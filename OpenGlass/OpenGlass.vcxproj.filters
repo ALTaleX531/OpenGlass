@@ -1,0 +1,211 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Header Files\pch">
+      <UniqueIdentifier>{a41eb6e4-584a-4dd8-b004-51c53897e9ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Helper">
+      <UniqueIdentifier>{da50cbed-34e1-4f21-a20e-7b1f9bd486b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Implementation">
+      <UniqueIdentifier>{b35002be-ef24-4571-a473-8dcfcb9b3bbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Win2D">
+      <UniqueIdentifier>{71a612cd-d0da-4038-b83e-65b3a8adebbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\BackdropLayers">
+      <UniqueIdentifier>{1785e8e1-c646-43ae-9af5-cf910f79fd91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Projections">
+      <UniqueIdentifier>{80fb9224-1d6f-4489-a8ae-9ef9d4e24e29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\pch">
+      <UniqueIdentifier>{d1b69628-009a-492d-81f3-c388db8cf9aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Helper">
+      <UniqueIdentifier>{66005dab-e456-4583-8145-9933691364d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Implementation">
+      <UniqueIdentifier>{b5da5b08-410f-4928-be66-c1365028fea6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="OpenGlass.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cpprt.hpp">
+      <Filter>Header Files\pch</Filter>
+    </ClInclude>
+    <ClInclude Include="framework.hpp">
+      <Filter>Header Files\pch</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Header Files\pch</Filter>
+    </ClInclude>
+    <ClInclude Include="winrt.hpp">
+      <Filter>Header Files\pch</Filter>
+    </ClInclude>
+    <ClInclude Include="dcompProjection.hpp">
+      <Filter>Header Files\Projections</Filter>
+    </ClInclude>
+    <ClInclude Include="uDwmProjection.hpp">
+      <Filter>Header Files\Projections</Filter>
+    </ClInclude>
+    <ClInclude Include="OSHelper.hpp">
+      <Filter>Header Files\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="HookHelper.hpp">
+      <Filter>Header Files\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="SymbolParser.hpp">
+      <Filter>Header Files\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils.hpp">
+      <Filter>Header Files\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="CaptionTextHandler.hpp">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometryRecorder.hpp">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="GlassFramework.hpp">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="BackdropManager.hpp">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="CanvasGeometry.hpp">
+      <Filter>Header Files\Win2D</Filter>
+    </ClInclude>
+    <ClInclude Include="BlendEffect.hpp">
+      <Filter>Header Files\Win2D</Filter>
+    </ClInclude>
+    <ClInclude Include="BorderEffect.hpp">
+      <Filter>Header Files\Win2D</Filter>
+    </ClInclude>
+    <ClInclude Include="BrightnessEffect.hpp">
+      <Filter>Header Files\Win2D</Filter>
+    </ClInclude>
+    <ClInclude Include="CanvasEffect.hpp">
+      <Filter>Header Files\Win2D</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorMatrixEffect.hpp">
+      <Filter>Header Files\Win2D</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorSourceEffect.hpp">
+      <Filter>Header Files\Win2D</Filter>
+    </ClInclude>
+    <ClInclude Include="CompositeEffect.hpp">
+      <Filter>Header Files\Win2D</Filter>
+    </ClInclude>
+    <ClInclude Include="CrossFadeEffect.hpp">
+      <Filter>Header Files\Win2D</Filter>
+    </ClInclude>
+    <ClInclude Include="ExposureEffect.hpp">
+      <Filter>Header Files\Win2D</Filter>
+    </ClInclude>
+    <ClInclude Include="GaussianBlurEffect.hpp">
+      <Filter>Header Files\Win2D</Filter>
+    </ClInclude>
+    <ClInclude Include="OpacityEffect.hpp">
+      <Filter>Header Files\Win2D</Filter>
+    </ClInclude>
+    <ClInclude Include="SaturationEffect.hpp">
+      <Filter>Header Files\Win2D</Filter>
+    </ClInclude>
+    <ClInclude Include="TestBackdrop.hpp">
+      <Filter>Header Files\BackdropLayers</Filter>
+    </ClInclude>
+    <ClInclude Include="AlphaMaskEffect.hpp">
+      <Filter>Header Files\Win2D</Filter>
+    </ClInclude>
+    <ClInclude Include="OcclusionCulling.hpp">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="ConfigurationFramework.hpp">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="ServiceApi.hpp">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="wil.hpp">
+      <Filter>Header Files\pch</Filter>
+    </ClInclude>
+    <ClInclude Include="GlassReflection.hpp">
+      <Filter>Header Files\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="dwmcoreProjection.hpp">
+      <Filter>Header Files\Projections</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGlass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>Source Files\pch</Filter>
+    </ClCompile>
+    <ClCompile Include="HookHelper.cpp">
+      <Filter>Source Files\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="SymbolParser.cpp">
+      <Filter>Source Files\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="CaptionTextHandler.cpp">
+      <Filter>Source Files\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometryRecorder.cpp">
+      <Filter>Source Files\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="GlassFramework.cpp">
+      <Filter>Source Files\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="BackdropManager.cpp">
+      <Filter>Source Files\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="OcclusionCulling.cpp">
+      <Filter>Source Files\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="ConfigurationFramework.cpp">
+      <Filter>Source Files\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="ServiceApi.cpp">
+      <Filter>Source Files\Implementation</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="$(MSBuildThisFileDirectory)..\..\natvis\wil.natvis" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="OpenGlass.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="reflection.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
