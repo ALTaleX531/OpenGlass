@@ -241,6 +241,21 @@ DWORD WINAPI OpenGlass::Initialize(PVOID)
 		FreeConsole();
 	}
 
+	ConfigurationFramework::Unload();
+	GlassFramework::Startup();
+	CaptionTextHandler::Startup();
+	GeometryRecorder::Startup();
+	OcclusionCulling::Startup();
+	ConfigurationFramework::Load();
+
+#ifdef _DEBUG
+	winrt::com_ptr<IDCompositionDeviceDebug> debugDevice{ nullptr };
+	uDwm::CDesktopManager::s_pDesktopManagerInstance->GetDCompDevice()->QueryInterface(
+		debugDevice.put()
+	);
+	debugDevice->EnableDebugCounters();
+#endif // _DEBUG
+
 	// just wait patiently, the dwm notification window maybe is not ready...
 	while (!(g_notificationWindow = FindWindowW(L"Dwm", nullptr))) { DwmFlush(); }
 	g_oldWndProc = reinterpret_cast<WNDPROC>(
@@ -260,21 +275,6 @@ DWORD WINAPI OpenGlass::Initialize(PVOID)
 	{
 		ChangeWindowMessageFilterEx(g_notificationWindow, WM_WTSSESSION_CHANGE, MSGFLT_ALLOW, nullptr);
 	}
-
-	ConfigurationFramework::Unload();
-	GlassFramework::Startup();
-	CaptionTextHandler::Startup();
-	GeometryRecorder::Startup();
-	OcclusionCulling::Startup();
-	ConfigurationFramework::Load();
-
-#ifdef _DEBUG
-	winrt::com_ptr<IDCompositionDeviceDebug> debugDevice{ nullptr };
-	uDwm::CDesktopManager::s_pDesktopManagerInstance->GetDCompDevice()->QueryInterface(
-		debugDevice.put()
-	);
-	debugDevice->EnableDebugCounters();
-#endif // _DEBUG
 
 	// refresh the whole desktop to apply our glass effect
 	DWORD info{ BSM_APPLICATIONS };

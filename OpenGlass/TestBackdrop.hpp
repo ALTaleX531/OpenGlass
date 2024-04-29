@@ -8,6 +8,7 @@
 #include "CompositeEffect.hpp"
 #include "AlphaMaskEffect.hpp"
 #include "BorderEffect.hpp"
+#include "SaturationEffect.hpp"
 
 namespace OpenGlass
 {
@@ -20,7 +21,7 @@ namespace OpenGlass
 		auto gaussianBlurEffect{ winrt::make_self<Win2D::GaussianBlurEffect>() };
 		gaussianBlurEffect->SetName(L"Blur");
 		gaussianBlurEffect->SetBorderMode(D2D1_BORDER_MODE_HARD);
-		gaussianBlurEffect->SetOptimizationMode(D2D1_GAUSSIANBLUR_OPTIMIZATION_QUALITY);
+		gaussianBlurEffect->SetOptimizationMode(D2D1_GAUSSIANBLUR_OPTIMIZATION_SPEED);
 		gaussianBlurEffect->SetBlurAmount(3.f);
 		gaussianBlurEffect->SetInput(wuc::CompositionEffectSourceParameter{ L"Backdrop" });
 

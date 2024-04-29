@@ -13,13 +13,14 @@ namespace ABI::Windows::UI::Composition
 }
 namespace OpenGlass::dcomp
 {
+	inline const auto DCompositionCreateTargetForHandle{ reinterpret_cast<HRESULT(WINAPI*)(HANDLE, IDCompositionTarget**)>(GetProcAddress(GetModuleHandleW(L"dcomp.dll"), MAKEINTRESOURCEA(1038))) };
+
 	DECLARE_INTERFACE_IID_(InteropCompositionTarget, IUnknown, "EACDD04C-117E-4E17-88F4-D1B12B0E3D89")
 	{
 		STDMETHOD(SetRoot)(THIS_ IN IDCompositionVisual * visual) PURE;
 	};
 
-	// the uuid may be wrong
-	DECLARE_INTERFACE_IID_(IDCompositionDesktopDevicePartner, IDCompositionDesktopDevice, "E01EB649-787E-4560-B398-0DE7A2065D8B")
+	DECLARE_INTERFACE_IID_(IDCompositionDesktopDevicePartner, IDCompositionDesktopDevice, "D14B6158-C3FA-4BCE-9C1F-B61D8665EAB0")
 	{
 		HRESULT CreateSharedResource(REFIID riid, PVOID* ppvObject)
 		{

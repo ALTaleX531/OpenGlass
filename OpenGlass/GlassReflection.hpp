@@ -7,7 +7,7 @@
 
 namespace OpenGlass
 {
-	class CGlassReflectionVisual
+	class CGlassReflectionVisual : public winrt::implements<CGlassReflectionVisual, IUnknown>
 	{
 		static inline wuc::CompositionDrawingSurface s_reflectionSurface{ nullptr };
 		static inline std::wstring s_reflectionPath{};
@@ -176,7 +176,6 @@ namespace OpenGlass
 		{
 			if (!s_reflectionSurface || !uDwm::CheckDeviceState(s_dcompDevice))
 			{
-				s_dcompDevice.copy_from(uDwm::CDesktopManager::s_pDesktopManagerInstance->GetDCompDevice());
 				UpdateReflectionSurface(s_reflectionPath.data());
 			}
 		}
@@ -188,6 +187,12 @@ namespace OpenGlass
 			{
 				s_reflectionPath = reflectionPath;
 			}
+			else if (s_reflectionSurface)
+			{
+				return;
+			}
+
+			s_dcompDevice.copy_from(uDwm::CDesktopManager::s_pDesktopManagerInstance->GetDCompDevice());
 			if (reflectionPath.empty() || !PathFileExistsW(reflectionPath.data()))
 			{
 				HMODULE currentModule{ wil::GetModuleInstanceHandle() };

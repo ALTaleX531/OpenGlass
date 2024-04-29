@@ -1,14 +1,23 @@
 ﻿#include "pch.h"
 #include "OcclusionCulling.hpp"
 #include "uDwmProjection.hpp"
+#include "dwmcoreProjection.hpp"
 #include "BackdropManager.hpp"
 
 using namespace OpenGlass;
 namespace OpenGlass::OcclusionCulling
 {
+	HRESULT WINAPI MyCArrayBasedCoverageSet_AddAntiOccluderRect(
+		dwmcore::CArrayBasedCoverageSet* This,
+		const D2D1_RECT_F& lprc,
+		int unknown,
+		const MilMatrix3x2D* matrix
+	);
 	HRESULT STDMETHODCALLTYPE MyCWindowList_StyleChange(uDwm::CWindowList* This, struct IDwmWindow* windowContext);
 	HRESULT STDMETHODCALLTYPE MyCWindowList_CloakChange(uDwm::CWindowList* This, struct IDwmWindow* windowContext1, struct IDwmWindow* windowContext2, bool cloaked);
 	HRESULT STDMETHODCALLTYPE MyCWindowList_CheckForMaximizedChange(uDwm::CWindowList* This, uDwm::CWindowData* data);
+
+	decltype(&MyCArrayBasedCoverageSet_AddAntiOccluderRect) g_CArrayBasedCoverageSet_AddAntiOccluderRect_Org{ nullptr };
 	decltype(&MyCWindowList_StyleChange) g_CWindowList_StyleChange_Org{ nullptr };
 	decltype(&MyCWindowList_CloakChange) g_CWindowList_CloakChange_Org{ nullptr };
 	decltype(&MyCWindowList_CheckForMaximizedChange) g_CWindowList_CheckForMaximizedChange_Org{ nullptr };
@@ -155,14 +164,25 @@ namespace OpenGlass::OcclusionCulling
 				break;
 			}
 		}
-
-		if (backdropCount != BackdropManager::GetBackdropCount())
-		{
-			uDwm::CDesktopManager::s_pDesktopManagerInstance->GetDCompDevice()->Commit();
-		}
 	}
 }
 
+HRESULT WINAPI OcclusionCulling::MyCArrayBasedCoverageSet_AddAntiOccluderRect(
+	dwmcore::CArrayBasedCoverageSet* This,
+	const D2D1_RECT_F& lprc,
+	int unknown,
+	const MilMatrix3x2D* matrix
+)
+{
+	/*OutputDebugStringW(
+		std::format(
+			L"lprc:[{},{},{},{}] - {}\n",
+			lprc.left, lprc.top, lprc.right, lprc.bottom,
+			unknown
+		).c_str()
+	);*/
+	return S_OK;
+}
 HRESULT STDMETHODCALLTYPE OcclusionCulling::MyCWindowList_StyleChange(uDwm::CWindowList* This, struct IDwmWindow* windowContext)
 {
 	HRESULT hr{ g_CWindowList_StyleChange_Org(This, windowContext) };
@@ -227,8 +247,13 @@ void OcclusionCulling::UpdateConfiguration(ConfigurationFramework::UpdateType ty
 
 HRESULT OcclusionCulling::Startup()
 {
+	g_CArrayBasedCoverageSet_AddAntiOccluderRect_Org = dwmcore::CArrayBasedCoverageSet::s_AddAntiOccluderRect;
 	return HookHelper::Detours::Write([]()
 	{
+		if (os::buildNumber >= os::build_w10_2004 && os::buildNumber < os::build_w11_21h2)
+		{
+			HookHelper::Detours::Attach(&g_CArrayBasedCoverageSet_AddAntiOccluderRect_Org, MyCArrayBasedCoverageSet_AddAntiOccluderRect);
+		}
 		HookHelper::Detours::Attach(&g_CWindowList_StyleChange_Org, MyCWindowList_StyleChange);
 		HookHelper::Detours::Attach(&g_CWindowList_CloakChange_Org, MyCWindowList_CloakChange);
 		HookHelper::Detours::Attach(&g_CWindowList_CheckForMaximizedChange_Org, MyCWindowList_CheckForMaximizedChange);
@@ -238,6 +263,10 @@ void OcclusionCulling::Shutdown()
 {
 	HookHelper::Detours::Write([]()
 	{
+		if (os::buildNumber >= os::build_w10_2004 && os::buildNumber < os::build_w11_21h2)
+		{
+			HookHelper::Detours::Detach(&g_CArrayBasedCoverageSet_AddAntiOccluderRect_Org, MyCArrayBasedCoverageSet_AddAntiOccluderRect);
+		}
 		HookHelper::Detours::Detach(&g_CWindowList_StyleChange_Org, MyCWindowList_StyleChange);
 		HookHelper::Detours::Detach(&g_CWindowList_CloakChange_Org, MyCWindowList_CloakChange);
 		HookHelper::Detours::Detach(&g_CWindowList_CheckForMaximizedChange_Org, MyCWindowList_CheckForMaximizedChange);

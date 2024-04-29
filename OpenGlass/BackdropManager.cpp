@@ -20,7 +20,6 @@ namespace OpenGlass::BackdropManager
 			// 0x20000 UpdateIcon
 			window->SetDirtyFlags(window->GetDirtyFlags() | 0x10000 | 0x20000 | 0x4000);
 		}
-		// CWindowList::ShowHide didn't update the gdi clip region
 		window->OnClipUpdated();
 		uDwm::CDesktopManager::s_pDesktopManagerInstance->GetWindowList()->ShowHide(window->GetData(), false);
 	}
@@ -37,7 +36,7 @@ namespace OpenGlass::BackdropManager
 		uDwm::CWindowData* m_data{ nullptr };
 		wuc::ContainerVisual m_containerVisual{ nullptr };
 		wuc::SpriteVisual m_spriteVisual{ nullptr };
-		CGlassReflectionVisual m_reflectionVisual;
+		winrt::com_ptr<CGlassReflectionVisual> m_reflectionVisual{ nullptr };
 
 		POINT m_clientOffset{};
 		wil::unique_hrgn m_clientBlurRgn{ nullptr };
@@ -59,6 +58,8 @@ namespace OpenGlass::BackdropManager
 		HRESULT InitializeVisual() override;
 		void UninitializeVisual() override;
 		void OnRegionUpdated();
+		void OnWindowStateChanged();
+		void OnAccentColorChanged();
 		void OnDeviceLost();
 	public:
 		CCompositedBackdropVisual(uDwm::CTopLevelWindow* window);
@@ -95,9 +96,11 @@ HRESULT BackdropManager::CCompositedBackdropVisual::InitializeVisual()
 	m_spriteVisual = compositor.CreateSpriteVisual();
 	m_spriteVisual.RelativeSizeAdjustment({ 1.f, 1.f });
 	m_spriteVisual.Brush(GetBrush(compositor));
-	m_reflectionVisual.InitializeVisual(compositor);
+	// if the effect brush is compiled during the maximize/minimize animation
+	// then it will NOT show normally, that's because the compilation is asynchronous
+	m_reflectionVisual->InitializeVisual(compositor);
 	m_containerVisual.Children().InsertAtBottom(m_spriteVisual);
-	m_containerVisual.Children().InsertAtTop(m_reflectionVisual.GetVisual());
+	m_containerVisual.Children().InsertAtTop(m_reflectionVisual->GetVisual());
 	m_pathGeometry = compositor.CreatePathGeometry();
 	RETURN_IF_FAILED(uDwm::ResourceHelper::CreateGeometryFromHRGN(wil::unique_hrgn{ CreateRectRgn(0, 0, 0, 0) }.get(), m_rgnGeometryProxy.put()));
 
@@ -127,7 +130,7 @@ void BackdropManager::CCompositedBackdropVisual::UninitializeVisual()
 		m_containerVisual = nullptr;
 	}
 
-	m_reflectionVisual.UninitializeVisual();
+	m_reflectionVisual->UninitializeVisual();
 	uDwm::CBackdropVisual::UninitializeVisual();
 }
 void BackdropManager::CCompositedBackdropVisual::OnRegionUpdated() try
@@ -136,11 +139,24 @@ void BackdropManager::CCompositedBackdropVisual::OnRegionUpdated() try
 	wil::unique_hrgn nonClientRgn{ CreateRectRgn(0, 0, 0, 0) };
 	wil::unique_hrgn realClientBlurRgn{ CreateRectRgn(0, 0, 0, 0) };
 
-	RECT borderRect{};
-	THROW_HR_IF_NULL(E_INVALIDARG, m_window->GetActualWindowRect(&borderRect, true, true, false));
-	if (!m_cloned && (borderRect.right <= GetSystemMetrics(SM_XVIRTUALSCREEN) || borderRect.bottom <= GetSystemMetrics(SM_YVIRTUALSCREEN)))
+	if (!m_cloned)
 	{
-		return;
+		RECT borderRect{};
+		THROW_HR_IF_NULL(E_INVALIDARG, m_window->GetActualWindowRect(&borderRect, true, true, false));
+		auto virtualScreenX{ GetSystemMetrics(SM_XVIRTUALSCREEN) };
+		auto virtualScreenY{ GetSystemMetrics(SM_YVIRTUALSCREEN) };
+		auto virtualScreenCX{ GetSystemMetrics(SM_CXVIRTUALSCREEN) };
+		auto virtualScreenCY{ GetSystemMetrics(SM_CYVIRTUALSCREEN) };
+		if (
+			borderRect.right <= virtualScreenX ||
+			borderRect.bottom <= virtualScreenY ||
+			borderRect.left >= virtualScreenX + virtualScreenCX ||
+			borderRect.bottom >= virtualScreenY + virtualScreenCY ||
+			!m_data->IsWindowVisibleAndUncloaked()
+		)
+		{
+			return;
+		}
 	}
 
 	bool forceUpdate{ false };
@@ -154,7 +170,7 @@ void BackdropManager::CCompositedBackdropVisual::OnRegionUpdated() try
 		m_roundRectRadius = Configuration::g_roundRectRadius;
 		forceUpdate = true;
 	}
-	CombineRgn(nonClientRgn.get(), m_captionRgn.get(), m_overrideBorder ? m_borderRgn.get() : nullptr, m_overrideBorder ? RGN_OR : RGN_COPY);
+	CombineRgn(nonClientRgn.get(), m_captionRgn.get(), m_overrideBorder || m_data->IsFrameExtendedIntoClientAreaLRB() ? m_borderRgn.get() : nullptr, m_overrideBorder || m_data->IsFrameExtendedIntoClientAreaLRB() ? RGN_OR : RGN_COPY);
 	if (m_kind != CompositedBackdropKind::Accent)
 	{
 		CombineRgn(compositedRgn.get(), compositedRgn.get(), nonClientRgn.get(), RGN_OR);
@@ -207,13 +223,13 @@ void BackdropManager::CCompositedBackdropVisual::OnRegionUpdated() try
 		{
 			m_containerVisual.IsVisible(false);
 		}
-		else if (!m_containerVisual.IsVisible() && (m_data->IsWindowVisibleAndUncloaked() || m_cloned))
+		else if (!m_containerVisual.IsVisible())
 		{
 			m_containerVisual.IsVisible(true);
 		}
 		m_containerVisual.Offset({ static_cast<float>(regionBox.left), static_cast<float>(regionBox.top), 0.f });
 		m_containerVisual.Size({ static_cast<float>(max(wil::rect_width(regionBox), 0)), static_cast<float>(max(wil::rect_height(regionBox), 0)) });
-		m_reflectionVisual.NotifyOffsetToWindow(m_containerVisual.Offset());
+		m_reflectionVisual->NotifyOffsetToWindow(m_containerVisual.Offset());
 
 		winrt::com_ptr<ID2D1Factory> factory{ nullptr };
 		uDwm::CDesktopManager::s_pDesktopManagerInstance->GetD2DDevice()->GetFactory(factory.put());
@@ -291,7 +307,7 @@ void BackdropManager::CCompositedBackdropVisual::OnDeviceLost()
 BackdropManager::CCompositedBackdropVisual::CCompositedBackdropVisual(uDwm::CTopLevelWindow* window) :
 	m_window{ window },
 	m_data{ window->GetData() },
-	m_reflectionVisual{ m_window, m_data },
+	m_reflectionVisual{ winrt::make_self<CGlassReflectionVisual>(m_window, m_data) },
 	uDwm::CBackdropVisual{ window->GetNonClientVisual() }
 {
 	m_captionRgn.reset(CreateRectRgn(0, 0, 0, 0));
@@ -306,7 +322,7 @@ BackdropManager::CCompositedBackdropVisual::CCompositedBackdropVisual(uDwm::CTop
 	m_window{ window },
 	m_data{ backdrop->m_data },
 	m_clientOffset{ backdrop->m_clientOffset },
-	m_reflectionVisual{ m_window, m_data, true },
+	m_reflectionVisual{ winrt::make_self<CGlassReflectionVisual>(m_window, m_data, true) },
 	m_roundRectRadius{ backdrop->m_roundRectRadius },
 	m_overrideBorder{ backdrop->m_overrideBorder },
 	m_windowBox{ backdrop->m_windowBox },
@@ -345,7 +361,7 @@ BackdropManager::CCompositedBackdropVisual::CCompositedBackdropVisual(uDwm::CTop
 	m_compositedRgn.reset(CreateRectRgn(0, 0, 0, 0));
 	OnDeviceLost();
 	OnRegionUpdated();
-	m_reflectionVisual.SyncReflectionData(backdrop->m_reflectionVisual);
+	m_reflectionVisual->SyncReflectionData(*backdrop->m_reflectionVisual);
 }
 BackdropManager::CCompositedBackdropVisual::~CCompositedBackdropVisual()
 {
@@ -363,7 +379,7 @@ void BackdropManager::CCompositedBackdropVisual::MarkAsOccluded(bool occluded)
 	{
 		m_occluded = occluded;
 
-		m_dcompVisual.as<IDCompositionVisual3>()->SetVisible(!occluded);
+		m_dcompTarget->SetRoot(occluded ? nullptr : m_dcompVisual.get());
 	}
 }
 
@@ -444,7 +460,7 @@ void BackdropManager::CCompositedBackdropVisual::ValidateVisual()
 {
 	if (m_cloned) { return; }
 
-	if (m_containerVisual.IsVisible() && m_data->IsWindowVisibleAndUncloaked())
+	if (m_containerVisual.IsVisible())
 	{
 		BOOL valid{ FALSE };
 		if (!uDwm::CheckDeviceState(m_dcompDevice))
@@ -459,7 +475,7 @@ void BackdropManager::CCompositedBackdropVisual::ValidateVisual()
 
 		m_regionDirty = false;
 	}
-	m_reflectionVisual.ValidateVisual();
+	m_reflectionVisual->ValidateVisual();
 }
 void BackdropManager::CCompositedBackdropVisual::UpdateNCBackground()
 {
@@ -493,9 +509,8 @@ winrt::com_ptr<BackdropManager::ICompositedBackdropVisual> BackdropManager::GetO
 		auto data{ window->GetData() };
 		if (
 			it == g_backdropMap.end() &&
-			data->IsWindowVisibleAndUncloaked() &&
 			data->GetHwnd() != uDwm::GetShellWindowForCurrentDesktop()
-			)
+		)
 		{
 			auto result{ g_backdropMap.emplace(window, winrt::make<BackdropManager::CCompositedBackdropVisual>(window)) };
 			if (result.second == true)

@@ -480,6 +480,21 @@ namespace OpenGlass::uDwm
 
 			return attribute;
 		}
+		bool IsFrameExtendedIntoClientAreaLRB() const
+		{
+			const DWORD* margins{ nullptr };
+
+			if (os::buildNumber < os::build_w11_21h2)
+			{
+				margins = reinterpret_cast<const DWORD*>(this) + 20;
+			}
+			else
+			{
+				margins = reinterpret_cast<const DWORD*>(this) + 24;
+			}
+
+			return margins[0] || margins[1] || margins[3];
+		}
 	};
 	struct CTopLevelWindow : CVisual
 	{
@@ -1037,7 +1052,7 @@ namespace OpenGlass::uDwm
 		uDwm::CVisual* m_parentVisual{ nullptr };
 		winrt::com_ptr<uDwm::CVisual> m_udwmVisual{ nullptr };
 		winrt::com_ptr<IDCompositionVisual2> m_dcompVisual{ nullptr };
-		winrt::com_ptr<dcomp::InteropCompositionTarget> m_dcompTarget{ nullptr };
+		winrt::com_ptr<IDCompositionTarget> m_dcompTarget{ nullptr };
 		winrt::com_ptr<dcomp::IDCompositionDesktopDevicePartner> m_dcompDevice{ nullptr };
 		wuc::VisualCollection m_visualCollection{ nullptr };
 
@@ -1047,24 +1062,32 @@ namespace OpenGlass::uDwm
 		}
 		virtual HRESULT InitializeVisual()
 		{
-			RETURN_IF_FAILED(
-				m_dcompDevice->CreateSharedResource(
-					IID_PPV_ARGS(m_dcompTarget.put())
-				)
-			);
+			// initialize dcomp visual
 			RETURN_IF_FAILED(m_dcompDevice->CreateVisual(m_dcompVisual.put()));
 			RETURN_IF_FAILED(m_dcompVisual->SetBorderMode(DCOMPOSITION_BORDER_MODE_SOFT));
+			THROW_IF_FAILED(m_dcompVisual->SetCompositeMode(DCOMPOSITION_COMPOSITE_MODE_SOURCE_OVER));
+			THROW_IF_FAILED(m_dcompVisual->SetBitmapInterpolationMode(DCOMPOSITION_BITMAP_INTERPOLATION_MODE_LINEAR));
 #ifdef _DEBUG
 			m_dcompVisual.as<IDCompositionVisualDebug>()->EnableRedrawRegions();
 #endif
-			RETURN_IF_FAILED(m_dcompTarget->SetRoot(m_dcompVisual.get()));
-			RETURN_IF_FAILED(m_dcompDevice->Commit());
 			m_visualCollection = m_dcompVisual.as<dcomp::IDCompositionVisualPartnerWinRTInterop>()->GetVisualCollection();
 
+			// create shared target
+			// CreateTargetVisualProxy is more expensive than CreateVisualProxy
+			winrt::com_ptr<IDCompositionVisual> dcompTargetVisualSource{ nullptr };
+			RETURN_IF_FAILED(
+				m_dcompDevice->CreateSharedResource(
+					IID_PPV_ARGS(dcompTargetVisualSource.put())
+				)
+			);
 			wil::unique_handle resourceHandle{ nullptr };
 			RETURN_IF_FAILED(
-				m_dcompDevice->OpenSharedResourceHandle(m_dcompTarget.get(), resourceHandle.put())
+				m_dcompDevice->OpenSharedResourceHandle(dcompTargetVisualSource.get(), resourceHandle.put())
 			);
+			RETURN_IF_FAILED(dcomp::DCompositionCreateTargetForHandle(resourceHandle.get(), m_dcompTarget.put()));
+			RETURN_IF_FAILED(m_dcompTarget->SetRoot(m_dcompVisual.get()));
+
+			// interop with udwm and dwmcore
 			RETURN_IF_FAILED(uDwm::CVisual::CreateFromSharedHandle(resourceHandle.get(), m_udwmVisual.put()));
 			m_udwmVisual->AllowVisualTreeClone(false);
 			if (m_parentVisual)

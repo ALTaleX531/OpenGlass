@@ -28,7 +28,6 @@ namespace OpenGlass::GlassFramework
 	void STDMETHODCALLTYPE MyCTopLevelWindow_Destructor(uDwm::CTopLevelWindow* This);
 	HRESULT STDMETHODCALLTYPE MyCTopLevelWindow_InitializeVisualTreeClone(uDwm::CTopLevelWindow* This, uDwm::CTopLevelWindow* window, UINT cloneOptions);
 	HRESULT STDMETHODCALLTYPE MyCTopLevelWindow_OnClipUpdated(uDwm::CTopLevelWindow* This);
-	int STDMETHODCALLTYPE MyCTopLevelWindow_GetCurrentStyle(uDwm::CWindowData* data);
 	struct MILCMD_DWM_REDIRECTION_ACCENTBLURRECTUPDATE
 	{
 		HWND GetHwnd() const
@@ -179,7 +178,7 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_UpdateNCAreaBackgrou
 				wil::unique_hrgn realBorderRegion{ CreateRectRgn(0, 0, 0, 0) };
 				wil::unique_hrgn emptyRegion{ CreateRectRgn(0, 0, 0, 0) };
 
-				if (!BackdropManager::Configuration::g_overrideBorder)
+				if (!BackdropManager::Configuration::g_overrideBorder && !data->IsFrameExtendedIntoClientAreaLRB())
 				{
 					RECT captionBox{};
 					RECT borderBox{};
@@ -245,8 +244,6 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_UpdateNCAreaBackgrou
 
 // make the visual of DwmEnableBlurBehind invisible
 // and record the blur region
-// TO-DO: for those already created window which contains blur region
-// needs to be called CTopLevelWindow::OnBlurBehindUpdated to show it correctly
 HRESULT STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_UpdateClientBlur(uDwm::CTopLevelWindow* This)
 {
 	if (!IsBackdropAllowed())
@@ -315,7 +312,11 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_UpdateAccent(uDwm::C
 	auto data{ This->GetData() };
 	auto accentPolicy{ data->GetAccentPolicy() };
 	HRESULT hr{ S_OK };
-	if (data && accentPolicy && accentPolicy->IsActive() && g_overrideAccent)
+	if (
+		data &&
+		accentPolicy->IsActive() &&
+		g_overrideAccent
+	)
 	{
 		auto oldAccentState{ accentPolicy->AccentState };
 
@@ -327,6 +328,7 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_UpdateAccent(uDwm::C
 		if (backdrop)
 		{
 			backdrop->SetBackdropKind(static_cast<BackdropManager::CompositedBackdropKind>(GetActualBackgroundType(This)));
+			backdrop->ValidateVisual();
 		}
 	}
 	else
@@ -456,10 +458,7 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCWindowList_UpdateAccentBlurRect(uDw
 	if (SUCCEEDED(hr) && SUCCEEDED(This->GetSyncedWindowDataByHwnd(milCmd->GetHwnd(), &data)) && data)
 	{
 		winrt::com_ptr<BackdropManager::ICompositedBackdropVisual> backdrop{ BackdropManager::GetOrCreateBackdropVisual(data->GetWindow()) };
-		if (
-			backdrop &&
-			data->GetAccentPolicy()->IsActive()
-		)
+		if (backdrop)
 		{
 			if (data->GetAccentPolicy()->IsClipEnabled())
 			{
