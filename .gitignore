@@ -356,3 +356,4 @@ MigrationBackup/
 *.zip
 /OpenGlass/Archieve
 /Theme
+/OpenGlass/OpenGlass.vcxproj.filters
