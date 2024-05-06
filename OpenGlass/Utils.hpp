@@ -107,5 +107,6 @@ namespace OpenGlass::Utils
 }
 
 #define DEFINE_INVOKER(fn) static const auto s_fn_ptr{ Utils::cast_pointer<decltype(&fn)>(g_offsetMap.at(#fn)) }
+#define DEFINE_USER_INVOKER(type, name) static const auto s_fn_ptr{ Utils::cast_pointer<decltype(type)>(g_offsetMap.at(name)) }
 #define INVOKE_MEMBERFUNCTION(...) std::invoke(s_fn_ptr, this, ##__VA_ARGS__)
 #define INVOKE_FUNCTION(...) std::invoke(s_fn_ptr, ##__VA_ARGS__)

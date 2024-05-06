@@ -151,7 +151,7 @@ namespace OpenGlass::Win2D
 		}
 		auto BoxValue(const D2D1_MATRIX_5X4_F& value)
 		{
-			return wf::PropertyValue::CreateSingleArray(value.m[0]).as<wf::IPropertyValue>();
+			return wf::PropertyValue::CreateSingleArray({ reinterpret_cast<const float*>(&value), sizeof(value) / sizeof(float) }).as<wf::IPropertyValue>();
 		}
 		template <size_t size>
 		auto BoxValue(float(&value)[size])

@@ -202,7 +202,7 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_UpdateNCAreaBackgrou
 				{
 					uDwm::ResourceHelper::CreateGeometryFromHRGN(emptyRegion.get(), &captionGeometry);
 				}
-				//This->GetLegacyVisual()->ClearInstructions();
+				// This->GetLegacyVisual()->ClearInstructions();
 
 			}
 		}
@@ -571,18 +571,30 @@ void GlassFramework::UpdateConfiguration(ConfigurationFramework::UpdateType type
 			wil::reg::get_value_dword_nothrow(
 				ConfigurationFramework::GetDwmKey(),
 				L"OverrideBorder",
-				reinterpret_cast<DWORD*>(&BackdropManager::Configuration::g_overrideBorder)
+				&value
 			)
 		);
+		BackdropManager::Configuration::g_overrideBorder = static_cast<bool>(value);
+
+		BackdropManager::Configuration::g_splitBlurRegionIntoChunks = TRUE;
+		LOG_IF_FAILED(
+			wil::reg::get_value_dword_nothrow(
+				ConfigurationFramework::GetDwmKey(),
+				L"SplitBlurRegionIntoChunks",
+				&value
+			)
+		);
+		BackdropManager::Configuration::g_splitBlurRegionIntoChunks = static_cast<bool>(value);
 
 		g_overrideAccent = FALSE;
 		LOG_IF_FAILED(
 			wil::reg::get_value_dword_nothrow(
 				ConfigurationFramework::GetDwmKey(),
 				L"OverrideAccent",
-				reinterpret_cast<DWORD*>(&g_overrideAccent)
+				&value
 			)
 		);
+		g_overrideAccent = value;
 
 		value = 0;
 		LOG_IF_FAILED(
@@ -615,6 +627,7 @@ void GlassFramework::UpdateConfiguration(ConfigurationFramework::UpdateType type
 		CGlassReflectionVisual::UpdateReflectionSurface(reflectionPath);
 	}
 
+	auto lock{ wil::EnterCriticalSection(uDwm::CDesktopManager::s_csDwmInstance) };
 	if (!IsBackdropAllowed())
 	{
 		BackdropManager::Shutdown();

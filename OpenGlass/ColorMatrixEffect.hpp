@@ -9,6 +9,7 @@ namespace OpenGlass::Win2D
 		ColorMatrixEffect() : CanvasEffect{ CLSID_D2D1ColorMatrix }
 		{
 			SetAlphaMode();
+			SetClamp();
 		}
 		virtual ~ColorMatrixEffect() = default;
 
@@ -19,6 +20,10 @@ namespace OpenGlass::Win2D
 		void SetAlphaMode(D2D1_COLORMATRIX_ALPHA_MODE alphaMode = D2D1_COLORMATRIX_ALPHA_MODE_PREMULTIPLIED)
 		{
 			SetProperty(D2D1_COLORMATRIX_PROP_ALPHA_MODE, BoxValue(alphaMode));
+		}
+		void SetClamp(bool clamp = false)
+		{
+			SetProperty(D2D1_COLORMATRIX_PROP_CLAMP_OUTPUT, BoxValue(clamp));
 		}
 	};
 }

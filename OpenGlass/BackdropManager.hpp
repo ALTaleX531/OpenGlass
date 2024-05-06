@@ -37,16 +37,12 @@ namespace OpenGlass::BackdropManager
 		virtual void ValidateVisual() = 0;
 		virtual void UpdateNCBackground() = 0;
 	};
-	// [Guid("A108448A-FA93-4131-921C-D5D29F800F4B")]
-	DECLARE_INTERFACE_IID_(ICompositedBackdropVisualPrivate, IUnknown, "A108448A-FA93-4131-921C-D5D29F800F4B")
-	{
-		virtual HRGN GetCompositedRegion() const = 0;
-		virtual void MarkAsOccluded(bool occluded) = 0;
-	};
+
 	namespace Configuration
 	{
 		inline float g_roundRectRadius{ 0.f };
 		inline bool g_overrideBorder{ true };
+		inline bool g_splitBlurRegionIntoChunks{ true };
 	}
 
 	size_t GetBackdropCount();

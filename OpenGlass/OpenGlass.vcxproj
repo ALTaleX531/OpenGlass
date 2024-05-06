@@ -214,6 +214,7 @@
     <ClInclude Include="SaturationEffect.hpp" />
     <ClInclude Include="SymbolParser.hpp" />
     <ClInclude Include="TestBackdrop.hpp" />
+    <ClInclude Include="TintEffect.hpp" />
     <ClInclude Include="uDwmProjection.hpp" />
     <ClInclude Include="Utils.hpp" />
     <ClInclude Include="wil.hpp" />

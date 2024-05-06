@@ -129,6 +129,8 @@ LRESULT CALLBACK OpenGlass::DwmNotificationWndProc(HWND hWnd, UINT uMsg, WPARAM 
 			}
 			break;
 		}
+		default:
+			break;
 	}
 
 	return g_oldWndProc(hWnd, uMsg, wParam, lParam);
@@ -188,7 +190,7 @@ bool OpenGlass::OnSymbolParsing_Dwmcore(
 	const PSYMBOL_INFO originalSymInfo
 )
 {
-	dwmcore::InitializeFromSymbol(fullyUnDecoratedFunctionName, offset);
+	dwmcore::InitializeFromSymbol(functionName, fullyUnDecoratedFunctionName, offset);
 
 	return true;
 }
@@ -280,7 +282,6 @@ DWORD WINAPI OpenGlass::Initialize(PVOID)
 	DWORD info{ BSM_APPLICATIONS };
 	BroadcastSystemMessageW(BSF_IGNORECURRENTTASK | BSF_ALLOWSFW | BSF_FORCEIFHUNG, &info, WM_THEMECHANGED, 0, 0);
 	InvalidateRect(nullptr, nullptr, FALSE);
-	WS_THICKFRAME;
 
 	return S_OK;
 }
