@@ -123,26 +123,6 @@ HRESULT STDMETHODCALLTYPE GeometryRecorder::MyCRgnGeometryProxy_Update(
 	return hr;
 }
 
-void GeometryRecorder::InitializeFromSymbol(std::string_view functionName, std::string_view fullyUnDecoratedFunctionName, const HookHelper::OffsetStorage& offset)
-{
-	if (functionName == "?CreateRectangleGeometry@ResourceHelper@@SAJPEBUtagRECT@@PEAPEAVCRectangleGeometryProxy@@@Z")
-	{
-		offset.To(uDwm::g_moduleHandle, g_ResourceHelper_CreateRectangleGeometry_Org);
-	}
-	if (fullyUnDecoratedFunctionName == "ResourceHelper::CreateGeometryFromHRGN")
-	{
-		offset.To(uDwm::g_moduleHandle, g_ResourceHelper_CreateGeometryFromHRGN_Org);
-	}
-	if (fullyUnDecoratedFunctionName == "ResourceHelper::CreateCombinedGeometry")
-	{
-		offset.To(uDwm::g_moduleHandle, g_ResourceHelper_CreateCombinedGeometry_Org);
-	}
-	if (fullyUnDecoratedFunctionName == "CRgnGeometryProxy::Update")
-	{
-		offset.To(uDwm::g_moduleHandle, g_CRgnGeometryProxy_Update_Org);
-	}
-}
-
 void GeometryRecorder::BeginCapture()
 {
 	g_captureRef += 1;
@@ -173,6 +153,11 @@ void GeometryRecorder::EndCapture()
 
 HRESULT GeometryRecorder::Startup()
 {
+	uDwm::GetAddressFromSymbolMap("ResourceHelper::CreateRectangleGeometry", g_ResourceHelper_CreateRectangleGeometry_Org);
+	uDwm::GetAddressFromSymbolMap("ResourceHelper::CreateGeometryFromHRGN", g_ResourceHelper_CreateGeometryFromHRGN_Org);
+	uDwm::GetAddressFromSymbolMap("ResourceHelper::CreateCombinedGeometry", g_ResourceHelper_CreateCombinedGeometry_Org);
+	uDwm::GetAddressFromSymbolMap("CRgnGeometryProxy::Update", g_CRgnGeometryProxy_Update_Org);
+
 	return HookHelper::Detours::Write([]()
 	{
 		HookHelper::Detours::Attach(&g_ResourceHelper_CreateGeometryFromHRGN_Org, MyResourceHelper_CreateGeometryFromHRGN);

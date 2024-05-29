@@ -37,6 +37,7 @@ namespace OpenGlass
 		HRESULT m_lastErr{ S_OK };
 		PVOID m_LoadLibraryExW_Org{ nullptr };
 		SymbolDownloaderCallback m_downloadNotifyCallback{ nullptr };
+		std::wstring m_currentModule{};
 	public:
 		SymbolParser();
 		~SymbolParser() noexcept;

@@ -1,10 +1,13 @@
 ﻿#pragma once
 #include "framework.hpp"
 #include "cpprt.hpp"
+#include "winrt.hpp"
 #include "HookHelper.hpp"
 
 namespace OpenGlass::Utils
 {
+	inline HANDLE g_processHeap{ GetProcessHeap() };
+
 	FORCEINLINE auto to_error_wstring(HRESULT hr)
 	{
 		return winrt::hresult_error{ hr }.message();
@@ -74,7 +77,7 @@ namespace OpenGlass::Utils
 		return false;
 	}
 
-	FORCEINLINE bool WINAPI IsInBatteryMode()
+	FORCEINLINE bool WINAPI IsBatterySaverEnabled()
 	{
 		SYSTEM_POWER_STATUS powerStatus{};
 		return GetSystemPowerStatus(&powerStatus) && powerStatus.SystemStatusFlag;
@@ -104,9 +107,50 @@ namespace OpenGlass::Utils
 		}
 		return static_cast<bool>(isLocalSystem);
 	}
+
+	FORCEINLINE wu::Color FromAbgr(DWORD color)
+	{
+		auto abgr{ reinterpret_cast<const UCHAR*>(&color) };
+		return
+		{
+			abgr[3],
+			abgr[0],
+			abgr[1],
+			abgr[2]
+		};
+	}
+	FORCEINLINE wu::Color FromArgb(DWORD color)
+	{
+		auto abgr{ reinterpret_cast<const UCHAR*>(&color) };
+		return
+		{
+			abgr[3],
+			abgr[2],
+			abgr[1],
+			abgr[0]
+		};
+	}
+
+	FORCEINLINE void ThisModule_AddRef()
+	{
+		HMODULE thisModule{ nullptr };
+		GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS, L"", &thisModule);
+	}
+	FORCEINLINE void ThisModule_Release(bool async = true)
+	{
+		if (async)
+		{
+			static wil::unique_threadpool_work s_freeModuleRefWork{ CreateThreadpoolWork([](PTP_CALLBACK_INSTANCE instance, PVOID, PTP_WORK) { DwmFlush(); FreeLibraryWhenCallbackReturns(instance, wil::GetModuleInstanceHandle());  }, nullptr, nullptr) };
+			SubmitThreadpoolWork(s_freeModuleRefWork.get());
+		}
+		else
+		{
+			FreeLibraryAndExitThread(wil::GetModuleInstanceHandle(), 0);
+		}
+	}
 }
 
-#define DEFINE_INVOKER(fn) static const auto s_fn_ptr{ Utils::cast_pointer<decltype(&fn)>(g_offsetMap.at(#fn)) }
-#define DEFINE_USER_INVOKER(type, name) static const auto s_fn_ptr{ Utils::cast_pointer<decltype(type)>(g_offsetMap.at(name)) }
+#define DEFINE_INVOKER(fn) static const auto s_fn_ptr{ Utils::cast_pointer<decltype(&fn)>(g_symbolMap.at(#fn)) }
+#define DEFINE_USER_INVOKER(type, name) static const auto s_fn_ptr{ Utils::cast_pointer<decltype(&type)>(g_symbolMap.at(name)) }
 #define INVOKE_MEMBERFUNCTION(...) std::invoke(s_fn_ptr, this, ##__VA_ARGS__)
 #define INVOKE_FUNCTION(...) std::invoke(s_fn_ptr, ##__VA_ARGS__)

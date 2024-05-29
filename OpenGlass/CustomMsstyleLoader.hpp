@@ -3,10 +3,10 @@
 #include "cpprt.hpp"
 #include "ConfigurationFramework.hpp"
 
-namespace OpenGlass::GlassFramework
+namespace OpenGlass::CustomMsstyleLoader
 {
 	void UpdateConfiguration(ConfigurationFramework::UpdateType type);
-	
+
 	HRESULT Startup();
 	void Shutdown();
 }

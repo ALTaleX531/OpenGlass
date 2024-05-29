@@ -18,6 +18,6 @@ namespace OpenGlass::ConfigurationFramework
 	void Update(UpdateType type);
 	HKEY GetDwmKey();
 	HKEY GetPersonalizeKey();
-	void Load();
+	void Load(bool updateNow = true);
 	void Unload();
 }

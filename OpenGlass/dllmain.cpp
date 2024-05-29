@@ -4,6 +4,102 @@
 #include "Utils.hpp"
 #include "OpenGlass.hpp"
 #include "ServiceApi.hpp"
+#if defined _M_IX86
+	#pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='x86' publicKeyToken='6595b64144ccf1df' language='*'\"")
+#elif defined _M_IA64
+	#pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='ia64' publicKeyToken='6595b64144ccf1df' language='*'\"")
+#elif defined _M_X64
+	#pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='amd64' publicKeyToken='6595b64144ccf1df' language='*'\"")
+#else
+	#pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
+#endif
+
+ _NODISCARD _Ret_notnull_ _Post_writable_byte_size_(size) _VCRT_ALLOCATOR 
+void* operator new(size_t size) noexcept(false)
+{
+	auto memory{ HeapAlloc(OpenGlass::Utils::g_processHeap, 0, size) };
+	THROW_LAST_ERROR_IF_NULL(memory);
+	return memory;
+}
+_NODISCARD _Ret_maybenull_ _Success_(return != NULL) _Post_writable_byte_size_(size) _VCRT_ALLOCATOR 
+void* operator new(
+	size_t size,
+	std::nothrow_t const&
+) noexcept
+{
+	return HeapAlloc(OpenGlass::Utils::g_processHeap, 0, size);
+}
+_NODISCARD _Ret_notnull_ _Post_writable_byte_size_(size) _VCRT_ALLOCATOR
+void* operator new[](
+	size_t size
+)
+{
+	auto memory{ HeapAlloc(OpenGlass::Utils::g_processHeap, 0, size) };
+	THROW_LAST_ERROR_IF_NULL(memory);
+	return memory;
+}
+_NODISCARD _Ret_maybenull_ _Success_(return != NULL) _Post_writable_byte_size_(size) _VCRT_ALLOCATOR
+void* operator new[](
+	size_t size,
+	std::nothrow_t const&
+) noexcept
+{
+	return HeapAlloc(OpenGlass::Utils::g_processHeap, 0, size);
+}
+void operator delete(void* ptr) noexcept
+{
+	FAIL_FAST_IF_NULL(ptr);
+	HeapFree(OpenGlass::Utils::g_processHeap, 0, ptr);
+	ptr = nullptr;
+}
+void operator delete(
+	void* ptr,
+	std::nothrow_t const&
+) noexcept
+{
+	if (ptr)
+	{
+		HeapFree(OpenGlass::Utils::g_processHeap, 0, ptr);
+		ptr = nullptr;
+	}
+}
+void operator delete[](
+	void* ptr
+) noexcept
+{
+	FAIL_FAST_IF_NULL(ptr);
+	HeapFree(OpenGlass::Utils::g_processHeap, 0, ptr);
+	ptr = nullptr;
+}
+void operator delete[](
+	void* ptr,
+	std::nothrow_t const&
+) noexcept
+{
+	if (ptr)
+	{
+		HeapFree(OpenGlass::Utils::g_processHeap, 0, ptr);
+		ptr = nullptr;
+	}
+}
+void operator delete(
+	void* ptr,
+	size_t size
+) noexcept 
+{
+	FAIL_FAST_IF_NULL(ptr);
+	HeapFree(OpenGlass::Utils::g_processHeap, 0, ptr);
+	ptr = nullptr;
+}
+void operator delete[](
+	void* ptr,
+	size_t size
+) noexcept
+{
+	FAIL_FAST_IF_NULL(ptr);
+	HeapFree(OpenGlass::Utils::g_processHeap, 0, ptr);
+	ptr = nullptr;
+}
 
 BOOL APIENTRY DllMain(
 	HMODULE hModule,
@@ -229,21 +325,17 @@ EXTERN_C __declspec(dllexport) int WINAPI Main(
 )
 {
 	using namespace OpenGlass;
-	// Until now, We only support Chinese and English...
-	if (PRIMARYLANGID(GetUserDefaultUILanguage()) != LANG_CHINESE)
-	{
-		SetThreadUILanguage(MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US));
-	}
 	SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
-	RETURN_IF_FAILED(SetCurrentProcessExplicitAppUserModelID(L"OpenGlass.Serivce"));
+	RETURN_IF_FAILED(SetThreadDescription(GetCurrentThread(), L"OpenGlass Client Thread"));
+	RETURN_IF_FAILED(SetCurrentProcessExplicitAppUserModelID(L"OpenGlass.Client"));
 
 	// Convert the ansi string back to unicode string
 	HRESULT hr{ S_OK };
 	auto length{ MultiByteToWideChar(CP_ACP, 0, lpCmdLine, -1, nullptr, 0) };
-	THROW_LAST_ERROR_IF(length == 0);
+	RETURN_LAST_ERROR_IF(length == 0);
 	wil::unique_cotaskmem_string convertedCommandLine{ reinterpret_cast<PWSTR>(CoTaskMemAlloc(sizeof(WCHAR) * length)) };
-	THROW_LAST_ERROR_IF_NULL(convertedCommandLine);
-	THROW_LAST_ERROR_IF(MultiByteToWideChar(CP_ACP, 0, lpCmdLine, -1, convertedCommandLine.get(), length) == 0);
+	RETURN_LAST_ERROR_IF_NULL(convertedCommandLine);
+	RETURN_LAST_ERROR_IF(MultiByteToWideChar(CP_ACP, 0, lpCmdLine, -1, convertedCommandLine.get(), length) == 0);
 
 	auto params{ AnalyseCommandLine(convertedCommandLine.get()) };
 	if (params.type == ExecutionParameters::CommandType::Startup)
@@ -251,57 +343,72 @@ EXTERN_C __declspec(dllexport) int WINAPI Main(
 		hr = StartupService();
 		if (FAILED(hr))
 		{
-			ShellMessageBoxW(
-				hInstance,
+			TaskDialog(
 				nullptr,
+				nullptr,
+				nullptr,
+				Utils::GetResWString<IDS_STRING106>().c_str(),
 				Utils::to_error_wstring(hr).c_str(),
-				nullptr,
-				MB_ICONERROR
+				TDCBF_OK_BUTTON,
+				TD_ERROR_ICON,
+				nullptr
 			);
 		}
 	}
 	else if (params.type == ExecutionParameters::CommandType::Shutdown)
 	{
 		hr = ShutdownService();
-		ShellMessageBoxW(
-			hInstance,
+		TaskDialog(
 			nullptr,
+			nullptr,
+			nullptr,
+			Utils::GetResWString<IDS_STRING106>().c_str(),
 			Utils::to_error_wstring(hr).c_str(),
-			nullptr,
-			FAILED(hr) ? MB_ICONERROR : MB_ICONINFORMATION
+			TDCBF_OK_BUTTON,
+			FAILED(hr) ? TD_ERROR_ICON : TD_INFORMATION_ICON,
+			nullptr
 		);
 	}
 	else if (params.type == ExecutionParameters::CommandType::Install)
 	{
 		hr = InstallApp();
-		ShellMessageBoxW(
-			hInstance,
+		TaskDialog(
 			nullptr,
+			nullptr,
+			nullptr,
+			Utils::GetResWString<IDS_STRING106>().c_str(),
 			Utils::to_error_wstring(hr).c_str(),
-			nullptr,
-			FAILED(hr) ? MB_ICONERROR : MB_ICONINFORMATION
+			TDCBF_OK_BUTTON,
+			FAILED(hr) ? TD_ERROR_ICON : TD_INFORMATION_ICON,
+			nullptr
 		);
 	}
 	else if (params.type == ExecutionParameters::CommandType::Uninstall)
 	{
 		hr = UninstallApp();
-		ShellMessageBoxW(
-			hInstance,
+		TaskDialog(
 			nullptr,
+			nullptr,
+			nullptr,
+			Utils::GetResWString<IDS_STRING106>().c_str(),
 			Utils::to_error_wstring(hr).c_str(),
-			nullptr,
-			FAILED(hr) ? MB_ICONERROR : MB_ICONINFORMATION
+			TDCBF_OK_BUTTON,
+			FAILED(hr) ? TD_ERROR_ICON : TD_INFORMATION_ICON,
+			nullptr
 		);
 	}
 	else
 	{
 		hr = HRESULT_FROM_WIN32(ERROR_BAD_DRIVER_LEVEL);
-		ShellMessageBoxW(
-			hInstance,
+		TaskDialog(
 			nullptr,
+			nullptr,
+			nullptr,
+			Utils::GetResWString<IDS_STRING106>().c_str(),
 			Utils::to_error_wstring(hr).c_str(),
-			nullptr,
-			MB_ICONERROR
+			TDCBF_OK_BUTTON,
+			TD_ERROR_ICON,
+			nullptr
 		);
 	}
 

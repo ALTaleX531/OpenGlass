@@ -34,6 +34,59 @@ namespace OpenGlass::Win2D
 			return S_OK;
 		}
 
+		static winrt::com_ptr<CanvasGeometry> CreateGeometryFromRectangles(
+			ID2D1Factory* factory,
+			const std::vector<RECT>& rectangles
+		) try
+		{
+			auto canvasGeometry{ winrt::make_self<CanvasGeometry>() };
+
+			winrt::com_ptr<ID2D1PathGeometry> geometry{ nullptr };
+			THROW_IF_FAILED(
+				factory->CreatePathGeometry(
+					geometry.put()
+				)
+			);
+			winrt::com_ptr<ID2D1GeometrySink> sink{ nullptr };
+			THROW_IF_FAILED(geometry->Open(sink.put()));
+
+			winrt::com_ptr<ID2D1RectangleGeometry> emptyGeometry{ nullptr };
+			THROW_IF_FAILED(
+				factory->CreateRectangleGeometry(
+					D2D1::RectF(),
+					emptyGeometry.put()
+				)
+			);
+			for (const auto& rect : rectangles)
+			{
+				winrt::com_ptr<ID2D1RectangleGeometry> rectangleGeometry{ nullptr };
+				THROW_IF_FAILED(
+					factory->CreateRectangleGeometry(
+						D2D1::RectF(
+							static_cast<float>(rect.left),
+							static_cast<float>(rect.top),
+							static_cast<float>(rect.right),
+							static_cast<float>(rect.bottom)
+						),
+						rectangleGeometry.put()
+					)
+				);
+				THROW_IF_FAILED(
+					emptyGeometry->CombineWithGeometry(
+						rectangleGeometry.get(),
+						D2D1_COMBINE_MODE::D2D1_COMBINE_MODE_UNION,
+						nullptr,
+						sink.get()
+					)
+				);
+			}
+			THROW_IF_FAILED(sink->Close());
+
+			canvasGeometry->m_geometry = geometry;
+			return canvasGeometry;
+		}
+		catch (...) { return nullptr; }
+
 		static winrt::com_ptr<CanvasGeometry> CreateGeometryFromHRGN(
 			ID2D1Factory* factory,
 			HRGN hrgn

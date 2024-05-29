@@ -22,7 +22,7 @@ BOOL CALLBACK SymbolParser::SymCallback(
 			if (wcsstr(event->desc, L"from http://"))
 			{
 				symbolResolver.m_downloading = true;
-				symbolResolver.m_downloadNotifyCallback(SymbolDownloaderStatus::Start, L"");
+				symbolResolver.m_downloadNotifyCallback(SymbolDownloaderStatus::Start, symbolResolver.m_currentModule);
 			}
 			if (symbolResolver.m_downloading)
 			{
@@ -134,6 +134,7 @@ HRESULT SymbolParser::Walk(
 		});
 
 		m_downloadNotifyCallback = downloadNotifyCallback;
+		m_currentModule = dllName;
 		THROW_IF_WIN32_BOOL_FALSE(SymGetSymbolFileW(GetCurrentProcess(), symPath.c_str(), filePath, sfPdb, symFile, MAX_PATH, symFile, MAX_PATH));
 
 	}

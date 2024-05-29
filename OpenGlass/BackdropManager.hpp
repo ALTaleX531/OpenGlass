@@ -26,12 +26,10 @@ namespace OpenGlass::BackdropManager
 	// [Guid("B1FDFCD4-F35C-44FD-8BF0-C2E7E6571461")]
 	DECLARE_INTERFACE_IID_(ICompositedBackdropVisual, IUnknown, "B1FDFCD4-F35C-44FD-8BF0-C2E7E6571461")
 	{
-		virtual void SetBackdropKind(CompositedBackdropKind kind) = 0;
-
 		virtual void SetClientBlurRegion(HRGN region) = 0;
 		virtual void SetCaptionRegion(HRGN region) = 0;
 		virtual void SetBorderRegion(HRGN region) = 0;
-		virtual void SetAccentRegion(HRGN region) = 0;
+		virtual void SetAccentRect(LPCRECT lprc) = 0;
 		virtual void SetGdiWindowRegion(HRGN region) = 0;
 
 		virtual void ValidateVisual() = 0;
@@ -41,8 +39,9 @@ namespace OpenGlass::BackdropManager
 	namespace Configuration
 	{
 		inline float g_roundRectRadius{ 0.f };
-		inline bool g_overrideBorder{ true };
-		inline bool g_splitBlurRegionIntoChunks{ true };
+		inline bool g_overrideBorder{ false };
+		inline bool g_splitBackdropRegionIntoChunks{ true };
+		inline wf::TimeSpan g_crossfadeTime{ std::chrono::milliseconds{ 87 } };
 	}
 
 	size_t GetBackdropCount();

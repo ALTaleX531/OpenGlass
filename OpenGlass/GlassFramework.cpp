@@ -10,13 +10,7 @@ using namespace OpenGlass;
 
 namespace OpenGlass::GlassFramework
 {
-	enum class ActualBackdropType
-	{
-		Legacy,
-		Accent,
-		SystemBackdrop
-	};
-	ActualBackdropType GetActualBackgroundType(uDwm::CTopLevelWindow* This);
+	BackdropManager::CompositedBackdropKind GetActualBackdropKind(uDwm::CTopLevelWindow* This);
 
 	HRESULT STDMETHODCALLTYPE MyCDrawGeometryInstruction_Create(uDwm::CBaseLegacyMilBrushProxy* brush, uDwm::CBaseGeometryProxy* geometry, uDwm::CDrawGeometryInstruction** instruction);
 	HRESULT STDMETHODCALLTYPE MyCTopLevelWindow_UpdateNCAreaBackground(uDwm::CTopLevelWindow* This);
@@ -76,51 +70,51 @@ namespace OpenGlass::GlassFramework
 	}
 }
 
-GlassFramework::ActualBackdropType GlassFramework::GetActualBackgroundType(uDwm::CTopLevelWindow* This)
+BackdropManager::CompositedBackdropKind GlassFramework::GetActualBackdropKind(uDwm::CTopLevelWindow* This)
 {
-	auto backgroundType{ ActualBackdropType::Legacy };
+	auto backgroundType{ BackdropManager::CompositedBackdropKind::Legacy };
 	auto windowData{ This->GetData() };
 
 	if (os::buildNumber < os::build_w11_21h2)
 	{
 		backgroundType = windowData ?
-			(windowData->GetAccentPolicy()->IsActive() ? ActualBackdropType::Accent : ActualBackdropType::Legacy) :
-			ActualBackdropType::Legacy;
+			(windowData->GetAccentPolicy()->IsActive() ? BackdropManager::CompositedBackdropKind::Accent : BackdropManager::CompositedBackdropKind::Legacy) :
+			BackdropManager::CompositedBackdropKind::Legacy;
 	}
 	else if (os::buildNumber < os::build_w11_22h2)
 	{
 		backgroundType = windowData ?
 			(
 				*reinterpret_cast<DWORD*>(reinterpret_cast<ULONG_PTR>(windowData) + 204) ?
-				ActualBackdropType::SystemBackdrop :
+				BackdropManager::CompositedBackdropKind::SystemBackdrop :
 				(
 					windowData->GetAccentPolicy()->IsActive() ?
-					ActualBackdropType::Accent :
-					ActualBackdropType::Legacy
+					BackdropManager::CompositedBackdropKind::Accent :
+					BackdropManager::CompositedBackdropKind::Legacy
 					)
 				) :
-			ActualBackdropType::Legacy;
+			BackdropManager::CompositedBackdropKind::Legacy;
 	}
 	else
 	{
 		auto calculatedBackdropType{ g_CTopLevelWindow_CalculateBackgroundType_Org(This) };
 		if (calculatedBackdropType == 2 || calculatedBackdropType == 3)
 		{
-			backgroundType = ActualBackdropType::SystemBackdrop;
+			backgroundType = BackdropManager::CompositedBackdropKind::SystemBackdrop;
 		}
 		else if (calculatedBackdropType == 4 || calculatedBackdropType == 0)
 		{
-			backgroundType = ActualBackdropType::Legacy;
+			backgroundType = BackdropManager::CompositedBackdropKind::Legacy;
 		}
 		else
 		{
-			backgroundType = ActualBackdropType::Accent;
+			backgroundType = BackdropManager::CompositedBackdropKind::Accent;
 		}
 	}
 
-	if (!g_overrideAccent && backgroundType == ActualBackdropType::Accent)
+	if (!g_overrideAccent && backgroundType == BackdropManager::CompositedBackdropKind::Accent)
 	{
-		backgroundType = ActualBackdropType::Legacy;
+		backgroundType = BackdropManager::CompositedBackdropKind::Legacy;
 	}
 	return backgroundType;
 }
@@ -154,7 +148,7 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_UpdateNCAreaBackgrou
 	if (data && This->HasNonClientBackground())
 	{
 		GeometryRecorder::BeginCapture();
-		g_captureRef += 1;
+
 		DWORD oldSystemBackdropType{ 0 };
 		if (os::buildNumber == os::build_w11_21h2)
 		{
@@ -163,6 +157,12 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_UpdateNCAreaBackgrou
 		}
 
 		hr = g_CTopLevelWindow_UpdateNCAreaBackground_Org(This);
+
+		if (os::buildNumber == os::build_w11_21h2)
+		{
+			*reinterpret_cast<DWORD*>(reinterpret_cast<ULONG_PTR>(data) + 204) = oldSystemBackdropType;
+		}
+
 		if (SUCCEEDED(hr))
 		{
 			backdrop = BackdropManager::GetOrCreateBackdropVisual(This, true);
@@ -207,21 +207,11 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_UpdateNCAreaBackgrou
 			}
 		}
 
-		if (os::buildNumber == os::build_w11_21h2)
-		{
-			*reinterpret_cast<DWORD*>(reinterpret_cast<ULONG_PTR>(data) + 204) = oldSystemBackdropType;
-		}
-		g_captureRef -= 1;
-		g_geometryBuffer.clear();
 		GeometryRecorder::EndCapture();
 	}
 	else if (data)
 	{
-		if (GetActualBackgroundType(This) == ActualBackdropType::Accent)
-		{
-			backdrop = BackdropManager::GetOrCreateBackdropVisual(This, true);
-		}
-
+		backdrop = BackdropManager::GetOrCreateBackdropVisual(This, GetActualBackdropKind(This) == BackdropManager::CompositedBackdropKind::Accent);
 		hr = g_CTopLevelWindow_UpdateNCAreaBackground_Org(This);
 
 		// let's update our backdrop region
@@ -235,7 +225,6 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_UpdateNCAreaBackgrou
 
 	if (backdrop)
 	{
-		backdrop->SetBackdropKind(static_cast<BackdropManager::CompositedBackdropKind>(GetActualBackgroundType(This)));
 		backdrop->UpdateNCBackground();
 	}
 
@@ -262,11 +251,13 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_UpdateClientBlur(uDw
 		// UpdateClientBlur will only create at most one geometry draw instrution
 		if (!g_geometryBuffer.empty())
 		{
+			HRGN clientBlurRegion{ GeometryRecorder::GetRegionFromGeometry(g_geometryBuffer[0].get()) };
+			RECT clientBlurBox{};
 			// let's update our backdrop region
-			auto backdrop{ BackdropManager::GetOrCreateBackdropVisual(This, true, true) };
+			auto backdrop{ BackdropManager::GetOrCreateBackdropVisual(This, GetRgnBox(clientBlurRegion, &clientBlurBox) != NULLREGION && !IsRectEmpty(&clientBlurBox), true) };
 			if (backdrop)
 			{
-				backdrop->SetClientBlurRegion(GeometryRecorder::GetRegionFromGeometry(g_geometryBuffer[0].get()));
+				backdrop->SetClientBlurRegion(clientBlurRegion);
 			}
 		}
 	}
@@ -310,24 +301,23 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_UpdateAccent(uDwm::C
 	}
 
 	auto data{ This->GetData() };
-	auto accentPolicy{ data->GetAccentPolicy() };
+	auto kind{ static_cast<BackdropManager::CompositedBackdropKind>(GetActualBackdropKind(This)) };
 	HRESULT hr{ S_OK };
 	if (
 		data &&
-		accentPolicy->IsActive() &&
-		g_overrideAccent
+		kind == BackdropManager::CompositedBackdropKind::Accent
 	)
 	{
+		auto accentPolicy{ data->GetAccentPolicy() };
 		auto oldAccentState{ accentPolicy->AccentState };
 
 		accentPolicy->AccentState = 0;
 		hr = g_CTopLevelWindow_UpdateAccent_Org(This, visibleAndUncloaked);
 		accentPolicy->AccentState = oldAccentState;
 
-		winrt::com_ptr<BackdropManager::ICompositedBackdropVisual> backdrop{ BackdropManager::GetOrCreateBackdropVisual(This, accentPolicy->IsActive()) };
+		winrt::com_ptr<BackdropManager::ICompositedBackdropVisual> backdrop{ BackdropManager::GetOrCreateBackdropVisual(This, kind == BackdropManager::CompositedBackdropKind::Accent) };
 		if (backdrop)
 		{
-			backdrop->SetBackdropKind(static_cast<BackdropManager::CompositedBackdropKind>(GetActualBackgroundType(This)));
 			backdrop->ValidateVisual();
 		}
 	}
@@ -424,7 +414,8 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_OnClipUpdated(uDwm::
 	auto data{ This->GetData() };
 	if (SUCCEEDED(hr) && data)
 	{
-		winrt::com_ptr<BackdropManager::ICompositedBackdropVisual> backdrop{ BackdropManager::GetOrCreateBackdropVisual(This) };
+		auto kind{ static_cast<BackdropManager::CompositedBackdropKind>(GetActualBackdropKind(This)) };
+		winrt::com_ptr<BackdropManager::ICompositedBackdropVisual> backdrop{ BackdropManager::GetOrCreateBackdropVisual(This, kind == BackdropManager::CompositedBackdropKind::Accent) };
 		if (backdrop)
 		{
 			wil::unique_hrgn clipRgn{ CreateRectRgn(0, 0, 0, 0) };
@@ -457,100 +448,46 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCWindowList_UpdateAccentBlurRect(uDw
 	auto lock{ wil::EnterCriticalSection(uDwm::CDesktopManager::s_csDwmInstance) };
 	if (SUCCEEDED(hr) && SUCCEEDED(This->GetSyncedWindowDataByHwnd(milCmd->GetHwnd(), &data)) && data)
 	{
-		winrt::com_ptr<BackdropManager::ICompositedBackdropVisual> backdrop{ BackdropManager::GetOrCreateBackdropVisual(data->GetWindow()) };
-		if (backdrop)
+		auto window{ data->GetWindow() };
+		if (window)
 		{
-			if (data->GetAccentPolicy()->IsClipEnabled())
+			auto kind{ static_cast<BackdropManager::CompositedBackdropKind>(GetActualBackdropKind(window)) };
+			winrt::com_ptr<BackdropManager::ICompositedBackdropVisual> backdrop{ BackdropManager::GetOrCreateBackdropVisual(window, kind == BackdropManager::CompositedBackdropKind::Accent) };
+			if (backdrop)
 			{
-				auto lprc{ milCmd->GetRect() };
-				wil::unique_hrgn clipRgn{ nullptr };
-				if (
-					lprc->right > lprc->left &&
-					lprc->bottom > lprc->top
-				)
+				if (data->GetAccentPolicy()->IsClipEnabled())
 				{
-					clipRgn.reset(CreateRectRgnIndirect(lprc));
+					auto lprc{ milCmd->GetRect() };
+					if (
+						lprc->right <= lprc->left ||
+						lprc->bottom <= lprc->top
+						)
+					{
+						lprc = nullptr;
+					}
+					backdrop->SetAccentRect(lprc);
 				}
-				backdrop->SetAccentRegion(clipRgn.get());
-			}
 
-			backdrop->ValidateVisual();
+				backdrop->ValidateVisual();
+			}
 		}
 	}
 	return hr;
 }
 
-void GlassFramework::InitializeFromSymbol(std::string_view fullyUnDecoratedFunctionName, const HookHelper::OffsetStorage& offset)
-{
-	if (fullyUnDecoratedFunctionName == "CDrawGeometryInstruction::Create")
-	{
-		offset.To(uDwm::g_moduleHandle, g_CDrawGeometryInstruction_Create_Org);
-	}
-	if (fullyUnDecoratedFunctionName == "CTopLevelWindow::UpdateNCAreaBackground")
-	{
-		offset.To(uDwm::g_moduleHandle, g_CTopLevelWindow_UpdateNCAreaBackground_Org);
-	}
-	if (fullyUnDecoratedFunctionName == "CTopLevelWindow::UpdateClientBlur")
-	{
-		offset.To(uDwm::g_moduleHandle, g_CTopLevelWindow_UpdateClientBlur_Org);
-	}
-	if (fullyUnDecoratedFunctionName == "CTopLevelWindow::ValidateVisual")
-	{
-		offset.To(uDwm::g_moduleHandle, g_CTopLevelWindow_ValidateVisual_Org);
-	}
-	if (fullyUnDecoratedFunctionName == "CTopLevelWindow::UpdateAccent")
-	{
-		offset.To(uDwm::g_moduleHandle, g_CTopLevelWindow_UpdateAccent_Org);
-	}
-	if (fullyUnDecoratedFunctionName == "CTopLevelWindow::CalculateBackgroundType")
-	{
-		offset.To(uDwm::g_moduleHandle, g_CTopLevelWindow_CalculateBackgroundType_Org);
-	}
-	if (fullyUnDecoratedFunctionName == "CTopLevelWindow::UpdateSystemBackdropVisual")
-	{
-		offset.To(uDwm::g_moduleHandle, g_CTopLevelWindow_UpdateSystemBackdropVisual_Org);
-	}
-	if (fullyUnDecoratedFunctionName == "CTopLevelWindow::~CTopLevelWindow")
-	{
-		offset.To(uDwm::g_moduleHandle, g_CTopLevelWindow_Destructor_Org);
-	}
-	if (fullyUnDecoratedFunctionName == "CTopLevelWindow::InitializeVisualTreeClone")
-	{
-		offset.To(uDwm::g_moduleHandle, g_CTopLevelWindow_InitializeVisualTreeClone_Org);
-	}
-	if (fullyUnDecoratedFunctionName == "CTopLevelWindow::OnClipUpdated")
-	{
-		offset.To(uDwm::g_moduleHandle, g_CTopLevelWindow_OnClipUpdated_Org);
-	}
-	if (fullyUnDecoratedFunctionName == "CWindowList::UpdateAccentBlurRect")
-	{
-		offset.To(uDwm::g_moduleHandle, g_CWindowList_UpdateAccentBlurRect_Org);
-	}
-}
 void GlassFramework::UpdateConfiguration(ConfigurationFramework::UpdateType type)
 {
 	if (type & ConfigurationFramework::UpdateType::Framework)
 	{
 		g_disableOnBattery = TRUE;
-		if (FAILED(
+		LOG_IF_FAILED(
 			wil::reg::get_value_dword_nothrow(
 				ConfigurationFramework::GetDwmKey(),
 				L"DisableGlassOnBattery",
 				reinterpret_cast<DWORD*>(&g_disableOnBattery)
 			)
-		))
-		{
-			// compatibility fallback for glass8
-			LOG_IF_FAILED(
-				wil::reg::get_value_dword_nothrow(
-					HKEY_LOCAL_MACHINE,
-					L"Software\\Microsoft\\Windows\\DWM",
-					L"DisableGlassOnBattery",
-					reinterpret_cast<DWORD*>(&g_disableOnBattery)
-				)
-			);
-		}
-		g_batteryMode = Utils::IsInBatteryMode();
+		);
+		g_batteryMode = Utils::IsBatterySaverEnabled();
 	}
 	if (type & ConfigurationFramework::UpdateType::Backdrop)
 	{
@@ -566,31 +503,41 @@ void GlassFramework::UpdateConfiguration(ConfigurationFramework::UpdateType type
 		);
 		BackdropManager::Configuration::g_roundRectRadius = static_cast<float>(value);
 
-		BackdropManager::Configuration::g_overrideBorder = FALSE;
+		value = FALSE;
 		LOG_IF_FAILED(
 			wil::reg::get_value_dword_nothrow(
 				ConfigurationFramework::GetDwmKey(),
-				L"OverrideBorder",
+				L"GlassOverrideBorder",
 				&value
 			)
 		);
 		BackdropManager::Configuration::g_overrideBorder = static_cast<bool>(value);
 
-		BackdropManager::Configuration::g_splitBlurRegionIntoChunks = TRUE;
+		value = TRUE;
 		LOG_IF_FAILED(
 			wil::reg::get_value_dword_nothrow(
 				ConfigurationFramework::GetDwmKey(),
-				L"SplitBlurRegionIntoChunks",
+				L"EnableGlassRegionSplitting",
 				&value
 			)
 		);
-		BackdropManager::Configuration::g_splitBlurRegionIntoChunks = static_cast<bool>(value);
+		BackdropManager::Configuration::g_splitBackdropRegionIntoChunks = static_cast<bool>(value);
+
+		value = 87;
+		LOG_IF_FAILED(
+			wil::reg::get_value_dword_nothrow(
+				ConfigurationFramework::GetDwmKey(),
+				L"GlassCrossFadeTime",
+				&value
+			)
+		);
+		BackdropManager::Configuration::g_crossfadeTime = std::chrono::milliseconds{ uDwm::CDesktopManager::s_pDesktopManagerInstance->IsWindowAnimationEnabled() ? value : 0 };
 
 		g_overrideAccent = FALSE;
 		LOG_IF_FAILED(
 			wil::reg::get_value_dword_nothrow(
 				ConfigurationFramework::GetDwmKey(),
-				L"OverrideAccent",
+				L"GlassOverrideAccent",
 				&value
 			)
 		);
@@ -604,7 +551,7 @@ void GlassFramework::UpdateConfiguration(ConfigurationFramework::UpdateType type
 				&value
 			)
 		);
-		CGlassReflectionVisual::UpdateIntensity(static_cast<float>(value) / 100.f);
+		CGlassReflectionVisual::UpdateIntensity(std::clamp(static_cast<float>(value) / 100.f, 0.f, 1.f));
 
 		value = 10;
 		LOG_IF_FAILED(
@@ -614,17 +561,17 @@ void GlassFramework::UpdateConfiguration(ConfigurationFramework::UpdateType type
 				&value
 			)
 		);
-		CGlassReflectionVisual::UpdateParallaxIntensity(static_cast<float>(value) / 100.f);
+		CGlassReflectionVisual::UpdateParallaxIntensity(std::clamp(static_cast<float>(value) / 100.f, 0.f, 1.f));
 
-		WCHAR reflectionPath[MAX_PATH + 1]{};
+		WCHAR reflectionTexturePath[MAX_PATH + 1]{};
 		LOG_IF_FAILED(
 			wil::reg::get_value_string_nothrow(
 				ConfigurationFramework::GetDwmKey(),
 				L"CustomThemeReflection",
-				reflectionPath
+				reflectionTexturePath
 			)
 		);
-		CGlassReflectionVisual::UpdateReflectionSurface(reflectionPath);
+		CGlassReflectionVisual::UpdateReflectionSurface(reflectionTexturePath);
 	}
 
 	auto lock{ wil::EnterCriticalSection(uDwm::CDesktopManager::s_csDwmInstance) };
@@ -645,14 +592,10 @@ void GlassFramework::UpdateConfiguration(ConfigurationFramework::UpdateType type
 			auto window{ data->GetWindow() };
 			if (!window) { continue; }
 
-			if (window->HasNonClientBackground() || GetActualBackgroundType(window) == ActualBackdropType::Accent)
+			auto backdrop{ BackdropManager::GetOrCreateBackdropVisual(window, window->HasNonClientBackground() || GetActualBackdropKind(window) == BackdropManager::CompositedBackdropKind::Accent) };
+			if (backdrop)
 			{
-				auto backdrop{ BackdropManager::GetOrCreateBackdropVisual(window, true) };
-				if (backdrop)
-				{
-					backdrop->SetBackdropKind(static_cast<BackdropManager::CompositedBackdropKind>(GetActualBackgroundType(window)));
-					backdrop->ValidateVisual();
-				}
+				backdrop->ValidateVisual();
 			}
 		}
 	}
@@ -663,12 +606,25 @@ HRESULT GlassFramework::Startup()
 	// Remove blurred backdrop low framerate refresh limitation!!!
 	g_oldBackdropBlurCachingThrottleQPCTimeDelta = *dwmcore::CCommonRegistryData::m_backdropBlurCachingThrottleQPCTimeDelta;
 	*dwmcore::CCommonRegistryData::m_backdropBlurCachingThrottleQPCTimeDelta = 0;
+#ifdef _DEBUG
 	OutputDebugStringW(
 		std::format(
 			L"CCommonRegistryData::m_backdropBlurCachingThrottleQPCTimeDelta: {}\n",
 			g_oldBackdropBlurCachingThrottleQPCTimeDelta
 		).c_str()
 	);
+#endif
+	uDwm::GetAddressFromSymbolMap("CDrawGeometryInstruction::Create", g_CDrawGeometryInstruction_Create_Org);
+	uDwm::GetAddressFromSymbolMap("CTopLevelWindow::UpdateNCAreaBackground", g_CTopLevelWindow_UpdateNCAreaBackground_Org);
+	uDwm::GetAddressFromSymbolMap("CTopLevelWindow::UpdateClientBlur", g_CTopLevelWindow_UpdateClientBlur_Org);
+	uDwm::GetAddressFromSymbolMap("CTopLevelWindow::ValidateVisual", g_CTopLevelWindow_ValidateVisual_Org);
+	uDwm::GetAddressFromSymbolMap("CTopLevelWindow::UpdateAccent", g_CTopLevelWindow_UpdateAccent_Org);
+	uDwm::GetAddressFromSymbolMap("CTopLevelWindow::CalculateBackgroundType", g_CTopLevelWindow_CalculateBackgroundType_Org);
+	uDwm::GetAddressFromSymbolMap("CTopLevelWindow::UpdateSystemBackdropVisual", g_CTopLevelWindow_UpdateSystemBackdropVisual_Org);
+	uDwm::GetAddressFromSymbolMap("CTopLevelWindow::~CTopLevelWindow", g_CTopLevelWindow_Destructor_Org);
+	uDwm::GetAddressFromSymbolMap("CTopLevelWindow::InitializeVisualTreeClone", g_CTopLevelWindow_InitializeVisualTreeClone_Org);
+	uDwm::GetAddressFromSymbolMap("CTopLevelWindow::OnClipUpdated", g_CTopLevelWindow_OnClipUpdated_Org);
+	uDwm::GetAddressFromSymbolMap("CWindowList::UpdateAccentBlurRect", g_CWindowList_UpdateAccentBlurRect_Org);
 	
 	return HookHelper::Detours::Write([]()
 	{
@@ -725,4 +681,5 @@ void GlassFramework::Shutdown()
 	BackdropManager::Shutdown();
 
 	*dwmcore::CCommonRegistryData::m_backdropBlurCachingThrottleQPCTimeDelta = g_oldBackdropBlurCachingThrottleQPCTimeDelta;
+	CGlassReflectionVisual::Shutdown();
 }

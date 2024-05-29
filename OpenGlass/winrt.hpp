@@ -26,7 +26,6 @@
 #include <winrt/Windows.Graphics.h>
 #include <winrt/Windows.Graphics.Effects.h>
 #include <winrt/Windows.Graphics.directx.h>
-
 #pragma comment(lib, "windowsapp")
 
 namespace OpenGlass

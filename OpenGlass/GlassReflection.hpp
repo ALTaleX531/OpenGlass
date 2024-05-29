@@ -9,8 +9,8 @@ namespace OpenGlass
 {
 	class CGlassReflectionVisual : public winrt::implements<CGlassReflectionVisual, IUnknown>
 	{
+		static inline std::wstring s_reflectionTexturePath{};
 		static inline wuc::CompositionDrawingSurface s_reflectionSurface{ nullptr };
-		static inline std::wstring s_reflectionPath{};
 		static inline winrt::com_ptr<dcomp::IDCompositionDesktopDevicePartner> s_dcompDevice{ nullptr };
 		static inline float s_parallaxIntensity{ 0.1f };
 		static inline float s_intensity{ 0.f };
@@ -22,12 +22,15 @@ namespace OpenGlass
 		HMONITOR m_monitor{ nullptr };
 		RECT m_monitorRect{};
 		RECT m_windowRect{};
+		wg::SizeInt32 m_surfaceSize{};
 		float m_parallaxIntensity{ 0.f };
 		wfn::float3 m_offsetToWindow{};
 		bool m_forceUpdate{ false };
-		bool m_cloned{ false };
+		bool m_offsetChanged{ false };
+		// temporary workaround for aero peek/live preview
+		bool m_noParallax{ false };
 	public:
-		CGlassReflectionVisual(uDwm::CTopLevelWindow* window, uDwm::CWindowData* data, bool cloned = false) : m_window{ window }, m_data{ data }, m_cloned{ cloned } {}
+		CGlassReflectionVisual(uDwm::CTopLevelWindow* window, uDwm::CWindowData* data, bool noParallax = false) : m_window{ window }, m_data{ data }, m_noParallax{ noParallax } {}
 		~CGlassReflectionVisual()
 		{
 			UninitializeVisual();
@@ -39,7 +42,7 @@ namespace OpenGlass
 
 		void InitializeVisual(const wuc::Compositor& compositor)
 		{
-			m_brush = compositor.CreateSurfaceBrush();
+			m_brush = compositor.CreateSurfaceBrush(s_reflectionSurface);
 			m_brush.Stretch(wuc::CompositionStretch::None);
 			m_brush.HorizontalAlignmentRatio(0.f);
 			m_brush.VerticalAlignmentRatio(0.f);
@@ -52,7 +55,7 @@ namespace OpenGlass
 			m_brush = nullptr;
 			m_visual = nullptr;
 		}
-		void SyncReflectionData(const CGlassReflectionVisual& reflecctionVisual)
+		[[maybe_unused]] void SyncReflectionData(const CGlassReflectionVisual& reflecctionVisual)
 		{
 			m_brush.Surface(reflecctionVisual.m_brush.Surface());
 			m_brush.Scale(reflecctionVisual.m_brush.Scale());
@@ -61,23 +64,14 @@ namespace OpenGlass
 		}
 		void NotifyOffsetToWindow(wfn::float3 offset)
 		{
-			if (m_cloned) { return; }
 			if (m_offsetToWindow != offset)
 			{
 				m_offsetToWindow = offset;
-				m_forceUpdate = true;
+				m_offsetChanged = true;
 			}
 		}
 		void ValidateVisual() try
 		{
-			if (m_cloned) { return; }
-
-			EnsureGlassSurface();
-			if (m_brush.Surface() != s_reflectionSurface)
-			{
-				m_forceUpdate = true;
-				m_brush.Surface(s_reflectionSurface);
-			}
 			if (m_visual.Opacity() != s_intensity)
 			{
 				m_visual.Opacity(s_intensity);
@@ -94,6 +88,12 @@ namespace OpenGlass
 			{
 				return;
 			}
+			EnsureGlassSurface();
+			if (!m_brush.Surface())
+			{
+				m_forceUpdate = true;
+				m_brush.Surface(s_reflectionSurface);
+			}
 
 			RECT windowRect{};
 			THROW_HR_IF_NULL(E_INVALIDARG, m_window->GetActualWindowRect(&windowRect, false, true, false));
@@ -105,13 +105,13 @@ namespace OpenGlass
 			MONITORINFO mi{ sizeof(MONITORINFO) };
 			THROW_IF_WIN32_BOOL_FALSE(GetMonitorInfoW(monitor, &mi));
 
+			auto surfaceSize{ s_reflectionSurface.SizeInt32() };
 			bool scallingChanged{ false };
-			bool offsetChanged{ false };
 			if (
 				m_forceUpdate ||
 				m_monitor != monitor ||
-				!EqualRect(&m_monitorRect, &mi.rcMonitor) ||
-				m_parallaxIntensity != s_parallaxIntensity
+				m_surfaceSize != surfaceSize ||
+				!EqualRect(&m_monitorRect, &mi.rcMonitor)
 			)
 			{
 				scallingChanged = true;
@@ -121,18 +121,18 @@ namespace OpenGlass
 				m_forceUpdate ||
 				(m_windowRect.left != windowRect.left) || 
 				(m_windowRect.top != windowRect.top) || 
-				m_parallaxIntensity != s_parallaxIntensity
+				(m_parallaxIntensity != s_parallaxIntensity && !m_noParallax)
 			)
 			{
-				offsetChanged = true;
+				m_offsetChanged = true;
 			}
 			m_monitor = monitor;
 			m_monitorRect = mi.rcMonitor;
 			m_windowRect = windowRect;
 			m_parallaxIntensity = s_parallaxIntensity;
+			m_parallaxIntensity = m_noParallax ? 0.f : m_parallaxIntensity;
 			m_forceUpdate = false;
 
-			auto surfaceSize{ s_reflectionSurface.SizeInt32() };
 			if (scallingChanged)
 			{
 				m_brush.Scale(
@@ -143,17 +143,28 @@ namespace OpenGlass
 					}
 				);
 			}
-			if (offsetChanged)
+			if (m_offsetChanged)
 			{
 				// when window is maximized, windowRect.left and windowRect.top are both 0
 				// it is not the real window position, needs to add border margins
-				m_brush.Offset(
-					winrt::Windows::Foundation::Numerics::float2
+				winrt::Windows::Foundation::Numerics::float2 offset{};
+				if (!m_window->IsRTLMirrored())
+				{
+					offset =
 					{
-						-static_cast<float>((windowRect.left) + (!IsMaximized(hwnd) ? m_offsetToWindow.x : 0) - mi.rcMonitor.left) * (1.f - m_parallaxIntensity),
-						-static_cast<float>((windowRect.top) + (!IsMaximized(hwnd) ? m_offsetToWindow.y : 0) - mi.rcMonitor.top),
-					}
-				);
+						-static_cast<float>((windowRect.left - mi.rcMonitor.left) + (!IsMaximized(hwnd) ? m_offsetToWindow.x : 0)) * (1.f - m_parallaxIntensity),
+						-static_cast<float>((windowRect.top - mi.rcMonitor.top) + (!IsMaximized(hwnd) ? m_offsetToWindow.y : 0)),
+					};
+				}
+				else
+				{
+					offset = 
+					{
+						static_cast<float>((windowRect.right - mi.rcMonitor.right) - (!IsMaximized(hwnd) ? m_offsetToWindow.x : 0)) * (1.f - m_parallaxIntensity),
+						-static_cast<float>((windowRect.top - mi.rcMonitor.top) + (!IsMaximized(hwnd) ? m_offsetToWindow.y : 0)),
+					};
+				}
+				m_brush.Offset(offset);
 			}
 		}
 		CATCH_LOG_RETURN()
@@ -174,18 +185,22 @@ namespace OpenGlass
 		}
 		static void EnsureGlassSurface()
 		{
-			if (!s_reflectionSurface || !uDwm::CheckDeviceState(s_dcompDevice))
+			if (!uDwm::CheckDeviceState(s_dcompDevice))
 			{
-				UpdateReflectionSurface(s_reflectionPath.data());
+				s_reflectionSurface = nullptr;
+			}
+			if (!s_reflectionSurface)
+			{
+				UpdateReflectionSurface(s_reflectionTexturePath.data());
 			}
 		}
 		static void UpdateReflectionSurface(std::wstring_view reflectionPath) try
 		{
 			winrt::com_ptr<IStream> stream{ nullptr };
 
-			if (s_reflectionPath != reflectionPath)
+			if (s_reflectionTexturePath != reflectionPath)
 			{
-				s_reflectionPath = reflectionPath;
+				s_reflectionTexturePath = reflectionPath;
 			}
 			else if (s_reflectionSurface)
 			{
@@ -251,19 +266,32 @@ namespace OpenGlass
 			UINT width{ 0 }, height{ 0 };
 			THROW_IF_FAILED(wicBitmap->GetSize(&width, &height));
 
-			auto compositor{ s_dcompDevice.as<wuc::Compositor>() };
-			wuc::CompositionGraphicsDevice graphicsDevice{ nullptr };
-			THROW_IF_FAILED(
-				compositor.as<ABI::Windows::UI::Composition::ICompositorInterop>()->CreateGraphicsDevice(
-					uDwm::CDesktopManager::s_pDesktopManagerInstance->GetD2DDevice(),
-					reinterpret_cast<ABI::Windows::UI::Composition::ICompositionGraphicsDevice**>(winrt::put_abi(graphicsDevice))
-				)
-			);
-			s_reflectionSurface = graphicsDevice.CreateDrawingSurface(
-				{ static_cast<float>(width), static_cast<float>(height) },
-				wgd::DirectXPixelFormat::B8G8R8A8UIntNormalized,
-				wgd::DirectXAlphaMode::Premultiplied
-			);
+			if (!s_reflectionSurface)
+			{
+				auto compositor{ s_dcompDevice.as<wuc::Compositor>() };
+				wuc::CompositionGraphicsDevice graphicsDevice{ nullptr };
+				THROW_IF_FAILED(
+					compositor.as<ABI::Windows::UI::Composition::ICompositorInterop>()->CreateGraphicsDevice(
+						uDwm::CDesktopManager::s_pDesktopManagerInstance->GetD2DDevice(),
+						reinterpret_cast<ABI::Windows::UI::Composition::ICompositionGraphicsDevice**>(winrt::put_abi(graphicsDevice))
+					)
+				);
+				s_reflectionSurface = graphicsDevice.CreateDrawingSurface(
+					{ static_cast<float>(width), static_cast<float>(height) },
+					wgd::DirectXPixelFormat::B8G8R8A8UIntNormalized,
+					wgd::DirectXAlphaMode::Premultiplied
+				);
+			}
+			else
+			{
+				s_reflectionSurface.Resize(
+					{ 
+						static_cast<int>(width), 
+						static_cast<int>(height)
+					}
+				);
+			}
+
 			auto drawingSurfaceInterop{ s_reflectionSurface.as<ABI::Windows::UI::Composition::ICompositionDrawingSurfaceInterop>() };
 			POINT offset{ 0, 0 };
 			winrt::com_ptr<ID2D1DeviceContext> d2dContext{ nullptr };
@@ -286,5 +314,10 @@ namespace OpenGlass
 			);
 		}
 		CATCH_LOG_RETURN()
+		static void Shutdown()
+		{
+			s_reflectionSurface = nullptr;
+			s_dcompDevice = nullptr;
+		}
 	};
 }

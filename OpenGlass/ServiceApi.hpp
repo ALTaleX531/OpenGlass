@@ -17,7 +17,8 @@ namespace OpenGlass
 	namespace Server
 	{
 		HRESULT DuplicateUserRegistryKeyToDwm(PipeContent& content);
-		HRESULT InjectDllToDwm(DWORD processId, bool inject, bool* actionPerformed = nullptr);
+		bool IsDllAlreadyLoadedByDwm(DWORD processId);
+		HRESULT InjectDllToDwm(DWORD processId, bool inject);
 		DWORD InjectionThreadProc(LPVOID);
 		HRESULT Run();
 	}

@@ -62,3 +62,5 @@
 #pragma comment(lib, "dcomp.lib")
 #pragma comment(lib, "dwrite.lib")
 #pragma comment(lib, "dxguid.lib")
+
+#pragma comment(lib, "onecore.lib")

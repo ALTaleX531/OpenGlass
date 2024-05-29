@@ -48,7 +48,7 @@ namespace OpenGlass::CaptionTextHandler
 	constexpr int standardGlowSize{ 15 };
 	int g_textGlowSize{ standardGlowSize };
 	BOOL g_centerCaption{ false };
-	BOOL g_disableTextHooks{ false };
+	bool g_disableTextHooks{ false };
 }
 
 int WINAPI CaptionTextHandler::MyDrawTextW(
@@ -207,28 +207,13 @@ HRESULT STDMETHODCALLTYPE CaptionTextHandler::MyCMatrixTransformProxy_Update(str
 		matrix->DX -= static_cast<DOUBLE>(g_textGlowSize);
 		if (g_centerCaption)
 		{
-			matrix->DX += floor(static_cast<DOUBLE>(g_textVisual->GetWidth() - g_textWidth) / 2.);
+			auto offset{ floor(static_cast<DOUBLE>(g_textVisual->GetWidth() - g_textWidth) / 2.) };
+			matrix->DX += g_textVisual->IsRTL() ? -offset : offset;
 		}
 		matrix->DY = static_cast<DOUBLE>(static_cast<LONG>(static_cast<DOUBLE>(g_textVisual->GetHeight() - g_textHeight) / 2. - 0.5));
 	}
 
 	return g_CMatrixTransformProxy_Update_Org(This, matrix);
-}
-
-void CaptionTextHandler::InitializeFromSymbol(std::string_view fullyUnDecoratedFunctionName, const HookHelper::OffsetStorage& offset)
-{
-	if (fullyUnDecoratedFunctionName == "CText::ValidateResources")
-	{
-		offset.To(uDwm::g_moduleHandle, g_CText_ValidateResources_Org);
-	}
-	if (fullyUnDecoratedFunctionName == "CText::SetSize")
-	{
-		offset.To(uDwm::g_moduleHandle, g_CText_SetSize_Org);
-	}
-	if (fullyUnDecoratedFunctionName == "CMatrixTransformProxy::Update")
-	{
-		offset.To(uDwm::g_moduleHandle, g_CMatrixTransformProxy_Update_Org);
-	}
 }
 
 void CaptionTextHandler::UpdateConfiguration(ConfigurationFramework::UpdateType type)
@@ -276,11 +261,17 @@ void CaptionTextHandler::UpdateConfiguration(ConfigurationFramework::UpdateType 
 
 HRESULT CaptionTextHandler::Startup()
 {
+	DWORD value{ 0ul };
 	wil::reg::get_value_dword_nothrow(
 		ConfigurationFramework::GetDwmKey(),
-		L"DisableTextHooks",
-		reinterpret_cast<DWORD*>(&g_disableTextHooks)
+		L"DisabledHooks",
+		reinterpret_cast<DWORD*>(&value)
 	);
+	g_disableTextHooks = (value & 1) != 0;
+
+	uDwm::GetAddressFromSymbolMap("CText::ValidateResources", g_CText_ValidateResources_Org);
+	uDwm::GetAddressFromSymbolMap("CText::SetSize", g_CText_SetSize_Org);
+	uDwm::GetAddressFromSymbolMap("CMatrixTransformProxy::Update", g_CMatrixTransformProxy_Update_Org);
 	if (!g_disableTextHooks)
 	{
 		if (os::buildNumber < os::build_w11_22h2)

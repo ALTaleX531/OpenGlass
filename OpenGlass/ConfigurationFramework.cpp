@@ -4,6 +4,8 @@
 #include "BackdropManager.hpp"
 #include "CaptionTextHandler.hpp"
 #include "GlassFramework.hpp"
+#include "BackdropFactory.hpp"
+#include "CustomMsstyleLoader.hpp"
 #include "ServiceApi.hpp"
 
 using namespace OpenGlass;
@@ -16,8 +18,10 @@ namespace OpenGlass::ConfigurationFramework
 void ConfigurationFramework::Update(UpdateType type)
 {
 	OcclusionCulling::UpdateConfiguration(type);
+	BackdropFactory::UpdateConfiguration(type);
 	GlassFramework::UpdateConfiguration(type);
 	CaptionTextHandler::UpdateConfiguration(type);
+	CustomMsstyleLoader::UpdateConfiguration(type);
 }
 
 HKEY ConfigurationFramework::GetDwmKey()
@@ -30,7 +34,7 @@ HKEY ConfigurationFramework::GetPersonalizeKey()
 	return g_personalizeKey.get();
 }
 
-void ConfigurationFramework::Load()
+void ConfigurationFramework::Load(bool updateNow)
 {
 	PipeContent content{ GetCurrentProcessId() };
 	HRESULT hr{ Client::RequestUserRegistryKey(content) };
@@ -38,7 +42,10 @@ void ConfigurationFramework::Load()
 	{
 		g_dwmKey.reset(content.dwmKey);
 		g_personalizeKey.reset(content.personalizeKey);
-		Update(UpdateType::All);
+		if (updateNow)
+		{
+			Update(UpdateType::All);
+		}
 	}
 	else
 	{

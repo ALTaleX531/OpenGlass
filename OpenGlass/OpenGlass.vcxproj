@@ -181,9 +181,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AcrylicBackdrop.hpp" />
+    <ClInclude Include="AeroBackdrop.hpp" />
     <ClInclude Include="AlphaMaskEffect.hpp" />
+    <ClInclude Include="BackdropFactory.hpp" />
+    <ClInclude Include="BlurBackdrop.hpp" />
+    <ClInclude Include="ColorConversion.hpp" />
+    <ClInclude Include="CustomMsstyleLoader.hpp" />
     <ClInclude Include="dwmcoreProjection.hpp" />
     <ClInclude Include="GlassReflection.hpp" />
+    <ClInclude Include="MicaBackdrop.hpp" />
     <ClInclude Include="ServiceApi.hpp" />
     <ClInclude Include="BackdropManager.hpp" />
     <ClInclude Include="BlendEffect.hpp" />
@@ -213,14 +220,17 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="SaturationEffect.hpp" />
     <ClInclude Include="SymbolParser.hpp" />
-    <ClInclude Include="TestBackdrop.hpp" />
     <ClInclude Include="TintEffect.hpp" />
     <ClInclude Include="uDwmProjection.hpp" />
     <ClInclude Include="Utils.hpp" />
     <ClInclude Include="wil.hpp" />
     <ClInclude Include="winrt.hpp" />
+    <ClInclude Include="wucUtils.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BackdropFactory.cpp" />
+    <ClCompile Include="ColorConversion.cpp" />
+    <ClCompile Include="CustomMsstyleLoader.cpp" />
     <ClCompile Include="ServiceApi.cpp" />
     <ClCompile Include="BackdropManager.cpp" />
     <ClCompile Include="CaptionTextHandler.cpp" />

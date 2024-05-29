@@ -7,9 +7,10 @@
 namespace OpenGlass
 {
 	constexpr std::wstring_view pipe_name{ L"\\\\.\\pipe\\OpenGlassHostPipe" };
-	std::unordered_map<DWORD, std::chrono::steady_clock::time_point> g_dwmInjectionMap{};
+	std::unordered_map<DWORD, std::pair<DWORD, std::chrono::steady_clock::time_point>> g_dwmInjectionMap{};
 	std::chrono::steady_clock::time_point g_dwmInjectionCheckPoint{};
 	bool g_serverClosed{ false };
+	auto g_openGlassDllPath{ wil::GetModuleFileNameW<std::wstring, MAX_PATH + 1>(wil::GetModuleInstanceHandle()) };
 }
 using namespace OpenGlass;
 
@@ -68,18 +69,22 @@ HRESULT Server::DuplicateUserRegistryKeyToDwm(PipeContent& content) try
 }
 CATCH_RETURN()
 
-HRESULT Server::InjectDllToDwm(DWORD processId, bool inject, bool* actionPerformed)
+bool Server::IsDllAlreadyLoadedByDwm(DWORD processId)
 {
-	static auto s_OpenGlassDllPath{ wil::GetModuleFileNameW<std::wstring, MAX_PATH + 1>(wil::GetModuleInstanceHandle()) };
-	wil::unique_handle processHandle{ OpenProcess(PROCESS_CREATE_THREAD | PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ | PROCESS_QUERY_INFORMATION, FALSE, processId) };
-	HMODULE moduleHandle{ HookHelper::GetProcessModule(processHandle.get(), s_OpenGlassDllPath.c_str())};
-	if (inject && moduleHandle)
-	{
-		return S_OK;
-	}
+	wil::unique_handle processHandle{ OpenProcess(PROCESS_VM_READ | PROCESS_QUERY_INFORMATION, FALSE, processId) };
+	return HookHelper::GetProcessModule(processHandle.get(), g_openGlassDllPath.c_str()) != nullptr;
+}
 
+HRESULT Server::InjectDllToDwm(DWORD processId, bool inject)
+{
+	wil::unique_handle processHandle{ OpenProcess(PROCESS_CREATE_THREAD | PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ | PROCESS_QUERY_INFORMATION, FALSE, processId) };
+	HMODULE moduleHandle{ HookHelper::GetProcessModule(processHandle.get(), g_openGlassDllPath.c_str())};
+	
+#ifdef _DEBUG
 	OutputDebugStringW(std::format(L"dwm {}. (PID: {})\n", inject ? L"injected" : L"uninjected", processId).c_str());
-	auto bufferSize{ (s_OpenGlassDllPath.size() + 1) * sizeof(WCHAR) };
+#endif // _DEBUG
+
+	auto bufferSize{ (g_openGlassDllPath.size() + 1) * sizeof(WCHAR) };
 	auto remoteAddress{ inject ? VirtualAllocEx(processHandle.get(), nullptr, bufferSize, MEM_COMMIT, PAGE_READWRITE) : nullptr };
 	if (inject)
 	{
@@ -102,23 +107,20 @@ HRESULT Server::InjectDllToDwm(DWORD processId, bool inject, bool* actionPerform
 	};
 	if (inject)
 	{
-		RETURN_IF_WIN32_BOOL_FALSE(WriteProcessMemory(processHandle.get(), remoteAddress, static_cast<LPCVOID>(s_OpenGlassDllPath.c_str()), bufferSize, nullptr));
+		RETURN_IF_WIN32_BOOL_FALSE(WriteProcessMemory(processHandle.get(), remoteAddress, static_cast<LPCVOID>(g_openGlassDllPath.c_str()), bufferSize, nullptr));
 	}
 	wil::unique_handle threadHandle{ nullptr };
 	static const auto s_pfnNtCreateThreadEx{ reinterpret_cast<NTSTATUS(NTAPI*)(PHANDLE, ACCESS_MASK, LPVOID, HANDLE, LPTHREAD_START_ROUTINE, LPVOID, ULONG, SIZE_T, SIZE_T, SIZE_T, LPVOID)>(GetProcAddress(GetModuleHandleW(L"ntdll.dll"), "NtCreateThreadEx")) };
 	NTSTATUS ntstatus{ s_pfnNtCreateThreadEx(&threadHandle, PROCESS_ALL_ACCESS, nullptr, processHandle.get(), startRoutine, inject ? remoteAddress : moduleHandle, 0x0, 0x0, 0x0, 0x0, nullptr)};
 	RETURN_IF_NTSTATUS_FAILED(ntstatus);
 	RETURN_LAST_ERROR_IF(WaitForSingleObject(threadHandle.get(), 1000) != WAIT_OBJECT_0);
-	if (actionPerformed)
-	{
-		*actionPerformed = true;
-	}
 
 	return S_OK;
 }
 
 DWORD Server::InjectionThreadProc(LPVOID)
 {
+	RETURN_IF_FAILED(SetThreadDescription(GetCurrentThread(), L"OpenGlass Injection Thread"));
 	constexpr auto SE_DEBUG_PRIVILEGE{ 0x14 };
 	static const auto s_pfnRtlAdjustPrivilege{ reinterpret_cast<NTSTATUS(NTAPI*)(int, BOOLEAN, BOOLEAN, PBOOLEAN)>(GetProcAddress(GetModuleHandleW(L"ntdll.dll"), "RtlAdjustPrivilege")) };
 	
@@ -140,30 +142,44 @@ DWORD Server::InjectionThreadProc(LPVOID)
 	};
 
 	HRESULT hr{ S_OK };
-	bool injectionSusepended{ false };
+	bool injectionSuspended{ false };
 	while (!g_serverClosed)
 	{
-		hr = WalkDwmProcesses([&injectionSusepended](DWORD processId)
+		hr = WalkDwmProcesses([&injectionSuspended](DWORD processId)
 		{
-			if (injectionSusepended)
+			if (injectionSuspended)
 			{
 				return;
 			}
 
 			DWORD sessionId{ 0 };
-			LOG_IF_WIN32_BOOL_FALSE(ProcessIdToSessionId(processId, &sessionId));
+			if (!ProcessIdToSessionId(processId, &sessionId))
+			{
+				return;
+			}
+			if (WTSGetActiveConsoleSessionId() != sessionId)
+			{
+				return;
+			}
 			auto currentTimeStamp{ std::chrono::steady_clock::now() };
 
-			bool actionPerformed{ false };
-			LOG_IF_FAILED(InjectDllToDwm(processId, true, &actionPerformed));
-
-			if (actionPerformed)
+			if (!IsDllAlreadyLoadedByDwm(processId))
 			{
 				// DWM crashes constantly
 				auto it{ g_dwmInjectionMap.find(sessionId) };
 				if (it != g_dwmInjectionMap.end())
 				{
-					if (currentTimeStamp - it->second <= std::chrono::seconds{ 15 })
+					auto IsProcessAlive = [](DWORD processId)
+					{
+						wil::unique_handle processHandle{ OpenProcess(SYNCHRONIZE, FALSE, processId) };
+						if (!processHandle)
+						{
+							return false;
+						}
+
+						return WaitForSingleObject(processHandle.get(), 0) == WAIT_TIMEOUT;
+					};
+					if (currentTimeStamp - it->second.second <= std::chrono::seconds{ 15 } && !IsProcessAlive(it->second.first))
 					{
 						auto title{ Utils::GetResWStringView<IDS_STRING101>() };
 						auto content{ Utils::GetResWStringView<IDS_STRING105>() };
@@ -182,27 +198,33 @@ DWORD Server::InjectionThreadProc(LPVOID)
 								FALSE
 							)
 						);
-						injectionSusepended = true;
+						injectionSuspended = true;
 						return;
 					}
 				}
 
-				g_dwmInjectionMap.insert_or_assign(sessionId, currentTimeStamp);
-				g_dwmInjectionCheckPoint = currentTimeStamp;
+				if (SUCCEEDED(InjectDllToDwm(processId, true)))
+				{
+					g_dwmInjectionMap.insert_or_assign(sessionId, std::make_pair(processId, currentTimeStamp));
+				}
 			}
 			else if (currentTimeStamp - g_dwmInjectionCheckPoint >= std::chrono::minutes{ 2 }) // GC
 			{
 				g_dwmInjectionMap.clear();
-				g_dwmInjectionCheckPoint = currentTimeStamp;
 			}
+			g_dwmInjectionCheckPoint = currentTimeStamp;
+
 		});
 		LOG_IF_FAILED(hr);
 
-		SleepEx(injectionSusepended ? INFINITE : 3000ul, TRUE);
+		SleepEx(injectionSuspended ? INFINITE : 5000ul, TRUE);
 	}
 	hr = WalkDwmProcesses([](DWORD processId)
 	{
-		LOG_IF_FAILED(InjectDllToDwm(processId, false));
+		if (IsDllAlreadyLoadedByDwm(processId))
+		{
+			LOG_IF_FAILED(InjectDllToDwm(processId, false));
+		}
 	});
 	LOG_IF_FAILED(hr);
 
@@ -211,6 +233,8 @@ DWORD Server::InjectionThreadProc(LPVOID)
 
 HRESULT Server::Run()
 {
+	RETURN_IF_FAILED(SetCurrentProcessExplicitAppUserModelID(L"OpenGlass.Host"));
+	RETURN_IF_FAILED(SetThreadDescription(GetCurrentThread(), L"OpenGlass Server Thread"));
 	wil::unique_sid sid{ nullptr };
 	SID_IDENTIFIER_AUTHORITY authority{ SECURITY_WORLD_SID_AUTHORITY };
 	RETURN_IF_WIN32_BOOL_FALSE(
@@ -266,23 +290,36 @@ HRESULT Server::Run()
 		DWORD error{ 0ul };
 		if (ConnectNamedPipe(pipe.get(), nullptr) || (error = GetLastError()) == ERROR_PIPE_CONNECTED)
 		{
-			OutputDebugStringW(L"pipe connected, waiting for the input from dwm...\n");
-			PipeContent content{};
-			if (ReadFile(pipe.get(), &content, sizeof(content), nullptr, nullptr) && !(stop = (content.processId == -1)))
+			try
 			{
-				OutputDebugStringW(std::format(L"handling request for dwm (PID: {})...\n", content.processId).c_str());
-				LOG_IF_FAILED(DuplicateUserRegistryKeyToDwm(content));
-				LOG_IF_WIN32_BOOL_FALSE(WriteFile(pipe.get(), &content, sizeof(content), nullptr, nullptr));
-				LOG_IF_WIN32_BOOL_FALSE(FlushFileBuffers(pipe.get()));
+#ifdef _DEBUG
+				OutputDebugStringW(L"pipe connected, waiting for the input from dwm...\n");
+#endif
+				PipeContent content{};
+				THROW_IF_WIN32_BOOL_FALSE(ReadFile(pipe.get(), &content, sizeof(content), nullptr, nullptr));
+				if (!(stop = (content.processId == -1)))
+				{
+#ifdef _DEBUG
+					OutputDebugStringW(std::format(L"handling request for dwm (PID: {})...\n", content.processId).c_str());
+#endif
+					THROW_IF_FAILED(DuplicateUserRegistryKeyToDwm(content));
+				}
+				else
+				{
+					QueueUserAPC([](ULONG_PTR) {g_serverClosed = true; }, injectionThread.get(), 0);
+					WaitForSingleObject(injectionThread.get(), INFINITE);
+				}
+				THROW_IF_WIN32_BOOL_FALSE(WriteFile(pipe.get(), &content, sizeof(content), nullptr, nullptr));
+				THROW_IF_WIN32_BOOL_FALSE(FlushFileBuffers(pipe.get()));
+#ifdef _DEBUG
+				OutputDebugStringW(std::format(L"pipe disconnected for dwm (PID: {}).\n", content.processId).c_str());
+#endif
 			}
-			OutputDebugStringW(std::format(L"pipe disconnected for dwm (PID: {}).\n", content.processId).c_str());
+			CATCH_LOG()
 			LOG_IF_WIN32_BOOL_FALSE(DisconnectNamedPipe(pipe.get()));
 		}
 		Sleep(0);
 	}
-	
-	QueueUserAPC([](ULONG_PTR){g_serverClosed = true; }, injectionThread.get(), 0);
-	WaitForSingleObject(injectionThread.get(), INFINITE);
 
 	return S_OK;
 }
@@ -324,12 +361,13 @@ HRESULT Client::RequestUserRegistryKey(PipeContent& content)
 	}
 
 	RETURN_IF_WIN32_BOOL_FALSE(WriteFile(pipe.get(), &content, sizeof(content), nullptr, nullptr));
+#ifdef _DEBUG
 	OutputDebugStringW(L"request sent, waiting for the response from host process...\n");
-	if (content.processId != -1)
-	{
-		OutputDebugStringW(L"reading the data sent by the host process...\n");
-		RETURN_IF_WIN32_BOOL_FALSE(ReadFile(pipe.get(), &content, sizeof(content), nullptr, nullptr));
-	}
+#endif
+	RETURN_IF_WIN32_BOOL_FALSE(ReadFile(pipe.get(), &content, sizeof(content), nullptr, nullptr));
+#ifdef _DEBUG
+	OutputDebugStringW(L"reading the data sent by the host process...\n");
+#endif
 
 	return S_OK;
 }

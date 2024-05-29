@@ -11,7 +11,9 @@
 #include "CaptionTextHandler.hpp"
 #include "GlassFramework.hpp"
 #include "OcclusionCulling.hpp"
+#include "CustomMsstyleLoader.hpp"
 #include "ConfigurationFramework.hpp"
+#include <Windows.h>
 
 namespace OpenGlass
 {
@@ -19,26 +21,135 @@ namespace OpenGlass
 	bool g_outOfLoaderLock{ false };
 
 	LONG NTAPI TopLevelExceptionFilter(EXCEPTION_POINTERS* exceptionInfo);
-	LRESULT CALLBACK DwmNotificationWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	LPTOP_LEVEL_EXCEPTION_FILTER g_old{ nullptr };
+
+	LRESULT CALLBACK DwmNotificationWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	HWND g_notificationWindow{ nullptr };
 	HPOWERNOTIFY g_powerNotify{ nullptr };
 	WNDPROC g_oldWndProc{ nullptr };
-	bool g_startup{ false };
 
+	// for symbol downloading use
 	void OnSymbolDownloading(SymbolDownloaderStatus status, std::wstring_view text);
-	bool OnSymbolParsing_uDwm(
-		std::string_view functionName, 
-		std::string_view fullyUnDecoratedFunctionName, 
-		const HookHelper::OffsetStorage& offset, 
-		const PSYMBOL_INFO originalSymInfo
-	);
-	bool OnSymbolParsing_Dwmcore(
-		std::string_view functionName,
-		std::string_view fullyUnDecoratedFunctionName,
-		const HookHelper::OffsetStorage& offset,
-		const PSYMBOL_INFO originalSymInfo
-	);
+	bool g_symbolRequiresDownloading{ false };
+	bool g_symbolDownloadCompleted{ false };
+	ULONGLONG g_previouslyCompletedProgress{ 0 };
+	class CDownloadingProgressIndicator
+	{
+		bool m_tabAdded{ false };
+		bool m_windowShowed{ false };
+		bool m_titleChanged{ false };
+		HWND m_hwnd{ nullptr };
+		ULONGLONG m_total{ 100 };
+		wil::com_ptr_nothrow<ITaskbarList4> m_taskbar{ nullptr };
+		WCHAR m_originalTitle[MAX_PATH + 1]{};
+
+		void EnureTaskbarIndicatorInitialized()
+		{
+			if (!m_windowShowed)
+			{
+				ShowWindowAsync(m_hwnd, SW_SHOWNOACTIVATE);
+				BOOL value{ TRUE };
+				DwmSetWindowAttribute(m_hwnd, DWMWA_DISALLOW_PEEK, &value, sizeof(value));
+				DwmSetWindowAttribute(m_hwnd, DWMWA_EXCLUDED_FROM_PEEK, &value, sizeof(value));
+				DwmSetWindowAttribute(m_hwnd, DWMWA_CLOAK, &value, sizeof(value));
+				wil::unique_hicon icon{ LoadIconW(GetModuleHandleW(L"shell32.dll"), MAKEINTRESOURCEW(18)) };
+				SendMessageW(m_hwnd, WM_SETICON, ICON_SMALL, reinterpret_cast<LPARAM>(icon.get()));
+				SendMessageW(m_hwnd, WM_SETICON, ICON_BIG, reinterpret_cast<LPARAM>(icon.get()));
+				m_windowShowed = true;
+			}
+			if (!m_taskbar)
+			{
+				m_taskbar = wil::CoCreateInstanceNoThrow<ITaskbarList4>(CLSID_TaskbarList);
+				m_taskbar->HrInit();
+			}
+			if (!m_tabAdded)
+			{
+				m_taskbar->AddTab(m_hwnd);
+				m_tabAdded = true;
+			}
+		}
+	public:
+		CDownloadingProgressIndicator()
+		{
+			// just wait patiently, the dwm notification window maybe is not ready...
+			while (!(m_hwnd = FindWindowW(L"Dwm", nullptr))) { DwmFlush(); }
+			InternalGetWindowText(m_hwnd, m_originalTitle, MAX_PATH);
+		}
+		~CDownloadingProgressIndicator()
+		{
+			if (m_windowShowed)
+			{
+				BOOL value{ FALSE };
+				SendMessageW(m_hwnd, WM_SETICON, ICON_SMALL, 0);
+				SendMessageW(m_hwnd, WM_SETICON, ICON_BIG, 0);
+				DwmSetWindowAttribute(m_hwnd, DWMWA_CLOAK, &value, sizeof(value));
+				DwmSetWindowAttribute(m_hwnd, DWMWA_DISALLOW_PEEK, &value, sizeof(value));
+				DwmSetWindowAttribute(m_hwnd, DWMWA_EXCLUDED_FROM_PEEK, &value, sizeof(value));
+				ShowWindowAsync(m_hwnd, SW_HIDE);
+				m_windowShowed = false;
+			}
+			if (m_tabAdded)
+			{
+				m_taskbar->SetProgressState(m_hwnd, TBPF_NOPROGRESS);
+				m_taskbar->DeleteTab(m_hwnd);
+				m_tabAdded = false;
+			}
+			if (m_titleChanged)
+			{
+				SetWindowTextW(m_hwnd, m_originalTitle);
+				m_titleChanged = false;
+			}
+		}
+		void SetProgressState(TBPFLAG flags, bool ensureInitialized = true)
+		{	
+			if (ensureInitialized)
+			{
+				EnureTaskbarIndicatorInitialized();
+			}
+			if (m_tabAdded)
+			{
+				m_taskbar->SetProgressState(m_hwnd, flags);
+			}
+		}
+		void SetProgressTotalValue(ULONGLONG total, bool ensureInitialized = true)
+		{
+			if (ensureInitialized)
+			{
+				EnureTaskbarIndicatorInitialized();
+			}
+			m_total = total;
+		}
+		void SetProgressValue(ULONGLONG completed, bool ensureInitialized = true)
+		{
+			if (ensureInitialized)
+			{
+				EnureTaskbarIndicatorInitialized();
+			}
+			if (m_tabAdded)
+			{
+				m_taskbar->SetProgressValue(m_hwnd, completed, m_total);
+			}
+		}
+		void SetProgressTitle(std::wstring_view titleView, bool ensureInitialized = true)
+		{
+			if (ensureInitialized)
+			{
+				EnureTaskbarIndicatorInitialized();
+			}
+			if (m_windowShowed)
+			{
+				m_titleChanged = true;
+				SetWindowTextW(m_hwnd, titleView.data());
+			}
+		}
+		HWND GetHwnd() const
+		{
+			return m_hwnd;
+		}
+	};
+	CDownloadingProgressIndicator* g_indicator{ nullptr };
+
+	bool g_startup{ false };
 }
 
 LONG NTAPI OpenGlass::TopLevelExceptionFilter(EXCEPTION_POINTERS* exceptionInfo)
@@ -142,112 +253,183 @@ void OpenGlass::OnSymbolDownloading(SymbolDownloaderStatus status, std::wstring_
 	{
 		case SymbolDownloaderStatus::Start:
 		{
-			if (GetConsoleWindow())
-			{
-				if (AllocConsole())
-				{
-					FILE* fpstdin{ nullptr }, * fpstdout{ nullptr };
-					_wfreopen_s(&fpstdin, L"CONIN$", L"r", stdin);
-					_wfreopen_s(&fpstdout, L"CONOUT$", L"w+t", stdout);
-					_wsetlocale(LC_ALL, L"");
-				}
-			}
+			g_symbolRequiresDownloading = true;
+			g_indicator->SetProgressValue(g_previouslyCompletedProgress);
+			g_indicator->SetProgressState(TBPF_NORMAL | TBPF_INDETERMINATE);
 			break;
 		}
 		case SymbolDownloaderStatus::Downloading:
 		{
-			if (GetConsoleWindow())
+			auto percentIndex{ text.find(L" percent") };
+			if (percentIndex != text.npos)
 			{
-				wprintf_s(text.data());
+				std::wstring_view progressView{ &text[percentIndex] - 3, 4 };
+				OutputDebugStringW(std::wstring(progressView).c_str());
+				g_indicator->SetProgressValue(g_previouslyCompletedProgress + _wtoll(std::wstring(progressView).c_str()));
+				g_indicator->SetProgressState(TBPF_NORMAL);
+				g_indicator->SetProgressTitle(Utils::GetResWString<IDS_STRING114>());
 			}
+			else
+			{
+				g_indicator->SetProgressState(TBPF_NORMAL | TBPF_INDETERMINATE);
+			}
+
+			OutputDebugStringW(text.data());
 			break;
 		}
 		case SymbolDownloaderStatus::OK:
 		{
+			g_indicator->SetProgressValue(g_previouslyCompletedProgress + 100);
+			g_indicator->SetProgressState(TBPF_NORMAL);
+			g_symbolDownloadCompleted = true;
+
+			OutputDebugStringW(text.data());
 			break;
 		}
 	}
-}
-bool OpenGlass::OnSymbolParsing_uDwm(
-	std::string_view functionName,
-	std::string_view fullyUnDecoratedFunctionName,
-	const HookHelper::OffsetStorage& offset,
-	const PSYMBOL_INFO originalSymInfo
-)
-{
-	uDwm::InitializeFromSymbol(fullyUnDecoratedFunctionName, offset);
-	GlassFramework::InitializeFromSymbol(fullyUnDecoratedFunctionName, offset);
-	CaptionTextHandler::InitializeFromSymbol(fullyUnDecoratedFunctionName, offset);
-	GeometryRecorder::InitializeFromSymbol(functionName, fullyUnDecoratedFunctionName, offset);
-	OcclusionCulling::InitializeFromSymbol(fullyUnDecoratedFunctionName, offset);
-
-	return true;
-}
-bool OpenGlass::OnSymbolParsing_Dwmcore(
-	std::string_view functionName,
-	std::string_view fullyUnDecoratedFunctionName,
-	const HookHelper::OffsetStorage& offset,
-	const PSYMBOL_INFO originalSymInfo
-)
-{
-	dwmcore::InitializeFromSymbol(functionName, fullyUnDecoratedFunctionName, offset);
-
-	return true;
 }
 
 DWORD WINAPI OpenGlass::Initialize(PVOID)
 {
 	auto moduleReference{ wil::get_module_reference_for_thread() };
 	auto coCleanUp{ wil::CoInitializeEx() };
+
+	SetThreadDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
+	RETURN_IF_FAILED(SetThreadDescription(GetCurrentThread(), L"OpenGlass Initialization Thread"));
+
 	while (!g_outOfLoaderLock)
 	{
 		Sleep(50);
 	}
-	Sleep(100);
+	Sleep(200);
 
-	SymbolParser parser{};
-	HRESULT hr{ parser.Walk(L"uDwm.dll", OnSymbolDownloading, OnSymbolParsing_uDwm) };
-	if (FAILED(hr))
+	if (os::IsOpenGlassUnsupported())
 	{
-		// TO-DO: Replace ShellMessageBoxW
-		ShellMessageBoxW(
-			wil::GetModuleInstanceHandle(),
-			nullptr,
-			MAKEINTRESOURCEW(IDS_STRING103),
-			MAKEINTRESOURCEW(IDS_STRING101),
-			MB_ICONERROR,
-			std::format(L"{:#x}", static_cast<ULONG>(hr)).c_str()
+		auto result{ 0 };
+		LOG_IF_FAILED(
+			TaskDialog(
+				nullptr,
+				nullptr,
+				nullptr,
+				Utils::GetResWString<IDS_STRING101>().c_str(),
+				Utils::GetResWString<IDS_STRING102>().c_str(),
+				TDCBF_YES_BUTTON | TDCBF_NO_BUTTON,
+				TD_WARNING_ICON,
+				&result
+			)
 		);
-		return hr;
-	}
-	hr = parser.Walk(L"dwmcore.dll", OnSymbolDownloading, OnSymbolParsing_Dwmcore);
-	if (FAILED(hr))
-	{
-		// TO-DO: Replace ShellMessageBoxW
-		ShellMessageBoxW(
-			wil::GetModuleInstanceHandle(),
-			nullptr,
-			MAKEINTRESOURCEW(IDS_STRING103),
-			MAKEINTRESOURCEW(IDS_STRING101),
-			MB_ICONERROR,
-			std::format(L"{:#x}", static_cast<ULONG>(hr)).c_str()
-		);
-		return hr;
+		if (result == IDNO)
+		{
+			return E_ABORT;
+		}
 	}
 
-	if (GetConsoleWindow())
 	{
-		system("pause");
-		fclose(stdin);
-		fclose(stdout);
-		FreeConsole();
-	}
+		auto indicator{ std::make_unique<CDownloadingProgressIndicator>() };
+		indicator->SetProgressTotalValue(200, false);
+		g_indicator = indicator.get();
 
+		std::wstring expandText{ Utils::GetResWString<IDS_STRING108>() };
+		std::wstring collapseText{ Utils::GetResWString<IDS_STRING109>() };
+		int result{ 0 };
+		TASKDIALOGCONFIG config{ sizeof(TASKDIALOGCONFIG), nullptr, nullptr, TDF_SIZE_TO_CONTENT, TDCBF_RETRY_BUTTON | TDCBF_CANCEL_BUTTON, nullptr, {.pszMainIcon{TD_ERROR_ICON}}, nullptr, nullptr, 0, nullptr, IDRETRY, 0, nullptr, 0, nullptr, nullptr, collapseText.c_str(), expandText.c_str(), {}, nullptr, nullptr, 0, 0 };
+
+		SymbolParser parser{};
+		HRESULT hr{ S_OK };
+
+do_udwm_symbol_parsing:
+		g_previouslyCompletedProgress = 0;
+		g_symbolDownloadCompleted = false;
+		g_symbolRequiresDownloading = false;
+		hr = parser.Walk(L"uDwm.dll", OnSymbolDownloading, uDwm::OnSymbolParsing);
+		if (FAILED(hr))
+		{
+			std::wstring mainInstruction{ !g_symbolRequiresDownloading || g_symbolDownloadCompleted ? Utils::GetResWStringView<IDS_STRING103>() : Utils::GetResWStringView<IDS_STRING110>() };
+			std::wstring content{ Utils::to_error_wstring(hr) + L"\n\n" + (!g_symbolRequiresDownloading || g_symbolDownloadCompleted ? Utils::GetResWStringView<IDS_STRING107>() : Utils::GetResWStringView<IDS_STRING114>()) };
+			std::wstring errorText
+			{
+				std::format(
+					L"hr: {:#x} (uDwm.dll)\n{}",
+					static_cast<ULONG>(hr),
+					Utils::GetResWStringView<IDS_STRING112>()
+				)
+			};
+
+			indicator->SetProgressTitle(Utils::GetResWString<IDS_STRING115>());
+			indicator->SetProgressState(TBPF_INDETERMINATE);
+			config.pszMainInstruction = mainInstruction.c_str();
+			config.pszContent = content.c_str();
+			config.pszExpandedInformation = errorText.c_str();
+			LOG_IF_FAILED(
+				TaskDialogIndirect(
+					&config,
+					&result,
+					nullptr,
+					nullptr
+				)
+			);
+			if (result == IDCANCEL)
+			{
+				return hr;
+			}
+			else
+			{
+				goto do_udwm_symbol_parsing;
+			}
+		}
+
+do_dwmcore_symbol_parsing:
+		g_previouslyCompletedProgress = 100;
+		g_symbolDownloadCompleted = false;
+		g_symbolRequiresDownloading = false;
+		hr = parser.Walk(L"dwmcore.dll", OnSymbolDownloading, dwmcore::OnSymbolParsing);
+		if (FAILED(hr))
+		{
+			std::wstring mainInstruction{ !g_symbolRequiresDownloading || g_symbolDownloadCompleted ? Utils::GetResWStringView<IDS_STRING103>() : Utils::GetResWStringView<IDS_STRING110>() };
+			std::wstring content{ Utils::to_error_wstring(hr) + L"\n\n" + (!g_symbolRequiresDownloading || g_symbolDownloadCompleted ? Utils::GetResWStringView<IDS_STRING107>() : Utils::GetResWStringView<IDS_STRING114>()) };
+			std::wstring errorText
+			{
+				std::format(
+					L"hr: {:#x} (dwmcore.dll)\n{}",
+					static_cast<ULONG>(hr),
+					Utils::GetResWStringView<IDS_STRING112>()
+				)
+			};
+
+			indicator->SetProgressTitle(Utils::GetResWString<IDS_STRING115>());
+			indicator->SetProgressState(TBPF_INDETERMINATE);
+			config.pszMainInstruction = mainInstruction.c_str();
+			config.pszContent = content.c_str();
+			config.pszExpandedInformation = errorText.c_str();
+			LOG_IF_FAILED(
+				TaskDialogIndirect(
+					&config,
+					&result,
+					nullptr,
+					nullptr
+				)
+			);
+			if (result == IDCANCEL)
+			{
+				return hr;
+			}
+			else
+			{
+				goto do_dwmcore_symbol_parsing;
+			}
+		}
+
+		g_previouslyCompletedProgress = 200;
+		g_notificationWindow = indicator->GetHwnd();
+		g_indicator = nullptr;
+	}
+	
 	ConfigurationFramework::Unload();
 	GlassFramework::Startup();
 	CaptionTextHandler::Startup();
 	GeometryRecorder::Startup();
 	OcclusionCulling::Startup();
+	CustomMsstyleLoader::Startup();
 	ConfigurationFramework::Load();
 
 #ifdef _DEBUG
@@ -258,15 +440,14 @@ DWORD WINAPI OpenGlass::Initialize(PVOID)
 	debugDevice->EnableDebugCounters();
 #endif // _DEBUG
 
-	// just wait patiently, the dwm notification window maybe is not ready...
-	while (!(g_notificationWindow = FindWindowW(L"Dwm", nullptr))) { DwmFlush(); }
 	g_oldWndProc = reinterpret_cast<WNDPROC>(
 		SetWindowLongPtrW(
 			g_notificationWindow,
 			GWLP_WNDPROC,
 			reinterpret_cast<LONG_PTR>(DwmNotificationWndProc)
 		)
-		);
+	);
+	// make sure our third-party ui creators can send message to dwm
 	ChangeWindowMessageFilterEx(g_notificationWindow, WM_DWMCOLORIZATIONCOLORCHANGED, MSGFLT_ALLOW, nullptr);
 	ChangeWindowMessageFilterEx(g_notificationWindow, WM_THEMECHANGED, MSGFLT_ALLOW, nullptr);
 	if (g_powerNotify = RegisterPowerSettingNotification(g_notificationWindow, &GUID_POWER_SAVING_STATUS, DEVICE_NOTIFY_WINDOW_HANDLE))
@@ -279,8 +460,7 @@ DWORD WINAPI OpenGlass::Initialize(PVOID)
 	}
 
 	// refresh the whole desktop to apply our glass effect
-	DWORD info{ BSM_APPLICATIONS };
-	BroadcastSystemMessageW(BSF_IGNORECURRENTTASK | BSF_ALLOWSFW | BSF_FORCEIFHUNG, &info, WM_THEMECHANGED, 0, 0);
+	SendMessageW(g_notificationWindow, WM_THEMECHANGED, 0, 0);
 	InvalidateRect(nullptr, nullptr, FALSE);
 
 	return S_OK;
@@ -300,23 +480,13 @@ void OpenGlass::Startup()
 	{
 		return;
 	}
-	if (os::IsOpenGlassUnsupported())
-	{
-		ShellMessageBoxW(
-			wil::GetModuleInstanceHandle(),
-			nullptr,
-			MAKEINTRESOURCEW(IDS_STRING102),
-			MAKEINTRESOURCEW(IDS_STRING101),
-			MB_ICONERROR
-		);
-		return;
-	}
 
 	wil::SetResultLoggingCallback([](const wil::FailureInfo& failure) noexcept
 	{
 		OutputDebugStringW(failure.pszMessage);
 	});
 	g_old = SetUnhandledExceptionFilter(TopLevelExceptionFilter);
+	// the injection thread cannot show TaskDialog but MessageBox, i don't known why...
 	#pragma warning (suppress : 26444)
 	wil::unique_handle{ CreateThread(nullptr, 0, Initialize, nullptr, 0, nullptr) };
 	g_outOfLoaderLock = true;
@@ -354,8 +524,9 @@ void OpenGlass::Shutdown()
 	GeometryRecorder::Shutdown();
 	CaptionTextHandler::Shutdown();
 	GlassFramework::Shutdown();
+	CustomMsstyleLoader::Shutdown();
 
-	PostMessageW(g_notificationWindow, WM_THEMECHANGED, 0, 0);
+	SendMessageW(g_notificationWindow, WM_THEMECHANGED, 0, 0);
 	InvalidateRect(nullptr, nullptr, FALSE);
 	g_notificationWindow = nullptr;
 	g_outOfLoaderLock = false;
