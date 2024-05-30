@@ -695,7 +695,7 @@ void BackdropManager::CCompositedBackdropVisual::OnBackdropChunksChanged()
 		m_captionVisual.Size(
 			{
 				static_cast<float>(wil::rect_width(m_captionRect)),
-				static_cast<float>(wil::rect_height(m_captionRect))
+				static_cast<float>(wil::rect_height(m_captionRect)) + static_cast<float>(m_captionRect.top - compositedBox.top)
 			}
 		);
 

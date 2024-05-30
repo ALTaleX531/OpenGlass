@@ -537,11 +537,11 @@ namespace OpenGlass::uDwm
 
 			if (os::buildNumber < os::build_w11_21h2)
 			{
-				margins = reinterpret_cast<const MARGINS*>(this) + 20;
+				margins = reinterpret_cast<const MARGINS*>(reinterpret_cast<ULONG_PTR>(this) + 80);
 			}
 			else
 			{
-				margins = reinterpret_cast<const MARGINS*>(this) + 24;
+				margins = reinterpret_cast<const MARGINS*>(reinterpret_cast<ULONG_PTR>(this) + 96);
 			}
 
 			return margins;

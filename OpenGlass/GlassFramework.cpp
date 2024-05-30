@@ -533,7 +533,7 @@ void GlassFramework::UpdateConfiguration(ConfigurationFramework::UpdateType type
 		);
 		BackdropManager::Configuration::g_crossfadeTime = std::chrono::milliseconds{ uDwm::CDesktopManager::s_pDesktopManagerInstance->IsWindowAnimationEnabled() ? value : 0 };
 
-		g_overrideAccent = FALSE;
+		value = FALSE;
 		LOG_IF_FAILED(
 			wil::reg::get_value_dword_nothrow(
 				ConfigurationFramework::GetDwmKey(),
