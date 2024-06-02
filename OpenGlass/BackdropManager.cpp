@@ -684,6 +684,17 @@ void BackdropManager::CCompositedBackdropVisual::OnBackdropChunksChanged()
 		CombineRgn(boxRgn.get(), boxRgn.get(), m_borderRgn.get(), RGN_DIFF);
 		RECT clientBox{};
 		GetRgnBox(boxRgn.get(), &clientBox);
+		if (IsRectEmpty(&clientBox))
+		{
+			clientBox.left = m_captionRect.left;
+			clientBox.top = clientBox.bottom = m_captionRect.bottom;
+			clientBox.right = m_captionRect.right;
+		}
+#ifdef _DEBUG
+		OutputDebugStringW(
+			std::format(L"clientBox: [{}, {}, {}, {}]\n", clientBox.left, clientBox.top, clientBox.right, clientBox.bottom).c_str()
+		);
+#endif // _DEBUG
 
 		m_captionVisual.Offset(
 			{
@@ -742,7 +753,7 @@ void BackdropManager::CCompositedBackdropVisual::OnBackdropChunksChanged()
 		m_borderRightVisual.IsVisible(bordersVisible);
 
 		RECT clientBlurBox{};
-		bool clientBlurVisible{ GetRgnBox(m_clientBlurRgn.get(), &clientBlurBox) != NULLREGION };
+		bool clientBlurVisible{ GetRgnBox(m_clientBlurRgn.get(), &clientBlurBox) != NULLREGION && !IsRectEmpty(&clientBox) };
 		if (clientBlurVisible)
 		{
 			m_clientVisual.Offset(
