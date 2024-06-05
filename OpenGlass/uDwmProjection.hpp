@@ -434,6 +434,7 @@ namespace OpenGlass::uDwm
 	{
 	};
 
+	struct IDwmWindow;
 	struct CTopLevelWindow;
 	struct CWindowData : CBaseObject
 	{
@@ -460,6 +461,10 @@ namespace OpenGlass::uDwm
 		HWND GetHwnd() const
 		{
 			return reinterpret_cast<const HWND*>(this)[5];
+		}
+		IDwmWindow* GetWindowContext() const
+		{
+			return reinterpret_cast<IDwmWindow* const*>(this)[3];
 		}
 		CTopLevelWindow* GetWindow() const
 		{
@@ -1188,7 +1193,7 @@ namespace OpenGlass::uDwm
 		CVisual* m_parentVisual{ nullptr };
 		winrt::com_ptr<CVisual> m_udwmVisual{ nullptr };
 		winrt::com_ptr<IDCompositionVisual2> m_dcompVisual{ nullptr };
-		winrt::com_ptr<IDCompositionTarget> m_dcompTarget{ nullptr };
+		winrt::com_ptr<dcomp::InteropCompositionTarget> m_dcompTarget{ nullptr };
 		winrt::com_ptr<dcomp::IDCompositionDesktopDevicePartner> m_dcompDevice{ nullptr };
 		wuc::VisualCollection m_visualCollection{ nullptr };
 
@@ -1209,21 +1214,19 @@ namespace OpenGlass::uDwm
 			m_visualCollection = m_dcompVisual.as<dcomp::IDCompositionVisualPartnerWinRTInterop>()->GetVisualCollection();
 
 			// create shared target
-			// CreateTargetVisualProxy is more expensive than CreateVisualProxy
-			winrt::com_ptr<IDCompositionVisual> dcompTargetVisualSource{ nullptr };
-			RETURN_IF_FAILED(
+			THROW_IF_FAILED(
 				m_dcompDevice->CreateSharedResource(
-					IID_PPV_ARGS(dcompTargetVisualSource.put())
+					IID_PPV_ARGS(m_dcompTarget.put())
 				)
 			);
-			wil::unique_handle resourceHandle{ nullptr };
-			RETURN_IF_FAILED(
-				m_dcompDevice->OpenSharedResourceHandle(dcompTargetVisualSource.get(), resourceHandle.put())
-			);
-			RETURN_IF_FAILED(dcomp::DCompositionCreateTargetForHandle(resourceHandle.get(), m_dcompTarget.put()));
 			RETURN_IF_FAILED(m_dcompTarget->SetRoot(m_dcompVisual.get()));
+			RETURN_IF_FAILED(m_dcompDevice->Commit());
 
 			// interop with udwm and dwmcore
+			wil::unique_handle resourceHandle{ nullptr };
+			THROW_IF_FAILED(
+				m_dcompDevice->OpenSharedResourceHandle(m_dcompTarget.get(), resourceHandle.put())
+			);
 			RETURN_IF_FAILED(CVisual::CreateFromSharedHandle(resourceHandle.get(), m_udwmVisual.put()));
 			m_udwmVisual->AllowVisualTreeClone(false);
 

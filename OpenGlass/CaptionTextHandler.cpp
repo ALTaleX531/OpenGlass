@@ -3,6 +3,7 @@
 #include "OSHelper.hpp"
 #include "uDwmProjection.hpp"
 #include "CaptionTextHandler.hpp"
+#include "CustomMsstyleLoader.hpp"
 
 using namespace OpenGlass;
 namespace OpenGlass::CaptionTextHandler
@@ -123,7 +124,7 @@ int WINAPI CaptionTextHandler::MyDrawTextW(
 		drawTextCallback,
 		(LPARAM)&result
 	};
-	wil::unique_htheme hTheme{ OpenThemeData(nullptr, TEXT("Composited::Window")) };
+	wil::unique_htheme hTheme{ CustomMsstyleLoader::OpenActualThemeData(L"Composited::Window")};
 
 	if (hTheme)
 	{

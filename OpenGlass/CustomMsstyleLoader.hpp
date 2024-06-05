@@ -9,4 +9,6 @@ namespace OpenGlass::CustomMsstyleLoader
 
 	HRESULT Startup();
 	void Shutdown();
+
+	HTHEME OpenActualThemeData(std::wstring_view className);
 }

@@ -212,7 +212,7 @@
     <ClInclude Include="GeometryRecorder.hpp" />
     <ClInclude Include="GlassFramework.hpp" />
     <ClInclude Include="HookHelper.hpp" />
-    <ClInclude Include="OcclusionCulling.hpp" />
+    <ClInclude Include="GlassOptimizer.hpp" />
     <ClInclude Include="OpacityEffect.hpp" />
     <ClInclude Include="OpenGlass.hpp" />
     <ClInclude Include="OSHelper.hpp" />
@@ -239,7 +239,7 @@
     <ClCompile Include="GeometryRecorder.cpp" />
     <ClCompile Include="GlassFramework.cpp" />
     <ClCompile Include="HookHelper.cpp" />
-    <ClCompile Include="OcclusionCulling.cpp" />
+    <ClCompile Include="GlassOptimizer.cpp" />
     <ClCompile Include="OpenGlass.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

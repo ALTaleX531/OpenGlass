@@ -99,7 +99,11 @@ namespace OpenGlass
 			THROW_HR_IF_NULL(E_INVALIDARG, m_window->GetActualWindowRect(&windowRect, false, true, false));
 
 			HWND hwnd{ m_data->GetHwnd() };
-			HMONITOR monitor{ MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST) };
+			HMONITOR monitor{ MonitorFromWindow(hwnd, MONITOR_DEFAULTTOPRIMARY) };
+			if (!monitor)
+			{
+				monitor = m_monitor;
+			}
 			THROW_LAST_ERROR_IF_NULL(monitor);
 
 			MONITORINFO mi{ sizeof(MONITORINFO) };

@@ -5,7 +5,7 @@
 #include "uDwmProjection.hpp"
 #include "ConfigurationFramework.hpp"
 
-namespace OpenGlass::OcclusionCulling
+namespace OpenGlass::GlassOptimizer
 {
 	void UpdateConfiguration(ConfigurationFramework::UpdateType type);
 	

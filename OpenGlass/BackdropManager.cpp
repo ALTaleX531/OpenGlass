@@ -19,16 +19,19 @@ namespace OpenGlass::BackdropManager
 		__try
 		{
 			auto kind{ GlassFramework::GetActualBackdropKind(window) };
-			if (os::buildNumber < os::build_w11_22h2)
-			{
-				// 0x10000 UpdateText
-				// 0x20000 UpdateIcon
-				// 0x100000 UpdateColorization
-				// ...
-				// let's make it full dirty
-				window->SetDirtyFlags(window->GetDirtyFlags() | 0xFFFFFFFF);
-			}
-			else
+			// 0x10000 UpdateText
+			// 0x20000 UpdateIcon
+			// 0x100000 UpdateColorization
+			// ...
+			window->SetDirtyFlags(0x4000);
+			window->SetDirtyFlags(0x10000);
+			window->SetDirtyFlags(0x20000);
+			window->SetDirtyFlags(0x40000);
+			window->SetDirtyFlags(0x100000);
+			window->SetDirtyFlags(0x400000);
+			window->SetDirtyFlags(0x2000000);
+			window->SetDirtyFlags(0x4000000);
+			if (os::buildNumber >= os::build_w11_22h2)
 			{
 				if (kind == CompositedBackdropKind::SystemBackdrop)
 				{
@@ -47,7 +50,7 @@ namespace OpenGlass::BackdropManager
 	class CCompositedBackdropVisual : public winrt::implements<CCompositedBackdropVisual, ICompositedBackdropVisual>, uDwm::CBackdropVisual
 	{
 		bool m_backdropDataChanged{ false };
-		bool m_splitBackdropRegionIntoChunks{ true };
+		bool m_splitBackdropRegionIntoChunks{ false };
 		bool m_backdropChunksChanged{ false };
 		bool m_backdropBrushChanged{ false };
 		bool m_activate{ false };

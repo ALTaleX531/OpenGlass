@@ -20,6 +20,10 @@ namespace OpenGlass::CustomMsstyleLoader
 		HWND hwnd,
 		LPCWSTR pszClassList
 	);
+	HTHEME OpenActualThemeData(std::wstring_view className)
+	{
+		return MyOpenThemeData(nullptr, className.data());
+	}
 	decltype(&MyGetCurrentThemeName) g_GetCurrentThemeName_Org{ nullptr };
 	decltype(&MyOpenThemeData) g_OpenThemeData_Org{ nullptr };
 

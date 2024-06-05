@@ -327,6 +327,33 @@ namespace OpenGlass::dwmcore
 			return INVOKE_MEMBERFUNCTION(visualTree, unknown);
 		}
 	};
+	struct CCustomBlur : CResource 
+	{
+		ID2D1DeviceContext* GetDeviceContext() const
+		{
+			return reinterpret_cast<ID2D1DeviceContext* const*>(this)[2];
+		}
+		ID2D1Effect* GetCropEffect() const
+		{
+			return reinterpret_cast<ID2D1Effect* const*>(this)[3];
+		}
+		ID2D1Effect* GetBorderEffect() const
+		{
+			return reinterpret_cast<ID2D1Effect* const*>(this)[4];
+		}
+		ID2D1Effect* GetScaleEffect() const
+		{
+			return reinterpret_cast<ID2D1Effect* const*>(this)[5];
+		}
+		ID2D1Effect* GetDirectionalBlurXEffect() const
+		{
+			return reinterpret_cast<ID2D1Effect* const*>(this)[6];
+		}
+		ID2D1Effect* GetDirectionalBlurYEffect() const
+		{
+			return reinterpret_cast<ID2D1Effect* const*>(this)[7];
+		}
+	};
 	struct CDrawListCache : CResource {};
 	struct CDrawListBrush : CResource {};
 	struct CBrush : CResource {};
@@ -362,23 +389,17 @@ namespace OpenGlass::dwmcore
 			fullyUnDecoratedFunctionName.starts_with("FastRegion::CRegion::") ||
 			fullyUnDecoratedFunctionName.starts_with("FastRegion::Internal::CRgnData") ||
 			fullyUnDecoratedFunctionName.starts_with("CRegion::") ||
+			fullyUnDecoratedFunctionName.starts_with("CCustomBlur::") ||
 			fullyUnDecoratedFunctionName == "GetCurrentFrameId" ||
 			fullyUnDecoratedFunctionName == "CChannel::RedirectVisualSetRedirectedVisual" ||
 			fullyUnDecoratedFunctionName == "CResource::GetOwningProcessId" ||
-			fullyUnDecoratedFunctionName == "COcclusionContext::PostSubgraph"
-#ifdef _DEBUG
-			||
-			fullyUnDecoratedFunctionName == "CBrushRenderingGraph::RenderSubgraphs" ||
-			fullyUnDecoratedFunctionName == "CBrush::GenerateDrawList" ||
-			fullyUnDecoratedFunctionName == "CWindowNode::RenderImage" ||
-			fullyUnDecoratedFunctionName.starts_with("CVisual::") ||
-			fullyUnDecoratedFunctionName.starts_with("CWindowNode::") ||
+			fullyUnDecoratedFunctionName == "COcclusionContext::PostSubgraph" ||
+			fullyUnDecoratedFunctionName == "CBlurRenderingGraph::DeterminePreScale" ||
 			(
 				fullyUnDecoratedFunctionName.starts_with("CDrawingContext::") &&
 				fullyUnDecoratedFunctionName != "CDrawingContext::IsOccluded"
-			) ||
+				) ||
 			functionName == "?IsOccluded@CDrawingContext@@QEBA_NAEBV?$TMilRect_@MUMilRectF@@UMil3DRectF@@UMilPointAndSizeF@@UNotNeeded@RectUniqueness@@@@H@Z"
-#endif
 		)
 		{
 			g_symbolMap.insert_or_assign(

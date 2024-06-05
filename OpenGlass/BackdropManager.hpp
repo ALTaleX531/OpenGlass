@@ -40,7 +40,7 @@ namespace OpenGlass::BackdropManager
 	{
 		inline float g_roundRectRadius{ 0.f };
 		inline bool g_overrideBorder{ false };
-		inline bool g_splitBackdropRegionIntoChunks{ true };
+		inline bool g_splitBackdropRegionIntoChunks{ false };
 		inline wf::TimeSpan g_crossfadeTime{ std::chrono::milliseconds{ 87 } };
 	}
 

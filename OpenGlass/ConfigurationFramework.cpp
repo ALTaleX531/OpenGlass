@@ -1,6 +1,6 @@
 ﻿#include "pch.h"
 #include "ConfigurationFramework.hpp"
-#include "OcclusionCulling.hpp"
+#include "GlassOptimizer.hpp"
 #include "BackdropManager.hpp"
 #include "CaptionTextHandler.hpp"
 #include "GlassFramework.hpp"
@@ -17,11 +17,12 @@ namespace OpenGlass::ConfigurationFramework
 
 void ConfigurationFramework::Update(UpdateType type)
 {
-	OcclusionCulling::UpdateConfiguration(type);
+	GlassOptimizer::UpdateConfiguration(type);
 	BackdropFactory::UpdateConfiguration(type);
 	GlassFramework::UpdateConfiguration(type);
 	CaptionTextHandler::UpdateConfiguration(type);
 	CustomMsstyleLoader::UpdateConfiguration(type);
+	DwmFlush();
 }
 
 HKEY ConfigurationFramework::GetDwmKey()
