@@ -533,16 +533,6 @@ void GlassFramework::UpdateConfiguration(ConfigurationFramework::UpdateType type
 		);
 		BackdropManager::Configuration::g_overrideBorder = static_cast<bool>(value);
 
-		value = FALSE;
-		LOG_IF_FAILED(
-			wil::reg::get_value_dword_nothrow(
-				ConfigurationFramework::GetDwmKey(),
-				L"EnableGlassRegionSplitting",
-				&value
-			)
-		);
-		BackdropManager::Configuration::g_splitBackdropRegionIntoChunks = static_cast<bool>(value);
-
 		value = 87;
 		LOG_IF_FAILED(
 			wil::reg::get_value_dword_nothrow(

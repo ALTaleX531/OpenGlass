@@ -190,12 +190,17 @@ HRESULT STDMETHODCALLTYPE CaptionTextHandler::MyCText_ValidateResources(uDwm::CT
 }
 HRESULT STDMETHODCALLTYPE CaptionTextHandler::MyCText_SetSize(uDwm::CText* This, const SIZE* size)
 {
+	if (!g_centerCaption)
+	{
+		return g_CText_SetSize_Org(This, size);
+	}
+
 	auto oldWidth{ This->GetWidth() };
 	HRESULT hr{ g_CText_SetSize_Org(This, size) };
 
-	if (g_centerCaption && oldWidth != size->cx)
+	if (oldWidth != size->cx)
 	{
-		This->SetDirtyFlags(This->GetDirtyFlags() | 0x8000);
+		This->SetDirtyFlags(0x8000);
 	}
 
 	return hr;

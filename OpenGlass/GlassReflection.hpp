@@ -14,19 +14,23 @@ namespace OpenGlass
 		static inline winrt::com_ptr<dcomp::IDCompositionDesktopDevicePartner> s_dcompDevice{ nullptr };
 		static inline float s_parallaxIntensity{ 0.1f };
 		static inline float s_intensity{ 0.f };
+		static inline wg::SizeInt32 s_surfaceSize{};
 
 		uDwm::CTopLevelWindow* m_window{ nullptr };
 		uDwm::CWindowData* m_data{ nullptr };
 		wuc::SpriteVisual m_visual{ nullptr };
 		wuc::CompositionSurfaceBrush m_brush{ nullptr };
+
 		HMONITOR m_monitor{ nullptr };
 		RECT m_monitorRect{};
 		RECT m_windowRect{};
 		wg::SizeInt32 m_surfaceSize{};
 		float m_parallaxIntensity{ 0.f };
+		float m_intensity{ 0.f };
 		wfn::float3 m_offsetToWindow{};
 		bool m_forceUpdate{ false };
 		bool m_offsetChanged{ false };
+		bool m_visible{ true };
 		// temporary workaround for aero peek/live preview
 		bool m_noParallax{ false };
 	public:
@@ -46,6 +50,7 @@ namespace OpenGlass
 			m_brush.Stretch(wuc::CompositionStretch::None);
 			m_brush.HorizontalAlignmentRatio(0.f);
 			m_brush.VerticalAlignmentRatio(0.f);
+			m_brush.Surface(s_reflectionSurface);
 			m_visual = compositor.CreateSpriteVisual();
 			m_visual.Brush(m_brush);
 			m_visual.RelativeSizeAdjustment({ 1.f, 1.f });
@@ -54,13 +59,6 @@ namespace OpenGlass
 		{
 			m_brush = nullptr;
 			m_visual = nullptr;
-		}
-		[[maybe_unused]] void SyncReflectionData(const CGlassReflectionVisual& reflecctionVisual)
-		{
-			m_brush.Surface(reflecctionVisual.m_brush.Surface());
-			m_brush.Scale(reflecctionVisual.m_brush.Scale());
-			m_brush.Offset(reflecctionVisual.m_brush.Offset());
-			m_visual.Opacity(reflecctionVisual.m_visual.Opacity());
 		}
 		void NotifyOffsetToWindow(wfn::float3 offset)
 		{
@@ -72,28 +70,27 @@ namespace OpenGlass
 		}
 		void ValidateVisual() try
 		{
-			if (m_visual.Opacity() != s_intensity)
+			if (m_intensity != s_intensity)
 			{
 				m_visual.Opacity(s_intensity);
+				m_intensity = s_intensity;
 				if (s_intensity == 0.f)
 				{
 					m_visual.IsVisible(false);
+					m_visible = false;
 				}
 				else
 				{
 					m_visual.IsVisible(true);
+					m_visible = true;
 				}
 			}
-			if (!m_visual.IsVisible())
+			if (!m_visible)
 			{
 				return;
 			}
+
 			EnsureGlassSurface();
-			if (!m_brush.Surface())
-			{
-				m_forceUpdate = true;
-				m_brush.Surface(s_reflectionSurface);
-			}
 
 			RECT windowRect{};
 			THROW_HR_IF_NULL(E_INVALIDARG, m_window->GetActualWindowRect(&windowRect, false, true, false));
@@ -109,12 +106,11 @@ namespace OpenGlass
 			MONITORINFO mi{ sizeof(MONITORINFO) };
 			THROW_IF_WIN32_BOOL_FALSE(GetMonitorInfoW(monitor, &mi));
 
-			auto surfaceSize{ s_reflectionSurface.SizeInt32() };
 			bool scallingChanged{ false };
 			if (
 				m_forceUpdate ||
 				m_monitor != monitor ||
-				m_surfaceSize != surfaceSize ||
+				m_surfaceSize != s_surfaceSize ||
 				!EqualRect(&m_monitorRect, &mi.rcMonitor)
 			)
 			{
@@ -133,6 +129,7 @@ namespace OpenGlass
 			m_monitor = monitor;
 			m_monitorRect = mi.rcMonitor;
 			m_windowRect = windowRect;
+			m_surfaceSize = s_surfaceSize;
 			m_parallaxIntensity = s_parallaxIntensity;
 			m_parallaxIntensity = m_noParallax ? 0.f : m_parallaxIntensity;
 			m_forceUpdate = false;
@@ -142,8 +139,8 @@ namespace OpenGlass
 				m_brush.Scale(
 					winrt::Windows::Foundation::Numerics::float2
 					{ 
-						(static_cast<float>(wil::rect_width(m_monitorRect)) / static_cast<float>(surfaceSize.Width)) + 0.01f,
-						(static_cast<float>(wil::rect_height(m_monitorRect)) / static_cast<float>(surfaceSize.Height)) + 0.01f
+						(static_cast<float>(wil::rect_width(m_monitorRect)) / static_cast<float>(m_surfaceSize.Width)) + 0.01f,
+						(static_cast<float>(wil::rect_height(m_monitorRect)) / static_cast<float>(m_surfaceSize.Height)) + 0.01f
 					}
 				);
 			}
@@ -295,6 +292,11 @@ namespace OpenGlass
 					}
 				);
 			}
+			s_surfaceSize = 
+			{
+				static_cast<int>(width),
+				static_cast<int>(height)
+			};
 
 			auto drawingSurfaceInterop{ s_reflectionSurface.as<ABI::Windows::UI::Composition::ICompositionDrawingSurfaceInterop>() };
 			POINT offset{ 0, 0 };

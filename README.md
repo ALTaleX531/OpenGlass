@@ -12,8 +12,9 @@ This software is designed for Windows 10 2004 to Windows 11 23H2, which is curre
 ## Migrate from glass8 to OpenGlass
 The following table demonstrates the similarities and differences between these two software.
 > [!NOTE]
-> 1. Most of the OpenGlass settings are stored only in the HKCU\SOFTWARE\Microsoft\Windows\DWM
-> 2. Instead of reading the registry directly to get the color, OpenGlass uses the udwm internal API to get the calculated color.
+> 1. Most of the OpenGlass settings are stored only in the `HKCU\SOFTWARE\Microsoft\Windows\DWM`, all registry items stored in HKLM remain constant at runtime.
+> 2. All external resources referenced by OpenGlass must ensure that it can be accessed by DWM, so paths like `C:\Users\*` are invalid.
+> 3. Instead of reading the registry directly to get the color, OpenGlass uses the udwm internal API to get the calculated color.
 
 | glass8 | Type | Description | OpenGlass | Description | Remarks
 | ---- | ---- | ---- | ---- | ---- | ---- |
@@ -43,7 +44,6 @@ The following table demonstrates the similarities and differences between these 
 |  | DWORD | **Not supported** | GlassLuminosity | The luminosity of Acrylic/Mica effect |  |
 |  | DWORD | **Not supported** | GlassType | The type of backdrop effect (0x0-0x4). 0x0=Blur. 0x01=Aero. 0x02=Acrylic. 0x03=Mica. 0x04=Solid. |  |
 |  | DWORD | **Not supported** | GlassOverrideBorder | Specifies that the effect should extend to the border. The default value is 0. | **Disabling this option can significantly improve performance** |
-|  | DWORD | **Not supported** | ~~EnableGlassRegionSplitting~~ | ~~Split the backdrop region to improve performance.~~ | **This option is deprecated because it has been found through extensive benchmarking that it not only does not improve performance but may degrade performance** |
 |  | DWORD | **Not supported** | GlassCrossFadeTime | The cross fade time for backdrop switching. The default value is 87. |  |
 |  | DWORD | **Not supported** | GlassOverrideAccent | Overriding accent with the effect of OpenGlass. The default value is 0. |  |
 |  | DWORD | **Not supported** | EnableOcclusionCulling | Enable occlusion cullling optimization for Windows 10. The default value is 1. |  |
