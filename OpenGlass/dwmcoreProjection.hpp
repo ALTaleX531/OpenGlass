@@ -271,7 +271,14 @@ namespace OpenGlass::dwmcore
 			return reinterpret_cast<DynArray<CZOrderedRect>*>(const_cast<CArrayBasedCoverageSet*>(this));
 		}
 	};
-	struct CVisualTree : CResource {};
+	struct CVisual;
+	struct CVisualTree : CResource 
+	{
+		CVisual* GetVisual() const
+		{
+			return reinterpret_cast<CVisual* const*>(this)[7];
+		}
+	};
 	struct CWindowBackgroundTreatment : CResource {};
 	struct CVisual : CResource
 	{
@@ -290,14 +297,19 @@ namespace OpenGlass::dwmcore
 			DEFINE_INVOKER(CVisual::GetHwnd);
 			return INVOKE_MEMBERFUNCTION();
 		}
+		HWND STDMETHODCALLTYPE GetTopLevelWindow() const
+		{
+			DEFINE_INVOKER(CVisual::GetTopLevelWindow);
+			return INVOKE_MEMBERFUNCTION();
+		}
 	};
 	struct EffectInput : CResource {};
 	struct IDeviceTarget: CResource {};
 	struct CDrawingContext : CResource
 	{
-		CDrawingContext* GetParentDrawingContext() const
+		CDrawingContext* GetRealDrawingContext() const
 		{
-			return const_cast<CDrawingContext*>(this) + 3;
+			return reinterpret_cast<CDrawingContext*>(reinterpret_cast<ULONG_PTR const>(this) + 24);
 		}
 		bool STDMETHODCALLTYPE IsOccluded(const D2D1_RECT_F& lprc, int flag) const
 		{
