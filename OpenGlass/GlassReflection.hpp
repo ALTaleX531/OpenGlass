@@ -51,6 +51,7 @@ namespace OpenGlass
 			m_brush.HorizontalAlignmentRatio(0.f);
 			m_brush.VerticalAlignmentRatio(0.f);
 			m_brush.Surface(s_reflectionSurface);
+			m_brush.BitmapInterpolationMode(wuc::CompositionBitmapInterpolationMode::Linear);
 			m_visual = compositor.CreateSpriteVisual();
 			m_visual.Brush(m_brush);
 			m_visual.RelativeSizeAdjustment({ 1.f, 1.f });

@@ -75,7 +75,7 @@ wuc::CompositionBrush BackdropFactory::GetOrCreateBackdropBrush(
 
 		if (
 			policy->AccentState == 4 &&
-			(policy->dwGradientColor << 24) == 0
+			policy->dwGradientColor == 0
 		)
 		{
 			brush = compositor.CreateColorBrush({});

@@ -23,11 +23,6 @@ namespace OpenGlass::AeroBackdrop
 		float blurAmount
 	)
 	{
-		if (static_cast<float>(color.A) * colorBalance == 255.f)
-		{
-			return compositor.CreateColorBrush(color);
-		}
-
 		wuc::CompositionBrush blurredBackdropBrush
 		{
 			[](auto compositor, auto blurAmount) -> wuc::CompositionBrush

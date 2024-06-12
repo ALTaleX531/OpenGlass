@@ -25,17 +25,6 @@ namespace OpenGlass::GlassOptimizer
 		dwmcore::CVisualTree* visualTree, 
 		bool* unknown
 	);
-#ifdef _DEBUG
-	HRESULT STDMETHODCALLTYPE MyCCustomBlur_BuildEffect(
-		dwmcore::CCustomBlur* This,
-		ID2D1Image* image,
-		D2D1_RECT_F& sourceRect,
-		const D2D1_SIZE_F& blurAmount,
-		D2D1_GAUSSIANBLUR_OPTIMIZATION optimization,
-		const D2D1_VECTOR_2F& outputScale,
-		D2D1_VECTOR_2F* scaleAmount
-	);
-#endif
 	float STDMETHODCALLTYPE MyCCustomBlur_DetermineOutputScale(
 		float size, 
 		float blurAmount, 
@@ -48,32 +37,61 @@ namespace OpenGlass::GlassOptimizer
 		const D2D1_VECTOR_2F& blurAmount,
 		D2D1_VECTOR_2F* scaleAmount
 	);
-	HRESULT WINAPI MyCDrawingContext_GetBackdropImageFromRenderTarget(
+	HRESULT STDMETHODCALLTYPE MyCDrawingContext_GetBackdropImageFromRenderTarget(
 		dwmcore::CDrawingContext* This,
-		D2D1_RECT_F& lprc,
+		const D2D1_RECT_F& lprc,
 		bool notUsingFullTargetAsBackdropInput,
 		dwmcore::EffectInput** effectInput
+	);
+	HRESULT STDMETHODCALLTYPE MyCDrawingContext_PreSubgraph(
+		dwmcore::CDrawingContext* This,
+		dwmcore::CVisualTree* visualTree,
+		bool* conditionalBreak
+	);
+	HRESULT STDMETHODCALLTYPE MyCCustomBlur_Draw(
+		dwmcore::CCustomBlur* This,
+		dwmcore::CDrawingContext* drawingContext,
+		const D2D1_RECT_F& destinationRect,
+		const D2D1_POINT_2F& point,
+		D2D1_INTERPOLATION_MODE interpolationMode,
+		D2D1_COMPOSITE_MODE compositeMode
 	);
 
 	decltype(&MyCVisual_GetWindowBackgroundTreatmentInternal) g_CVisual_GetWindowBackgroundTreatmentInternal_Org{ nullptr };
 	decltype(&MyCArrayBasedCoverageSet_AddAntiOccluderRect) g_CArrayBasedCoverageSet_AddAntiOccluderRect_Org{ nullptr };
 	decltype(&MyCArrayBasedCoverageSet_IsCovered) g_CArrayBasedCoverageSet_IsCovered_Org{ nullptr };
 	decltype(&MyCOcclusionContext_PostSubgraph) g_COcclusionContext_PostSubgraph_Org{ nullptr };
-#ifdef _DEBUG
-	decltype(&MyCCustomBlur_BuildEffect) g_CCustomBlur_BuildEffect_Org{ nullptr };
-#endif
 	decltype(&MyCCustomBlur_DetermineOutputScale) g_CCustomBlur_DetermineOutputScale_Org{ nullptr };
 	decltype(&MyCBlurRenderingGraph_DeterminePreScale) g_CBlurRenderingGraph_DeterminePreScale_Org{ nullptr };
 	decltype(&MyCDrawingContext_GetBackdropImageFromRenderTarget) g_CDrawingContext_GetBackdropImageFromRenderTarget_Org{ nullptr };
+	decltype(&MyCDrawingContext_PreSubgraph) g_CDrawingContext_PreSubgraph_Org{ nullptr };
+	decltype(&MyCCustomBlur_Draw) g_CCustomBlur_Draw_Org{ nullptr };
 
-	BOOL g_enableOcclusionCulling{ TRUE };
-	BOOL g_enableEffectInputOptimization{ TRUE };
 	float g_additionalPreScaleAmount{ 0.5f };
 
 	ULONGLONG g_frameId{ 0ull };
 	bool g_hasWindowBackgroundTreatment{ false };
 	dwmcore::CVisual* g_visual{ nullptr };
 	dwmcore::MyDynArrayImpl<dwmcore::CZOrderedRect> g_validAntiOccluderList{};
+
+	HWND g_hwnd{ nullptr };
+	enum D2D1_DIRECTIONALBLURKERNEL_PROP
+	{
+		D2D1_DIRECTIONALBLURKERNEL_PROP_STANDARD_DEVIATION,
+		D2D1_DIRECTIONALBLURKERNEL_PROP_DIRECTION,
+		D2D1_DIRECTIONALBLURKERNEL_PROP_KERNEL_RANGE_FACTOR,
+		D2D1_DIRECTIONALBLURKERNEL_PROP_OPTIMIZATION_TRANSFORM
+	};
+	enum D2D1_DIRECTIONALBLURKERNEL_DIRECTION
+	{
+		D2D1_DIRECTIONALBLURKERNEL_DIRECTION_X,
+		D2D1_DIRECTIONALBLURKERNEL_DIRECTION_Y
+	};
+	enum D2D1_DIRECTIONALBLURKERNEL_OPTIMIZATION_TRANSFORM
+	{
+		D2D1_DIRECTIONALBLURKERNEL_OPTIMIZATION_TRANSFORM_IDENDITY,
+		D2D1_DIRECTIONALBLURKERNEL_OPTIMIZATION_TRANSFORM_SCALE
+	};
 }
 
 dwmcore::CWindowBackgroundTreatment* STDMETHODCALLTYPE GlassOptimizer::MyCVisual_GetWindowBackgroundTreatmentInternal(dwmcore::CVisual* This)
@@ -83,6 +101,7 @@ dwmcore::CWindowBackgroundTreatment* STDMETHODCALLTYPE GlassOptimizer::MyCVisual
 	{
 		g_hasWindowBackgroundTreatment = true;
 	}
+
 	return result;
 }
 HRESULT STDMETHODCALLTYPE GlassOptimizer::MyCArrayBasedCoverageSet_AddAntiOccluderRect(
@@ -92,39 +111,36 @@ HRESULT STDMETHODCALLTYPE GlassOptimizer::MyCArrayBasedCoverageSet_AddAntiOcclud
 	const MilMatrix3x2D* matrix
 )
 {
-	if (g_enableOcclusionCulling) [[likely]]
+	auto currentFrameId{ dwmcore::GetCurrentFrameId() };
+	if (g_frameId != currentFrameId)
 	{
-		auto currentFrameId{ dwmcore::GetCurrentFrameId() };
-		if (g_frameId != currentFrameId)
-		{
 #ifdef _DEBUG
-			OutputDebugStringW(
-				L"new frame detected, executing GC...\n"
-			);
+		OutputDebugStringW(
+			L"new frame detected, executing GC...\n"
+		);
 #endif
-			g_frameId = currentFrameId;
-			g_validAntiOccluderList.Clear();
-		}
+		g_frameId = currentFrameId;
+		g_validAntiOccluderList.Clear();
+	}
 
-		if (
-			g_visual->GetOwningProcessId() != GetCurrentProcessId() /* actually this is useless, GetOwningProcessId only returns the process id of dwm, idk why */ || 
-			g_hasWindowBackgroundTreatment
-		)
-		{
-			dwmcore::CZOrderedRect zorderedRect{ lprc, depth, lprc };
-			zorderedRect.UpdateDeviceRect(matrix);
-			g_validAntiOccluderList.Add(zorderedRect);
+	if (
+		g_visual->GetOwningProcessId() != GetCurrentProcessId() /* actually this is useless, GetOwningProcessId only returns the process id of dwm, idk why */ ||
+		g_hasWindowBackgroundTreatment
+	)
+	{
+		dwmcore::CZOrderedRect zorderedRect{ lprc, depth, lprc };
+		zorderedRect.UpdateDeviceRect(matrix);
+		g_validAntiOccluderList.Add(zorderedRect);
 #ifdef _DEBUG
-			OutputDebugStringW(
-				std::format(
-					L"{} - depth: {}, owning process id: {}\n",
-					__FUNCTIONW__,
-					depth,
-					g_visual->GetOwningProcessId()
-				).c_str()
-			);
+		OutputDebugStringW(
+			std::format(
+				L"{} - depth: {}, owning process id: {}\n",
+				__FUNCTIONW__,
+				depth,
+				g_visual->GetOwningProcessId()
+			).c_str()
+		);
 #endif
-		}
 	}
 
 	return g_CArrayBasedCoverageSet_AddAntiOccluderRect_Org(This, lprc, depth, matrix);
@@ -136,19 +152,14 @@ bool STDMETHODCALLTYPE GlassOptimizer::MyCArrayBasedCoverageSet_IsCovered(
 	bool deprecated
 )
 {
-	if (g_enableOcclusionCulling) [[likely]]
-	{
-		auto array{ This->GetAntiOccluderArray() };
-		auto arrayBackup{ *array };
-		*array = g_validAntiOccluderList;
+	auto array{ This->GetAntiOccluderArray() };
+	auto arrayBackup{ *array };
+	*array = g_validAntiOccluderList;
 
-		bool result{ g_CArrayBasedCoverageSet_IsCovered_Org(This, lprc, depth, deprecated) };
+	bool result{ g_CArrayBasedCoverageSet_IsCovered_Org(This, lprc, depth, deprecated) };
 
-		*array = arrayBackup;
-		return result;
-	}
-
-	return g_CArrayBasedCoverageSet_IsCovered_Org(This, lprc, depth, deprecated);
+	*array = arrayBackup;
+	return result;
 }
 HRESULT STDMETHODCALLTYPE GlassOptimizer::MyCOcclusionContext_PostSubgraph(
 	dwmcore::COcclusionContext* This,
@@ -164,45 +175,6 @@ HRESULT STDMETHODCALLTYPE GlassOptimizer::MyCOcclusionContext_PostSubgraph(
 
 	return hr;
 }
-
-#ifdef _DEBUG
-HRESULT STDMETHODCALLTYPE GlassOptimizer::MyCCustomBlur_BuildEffect(
-	dwmcore::CCustomBlur* This,
-	ID2D1Image* image,
-	D2D1_RECT_F& sourceRect,
-	const D2D1_SIZE_F& blurAmount,
-	D2D1_GAUSSIANBLUR_OPTIMIZATION optimization,
-	const D2D1_VECTOR_2F& outputScale,
-	D2D1_VECTOR_2F* scaleAmount
-)
-{
-	HRESULT hr{ g_CCustomBlur_BuildEffect_Org(This, image, sourceRect, blurAmount, optimization, outputScale, scaleAmount) };
-	
-	D2D1_RECT_F cropRect{};
-	This->GetCropEffect()->GetValue(D2D1_CROP_PROP_RECT, &cropRect);
-	OutputDebugStringW(
-		std::format(
-			L"cropRect: [{},{},{},{}], sourceRect: [{},{},{},{}], blurAmount: [{},{}], outputScale:[{},{}], scaleAmount:[{},{}]\n",
-			cropRect.left,
-			cropRect.top,
-			cropRect.right,
-			cropRect.bottom,
-			sourceRect.left,
-			sourceRect.top,
-			sourceRect.right,
-			sourceRect.bottom,
-			blurAmount.width,
-			blurAmount.height,
-			outputScale.x,
-			outputScale.y,
-			scaleAmount->x,
-			scaleAmount->y
-		).c_str()
-	);
-
-	return hr;
-}
-#endif
 
 float STDMETHODCALLTYPE GlassOptimizer::MyCCustomBlur_DetermineOutputScale(
 	float size,
@@ -231,9 +203,9 @@ void STDMETHODCALLTYPE GlassOptimizer::MyCBlurRenderingGraph_DeterminePreScale(
 		scaleAmount->y *= g_additionalPreScaleAmount;
 	}
 }
-HRESULT WINAPI GlassOptimizer::MyCDrawingContext_GetBackdropImageFromRenderTarget(
+HRESULT STDMETHODCALLTYPE GlassOptimizer::MyCDrawingContext_GetBackdropImageFromRenderTarget(
 	dwmcore::CDrawingContext* This,
-	D2D1_RECT_F& lprc,
+	const D2D1_RECT_F& lprc,
 	bool notUsingFullTargetAsBackdropInput,
 	dwmcore::EffectInput** effectInput
 )
@@ -250,38 +222,55 @@ HRESULT WINAPI GlassOptimizer::MyCDrawingContext_GetBackdropImageFromRenderTarge
 		).c_str()
 	);
 #endif
-	return g_CDrawingContext_GetBackdropImageFromRenderTarget_Org(This, lprc, static_cast<bool>(g_enableEffectInputOptimization), effectInput);
+	return g_CDrawingContext_GetBackdropImageFromRenderTarget_Org(This, lprc, true, effectInput);
+}
+
+HRESULT STDMETHODCALLTYPE GlassOptimizer::MyCDrawingContext_PreSubgraph(
+	dwmcore::CDrawingContext* This,
+	dwmcore::CVisualTree* visualTree,
+	bool* conditionalBreak
+)
+{
+	HWND hwnd{ reinterpret_cast<dwmcore::CDrawingContext*>(This->GetD2DContextOwner())->GetCurrentVisual()->GetHwnd()};
+	if (hwnd) { g_hwnd = hwnd; }
+	HRESULT hr{ g_CDrawingContext_PreSubgraph_Org(This, visualTree, conditionalBreak) };
+
+	return hr;
+}
+
+HRESULT STDMETHODCALLTYPE GlassOptimizer::MyCCustomBlur_Draw(
+	dwmcore::CCustomBlur* This,
+	dwmcore::CDrawingContext* drawingContext,
+	const D2D1_RECT_F& destinationRect,
+	const D2D1_POINT_2F& point,
+	D2D1_INTERPOLATION_MODE interpolationMode,
+	D2D1_COMPOSITE_MODE compositeMode
+)
+{
+	drawingContext->GetD2DContext()->GetDeviceContext()->DrawImage(
+		This->GetDirectionalBlurYEffect(),
+		nullptr,
+		&destinationRect,
+		D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR,
+		D2D1_COMPOSITE_MODE_BOUNDED_SOURCE_COPY
+	);
+	g_hwnd = nullptr;
+
+	return S_OK;
 }
 
 void GlassOptimizer::UpdateConfiguration(ConfigurationFramework::UpdateType type)
 {
 	if (type & ConfigurationFramework::UpdateType::Framework)
 	{
-		g_enableOcclusionCulling = TRUE;
-		LOG_IF_FAILED(
-			wil::reg::get_value_dword_nothrow(
-				ConfigurationFramework::GetDwmKey(),
-				L"EnableOcclusionCulling",
-				reinterpret_cast<DWORD*>(&g_enableOcclusionCulling)
-			)
-		);
-		g_enableEffectInputOptimization = TRUE;
-		LOG_IF_FAILED(
-			wil::reg::get_value_dword_nothrow(
-				ConfigurationFramework::GetDwmKey(),
-				L"EnableEffectInputOptimization",
-				reinterpret_cast<DWORD*>(&g_enableEffectInputOptimization)
-			)
-		);
-
 		DWORD value{ 0 };
 		if (os::buildNumber < os::build_w11_21h2)
 		{
-			value = 50;
+			value = 90;
 		}
 		else
 		{
-			value = 75;
+			value = 95;
 		}
 		LOG_IF_FAILED(
 			wil::reg::get_value_dword_nothrow(
@@ -300,12 +289,11 @@ HRESULT GlassOptimizer::Startup()
 	dwmcore::GetAddressFromSymbolMap("CArrayBasedCoverageSet::AddAntiOccluderRect", g_CArrayBasedCoverageSet_AddAntiOccluderRect_Org);
 	dwmcore::GetAddressFromSymbolMap("CArrayBasedCoverageSet::IsCovered", g_CArrayBasedCoverageSet_IsCovered_Org);
 	dwmcore::GetAddressFromSymbolMap("COcclusionContext::PostSubgraph", g_COcclusionContext_PostSubgraph_Org);
-#ifdef _DEBUG
-	dwmcore::GetAddressFromSymbolMap("CCustomBlur::BuildEffect", g_CCustomBlur_BuildEffect_Org);
-#endif
 	dwmcore::GetAddressFromSymbolMap("CCustomBlur::DetermineOutputScale", g_CCustomBlur_DetermineOutputScale_Org);
 	dwmcore::GetAddressFromSymbolMap("CBlurRenderingGraph::DeterminePreScale", g_CBlurRenderingGraph_DeterminePreScale_Org);
 	dwmcore::GetAddressFromSymbolMap("CDrawingContext::GetBackdropImageFromRenderTarget", g_CDrawingContext_GetBackdropImageFromRenderTarget_Org);
+	dwmcore::GetAddressFromSymbolMap("CDrawingContext::PreSubgraph", g_CDrawingContext_PreSubgraph_Org);
+	dwmcore::GetAddressFromSymbolMap("CCustomBlur::Draw", g_CCustomBlur_Draw_Org);
 	
 	return HookHelper::Detours::Write([]()
 	{
@@ -315,11 +303,10 @@ HRESULT GlassOptimizer::Startup()
 			HookHelper::Detours::Attach(&g_CArrayBasedCoverageSet_AddAntiOccluderRect_Org, MyCArrayBasedCoverageSet_AddAntiOccluderRect);
 			HookHelper::Detours::Attach(&g_CArrayBasedCoverageSet_IsCovered_Org, MyCArrayBasedCoverageSet_IsCovered);
 			HookHelper::Detours::Attach(&g_COcclusionContext_PostSubgraph_Org, MyCOcclusionContext_PostSubgraph);
-#ifdef _DEBUG
-			HookHelper::Detours::Attach(&g_CCustomBlur_BuildEffect_Org, MyCCustomBlur_BuildEffect);
-#endif
 			HookHelper::Detours::Attach(&g_CCustomBlur_DetermineOutputScale_Org, MyCCustomBlur_DetermineOutputScale);
 			HookHelper::Detours::Attach(&g_CDrawingContext_GetBackdropImageFromRenderTarget_Org, MyCDrawingContext_GetBackdropImageFromRenderTarget);
+			HookHelper::Detours::Attach(&g_CDrawingContext_PreSubgraph_Org, MyCDrawingContext_PreSubgraph);
+			HookHelper::Detours::Attach(&g_CCustomBlur_Draw_Org, MyCCustomBlur_Draw);
 		}
 		else
 		{
@@ -337,11 +324,10 @@ void GlassOptimizer::Shutdown()
 			HookHelper::Detours::Detach(&g_CArrayBasedCoverageSet_AddAntiOccluderRect_Org, MyCArrayBasedCoverageSet_AddAntiOccluderRect);
 			HookHelper::Detours::Detach(&g_CArrayBasedCoverageSet_IsCovered_Org, MyCArrayBasedCoverageSet_IsCovered);
 			HookHelper::Detours::Detach(&g_COcclusionContext_PostSubgraph_Org, MyCOcclusionContext_PostSubgraph);
-#ifdef _DEBUG
-			HookHelper::Detours::Detach(&g_CCustomBlur_BuildEffect_Org, MyCCustomBlur_BuildEffect);
-#endif
 			HookHelper::Detours::Detach(&g_CCustomBlur_DetermineOutputScale_Org, MyCCustomBlur_DetermineOutputScale);
 			HookHelper::Detours::Detach(&g_CDrawingContext_GetBackdropImageFromRenderTarget_Org, MyCDrawingContext_GetBackdropImageFromRenderTarget);
+			HookHelper::Detours::Detach(&g_CDrawingContext_PreSubgraph_Org, MyCDrawingContext_PreSubgraph);
+			HookHelper::Detours::Detach(&g_CCustomBlur_Draw_Org, MyCCustomBlur_Draw);
 		}
 		else
 		{

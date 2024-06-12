@@ -106,39 +106,6 @@ namespace OpenGlass::BackdropManager
 		{
 			return Configuration::g_overrideBorder || m_data->IsFrameExtendedIntoClientAreaLRB();
 		}
-		bool ShouldUpdateBackdropRegion() const
-		{
-			// window probably minimized or not visible on the screen,
-			// no need to update
-			RECT borderRect{};
-			THROW_HR_IF_NULL(E_INVALIDARG, m_window->GetActualWindowRect(&borderRect, false, true, false));
-			auto virtualScreenX{ GetSystemMetrics(SM_XVIRTUALSCREEN) };
-			auto virtualScreenY{ GetSystemMetrics(SM_YVIRTUALSCREEN) };
-			auto virtualScreenCX{ GetSystemMetrics(SM_CXVIRTUALSCREEN) };
-			auto virtualScreenCY{ GetSystemMetrics(SM_CYVIRTUALSCREEN) };
-			if (
-				borderRect.right <= virtualScreenX ||
-				borderRect.bottom <= virtualScreenY ||
-				borderRect.left >= virtualScreenX + virtualScreenCX ||
-				borderRect.top >= virtualScreenY + virtualScreenCY ||
-				!m_data->IsWindowVisibleAndUncloaked()
-			)
-			{
-				return false;
-			}
-#ifdef _DEBUG
-			OutputDebugStringW(
-				std::format(
-					L"borderRect: [{},{},{},{}]\n",
-					borderRect.left,
-					borderRect.top,
-					borderRect.right,
-					borderRect.bottom
-				).c_str()
-			);
-#endif
-			return true;
-		}
 		wil::unique_hrgn CompositeNewBackdropRegion() const
 		{
 			wil::unique_hrgn compositedRgn{ CreateRectRgn(0, 0, 0, 0) };
@@ -174,23 +141,15 @@ namespace OpenGlass::BackdropManager
 					CombineRgn(compositedRgn.get(), compositedRgn.get(), accentRgn.get(), RGN_AND);
 				}
 
-				// TO-DO: round corner specialization for SIB task thumbnail window
-			}
-
-			CombineRgn(compositedRgn.get(), compositedRgn.get(), windowRgn.get(), RGN_AND);
-			if (
-				m_gdiWindowRgn &&
-				(
-					m_kind != CompositedBackdropKind::Accent ||
-					(
-						m_kind == CompositedBackdropKind::Accent &&
-						m_data->GetAccentPolicy()->IsGdiRegionRespected()
-						)
-					)
+				if (
+					m_gdiWindowRgn &&
+					m_data->GetAccentPolicy()->IsGdiRegionRespected()
 				)
-			{
-				CombineRgn(compositedRgn.get(), compositedRgn.get(), m_gdiWindowRgn.get(), RGN_AND);
+				{
+					CombineRgn(compositedRgn.get(), compositedRgn.get(), m_gdiWindowRgn.get(), RGN_AND);
+				}
 			}
+			CombineRgn(compositedRgn.get(), compositedRgn.get(), windowRgn.get(), RGN_AND);
 
 			return compositedRgn;
 		}
@@ -208,6 +167,23 @@ namespace OpenGlass::BackdropManager
 		auto GetuDwmVisual() const
 		{
 			return m_udwmVisual.get();
+		}
+		bool CanBeTrimmed() override
+		{
+			if (m_kind != CompositedBackdropKind::Accent || !m_visible)
+			{
+				return true;
+			}
+			if (m_accentRect.has_value())
+			{
+				return false;
+			}
+			if (m_gdiWindowRgn && m_data->GetAccentPolicy()->IsGdiRegionRespected())
+			{
+				return false;
+			}
+
+			return true;
 		}
 	};
 
@@ -298,6 +274,10 @@ namespace OpenGlass::BackdropManager
 		void SetGdiWindowRegion(HRGN region) override {}
 		void ValidateVisual() override {}
 		void UpdateNCBackground() override {}
+		bool CanBeTrimmed() override
+		{
+			return false;
+		}
 	};
 	class CClonedCompositedBackdropVisual : public winrt::implements<CClonedCompositedBackdropVisual, ICompositedBackdropVisual>, uDwm::CClonedBackdropVisual
 	{
@@ -321,6 +301,10 @@ namespace OpenGlass::BackdropManager
 		void SetGdiWindowRegion(HRGN region) override {}
 		void ValidateVisual() override {}
 		void UpdateNCBackground() override {}
+		bool CanBeTrimmed() override
+		{
+			return false;
+		}
 	};
 }
 
@@ -623,6 +607,18 @@ BackdropManager::CCompositedBackdropVisual::CCompositedBackdropVisual(uDwm::CTop
 
 	OnDeviceLost();
 	OnBackdropKindUpdated(GlassFramework::GetActualBackdropKind(window));
+	if (m_kind == CompositedBackdropKind::Accent)
+	{
+		wil::unique_hrgn clipRgn{ CreateRectRgn(0, 0, 0, 0) };
+		if (GetWindowRgn(m_data->GetHwnd(), clipRgn.get()) != ERROR)
+		{
+			SetGdiWindowRegion(clipRgn.get());
+		}
+		else
+		{
+			SetGdiWindowRegion(nullptr);
+		}
+	}
 }
 
 BackdropManager::CCompositedBackdropVisual::~CCompositedBackdropVisual()
@@ -665,10 +661,23 @@ void BackdropManager::CCompositedBackdropVisual::SetAccentRect(LPCRECT lprc)
 	if (lprc)
 	{
 		m_accentRect = *lprc;
+		m_gdiWindowRgn.reset();
 	}
-	else
+	else if (m_accentRect.has_value())
 	{
 		m_accentRect = std::nullopt;
+		if (m_kind == CompositedBackdropKind::Accent)
+		{
+			wil::unique_hrgn clipRgn{ CreateRectRgn(0, 0, 0, 0) };
+			if (GetWindowRgn(m_data->GetHwnd(), clipRgn.get()) != ERROR)
+			{
+				m_gdiWindowRgn.reset(clipRgn.release());
+			}
+			else
+			{
+				m_gdiWindowRgn.reset();
+			}
+		}
 	}
 	m_backdropDataChanged = true;
 }
@@ -681,17 +690,19 @@ void BackdropManager::CCompositedBackdropVisual::SetGdiWindowRegion(HRGN region)
 			m_gdiWindowRgn.reset(CreateRectRgn(0, 0, 0, 0));
 		}
 		CopyRgn(m_gdiWindowRgn.get(), region);
+		m_accentRect = std::nullopt;
 	}
-	else
+	else if (m_gdiWindowRgn)
 	{
 		m_gdiWindowRgn.reset();
+		m_accentRect = std::nullopt;
 	}
 	m_backdropDataChanged = true;
 }
 
 void BackdropManager::CCompositedBackdropVisual::ValidateVisual()
 {
-	if (ShouldUpdateBackdropRegion())
+	if (!m_window->IsTrullyMinimized())
 	{
 		if (m_visible)
 		{
@@ -714,7 +725,7 @@ void BackdropManager::CCompositedBackdropVisual::ValidateVisual()
 }
 void BackdropManager::CCompositedBackdropVisual::UpdateNCBackground()
 {
-	if (!ShouldUpdateBackdropRegion())
+	if (m_window->IsTrullyMinimized())
 	{
 		return;
 	}
@@ -730,12 +741,12 @@ void BackdropManager::CCompositedBackdropVisual::UpdateNCBackground()
 }
 
 
-size_t BackdropManager::GetBackdropCount()
+size_t BackdropManager::GetCount()
 {
 	return g_backdropMap.size();
 }
 
-winrt::com_ptr<BackdropManager::ICompositedBackdropVisual> BackdropManager::GetOrCreateBackdropVisual(uDwm::CTopLevelWindow* window, bool createIfNecessary, bool silent)
+winrt::com_ptr<BackdropManager::ICompositedBackdropVisual> BackdropManager::GetOrCreate(uDwm::CTopLevelWindow* window, bool createIfNecessary, bool silent)
 {
 	auto it{ g_backdropMap.find(window) };
 
@@ -770,10 +781,27 @@ winrt::com_ptr<BackdropManager::ICompositedBackdropVisual> BackdropManager::GetO
 	return it == g_backdropMap.end() ? nullptr : it->second;
 }
 
-void BackdropManager::TryCloneBackdropVisualForWindow(uDwm::CTopLevelWindow* src, uDwm::CTopLevelWindow* dst, ICompositedBackdropVisual** visual)
+winrt::com_ptr<BackdropManager::ICompositedBackdropVisual> BackdropManager::GetOrCreateForAccentBlurRect(uDwm::CTopLevelWindow* window, LPCRECT accentBlurRect, bool createIfNecessary, bool silent)
+{
+	auto it{ g_backdropMap.find(window) };
+
+	auto result{ BackdropManager::GetOrCreate(window, createIfNecessary, true) };
+	if (result && it == g_backdropMap.end())
+	{
+		result->SetAccentRect(accentBlurRect);
+		if (!silent)
+		{
+			RedrawTopLevelWindow(window);
+		}
+	}
+
+	return result;
+}
+
+void BackdropManager::TryClone(uDwm::CTopLevelWindow* src, uDwm::CTopLevelWindow* dst, ICompositedBackdropVisual** visual)
 {
 	auto legacyVisual{ src->GetLegacyVisual() };
-	if (auto backdrop{ GetOrCreateBackdropVisual(src) }; backdrop && legacyVisual)
+	if (auto backdrop{ GetOrCreate(src) }; backdrop && legacyVisual)
 	{
 		auto it{ g_backdropMap.find(dst) };
 		if (it == g_backdropMap.end())
@@ -793,7 +821,7 @@ void BackdropManager::TryCloneBackdropVisualForWindow(uDwm::CTopLevelWindow* src
 	}
 }
 
-void BackdropManager::RemoveBackdrop(uDwm::CTopLevelWindow* window, bool silent)
+void BackdropManager::Remove(uDwm::CTopLevelWindow* window, bool silent)
 {
 	auto it{ g_backdropMap.find(window) };
 
@@ -805,6 +833,16 @@ void BackdropManager::RemoveBackdrop(uDwm::CTopLevelWindow* window, bool silent)
 		{
 			RedrawTopLevelWindow(window);
 		}
+	}
+}
+
+void BackdropManager::Trim(uDwm::CTopLevelWindow* window)
+{
+	auto it{ g_backdropMap.find(window) };
+
+	if (it != g_backdropMap.end() && it->second->CanBeTrimmed())
+	{
+		g_backdropMap.erase(it);
 	}
 }
 

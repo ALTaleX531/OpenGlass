@@ -34,6 +34,7 @@ namespace OpenGlass::BackdropManager
 
 		virtual void ValidateVisual() = 0;
 		virtual void UpdateNCBackground() = 0;
+		virtual bool CanBeTrimmed() = 0;
 	};
 
 	namespace Configuration
@@ -43,9 +44,11 @@ namespace OpenGlass::BackdropManager
 		inline wf::TimeSpan g_crossfadeTime{ std::chrono::milliseconds{ 87 } };
 	}
 
-	size_t GetBackdropCount();
-	winrt::com_ptr<ICompositedBackdropVisual> GetOrCreateBackdropVisual(uDwm::CTopLevelWindow* window, bool createIfNecessary = false, bool silent = false);
-	void TryCloneBackdropVisualForWindow(uDwm::CTopLevelWindow* src, uDwm::CTopLevelWindow* dst, ICompositedBackdropVisual** visual = nullptr);
-	void RemoveBackdrop(uDwm::CTopLevelWindow* window, bool silent = false);
+	size_t GetCount();
+	winrt::com_ptr<ICompositedBackdropVisual> GetOrCreate(uDwm::CTopLevelWindow* window, bool createIfNecessary = false, bool silent = false);
+	winrt::com_ptr<ICompositedBackdropVisual> GetOrCreateForAccentBlurRect(uDwm::CTopLevelWindow* window, LPCRECT accentBlurRect, bool createIfNecessary = false, bool silent = false);
+	void TryClone(uDwm::CTopLevelWindow* src, uDwm::CTopLevelWindow* dst, ICompositedBackdropVisual** visual = nullptr);
+	void Remove(uDwm::CTopLevelWindow* window, bool silent = false);
+	void Trim(uDwm::CTopLevelWindow* window);
 	void Shutdown();
 }

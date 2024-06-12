@@ -305,11 +305,35 @@ namespace OpenGlass::dwmcore
 	};
 	struct EffectInput : CResource {};
 	struct IDeviceTarget: CResource {};
+	struct ID2DContextOwner : CResource {};
+	struct CD2DContext : CResource
+	{
+		ID2D1DeviceContext* GetDeviceContext() const
+		{
+			return reinterpret_cast<ID2D1DeviceContext* const*>(this)[30];
+		}
+		HRESULT STDMETHODCALLTYPE FillEffect(
+			const ID2DContextOwner* contextOwner,
+			ID2D1Effect* effect,
+			const D2D_RECT_F* lprc,
+			const D2D_POINT_2F* point,
+			D2D1_INTERPOLATION_MODE interpolationMode,
+			D2D1_COMPOSITE_MODE compositeMode
+		)
+		{
+			DEFINE_INVOKER(CD2DContext::FillEffect);
+			return INVOKE_MEMBERFUNCTION(contextOwner, effect, lprc, point, interpolationMode, compositeMode);
+		}
+	};
 	struct CDrawingContext : CResource
 	{
-		CDrawingContext* GetRealDrawingContext() const
+		CD2DContext* GetD2DContext() const
 		{
-			return reinterpret_cast<CDrawingContext*>(reinterpret_cast<ULONG_PTR const>(this) + 24);
+			return reinterpret_cast<CD2DContext*>(reinterpret_cast<ULONG_PTR const*>(this)[5] + 16);
+		}
+		ID2DContextOwner* GetD2DContextOwner() const
+		{
+			return reinterpret_cast<ID2DContextOwner*>(reinterpret_cast<ULONG_PTR const>(this) + 24);
 		}
 		bool STDMETHODCALLTYPE IsOccluded(const D2D1_RECT_F& lprc, int flag) const
 		{
@@ -365,6 +389,25 @@ namespace OpenGlass::dwmcore
 		{
 			return reinterpret_cast<ID2D1Effect* const*>(this)[7];
 		}
+		void STDMETHODCALLTYPE Reset()
+		{
+			DEFINE_INVOKER(CCustomBlur::Reset);
+			return INVOKE_MEMBERFUNCTION();
+		}
+		static HRESULT STDMETHODCALLTYPE Create(ID2D1DeviceContext* deviceContext, CCustomBlur** customBlur)
+		{
+			DEFINE_INVOKER(CCustomBlur::Create);
+			return INVOKE_FUNCTION(deviceContext, customBlur);
+		}
+		static float STDMETHODCALLTYPE DetermineOutputScale(
+			float size,
+			float blurAmount,
+			D2D1_GAUSSIANBLUR_OPTIMIZATION optimization
+		)
+		{
+			DEFINE_INVOKER(CCustomBlur::DetermineOutputScale);
+			return INVOKE_FUNCTION(size, blurAmount, optimization);
+		}
 	};
 	struct CDrawListCache : CResource {};
 	struct CDrawListBrush : CResource {};
@@ -407,6 +450,7 @@ namespace OpenGlass::dwmcore
 			fullyUnDecoratedFunctionName == "CResource::GetOwningProcessId" ||
 			fullyUnDecoratedFunctionName == "COcclusionContext::PostSubgraph" ||
 			fullyUnDecoratedFunctionName == "CBlurRenderingGraph::DeterminePreScale" ||
+			fullyUnDecoratedFunctionName == "CD2DContext::FillEffect" ||
 			(
 				fullyUnDecoratedFunctionName.starts_with("CDrawingContext::") &&
 				fullyUnDecoratedFunctionName != "CDrawingContext::IsOccluded"

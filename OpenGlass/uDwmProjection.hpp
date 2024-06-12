@@ -421,7 +421,7 @@ namespace OpenGlass::uDwm
 		{
 			return AccentState >= 1 && AccentState <= 4;
 		}
-		bool IsClipEnabled() const
+		bool IsAccentBlurRectEnabled() const
 		{
 			return (AccentFlags & (1 << 9)) != 0;
 		}
@@ -913,6 +913,13 @@ namespace OpenGlass::uDwm
 			}
 
 			return true;
+		}
+		bool IsTrullyMinimized()
+		{
+			RECT borderRect{};
+			THROW_HR_IF_NULL(E_INVALIDARG, GetActualWindowRect(&borderRect, false, true, false));
+
+			return borderRect.left <= -32000 || borderRect.top <= -32000;
 		}
 
 		enum class BackgroundType

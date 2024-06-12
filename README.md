@@ -46,9 +46,9 @@ The following table demonstrates the similarities and differences between these 
 |  | DWORD | **Not supported** | GlassOverrideBorder | Specifies that the effect should extend to the border. The default value is 0. | **Disabling this option can significantly improve performance** |
 |  | DWORD | **Not supported** | GlassCrossFadeTime | The cross fade time for backdrop switching. The default value is 87. |  |
 |  | DWORD | **Not supported** | GlassOverrideAccent | Overriding accent with the effect of OpenGlass. The default value is 0. |  |
-|  | DWORD | **Not supported** | EnableOcclusionCulling | Enable occlusion cullling optimization for Windows 10. The default value is 1. |  |
-|  | DWORD | **Not supported** | GlassAdditionalPreScaleAmount | Additional prescaling factor for backdrop input image, the smaller the value the more significant the performance improvement, the lower the quality of the glass. The default value is 50% for Windows 10 but 75% for Windows 11. |  |
-|  | DWORD | **Not supported** | EnableEffectInputOptimization | In Windows 10, dwmcore creates a copy of the entire desktop for effect input by default. When this option is on, dwmcore only creates a copy of the desktop in the size of the blurred region. The default value is 1. |  |
+|  | DWORD | **Not supported** | GlassAdditionalPreScaleAmount | Additional prescaling factor for backdrop input image, the smaller the value the more significant the performance improvement, the lower the quality of the glass. The default value is 90% for Windows 10 but 95% for Windows 11. |  |
+|  | DWORD | **Not supported** | EnableOcclusionCulling | Enable occlusion cullling optimization for Windows 10. The default value is 1. | **Outdated** |
+|  | DWORD | **Not supported** | EnableEffectInputOptimization | In Windows 10, dwmcore creates a copy of the entire desktop for effect input by default. When this option is on, dwmcore only creates a copy of the desktop in the size of the blurred region. The default value is 1. | **Outdated** |
 
 > [!TIP]  
 > Check out the code to discover more details!

@@ -65,14 +65,44 @@ namespace OpenGlass::dcomp
 		}
 	};
 
-	// Windows 11 only, customize the content of hostbackdropbrush
-	DECLARE_INTERFACE_IID_(IVisualPartner, IUnknown, "01dc794b-4ff5-4491-9942-b9e7b8893be4")
+	
+	static HRESULT SetWindowBackgroundTreatment(IUnknown* unknown, const wuc::CompositionBrush& brush)
 	{
-		virtual HRESULT STDMETHODCALLTYPE GetPointerEventRouter(struct ::ABI::Windows::UI::Composition::ICompositionInteractionPartner**) PURE;
-		virtual HRESULT STDMETHODCALLTYPE RemovePointerEventRouter() PURE;
-		virtual HRESULT STDMETHODCALLTYPE SetTransformParent(::ABI::Windows::UI::Composition::IVisual* visual) PURE;
-		virtual HRESULT STDMETHODCALLTYPE SetWindowBackgroundTreatment(::ABI::Windows::UI::Composition::ICompositionBrush* brush) PURE;
-		virtual HRESULT STDMETHODCALLTYPE SetInteraction(struct ::ABI::Windows::UI::Composition::ICompositionInteractionPartner*) PURE;
-		virtual HRESULT STDMETHODCALLTYPE SetSharedManipulationTransform(struct ::ABI::Windows::UI::Composition::ICompositionManipulationTransformPartner*) PURE;
-	};
+		if (os::buildNumber < os::build_w11_21h2)
+		{
+			// Windows 10 only, customize the content of hostbackdropbrush
+			// only affect the entire tree of the applied visual
+			DECLARE_INTERFACE_IID_(IVisualPartner, IUnknown, "bbed8da5-977f-42cb-9b28-f0ceebced3a7")
+			{
+				virtual HRESULT STDMETHODCALLTYPE GetPointerEventRouter(struct ::ABI::Windows::UI::Composition::ICompositionInteractionPartner**) PURE;
+				virtual HRESULT STDMETHODCALLTYPE RemovePointerEventRouter() PURE;
+				virtual HRESULT STDMETHODCALLTYPE SetTransformParent(::ABI::Windows::UI::Composition::IVisual * visual) PURE;
+				virtual HRESULT STDMETHODCALLTYPE SetWindowBackgroundTreatment(::ABI::Windows::UI::Composition::ICompositionBrush * brush) PURE;
+				virtual HRESULT STDMETHODCALLTYPE SetInteraction(struct ::ABI::Windows::UI::Composition::ICompositionInteractionPartner*) PURE;
+				virtual HRESULT STDMETHODCALLTYPE SetSharedManipulationTransform(struct ::ABI::Windows::UI::Composition::ICompositionManipulationTransformPartner*) PURE;
+			};
+			winrt::com_ptr<IVisualPartner> visualPartner{ nullptr };
+			RETURN_IF_FAILED(unknown->QueryInterface(visualPartner.put()));
+			RETURN_IF_FAILED(visualPartner->SetWindowBackgroundTreatment(brush.as<::ABI::Windows::UI::Composition::ICompositionBrush>().get()));
+		}
+		else
+		{
+			// Windows 11 only, customize the content of hostbackdropbrush
+			// affect the whole window
+			DECLARE_INTERFACE_IID_(IVisualPartner, IUnknown, "01dc794b-4ff5-4491-9942-b9e7b8893be4")
+			{
+				virtual HRESULT STDMETHODCALLTYPE GetPointerEventRouter(struct ::ABI::Windows::UI::Composition::ICompositionInteractionPartner**) PURE;
+				virtual HRESULT STDMETHODCALLTYPE RemovePointerEventRouter() PURE;
+				virtual HRESULT STDMETHODCALLTYPE SetTransformParent(::ABI::Windows::UI::Composition::IVisual * visual) PURE;
+				virtual HRESULT STDMETHODCALLTYPE SetWindowBackgroundTreatment(::ABI::Windows::UI::Composition::ICompositionBrush * brush) PURE;
+				virtual HRESULT STDMETHODCALLTYPE SetInteraction(struct ::ABI::Windows::UI::Composition::ICompositionInteractionPartner*) PURE;
+				virtual HRESULT STDMETHODCALLTYPE SetSharedManipulationTransform(struct ::ABI::Windows::UI::Composition::ICompositionManipulationTransformPartner*) PURE;
+			};
+			winrt::com_ptr<IVisualPartner> visualPartner{ nullptr };
+			RETURN_IF_FAILED(unknown->QueryInterface(visualPartner.put()));
+			RETURN_IF_FAILED(visualPartner->SetWindowBackgroundTreatment(brush.as<::ABI::Windows::UI::Composition::ICompositionBrush>().get()));
+		}
+
+		return S_OK;
+	}
 }
