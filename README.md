@@ -1,3 +1,4 @@
+![header](https://www.glass8.eu/files/images/header.jpg)
 # OpenGlass
 A replica of the dead software glass8, also known as the upstream project of [DWMBlurGlass](https://github.com/Maplespe/DWMBlurGlass).  
 This software is designed for Windows 10 2004 to Windows 11 23H2, which is currently in its early stages and may have various efficiency issues and bugs.   
