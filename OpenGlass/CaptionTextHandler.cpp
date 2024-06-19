@@ -32,6 +32,7 @@ namespace OpenGlass::CaptionTextHandler
 	HRESULT STDMETHODCALLTYPE MyCText_ValidateResources(uDwm::CText* This);
 	HRESULT STDMETHODCALLTYPE MyCText_SetSize(uDwm::CText* This, const SIZE* size);
 	HRESULT STDMETHODCALLTYPE MyCMatrixTransformProxy_Update(struct CMatrixTransformProxy* This, MilMatrix3x2D* matrix);
+	HRESULT STDMETHODCALLTYPE MyCChannel_MatrixTransformUpdate(dwmcore::CChannel* This, UINT handleIndex, MilMatrix3x2D* matrix);
 
 	decltype(&MyDrawTextW) g_DrawTextW_Org{ nullptr };
 	decltype(&MyCreateBitmap) g_CreateBitmap_Org{ nullptr };
@@ -39,6 +40,7 @@ namespace OpenGlass::CaptionTextHandler
 	decltype(&MyCText_ValidateResources) g_CText_ValidateResources_Org{ nullptr };
 	decltype(&MyCText_SetSize) g_CText_SetSize_Org{ nullptr };
 	decltype(&MyCMatrixTransformProxy_Update) g_CMatrixTransformProxy_Update_Org{ nullptr };
+	decltype(&MyCChannel_MatrixTransformUpdate) g_CChannel_MatrixTransformUpdate_Org{ nullptr };
 	PVOID* g_IWICImagingFactory2_CreateBitmapFromHBITMAP_Org_Address{ nullptr };
 
 	uDwm::CText* g_textVisual{ nullptr };
@@ -48,7 +50,7 @@ namespace OpenGlass::CaptionTextHandler
 
 	constexpr int standardGlowSize{ 15 };
 	int g_textGlowSize{ standardGlowSize };
-	BOOL g_centerCaption{ false };
+	bool g_centerCaption{ false };
 	bool g_disableTextHooks{ false };
 }
 
@@ -146,9 +148,9 @@ int WINAPI CaptionTextHandler::MyDrawTextW(
 HBITMAP WINAPI CaptionTextHandler::MyCreateBitmap(
 	int nWidth,
 	int nHeight,
-	UINT nPlanes,
-	UINT nBitCount,
-	const void* lpBits
+	UINT /*nPlanes*/,
+	UINT /*nBitCount*/,
+	const void* /*lpBits*/
 )
 {
 	if (g_textHeight)
@@ -166,7 +168,7 @@ HRESULT STDMETHODCALLTYPE CaptionTextHandler::MyIWICImagingFactory2_CreateBitmap
 	IWICImagingFactory2* This,
 	HBITMAP hBitmap,
 	HPALETTE hPalette,
-	WICBitmapAlphaChannelOption options,
+	WICBitmapAlphaChannelOption /*options*/,
 	IWICBitmap** ppIBitmap
 )
 {
@@ -221,73 +223,66 @@ HRESULT STDMETHODCALLTYPE CaptionTextHandler::MyCMatrixTransformProxy_Update(str
 
 	return g_CMatrixTransformProxy_Update_Org(This, matrix);
 }
+HRESULT STDMETHODCALLTYPE CaptionTextHandler::MyCChannel_MatrixTransformUpdate(dwmcore::CChannel* This, UINT handleIndex, MilMatrix3x2D* matrix)
+{
+	if (g_textVisual)
+	{
+		matrix->DX -= static_cast<DOUBLE>(g_textGlowSize);
+		if (g_centerCaption)
+		{
+			auto offset{ floor(static_cast<DOUBLE>(g_textVisual->GetWidth() - g_textWidth) / 2.) };
+			matrix->DX += g_textVisual->IsRTL() ? -offset : offset;
+		}
+		matrix->DY = static_cast<DOUBLE>(static_cast<LONG>(static_cast<DOUBLE>(g_textVisual->GetHeight() - g_textHeight) / 2. - 0.5));
+	}
+
+	return g_CChannel_MatrixTransformUpdate_Org(This, handleIndex, matrix);
+}
 
 void CaptionTextHandler::UpdateConfiguration(ConfigurationFramework::UpdateType type)
 {
 	if (type & ConfigurationFramework::UpdateType::Backdrop)
 	{
-		g_centerCaption = FALSE;
-		wil::reg::get_value_dword_nothrow(
-			ConfigurationFramework::GetDwmKey(),
-			L"CenterCaption",
-			reinterpret_cast<DWORD*>(&g_centerCaption)
-		);
+		g_centerCaption = static_cast<bool>(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"CenterCaption", FALSE));
 		g_textGlowSize = standardGlowSize;
-		if (FAILED(
-			wil::reg::get_value_dword_nothrow(
-				ConfigurationFramework::GetDwmKey(),
-				L"TextGlowSize",
-				reinterpret_cast<DWORD*>(&g_textGlowSize)
-			)
-		))
+		auto glowSize{ ConfigurationFramework::DwmTryDwordFromHKCUAndHKLM(L"TextGlowSize") };
+		if (!glowSize.has_value())
 		{
-			// compatibility fallback for glass8
-			wil::reg::get_value_dword_nothrow(
-				ConfigurationFramework::GetDwmKey(),
-				L"TextGlowMode",
-				reinterpret_cast<DWORD*>(&g_textGlowSize)
-			);
-			g_textGlowSize = HIWORD(g_textGlowSize);
+			glowSize = ConfigurationFramework::DwmTryDwordFromHKCUAndHKLM(L"TextGlowMode");
+			if (glowSize.has_value())
+			{
+				g_textGlowSize = HIWORD(glowSize.value());
+			}
 		}
-
-		g_captionColor = std::nullopt;
-		COLORREF captionColor{};
-		if (SUCCEEDED(
-			wil::reg::get_value_dword_nothrow(
-				ConfigurationFramework::GetDwmKey(),
-				L"ColorizationColorCaption",
-				reinterpret_cast<DWORD*>(&captionColor)
-			)
-		))
+		else
 		{
-			g_captionColor = captionColor;
+			g_textGlowSize = glowSize.value();
 		}
+		g_captionColor = ConfigurationFramework::DwmTryDwordFromHKCUAndHKLM(L"ColorizationColorCaption");
 	}
 }
 
 HRESULT CaptionTextHandler::Startup()
 {
 	DWORD value{ 0ul };
-	wil::reg::get_value_dword_nothrow(
-		ConfigurationFramework::GetDwmKey(),
-		L"DisabledHooks",
-		reinterpret_cast<DWORD*>(&value)
+	LOG_IF_FAILED_WITH_EXPECTED(
+		wil::reg::get_value_dword_nothrow(
+			ConfigurationFramework::GetDwmKey(),
+			L"DisabledHooks",
+			reinterpret_cast<DWORD*>(&value)
+		),
+		HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND)
 	);
 	g_disableTextHooks = (value & 1) != 0;
 
-	uDwm::GetAddressFromSymbolMap("CText::ValidateResources", g_CText_ValidateResources_Org);
-	uDwm::GetAddressFromSymbolMap("CText::SetSize", g_CText_SetSize_Org);
-	uDwm::GetAddressFromSymbolMap("CMatrixTransformProxy::Update", g_CMatrixTransformProxy_Update_Org);
 	if (!g_disableTextHooks)
 	{
 		if (os::buildNumber < os::build_w11_22h2)
 		{
-			HookHelper::Detours::Write([]()
-			{
-				HookHelper::Detours::Attach(&g_CMatrixTransformProxy_Update_Org, MyCMatrixTransformProxy_Update);
-				HookHelper::Detours::Attach(&g_CText_SetSize_Org, MyCText_SetSize);
-				HookHelper::Detours::Attach(&g_CText_ValidateResources_Org, MyCText_ValidateResources);
-			});
+			uDwm::GetAddressFromSymbolMap("CText::ValidateResources", g_CText_ValidateResources_Org);
+			uDwm::GetAddressFromSymbolMap("CText::SetSize", g_CText_SetSize_Org);
+			uDwm::GetAddressFromSymbolMap("CMatrixTransformProxy::Update", g_CMatrixTransformProxy_Update_Org);
+			dwmcore::GetAddressFromSymbolMap("CChannel::MatrixTransformUpdate", g_CChannel_MatrixTransformUpdate_Org);
 
 			wil::unique_hmodule wincodecsMoudle{ LoadLibraryExW(L"WindowsCodecs.dll", nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32) };
 			RETURN_LAST_ERROR_IF_NULL(wincodecsMoudle);
@@ -307,6 +302,20 @@ HRESULT CaptionTextHandler::Startup()
 			HMODULE udwmModule{ GetModuleHandleW(L"uDwm.dll") };
 			g_DrawTextW_Org = reinterpret_cast<decltype(g_DrawTextW_Org)>(HookHelper::WriteIAT(udwmModule, "user32.dll", "DrawTextW", MyDrawTextW));
 			g_CreateBitmap_Org = reinterpret_cast<decltype(g_CreateBitmap_Org)>(HookHelper::WriteIAT(udwmModule, "gdi32.dll", "CreateBitmap", MyCreateBitmap));
+
+			HookHelper::Detours::Write([]()
+			{
+				if (os::buildNumber >= os::build_w10_1903)
+				{
+					HookHelper::Detours::Attach(&g_CMatrixTransformProxy_Update_Org, MyCMatrixTransformProxy_Update);
+				}
+				else
+				{
+					HookHelper::Detours::Attach(&g_CChannel_MatrixTransformUpdate_Org, MyCChannel_MatrixTransformUpdate);
+				}
+				HookHelper::Detours::Attach(&g_CText_SetSize_Org, MyCText_SetSize);
+				HookHelper::Detours::Attach(&g_CText_ValidateResources_Org, MyCText_ValidateResources);
+			});
 		}
 	}
 
@@ -318,6 +327,20 @@ void CaptionTextHandler::Shutdown()
 	{
 		if (os::buildNumber < os::build_w11_22h2)
 		{
+			HookHelper::Detours::Write([]()
+			{
+				HookHelper::Detours::Detach(&g_CText_ValidateResources_Org, MyCText_ValidateResources);
+				HookHelper::Detours::Detach(&g_CText_SetSize_Org, MyCText_SetSize);
+				if (os::buildNumber >= os::build_w10_1903)
+				{
+					HookHelper::Detours::Detach(&g_CMatrixTransformProxy_Update_Org, MyCMatrixTransformProxy_Update);
+				}
+				else
+				{
+					HookHelper::Detours::Detach(&g_CChannel_MatrixTransformUpdate_Org, MyCChannel_MatrixTransformUpdate);
+				}
+			});
+
 			if (g_IWICImagingFactory2_CreateBitmapFromHBITMAP_Org_Address)
 			{
 				HookHelper::WritePointer(
@@ -334,13 +357,6 @@ void CaptionTextHandler::Shutdown()
 			{
 				HookHelper::WriteIAT(udwmModule, "gdi32.dll", "CreateBitmap", g_CreateBitmap_Org);
 			}
-
-			HookHelper::Detours::Write([]()
-			{
-				HookHelper::Detours::Detach(&g_CText_ValidateResources_Org, MyCText_ValidateResources);
-				HookHelper::Detours::Detach(&g_CText_SetSize_Org, MyCText_SetSize);
-				HookHelper::Detours::Detach(&g_CMatrixTransformProxy_Update_Org, MyCMatrixTransformProxy_Update);
-			});
 
 			g_textVisual = nullptr;
 			g_textWidth = 0;

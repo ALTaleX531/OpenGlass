@@ -55,6 +55,17 @@ namespace OpenGlass
 			m_visual = compositor.CreateSpriteVisual();
 			m_visual.Brush(m_brush);
 			m_visual.RelativeSizeAdjustment({ 1.f, 1.f });
+			m_visual.Opacity(s_intensity);
+			if (s_intensity == 0.f)
+			{
+				m_visual.IsVisible(false);
+				m_visible = false;
+			}
+			else
+			{
+				m_visual.IsVisible(true);
+				m_visible = true;
+			}
 		}
 		void UninitializeVisual()
 		{

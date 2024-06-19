@@ -6,10 +6,7 @@
 
 namespace OpenGlass::Utils
 {
-	FORCEINLINE wge::IGraphicsEffectSource CreateBlurredBackdrop(
-		const wuc::Compositor& compositor,
-		float blurAmount
-	)
+	FORCEINLINE wge::IGraphicsEffectSource CreateBlurredBackdrop(float blurAmount)
 	{
 		if (!blurAmount)
 		{
@@ -46,13 +43,14 @@ namespace OpenGlass::Utils
 
 	FORCEINLINE wuc::ScalarKeyFrameAnimation CreateCrossFadeAnimation(
 		const wuc::Compositor& compositor,
+		char easingFunction,
 		winrt::Windows::Foundation::TimeSpan const& crossfadeTime
 	)
 	{
 		auto animation{ compositor.CreateScalarKeyFrameAnimation() };
-		auto linearEasing{ compositor.CreateLinearEasingFunction() };
-		animation.InsertKeyFrame(0.0f, 0.0f, linearEasing);
-		animation.InsertKeyFrame(1.0f, 1.0f, linearEasing);
+		auto easing{ easingFunction == 1 ? static_cast<wuc::CompositionEasingFunction>(compositor.CreateCubicBezierEasingFunction({ 0.5f, 0.0f }, { 0.0f, 0.9f })) : static_cast<wuc::CompositionEasingFunction>(compositor.CreateLinearEasingFunction()) };
+		animation.InsertKeyFrame(0.0f, 0.0f);
+		animation.InsertKeyFrame(1.0f, 1.0f, easing);
 		animation.Duration(crossfadeTime);
 		return animation;
 	}

@@ -150,10 +150,15 @@ namespace OpenGlass::dwmcore
 	};
 	struct CChannel
 	{
-		HRESULT STDMETHODCALLTYPE RedirectVisualSetRedirectedVisual(UINT redirectVisualHandleIndex, UINT visualHandleIndex)
+		HRESULT STDMETHODCALLTYPE DuplicateSharedResource(HANDLE handle, UINT type, UINT* handleIndex)
 		{
-			DEFINE_INVOKER(CChannel::RedirectVisualSetRedirectedVisual);
-			return INVOKE_MEMBERFUNCTION(redirectVisualHandleIndex, visualHandleIndex);
+			DEFINE_INVOKER(CChannel::DuplicateSharedResource);
+			return INVOKE_MEMBERFUNCTION(handle, type, handleIndex);
+		}
+		HRESULT STDMETHODCALLTYPE MatrixTransformUpdate(UINT handleIndex, MilMatrix3x2D* matrix)
+		{
+			DEFINE_INVOKER(CChannel::MatrixTransformUpdate);
+			return INVOKE_MEMBERFUNCTION(handleIndex, matrix);
 		}
 	};
 	namespace CCommonRegistryData
@@ -264,7 +269,17 @@ namespace OpenGlass::dwmcore
 
 		DynArray<CZOrderedRect>* GetAntiOccluderArray() const
 		{
-			return reinterpret_cast<DynArray<CZOrderedRect>*>(const_cast<CArrayBasedCoverageSet*>(this + 49));
+			DynArray<CZOrderedRect>* array{ nullptr };
+			if (os::buildNumber < os::build_w10_2004)
+			{
+				array = reinterpret_cast<DynArray<CZOrderedRect>*>(const_cast<CArrayBasedCoverageSet*>(this + 52));
+			}
+			else
+			{
+				array = reinterpret_cast<DynArray<CZOrderedRect>*>(const_cast<CArrayBasedCoverageSet*>(this + 49));
+			}
+
+			return array;
 		}
 		DynArray<CZOrderedRect>* GetOccluderArray() const
 		{
@@ -329,10 +344,18 @@ namespace OpenGlass::dwmcore
 	{
 		CD2DContext* GetD2DContext() const
 		{
+			if (os::buildNumber < os::build_w10_2004)
+			{
+				return reinterpret_cast<CD2DContext* const*>(this)[48];
+			}
 			return reinterpret_cast<CD2DContext*>(reinterpret_cast<ULONG_PTR const*>(this)[5] + 16);
 		}
 		ID2DContextOwner* GetD2DContextOwner() const
 		{
+			if (os::buildNumber < os::build_w10_2004)
+			{
+				return reinterpret_cast<ID2DContextOwner* const*>(this)[8];
+			}
 			return reinterpret_cast<ID2DContextOwner*>(reinterpret_cast<ULONG_PTR const>(this) + 24);
 		}
 		bool STDMETHODCALLTYPE IsOccluded(const D2D1_RECT_F& lprc, int flag) const
@@ -355,7 +378,18 @@ namespace OpenGlass::dwmcore
 	{
 		CVisual* GetVisual() const
 		{
-			return reinterpret_cast<CVisual* const*>(this)[1];
+			CVisual* visual{ nullptr };
+
+			if (os::buildNumber < os::build_w10_2004)
+			{
+				visual = reinterpret_cast<CVisual* const*>(this)[6];
+			}
+			else
+			{
+				visual = reinterpret_cast<CVisual* const*>(this)[1];
+			}
+
+			return visual;
 		}
 		HRESULT STDMETHODCALLTYPE PostSubgraph(CVisualTree* visualTree, bool* unknown)
 		{
@@ -430,7 +464,7 @@ namespace OpenGlass::dwmcore
 		return INVOKE_FUNCTION();
 	}
 
-	inline bool OnSymbolParsing(std::string_view functionName, std::string_view fullyUnDecoratedFunctionName, const HookHelper::OffsetStorage& offset, const PSYMBOL_INFO originalSymInfo)
+	inline bool OnSymbolParsing(std::string_view functionName, std::string_view fullyUnDecoratedFunctionName, const HookHelper::OffsetStorage& offset, const PSYMBOL_INFO /*originalSymInfo*/)
 	{
 		if (fullyUnDecoratedFunctionName == "CCommonRegistryData::m_backdropBlurCachingThrottleQPCTimeDelta")
 		{
@@ -441,12 +475,13 @@ namespace OpenGlass::dwmcore
 			fullyUnDecoratedFunctionName.starts_with("CVisual::") ||
 			fullyUnDecoratedFunctionName.starts_with("CArrayBasedCoverageSet::") ||
 			fullyUnDecoratedFunctionName.starts_with("CZOrderedRect::") ||
-			fullyUnDecoratedFunctionName.starts_with("FastRegion::CRegion::") ||
+			/*fullyUnDecoratedFunctionName.starts_with("FastRegion::CRegion::") ||
 			fullyUnDecoratedFunctionName.starts_with("FastRegion::Internal::CRgnData") ||
-			fullyUnDecoratedFunctionName.starts_with("CRegion::") ||
+			fullyUnDecoratedFunctionName.starts_with("CRegion::") ||*/
 			fullyUnDecoratedFunctionName.starts_with("CCustomBlur::") ||
 			fullyUnDecoratedFunctionName == "GetCurrentFrameId" ||
-			fullyUnDecoratedFunctionName == "CChannel::RedirectVisualSetRedirectedVisual" ||
+			fullyUnDecoratedFunctionName == "CChannel::DuplicateSharedResource" ||
+			fullyUnDecoratedFunctionName == "CChannel::MatrixTransformUpdate" ||
 			fullyUnDecoratedFunctionName == "CResource::GetOwningProcessId" ||
 			fullyUnDecoratedFunctionName == "COcclusionContext::PostSubgraph" ||
 			fullyUnDecoratedFunctionName == "CBlurRenderingGraph::DeterminePreScale" ||

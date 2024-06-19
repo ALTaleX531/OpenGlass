@@ -186,93 +186,27 @@ void BackdropFactory::UpdateConfiguration(ConfigurationFramework::UpdateType typ
 {
 	if (type & ConfigurationFramework::UpdateType::Backdrop)
 	{
-		DWORD value{ 0 };
-
-		value = 30;
-		LOG_IF_FAILED(
-			wil::reg::get_value_dword_nothrow(
-				ConfigurationFramework::GetDwmKey(),
-				L"BlurDeviation",
-				&value
-			)
-		);
-		g_blurAmount = std::clamp(static_cast<float>(value) / 10.f * 3.f, 0.f, 250.f);
-
-		value = 63;
-		LOG_IF_FAILED(
-			wil::reg::get_value_dword_nothrow(
-				ConfigurationFramework::GetDwmKey(),
-				L"GlassOpacity",
-				&value
-			)
-		);
-		g_glassOpacity = std::clamp(static_cast<float>(value) / 100.f, 0.f, 1.f);
-
-		value = 0;
-		LOG_IF_FAILED(
-			wil::reg::get_value_dword_nothrow(
-				ConfigurationFramework::GetDwmKey(),
-				L"ColorizationColorBalance",
-				&value
-			)
-		);
-		g_colorBalance = std::clamp(static_cast<float>(value) / 100.f, 0.f, 1.f);
-		value = 43;
-		LOG_IF_FAILED(
-			wil::reg::get_value_dword_nothrow(
-				ConfigurationFramework::GetDwmKey(),
-				L"ColorizationAfterglowBalance",
-				&value
-			)
-		);
-		g_afterglowBalance = std::clamp(static_cast<float>(value) / 100.f, 0.f, 1.f);
-
-		value = 15;
-		LOG_IF_FAILED(
-			wil::reg::get_value_dword_nothrow(
-				ConfigurationFramework::GetDwmKey(),
-				L"GlassLuminosity",
-				&value
-			)
-		);
-		g_luminosity = std::clamp(static_cast<float>(value) / 100.f, 0.f, 1.f);
+		g_blurAmount = std::clamp(static_cast<float>(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"BlurDeviation", 30)) / 10.f * 3.f, 0.f, 250.f);
+		g_glassOpacity = std::clamp(static_cast<float>(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"GlassOpacity", 63)) / 100.f, 0.f, 1.f);
+		g_colorBalance = std::clamp(static_cast<float>(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"ColorizationColorBalance", 0)) / 100.f, 0.f, 1.f);
+		g_afterglowBalance = std::clamp(static_cast<float>(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"ColorizationAfterglowBalance", 43)) / 100.f, 0.f, 1.f);
+		g_luminosity = std::clamp(static_cast<float>(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"GlassLuminosity", 15)) / 100.f, 0.f, 1.f);
 
 		WCHAR materialTexturePath[MAX_PATH + 1]{};
-		LOG_IF_FAILED(
-			wil::reg::get_value_string_nothrow(
-				ConfigurationFramework::GetDwmKey(),
-				L"CustomThemeMaterial",
-				materialTexturePath
-			)
-		);
+		ConfigurationFramework::DwmGetStringFromHKCUAndHKLM(L"CustomThemeMaterial", materialTexturePath);
 		if (g_materialTexturePath != materialTexturePath)
 		{
 			g_materialTexturePath = materialTexturePath;
 			g_materialTextureBrush = nullptr;
 		}
-		value = 2;
-		LOG_IF_FAILED(
-			wil::reg::get_value_dword_nothrow(
-				ConfigurationFramework::GetDwmKey(),
-				L"MaterialOpacity",
-				&value
-			)
-		);
-		g_materialOpacity = std::clamp(static_cast<float>(value) / 100.f, 0.f, 1.f);	
+
+		g_materialOpacity = std::clamp(static_cast<float>(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"MaterialOpacity", 2)) / 100.f, 0.f, 1.f);
 		if (!g_materialTextureBrush)
 		{
 			g_materialTextureBrush = CreateMaterialTextureBrush();
 		}
 
-		value = 0;
-		LOG_IF_FAILED(
-			wil::reg::get_value_dword_nothrow(
-				ConfigurationFramework::GetDwmKey(),
-				L"GlassType",
-				&value
-			)
-		);
-		g_type = static_cast<BackdropType>(std::clamp(value, 0ul, 4ul));
+		g_type = static_cast<BackdropType>(std::clamp(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"GlassType", 0), 0ul, 4ul));
 		// mica is not available in windows 10
 		if (os::buildNumber < os::build_w11_21h2 && g_type == BackdropType::Mica)
 		{

@@ -31,7 +31,7 @@ namespace OpenGlass::MicaBackdrop
 		tintOpacityEffect->SetInput(*tintColorEffect);
 
 		auto luminosityColorEffect{ winrt::make_self<Win2D::ColorSourceEffect>() };
-		luminosityColorEffect->SetColor(tintColor);
+		luminosityColorEffect->SetColor(luminosityColor);
 
 		auto luminosityOpacityEffect{ winrt::make_self<Win2D::OpacityEffect>() };
 		luminosityOpacityEffect->SetName(L"LuminosityOpacity");

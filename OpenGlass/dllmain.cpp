@@ -84,7 +84,7 @@ void operator delete[](
 }
 void operator delete(
 	void* ptr,
-	size_t size
+	size_t /*size*/
 ) noexcept 
 {
 	FAIL_FAST_IF_NULL(ptr);
@@ -93,7 +93,7 @@ void operator delete(
 }
 void operator delete[](
 	void* ptr,
-	size_t size
+	size_t /*size*/
 ) noexcept
 {
 	FAIL_FAST_IF_NULL(ptr);
@@ -104,7 +104,7 @@ void operator delete[](
 BOOL APIENTRY DllMain(
 	HMODULE hModule,
 	DWORD  dwReason,
-	LPVOID lpReserved
+	LPVOID /*lpReserved*/
 )
 {
 	switch (dwReason)
@@ -226,7 +226,7 @@ EXTERN_C __declspec(dllexport) HRESULT InstallApp() try
 			execAction->put_Arguments(
 				_bstr_t
 				{
-					std::format(L"\"{}\",Main /startup", modulePath).c_str()
+					(std::wstring{ L"\"" } + modulePath + L"\",Main /startup").c_str()
 				}
 			)
 		);
@@ -318,8 +318,8 @@ ExecutionParameters AnalyseCommandLine(LPCWSTR lpCmdLine)
 	return params;
 }
 EXTERN_C __declspec(dllexport) int WINAPI Main(
-	HWND hWnd,
-	HINSTANCE hInstance,
+	HWND /*hWnd*/,
+	HINSTANCE /*hInstance*/,
 	LPCSTR    lpCmdLine,
 	int       /*nCmdShow*/
 )

@@ -297,7 +297,7 @@ HRESULT Server::Run()
 #endif
 				PipeContent content{};
 				THROW_IF_WIN32_BOOL_FALSE(ReadFile(pipe.get(), &content, sizeof(content), nullptr, nullptr));
-				if (!(stop = (content.processId == -1)))
+				if (stop = (content.processId == -1); !stop)
 				{
 #ifdef _DEBUG
 					OutputDebugStringW(std::format(L"handling request for dwm (PID: {})...\n", content.processId).c_str());

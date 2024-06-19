@@ -169,10 +169,7 @@ LONG NTAPI OpenGlass::TopLevelExceptionFilter(EXCEPTION_POINTERS* exceptionInfo)
 		{
 			CreateFile2(
 				Utils::make_current_folder_file_wstring(
-					std::format(
-						L"dumps\\minidump-{}.dmp",
-						time
-					)
+					std::wstring{L"dumps\\minidump-"} + time + L".dmp"
 				).c_str(),
 				GENERIC_READ | GENERIC_WRITE,
 				FILE_SHARE_READ,
@@ -228,7 +225,7 @@ LRESULT CALLBACK OpenGlass::DwmNotificationWndProc(HWND hWnd, UINT uMsg, WPARAM 
 			}
 			break;
 		}
-		case WM_WTSSESSION_CHANGE: // session changed, user has justed login in/off
+		case WM_WTSSESSION_CHANGE: // session changed, user has just logged in/off
 		{
 			if (wParam == WTS_SESSION_LOGON)
 			{
@@ -301,7 +298,7 @@ DWORD WINAPI OpenGlass::Initialize(PVOID)
 	{
 		Sleep(50);
 	}
-	Sleep(200);
+	Sleep(100);
 
 	if (os::IsOpenGlassUnsupported())
 	{
@@ -320,7 +317,7 @@ DWORD WINAPI OpenGlass::Initialize(PVOID)
 		);
 		if (result == IDNO)
 		{
-			return E_ABORT;
+			return static_cast<DWORD>(E_ABORT);
 		}
 	}
 
@@ -346,20 +343,19 @@ do_udwm_symbol_parsing:
 		{
 			std::wstring mainInstruction{ !g_symbolRequiresDownloading || g_symbolDownloadCompleted ? Utils::GetResWStringView<IDS_STRING103>() : Utils::GetResWStringView<IDS_STRING110>() };
 			std::wstring content{ Utils::to_error_wstring(hr) + L"\n\n" + (!g_symbolRequiresDownloading || g_symbolDownloadCompleted ? Utils::GetResWStringView<IDS_STRING107>() : Utils::GetResWStringView<IDS_STRING114>()) };
-			std::wstring errorText
-			{
-				std::format(
-					L"hr: {:#x} (uDwm.dll)\n{}",
-					static_cast<ULONG>(hr),
-					Utils::GetResWStringView<IDS_STRING112>()
-				)
-			};
+			WCHAR errorText[MAX_PATH + 1]{};
+			swprintf_s(
+				errorText, 
+				L"hr: 0x%lx (uDwm.dll)\n%s", 
+				hr,
+				Utils::GetResWString<IDS_STRING112>().c_str()
+			);
 
 			indicator->SetProgressTitle(Utils::GetResWString<IDS_STRING115>());
 			indicator->SetProgressState(TBPF_INDETERMINATE);
 			config.pszMainInstruction = mainInstruction.c_str();
 			config.pszContent = content.c_str();
-			config.pszExpandedInformation = errorText.c_str();
+			config.pszExpandedInformation = errorText;
 			LOG_IF_FAILED(
 				TaskDialogIndirect(
 					&config,
@@ -370,7 +366,7 @@ do_udwm_symbol_parsing:
 			);
 			if (result == IDCANCEL)
 			{
-				return hr;
+				return static_cast<DWORD>(hr);
 			}
 			else
 			{
@@ -387,20 +383,19 @@ do_dwmcore_symbol_parsing:
 		{
 			std::wstring mainInstruction{ !g_symbolRequiresDownloading || g_symbolDownloadCompleted ? Utils::GetResWStringView<IDS_STRING103>() : Utils::GetResWStringView<IDS_STRING110>() };
 			std::wstring content{ Utils::to_error_wstring(hr) + L"\n\n" + (!g_symbolRequiresDownloading || g_symbolDownloadCompleted ? Utils::GetResWStringView<IDS_STRING107>() : Utils::GetResWStringView<IDS_STRING114>()) };
-			std::wstring errorText
-			{
-				std::format(
-					L"hr: {:#x} (dwmcore.dll)\n{}",
-					static_cast<ULONG>(hr),
-					Utils::GetResWStringView<IDS_STRING112>()
-				)
-			};
+			WCHAR errorText[MAX_PATH + 1]{};
+			swprintf_s(
+				errorText,
+				L"hr: 0x%lx (dwmcore.dll)\n%s",
+				hr,
+				Utils::GetResWString<IDS_STRING112>().c_str()
+			);
 
 			indicator->SetProgressTitle(Utils::GetResWString<IDS_STRING115>());
 			indicator->SetProgressState(TBPF_INDETERMINATE);
 			config.pszMainInstruction = mainInstruction.c_str();
 			config.pszContent = content.c_str();
-			config.pszExpandedInformation = errorText.c_str();
+			config.pszExpandedInformation = errorText;
 			LOG_IF_FAILED(
 				TaskDialogIndirect(
 					&config,
@@ -411,7 +406,7 @@ do_dwmcore_symbol_parsing:
 			);
 			if (result == IDCANCEL)
 			{
-				return hr;
+				return static_cast<DWORD>(hr);
 			}
 			else
 			{
@@ -450,7 +445,7 @@ do_dwmcore_symbol_parsing:
 	// make sure our third-party ui creators can send message to dwm
 	ChangeWindowMessageFilterEx(g_notificationWindow, WM_DWMCOLORIZATIONCOLORCHANGED, MSGFLT_ALLOW, nullptr);
 	ChangeWindowMessageFilterEx(g_notificationWindow, WM_THEMECHANGED, MSGFLT_ALLOW, nullptr);
-	if (g_powerNotify = RegisterPowerSettingNotification(g_notificationWindow, &GUID_POWER_SAVING_STATUS, DEVICE_NOTIFY_WINDOW_HANDLE))
+	if (g_powerNotify = RegisterPowerSettingNotification(g_notificationWindow, &GUID_POWER_SAVING_STATUS, DEVICE_NOTIFY_WINDOW_HANDLE); g_powerNotify)
 	{
 		ChangeWindowMessageFilterEx(g_notificationWindow, WM_POWERBROADCAST, MSGFLT_ALLOW, nullptr);
 	}
@@ -463,7 +458,7 @@ do_dwmcore_symbol_parsing:
 	SendMessageW(g_notificationWindow, WM_THEMECHANGED, 0, 0);
 	InvalidateRect(nullptr, nullptr, FALSE);
 
-	return S_OK;
+	return static_cast<DWORD>(S_OK);
 }
 
 void OpenGlass::Startup()

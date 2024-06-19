@@ -23,14 +23,7 @@ namespace OpenGlass::BackdropManager
 			// 0x20000 UpdateIcon
 			// 0x100000 UpdateColorization
 			// ...
-			window->SetDirtyFlags(0x4000);
-			window->SetDirtyFlags(0x10000);
-			window->SetDirtyFlags(0x20000);
-			window->SetDirtyFlags(0x40000);
-			window->SetDirtyFlags(0x100000);
-			window->SetDirtyFlags(0x400000);
-			window->SetDirtyFlags(0x2000000);
-			window->SetDirtyFlags(0x4000000);
+
 			if (os::buildNumber >= os::build_w11_22h2)
 			{
 				if (kind == CompositedBackdropKind::SystemBackdrop)
@@ -38,11 +31,22 @@ namespace OpenGlass::BackdropManager
 					window->OnSystemBackdropUpdated();
 				}
 			}
+			else
+			{
+				window->SetDirtyFlags(0x10000);
+			}
 			if (kind == CompositedBackdropKind::Accent)
 			{
 				window->OnAccentPolicyUpdated();
 			}
-			window->OnClipUpdated();
+			if (os::buildNumber >= os::build_w10_1903)
+			{
+				window->OnClipUpdated();
+			}
+			else
+			{
+				window->OnBlurBehindUpdated();
+			}
 		}
 		__except (EXCEPTION_EXECUTE_HANDLER) {}
 	}
@@ -168,9 +172,13 @@ namespace OpenGlass::BackdropManager
 		{
 			return m_udwmVisual.get();
 		}
+		auto GetDCompVisual() const
+		{
+			return m_dcompVisual.as<wuc::Visual>();
+		}
 		bool CanBeTrimmed() override
 		{
-			if (m_kind != CompositedBackdropKind::Accent || !m_visible)
+			if (m_kind != CompositedBackdropKind::Accent && (!m_visible || m_window->IsTrullyMinimized()))
 			{
 				return true;
 			}
@@ -267,11 +275,11 @@ namespace OpenGlass::BackdropManager
 			UninitializeVisual();
 		}
 
-		void SetClientBlurRegion(HRGN region) override {}
-		void SetCaptionRegion(HRGN region) override {}
-		void SetBorderRegion(HRGN region) override {}
-		void SetAccentRect(LPCRECT lprc) override {}
-		void SetGdiWindowRegion(HRGN region) override {}
+		void SetClientBlurRegion(HRGN /*region*/) override {}
+		void SetCaptionRegion(HRGN /*region*/) override {}
+		void SetBorderRegion(HRGN /*region*/) override {}
+		void SetAccentRect(LPCRECT /*lprc*/) override {}
+		void SetGdiWindowRegion(HRGN /*region*/) override {}
 		void ValidateVisual() override {}
 		void UpdateNCBackground() override {}
 		bool CanBeTrimmed() override
@@ -284,21 +292,22 @@ namespace OpenGlass::BackdropManager
 		winrt::com_ptr<CCompositedBackdropVisual> m_compositedBackdropVisual{ nullptr };
 	public:
 		CClonedCompositedBackdropVisual(uDwm::CTopLevelWindow* window, const CCompositedBackdropVisual* compositedBackdropVisual) :
-			uDwm::CClonedBackdropVisual{ window->GetNonClientVisual(), compositedBackdropVisual->GetuDwmVisual() }
+			uDwm::CClonedBackdropVisual{ window->GetNonClientVisual(), compositedBackdropVisual->GetDCompVisual() }
 		{
 			winrt::copy_from_abi(m_compositedBackdropVisual, compositedBackdropVisual);
-			InitializeVisual();
+			OnDeviceLost();
 		}
 		virtual ~CClonedCompositedBackdropVisual()
 		{
 			UninitializeVisual();
+			m_compositedBackdropVisual = nullptr;
 		}
 
-		void SetClientBlurRegion(HRGN region) override {}
-		void SetCaptionRegion(HRGN region) override {}
-		void SetBorderRegion(HRGN region) override {}
-		void SetAccentRect(LPCRECT lprc) override {}
-		void SetGdiWindowRegion(HRGN region) override {}
+		void SetClientBlurRegion(HRGN /*region*/) override {}
+		void SetCaptionRegion(HRGN /*region*/) override {}
+		void SetBorderRegion(HRGN /*region*/) override {}
+		void SetAccentRect(LPCRECT /*lprc*/) override {}
+		void SetGdiWindowRegion(HRGN /*region*/) override {}
 		void ValidateVisual() override {}
 		void UpdateNCBackground() override {}
 		bool CanBeTrimmed() override
@@ -351,10 +360,7 @@ HRESULT BackdropManager::CCompositedBackdropVisual::InitializeVisual()
 
 void BackdropManager::CCompositedBackdropVisual::UninitializeVisual()
 {
-	if (m_isWaitingForAnimationComplete)
-	{
-		CancelAnimationCompleteWait();
-	}
+	CancelAnimationCompleteWait();
 
 	m_roundedGeometry = nullptr;
 	m_pathGeometry = nullptr;
@@ -388,10 +394,14 @@ void BackdropManager::CCompositedBackdropVisual::OnBackdropRegionChanged(wil::un
 
 	if (m_visible != isVisible)
 	{
-		m_containerVisual.IsVisible(isVisible);
+		m_dcompVisual.as<wuc::Visual>().IsVisible(isVisible);
 		m_visible = isVisible;
 	}
 
+	if (!m_visible)
+	{
+		return;
+	}
 	wfn::float3 offset{ static_cast<float>(regionBox.left), static_cast<float>(regionBox.top), 0.f };
 	m_containerVisual.Offset(offset);
 	m_containerVisual.Size({ static_cast<float>(max(wil::rect_width(regionBox), 0)), static_cast<float>(max(wil::rect_height(regionBox), 0)) });
@@ -444,7 +454,7 @@ void BackdropManager::CCompositedBackdropVisual::OnBackdropBrushUpdated()
 			m_backdropBrushChanged = true;
 		}
 
-		auto color{ m_window->GetCurrentColorizationColor() };
+		auto color{ !Configuration::g_forceAccentColorization ? m_window->GetCurrentColorizationColor() : (active ? Configuration::g_accentColor : Configuration::g_accentColorInactive) };
 		if (color != m_color)
 		{
 			m_shouldPlayCrossFadeAnimation = true;
@@ -480,29 +490,37 @@ void BackdropManager::CCompositedBackdropVisual::OnBackdropBrushChanged()
 		{
 			m_shouldPlayCrossFadeAnimation = false;
 		}
-		if (m_isWaitingForAnimationComplete)
-		{
-			CancelAnimationCompleteWait();
-		}
+		CancelAnimationCompleteWait();
 
 		if (m_shouldPlayCrossFadeAnimation && Configuration::g_crossfadeTime.count())
 		{
 			auto compositor{ m_backdropBrush.Compositor() };
 			auto crossfadeBrush{ Utils::CreateCrossFadeBrush(compositor, m_previousBackdropBrush, m_backdropBrush) };
 
-			m_isWaitingForAnimationComplete = true;
-			m_waitingForAnimationCompleteBatch = compositor.CreateScopedBatch(wuc::CompositionBatchTypes::Animation);
+			// the completed handler won't be called under windows 10 2004, idk why...
+			if (os::buildNumber >= os::build_w10_2004)
 			{
-				auto strongThis{ get_strong() };
-				auto handler = [strongThis](auto sender, auto args)
-				{
-					strongThis->CancelAnimationCompleteWait();
-					strongThis->m_spriteVisual.Brush(strongThis->m_backdropBrush);
-				};
+				m_isWaitingForAnimationComplete = true;
 				Utils::ThisModule_AddRef();
-				crossfadeBrush.StartAnimation(L"Crossfade.Weight", Utils::CreateCrossFadeAnimation(compositor, Configuration::g_crossfadeTime));
-				m_waitingForAnimationCompleteBatch.End();
-				m_waitingForAnimationCompleteToken = m_waitingForAnimationCompleteBatch.Completed(handler);
+
+				m_waitingForAnimationCompleteBatch = compositor.CreateScopedBatch(wuc::CompositionBatchTypes::Animation);
+				{
+					auto strongThis{ get_strong() };
+					auto handler = [strongThis](auto sender, auto args)
+					{
+						strongThis->CancelAnimationCompleteWait();
+						strongThis->m_spriteVisual.Brush(strongThis->m_backdropBrush);
+					};
+
+					crossfadeBrush.StartAnimation(L"Crossfade.Weight", Utils::CreateCrossFadeAnimation(compositor, Configuration::g_animationEasingFunction, Configuration::g_crossfadeTime));
+
+					m_waitingForAnimationCompleteToken = m_waitingForAnimationCompleteBatch.Completed(handler);
+					m_waitingForAnimationCompleteBatch.End();
+				}
+			}
+			else
+			{
+				crossfadeBrush.StartAnimation(L"Crossfade.Weight", Utils::CreateCrossFadeAnimation(compositor, Configuration::g_animationEasingFunction, Configuration::g_crossfadeTime));
 			}
 
 			m_spriteVisual.Brush(crossfadeBrush);
@@ -706,7 +724,6 @@ void BackdropManager::CCompositedBackdropVisual::ValidateVisual()
 	{
 		if (m_visible)
 		{
-			BOOL valid{ FALSE };
 			if (!uDwm::CheckDeviceState(m_dcompDevice))
 			{
 				OnDeviceLost();

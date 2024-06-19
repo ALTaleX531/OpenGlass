@@ -1,5 +1,7 @@
 ﻿#pragma once
 #include "framework.hpp"
+#pragma warning(push)
+#pragma warning(disable : 4201)
 
 namespace OpenGlass::os
 {
@@ -187,7 +189,7 @@ namespace OpenGlass::os
 	constexpr ULONG build_w11_21h2{ 22000 };
 	constexpr ULONG build_w11_22h2{ 22621 };
 	constexpr ULONG build_w11_23h2{ 22635 };
-	constexpr ULONG build_openglass_minimum_support{ build_w10_1607 };
+	constexpr ULONG build_openglass_minimum_support{ build_w10_1809 };
 	constexpr ULONG build_openglass_maximum_support{ build_w11_23h2 };
 
 	FORCEINLINE bool IsOpenGlassUnsupported()
@@ -203,3 +205,5 @@ namespace OpenGlass::os
 		);
 	}
 }
+
+#pragma warning(pop)

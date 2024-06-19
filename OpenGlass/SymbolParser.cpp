@@ -46,7 +46,7 @@ HMODULE WINAPI SymbolParser::MyLoadLibraryExW(
 	DWORD dwFlags
 )
 {
-	static auto s_symsrvSysFullPath{ std::format(L"{}\\symsrv.dll", wil::GetSystemDirectoryW<std::wstring, MAX_PATH + 1>()) };
+	static auto s_symsrvSysFullPath{ wil::GetSystemDirectoryW<std::wstring, MAX_PATH + 1>() + L"\\symsrv.dll" };
 	static auto s_symsrvCurFullPath{ Utils::make_current_folder_file_wstring(L"symsrv.dll") };
 	if (
 		!_wcsicmp(lpLibFileName, s_symsrvSysFullPath.c_str())
@@ -72,7 +72,7 @@ SymbolParser::SymbolParser()
 		THROW_LAST_ERROR_IF(GetModuleFileName(wil::GetModuleInstanceHandle(), curDir, MAX_PATH) == 0);
 		THROW_IF_FAILED(PathCchRemoveFileSpec(curDir, MAX_PATH));
 
-		std::wstring symPath{ std::format(L"SRV*{}\\symbols", curDir) };
+		auto symPath{ std::wstring{L"SRV*"} + curDir + L"\\symbols" };
 		THROW_IF_WIN32_BOOL_FALSE(SymSetSearchPathW(GetCurrentProcess(), symPath.c_str()));
 	}
 	catch (...)
@@ -123,7 +123,7 @@ HRESULT SymbolParser::Walk(
 		THROW_LAST_ERROR_IF(GetModuleFileName(wil::GetModuleInstanceHandle(), curDir, MAX_PATH) == 0);
 		THROW_IF_FAILED(PathCchRemoveFileSpec(curDir, MAX_PATH));
 
-		std::wstring symPath{ std::format(L"SRV*{}\\symbols*http://msdl.microsoft.com/download/symbols", curDir) };
+		auto symPath{ std::wstring{L"SRV*"} + curDir + L"\\symbols*http://msdl.microsoft.com/download/symbols" };
 
 		DWORD options = SymSetOptions(SymGetOptions() | SYMOPT_DEBUG);
 
@@ -147,7 +147,7 @@ HRESULT SymbolParser::Walk(
 }
 CATCH_LOG_RETURN_HR(wil::ResultFromCaughtException())
 
-BOOL SymbolParser::EnumSymbolsCallback(PSYMBOL_INFO pSymInfo, ULONG SymbolSize, PVOID UserContext)
+BOOL SymbolParser::EnumSymbolsCallback(PSYMBOL_INFO pSymInfo, ULONG /*SymbolSize*/, PVOID UserContext)
 {
 	auto& callback{ *reinterpret_cast<SymbolParserCallback*>(UserContext) };
 

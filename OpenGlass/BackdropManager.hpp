@@ -41,7 +41,12 @@ namespace OpenGlass::BackdropManager
 	{
 		inline float g_roundRectRadius{ 0.f };
 		inline bool g_overrideBorder{ false };
+		inline char g_animationEasingFunction{ 0 };
 		inline wf::TimeSpan g_crossfadeTime{ std::chrono::milliseconds{ 87 } };
+
+		inline bool g_forceAccentColorization{ false };
+		inline DWORD g_accentColor{ 0 };
+		inline DWORD g_accentColorInactive{ 0 };
 	}
 
 	size_t GetCount();

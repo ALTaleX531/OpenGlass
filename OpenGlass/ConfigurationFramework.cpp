@@ -55,6 +55,10 @@ void ConfigurationFramework::Load(bool updateNow)
 }
 void ConfigurationFramework::Unload()
 {
-	LOG_IF_FAILED(wil::reg::open_unique_key_nothrow(HKEY_LOCAL_MACHINE, L"Software\\Microsoft\\Windows\\DWM", g_dwmKey));
-	LOG_IF_FAILED(wil::reg::open_unique_key_nothrow(HKEY_LOCAL_MACHINE, L"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", g_personalizeKey));
+	HRESULT hr{ S_OK };
+
+	hr = wil::reg::open_unique_key_nothrow(HKEY_LOCAL_MACHINE, L"Software\\Microsoft\\Windows\\DWM", g_dwmKey);
+	LOG_IF_FAILED_WITH_EXPECTED(hr, HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND));
+	hr = wil::reg::open_unique_key_nothrow(HKEY_LOCAL_MACHINE, L"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", g_personalizeKey);
+	LOG_IF_FAILED_WITH_EXPECTED(hr, HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND));
 }

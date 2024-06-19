@@ -72,7 +72,6 @@ namespace OpenGlass::AcrylicBackdrop
 
 	wu::Color GetEffectiveTintColor(wu::Color tintColor, float tintOpacity, std::optional<float> luminosityOpacity)
 	{
-		const double tintOpacityModifier{ GetTintOpacityModifier(tintColor) };
 		if (luminosityOpacity)
 		{
 			tintColor.A = static_cast<BYTE>(round(tintColor.A * tintOpacity));
@@ -161,7 +160,7 @@ namespace OpenGlass::AcrylicBackdrop
 		// NOTE: There is currently a bug where the names of BlendEffectMode::Luminosity and BlendEffectMode::Color are flipped->
 		// This should be changed to Luminosity when/if the bug is fixed->
 		luminosityBlendEffect->SetBlendMode(D2D1_BLEND_MODE_COLOR);
-		luminosityBlendEffect->SetBackground(Utils::CreateBlurredBackdrop(compositor, blurAmount));
+		luminosityBlendEffect->SetBackground(Utils::CreateBlurredBackdrop(blurAmount));
 		luminosityBlendEffect->SetForeground(*luminosityColorEffect);
 
 		auto colorBlendEffect{ winrt::make_self<Win2D::BlendEffect>() };

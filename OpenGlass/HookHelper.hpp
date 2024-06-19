@@ -45,8 +45,8 @@ namespace OpenGlass::HookHelper
 	template <typename T1, typename T2> FORCEINLINE T2 WritePointer(T1 address, T2 value) { return reinterpret_cast<T2>(WritePointerInternal(reinterpret_cast<PVOID*>(address), reinterpret_cast<PVOID>(value))); }
 	HMODULE GetProcessModule(HANDLE processHandle, std::wstring_view dllPath);
 
-	void WalkIAT(PVOID baseAddress, std::string_view dllName, std::function<bool(PVOID* functionAddress, LPCSTR functionNameOrOrdinal, BOOL importedByName)> callback);
-	void WalkDelayloadIAT(PVOID baseAddress, std::string_view dllName, std::function<bool(HMODULE* moduleHandle, PVOID* functionAddress, LPCSTR functionNameOrOrdinal, BOOL importedByName)> callback);
+	void WalkIAT(PVOID baseAddress, std::string_view dllName, std::function<bool(PVOID* functionAddress, LPCSTR functionNameOrOrdinal, bool importedByName)> callback);
+	void WalkDelayloadIAT(PVOID baseAddress, std::string_view dllName, std::function<bool(HMODULE* moduleHandle, PVOID* functionAddress, LPCSTR functionNameOrOrdinal, bool importedByName)> callback);
 
 	PVOID* GetIAT(PVOID baseAddress, std::string_view dllName, LPCSTR targetFunctionNameOrOrdinal);
 	std::pair<HMODULE*, PVOID*> GetDelayloadIAT(PVOID baseAddress, std::string_view dllName, LPCSTR targetFunctionNameOrOrdinal, bool resolveAPI = false);

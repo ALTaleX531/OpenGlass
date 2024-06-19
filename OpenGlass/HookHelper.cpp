@@ -115,7 +115,7 @@ HMODULE HookHelper::GetProcessModule(HANDLE processHandle, std::wstring_view dll
 	return targetModule;
 }
 
-void HookHelper::WalkIAT(PVOID baseAddress, std::string_view dllName, std::function<bool(PVOID* functionAddress, LPCSTR functionNameOrOrdinal, BOOL importedByName)> callback) try
+void HookHelper::WalkIAT(PVOID baseAddress, std::string_view dllName, std::function<bool(PVOID* functionAddress, LPCSTR functionNameOrOrdinal, bool importedByName)> callback) try
 {
 	THROW_HR_IF(E_INVALIDARG, dllName.empty());
 	THROW_HR_IF_NULL(E_INVALIDARG, baseAddress);
@@ -161,7 +161,7 @@ void HookHelper::WalkIAT(PVOID baseAddress, std::string_view dllName, std::funct
 		LPCSTR functionName{ nullptr };
 		auto functionAddress = reinterpret_cast<PVOID*>(&thunk->u1.Function);
 
-		BOOL importedByName{ !IMAGE_SNAP_BY_ORDINAL(nameThunk->u1.Ordinal) };
+		bool importedByName{ !IMAGE_SNAP_BY_ORDINAL(nameThunk->u1.Ordinal) };
 		if (importedByName)
 		{
 			functionName = reinterpret_cast<PIMAGE_IMPORT_BY_NAME>(
@@ -185,7 +185,7 @@ void HookHelper::WalkIAT(PVOID baseAddress, std::string_view dllName, std::funct
 }
 catch (...) {}
 
-void HookHelper::WalkDelayloadIAT(PVOID baseAddress, std::string_view dllName, std::function<bool(HMODULE* moduleHandle, PVOID* functionAddress, LPCSTR functionNameOrOrdinal, BOOL importedByName)> callback) try
+void HookHelper::WalkDelayloadIAT(PVOID baseAddress, std::string_view dllName, std::function<bool(HMODULE* moduleHandle, PVOID* functionAddress, LPCSTR functionNameOrOrdinal, bool importedByName)> callback) try
 {
 	THROW_HR_IF(E_INVALIDARG, dllName.empty());
 	THROW_HR_IF_NULL(E_INVALIDARG, baseAddress);
@@ -243,7 +243,7 @@ void HookHelper::WalkDelayloadIAT(PVOID baseAddress, std::string_view dllName, s
 		LPCSTR functionName{ nullptr };
 		auto functionAddress = reinterpret_cast<PVOID*>(&thunk->u1.Function);
 
-		BOOL importedByName{ !IMAGE_SNAP_BY_ORDINAL(nameThunk->u1.Ordinal) };
+		bool importedByName{ !IMAGE_SNAP_BY_ORDINAL(nameThunk->u1.Ordinal) };
 		if (importedByName)
 		{
 			functionName = reinterpret_cast<PIMAGE_IMPORT_BY_NAME>(
@@ -270,7 +270,7 @@ catch (...) {}
 PVOID* HookHelper::GetIAT(PVOID baseAddress, std::string_view dllName, LPCSTR targetFunctionNameOrOrdinal)
 {
 	PVOID* originalFunction{ nullptr };
-	WalkIAT(baseAddress, dllName, [&](PVOID* functionAddress, LPCSTR functionNameOrOrdinal, BOOL importedByName) -> bool
+	WalkIAT(baseAddress, dllName, [&](PVOID* functionAddress, LPCSTR functionNameOrOrdinal, bool importedByName) -> bool
 	{
 		if (
 			(importedByName == TRUE && targetFunctionNameOrOrdinal && !strcmp(functionNameOrOrdinal, targetFunctionNameOrOrdinal)) ||
@@ -290,7 +290,7 @@ PVOID* HookHelper::GetIAT(PVOID baseAddress, std::string_view dllName, LPCSTR ta
 std::pair<HMODULE*, PVOID*> HookHelper::GetDelayloadIAT(PVOID baseAddress, std::string_view dllName, LPCSTR targetFunctionNameOrOrdinal, bool resolveAPI)
 {
 	std::pair<HMODULE*, PVOID*> originalInfo{ nullptr, nullptr };
-	WalkDelayloadIAT(baseAddress, dllName, [&](HMODULE* moduleHandle, PVOID* functionAddress, LPCSTR functionNameOrOrdinal, BOOL importedByName) -> bool
+	WalkDelayloadIAT(baseAddress, dllName, [&](HMODULE* moduleHandle, PVOID* functionAddress, LPCSTR functionNameOrOrdinal, bool importedByName) -> bool
 	{
 		if (
 			(importedByName == TRUE && targetFunctionNameOrOrdinal && (reinterpret_cast<DWORD64>(targetFunctionNameOrOrdinal) & 0xFFFF0000) != 0 && !strcmp(functionNameOrOrdinal, targetFunctionNameOrOrdinal)) ||

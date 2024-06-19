@@ -102,21 +102,12 @@ void CustomMsstyleLoader::UpdateConfiguration(ConfigurationFramework::UpdateType
 	if (type & ConfigurationFramework::UpdateType::Theme)
 	{
 		WCHAR msstyleThemePath[MAX_PATH + 1]{};
-		LOG_IF_FAILED(
-			wil::reg::get_value_string_nothrow(
-				ConfigurationFramework::GetDwmKey(),
-				L"CustomThemeMsstyle",
-				msstyleThemePath
-			)
+		ConfigurationFramework::DwmGetStringFromHKCUAndHKLM(
+			L"CustomThemeMsstyle",
+			msstyleThemePath
 		);
-		DWORD value{ 1 };
-		LOG_IF_FAILED(
-			wil::reg::get_value_dword_nothrow(
-				ConfigurationFramework::GetDwmKey(),
-				L"CustomThemeMsstyleUseDefaults",
-				&value
-			)
-		);
+
+		DWORD value{ ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"CustomThemeMsstyleUseDefaults", 1)};
 
 		if (g_msstyleThemePath != msstyleThemePath || g_useMsstyleDefaultScheme != static_cast<bool>(value))
 		{
@@ -263,14 +254,31 @@ void CustomMsstyleLoader::UpdateConfiguration(ConfigurationFramework::UpdateType
 
 HRESULT CustomMsstyleLoader::Startup()
 {
-	g_GetCurrentThemeName_Org = reinterpret_cast<decltype(g_GetCurrentThemeName_Org)>(HookHelper::WriteDelayloadIAT(uDwm::g_moduleHandle, "ext-ms-win-uxtheme-themes-l1-1-2.dll", "GetCurrentThemeName", MyGetCurrentThemeName).second);
-	g_OpenThemeData_Org = reinterpret_cast<decltype(g_OpenThemeData_Org)>(HookHelper::WriteDelayloadIAT(uDwm::g_moduleHandle, "ext-ms-win-uxtheme-themes-l1-1-0.dll", "OpenThemeData", MyOpenThemeData).second);
+	if (os::buildNumber < os::build_w10_2004)
+	{
+		g_GetCurrentThemeName_Org = reinterpret_cast<decltype(g_GetCurrentThemeName_Org)>(HookHelper::WriteDelayloadIAT(uDwm::g_moduleHandle, "uxtheme.dll", "GetCurrentThemeName", MyGetCurrentThemeName).second);
+		g_OpenThemeData_Org = reinterpret_cast<decltype(g_OpenThemeData_Org)>(HookHelper::WriteDelayloadIAT(uDwm::g_moduleHandle, "ext-ms-win-uxtheme-themes-l1-1-0.dll", "OpenThemeData", MyOpenThemeData).second);
+	}
+	else
+	{
+		g_GetCurrentThemeName_Org = reinterpret_cast<decltype(g_GetCurrentThemeName_Org)>(HookHelper::WriteDelayloadIAT(uDwm::g_moduleHandle, "ext-ms-win-uxtheme-themes-l1-1-2.dll", "GetCurrentThemeName", MyGetCurrentThemeName).second);
+		g_OpenThemeData_Org = reinterpret_cast<decltype(g_OpenThemeData_Org)>(HookHelper::WriteDelayloadIAT(uDwm::g_moduleHandle, "ext-ms-win-uxtheme-themes-l1-1-0.dll", "OpenThemeData", MyOpenThemeData).second);
+	}
+	
 	return S_OK;
 }
 void CustomMsstyleLoader::Shutdown()
 {
-	HookHelper::WriteDelayloadIAT(uDwm::g_moduleHandle, "ext-ms-win-uxtheme-themes-l1-1-2.dll", "GetCurrentThemeName", g_GetCurrentThemeName_Org);
-	HookHelper::WriteDelayloadIAT(uDwm::g_moduleHandle, "ext-ms-win-uxtheme-themes-l1-1-0.dll", "OpenThemeData", g_OpenThemeData_Org);
+	if (os::buildNumber < os::build_w10_2004)
+	{
+		HookHelper::WriteDelayloadIAT(uDwm::g_moduleHandle, "uxtheme.dll", "GetCurrentThemeName", g_GetCurrentThemeName_Org);
+		HookHelper::WriteDelayloadIAT(uDwm::g_moduleHandle, "ext-ms-win-uxtheme-themes-l1-1-0.dll", "OpenThemeData", g_OpenThemeData_Org);
+	}
+	else
+	{
+		HookHelper::WriteDelayloadIAT(uDwm::g_moduleHandle, "ext-ms-win-uxtheme-themes-l1-1-2.dll", "GetCurrentThemeName", g_GetCurrentThemeName_Org);
+		HookHelper::WriteDelayloadIAT(uDwm::g_moduleHandle, "ext-ms-win-uxtheme-themes-l1-1-0.dll", "OpenThemeData", g_OpenThemeData_Org);
+	}
 	
 	g_msstyleThemeFile.reset();
 	g_msstyleThemePath.clear();
