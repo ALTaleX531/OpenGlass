@@ -272,7 +272,7 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_UpdateClientBlur(uDw
 		// UpdateClientBlur will only create at most one geometry draw instrution
 		if (!g_geometryBuffer.empty())
 		{
-			HRGN clientBlurRegion{ GeometryRecorder::GetRegionFromGeometry(g_geometryBuffer[0].get()) };
+			HRGN clientBlurRegion{ GeometryRecorder::GetRegionFromGeometry(g_geometryBuffer.back().get())};
 			RECT clientBlurBox{};
 			// let's update our backdrop region
 			auto backdrop{ BackdropManager::GetOrCreate(This, GetRgnBox(clientBlurRegion, &clientBlurBox) != NULLREGION && !IsRectEmpty(&clientBlurBox), true) };

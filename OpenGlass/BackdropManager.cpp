@@ -58,6 +58,7 @@ namespace OpenGlass::BackdropManager
 		bool m_activate{ false };
 		bool m_visible{ true };
 		bool m_clipApplied{ false };
+		bool m_clipApplied2{ true };
 		DWORD m_state{};
 		DWORD m_color{};
 		DWORD m_accentFlags{};
@@ -92,6 +93,7 @@ namespace OpenGlass::BackdropManager
 		wuc::CompositionRoundedRectangleGeometry m_roundedGeometry{ nullptr };
 		wuc::CompositionGeometricClip m_roundedClip{ nullptr };
 		wuc::CompositionPathGeometry m_pathGeometry{ nullptr };
+		//winrt::com_ptr<uDwm::CRgnGeometryProxy> m_rgnGeometryProxy{ nullptr };
 
 		HRESULT InitializeVisual() override;
 		void UninitializeVisual() override;
@@ -330,7 +332,9 @@ HRESULT BackdropManager::CCompositedBackdropVisual::InitializeVisual()
 
 	auto compositor{ m_dcompDevice.as<wuc::Compositor>() };
 	m_wucRootVisual = compositor.CreateContainerVisual();
+	m_wucRootVisual.BorderMode(wuc::CompositionBorderMode::Soft);
 	m_containerVisual = compositor.CreateContainerVisual();
+	m_containerVisual.BorderMode(wuc::CompositionBorderMode::Hard);
 	m_spriteVisual = compositor.CreateSpriteVisual();
 	m_spriteVisual.RelativeSizeAdjustment({ 1.f, 1.f });
 	
@@ -351,8 +355,10 @@ HRESULT BackdropManager::CCompositedBackdropVisual::InitializeVisual()
 	uDwm::CDesktopManager::s_pDesktopManagerInstance->GetD2DDevice()->GetFactory(factory.put());
 	// since build 22621, Path propertie cannot be empty or the dwmcore will raise a null pointer exception
 	m_pathGeometry.Path(wuc::CompositionPath{ Win2D::CanvasGeometry::CreateGeometryFromHRGN(factory.get(), m_compositedRgn.get()).as<wg::IGeometrySource2D>() });
+	//RETURN_IF_FAILED(uDwm::ResourceHelper::CreateGeometryFromHRGN(m_compositedRgn.get(), m_rgnGeometryProxy.put()));
 
 	m_dcompVisual.as<wuc::Visual>().Clip(compositor.CreateGeometricClip(m_pathGeometry));
+	//m_udwmVisual->GetVisualProxy()->SetClip(m_rgnGeometryProxy.get());
 	m_visualCollection.InsertAtBottom(m_wucRootVisual);
 
 	return S_OK;
@@ -364,6 +370,7 @@ void BackdropManager::CCompositedBackdropVisual::UninitializeVisual()
 
 	m_roundedGeometry = nullptr;
 	m_pathGeometry = nullptr;
+	//m_rgnGeometryProxy = nullptr;
 	m_spriteVisual = nullptr;
 	m_wucRootVisual = nullptr;
 	m_containerVisual = nullptr;
@@ -380,8 +387,9 @@ void BackdropManager::CCompositedBackdropVisual::OnBackdropRegionChanged(wil::un
 
 	bool isVisible{};
 	RECT regionBox{};
+	auto regionType{ GetRgnBox(m_compositedRgn.get(), &regionBox) };
 	if (
-		GetRgnBox(m_compositedRgn.get(), &regionBox) == NULLREGION || 
+		regionType == NULLREGION ||
 		IsRectEmpty(&regionBox)
 	)
 	{
@@ -402,6 +410,22 @@ void BackdropManager::CCompositedBackdropVisual::OnBackdropRegionChanged(wil::un
 	{
 		return;
 	}
+
+	bool clipApplied{ false };
+	if (regionType == SIMPLEREGION)
+	{
+		clipApplied = false;
+	}
+	if (regionType == COMPLEXREGION)
+	{
+		clipApplied = true;
+	}
+	if (m_clipApplied2 != clipApplied)
+	{
+		m_dcompVisual.as<wuc::Visual>().Clip(clipApplied ? m_dcompDevice.as<wuc::Compositor>().CreateGeometricClip(m_pathGeometry) : nullptr);
+		m_clipApplied2 = clipApplied;
+	}
+
 	wfn::float3 offset{ static_cast<float>(regionBox.left), static_cast<float>(regionBox.top), 0.f };
 	m_containerVisual.Offset(offset);
 	m_containerVisual.Size({ static_cast<float>(max(wil::rect_width(regionBox), 0)), static_cast<float>(max(wil::rect_height(regionBox), 0)) });
@@ -417,6 +441,8 @@ void BackdropManager::CCompositedBackdropVisual::OnBackdropRegionChanged(wil::un
 		)
 	};
 	m_pathGeometry.Path(wuc::CompositionPath{ canvasGeometry.as<wg::IGeometrySource2D>() });
+	// DO NOT USE .put() HERE, OR IT WILL RELEASE THE OBJECT WE CREATED BEFORE!
+	//uDwm::ResourceHelper::CreateGeometryFromHRGN(m_compositedRgn.get(), reinterpret_cast<uDwm::CRgnGeometryProxy**>(&m_rgnGeometryProxy));
 }
 
 void BackdropManager::CCompositedBackdropVisual::OnBackdropBrushUpdated()

@@ -1247,16 +1247,13 @@ namespace OpenGlass::uDwm
 		{
 			// initialize dcomp visual
 			RETURN_IF_FAILED(m_dcompDevice->CreateVisual(m_dcompVisual.put()));
-			RETURN_IF_FAILED(m_dcompVisual->SetBorderMode(DCOMPOSITION_BORDER_MODE_SOFT));
-			THROW_IF_FAILED(m_dcompVisual->SetCompositeMode(DCOMPOSITION_COMPOSITE_MODE_SOURCE_OVER));
-			THROW_IF_FAILED(m_dcompVisual->SetBitmapInterpolationMode(DCOMPOSITION_BITMAP_INTERPOLATION_MODE_LINEAR));
 #ifdef _DEBUG
 			m_dcompVisual.as<IDCompositionVisualDebug>()->EnableRedrawRegions();
 #endif
 			m_visualCollection = dcomp::GetVisualPartnerWinRTInterop(m_dcompVisual.get())->GetVisualCollection();
 
 			// create shared target
-			THROW_IF_FAILED(
+			RETURN_IF_FAILED(
 				m_dcompDevice->CreateSharedResource(
 					IID_PPV_ARGS(m_dcompTarget.put())
 				)
@@ -1266,7 +1263,7 @@ namespace OpenGlass::uDwm
 
 			// interop with udwm and dwmcore
 			wil::unique_handle resourceHandle{ nullptr };
-			THROW_IF_FAILED(
+			RETURN_IF_FAILED(
 				m_dcompDevice->OpenSharedResourceHandle(m_dcompTarget.get(), resourceHandle.put())
 			);
 
