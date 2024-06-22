@@ -56,6 +56,30 @@ namespace OpenGlass::GlassOptimizer
 		D2D1_INTERPOLATION_MODE interpolationMode,
 		D2D1_COMPOSITE_MODE compositeMode
 	);
+	HRESULT STDMETHODCALLTYPE MyCRenderData_TryDrawCommandAsDrawList(
+		dwmcore::CResource* This,
+		dwmcore::CDrawingContext* drawingContext,
+		dwmcore::CDrawListCache* drawListCache,
+		dwmcore::CResource* drawListEntryBuilder,
+		bool unknwon,
+		int commandType,
+		dwmcore::CResource** resources,
+		bool* succeeded
+	);
+	HRESULT STDMETHODCALLTYPE MyCRenderData_DrawSolidColorRectangle(
+		dwmcore::CResource* This,
+		dwmcore::CDrawingContext* drawingContext,
+		dwmcore::CResource* drawListEntryBuilder,
+		bool unknwon,
+		D2D1_RECT_F* lprc,
+		D2D1_COLOR_F* color
+	);
+	HRESULT STDMETHODCALLTYPE MyID2D1DeviceContext_FillGeometry(
+		ID2D1DeviceContext* This,
+		ID2D1Geometry* geometry,
+		ID2D1Brush* brush,
+		ID2D1Brush* opacityBrush
+	);
 
 	decltype(&MyCVisual_GetWindowBackgroundTreatmentInternal) g_CVisual_GetWindowBackgroundTreatmentInternal_Org{ nullptr };
 	decltype(&MyCArrayBasedCoverageSet_AddAntiOccluderRect) g_CArrayBasedCoverageSet_AddAntiOccluderRect_Org{ nullptr };
@@ -66,6 +90,10 @@ namespace OpenGlass::GlassOptimizer
 	decltype(&MyCDrawingContext_GetBackdropImageFromRenderTarget) g_CDrawingContext_GetBackdropImageFromRenderTarget_Org{ nullptr };
 	//decltype(&MyCDrawingContext_PreSubgraph) g_CDrawingContext_PreSubgraph_Org{ nullptr };
 	decltype(&MyCCustomBlur_Draw) g_CCustomBlur_Draw_Org{ nullptr };
+	decltype(&MyCRenderData_TryDrawCommandAsDrawList) g_CRenderData_TryDrawCommandAsDrawList_Org{ nullptr };
+	decltype(&MyCRenderData_DrawSolidColorRectangle) g_CRenderData_DrawSolidColorRectangle_Org{ nullptr };
+	decltype(&MyID2D1DeviceContext_FillGeometry) g_ID2D1DeviceContext_FillGeometry_Org{ nullptr };
+	decltype(&MyID2D1DeviceContext_FillGeometry)* g_ID2D1DeviceContext_FillGeometry_Org_Address{ nullptr };
 
 	float g_additionalPreScaleAmount{ 0.5f };
 
@@ -73,6 +101,8 @@ namespace OpenGlass::GlassOptimizer
 	bool g_hasWindowBackgroundTreatment{ false };
 	dwmcore::CVisual* g_visual{ nullptr };
 	dwmcore::MyDynArrayImpl<dwmcore::CZOrderedRect> g_validAntiOccluderList{};
+	bool g_drawSolidRectangle{ false };
+	D2D1_RECT_F g_drawRect{};
 
 	//HWND g_hwnd{ nullptr };
 	enum D2D1_DIRECTIONALBLURKERNEL_PROP
@@ -226,7 +256,7 @@ HRESULT STDMETHODCALLTYPE GlassOptimizer::MyCDrawingContext_GetBackdropImageFrom
 		).c_str()
 	);
 #endif
-	return g_CDrawingContext_GetBackdropImageFromRenderTarget_Org(This, lprc, true, effectInput);
+	return g_CDrawingContext_GetBackdropImageFromRenderTarget_Org(This, lprc, lprc.right * lprc.bottom >= 1'350'000.f ? false : true, effectInput);
 }
 
 //HRESULT STDMETHODCALLTYPE GlassOptimizer::MyCDrawingContext_PreSubgraph(
@@ -259,8 +289,66 @@ HRESULT STDMETHODCALLTYPE GlassOptimizer::MyCCustomBlur_Draw(
 		D2D1_COMPOSITE_MODE_BOUNDED_SOURCE_COPY
 	);
 	//g_hwnd = nullptr;
+	if (!g_ID2D1DeviceContext_FillGeometry_Org)
+	{
+		g_ID2D1DeviceContext_FillGeometry_Org_Address = reinterpret_cast<decltype(g_ID2D1DeviceContext_FillGeometry_Org_Address)>(&HookHelper::vtbl_of(This->GetDeviceContext())[0x17]);
+		g_ID2D1DeviceContext_FillGeometry_Org = HookHelper::WritePointer(g_ID2D1DeviceContext_FillGeometry_Org_Address, MyID2D1DeviceContext_FillGeometry);
+	}
 
 	return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE GlassOptimizer::MyCRenderData_TryDrawCommandAsDrawList(
+	dwmcore::CResource* This,
+	dwmcore::CDrawingContext* drawingContext,
+	dwmcore::CDrawListCache* drawListCache,
+	dwmcore::CResource* drawListEntryBuilder,
+	bool unknwon,
+	int commandType,
+	dwmcore::CResource** resources,
+	bool* succeeded
+)
+{
+	g_CRenderData_TryDrawCommandAsDrawList_Org(This, drawingContext, drawListCache, drawListEntryBuilder, unknwon, commandType, resources, succeeded);
+	if (g_drawSolidRectangle)
+	{
+		*succeeded = false;
+		g_drawSolidRectangle = false;
+		winrt::com_ptr<ID2D1SolidColorBrush> brush{ nullptr };
+		//g_drawRect
+		drawingContext->GetD2DContext()->GetDeviceContext()->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Gold), brush.put());
+		drawingContext->GetD2DContext()->GetDeviceContext()->FillRectangle(g_drawRect, brush.get());
+	}
+	return S_OK;
+}
+HRESULT STDMETHODCALLTYPE GlassOptimizer::MyCRenderData_DrawSolidColorRectangle(
+	dwmcore::CResource* This,
+	dwmcore::CDrawingContext* drawingContext,
+	dwmcore::CResource* drawListEntryBuilder,
+	bool unknwon,
+	D2D1_RECT_F* lprc,
+	D2D1_COLOR_F* color
+)
+{
+	g_drawSolidRectangle = true;
+	g_drawRect = *lprc;
+	return S_OK;
+	return g_CRenderData_DrawSolidColorRectangle_Org(This, drawingContext, drawListEntryBuilder, unknwon, lprc, color);
+}
+
+HRESULT STDMETHODCALLTYPE GlassOptimizer::MyID2D1DeviceContext_FillGeometry(
+	ID2D1DeviceContext* This,
+	ID2D1Geometry* geometry,
+	ID2D1Brush* brush,
+	ID2D1Brush* opacityBrush
+)
+{
+	winrt::com_ptr<ID2D1SolidColorBrush> solidColorBrush{ nullptr };
+	if (SUCCEEDED(brush->QueryInterface(solidColorBrush.put())))
+	{
+		OutputDebugStringW(L"MyID2D1DeviceContext_FillGeometry is using solid color brush!\n");
+	}
+	return g_ID2D1DeviceContext_FillGeometry_Org(This, geometry, brush, opacityBrush);
 }
 
 void GlassOptimizer::UpdateConfiguration(ConfigurationFramework::UpdateType type)
@@ -282,6 +370,8 @@ HRESULT GlassOptimizer::Startup()
 	dwmcore::GetAddressFromSymbolMap("CDrawingContext::GetBackdropImageFromRenderTarget", g_CDrawingContext_GetBackdropImageFromRenderTarget_Org);
 	//dwmcore::GetAddressFromSymbolMap("CDrawingContext::PreSubgraph", g_CDrawingContext_PreSubgraph_Org);
 	dwmcore::GetAddressFromSymbolMap("CCustomBlur::Draw", g_CCustomBlur_Draw_Org);
+	dwmcore::GetAddressFromSymbolMap("CRenderData::TryDrawCommandAsDrawList", g_CRenderData_TryDrawCommandAsDrawList_Org);
+	dwmcore::GetAddressFromSymbolMap("CRenderData::DrawSolidColorRectangle", g_CRenderData_DrawSolidColorRectangle_Org);
 	
 	return HookHelper::Detours::Write([]()
 	{
@@ -295,6 +385,8 @@ HRESULT GlassOptimizer::Startup()
 			HookHelper::Detours::Attach(&g_CDrawingContext_GetBackdropImageFromRenderTarget_Org, MyCDrawingContext_GetBackdropImageFromRenderTarget);
 			//HookHelper::Detours::Attach(&g_CDrawingContext_PreSubgraph_Org, MyCDrawingContext_PreSubgraph);
 			HookHelper::Detours::Attach(&g_CCustomBlur_Draw_Org, MyCCustomBlur_Draw);
+			//HookHelper::Detours::Attach(&g_CRenderData_TryDrawCommandAsDrawList_Org, MyCRenderData_TryDrawCommandAsDrawList);
+			//HookHelper::Detours::Attach(&g_CRenderData_DrawSolidColorRectangle_Org, MyCRenderData_DrawSolidColorRectangle);
 		}
 		else
 		{
@@ -304,6 +396,11 @@ HRESULT GlassOptimizer::Startup()
 }
 void GlassOptimizer::Shutdown()
 {
+	if (g_ID2D1DeviceContext_FillGeometry_Org)
+	{
+		HookHelper::WritePointer(g_ID2D1DeviceContext_FillGeometry_Org_Address, g_ID2D1DeviceContext_FillGeometry_Org);
+		g_ID2D1DeviceContext_FillGeometry_Org = nullptr;
+	}
 	HookHelper::Detours::Write([]()
 	{
 		if (os::buildNumber < os::build_w11_21h2)
@@ -316,6 +413,8 @@ void GlassOptimizer::Shutdown()
 			HookHelper::Detours::Detach(&g_CDrawingContext_GetBackdropImageFromRenderTarget_Org, MyCDrawingContext_GetBackdropImageFromRenderTarget);
 			//HookHelper::Detours::Detach(&g_CDrawingContext_PreSubgraph_Org, MyCDrawingContext_PreSubgraph);
 			HookHelper::Detours::Detach(&g_CCustomBlur_Draw_Org, MyCCustomBlur_Draw);
+			//HookHelper::Detours::Detach(&g_CRenderData_TryDrawCommandAsDrawList_Org, MyCRenderData_TryDrawCommandAsDrawList);
+			//HookHelper::Detours::Detach(&g_CRenderData_DrawSolidColorRectangle_Org, MyCRenderData_DrawSolidColorRectangle);
 		}
 		else
 		{
