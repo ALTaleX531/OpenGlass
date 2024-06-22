@@ -188,9 +188,20 @@ void BackdropFactory::UpdateConfiguration(ConfigurationFramework::UpdateType typ
 	{
 		g_blurAmount = std::clamp(static_cast<float>(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"BlurDeviation", 30)) / 10.f * 3.f, 0.f, 250.f);
 		g_glassOpacity = std::clamp(static_cast<float>(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"GlassOpacity", 63)) / 100.f, 0.f, 1.f);
-		g_colorBalance = std::clamp(static_cast<float>(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"ColorizationColorBalance", 0)) / 100.f, 0.f, 1.f);
-		g_afterglowBalance = std::clamp(static_cast<float>(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"ColorizationAfterglowBalance", 43)) / 100.f, 0.f, 1.f);
 		g_luminosity = std::clamp(static_cast<float>(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"GlassLuminosity", 15)) / 100.f, 0.f, 1.f);
+
+		auto colorBalance{ ConfigurationFramework::DwmTryDwordFromHKCUAndHKLM(L"ColorizationColorBalanceOverride")};
+		if (!colorBalance.has_value())
+		{
+			colorBalance = ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"ColorizationColorBalance", 0);
+		}
+		g_colorBalance = std::clamp(static_cast<float>(colorBalance.value()) / 100.f, 0.f, 1.f);
+		auto afterglowBalance{ ConfigurationFramework::DwmTryDwordFromHKCUAndHKLM(L"ColorizationAfterglowBalanceOverride") };
+		if (!afterglowBalance.has_value())
+		{
+			afterglowBalance = ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"ColorizationAfterglowBalance", 43);
+		}
+		g_afterglowBalance = std::clamp(static_cast<float>(afterglowBalance.value()) / 100.f, 0.f, 1.f);
 
 		WCHAR materialTexturePath[MAX_PATH + 1]{};
 		ConfigurationFramework::DwmGetStringFromHKCUAndHKLM(L"CustomThemeMaterial", materialTexturePath);
