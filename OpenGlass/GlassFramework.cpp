@@ -222,7 +222,7 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_UpdateNCAreaBackgrou
 	}
 	else
 	{
-		backdrop = BackdropManager::GetOrCreate(This, GetActualBackdropKind(This) == BackdropManager::CompositedBackdropKind::Accent);
+		backdrop = BackdropManager::GetOrCreate(This, GetActualBackdropKind(This) != BackdropManager::CompositedBackdropKind::Legacy);
 		hr = g_CTopLevelWindow_UpdateNCAreaBackground_Org(This);
 
 		// let's update our backdrop region
