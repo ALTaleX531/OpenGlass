@@ -61,6 +61,8 @@ The following table demonstrates the similarities and differences between these 
 |  | DWORD | **Not supported** | GlassAdditionalPreScaleAmount | Additional prescaling factor for backdrop input image, the smaller the value the more significant the performance improvement, the lower the quality of the glass. The default value is 90% for Windows 10 but 95% for Windows 11. |  |
 |  | DWORD | **Not supported** | ForceAccentColorization | When this option is on, OpenGlass will always uses the colors from `AccentColor` and `AccentColorInactive`, which will ignore all the system settings related to color. | You can turn it on when there exists third-party softwares that break the auto-coloring. |
 |  | DWORD | **Not supported** | GlassCrossFadeEasingFunction | The easing function for cross fade animation. 0x0=Linear. 0x1=CubicBezier. The Default value is 0. |  |
+|  | DWORD | **Not supported** | ColorizationColorBalanceOverride | Override the value of `ColorizationColorBalance`. |  |
+|  | DWORD | **Not supported** | ColorizationAfterglowBalanceOverride | Override the value of `ColorizationAfterglowBalance`. |  |
 
 > [!TIP]  
 > Check out the code to discover more details!
