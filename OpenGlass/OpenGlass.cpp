@@ -10,10 +10,8 @@
 #include "GeometryRecorder.hpp"
 #include "CaptionTextHandler.hpp"
 #include "GlassFramework.hpp"
-#include "GlassOptimizer.hpp"
 #include "CustomMsstyleLoader.hpp"
 #include "ConfigurationFramework.hpp"
-#include <Windows.h>
 
 namespace OpenGlass
 {
@@ -423,7 +421,6 @@ do_dwmcore_symbol_parsing:
 	GlassFramework::Startup();
 	CaptionTextHandler::Startup();
 	GeometryRecorder::Startup();
-	GlassOptimizer::Startup();
 	CustomMsstyleLoader::Startup();
 	ConfigurationFramework::Load();
 
@@ -515,7 +512,6 @@ void OpenGlass::Shutdown()
 	debugDevice->DisableDebugCounters();
 #endif // _DEBUG
 
-	GlassOptimizer::Shutdown();
 	GeometryRecorder::Shutdown();
 	CaptionTextHandler::Shutdown();
 	GlassFramework::Shutdown();

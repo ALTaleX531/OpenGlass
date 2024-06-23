@@ -241,7 +241,7 @@ EXTERN_C __declspec(dllexport) HRESULT InstallApp() try
 	wil::com_ptr<IRegisteredTask> registeredTask{ nullptr };
 	THROW_IF_FAILED(
 		rootFolder->RegisterTaskDefinition(
-			_bstr_t{L"OpenGlass Host"},
+			_bstr_t{L"OpenGlass Legacy Host"},
 			taskDefinition.get(),
 			TASK_CREATE_OR_UPDATE,
 			_variant_t{ L"SYSTEM" },
@@ -267,7 +267,7 @@ EXTERN_C __declspec(dllexport) HRESULT UninstallApp() try
 	HRESULT hr
 	{
 		rootFolder->DeleteTask(
-			_bstr_t{L"OpenGlass Host"},
+			_bstr_t{L"OpenGlass Legacy Host"},
 			0
 		)
 	};

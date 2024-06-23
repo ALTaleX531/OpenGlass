@@ -189,65 +189,39 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="AcrylicBackdrop.hpp" />
-    <ClInclude Include="AeroBackdrop.hpp" />
-    <ClInclude Include="AlphaMaskEffect.hpp" />
     <ClInclude Include="BackdropFactory.hpp" />
-    <ClInclude Include="BlurBackdrop.hpp" />
-    <ClInclude Include="ColorConversion.hpp" />
     <ClInclude Include="CustomMsstyleLoader.hpp" />
     <ClInclude Include="dwmcoreProjection.hpp" />
-    <ClInclude Include="GlassReflection.hpp" />
-    <ClInclude Include="MicaBackdrop.hpp" />
     <ClInclude Include="ServiceApi.hpp" />
     <ClInclude Include="BackdropManager.hpp" />
-    <ClInclude Include="BlendEffect.hpp" />
-    <ClInclude Include="BorderEffect.hpp" />
-    <ClInclude Include="BrightnessEffect.hpp" />
-    <ClInclude Include="CanvasEffect.hpp" />
-    <ClInclude Include="CanvasGeometry.hpp" />
     <ClInclude Include="CaptionTextHandler.hpp" />
-    <ClInclude Include="ColorMatrixEffect.hpp" />
-    <ClInclude Include="ColorSourceEffect.hpp" />
-    <ClInclude Include="CompositeEffect.hpp" />
     <ClInclude Include="ConfigurationFramework.hpp" />
-    <ClInclude Include="CrossFadeEffect.hpp" />
     <ClInclude Include="dcompProjection.hpp" />
     <ClInclude Include="cpprt.hpp" />
-    <ClInclude Include="ExposureEffect.hpp" />
     <ClInclude Include="framework.hpp" />
-    <ClInclude Include="GaussianBlurEffect.hpp" />
     <ClInclude Include="GeometryRecorder.hpp" />
     <ClInclude Include="GlassFramework.hpp" />
     <ClInclude Include="HookHelper.hpp" />
-    <ClInclude Include="GlassOptimizer.hpp" />
-    <ClInclude Include="OpacityEffect.hpp" />
     <ClInclude Include="OpenGlass.hpp" />
     <ClInclude Include="OSHelper.hpp" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="SaturationEffect.hpp" />
     <ClInclude Include="SymbolParser.hpp" />
-    <ClInclude Include="TintEffect.hpp" />
     <ClInclude Include="uDwmProjection.hpp" />
     <ClInclude Include="Utils.hpp" />
     <ClInclude Include="wil.hpp" />
     <ClInclude Include="winrt.hpp" />
-    <ClInclude Include="wucUtils.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BackdropFactory.cpp" />
-    <ClCompile Include="ColorConversion.cpp" />
+    <ClCompile Include="BackdropManager.cpp" />
     <ClCompile Include="CustomMsstyleLoader.cpp" />
     <ClCompile Include="ServiceApi.cpp" />
-    <ClCompile Include="BackdropManager.cpp" />
     <ClCompile Include="CaptionTextHandler.cpp" />
     <ClCompile Include="ConfigurationFramework.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="GeometryRecorder.cpp" />
     <ClCompile Include="GlassFramework.cpp" />
     <ClCompile Include="HookHelper.cpp" />
-    <ClCompile Include="GlassOptimizer.cpp" />
     <ClCompile Include="OpenGlass.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

@@ -6,7 +6,7 @@
 
 namespace OpenGlass
 {
-	constexpr std::wstring_view pipe_name{ L"\\\\.\\pipe\\OpenGlassHostPipe" };
+	constexpr std::wstring_view pipe_name{ L"\\\\.\\pipe\\OpenGlassLegacyHostPipe" };
 	std::unordered_map<DWORD, std::pair<DWORD, std::chrono::steady_clock::time_point>> g_dwmInjectionMap{};
 	std::chrono::steady_clock::time_point g_dwmInjectionCheckPoint{};
 	bool g_serverClosed{ false };

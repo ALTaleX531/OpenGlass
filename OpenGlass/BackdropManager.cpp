@@ -3,11 +3,7 @@
 #include "uDwmProjection.hpp"
 #include "dcompProjection.hpp"
 #include "BackdropManager.hpp"
-#include "CanvasGeometry.hpp"
-#include "GlassReflection.hpp"
 #include "Utils.hpp"
-#include "wucUtils.hpp"
-#include "BackdropFactory.hpp"
 
 using namespace OpenGlass;
 namespace OpenGlass::GlassFramework { extern BackdropManager::CompositedBackdropKind GetActualBackdropKind(uDwm::CTopLevelWindow* This); }
@@ -51,35 +47,18 @@ namespace OpenGlass::BackdropManager
 		__except (EXCEPTION_EXECUTE_HANDLER) {}
 	}
 
-	class CCompositedBackdropVisual : public winrt::implements<CCompositedBackdropVisual, ICompositedBackdropVisual>, uDwm::CBackdropVisual
+	class CCompositedBackdropVisual : public winrt::implements<CCompositedBackdropVisual, ICompositedBackdropVisual>
 	{
 		bool m_backdropDataChanged{ false };
-		bool m_backdropBrushChanged{ false };
 		bool m_activate{ false };
 		bool m_visible{ true };
-		bool m_clipApplied{ false };
-		bool m_clipApplied2{ true };
 		DWORD m_state{};
 		DWORD m_color{};
 		DWORD m_accentFlags{};
-		std::chrono::steady_clock::time_point m_backdropTimeStamp{};
 
 		CompositedBackdropKind m_kind{ CompositedBackdropKind::None };
 		uDwm::CTopLevelWindow* m_window{ nullptr };
 		uDwm::CWindowData* m_data{ nullptr };
-
-		wuc::CompositionBrush m_backdropBrush{ nullptr };
-		wuc::CompositionBrush m_previousBackdropBrush{ nullptr };
-		wuc::ContainerVisual m_wucRootVisual{ nullptr };
-		wuc::ContainerVisual m_containerVisual{ nullptr };
-		wuc::SpriteVisual m_spriteVisual{ nullptr };
-
-		bool m_isWaitingForAnimationComplete{ false };
-		bool m_shouldPlayCrossFadeAnimation{ false };
-		wuc::CompositionScopedBatch m_waitingForAnimationCompleteBatch{ nullptr };
-		winrt::event_token m_waitingForAnimationCompleteToken{};
-
-		winrt::com_ptr<CGlassReflectionVisual> m_reflectionVisual{ nullptr };
 
 		wil::unique_hrgn m_gdiWindowRgn{ nullptr };
 		wil::unique_hrgn m_clientBlurRgn{ nullptr };
@@ -89,29 +68,11 @@ namespace OpenGlass::BackdropManager
 		std::optional<RECT> m_accentRect{ std::nullopt };
 		wil::unique_hrgn m_compositedRgn{ nullptr };
 
-		float m_cornerRadius{ 0.f };
-		wuc::CompositionRoundedRectangleGeometry m_roundedGeometry{ nullptr };
-		wuc::CompositionGeometricClip m_roundedClip{ nullptr };
-		wuc::CompositionPathGeometry m_pathGeometry{ nullptr };
-		//winrt::com_ptr<uDwm::CRgnGeometryProxy> m_rgnGeometryProxy{ nullptr };
-
-		HRESULT InitializeVisual() override;
-		void UninitializeVisual() override;
-
-		void OnDeviceLost();
 		void HandleChanges();
-		void OnRoundedClipUpdated();
 		void OnBackdropKindUpdated(CompositedBackdropKind kind);
 		void OnBackdropRegionChanged(wil::unique_hrgn& newBackdropRegion);
-		void OnBackdropBrushUpdated();
-		void OnBackdropBrushChanged();
-		void CancelAnimationCompleteWait();
 
 		POINT GetClientAreaOffset() const;
-		bool DoesBorderParticipateInBackdropRegion() const
-		{
-			return Configuration::g_overrideBorder || m_data->IsFrameExtendedIntoClientAreaLRB();
-		}
 		wil::unique_hrgn CompositeNewBackdropRegion() const
 		{
 			wil::unique_hrgn compositedRgn{ CreateRectRgn(0, 0, 0, 0) };
@@ -120,8 +81,7 @@ namespace OpenGlass::BackdropManager
 			wil::unique_hrgn captionRgn{ CreateRectRgnIndirect(&m_captionRect) };
 			wil::unique_hrgn windowRgn{ CreateRectRgnIndirect(&m_windowRect) };
 
-			auto includedBorder{ DoesBorderParticipateInBackdropRegion() };
-			CombineRgn(nonClientRgn.get(), captionRgn.get(), includedBorder ? m_borderRgn.get() : nullptr, includedBorder ? RGN_OR : RGN_COPY);
+			CombineRgn(nonClientRgn.get(), captionRgn.get(), m_borderRgn.get(), RGN_OR);
 			// DwmEnableBlurBehind
 			if (m_clientBlurRgn)
 			{
@@ -170,14 +130,7 @@ namespace OpenGlass::BackdropManager
 		void SetGdiWindowRegion(HRGN region) override;
 		void ValidateVisual() override;
 		void UpdateNCBackground() override;
-		auto GetuDwmVisual() const
-		{
-			return m_udwmVisual.get();
-		}
-		auto GetDCompVisual() const
-		{
-			return m_dcompVisual.as<wuc::Visual>();
-		}
+
 		bool CanBeTrimmed() override
 		{
 			if (m_kind != CompositedBackdropKind::Accent && (!m_visible || m_window->IsTrullyMinimized()))
@@ -196,127 +149,6 @@ namespace OpenGlass::BackdropManager
 			return true;
 		}
 	};
-
-	// temporary workaround for aero peek/live preview
-	class CClonedPeekingBackdropVisual : public winrt::implements<CCompositedBackdropVisual, ICompositedBackdropVisual>, uDwm::CBackdropVisual
-	{
-		uDwm::CTopLevelWindow* m_window{ nullptr };
-		uDwm::CWindowData* m_data{ nullptr };
-		wuc::ContainerVisual m_containerVisual{ nullptr };
-		wuc::CompositionGeometricClip m_roundedClip{ nullptr };
-		wuc::CompositionRoundedRectangleGeometry m_roundedGeometry{ nullptr };
-		winrt::com_ptr<CGlassReflectionVisual> m_reflectionVisual{ nullptr };
-
-		HRESULT InitializeVisual() override
-		{
-			RETURN_IF_FAILED(uDwm::CBackdropVisual::InitializeVisual());
-
-			auto compositor{ m_dcompDevice.as<wuc::Compositor>() };
-			m_reflectionVisual->InitializeVisual(compositor);
-			m_containerVisual = compositor.CreateContainerVisual();
-			m_roundedGeometry = compositor.CreateRoundedRectangleGeometry();
-			m_roundedClip = compositor.CreateGeometricClip(m_roundedGeometry);
-			{
-				HWND hwnd{ m_data->GetHwnd() };
-				RECT windowRect{}, borderRect{};
-				auto window{ m_data->GetWindow() };
-				window->GetActualWindowRect(&windowRect, false, true, true);
-				window->GetActualWindowRect(&borderRect, false, true, false);
-				MARGINS margins{};
-				window->GetBorderMargins(&margins);
-				winrt::Windows::Foundation::Numerics::float3 offset
-				{
-					static_cast<float>(0.f),
-					static_cast<float>(!IsMaximized(hwnd) ? 0.f : margins.cyTopHeight),
-					1.f
-				};
-				winrt::Windows::Foundation::Numerics::float2 size
-				{
-					static_cast<float>(wil::rect_width(borderRect) + (IsMaximized(hwnd) ? margins.cxRightWidth + margins.cxLeftWidth : 0)),
-					static_cast<float>(wil::rect_height(borderRect))
-				};
-				m_containerVisual.Offset(offset);
-				m_containerVisual.Size(size);
-				m_roundedGeometry.Size(size);
-				m_roundedGeometry.CornerRadius(wfn::float2{ Configuration::g_roundRectRadius, Configuration::g_roundRectRadius });
-				m_reflectionVisual->NotifyOffsetToWindow(offset);
-			}
-			m_containerVisual.Clip(m_roundedClip);
-			m_containerVisual.Children().InsertAtTop(m_reflectionVisual->GetVisual());
-			m_reflectionVisual->ValidateVisual();
-			m_visualCollection.InsertAtBottom(m_containerVisual);
-
-			return S_OK;
-		}
-		void UninitializeVisual() override
-		{
-			m_roundedClip = nullptr;
-			m_roundedGeometry = nullptr;
-			m_containerVisual = nullptr;
-
-			m_reflectionVisual->UninitializeVisual();
-			uDwm::CBackdropVisual::UninitializeVisual();
-		}
-		void OnDeviceLost()
-		{
-			UninitializeVisual();
-			InitializeInteropDevice(uDwm::CDesktopManager::s_pDesktopManagerInstance->GetDCompDevice());
-			InitializeVisual();
-		}
-	public:
-		CClonedPeekingBackdropVisual(uDwm::CTopLevelWindow* source, uDwm::CTopLevelWindow* target) :
-			m_window{ target },
-			m_data{ source->GetData() },
-			m_reflectionVisual{ winrt::make_self<CGlassReflectionVisual>(source, m_data, true) },
-			uDwm::CBackdropVisual{ target->GetNonClientVisual() }
-		{
-			OnDeviceLost();
-		}
-		~CClonedPeekingBackdropVisual()
-		{
-			UninitializeVisual();
-		}
-
-		void SetClientBlurRegion(HRGN /*region*/) override {}
-		void SetCaptionRegion(HRGN /*region*/) override {}
-		void SetBorderRegion(HRGN /*region*/) override {}
-		void SetAccentRect(LPCRECT /*lprc*/) override {}
-		void SetGdiWindowRegion(HRGN /*region*/) override {}
-		void ValidateVisual() override {}
-		void UpdateNCBackground() override {}
-		bool CanBeTrimmed() override
-		{
-			return false;
-		}
-	};
-	class CClonedCompositedBackdropVisual : public winrt::implements<CClonedCompositedBackdropVisual, ICompositedBackdropVisual>, uDwm::CClonedBackdropVisual
-	{
-		winrt::com_ptr<CCompositedBackdropVisual> m_compositedBackdropVisual{ nullptr };
-	public:
-		CClonedCompositedBackdropVisual(uDwm::CTopLevelWindow* window, const CCompositedBackdropVisual* compositedBackdropVisual) :
-			uDwm::CClonedBackdropVisual{ window->GetNonClientVisual(), compositedBackdropVisual->GetDCompVisual() }
-		{
-			winrt::copy_from_abi(m_compositedBackdropVisual, compositedBackdropVisual);
-			OnDeviceLost();
-		}
-		virtual ~CClonedCompositedBackdropVisual()
-		{
-			UninitializeVisual();
-			m_compositedBackdropVisual = nullptr;
-		}
-
-		void SetClientBlurRegion(HRGN /*region*/) override {}
-		void SetCaptionRegion(HRGN /*region*/) override {}
-		void SetBorderRegion(HRGN /*region*/) override {}
-		void SetAccentRect(LPCRECT /*lprc*/) override {}
-		void SetGdiWindowRegion(HRGN /*region*/) override {}
-		void ValidateVisual() override {}
-		void UpdateNCBackground() override {}
-		bool CanBeTrimmed() override
-		{
-			return false;
-		}
-	};
 }
 
 POINT BackdropManager::CCompositedBackdropVisual::GetClientAreaOffset() const
@@ -325,60 +157,6 @@ POINT BackdropManager::CCompositedBackdropVisual::GetClientAreaOffset() const
 	// so here we use the original offset get from CTopLevelWindow::UpdateClientBlur
 	auto margins{ m_window->GetClientAreaContainerParentVisual()->GetMargins() };
 	return { margins->cxLeftWidth, margins->cyTopHeight };
-}
-HRESULT BackdropManager::CCompositedBackdropVisual::InitializeVisual()
-{
-	RETURN_IF_FAILED(uDwm::CBackdropVisual::InitializeVisual());
-
-	auto compositor{ m_dcompDevice.as<wuc::Compositor>() };
-	m_wucRootVisual = compositor.CreateContainerVisual();
-	m_wucRootVisual.BorderMode(wuc::CompositionBorderMode::Soft);
-	m_containerVisual = compositor.CreateContainerVisual();
-	m_containerVisual.BorderMode(wuc::CompositionBorderMode::Hard);
-	m_spriteVisual = compositor.CreateSpriteVisual();
-	m_spriteVisual.RelativeSizeAdjustment({ 1.f, 1.f });
-	
-	// prepare backdrop brush
-	OnBackdropBrushUpdated();
-
-	// if the effect brush is compiled during the maximize/minimize animation
-	// then it will NOT show normally, that's because the compilation is asynchronous
-	m_reflectionVisual->InitializeVisual(compositor);
-	m_wucRootVisual.Children().InsertAtTop(m_containerVisual);
-	m_containerVisual.Children().InsertAtBottom(m_spriteVisual);
-	m_containerVisual.Children().InsertAtTop(m_reflectionVisual->GetVisual());
-	m_pathGeometry = compositor.CreatePathGeometry();
-	m_roundedGeometry = compositor.CreateRoundedRectangleGeometry();
-	m_roundedClip = compositor.CreateGeometricClip(m_roundedGeometry);
-	
-	winrt::com_ptr<ID2D1Factory> factory{ nullptr };
-	uDwm::CDesktopManager::s_pDesktopManagerInstance->GetD2DDevice()->GetFactory(factory.put());
-	// since build 22621, Path propertie cannot be empty or the dwmcore will raise a null pointer exception
-	m_pathGeometry.Path(wuc::CompositionPath{ Win2D::CanvasGeometry::CreateGeometryFromHRGN(factory.get(), m_compositedRgn.get()).as<wg::IGeometrySource2D>() });
-	//RETURN_IF_FAILED(uDwm::ResourceHelper::CreateGeometryFromHRGN(m_compositedRgn.get(), m_rgnGeometryProxy.put()));
-
-	m_dcompVisual.as<wuc::Visual>().Clip(compositor.CreateGeometricClip(m_pathGeometry));
-	//m_udwmVisual->GetVisualProxy()->SetClip(m_rgnGeometryProxy.get());
-	m_visualCollection.InsertAtBottom(m_wucRootVisual);
-
-	return S_OK;
-}
-
-void BackdropManager::CCompositedBackdropVisual::UninitializeVisual()
-{
-	CancelAnimationCompleteWait();
-
-	m_roundedGeometry = nullptr;
-	m_pathGeometry = nullptr;
-	//m_rgnGeometryProxy = nullptr;
-	m_spriteVisual = nullptr;
-	m_wucRootVisual = nullptr;
-	m_containerVisual = nullptr;
-	m_backdropBrush = nullptr;
-	m_previousBackdropBrush = nullptr;
-
-	m_reflectionVisual->UninitializeVisual();
-	uDwm::CBackdropVisual::UninitializeVisual();
 }
 
 void BackdropManager::CCompositedBackdropVisual::OnBackdropRegionChanged(wil::unique_hrgn& newBackdropRegion)
@@ -402,7 +180,6 @@ void BackdropManager::CCompositedBackdropVisual::OnBackdropRegionChanged(wil::un
 
 	if (m_visible != isVisible)
 	{
-		m_dcompVisual.as<wuc::Visual>().IsVisible(isVisible);
 		m_visible = isVisible;
 	}
 
@@ -411,214 +188,7 @@ void BackdropManager::CCompositedBackdropVisual::OnBackdropRegionChanged(wil::un
 		return;
 	}
 
-	bool clipApplied{ false };
-	if (regionType == SIMPLEREGION)
-	{
-		clipApplied = false;
-	}
-	if (regionType == COMPLEXREGION)
-	{
-		clipApplied = true;
-	}
-	if (m_clipApplied2 != clipApplied)
-	{
-		m_dcompVisual.as<wuc::Visual>().Clip(clipApplied ? m_dcompDevice.as<wuc::Compositor>().CreateGeometricClip(m_pathGeometry) : nullptr);
-		m_clipApplied2 = clipApplied;
-	}
-
-	wfn::float3 offset{ static_cast<float>(regionBox.left), static_cast<float>(regionBox.top), 0.f };
-	m_containerVisual.Offset(offset);
-	m_containerVisual.Size({ static_cast<float>(max(wil::rect_width(regionBox), 0)), static_cast<float>(max(wil::rect_height(regionBox), 0)) });
-	m_reflectionVisual->NotifyOffsetToWindow(offset);
-
-	winrt::com_ptr<ID2D1Factory> factory{ nullptr };
-	uDwm::CDesktopManager::s_pDesktopManagerInstance->GetD2DDevice()->GetFactory(factory.put());
-	auto canvasGeometry
-	{
-		Win2D::CanvasGeometry::CreateGeometryFromHRGN(
-			factory.get(),
-			m_compositedRgn.get()
-		)
-	};
-	m_pathGeometry.Path(wuc::CompositionPath{ canvasGeometry.as<wg::IGeometrySource2D>() });
-	// DO NOT USE .put() HERE, OR IT WILL RELEASE THE OBJECT WE CREATED BEFORE!
-	//uDwm::ResourceHelper::CreateGeometryFromHRGN(m_compositedRgn.get(), reinterpret_cast<uDwm::CRgnGeometryProxy**>(&m_rgnGeometryProxy));
-}
-
-void BackdropManager::CCompositedBackdropVisual::OnBackdropBrushUpdated()
-{
-	m_backdropBrushChanged = false;
-	m_shouldPlayCrossFadeAnimation = false;
-	if (m_kind == CompositedBackdropKind::Accent)
-	{
-		auto policy{ m_data->GetAccentPolicy() };
-		if (
-			policy->AccentState != m_state ||
-			policy->dwGradientColor != m_color ||
-			policy->AccentFlags != m_accentFlags
-		)
-		{
-			m_state = policy->AccentState;
-			m_color = policy->dwGradientColor;
-			m_accentFlags = policy->AccentFlags;
-			m_backdropBrushChanged = true;
-		}
-
-		if (m_activate != true)
-		{
-			m_activate = true;
-			m_backdropBrushChanged = true;
-		}
-	}
-	else
-	{
-		auto active{ m_window->TreatAsActiveWindow() };
-		if (active != m_activate)
-		{
-			m_shouldPlayCrossFadeAnimation = true;
-			m_activate = active;
-			m_backdropBrushChanged = true;
-		}
-
-		auto color{ !Configuration::g_forceAccentColorization ? m_window->GetCurrentColorizationColor() : (active ? Configuration::g_accentColor : Configuration::g_accentColorInactive) };
-		if (color != m_color)
-		{
-			m_shouldPlayCrossFadeAnimation = true;
-			m_color = color;
-			m_backdropBrushChanged = true;
-		}
-	}
-
-	auto timeStamp{ BackdropFactory::GetBackdropBrushTimeStamp() };
-	if (m_backdropTimeStamp != timeStamp)
-	{
-		m_backdropTimeStamp = timeStamp;
-		m_backdropBrushChanged = true;
-	}
-
-	if (m_backdropBrushChanged || !m_backdropBrush)
-	{
-		m_backdropBrush = BackdropFactory::GetOrCreateBackdropBrush(
-			m_dcompDevice.as<wuc::Compositor>(),
-			m_color,
-			m_activate,
-			m_kind == CompositedBackdropKind::Accent ? m_data->GetAccentPolicy() : nullptr
-		);
-		OnBackdropBrushChanged();
-	}
-}
-
-void BackdropManager::CCompositedBackdropVisual::OnBackdropBrushChanged()
-{
-	if (m_previousBackdropBrush != m_backdropBrush)
-	{
-		if (!m_previousBackdropBrush)
-		{
-			m_shouldPlayCrossFadeAnimation = false;
-		}
-		CancelAnimationCompleteWait();
-
-		if (m_shouldPlayCrossFadeAnimation && Configuration::g_crossfadeTime.count())
-		{
-			auto compositor{ m_backdropBrush.Compositor() };
-			auto crossfadeBrush{ Utils::CreateCrossFadeBrush(compositor, m_previousBackdropBrush, m_backdropBrush) };
-
-			// the completed handler won't be called under windows 10 2004, idk why...
-			if (os::buildNumber >= os::build_w10_2004)
-			{
-				m_isWaitingForAnimationComplete = true;
-				Utils::ThisModule_AddRef();
-
-				m_waitingForAnimationCompleteBatch = compositor.CreateScopedBatch(wuc::CompositionBatchTypes::Animation);
-				{
-					auto strongThis{ get_strong() };
-					auto handler = [strongThis](auto sender, auto args)
-					{
-						strongThis->CancelAnimationCompleteWait();
-						strongThis->m_spriteVisual.Brush(strongThis->m_backdropBrush);
-					};
-
-					crossfadeBrush.StartAnimation(L"Crossfade.Weight", Utils::CreateCrossFadeAnimation(compositor, Configuration::g_animationEasingFunction, Configuration::g_crossfadeTime));
-
-					m_waitingForAnimationCompleteToken = m_waitingForAnimationCompleteBatch.Completed(handler);
-					m_waitingForAnimationCompleteBatch.End();
-				}
-			}
-			else
-			{
-				crossfadeBrush.StartAnimation(L"Crossfade.Weight", Utils::CreateCrossFadeAnimation(compositor, Configuration::g_animationEasingFunction, Configuration::g_crossfadeTime));
-			}
-
-			m_spriteVisual.Brush(crossfadeBrush);
-		}
-		else
-		{
-			m_spriteVisual.Brush(m_backdropBrush);
-		}
-		m_previousBackdropBrush = m_backdropBrush;
-	}
-}
-
-void BackdropManager::CCompositedBackdropVisual::CancelAnimationCompleteWait()
-{
-	if (m_waitingForAnimationCompleteBatch)
-	{
-		m_waitingForAnimationCompleteBatch.Completed(m_waitingForAnimationCompleteToken);
-		m_waitingForAnimationCompleteBatch = nullptr;
-		m_waitingForAnimationCompleteToken = {};
-	}
-	if (m_isWaitingForAnimationComplete)
-	{
-		m_isWaitingForAnimationComplete = false;
-		Utils::ThisModule_Release();
-	}
-}
-
-// this implementation sucks because it is inefficient
-// it always updates the size and offset of the geometry when ValidateVisual is called
-void BackdropManager::CCompositedBackdropVisual::OnRoundedClipUpdated()
-{
-	if (m_cornerRadius != Configuration::g_roundRectRadius)
-	{
-		m_cornerRadius = Configuration::g_roundRectRadius;
-		m_roundedGeometry.CornerRadius({ m_cornerRadius, m_cornerRadius });
-	}
-
-	auto update_if_round_rect_clip_applicable = [&]() -> bool
-	{
-		if (Configuration::g_roundRectRadius == 0.f)
-		{
-			return false;
-		}
-		if (!m_window->HasNonClientBackground(m_data) || IsMaximized(m_data->GetHwnd()))
-		{
-			return false;
-		}
-
-		RECT windowBox{};
-		m_window->GetActualWindowRect(&windowBox, true, true, true);
-		if (IsRectEmpty(&windowBox))
-		{
-			return false;
-		}
-
-		RECT box{};
-		if (GetRgnBox(m_compositedRgn.get(), &box) == NULLREGION)
-		{
-			return false;
-		}
-
-		m_roundedGeometry.Size({ static_cast<float>(wil::rect_width(windowBox)), static_cast<float>(wil::rect_height(windowBox)) });
-		m_roundedGeometry.Offset({ static_cast<float>(box.left), static_cast<float>(box.top) });
-		return true;
-	};
-
-	auto applicable{ update_if_round_rect_clip_applicable() };
-	if (applicable != m_clipApplied)
-	{
-		m_wucRootVisual.Clip(applicable ? m_roundedClip : nullptr);
-		m_clipApplied = applicable;
-	}
+	// ...
 }
 
 void BackdropManager::CCompositedBackdropVisual::HandleChanges() try
@@ -632,24 +202,13 @@ void BackdropManager::CCompositedBackdropVisual::HandleChanges() try
 }
 CATCH_LOG_RETURN()
 
-void BackdropManager::CCompositedBackdropVisual::OnDeviceLost()
-{
-	UninitializeVisual();
-	InitializeInteropDevice(uDwm::CDesktopManager::s_pDesktopManagerInstance->GetDCompDevice());
-	InitializeVisual();
-	m_backdropDataChanged = true;
-}
-
 BackdropManager::CCompositedBackdropVisual::CCompositedBackdropVisual(uDwm::CTopLevelWindow* window) :
 	m_window{ window },
-	m_data{ window->GetData() },
-	m_reflectionVisual{ winrt::make_self<CGlassReflectionVisual>(m_window, m_data) },
-	uDwm::CBackdropVisual{ window->GetNonClientVisual() }
+	m_data{ window->GetData() }
 {
 	m_borderRgn.reset(CreateRectRgn(0, 0, 0, 0));
 	m_compositedRgn.reset(CreateRectRgn(0, 0, 0, 0));
 
-	OnDeviceLost();
 	OnBackdropKindUpdated(GlassFramework::GetActualBackdropKind(window));
 	if (m_kind == CompositedBackdropKind::Accent)
 	{
@@ -667,7 +226,6 @@ BackdropManager::CCompositedBackdropVisual::CCompositedBackdropVisual(uDwm::CTop
 
 BackdropManager::CCompositedBackdropVisual::~CCompositedBackdropVisual()
 {
-	UninitializeVisual();
 }
 
 void BackdropManager::CCompositedBackdropVisual::OnBackdropKindUpdated(CompositedBackdropKind kind)
@@ -676,9 +234,6 @@ void BackdropManager::CCompositedBackdropVisual::OnBackdropKindUpdated(Composite
 	{
 		m_kind = kind;
 		m_backdropDataChanged = true;
-		m_previousBackdropBrush = nullptr;
-		m_backdropBrush = nullptr;
-		m_backdropBrushChanged = true;
 	}
 }
 void BackdropManager::CCompositedBackdropVisual::SetClientBlurRegion(HRGN region)
@@ -746,33 +301,15 @@ void BackdropManager::CCompositedBackdropVisual::SetGdiWindowRegion(HRGN region)
 
 void BackdropManager::CCompositedBackdropVisual::ValidateVisual()
 {
-	if (!m_window->IsTrullyMinimized())
+	OnBackdropKindUpdated(GlassFramework::GetActualBackdropKind(m_window));
+	if (m_backdropDataChanged) { HandleChanges(); }
+	if (m_visible)
 	{
-		if (m_visible)
-		{
-			if (!uDwm::CheckDeviceState(m_dcompDevice))
-			{
-				OnDeviceLost();
-			}
-		}
-
-		OnBackdropKindUpdated(GlassFramework::GetActualBackdropKind(m_window));
-		if (m_backdropDataChanged) { HandleChanges(); }
-		if (m_visible)
-		{
-			OnBackdropBrushUpdated();
-			OnRoundedClipUpdated();
-			m_reflectionVisual->ValidateVisual();
-		}
+		
 	}
 }
 void BackdropManager::CCompositedBackdropVisual::UpdateNCBackground()
 {
-	if (m_window->IsTrullyMinimized())
-	{
-		return;
-	}
-
 	RECT borderRect{};
 	THROW_HR_IF_NULL(E_INVALIDARG, m_window->GetActualWindowRect(&borderRect, true, true, false));
 
@@ -843,7 +380,7 @@ winrt::com_ptr<BackdropManager::ICompositedBackdropVisual> BackdropManager::GetO
 
 void BackdropManager::TryClone(uDwm::CTopLevelWindow* src, uDwm::CTopLevelWindow* dst, ICompositedBackdropVisual** visual)
 {
-	auto legacyVisual{ src->GetLegacyVisual() };
+	/*auto legacyVisual{ src->GetLegacyVisual() };
 	if (auto backdrop{ GetOrCreate(src) }; backdrop && legacyVisual)
 	{
 		auto it{ g_backdropMap.find(dst) };
@@ -861,7 +398,7 @@ void BackdropManager::TryClone(uDwm::CTopLevelWindow* src, uDwm::CTopLevelWindow
 		{
 			*visual = (it == g_backdropMap.end() ? nullptr : it->second.get());
 		}
-	}
+	}*/
 }
 
 void BackdropManager::Remove(uDwm::CTopLevelWindow* window, bool silent)

@@ -3,7 +3,6 @@
 #include "uDwmProjection.hpp"
 #include "GeometryRecorder.hpp"
 #include "BackdropManager.hpp"
-#include "GlassReflection.hpp"
 #include "dwmcoreProjection.hpp"
 
 using namespace OpenGlass;
@@ -187,34 +186,10 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_UpdateNCAreaBackgrou
 				wil::unique_hrgn realBorderRegion{ CreateRectRgn(0, 0, 0, 0) };
 				wil::unique_hrgn emptyRegion{ CreateRectRgn(0, 0, 0, 0) };
 
-				if (!BackdropManager::Configuration::g_overrideBorder && !data->IsFrameExtendedIntoClientAreaLRB())
-				{
-					RECT captionBox{};
-					RECT borderBox{};
-					GetRgnBox(captionRegion, &captionBox);
-					if (GetRgnBox(borderRegion, &borderBox) != NULLREGION)
-					{
-						LONG borderWidth{ captionBox.top - borderBox.top };
-						wil::unique_hrgn nonBorderRegion{ CreateRectRgn(borderBox.left + borderWidth, borderBox.top + borderWidth, borderBox.right - borderWidth, borderBox.bottom - borderWidth) };
-						CombineRgn(realBorderRegion.get(), borderRegion, nonBorderRegion.get(), RGN_DIFF);
-					}
-				}
-
 				backdrop->SetBorderRegion(borderRegion);
 				backdrop->SetCaptionRegion(captionRegion);
 
-				if (borderGeometry)
-				{
-					uDwm::ResourceHelper::CreateGeometryFromHRGN(realBorderRegion.get(), &borderGeometry);
-				}
-				if (captionGeometry)
-				{
-					uDwm::ResourceHelper::CreateGeometryFromHRGN(emptyRegion.get(), &captionGeometry);
-				}
-				if (EqualRgn(realBorderRegion.get(), emptyRegion.get()))
-				{
-					This->GetLegacyVisual()->ClearInstructions();
-				}
+				This->GetLegacyVisual()->ClearInstructions();
 			}
 		}
 
@@ -281,6 +256,8 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_UpdateClientBlur(uDw
 				backdrop->SetClientBlurRegion(clientBlurRegion);
 				backdrop->ValidateVisual();
 			}
+
+			This->GetClientBlurVisual()->ClearInstructions();
 		}
 	}
 
@@ -541,16 +518,11 @@ void GlassFramework::UpdateConfiguration(ConfigurationFramework::UpdateType type
 	{
 		g_transparencyEnabled = Utils::IsTransparencyEnabled(ConfigurationFramework::GetPersonalizeKey());
 		BackdropManager::Configuration::g_roundRectRadius = static_cast<float>(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"RoundRectRadius"));
-		BackdropManager::Configuration::g_overrideBorder = static_cast<bool>(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"GlassOverrideBorder"));
-		BackdropManager::Configuration::g_animationEasingFunction = static_cast<char>(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"GlassCrossFadeEasingFunction"));
-		BackdropManager::Configuration::g_crossfadeTime = std::chrono::milliseconds{ uDwm::CDesktopManager::s_pDesktopManagerInstance->IsWindowAnimationEnabled() ? ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"GlassCrossFadeTime", 87) : 0 };
 		g_overrideAccent = static_cast<bool>(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"GlassOverrideAccent"));
-		CGlassReflectionVisual::UpdateIntensity(std::clamp(static_cast<float>(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"ColorizationGlassReflectionIntensity")) / 100.f, 0.f, 1.f));
-		CGlassReflectionVisual::UpdateParallaxIntensity(std::clamp(static_cast<float>(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"ColorizationGlassReflectionParallaxIntensity", 10)) / 100.f, 0.f, 1.f));
-
+		
 		WCHAR reflectionTexturePath[MAX_PATH + 1]{};
 		ConfigurationFramework::DwmGetStringFromHKCUAndHKLM(L"CustomThemeReflection", reflectionTexturePath);
-		CGlassReflectionVisual::UpdateReflectionSurface(reflectionTexturePath);
+
 		BackdropManager::Configuration::g_forceAccentColorization = static_cast<bool>(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"ForceAccentColorization"));
 		if (BackdropManager::Configuration::g_forceAccentColorization)
 		{
@@ -589,17 +561,6 @@ void GlassFramework::UpdateConfiguration(ConfigurationFramework::UpdateType type
 
 HRESULT GlassFramework::Startup()
 {
-	// Remove blurred backdrop low framerate refresh limitation!!!
-	g_oldBackdropBlurCachingThrottleQPCTimeDelta = *dwmcore::CCommonRegistryData::m_backdropBlurCachingThrottleQPCTimeDelta;
-	*dwmcore::CCommonRegistryData::m_backdropBlurCachingThrottleQPCTimeDelta = 0;
-#ifdef _DEBUG
-	OutputDebugStringW(
-		std::format(
-			L"CCommonRegistryData::m_backdropBlurCachingThrottleQPCTimeDelta: {}\n",
-			g_oldBackdropBlurCachingThrottleQPCTimeDelta
-		).c_str()
-	);
-#endif
 	uDwm::GetAddressFromSymbolMap("CDrawGeometryInstruction::Create", g_CDrawGeometryInstruction_Create_Org);
 	uDwm::GetAddressFromSymbolMap("CTopLevelWindow::UpdateNCAreaBackground", g_CTopLevelWindow_UpdateNCAreaBackground_Org);
 	uDwm::GetAddressFromSymbolMap("CTopLevelWindow::UpdateClientBlur", g_CTopLevelWindow_UpdateClientBlur_Org);
@@ -685,7 +646,4 @@ void GlassFramework::Shutdown()
 	g_captureRef = 0;
 	g_geometryBuffer.clear();
 	BackdropManager::Shutdown();
-
-	*dwmcore::CCommonRegistryData::m_backdropBlurCachingThrottleQPCTimeDelta = g_oldBackdropBlurCachingThrottleQPCTimeDelta;
-	CGlassReflectionVisual::Shutdown();
 }
