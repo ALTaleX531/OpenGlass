@@ -191,11 +191,11 @@
   <ItemGroup>
     <ClInclude Include="CustomMsstyleLoader.hpp" />
     <ClInclude Include="dwmcoreProjection.hpp" />
+    <ClInclude Include="GlassRenderer.hpp" />
     <ClInclude Include="ServiceApi.hpp" />
     <ClInclude Include="BackdropManager.hpp" />
     <ClInclude Include="CaptionTextHandler.hpp" />
     <ClInclude Include="ConfigurationFramework.hpp" />
-    <ClInclude Include="dcompProjection.hpp" />
     <ClInclude Include="cpprt.hpp" />
     <ClInclude Include="framework.hpp" />
     <ClInclude Include="GeometryRecorder.hpp" />
@@ -209,11 +209,11 @@
     <ClInclude Include="uDwmProjection.hpp" />
     <ClInclude Include="Utils.hpp" />
     <ClInclude Include="wil.hpp" />
-    <ClInclude Include="winrt.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BackdropManager.cpp" />
     <ClCompile Include="CustomMsstyleLoader.cpp" />
+    <ClCompile Include="GlassRenderer.cpp" />
     <ClCompile Include="ServiceApi.cpp" />
     <ClCompile Include="CaptionTextHandler.cpp" />
     <ClCompile Include="ConfigurationFramework.cpp" />

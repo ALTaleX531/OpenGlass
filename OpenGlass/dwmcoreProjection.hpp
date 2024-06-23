@@ -1,7 +1,6 @@
 ﻿#pragma once
 #include "framework.hpp"
 #include "cpprt.hpp"
-#include "winrt.hpp"
 #include "Utils.hpp"
 #include "HookHelper.hpp"
 

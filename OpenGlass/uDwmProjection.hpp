@@ -1,9 +1,7 @@
 ﻿#pragma once
 #include "framework.hpp"
 #include "cpprt.hpp"
-#include "winrt.hpp"
 #include "Utils.hpp"
-#include "dcompProjection.hpp"
 #include "dwmcoreProjection.hpp"
 #include "OSHelper.hpp"
 #include "HookHelper.hpp"
@@ -1114,25 +1112,6 @@ namespace OpenGlass::uDwm
 			}
 
 			return d2dDevice;
-		}
-		dcomp::IDCompositionDesktopDevicePartner* GetDCompDevice() const
-		{
-			dcomp::IDCompositionDesktopDevicePartner* interopDevice{ nullptr };
-
-			if (os::buildNumber < os::build_w11_21h2)
-			{
-				interopDevice = reinterpret_cast<dcomp::IDCompositionDesktopDevicePartner* const*>(this)[27];
-			}
-			else if (os::buildNumber < os::build_w11_22h2)
-			{
-				interopDevice = reinterpret_cast<dcomp::IDCompositionDesktopDevicePartner**>(reinterpret_cast<void* const*>(this)[5])[4];
-			}
-			else
-			{
-				interopDevice = reinterpret_cast<dcomp::IDCompositionDesktopDevicePartner**>(reinterpret_cast<void* const*>(this)[6])[4];
-			}
-
-			return interopDevice;
 		}
 	};
 	FORCEINLINE HWND GetShellWindowForCurrentDesktop()
