@@ -189,7 +189,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="BackdropFactory.hpp" />
     <ClInclude Include="CustomMsstyleLoader.hpp" />
     <ClInclude Include="dwmcoreProjection.hpp" />
     <ClInclude Include="ServiceApi.hpp" />
