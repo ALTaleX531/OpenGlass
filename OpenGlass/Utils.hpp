@@ -1,7 +1,6 @@
 ﻿#pragma once
 #include "framework.hpp"
 #include "cpprt.hpp"
-#include "winrt.hpp"
 #include "HookHelper.hpp"
 
 namespace OpenGlass::Utils
@@ -108,49 +107,21 @@ namespace OpenGlass::Utils
 		return static_cast<bool>(isLocalSystem);
 	}
 
-	FORCEINLINE wu::Color FromAbgr(DWORD color)
+	FORCEINLINE D2D1_COLOR_F FromAbgr(DWORD color)
 	{
 		auto abgr{ reinterpret_cast<const UCHAR*>(&color) };
 		return
 		{
-			abgr[3],
-			abgr[0],
-			abgr[1],
-			abgr[2]
+			static_cast<float>(abgr[0]) / 255.f,
+			static_cast<float>(abgr[1]) / 255.f,
+			static_cast<float>(abgr[2]) / 255.f,
+			static_cast<float>(abgr[3]) / 255.f
 		};
-	}
-	FORCEINLINE wu::Color FromArgb(DWORD color)
-	{
-		auto abgr{ reinterpret_cast<const UCHAR*>(&color) };
-		return
-		{
-			abgr[3],
-			abgr[2],
-			abgr[1],
-			abgr[0]
-		};
-	}
-
-	FORCEINLINE void ThisModule_AddRef()
-	{
-		HMODULE thisModule{ nullptr };
-		GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS, L"", &thisModule);
-	}
-	FORCEINLINE void ThisModule_Release(bool async = true)
-	{
-		if (async)
-		{
-			static wil::unique_threadpool_work s_freeModuleRefWork{ CreateThreadpoolWork([](PTP_CALLBACK_INSTANCE instance, PVOID, PTP_WORK) { DwmFlush(); FreeLibraryWhenCallbackReturns(instance, wil::GetModuleInstanceHandle());  }, nullptr, nullptr) };
-			SubmitThreadpoolWork(s_freeModuleRefWork.get());
-		}
-		else
-		{
-			FreeLibraryAndExitThread(wil::GetModuleInstanceHandle(), 0);
-		}
 	}
 }
 
 #define DEFINE_INVOKER(fn) static const auto s_fn_ptr{ Utils::cast_pointer<decltype(&fn)>(g_symbolMap.at(#fn)) }
 #define DEFINE_USER_INVOKER(type, name) static const auto s_fn_ptr{ Utils::cast_pointer<decltype(&type)>(g_symbolMap.at(name)) }
+#define DEFINE_CUSTOM_INVOKER(type, name) static const auto s_fn_ptr{ Utils::cast_pointer<type>(g_symbolMap.at(name)) }
 #define INVOKE_MEMBERFUNCTION(...) std::invoke(s_fn_ptr, this, ##__VA_ARGS__)
 #define INVOKE_FUNCTION(...) std::invoke(s_fn_ptr, ##__VA_ARGS__)

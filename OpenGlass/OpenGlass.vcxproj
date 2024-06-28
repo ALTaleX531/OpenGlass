@@ -189,11 +189,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CustomBlurEffect.hpp" />
     <ClInclude Include="CustomMsstyleLoader.hpp" />
     <ClInclude Include="dwmcoreProjection.hpp" />
+    <ClInclude Include="GlassEffectManager.hpp" />
+    <ClInclude Include="ReflectionRenderer.hpp" />
     <ClInclude Include="GlassRenderer.hpp" />
+    <ClInclude Include="GlassSharedData.hpp" />
     <ClInclude Include="ServiceApi.hpp" />
-    <ClInclude Include="BackdropManager.hpp" />
+    <ClInclude Include="VisualManager.hpp" />
     <ClInclude Include="CaptionTextHandler.hpp" />
     <ClInclude Include="ConfigurationFramework.hpp" />
     <ClInclude Include="cpprt.hpp" />
@@ -211,7 +215,9 @@
     <ClInclude Include="wil.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BackdropManager.cpp" />
+    <ClCompile Include="CustomBlurEffect.cpp" />
+    <ClCompile Include="GlassEffectManager.cpp" />
+    <ClCompile Include="VisualManager.cpp" />
     <ClCompile Include="CustomMsstyleLoader.cpp" />
     <ClCompile Include="GlassRenderer.cpp" />
     <ClCompile Include="ServiceApi.cpp" />

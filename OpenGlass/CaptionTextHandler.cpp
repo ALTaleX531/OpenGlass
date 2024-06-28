@@ -299,9 +299,8 @@ HRESULT CaptionTextHandler::Startup()
 			);
 			RETURN_LAST_ERROR_IF_NULL(g_IWICImagingFactory2_CreateBitmapFromHBITMAP_Org);
 
-			HMODULE udwmModule{ GetModuleHandleW(L"uDwm.dll") };
-			g_DrawTextW_Org = reinterpret_cast<decltype(g_DrawTextW_Org)>(HookHelper::WriteIAT(udwmModule, "user32.dll", "DrawTextW", MyDrawTextW));
-			g_CreateBitmap_Org = reinterpret_cast<decltype(g_CreateBitmap_Org)>(HookHelper::WriteIAT(udwmModule, "gdi32.dll", "CreateBitmap", MyCreateBitmap));
+			g_DrawTextW_Org = reinterpret_cast<decltype(g_DrawTextW_Org)>(HookHelper::WriteIAT(uDwm::g_moduleHandle, "user32.dll", "DrawTextW", MyDrawTextW));
+			g_CreateBitmap_Org = reinterpret_cast<decltype(g_CreateBitmap_Org)>(HookHelper::WriteIAT(uDwm::g_moduleHandle, "gdi32.dll", "CreateBitmap", MyCreateBitmap));
 
 			HookHelper::Detours::Write([]()
 			{
@@ -348,14 +347,13 @@ void CaptionTextHandler::Shutdown()
 					g_IWICImagingFactory2_CreateBitmapFromHBITMAP_Org
 				);
 			}
-			HMODULE udwmModule{ GetModuleHandleW(L"uDwm.dll") };
 			if (g_DrawTextW_Org)
 			{
-				HookHelper::WriteIAT(udwmModule, "user32.dll", "DrawTextW", g_DrawTextW_Org);
+				HookHelper::WriteIAT(uDwm::g_moduleHandle, "user32.dll", "DrawTextW", g_DrawTextW_Org);
 			}
 			if (g_CreateBitmap_Org)
 			{
-				HookHelper::WriteIAT(udwmModule, "gdi32.dll", "CreateBitmap", g_CreateBitmap_Org);
+				HookHelper::WriteIAT(uDwm::g_moduleHandle, "gdi32.dll", "CreateBitmap", g_CreateBitmap_Org);
 			}
 
 			g_textVisual = nullptr;

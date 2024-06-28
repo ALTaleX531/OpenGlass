@@ -10,6 +10,7 @@
 #include "GeometryRecorder.hpp"
 #include "CaptionTextHandler.hpp"
 #include "GlassFramework.hpp"
+#include "GlassRenderer.hpp"
 #include "CustomMsstyleLoader.hpp"
 #include "ConfigurationFramework.hpp"
 
@@ -419,6 +420,7 @@ do_dwmcore_symbol_parsing:
 	
 	ConfigurationFramework::Unload();
 	GlassFramework::Startup();
+	GlassRenderer::Startup();
 	CaptionTextHandler::Startup();
 	GeometryRecorder::Startup();
 	CustomMsstyleLoader::Startup();
@@ -514,6 +516,7 @@ void OpenGlass::Shutdown()
 
 	GeometryRecorder::Shutdown();
 	CaptionTextHandler::Shutdown();
+	GlassRenderer::Shutdown();
 	GlassFramework::Shutdown();
 	CustomMsstyleLoader::Shutdown();
 

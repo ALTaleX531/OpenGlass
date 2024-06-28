@@ -99,7 +99,14 @@ namespace OpenGlass::uDwm
 		}
 	};
 
-	struct CSolidColorLegacyMilBrushProxy : CBaseLegacyMilBrushProxy {};
+	struct CSolidColorLegacyMilBrushProxy : CBaseLegacyMilBrushProxy 
+	{
+		HRESULT STDMETHODCALLTYPE Update(double opacity, const D2D1_COLOR_F& color)
+		{
+			DEFINE_INVOKER(CSolidColorLegacyMilBrushProxy::Update);
+			return INVOKE_MEMBERFUNCTION(opacity, color);
+		}
+	};
 
 	struct VisualCollection;
 	struct CVisualProxy : CResource
@@ -316,6 +323,23 @@ namespace OpenGlass::uDwm
 			return INVOKE_FUNCTION(brush, geometry, instruction);
 		}
 	};
+	struct CSolidRectangleInstruction : CRenderDataInstruction
+	{
+		DWORD m_refCount{ 1 };
+		DWORD m_unknown{ 0 };
+		D2D1_COLOR_F m_color{};
+		D2D1_RECT_F m_drawRect{};
+	public:
+		STDMETHOD(WriteInstruction)(
+			IRenderDataBuilder* builder,
+			const CVisual* /*visual*/
+		) override
+		{
+			return builder->DrawSolidRectangle(m_drawRect, m_color);
+		}
+		D2D1_COLOR_F& GetColor() { return m_color; }
+		D2D1_RECT_F& GetRectangle() { return m_drawRect; }
+	};
 
 	class CEmptyDrawInstruction : public CRenderDataInstruction
 	{
@@ -323,8 +347,8 @@ namespace OpenGlass::uDwm
 	public:
 		STDMETHOD(WriteInstruction)(
 			IRenderDataBuilder* /*builder*/,
-			const struct CVisual* /*visual*/
-			) override
+			const CVisual* /*visual*/
+		) override
 		{
 			return S_OK;
 		}
@@ -337,8 +361,8 @@ namespace OpenGlass::uDwm
 		CDrawVisualTreeInstruction(CVisual* visual) : CRenderDataInstruction{} { m_visual.copy_from(visual); }
 		STDMETHOD(WriteInstruction)(
 			IRenderDataBuilder* builder,
-			const struct CVisual* visual
-			) override
+			const CVisual* visual
+		) override
 		{
 			UINT visualHandleTableIndex{ 0 };
 			if (visual)
@@ -400,6 +424,14 @@ namespace OpenGlass::uDwm
 	};
 	struct CAccent : CVisual
 	{
+		ACCENT_POLICY* GetPolicy()
+		{
+			return reinterpret_cast<ACCENT_POLICY*>(this) + 35;
+		}
+		HWND GetHwnd() const
+		{
+			return reinterpret_cast<HWND const*>(this)[50];
+		}
 	};
 
 	struct IDwmWindow;
@@ -554,6 +586,20 @@ namespace OpenGlass::uDwm
 			const MARGINS* margins{ GetExtendedFrameMargins() };
 
 			return margins->cxLeftWidth == -1 || margins->cxRightWidth == -1 || margins->cyTopHeight == -1 || margins->cyBottomHeight == -1;
+		}
+	};
+
+	struct CGlassColorizationResources
+	{
+		D2D1_COLOR_F getArgbcolor() const
+		{
+			float balance{ reinterpret_cast<float const*>(this)[8] };
+			return D2D1::ColorF(
+				reinterpret_cast<float const*>(this)[4] * balance,
+				reinterpret_cast<float const*>(this)[5] * balance,
+				reinterpret_cast<float const*>(this)[6] * balance,
+				reinterpret_cast<float const*>(this)[7]
+			);
 		}
 	};
 	struct CTopLevelWindow : CVisual
@@ -810,6 +856,29 @@ namespace OpenGlass::uDwm
 
 			return visual;
 		}
+		CCanvasVisual** GetLegacyVisualAddress()
+		{
+			CCanvasVisual** visual{ nullptr };
+
+			if (os::buildNumber < os::build_w10_2004)
+			{
+				visual = &reinterpret_cast<CCanvasVisual**>(this)[35];
+			}
+			else if (os::buildNumber < os::build_w11_21h2)
+			{
+				visual = &reinterpret_cast<CCanvasVisual**>(this)[36];
+			}
+			else if (os::buildNumber < os::build_w11_22h2)
+			{
+				visual = &reinterpret_cast<CCanvasVisual**>(this)[37];
+			}
+			else
+			{
+				visual = &reinterpret_cast<CCanvasVisual**>(this)[39];
+			}
+
+			return visual;
+		}
 		CCanvasVisual* GetClientBlurVisual() const
 		{
 			CCanvasVisual* visual{ nullptr };
@@ -947,36 +1016,33 @@ namespace OpenGlass::uDwm
 			return borderRect.left <= -32000 || borderRect.top <= -32000;
 		}
 
-		DWORD STDMETHODCALLTYPE GetSolidColorCaptionColor() const
+		HRESULT STDMETHODCALLTYPE UpdateColorizationColor() const
 		{
-			DEFINE_INVOKER(CTopLevelWindow::GetSolidColorCaptionColor);
+			DEFINE_INVOKER(CTopLevelWindow::UpdateColorizationColor);
 			return INVOKE_MEMBERFUNCTION();
 		}
-		DWORD STDMETHODCALLTYPE GetWindowColorizationColor(BYTE flags) const
+		CGlassColorizationResources* GetTitlebarColorizationParameters() const
 		{
-			DEFINE_INVOKER(CTopLevelWindow::GetWindowColorizationColor);
-			return INVOKE_MEMBERFUNCTION(flags);
-		}
-		DWORD* STDMETHODCALLTYPE GetCurrentDefaultColorizationFlags(DWORD* flags) const
-		{
-			DEFINE_INVOKER(CTopLevelWindow::GetCurrentDefaultColorizationFlags);
-			return INVOKE_MEMBERFUNCTION(flags);
-		}
-		DWORD GetCurrentColorizationColor() const
-		{
-			DWORD color{};
+			CGlassColorizationResources* parameters{ nullptr };
 
-			if (os::buildNumber < os::build_w11_22h2)
+			if (os::buildNumber < os::build_w10_2004)
 			{
-				DWORD flags{};
-				color = GetWindowColorizationColor(static_cast<BYTE>(*GetCurrentDefaultColorizationFlags(&flags) | 8u));
+				parameters = reinterpret_cast<CGlassColorizationResources* const*>(this)[72];
+			}
+			else if (os::buildNumber < os::build_w11_21h2)
+			{
+				parameters = reinterpret_cast<CGlassColorizationResources* const*>(this)[73];
+			}
+			else if (os::buildNumber < os::build_w11_22h2)
+			{
+				parameters = reinterpret_cast<CGlassColorizationResources* const*>(this)[75];
 			}
 			else
 			{
-				color = GetSolidColorCaptionColor();
+				parameters = reinterpret_cast<CGlassColorizationResources* const*>(this)[77];
 			}
 
-			return color;
+			return parameters;
 		}
 	};
 	struct CWindowList : CBaseObject
@@ -1005,10 +1071,10 @@ namespace OpenGlass::uDwm
 
 	struct CCompositor
 	{
-		HRESULT CreateVisualProxyFromSharedHandle(HANDLE handle, CVisualProxy** visualProxy)
+		HRESULT STDMETHODCALLTYPE CreateSolidColorLegacyMilBrushProxy(CSolidColorLegacyMilBrushProxy** milBrushProxy)
 		{
-			DEFINE_USER_INVOKER(CCompositor::CreateVisualProxyFromSharedHandle, "CCompositor::CreateProxyFromSharedHandle<CVisualProxy>");
-			return INVOKE_MEMBERFUNCTION(handle, visualProxy);
+			DEFINE_USER_INVOKER(CCompositor::CreateSolidColorLegacyMilBrushProxy, "CCompositor::CreateProxy<CSolidColorLegacyMilBrushProxy>");
+			return INVOKE_MEMBERFUNCTION(milBrushProxy);
 		}
 		dwmcore::CChannel* GetChannel() const
 		{
@@ -1113,6 +1179,25 @@ namespace OpenGlass::uDwm
 
 			return d2dDevice;
 		}
+		IDCompositionDesktopDevice* GetDCompDevice() const
+		{
+			IDCompositionDesktopDevice* interopDevice{ nullptr };
+
+			if (os::buildNumber < os::build_w11_21h2)
+			{
+				interopDevice = reinterpret_cast<IDCompositionDesktopDevice* const*>(this)[27];
+			}
+			else if (os::buildNumber < os::build_w11_22h2)
+			{
+				interopDevice = reinterpret_cast<IDCompositionDesktopDevice**>(reinterpret_cast<void* const*>(this)[5])[4];
+			}
+			else
+			{
+				interopDevice = reinterpret_cast<IDCompositionDesktopDevice**>(reinterpret_cast<void* const*>(this)[6])[4];
+			}
+
+			return interopDevice;
+		}
 	};
 	FORCEINLINE HWND GetShellWindowForCurrentDesktop()
 	{
@@ -1149,12 +1234,14 @@ namespace OpenGlass::uDwm
 			fullyUnDecoratedFunctionName.starts_with("CWindowData::") ||
 			fullyUnDecoratedFunctionName.starts_with("VisualCollection::") ||
 			fullyUnDecoratedFunctionName.starts_with("CDesktopManager::") ||
+			fullyUnDecoratedFunctionName.starts_with("CAccent::") ||
 			fullyUnDecoratedFunctionName == "CWindowList::UpdateAccentBlurRect" ||
 			fullyUnDecoratedFunctionName == "CWindowList::GetSyncedWindowDataByHwnd" ||
 			fullyUnDecoratedFunctionName == "CWindowList::GetWindowListForDesktop" ||
 			fullyUnDecoratedFunctionName == "CWindowList::GetRootVisualForDesktop" ||
 			fullyUnDecoratedFunctionName == "CWindowList::GetShellWindowForDesktop" ||
 			fullyUnDecoratedFunctionName == "CDrawGeometryInstruction::Create" ||
+			fullyUnDecoratedFunctionName == "CSolidColorLegacyMilBrushProxy::Update" ||
 			(fullyUnDecoratedFunctionName.starts_with("ResourceHelper::") && fullyUnDecoratedFunctionName != "ResourceHelper::CreateRectangleGeometry") ||
 			functionName == "?CreateRectangleGeometry@ResourceHelper@@SAJPEBUtagRECT@@PEAPEAVCRectangleGeometryProxy@@@Z" ||
 			functionName == "?CreateRectangleGeometry@ResourceHelper@@SAJPEBUtagRECT@@PEAPEAVCResource@@@Z"

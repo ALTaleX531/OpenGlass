@@ -1,8 +1,8 @@
 ﻿#include "pch.h"
 #include "ConfigurationFramework.hpp"
-#include "BackdropManager.hpp"
 #include "CaptionTextHandler.hpp"
 #include "GlassFramework.hpp"
+#include "GlassRenderer.hpp"
 #include "CustomMsstyleLoader.hpp"
 #include "ServiceApi.hpp"
 
@@ -16,6 +16,7 @@ namespace OpenGlass::ConfigurationFramework
 void ConfigurationFramework::Update(UpdateType type)
 {
 	GlassFramework::UpdateConfiguration(type);
+	GlassRenderer::UpdateConfiguration(type);
 	CaptionTextHandler::UpdateConfiguration(type);
 	CustomMsstyleLoader::UpdateConfiguration(type);
 	DwmFlush();

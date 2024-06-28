@@ -139,7 +139,7 @@ EXTERN_C __declspec(dllexport) HRESULT StartupService()
 		HRESULT hr
 		{
 			rootFolder->GetTask(
-				_bstr_t{L"OpenGlass Host"},
+				_bstr_t{L"OpenGlass Legacy Host"},
 				&registeredTask
 			)
 		};
