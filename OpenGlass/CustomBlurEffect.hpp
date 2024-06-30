@@ -30,8 +30,7 @@ namespace OpenGlass
 		virtual HRESULT STDMETHODCALLTYPE Invalidate(
 			ID2D1Image* inputImage,
 			const D2D1_RECT_F& imageRectangle,
-			const D2D1_RECT_F & imageBounds,
-			bool transparentBlack,
+			const D2D1_RECT_F& imageBounds,
 			float blurAmount
 		) = 0;
 		virtual HRESULT STDMETHODCALLTYPE Draw(
@@ -39,13 +38,13 @@ namespace OpenGlass
 			D2D1_INTERPOLATION_MODE interpolationMode = D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR,
 			D2D1_COMPOSITE_MODE compositeMode = D2D1_COMPOSITE_MODE_BOUNDED_SOURCE_COPY
 		) = 0;
-		virtual float STDMETHODCALLTYPE GetBlurAmount() const = 0;
+		virtual ID2D1Image* STDMETHODCALLTYPE GetOutput() const = 0;
+		virtual void STDMETHODCALLTYPE Reset() = 0;
 	};
 
 	class CCustomBlurEffect : public winrt::implements<CCustomBlurEffect, ICustomBlurEffect>
 	{
 		bool m_initialized{ false };
-		bool m_transparentBlack{ false };
 		float m_blurAmount{ 9.f };
 		D2D1_RECT_F m_imageRectangle{};
 		ID2D1Image* m_effectInput{ nullptr };
@@ -68,7 +67,6 @@ namespace OpenGlass
 			ID2D1Image* inputImage,
 			const D2D1_RECT_F& imageRectangle,
 			const D2D1_RECT_F& imageBounds,
-			bool transparentBlack,
 			float blurAmount
 		) override;
 		HRESULT STDMETHODCALLTYPE Draw(
@@ -76,6 +74,12 @@ namespace OpenGlass
 			D2D1_INTERPOLATION_MODE interpolationMode,
 			D2D1_COMPOSITE_MODE compositeMode
 		) override;
-		float STDMETHODCALLTYPE GetBlurAmount() const override { return m_blurAmount; }
+		ID2D1Image* STDMETHODCALLTYPE GetOutput() const override { return m_effectOutput.get(); }
+		void STDMETHODCALLTYPE Reset()
+		{
+			if (m_cropInputEffect) { m_cropInputEffect->SetInput(0, nullptr); }
+			m_imageRectangle = {};
+			m_effectInput = nullptr;
+		}
 	};
 }

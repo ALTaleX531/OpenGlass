@@ -39,15 +39,17 @@ namespace OpenGlass::VisualManager
 
 void VisualManager::RedrawTopLevelWindow(uDwm::CTopLevelWindow* window)
 {
-	// 0x10000 UpdateText
-	// 0x20000 UpdateIcon
-	window->SetDirtyFlags(window->GetDirtyFlags() | 0x10000 | 0x20000 | 0x4000 | 0x400000);
+	if (auto clientBlurVisual{ window->GetClientBlurVisual() }; clientBlurVisual)
+	{
+		LOG_IF_FAILED(clientBlurVisual->ClearInstructions());
+	}
 	if (os::buildNumber >= os::build_w11_21h2)
 	{
 		LOG_IF_FAILED(window->OnSystemBackdropUpdated());
 	}
-	LOG_IF_FAILED(window->OnAccentPolicyUpdated());
-	LOG_IF_FAILED(window->OnClipUpdated());
+	// 0x10000 UpdateText
+	// 0x20000 UpdateIcon
+	window->SetDirtyFlags(window->GetDirtyFlags() | 0x8 | 0x4000 | 0x10000 | 0x20000 | 0x80000 | 0x2000000 | 0x400000 | 0x4000000);
 }
 
 VisualManager::CLegacyVisualOverrider::CLegacyVisualOverrider(uDwm::CTopLevelWindow* window) : m_window{ window }
@@ -160,11 +162,11 @@ HRESULT STDMETHODCALLTYPE VisualManager::CLegacyVisualOverrider::UpdateNCBackgro
 		RETURN_IF_FAILED(Initialize());
 	}
 	auto legacyVisual{ m_window->GetLegacyVisual() };
-	RETURN_IF_FAILED(legacyVisual->ClearInstructions());
-	if (!captionRgn || !borderRgn || !m_window->GetData()->IsWindowVisibleAndUncloaked() || m_window->IsTrullyMinimized())
+	if (!m_window->GetData()->IsWindowVisibleAndUncloaked() || m_window->IsTrullyMinimized())
 	{
 		return S_OK;
 	}
+	RETURN_IF_FAILED(legacyVisual->ClearInstructions());
 	RETURN_IF_FAILED(legacyVisual->AddInstruction(m_captionDrawInstruction.get()));
 	RETURN_IF_FAILED(legacyVisual->AddInstruction(m_topBorderDrawInstruction.get()));
 	RETURN_IF_FAILED(legacyVisual->AddInstruction(m_leftBorderDrawInstruction.get()));

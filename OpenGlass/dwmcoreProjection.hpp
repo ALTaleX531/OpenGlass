@@ -447,6 +447,11 @@ namespace OpenGlass::dwmcore
 			DEFINE_INVOKER(CDrawingContext::CalcWorldSpaceClippedBounds);
 			return INVOKE_MEMBERFUNCTION(sourceRect, targetRect);
 		}
+		ULONG_PTR STDMETHODCALLTYPE CalcLocalSpaceClippedBounds(const D2D1_RECT_F& sourceRect, const D2D1_RECT_F* targetRect) const
+		{
+			DEFINE_INVOKER(CDrawingContext::CalcLocalSpaceClippedBounds);
+			return INVOKE_MEMBERFUNCTION(sourceRect, targetRect);
+		}
 		HRESULT STDMETHODCALLTYPE GetUnOccludedWorldShape(const CShape* shape, int depth, CShapePtr* worldShape) const
 		{
 			DEFINE_INVOKER(CDrawingContext::GetUnOccludedWorldShape);
@@ -470,6 +475,16 @@ namespace OpenGlass::dwmcore
 		CVisual* STDMETHODCALLTYPE GetCurrentVisual() const
 		{
 			DEFINE_INVOKER(CDrawingContext::GetCurrentVisual);
+			return INVOKE_MEMBERFUNCTION();
+		}
+		bool  STDMETHODCALLTYPE IsInLayer() const
+		{
+			DEFINE_INVOKER(CDrawingContext::IsInLayer);
+			return INVOKE_MEMBERFUNCTION();
+		}
+		bool  STDMETHODCALLTYPE IsNormalDesktopRender() const
+		{
+			DEFINE_INVOKER(CDrawingContext::IsNormalDesktopRender);
 			return INVOKE_MEMBERFUNCTION();
 		}
 	};

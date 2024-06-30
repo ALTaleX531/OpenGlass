@@ -51,7 +51,7 @@ HRGN WINAPI GlassFramework::MyCreateRoundRectRgn(int x1, int y1, int x2, int y2,
 // restore the blur region set by DwmEnableBlurBehind and make sure the region isn't overlap with the non client region
 HRESULT STDMETHODCALLTYPE GlassFramework::MyCDrawGeometryInstruction_Create(uDwm::CBaseLegacyMilBrushProxy* brush, uDwm::CBaseGeometryProxy* geometry, uDwm::CDrawGeometryInstruction** instruction)
 {
-	if (g_capturedWindow)
+	if (g_capturedWindow && g_capturedWindow->GetData()->GetHwnd() != uDwm::GetShellWindowForCurrentDesktop())
 	{
 		HRGN region{ GeometryRecorder::GetRegionFromGeometry(geometry) };
 		RECT rgnBox{};
@@ -130,12 +130,8 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_UpdateNCAreaBackgrou
 	}
 	else
 	{
+		VisualManager::RemoveLegacyVisualOverrider(This);
 		hr = g_CTopLevelWindow_UpdateNCAreaBackground_Org(This);
-		auto legacyVisualOverride{ VisualManager::GetOrCreateLegacyVisualOverrider(This) };
-		if (legacyVisualOverride)
-		{
-			hr = legacyVisualOverride->UpdateNCBackground(nullptr, nullptr);
-		}
 	}
 
 	return hr;
@@ -181,7 +177,6 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCAccent_UpdateAccentPolicy(uDwm::CAc
 	{
 		accentPolicy.AccentState = 2;
 		hr = g_CAccent_UpdateAccentPolicy_Org(This, lprc, &accentPolicy, geometry);
-		accentPolicy.AccentState = policy->AccentState;
 	}
 	else
 	{
@@ -245,11 +240,12 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCRenderDataVisual_AddInstruction(uDw
 	auto drawRectangleInstruction{ reinterpret_cast<uDwm::CSolidRectangleInstruction*>(instruction) };
 	auto rectangle{ drawRectangleInstruction->GetRectangle() };
 	auto color{ drawRectangleInstruction->GetColor() };
-	if (g_accentState == 4 && color.a == 0.f)
+	if (g_accentState == 4 && color.a == 0.f && color.r == 0.f && color.g == 0.f && color.b == 0.f)
 	{
 		return g_CRenderDataVisual_AddInstruction_Org(This, instruction);
 	}
-	color.a *= 0.99f;
+
+	color.a = 0.99f;
 	winrt::com_ptr<uDwm::CRgnGeometryProxy> rgnGeometry{ nullptr };
 	uDwm::ResourceHelper::CreateGeometryFromHRGN(wil::unique_hrgn{ CreateRectRgn(static_cast<LONG>(rectangle.left), static_cast<LONG>(rectangle.top), static_cast<LONG>(rectangle.right), static_cast<LONG>(rectangle.bottom)) }.get(), rgnGeometry.put());
 	winrt::com_ptr<uDwm::CSolidColorLegacyMilBrushProxy> solidBrush{ nullptr };

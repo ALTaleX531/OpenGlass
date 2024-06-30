@@ -148,20 +148,12 @@ HRESULT STDMETHODCALLTYPE CCustomBlurEffect::Invalidate(
 	ID2D1Image* inputImage,
 	const D2D1_RECT_F& imageRectangle,
 	const D2D1_RECT_F& imageBounds,
-	bool transparentBlack,
 	float blurAmount
 )
 {
 	if (!m_initialized)
 	{
 		RETURN_IF_FAILED(Initialize());
-	}
-	if (transparentBlack || blurAmount == 0.f || (imageRectangle.right - imageRectangle.left <= 2.f || imageRectangle.bottom - imageRectangle.top <= 2.f))
-	{
-		m_transparentBlack = true;
-		m_imageRectangle = imageRectangle;
-		winrt::copy_from_abi(m_effectOutput, inputImage);
-		return S_OK;
 	}
 	if (m_effectInput != inputImage)
 	{
@@ -170,11 +162,6 @@ HRESULT STDMETHODCALLTYPE CCustomBlurEffect::Invalidate(
 	}
 
 	bool recalculateParams{ false };
-	if (m_transparentBlack)
-	{
-		m_transparentBlack = false;
-		recalculateParams = true;
-	}
 	if (m_blurAmount != blurAmount)
 	{
 		m_blurAmount = blurAmount;
@@ -343,8 +330,8 @@ HRESULT STDMETHODCALLTYPE CCustomBlurEffect::Draw(
 		D2D1::RectF(
 			m_imageRectangle.left,
 			m_imageRectangle.top,
-			min(bounds.left + m_imageRectangle.right, bounds.right),
-			min(bounds.top + m_imageRectangle.bottom, bounds.bottom)
+			m_imageRectangle.left + min(m_imageRectangle.right - m_imageRectangle.left, bounds.right - bounds.left - m_imageRectangle.left),
+			m_imageRectangle.top + min(m_imageRectangle.bottom - m_imageRectangle.top, bounds.bottom - bounds.top - m_imageRectangle.top)
 		),
 		interpolationMode,
 		compositeMode

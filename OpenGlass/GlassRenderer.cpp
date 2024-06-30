@@ -29,6 +29,11 @@ namespace OpenGlass::GlassRenderer
 		const D2D1_RECT_F& lprc,
 		const D2D1_COLOR_F& color
 	);
+	HRESULT STDMETHODCALLTYPE MyCDrawingContext_DrawSolidRectangle(
+		dwmcore::IDrawingContext* This,
+		const D2D1_RECT_F& rectangle,
+		const D2D1_COLOR_F& color
+	);
 	HRESULT STDMETHODCALLTYPE MyCDrawingContext_DrawGeometry(
 		dwmcore::IDrawingContext* This,
 		dwmcore::CLegacyMilBrush* brush,
@@ -50,6 +55,8 @@ namespace OpenGlass::GlassRenderer
 
 	decltype(&MyCRenderData_TryDrawCommandAsDrawList) g_CRenderData_TryDrawCommandAsDrawList_Org{ nullptr };
 	decltype(&MyCRenderData_DrawSolidColorRectangle) g_CRenderData_DrawSolidColorRectangle_Org{ nullptr };
+	decltype(&MyCDrawingContext_DrawSolidRectangle) g_CDrawingContext_DrawSolidRectangle_Org{ nullptr };
+	decltype(&MyCDrawingContext_DrawSolidRectangle)* g_CDrawingContext_DrawSolidRectangle_Org_Address{ nullptr };
 	decltype(&MyCDrawingContext_DrawGeometry) g_CDrawingContext_DrawGeometry_Org{ nullptr };
 	decltype(&MyCDrawingContext_DrawGeometry)* g_CDrawingContext_DrawGeometry_Org_Address{ nullptr };
 	decltype(&MyID2D1DeviceContext_FillGeometry) g_ID2D1DeviceContext_FillGeometry_Org{ nullptr };
@@ -102,6 +109,11 @@ HRESULT STDMETHODCALLTYPE GlassRenderer::MyCRenderData_DrawSolidColorRectangle(
 	{
 		g_drawColor = color;
 
+		if (!g_CDrawingContext_DrawSolidRectangle_Org)
+		{
+			g_CDrawingContext_DrawSolidRectangle_Org_Address = reinterpret_cast<decltype(g_CDrawingContext_DrawSolidRectangle_Org_Address)>(&(HookHelper::vtbl_of(drawingContext->GetInterface())[2]));
+			g_CDrawingContext_DrawSolidRectangle_Org = HookHelper::WritePointer(g_CDrawingContext_DrawSolidRectangle_Org_Address, MyCDrawingContext_DrawSolidRectangle);
+		}
 		if (!g_CDrawingContext_DrawGeometry_Org)
 		{
 			g_CDrawingContext_DrawGeometry_Org_Address = reinterpret_cast<decltype(g_CDrawingContext_DrawGeometry_Org_Address)>(&(HookHelper::vtbl_of(drawingContext->GetInterface())[4]));
@@ -121,6 +133,22 @@ HRESULT STDMETHODCALLTYPE GlassRenderer::MyCRenderData_DrawSolidColorRectangle(
 	);
 }
 
+
+HRESULT STDMETHODCALLTYPE GlassRenderer::MyCDrawingContext_DrawSolidRectangle(
+	dwmcore::IDrawingContext* This,
+	const D2D1_RECT_F& rectangle,
+	const D2D1_COLOR_F& color
+)
+{
+	if (!g_drawColor.has_value())
+	{
+		return g_CDrawingContext_DrawSolidRectangle_Org(This, rectangle, color);
+	}
+
+	D2D1_COLOR_F convertedColor{ dwmcore::Convert_D2D1_COLOR_F_scRGB_To_D2D1_COLOR_F_sRGB(g_drawColor.value()) };
+	g_drawColor = std::nullopt;
+	return g_CDrawingContext_DrawSolidRectangle_Org(This, rectangle, convertedColor);
+}
 HRESULT STDMETHODCALLTYPE GlassRenderer::MyCDrawingContext_DrawGeometry(
 	dwmcore::IDrawingContext* This,
 	dwmcore::CLegacyMilBrush* brush,
@@ -132,17 +160,17 @@ HRESULT STDMETHODCALLTYPE GlassRenderer::MyCDrawingContext_DrawGeometry(
 		!brush ||
 		!geometry ||
 		HookHelper::vtbl_of(brush) != g_CSolidColorLegacyMilBrush_vftable ||
-		!g_drawColor.has_value() ||
-		g_drawColor.value().a == 1.f
+		!g_drawColor.has_value()
 	)
 	{
 		return hr;
 	}
 
+	auto cleanUp{ wil::scope_exit([]{ g_drawColor = std::nullopt; })};
 	D2D1_COLOR_F color{ dwmcore::Convert_D2D1_COLOR_F_scRGB_To_D2D1_COLOR_F_sRGB(g_drawColor.value()) };
-	g_drawColor = std::nullopt;
-	dwmcore::CShapePtr geometryShape{ nullptr, false };
+	dwmcore::CShapePtr geometryShape{};
 	if (
+		g_drawColor.value().a == 1.f ||
 		FAILED(geometry->GetShapeData(nullptr, &geometryShape)) ||
 		!geometryShape ||
 		geometryShape->IsEmpty()
@@ -151,34 +179,45 @@ HRESULT STDMETHODCALLTYPE GlassRenderer::MyCDrawingContext_DrawGeometry(
 		return hr;
 	}
 
+	bool normalDesktopRender{ This->GetDrawingContext()->IsNormalDesktopRender() };
 	D2D1_RECT_F boundRect{};
 	RETURN_IF_FAILED(geometryShape->GetTightBounds(&boundRect, nullptr));
-	D2D1_RECT_F clippedDrawRect{};
-	This->GetDrawingContext()->CalcWorldSpaceClippedBounds(boundRect, &clippedDrawRect);
+	D2D1_RECT_F worldSpaceClippedBounds{};
+	This->GetDrawingContext()->CalcWorldSpaceClippedBounds(boundRect, &worldSpaceClippedBounds);
+	D2D1_RECT_F localSpaceClippedBounds{};
+	This->GetDrawingContext()->CalcLocalSpaceClippedBounds(boundRect, &localSpaceClippedBounds);
+
 	if (
-		clippedDrawRect.right <= clippedDrawRect.left ||
-		clippedDrawRect.bottom <= clippedDrawRect.top ||
-		This->GetDrawingContext()->IsOccluded(boundRect, This->GetDrawingContext()->GetD2DContextOwner()->GetCurrentZ())
+		normalDesktopRender &&
+		(
+			worldSpaceClippedBounds.right <= worldSpaceClippedBounds.left ||
+			worldSpaceClippedBounds.bottom <= worldSpaceClippedBounds.top ||
+			localSpaceClippedBounds.right <= localSpaceClippedBounds.left ||
+			localSpaceClippedBounds.bottom <= localSpaceClippedBounds.top ||
+			This->GetDrawingContext()->IsOccluded(boundRect, This->GetDrawingContext()->GetD2DContextOwner()->GetCurrentZ())
+		)
 	)
 	{
-		return hr;
+		return This->GetDrawingContext()->FillShapeWithColor(geometryShape.ptr, &color);
 	}
 
 	auto deviceContext{ This->GetDrawingContext()->GetD2DContext()->GetDeviceContext() };
 	winrt::com_ptr<ID2D1Device> device{ nullptr };
 	deviceContext->GetDevice(device.put());
+	// device lost
 	if (g_deviceNoRef != device.get())
 	{
 		g_deviceNoRef = device.get();
 		ReflectionRenderer::g_reflectionBitmap = nullptr;
 		GlassEffectManager::Shutdown();
 	}
+	// allocate glass effect
 	winrt::com_ptr<GlassEffectManager::IGlassEffect> glassEffect{ GlassEffectManager::GetOrCreate(geometry, deviceContext, true) };
 	if (!glassEffect)
 	{
-		return hr;
+		return This->GetDrawingContext()->FillShapeWithColor(geometryShape.ptr, &color);
 	}
-
+	// prepare ID2D1DeviceContext::FillGeometry
 	g_glassEffectNoRef = glassEffect.get();
 	g_drawingContextNoRef = This;
 	if (!g_ID2D1DeviceContext_FillGeometry_Org)
@@ -187,24 +226,37 @@ HRESULT STDMETHODCALLTYPE GlassRenderer::MyCDrawingContext_DrawGeometry(
 		g_ID2D1DeviceContext_FillGeometry_Org = HookHelper::WritePointer(g_ID2D1DeviceContext_FillGeometry_Org_Address, MyID2D1DeviceContext_FillGeometry);
 	}
 
-	dwmcore::CMILMatrix matrix{};
-	D2D1_RECT_F shapeActualBounds{};
-	RETURN_IF_FAILED(This->GetDrawingContext()->GetWorldTransform(&matrix));
-	RETURN_IF_FAILED(geometryShape->GetTightBounds(&shapeActualBounds, &matrix));
-	RETURN_IF_FAILED(glassEffect->SetSourceRect(shapeActualBounds));
-
-	winrt::com_ptr<ID2D1Bitmap1> backdropBitmap{ nullptr };
-	// This->GetDrawingContext()->GetD2DBitmap(backdropBitmap.put());
-	This->GetDrawingContext()->FlushD2D();
 	// hahaha, i can't belive i can actually convert ID2D1Image into ID2D1Bitmap1!
 	winrt::com_ptr<ID2D1Image> backdropImage{};
 	This->GetDrawingContext()->GetD2DContext()->GetDeviceContext()->GetTarget(backdropImage.put());
-	backdropBitmap = backdropImage.as<ID2D1Bitmap1>();
+	winrt::com_ptr<ID2D1Bitmap1> backdropBitmap{ backdropImage.as<ID2D1Bitmap1>() };
+	RETURN_IF_FAILED(This->GetDrawingContext()->FlushD2D());
 
-	RETURN_IF_FAILED(glassEffect->Invalidate(backdropBitmap.get(), clippedDrawRect, color, g_glassOpacity, g_blurAmount));
+	dwmcore::CMILMatrix matrix{};
+	D2D1_RECT_F shapeWorldBounds{};
+	RETURN_IF_FAILED(This->GetDrawingContext()->GetWorldTransform(&matrix));
+	RETURN_IF_FAILED(geometryShape->GetTightBounds(&shapeWorldBounds, &matrix));
+	glassEffect->SetGlassRenderingParameters(
+		color,
+		g_glassOpacity,
+		g_blurAmount
+	);
+	glassEffect->SetSize(
+		D2D1::SizeF(
+			boundRect.right - boundRect.left,
+			boundRect.bottom - boundRect.top
+		)
+	);
+	RETURN_IF_FAILED(
+		glassEffect->Invalidate(
+			backdropBitmap.get(), 
+			D2D1::Point2F(shapeWorldBounds.left, shapeWorldBounds.top),
+			worldSpaceClippedBounds,
+			normalDesktopRender
+		)
+	);
 
-	hr = This->GetDrawingContext()->FillShapeWithColor(geometryShape.ptr, &color);
-	return hr;
+	return This->GetDrawingContext()->FillShapeWithColor(geometryShape.ptr, &color);
 }
 
 void STDMETHODCALLTYPE GlassRenderer::MyID2D1DeviceContext_FillGeometry(
@@ -225,7 +277,7 @@ void STDMETHODCALLTYPE GlassRenderer::MyID2D1DeviceContext_FillGeometry(
 		g_drawingContextNoRef = nullptr;
 		g_glassEffectNoRef = nullptr;
 
-		LOG_IF_FAILED(glassEffect->Render(geometry));
+		LOG_IF_FAILED(glassEffect->Render(geometry, solidColorBrush.get()));
 		return;
 	}
 	return g_ID2D1DeviceContext_FillGeometry_Org(This, geometry, brush, opacityBrush);
@@ -245,7 +297,7 @@ HRESULT STDMETHODCALLTYPE GlassRenderer::MyCDirtyRegion__Add(
 	const D2D1_RECT_F& lprc
 )
 {
-	float extendAmount{ g_blurAmount * 1.5f + 0.5f };
+	float extendAmount{ g_blurAmount * 3.f + 0.5f };
 	D2D1_RECT_F extendedDirtyRectangle
 	{
 		lprc.left - extendAmount,
@@ -314,6 +366,12 @@ void GlassRenderer::Shutdown()
 		HookHelper::WritePointer(g_CDrawingContext_DrawGeometry_Org_Address, g_CDrawingContext_DrawGeometry_Org);
 		g_CDrawingContext_DrawGeometry_Org_Address = nullptr;
 		g_CDrawingContext_DrawGeometry_Org = nullptr;
+	}
+	if (g_CDrawingContext_DrawSolidRectangle_Org)
+	{
+		HookHelper::WritePointer(g_CDrawingContext_DrawSolidRectangle_Org_Address, g_CDrawingContext_DrawSolidRectangle_Org);
+		g_CDrawingContext_DrawSolidRectangle_Org_Address = nullptr;
+		g_CDrawingContext_DrawSolidRectangle_Org = nullptr;
 	}
 
 	GlassEffectManager::Shutdown();
