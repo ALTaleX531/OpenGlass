@@ -14,10 +14,11 @@ namespace OpenGlass::GlassEffectManager
 	class CGlassEffect : public winrt::implements<CGlassEffect, IGlassEffect>
 	{
 		bool m_initialized{ false };
-		bool m_normalDesktopRender{ false };
+		Type m_type{ Type::Blur };
 		float m_glassOpacity{ 0.63f };
 		float m_blurAmount{ 9.f };
 		D2D1_COLOR_F m_color{};
+
 		D2D1_SIZE_F m_glassSize{};
 		D2D1_SIZE_F m_desktopSize{};
 		D2D1_POINT_2F m_glassDesktopPosition{};
@@ -93,7 +94,6 @@ HRESULT STDMETHODCALLTYPE GlassEffectManager::CGlassEffect::Invalidate(
 )
 {
 	m_backdropPixelFormat = backdropBitmap->GetPixelFormat();
-	m_normalDesktopRender = normalDesktopRender;
 	if (!m_initialized)
 	{
 		RETURN_IF_FAILED(Initialize());

@@ -5,6 +5,12 @@
 
 namespace OpenGlass::GlassEffectManager
 {
+	enum class Type : UCHAR
+	{
+		Blur,
+		Aero
+	};
+
 	// [Guid("01AA613C-2376-4B95-8A74-B94CA840D4D1")]
 	DECLARE_INTERFACE_IID_(IGlassEffect, IUnknown, "01AA613C-2376-4B95-8A74-B94CA840D4D1")
 	{

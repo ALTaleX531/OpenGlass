@@ -70,8 +70,12 @@ namespace OpenGlass::GlassRenderer
 	dwmcore::IDrawingContext* g_drawingContextNoRef{ nullptr };
 	ID2D1Device* g_deviceNoRef{ nullptr };
 
+	GlassEffectManager::Type g_type{ GlassEffectManager::Type::Blur };
 	float g_blurAmount{ 9.f };
 	float g_glassOpacity{ 0.63f };
+	// exclusively used by aero backdrop
+	float g_colorBalance{ 0.f };
+	float g_afterglowBalance{ 0.43f };
 }
 
 HRESULT STDMETHODCALLTYPE GlassRenderer::MyCRenderData_TryDrawCommandAsDrawList(
@@ -170,7 +174,6 @@ HRESULT STDMETHODCALLTYPE GlassRenderer::MyCDrawingContext_DrawGeometry(
 	D2D1_COLOR_F color{ dwmcore::Convert_D2D1_COLOR_F_scRGB_To_D2D1_COLOR_F_sRGB(g_drawColor.value()) };
 	dwmcore::CShapePtr geometryShape{};
 	if (
-		g_drawColor.value().a == 1.f ||
 		FAILED(geometry->GetShapeData(nullptr, &geometryShape)) ||
 		!geometryShape ||
 		geometryShape->IsEmpty()
@@ -188,13 +191,15 @@ HRESULT STDMETHODCALLTYPE GlassRenderer::MyCDrawingContext_DrawGeometry(
 	This->GetDrawingContext()->CalcLocalSpaceClippedBounds(boundRect, &localSpaceClippedBounds);
 
 	if (
-		normalDesktopRender &&
+		g_drawColor.value().a == 1.f ||
 		(
-			worldSpaceClippedBounds.right <= worldSpaceClippedBounds.left ||
-			worldSpaceClippedBounds.bottom <= worldSpaceClippedBounds.top ||
-			localSpaceClippedBounds.right <= localSpaceClippedBounds.left ||
-			localSpaceClippedBounds.bottom <= localSpaceClippedBounds.top ||
-			This->GetDrawingContext()->IsOccluded(boundRect, This->GetDrawingContext()->GetD2DContextOwner()->GetCurrentZ())
+			normalDesktopRender &&
+			(
+				worldSpaceClippedBounds.right <= worldSpaceClippedBounds.left ||
+				worldSpaceClippedBounds.bottom <= worldSpaceClippedBounds.top ||
+				localSpaceClippedBounds.right <= localSpaceClippedBounds.left ||
+				localSpaceClippedBounds.bottom <= localSpaceClippedBounds.top
+			)
 		)
 	)
 	{
@@ -325,6 +330,21 @@ void GlassRenderer::UpdateConfiguration(ConfigurationFramework::UpdateType type)
 		ReflectionRenderer::g_reflectionIntensity = std::clamp(static_cast<float>(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"ColorizationGlassReflectionIntensity")) / 100.f, 0.f, 1.f);
 		ReflectionRenderer::g_reflectionParallaxIntensity = std::clamp(static_cast<float>(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"ColorizationGlassReflectionParallaxIntensity", 10)) / 100.f, 0.f, 1.f);
 		ReflectionRenderer::g_reflectionBitmap = nullptr;
+
+		auto colorBalance{ ConfigurationFramework::DwmTryDwordFromHKCUAndHKLM(L"ColorizationColorBalanceOverride") };
+		if (!colorBalance.has_value())
+		{
+			colorBalance = ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"ColorizationColorBalance", 0);
+		}
+		g_colorBalance = std::clamp(static_cast<float>(colorBalance.value()) / 100.f, 0.f, 1.f);
+		auto afterglowBalance{ ConfigurationFramework::DwmTryDwordFromHKCUAndHKLM(L"ColorizationAfterglowBalanceOverride") };
+		if (!afterglowBalance.has_value())
+		{
+			afterglowBalance = ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"ColorizationAfterglowBalance", 43);
+		}
+		g_afterglowBalance = std::clamp(static_cast<float>(afterglowBalance.value()) / 100.f, 0.f, 1.f);
+
+		g_type = static_cast<GlassEffectManager::Type>(std::clamp(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"GlassType", 0), 0ul, 4ul));
 	}
 }
 
