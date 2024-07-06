@@ -2,9 +2,16 @@
 # OpenGlass
 A replica of the dead software glass8, also known as the upstream project of [DWMBlurGlass](https://github.com/Maplespe/DWMBlurGlass).  
 
-This software is designed for Windows 10 2004 to Windows 11 23H2, which is currently in its early stages and may have various efficiency issues and bugs. OpenGlass works with Windows 10 1809 at a minimum, but I highly recommend you to use Windows 10 22H2.  
+> [!NOTE]
+> This project currently maintains two branches
+> - [master](https://github.com/ALTaleX531/OpenGlass/tree/master) It has many features and relatively fewer bugs, but the performance is average. It depends on `dcomp` and `Windows.UI.Composition`.
+> - [legacy](https://github.com/ALTaleX531/OpenGlass/tree/legacy) It has few features, but its performance is much better than the master branch. It is implemented in a similar way to glass8.  
+> 
+> I don't have that much time to maintain both branches at the same time, so they may rarely get updated, but feel free to submit PRs.
 
-Some simple tests show that at lower blur radius OpenGlass performs slightly worse than glass8, but at higher blur radius the performance will be a bit better. For some applications where `DwmEnableBlurBehind` and `DwmExtendFrameIntoClientArea` are used in combination, OpenGlass performs almost twice as well as glass8.   
+This branch is designed for Windows 10 2004 to Windows 11 23H2. It works with Windows 10 1809 at a minimum, but I highly recommend you to use Windows 10 22H2.  
+
+Some simple tests show that at lower blur radius this branch performs slightly worse than glass8, but at higher blur radius the performance will be a bit better. For some applications where `DwmEnableBlurBehind` and `DwmExtendFrameIntoClientArea` are used in combination, this branch performs almost twice as well as glass8.   
 > [!IMPORTANT]  
 > This software is intended for advanced users only. If you are a beginner and you do not have deeper knowledge of Windows (such as registry editing etc.) you should not install this software.  
 > For the average users, you should consider using [DWMBlurGlass](https://github.com/Maplespe/DWMBlurGlass).
