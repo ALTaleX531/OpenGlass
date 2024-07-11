@@ -4,12 +4,12 @@ A replica of the dead software glass8, also known as the upstream project of [DW
 
 > [!NOTE]
 > This project currently maintains two branches
-> - [master](https://github.com/ALTaleX531/OpenGlass/tree/master) It has many features and relatively fewer bugs, but the performance is average. It depends on `dcomp` and `Windows.UI.Composition`.
-> - [legacy](https://github.com/ALTaleX531/OpenGlass/tree/legacy) It has few features, but its performance is much better than the master branch. It is implemented in a similar way to glass8.  
+> - [master](https://github.com/ALTaleX531/OpenGlass/tree/master) It has many features and relatively fewer bugs. It depends on `dcomp` and `Windows.UI.Composition`. It is recommended for those who want to experience more features or are using Windows 11. 
+> - [legacy](https://github.com/ALTaleX531/OpenGlass/tree/legacy) It has few features, but its performance is much better than the master branch. It is implemented in a similar way to glass8. It is recommended for those who wish to experience the high performance glass effect. It is NOT available for Windows 11. 
 > 
 > I don't have that much time to maintain both branches at the same time, so they may rarely get updated, but feel free to submit PRs.
 
-This branch is designed for Windows 10 2004 to Windows 11 23H2. It works with Windows 10 1809 at a minimum, but I highly recommend you to use Windows 10 22H2.  
+This branch works for Windows 10 1809 to Windows 11 23H2.  
 
 Some simple tests show that at lower blur radius this branch performs slightly worse than glass8, but at higher blur radius the performance will be a bit better. For some applications where `DwmEnableBlurBehind` and `DwmExtendFrameIntoClientArea` are used in combination, this branch performs almost twice as well as glass8.   
 > [!IMPORTANT]  
@@ -24,6 +24,7 @@ Some simple tests show that at lower blur radius this branch performs slightly w
 3. Run `startup.bat` as administrator, this will run the helper process manually.
 4. When you use it for the first time or just after updating your system, OpenGlass will try to download the symbol files and you will see its download progress bar in the taskbar, but please don't close it and be patient for about 15s. When the symbol files are ready, enjoy!
 5. When you want to stop using OpenGlass or update the version of OpenGlass, running `shutdown.bat` will remove the effects of OpenGlass for you and exit the helper process. At this time, you can either replace the OpenGlass files or continue to run `uninstall.bat` and manually delete the remaining files to complete the uninstallation.
+6. When you experience a crash, OpenGlass is supposed to generate a large memory dump file in the `dumps` directory of the folder where it is located, please submit it to the developer if possible, this can help fix known or potential issues.
 
 ## Documentation (Migrate from glass8 to OpenGlass)
 The following table demonstrates the similarities and differences between these two software.
