@@ -1,4 +1,4 @@
-![header](https://www.glass8.eu/files/images/header.jpg)
+![header](https://private-user-images.githubusercontent.com/44238627/346738551-f507e3e8-a4bd-4edd-8386-e221650c6ca9.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MjA2NzUyMjQsIm5iZiI6MTcyMDY3NDkyNCwicGF0aCI6Ii80NDIzODYyNy8zNDY3Mzg1NTEtZjUwN2UzZTgtYTRiZC00ZWRkLTgzODYtZTIyMTY1MGM2Y2E5LnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNDA3MTElMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjQwNzExVDA1MTUyNFomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTNjM2RlYTM4NmFjZmU3ZjYzNGYwN2RlYmEzMmIxMmU2MDAyZGVlMTNiZDczYTNmZmU1MmNjODM2MDZmN2RiZGImWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0JmFjdG9yX2lkPTAma2V5X2lkPTAmcmVwb19pZD0wIn0.tp-HZisbys41FBErjnLndfemjmxGWzmBL0XcFvJzNXY)
 # OpenGlass
 A replica of the dead software glass8, also known as the upstream project of [DWMBlurGlass](https://github.com/Maplespe/DWMBlurGlass).  
 
@@ -73,6 +73,9 @@ PostMessage(FindWindow(TEXT("Dwm"), nullptr), WM_DWMCOLORIZATIONCHANGED, 0, 0); 
 - It is not necessary to use the DComp Unlocker mod with OpenGlass, as OpenGlass already has this feature built-in.
 
 ## Dependencies and References
+### [Banner for OpenGlass](https://github.com/ALTaleX531/OpenGlass/discussions/11)
+Provided by [@aubymori](https://github.com/aubymori)  
+Wallpaper: [metalheart jawn](https://www.deviantart.com/kfh83/art/metalheart-jawn-2-1068250045) #2 by [@kfh83](https://github.com/kfh83)
 ### [Microsoft Research Detours Package](https://github.com/microsoft/Detours)  
 Detours is a software package for monitoring and instrumenting API calls on Windows.  
 ### [VC-LTL - An elegant way to compile lighter binaries.](https://github.com/Chuyu-Team/VC-LTL5)  
