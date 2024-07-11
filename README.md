@@ -15,6 +15,7 @@ This branch does not rely on `dcomp` and `Windows.UI.Composition`, so it is very
 3. Run `startup.bat` as administrator, this will run the helper process manually.
 4. When you use it for the first time or just after updating your system, OpenGlass will try to download the symbol files and you will see its download progress bar in the taskbar, but please don't close it and be patient for about 15s. When the symbol files are ready, enjoy!
 5. When you want to stop using OpenGlass or update the version of OpenGlass, running `shutdown.bat` will remove the effects of OpenGlass for you and exit the helper process. At this time, you can either replace the OpenGlass files or continue to run `uninstall.bat` and manually delete the remaining files to complete the uninstallation.
+6. When you experience a crash, OpenGlass is supposed to generate a large memory dump file in the `dumps` directory of the folder where it is located, please submit it to the developer if possible, this can help fix known or potential issues.
 
 ## Documentation
 The legacy branch can use most of the features of the master branch. The following table lists the difference with master branch. The legacy branch uses the colors stored by `CTopLevelWindow`, so you can change the color settings using AWM without problems. 
@@ -70,7 +71,7 @@ PostMessage(FindWindow(TEXT("Dwm"), nullptr), WM_DWMCOLORIZATIONCHANGED, 0, 0); 
 
         In this case you are likely to get a crash of DWM or the other software working abnormally.
 - OpenGlass can be used with most windhawk mods, but some may have compatibility issues, especially community or personally written mods that can't be found in the windhawk marketplace.
-- It is not necessary to use the DComp Unlocker mod with OpenGlass, as OpenGlass already has this feature built-in.
+- This branch cannot be used with the master branch.
 
 ## Dependencies and References
 ### [Banner for OpenGlass](https://github.com/ALTaleX531/OpenGlass/discussions/11)
