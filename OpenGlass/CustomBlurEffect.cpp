@@ -53,10 +53,74 @@ HRESULT CCustomBlurEffect::Initialize()
 		)
 	);
 
+	// imma try n put whats relevant here
+	// ts is jus creating the effects
+
+	RETURN_IF_FAILED(
+		m_deviceContext->CreateEffect(
+			CLSID_D2D1Composite,
+			m_compositeEffect.put()
+		)
+	);
+	RETURN_IF_FAILED(
+		m_deviceContext->CreateEffect(
+			CLSID_D2D1Composite,
+			m_compositeEffect_pass2.put()
+	)
+	);
+
+	RETURN_IF_FAILED(
+		m_deviceContext->CreateEffect(
+			CLSID_D2D1Tint,
+			m_tintEffect.put()
+		)
+	);
+
+	RETURN_IF_FAILED(
+		m_deviceContext->CreateEffect(
+			CLSID_D2D1Saturation,
+			m_saturationEffect.put()
+		)
+	);
+
+	RETURN_IF_FAILED(
+		m_deviceContext->CreateEffect(
+			CLSID_D2D1ColorMatrix,
+			m_ColorizationAfterglowBalance.put()
+		)
+	);
+	RETURN_IF_FAILED(
+		m_deviceContext->CreateEffect(
+			CLSID_D2D1ColorMatrix,
+			m_ColorizationBlurBalance.put()
+		)
+	);
+
+	RETURN_IF_FAILED(
+		m_deviceContext->CreateEffect(
+			CLSID_D2D1ColorMatrix,
+			m_ColorizationColorBalance.put()
+		)
+	);
+
+	RETURN_IF_FAILED(
+		m_deviceContext->CreateEffect(
+			CLSID_D2D1Flood,
+			m_ColorizationColor.put()
+		)
+	);
+
 	/*
 	RETURN_IF_FAILED(
 		m_cropInputEffect->SetValue(D2D1_PROPERTY_CACHED, TRUE)
 	);*/
+
+
+	// now here we start setting values n shit or atleast the default values
+	// imma have to investigate later in the file whats being done but otherwise
+
+
+
 	RETURN_IF_FAILED(
 		m_cropInputEffect->SetValue(
 			D2D1_CROP_PROP_BORDER_MODE,
@@ -74,7 +138,7 @@ HRESULT CCustomBlurEffect::Initialize()
 	RETURN_IF_FAILED(
 		m_scaleDownEffect->SetValue(
 			D2D1_SCALE_PROP_INTERPOLATION_MODE,
-			D2D1_SCALE_INTERPOLATION_MODE_LINEAR
+			D2D1_SCALE_INTERPOLATION_MODE_ANISOTROPIC
 		)
 	);
 	m_borderEffect->SetInputEffect(0, m_scaleDownEffect.get());
@@ -104,7 +168,110 @@ HRESULT CCustomBlurEffect::Initialize()
 			D2D1_DIRECTIONALBLURKERNEL_DIRECTION_Y
 		)
 	);
-	m_scaleUpEffect->SetInputEffect(0, m_directionalBlurYEffect.get());
+
+
+	// okay my conclusion is that i shouldnt tamper with whatever was already set up (no point in removing the scales or adding gaussian blur)
+	// so since all of the blur work is done here, starting my part of it:
+	
+	// hardcoded values whatever
+	float ColorizationAfterglowBalance = 0.43f;
+	float ColorizationBlurBalance = 0.49f;
+	float ColorizationColorBalance = 0.08f;
+
+	// afterglow
+	m_saturationEffect->SetInputEffect(0, m_directionalBlurYEffect.get());
+	RETURN_IF_FAILED(
+		m_saturationEffect->SetValue(
+			D2D1_SATURATION_PROP_SATURATION, 
+			0.0f
+		)
+	);
+	
+	m_tintEffect->SetInputEffect(0, m_saturationEffect.get());
+	RETURN_IF_FAILED(
+		m_tintEffect->SetValue(
+			D2D1_TINT_PROP_COLOR, 
+			D2D1::Vector4F(116.0f / 255.0f, 184.0f / 255.0f, 252.0f / 255.0f, 1.0f)
+		)
+	);
+
+	
+	D2D1_MATRIX_5X4_F AfterglowBalanceM = D2D1::Matrix5x4F(ColorizationAfterglowBalance, 0.f, 0.f, 0.f,   
+													   0.f, ColorizationAfterglowBalance, 0.f, 0.f,   
+													   0.f, 0.f, ColorizationAfterglowBalance, 0.f,   
+													   0.f, 0.f, 0.f, 1.f,   
+													   0.f, 0.f, 0.f, 0.f);
+
+	m_ColorizationAfterglowBalance->SetInputEffect(0, m_tintEffect.get());
+	RETURN_IF_FAILED(
+		m_ColorizationAfterglowBalance->SetValue(
+			D2D1_COLORMATRIX_PROP_COLOR_MATRIX, 
+			AfterglowBalanceM
+		)
+	);
+
+	// afterglow done
+	
+	// heres blur balance
+	D2D1_MATRIX_5X4_F BlurBalanceM = D2D1::Matrix5x4F(ColorizationBlurBalance, 0.f, 0.f, 0.f,   
+													  0.f, ColorizationBlurBalance, 0.f, 0.f,   
+													  0.f, 0.f, ColorizationBlurBalance, 0.f,   
+														   0.f, 0.f, 0.f, 1.f,   
+														   0.f, 0.f, 0.f, 0.f);
+
+	m_ColorizationBlurBalance->SetInputEffect(0, m_directionalBlurYEffect.get());
+	RETURN_IF_FAILED(
+		m_ColorizationBlurBalance->SetValue(
+			D2D1_COLORMATRIX_PROP_COLOR_MATRIX, 
+			BlurBalanceM
+		)
+	);
+
+	// and finally ColorizationColor
+
+	RETURN_IF_FAILED(
+		m_ColorizationColor->SetValue(
+			D2D1_FLOOD_PROP_COLOR, 
+			D2D1::Vector4F(116.0f / 255.0f, 184.0f / 255.0f, 252.0f / 255.0f, 1.0f)
+		)
+	);
+
+	D2D1_MATRIX_5X4_F ColorBalanceM = D2D1::Matrix5x4F(ColorizationColorBalance, 0.f, 0.f, 0.f,   
+													  0.f, ColorizationColorBalance, 0.f, 0.f,   
+													  0.f, 0.f, ColorizationColorBalance, 0.f,   
+													  0.f, 0.f, 0.f, 1.f,   
+													  0.f, 0.f, 0.f, 0.f);
+
+	m_ColorizationColorBalance->SetInputEffect(0, m_ColorizationColor.get());
+	RETURN_IF_FAILED(
+		m_ColorizationColorBalance->SetValue(
+			D2D1_COLORMATRIX_PROP_COLOR_MATRIX, 
+			ColorBalanceM
+		)
+	);
+
+
+	// imma blend it together jus to see
+	m_compositeEffect->SetInputEffect(0, m_ColorizationBlurBalance.get());
+	m_compositeEffect->SetInputEffect(1, m_ColorizationAfterglowBalance.get());
+	RETURN_IF_FAILED(
+		m_compositeEffect->SetValue(
+			D2D1_COMPOSITE_PROP_MODE, 
+			D2D1_COMPOSITE_MODE_PLUS
+		)
+	);
+
+	m_compositeEffect_pass2->SetInputEffect(0, m_compositeEffect.get());
+	m_compositeEffect_pass2->SetInputEffect(1, m_ColorizationColorBalance.get());
+	RETURN_IF_FAILED(
+		m_compositeEffect_pass2->SetValue(
+			D2D1_COMPOSITE_PROP_MODE, 
+			D2D1_COMPOSITE_MODE_PLUS
+	)
+	);
+	// okay
+
+	m_scaleUpEffect->SetInputEffect(0, m_compositeEffect_pass2.get());
 	RETURN_IF_FAILED(m_scaleUpEffect->SetValue(D2D1_SCALE_PROP_SHARPNESS, 1.f));
 	RETURN_IF_FAILED(
 		m_scaleUpEffect->SetValue(
@@ -112,12 +279,14 @@ HRESULT CCustomBlurEffect::Initialize()
 			D2D1_BORDER_MODE_HARD
 		)
 	);
+
 	RETURN_IF_FAILED(
 		m_scaleUpEffect->SetValue(
 			D2D1_SCALE_PROP_INTERPOLATION_MODE,
-			D2D1_SCALE_INTERPOLATION_MODE_LINEAR
+			D2D1_SCALE_INTERPOLATION_MODE_ANISOTROPIC
 		)
 	);
+
 	m_initialized = true;
 
 	return S_OK;

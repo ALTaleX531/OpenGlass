@@ -56,6 +56,16 @@ namespace OpenGlass
 		winrt::com_ptr<ID2D1Effect> m_directionalBlurXEffect{};
 		winrt::com_ptr<ID2D1Effect> m_directionalBlurYEffect{};
 		winrt::com_ptr<ID2D1Effect> m_scaleUpEffect{};
+		
+		// new stuff
+		winrt::com_ptr<ID2D1Effect> m_compositeEffect{};
+		winrt::com_ptr<ID2D1Effect> m_compositeEffect_pass2{};
+		winrt::com_ptr<ID2D1Effect> m_saturationEffect{};
+		winrt::com_ptr<ID2D1Effect> m_tintEffect{};
+		winrt::com_ptr<ID2D1Effect> m_ColorizationAfterglowBalance{};
+		winrt::com_ptr<ID2D1Effect> m_ColorizationBlurBalance{};
+		winrt::com_ptr<ID2D1Effect> m_ColorizationColorBalance{};
+		winrt::com_ptr<ID2D1Effect> m_ColorizationColor{};
 
 		static const float k_optimizations[16];
 		static float DetermineOutputScale(float size, float blurAmount);
