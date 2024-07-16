@@ -332,6 +332,10 @@ void GlassFramework::UpdateConfiguration(ConfigurationFramework::UpdateType type
 		g_roundRectRadius = static_cast<int>(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"RoundRectRadius"));
 	}
 
+	GlassSharedData::g_ColorizationAfterglowBalance = ((float)ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"OG_ColorizationAfterglowBalance",43) / 100);
+	GlassSharedData::g_ColorizationBlurBalance = ((float)ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"OG_ColorizationBlurBalance",49) / 100);
+	GlassSharedData::g_ColorizationColorBalance = ((float)ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"OG_ColorizationColorBalance",8) / 100);
+
 	auto lock{ wil::EnterCriticalSection(uDwm::CDesktopManager::s_csDwmInstance) };
 	if (!GlassSharedData::IsBackdropAllowed())
 	{

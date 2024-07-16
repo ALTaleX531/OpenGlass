@@ -28,6 +28,10 @@ namespace OpenGlass::GlassEffectManager
 		winrt::com_ptr<ID2D1Bitmap1> m_blurBuffer{ nullptr };
 		winrt::com_ptr<ICustomBlurEffect> m_customBlurEffect{ nullptr };
 
+		float m_colorizationAfterglowBalanceVal;
+		float m_colorizationBlurBalanceVal;
+		float m_colorizationColorBalanceVal;
+
 		HRESULT Initialize();
 	public:
 		CGlassEffect(ID2D1DeviceContext* deviceContext) { winrt::copy_from_abi(m_deviceContext, deviceContext); }
@@ -35,7 +39,11 @@ namespace OpenGlass::GlassEffectManager
 		void STDMETHODCALLTYPE SetGlassRenderingParameters(
 			const D2D1_COLOR_F& color,
 			float glassOpacity,
-			float blurAmount
+			float blurAmount,
+			float colorizationAfterglowBalanceVal,
+			float colorizationBlurBalanceVal,
+			float colorizationColorBalanceVal,
+			Type type
 		) override;
 		void STDMETHODCALLTYPE SetSize(const D2D1_SIZE_F& size) override;
 		HRESULT STDMETHODCALLTYPE Invalidate(
@@ -57,12 +65,20 @@ HRESULT GlassEffectManager::CGlassEffect::Initialize()
 void STDMETHODCALLTYPE GlassEffectManager::CGlassEffect::SetGlassRenderingParameters(
 	const D2D1_COLOR_F& color,
 	float glassOpacity,
-	float blurAmount
+	float blurAmount,
+	float colorizationAfterglowBalanceVal,
+	float colorizationBlurBalanceVal,
+	float colorizationColorBalanceVal,
+	Type type
 )
 {
 	m_color = color;
 	m_glassOpacity = glassOpacity;
 	m_blurAmount = blurAmount;
+	m_colorizationAfterglowBalanceVal = colorizationAfterglowBalanceVal;
+	m_colorizationBlurBalanceVal = colorizationBlurBalanceVal;
+	m_colorizationColorBalanceVal = colorizationColorBalanceVal;
+	m_type = type;
 }
 void STDMETHODCALLTYPE GlassEffectManager::CGlassEffect::SetSize(const D2D1_SIZE_F& size)
 {
@@ -196,7 +212,11 @@ HRESULT STDMETHODCALLTYPE GlassEffectManager::CGlassEffect::Invalidate(
 				m_blurBuffer.get(),
 				invalidInputRect,
 				imageBounds,
-				m_blurAmount
+				m_blurAmount,
+				m_colorizationAfterglowBalanceVal,
+				m_colorizationBlurBalanceVal,
+				m_colorizationColorBalanceVal,
+				m_type
 			)
 		);
 	}

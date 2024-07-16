@@ -70,7 +70,7 @@ namespace OpenGlass::GlassRenderer
 	dwmcore::IDrawingContext* g_drawingContextNoRef{ nullptr };
 	ID2D1Device* g_deviceNoRef{ nullptr };
 
-	GlassEffectManager::Type g_type{ GlassEffectManager::Type::Blur };
+	Type g_type{ Type::Blur };
 	float g_blurAmount{ 9.f };
 	float g_glassOpacity{ 0.63f };
 	// exclusively used by aero backdrop
@@ -237,6 +237,9 @@ HRESULT STDMETHODCALLTYPE GlassRenderer::MyCDrawingContext_DrawGeometry(
 	winrt::com_ptr<ID2D1Bitmap1> backdropBitmap{ backdropImage.as<ID2D1Bitmap1>() };
 	RETURN_IF_FAILED(This->GetDrawingContext()->FlushD2D());
 
+	//TODO: idk if this is best, prob change
+	bool active = false;
+
 	dwmcore::CMILMatrix matrix{};
 	D2D1_RECT_F shapeWorldBounds{};
 	RETURN_IF_FAILED(This->GetDrawingContext()->GetWorldTransform(&matrix));
@@ -244,7 +247,11 @@ HRESULT STDMETHODCALLTYPE GlassRenderer::MyCDrawingContext_DrawGeometry(
 	glassEffect->SetGlassRenderingParameters(
 		color,
 		g_glassOpacity,
-		g_blurAmount
+		g_blurAmount,
+		GlassSharedData::g_ColorizationAfterglowBalance,
+		active ? GlassSharedData::g_ColorizationBlurBalance : 0.4f * GlassSharedData::g_ColorizationBlurBalance + 0.6f,
+		GlassSharedData::g_ColorizationColorBalance,
+		g_type
 	);
 	glassEffect->SetSize(
 		D2D1::SizeF(
@@ -344,7 +351,7 @@ void GlassRenderer::UpdateConfiguration(ConfigurationFramework::UpdateType type)
 		}
 		g_afterglowBalance = std::clamp(static_cast<float>(afterglowBalance.value()) / 100.f, 0.f, 1.f);
 
-		g_type = static_cast<GlassEffectManager::Type>(std::clamp(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"GlassType", 0), 0ul, 4ul));
+		g_type = static_cast<Type>(std::clamp(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"GlassType", 0), 0ul, 4ul));
 	}
 }
 

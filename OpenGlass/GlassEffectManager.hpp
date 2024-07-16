@@ -5,11 +5,6 @@
 
 namespace OpenGlass::GlassEffectManager
 {
-	enum class Type : UCHAR
-	{
-		Blur,
-		Aero
-	};
 
 	// [Guid("01AA613C-2376-4B95-8A74-B94CA840D4D1")]
 	DECLARE_INTERFACE_IID_(IGlassEffect, IUnknown, "01AA613C-2376-4B95-8A74-B94CA840D4D1")
@@ -17,7 +12,11 @@ namespace OpenGlass::GlassEffectManager
 		virtual void STDMETHODCALLTYPE SetGlassRenderingParameters(
 			const D2D1_COLOR_F& color,
 			float glassOpacity,
-			float blurAmount
+			float blurAmount,
+			float colorizationAfterglowBalanceVal,
+			float colorizationBlurBalanceVal,
+			float colorizationColorBalanceVal,
+			Type type
 		) = 0;
 		virtual void STDMETHODCALLTYPE SetSize(const D2D1_SIZE_F& size) = 0;
 		virtual HRESULT STDMETHODCALLTYPE Invalidate(

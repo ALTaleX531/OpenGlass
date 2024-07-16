@@ -23,7 +23,7 @@ namespace OpenGlass
 		D2D1_DIRECTIONALBLURKERNEL_OPTIMIZATION_TRANSFORM_IDENDITY,
 		D2D1_DIRECTIONALBLURKERNEL_OPTIMIZATION_TRANSFORM_SCALE
 	};
-
+	
 	// [Guid("01AA613C-2376-4B95-8A74-B94CA840D4D1")]
 	DECLARE_INTERFACE_IID_(ICustomBlurEffect, IUnknown, "01AA613C-2376-4B95-8A74-B94CA840D4D1")
 	{
@@ -31,7 +31,11 @@ namespace OpenGlass
 			ID2D1Image* inputImage,
 			const D2D1_RECT_F& imageRectangle,
 			const D2D1_RECT_F& imageBounds,
-			float blurAmount
+			float blurAmount,
+			float colorizationAfterglowBalanceVal,
+			float colorizationBlurBalanceVal,
+			float colorizationColorBalanceVal,
+			Type type
 		) = 0;
 		virtual HRESULT STDMETHODCALLTYPE Draw(
 			CONST D2D1_RECT_F & bounds,
@@ -46,6 +50,7 @@ namespace OpenGlass
 	{
 		bool m_initialized{ false };
 		float m_blurAmount{ 9.f };
+		Type m_type{Type::Blur};
 		D2D1_RECT_F m_imageRectangle{};
 		ID2D1Image* m_effectInput{ nullptr };
 		winrt::com_ptr<ID2D1Image> m_effectOutput{ nullptr };
@@ -67,9 +72,14 @@ namespace OpenGlass
 		winrt::com_ptr<ID2D1Effect> m_ColorizationColorBalance{};
 		winrt::com_ptr<ID2D1Effect> m_ColorizationColor{};
 
+		float m_colorizationAfterglowBalanceVal = 0.43f;
+		float m_colorizationBlurBalanceVal = 0.49f;
+		float m_colorizationColorBalanceVal = 0.08f;
+
 		static const float k_optimizations[16];
 		static float DetermineOutputScale(float size, float blurAmount);
 		HRESULT Initialize();
+		HRESULT InitializeAero();
 	public:
 		CCustomBlurEffect(ID2D1DeviceContext* deviceContext);
 
@@ -77,7 +87,11 @@ namespace OpenGlass
 			ID2D1Image* inputImage,
 			const D2D1_RECT_F& imageRectangle,
 			const D2D1_RECT_F& imageBounds,
-			float blurAmount
+			float blurAmount,
+			float colorizationAfterglowBalanceVal,
+			float colorizationBlurBalanceVal,
+			float colorizationColorBalanceVal,
+			Type type
 		) override;
 		HRESULT STDMETHODCALLTYPE Draw(
 			CONST D2D1_RECT_F& bounds,
