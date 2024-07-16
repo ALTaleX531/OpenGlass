@@ -283,10 +283,10 @@ HRESULT CCustomBlurEffect::InitializeAero()
 	// okay my conclusion is that i shouldnt tamper with whatever was already set up (no point in removing the scales or adding gaussian blur)
 	// so since all of the blur work is done here, starting my part of it:
 	
-	// hardcoded values whatever
-	m_colorizationAfterglowBalanceVal = 0.43f;
-	m_colorizationBlurBalanceVal = 0.49f;
-	m_colorizationColorBalanceVal = 0.08f;
+	// hardcoded values whatever (EDIT: Not Anymore!)
+	//m_colorizationAfterglowBalanceVal = 0.43f;
+	//m_colorizationBlurBalanceVal = 0.796f;
+	//m_colorizationColorBalanceVal = 0.08f;
 
 	// afterglow
 	m_saturationEffect->SetInputEffect(0, m_directionalBlurYEffect.get());
@@ -434,9 +434,9 @@ HRESULT STDMETHODCALLTYPE CCustomBlurEffect::Invalidate(
 	Type type
 )
 {
-	colorizationAfterglowBalanceVal = 0.49f;
-	colorizationBlurBalanceVal = 0.796f;
-	colorizationBlurBalanceVal = 0.08f;
+	//colorizationAfterglowBalanceVal = 0.49f;
+	//colorizationBlurBalanceVal = 0.796f;
+	//colorizationColorBalanceVal = 0.08f;
 	if (!inputImage) return S_FALSE;
 
 	bool recalculateParams{ false };

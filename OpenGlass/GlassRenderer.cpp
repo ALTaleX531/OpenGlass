@@ -238,7 +238,7 @@ HRESULT STDMETHODCALLTYPE GlassRenderer::MyCDrawingContext_DrawGeometry(
 	RETURN_IF_FAILED(This->GetDrawingContext()->FlushD2D());
 
 	//TODO: idk if this is best, prob change
-	bool active = false;
+	bool active = true;
 
 	dwmcore::CMILMatrix matrix{};
 	D2D1_RECT_F shapeWorldBounds{};
