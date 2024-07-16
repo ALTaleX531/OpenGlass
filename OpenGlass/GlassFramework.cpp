@@ -81,11 +81,13 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_UpdateNCAreaBackgrou
 {
 	if (!GlassSharedData::IsBackdropAllowed())
 	{
+		GlassSharedData::g_LastTopLevelWindow = 0;
 		return g_CTopLevelWindow_UpdateNCAreaBackground_Org(This);
 	}
 	auto data{ This->GetData() };
 	if (!data)
 	{
+		GlassSharedData::g_LastTopLevelWindow = 0;
 		return g_CTopLevelWindow_UpdateNCAreaBackground_Org(This);
 	}
 
@@ -123,6 +125,7 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_UpdateNCAreaBackgrou
 				HRGN borderRegion{ GeometryRecorder::GetRegionFromGeometry(borderGeometry) };
 				
 				hr = legacyVisualOverride->UpdateNCBackground(captionRegion, borderRegion);
+				GlassSharedData::g_LastTopLevelWindow = This;
 			}
 		}
 
@@ -130,6 +133,7 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_UpdateNCAreaBackgrou
 	}
 	else
 	{
+		GlassSharedData::g_LastTopLevelWindow = 0;
 		VisualManager::RemoveLegacyVisualOverrider(This);
 		hr = g_CTopLevelWindow_UpdateNCAreaBackground_Org(This);
 	}
@@ -152,6 +156,7 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_UpdateClientBlur(uDw
 
 	g_capturedWindow = This;
 	GeometryRecorder::BeginCapture();
+	GlassSharedData::g_LastTopLevelWindow = 0;
 	HRESULT hr{ g_CTopLevelWindow_UpdateClientBlur_Org(This) };
 	GeometryRecorder::EndCapture();
 	g_capturedWindow = nullptr;

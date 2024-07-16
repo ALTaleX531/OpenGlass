@@ -4,6 +4,7 @@
 
 namespace OpenGlass::GlassSharedData
 {
+	inline void* g_LastTopLevelWindow = nullptr;
 	inline bool g_disableOnBattery{ true };
 	inline bool g_overrideAccent{ false };
 	inline bool g_batteryMode{ false };

@@ -80,6 +80,8 @@ namespace OpenGlass
 		static float DetermineOutputScale(float size, float blurAmount);
 		HRESULT Initialize();
 		HRESULT InitializeAero();
+		HRESULT SetParams();
+		HRESULT SetParamsAero();
 	public:
 		CCustomBlurEffect(ID2D1DeviceContext* deviceContext);
 

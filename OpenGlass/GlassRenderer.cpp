@@ -153,6 +153,9 @@ HRESULT STDMETHODCALLTYPE GlassRenderer::MyCDrawingContext_DrawSolidRectangle(
 	g_drawColor = std::nullopt;
 	return g_CDrawingContext_DrawSolidRectangle_Org(This, rectangle, convertedColor);
 }
+
+bool active = false;
+
 HRESULT STDMETHODCALLTYPE GlassRenderer::MyCDrawingContext_DrawGeometry(
 	dwmcore::IDrawingContext* This,
 	dwmcore::CLegacyMilBrush* brush,
@@ -236,9 +239,12 @@ HRESULT STDMETHODCALLTYPE GlassRenderer::MyCDrawingContext_DrawGeometry(
 	This->GetDrawingContext()->GetD2DContext()->GetDeviceContext()->GetTarget(backdropImage.put());
 	winrt::com_ptr<ID2D1Bitmap1> backdropBitmap{ backdropImage.as<ID2D1Bitmap1>() };
 	RETURN_IF_FAILED(This->GetDrawingContext()->FlushD2D());
+	//TODO: ADD PROPER TYPE CHECKED CAST 
+	bool bactive = false;
+	if (GlassSharedData::g_LastTopLevelWindow)
+		bactive = (reinterpret_cast<uDwm::CTopLevelWindow*>(GlassSharedData::g_LastTopLevelWindow)->TreatAsActiveWindow());
 
-	//TODO: idk if this is best, prob change
-	bool active = true;
+	//bool bactive = true;
 
 	dwmcore::CMILMatrix matrix{};
 	D2D1_RECT_F shapeWorldBounds{};
@@ -249,7 +255,7 @@ HRESULT STDMETHODCALLTYPE GlassRenderer::MyCDrawingContext_DrawGeometry(
 		g_glassOpacity,
 		g_blurAmount,
 		GlassSharedData::g_ColorizationAfterglowBalance,
-		active ? GlassSharedData::g_ColorizationBlurBalance : 0.4f * GlassSharedData::g_ColorizationBlurBalance + 0.6f,
+		bactive ? GlassSharedData::g_ColorizationBlurBalance : 0.4f * GlassSharedData::g_ColorizationBlurBalance + 0.6f,
 		GlassSharedData::g_ColorizationColorBalance,
 		g_type
 	);
@@ -317,6 +323,7 @@ HRESULT STDMETHODCALLTYPE GlassRenderer::MyCDirtyRegion__Add(
 		lprc.right + extendAmount,
 		lprc.bottom + extendAmount
 	};
+	active = unknown;
 	return g_CDirtyRegion__Add_Org(
 		This,
 		visual,
