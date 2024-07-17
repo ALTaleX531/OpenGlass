@@ -243,7 +243,7 @@ HRESULT CCustomBlurEffect::SetParams()
 
 HRESULT CCustomBlurEffect::SetParamsAero()
 {
-	// now here we start setting values n shit or atleast the default values
+	// now here we start setting values, or atleast the default values
 	// imma have to investigate later in the file whats being done but otherwise
 
 
@@ -297,6 +297,8 @@ HRESULT CCustomBlurEffect::SetParamsAero()
 	);
 
 
+	// CREDITS: @kfh83, @wiktorwiktor12, @TorutheRedFox and @WackyIdeas. special shoutouts to @aubymori and @kawapure for testing/help
+	
 	// okay my conclusion is that i shouldnt tamper with whatever was already set up (no point in removing the scales or adding gaussian blur)
 	// so since all of the blur work is done here, starting my part of it:
 	
