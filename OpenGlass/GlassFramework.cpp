@@ -67,6 +67,7 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCDrawGeometryInstruction_Create(uDwm
 			);
 			auto color{ g_capturedWindow->GetTitlebarColorizationParameters()->getArgbcolor() };
 			color.a *= 0.99f;
+			color.r = g_capturedWindow->TreatAsActiveWindow();
 			RETURN_IF_FAILED(solidBrush->Update(1.0, color));
 			return g_CDrawGeometryInstruction_Create_Org(solidBrush.get(), rgnGeometry.get(), instruction);
 		}
@@ -251,6 +252,7 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCRenderDataVisual_AddInstruction(uDw
 	}
 
 	color.a = 0.99f;
+	color.r = 1.0f;
 	winrt::com_ptr<uDwm::CRgnGeometryProxy> rgnGeometry{ nullptr };
 	uDwm::ResourceHelper::CreateGeometryFromHRGN(wil::unique_hrgn{ CreateRectRgn(static_cast<LONG>(rectangle.left), static_cast<LONG>(rectangle.top), static_cast<LONG>(rectangle.right), static_cast<LONG>(rectangle.bottom)) }.get(), rgnGeometry.put());
 	winrt::com_ptr<uDwm::CSolidColorLegacyMilBrushProxy> solidBrush{ nullptr };
@@ -340,6 +342,9 @@ void GlassFramework::UpdateConfiguration(ConfigurationFramework::UpdateType type
 	GlassSharedData::g_ColorizationAfterglowBalance = ((float)ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"OG_ColorizationAfterglowBalance",43) / 100);
 	GlassSharedData::g_ColorizationBlurBalance = ((float)ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"OG_ColorizationBlurBalance",49) / 100);
 	GlassSharedData::g_ColorizationColorBalance = ((float)ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"OG_ColorizationColorBalance",8) / 100);
+
+	DWORD hexColour = ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"AccentColor", 0xfffcb874);
+	GlassSharedData::g_AccentColor = Utils::FromAbgr(hexColour);
 
 	auto lock{ wil::EnterCriticalSection(uDwm::CDesktopManager::s_csDwmInstance) };
 	if (!GlassSharedData::IsBackdropAllowed())

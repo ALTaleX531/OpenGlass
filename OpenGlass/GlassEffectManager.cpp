@@ -216,6 +216,7 @@ HRESULT STDMETHODCALLTYPE GlassEffectManager::CGlassEffect::Invalidate(
 				m_colorizationAfterglowBalanceVal,
 				m_colorizationBlurBalanceVal,
 				m_colorizationColorBalanceVal,
+				m_color,
 				m_type
 			)
 		);

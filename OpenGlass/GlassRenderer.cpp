@@ -173,8 +173,15 @@ HRESULT STDMETHODCALLTYPE GlassRenderer::MyCDrawingContext_DrawGeometry(
 		return hr;
 	}
 
+	bool bactive = g_drawColor.value().r == 1.0f; //HACK!!!: check if window is active using the data sent through the red channel
+	//bool bactive = data->GetWindow()->TreatAsActiveWindow();
+	//OutputDebugStringW(std::format(L"r {}", g_drawColor.value().r).c_str());
+	//g_drawColor.value() = D2D1_COLOR_F{ 116.0f / 255.0f, 184.0f / 255.0f, 252.0f / 255.0f, g_drawColor.value().a};
+	//g_drawColor.value() = D2D1_COLOR_F{ GlassSharedData::g_AccentColor.r, GlassSharedData::g_AccentColor.g, GlassSharedData::g_AccentColor.b, g_drawColor.value().a};
 	auto cleanUp{ wil::scope_exit([]{ g_drawColor = std::nullopt; })};
-	D2D1_COLOR_F color{ dwmcore::Convert_D2D1_COLOR_F_scRGB_To_D2D1_COLOR_F_sRGB(g_drawColor.value()) };
+	//D2D1_COLOR_F color{ dwmcore::Convert_D2D1_COLOR_F_scRGB_To_D2D1_COLOR_F_sRGB(g_drawColor.value()) };
+	//D2D1_COLOR_F color{ g_drawColor.value()};
+	D2D1_COLOR_F color{ GlassSharedData::g_AccentColor.r, GlassSharedData::g_AccentColor.g, GlassSharedData::g_AccentColor.b, g_drawColor.value().a };
 	dwmcore::CShapePtr geometryShape{};
 	if (
 		FAILED(geometry->GetShapeData(nullptr, &geometryShape)) ||
@@ -238,11 +245,12 @@ HRESULT STDMETHODCALLTYPE GlassRenderer::MyCDrawingContext_DrawGeometry(
 	winrt::com_ptr<ID2D1Image> backdropImage{};
 	This->GetDrawingContext()->GetD2DContext()->GetDeviceContext()->GetTarget(backdropImage.put());
 	winrt::com_ptr<ID2D1Bitmap1> backdropBitmap{ backdropImage.as<ID2D1Bitmap1>() };
-	RETURN_IF_FAILED(This->GetDrawingContext()->FlushD2D());
 	//TODO: ADD PROPER TYPE CHECKED CAST 
-	bool bactive = false;
-	if (GlassSharedData::g_LastTopLevelWindow)
-		bactive = (reinterpret_cast<uDwm::CTopLevelWindow*>(GlassSharedData::g_LastTopLevelWindow)->TreatAsActiveWindow());
+	//bool bactive = false;
+	//if (This->GetDrawingContext()->GetCurrentVisual())
+		//bactive = true;
+
+	RETURN_IF_FAILED(This->GetDrawingContext()->FlushD2D());
 
 	//bool bactive = true;
 

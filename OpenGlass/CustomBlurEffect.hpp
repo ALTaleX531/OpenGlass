@@ -35,6 +35,7 @@ namespace OpenGlass
 			float colorizationAfterglowBalanceVal,
 			float colorizationBlurBalanceVal,
 			float colorizationColorBalanceVal,
+			D2D1_COLOR_F color,
 			Type type
 		) = 0;
 		virtual HRESULT STDMETHODCALLTYPE Draw(
@@ -75,6 +76,7 @@ namespace OpenGlass
 		float m_colorizationAfterglowBalanceVal = 0.43f;
 		float m_colorizationBlurBalanceVal = 0.49f;
 		float m_colorizationColorBalanceVal = 0.08f;
+		D2D1_COLOR_F m_Color = { 116.0f / 255.0f, 184.0f / 255.0f, 252.0f / 255.0f,1.0f };
 
 		static const float k_optimizations[16];
 		static float DetermineOutputScale(float size, float blurAmount);
@@ -93,6 +95,7 @@ namespace OpenGlass
 			float colorizationAfterglowBalanceVal,
 			float colorizationBlurBalanceVal,
 			float colorizationColorBalanceVal,
+			D2D1_COLOR_F color,
 			Type type
 		) override;
 		HRESULT STDMETHODCALLTYPE Draw(

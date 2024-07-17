@@ -175,6 +175,7 @@ HRESULT STDMETHODCALLTYPE VisualManager::CLegacyVisualOverrider::UpdateNCBackgro
 
 	auto color{ m_window->GetTitlebarColorizationParameters()->getArgbcolor() };
 	color.a *= 0.99f;
+	color.r = m_window->TreatAsActiveWindow(); //HACK!!: Send active or inactive window data through the red channel
 	RETURN_IF_FAILED(m_brush->Update(1.0, color));
 
 	wil::unique_hrgn emptyRegion{ CreateRectRgn(0, 0, 0, 0) };

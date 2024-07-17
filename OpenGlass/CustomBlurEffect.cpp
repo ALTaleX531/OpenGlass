@@ -359,7 +359,7 @@ HRESULT CCustomBlurEffect::SetParamsAero()
 	RETURN_IF_FAILED(
 		m_ColorizationColor->SetValue(
 			D2D1_FLOOD_PROP_COLOR, 
-			D2D1::Vector4F(116.0f / 255.0f, 184.0f / 255.0f, 252.0f / 255.0f, 1.0f)
+			D2D1::Vector4F(m_Color.r, m_Color.g, m_Color.b, 1.0f)
 	)
 	);
 
@@ -446,6 +446,7 @@ HRESULT STDMETHODCALLTYPE CCustomBlurEffect::Invalidate(
 	float colorizationAfterglowBalanceVal,
 	float colorizationBlurBalanceVal,
 	float colorizationColorBalanceVal,
+	D2D1_COLOR_F color,
 	Type type
 )
 {
@@ -457,12 +458,13 @@ HRESULT STDMETHODCALLTYPE CCustomBlurEffect::Invalidate(
 	bool recalculateParams{ false };
 	if (m_blurAmount != blurAmount || m_colorizationAfterglowBalanceVal != colorizationAfterglowBalanceVal || 
 		m_colorizationBlurBalanceVal != colorizationBlurBalanceVal ||
-		m_colorizationColorBalanceVal != colorizationColorBalanceVal)
+		m_colorizationColorBalanceVal != colorizationColorBalanceVal || (m_Color.r != color.r) || (m_Color.g != color.g) || (m_Color.b != color.b) || (m_Color.a != color.a) )
 	{
 		m_blurAmount = blurAmount;
 		m_colorizationAfterglowBalanceVal = colorizationAfterglowBalanceVal;
 		m_colorizationBlurBalanceVal = colorizationBlurBalanceVal;
 		m_colorizationColorBalanceVal = colorizationColorBalanceVal;
+		m_Color = color;
 		recalculateParams = true;
 	}
 	
