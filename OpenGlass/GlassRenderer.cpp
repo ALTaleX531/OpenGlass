@@ -262,9 +262,9 @@ HRESULT STDMETHODCALLTYPE GlassRenderer::MyCDrawingContext_DrawGeometry(
 		color,
 		g_glassOpacity,
 		g_blurAmount,
-		GlassSharedData::g_ColorizationAfterglowBalance,
-		bactive ? GlassSharedData::g_ColorizationBlurBalance : 0.4f * GlassSharedData::g_ColorizationBlurBalance + 0.6f,
-		GlassSharedData::g_ColorizationColorBalance,
+		GlassSharedData::g_ColorizationAfterglowBalance,									// stays the same
+		bactive ? GlassSharedData::g_ColorizationBlurBalance : 0.4f * GlassSharedData::g_ColorizationBlurBalance + 0.6f,	// y = 0.4x + 60
+		bactive ? GlassSharedData::g_ColorizationColorBalance : 0.4f * GlassSharedData::g_ColorizationColorBalance,		//y = 0.4x
 		g_type
 	);
 	glassEffect->SetSize(
