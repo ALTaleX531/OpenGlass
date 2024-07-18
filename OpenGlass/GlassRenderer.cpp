@@ -172,16 +172,22 @@ HRESULT STDMETHODCALLTYPE GlassRenderer::MyCDrawingContext_DrawGeometry(
 	{
 		return hr;
 	}
-
+	//HWND hwnd = reinterpret_cast<dwmcore::CDrawingContext*>(This->GetDrawingContext()->GetD2DContextOwner())->GetCurrentVisual()->GetTopLevelWindow();
+	//uDwm::CWindowData* data{ nullptr };
+	//{
+	//	auto lock{ wil::EnterCriticalSection(uDwm::CDesktopManager::s_csDwmInstance) };
+	//	uDwm::CDesktopManager::s_pDesktopManagerInstance->GetWindowList()->GetSyncedWindowDataByHwnd(hwnd, &data);
+	//}
+	//if (!data) return hr;
 	bool bactive = g_drawColor.value().r == 1.0f; //HACK!!!: check if window is active using the data sent through the red channel
 	//bool bactive = data->GetWindow()->TreatAsActiveWindow();
 	//OutputDebugStringW(std::format(L"r {}", g_drawColor.value().r).c_str());
 	//g_drawColor.value() = D2D1_COLOR_F{ 116.0f / 255.0f, 184.0f / 255.0f, 252.0f / 255.0f, g_drawColor.value().a};
-	//g_drawColor.value() = D2D1_COLOR_F{ GlassSharedData::g_AccentColor.r, GlassSharedData::g_AccentColor.g, GlassSharedData::g_AccentColor.b, g_drawColor.value().a};
+	//g_drawColor.value() = D2D1_COLOR_F{ GlassSharedData::g_ColorizationColor.r, GlassSharedData::g_ColorizationColor.g, GlassSharedData::g_ColorizationColor.b, g_drawColor.value().a};
 	auto cleanUp{ wil::scope_exit([]{ g_drawColor = std::nullopt; })};
 	//D2D1_COLOR_F color{ dwmcore::Convert_D2D1_COLOR_F_scRGB_To_D2D1_COLOR_F_sRGB(g_drawColor.value()) };
 	//D2D1_COLOR_F color{ g_drawColor.value()};
-	D2D1_COLOR_F color{ GlassSharedData::g_AccentColor.r, GlassSharedData::g_AccentColor.g, GlassSharedData::g_AccentColor.b, g_drawColor.value().a };
+	D2D1_COLOR_F color{ GlassSharedData::g_ColorizationColor.r, GlassSharedData::g_ColorizationColor.g, GlassSharedData::g_ColorizationColor.b, g_drawColor.value().a };
 	dwmcore::CShapePtr geometryShape{};
 	if (
 		FAILED(geometry->GetShapeData(nullptr, &geometryShape)) ||

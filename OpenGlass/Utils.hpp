@@ -118,6 +118,24 @@ namespace OpenGlass::Utils
 			static_cast<float>(abgr[3]) / 255.f
 		};
 	}
+	FORCEINLINE D2D1_COLOR_F FromArgb(DWORD color)
+	{
+		auto argb{ reinterpret_cast<const UCHAR*>(&color) };
+		return
+		{
+			static_cast<float>(argb[2]) / 255.f,
+			static_cast<float>(argb[1]) / 255.f,
+			static_cast<float>(argb[0]) / 255.f,
+			static_cast<float>(argb[3]) / 255.f
+		};
+
+		/*
+		float r;
+		float g;
+		float b;
+		float a;
+		*/
+	}
 }
 
 #define DEFINE_INVOKER(fn) static const auto s_fn_ptr{ Utils::cast_pointer<decltype(&fn)>(g_symbolMap.at(#fn)) }

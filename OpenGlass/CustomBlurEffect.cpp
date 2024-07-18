@@ -320,7 +320,7 @@ HRESULT CCustomBlurEffect::SetParamsAero()
 	RETURN_IF_FAILED(
 		m_tintEffect->SetValue(
 			D2D1_TINT_PROP_COLOR, 
-			D2D1::Vector4F(116.0f / 255.0f, 184.0f / 255.0f, 252.0f / 255.0f, 1.0f)
+			D2D1::Vector4F(m_Color.r, m_Color.g, m_Color.b, 1.0f)
 	)
 	);
 

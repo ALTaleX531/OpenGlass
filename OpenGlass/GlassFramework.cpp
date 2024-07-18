@@ -343,8 +343,8 @@ void GlassFramework::UpdateConfiguration(ConfigurationFramework::UpdateType type
 	GlassSharedData::g_ColorizationBlurBalance = ((float)ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"OG_ColorizationBlurBalance",49) / 100);
 	GlassSharedData::g_ColorizationColorBalance = ((float)ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"OG_ColorizationColorBalance",8) / 100);
 
-	DWORD hexColour = ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"AccentColor", 0xfffcb874);
-	GlassSharedData::g_AccentColor = Utils::FromAbgr(hexColour);
+	DWORD hexColour = ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"ColorizationColor", 0xfffcb874);
+	GlassSharedData::g_ColorizationColor = Utils::FromArgb(hexColour);
 
 	auto lock{ wil::EnterCriticalSection(uDwm::CDesktopManager::s_csDwmInstance) };
 	if (!GlassSharedData::IsBackdropAllowed())
