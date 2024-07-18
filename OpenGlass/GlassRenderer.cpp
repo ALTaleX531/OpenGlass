@@ -71,7 +71,6 @@ namespace OpenGlass::GlassRenderer
 	dwmcore::IDrawingContext* g_drawingContextNoRef{ nullptr };
 	ID2D1Device* g_deviceNoRef{ nullptr };
 
-	Type g_type{ Type::Blur };
 	float g_blurAmount{ 9.f };
 	float g_glassOpacity{ 0.63f };
 	// exclusively used by aero backdrop
@@ -155,8 +154,6 @@ HRESULT STDMETHODCALLTYPE GlassRenderer::MyCDrawingContext_DrawSolidRectangle(
 	return g_CDrawingContext_DrawSolidRectangle_Org(This, rectangle, convertedColor);
 }
 
-bool active = false;
-
 HRESULT STDMETHODCALLTYPE GlassRenderer::MyCDrawingContext_DrawGeometry(
 	dwmcore::IDrawingContext* This,
 	dwmcore::CLegacyMilBrush* brush,
@@ -186,9 +183,10 @@ HRESULT STDMETHODCALLTYPE GlassRenderer::MyCDrawingContext_DrawGeometry(
 	//g_drawColor.value() = D2D1_COLOR_F{ 116.0f / 255.0f, 184.0f / 255.0f, 252.0f / 255.0f, g_drawColor.value().a};
 	//g_drawColor.value() = D2D1_COLOR_F{ GlassSharedData::g_ColorizationColor.r, GlassSharedData::g_ColorizationColor.g, GlassSharedData::g_ColorizationColor.b, g_drawColor.value().a};
 	auto cleanUp{ wil::scope_exit([]{ g_drawColor = std::nullopt; })};
-	//D2D1_COLOR_F color{ dwmcore::Convert_D2D1_COLOR_F_scRGB_To_D2D1_COLOR_F_sRGB(g_drawColor.value()) };
-	//D2D1_COLOR_F color{ g_drawColor.value()};
+
 	D2D1_COLOR_F color{ GlassSharedData::g_ColorizationColor.r, GlassSharedData::g_ColorizationColor.g, GlassSharedData::g_ColorizationColor.b, g_drawColor.value().a };
+	if (GlassSharedData::g_type == Type::Blur)
+		color = dwmcore::Convert_D2D1_COLOR_F_scRGB_To_D2D1_COLOR_F_sRGB(g_drawColor.value());
 	dwmcore::CShapePtr geometryShape{};
 	if (
 		FAILED(geometry->GetShapeData(nullptr, &geometryShape)) ||
@@ -272,7 +270,7 @@ HRESULT STDMETHODCALLTYPE GlassRenderer::MyCDrawingContext_DrawGeometry(
 		GlassSharedData::g_ColorizationAfterglowBalance,									// stays the same
 		bactive ? GlassSharedData::g_ColorizationBlurBalance : 0.4f * GlassSharedData::g_ColorizationBlurBalance + 0.6f,	// y = 0.4x + 60
 		bactive ? GlassSharedData::g_ColorizationColorBalance : 0.4f * GlassSharedData::g_ColorizationColorBalance,		//y = 0.4x
-		g_type
+		GlassSharedData::g_type
 	);
 	glassEffect->SetSize(
 		D2D1::SizeF(
@@ -338,7 +336,7 @@ HRESULT STDMETHODCALLTYPE GlassRenderer::MyCDirtyRegion__Add(
 		lprc.right + extendAmount,
 		lprc.bottom + extendAmount
 	};
-	active = unknown;
+
 	return g_CDirtyRegion__Add_Org(
 		This,
 		visual,
@@ -373,7 +371,7 @@ void GlassRenderer::UpdateConfiguration(ConfigurationFramework::UpdateType type)
 		}
 		g_afterglowBalance = std::clamp(static_cast<float>(afterglowBalance.value()) / 100.f, 0.f, 1.f);
 
-		g_type = static_cast<Type>(std::clamp(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"GlassType", 0), 0ul, 4ul));
+		GlassSharedData::g_type = static_cast<Type>(std::clamp(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"GlassType", 0), 0ul, 4ul));
 	}
 }
 

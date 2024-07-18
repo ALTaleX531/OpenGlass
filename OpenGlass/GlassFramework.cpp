@@ -67,7 +67,8 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCDrawGeometryInstruction_Create(uDwm
 			);
 			auto color{ g_capturedWindow->GetTitlebarColorizationParameters()->getArgbcolor() };
 			color.a *= 0.99f;
-			color.r = g_capturedWindow->TreatAsActiveWindow();
+			if (GlassSharedData::g_type == Type::Aero)
+				color.r = g_capturedWindow->TreatAsActiveWindow();
 			RETURN_IF_FAILED(solidBrush->Update(1.0, color));
 			return g_CDrawGeometryInstruction_Create_Org(solidBrush.get(), rgnGeometry.get(), instruction);
 		}
@@ -82,13 +83,11 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_UpdateNCAreaBackgrou
 {
 	if (!GlassSharedData::IsBackdropAllowed())
 	{
-		GlassSharedData::g_LastTopLevelWindow = 0;
 		return g_CTopLevelWindow_UpdateNCAreaBackground_Org(This);
 	}
 	auto data{ This->GetData() };
 	if (!data)
 	{
-		GlassSharedData::g_LastTopLevelWindow = 0;
 		return g_CTopLevelWindow_UpdateNCAreaBackground_Org(This);
 	}
 
@@ -126,7 +125,6 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_UpdateNCAreaBackgrou
 				HRGN borderRegion{ GeometryRecorder::GetRegionFromGeometry(borderGeometry) };
 				
 				hr = legacyVisualOverride->UpdateNCBackground(captionRegion, borderRegion);
-				GlassSharedData::g_LastTopLevelWindow = This;
 			}
 		}
 
@@ -134,7 +132,6 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_UpdateNCAreaBackgrou
 	}
 	else
 	{
-		GlassSharedData::g_LastTopLevelWindow = 0;
 		VisualManager::RemoveLegacyVisualOverrider(This);
 		hr = g_CTopLevelWindow_UpdateNCAreaBackground_Org(This);
 	}
@@ -157,7 +154,6 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_UpdateClientBlur(uDw
 
 	g_capturedWindow = This;
 	GeometryRecorder::BeginCapture();
-	GlassSharedData::g_LastTopLevelWindow = 0;
 	HRESULT hr{ g_CTopLevelWindow_UpdateClientBlur_Org(This) };
 	GeometryRecorder::EndCapture();
 	g_capturedWindow = nullptr;
@@ -252,7 +248,8 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCRenderDataVisual_AddInstruction(uDw
 	}
 
 	color.a = 0.99f;
-	color.r = 1.0f;
+	if (GlassSharedData::g_type == Type::Aero)
+		color.r = 1.0f;
 	winrt::com_ptr<uDwm::CRgnGeometryProxy> rgnGeometry{ nullptr };
 	uDwm::ResourceHelper::CreateGeometryFromHRGN(wil::unique_hrgn{ CreateRectRgn(static_cast<LONG>(rectangle.left), static_cast<LONG>(rectangle.top), static_cast<LONG>(rectangle.right), static_cast<LONG>(rectangle.bottom)) }.get(), rgnGeometry.put());
 	winrt::com_ptr<uDwm::CSolidColorLegacyMilBrushProxy> solidBrush{ nullptr };
@@ -339,10 +336,13 @@ void GlassFramework::UpdateConfiguration(ConfigurationFramework::UpdateType type
 		g_roundRectRadius = static_cast<int>(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"RoundRectRadius"));
 	}
 
+	//Seperate keys for now until a way to readd the code that handles setting the actual values in registry is found
 	GlassSharedData::g_ColorizationAfterglowBalance = ((float)ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"OG_ColorizationAfterglowBalance",43) / 100);
 	GlassSharedData::g_ColorizationBlurBalance = ((float)ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"OG_ColorizationBlurBalance",49) / 100);
 	GlassSharedData::g_ColorizationColorBalance = ((float)ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"OG_ColorizationColorBalance",8) / 100);
 
+	//Get the colorizationColor from registry directly for aero glass type, a dwm function could be used, however mods or programs such as AWM hook into this and can
+	//cause issues, so the colour is taken directly from registry, which is fine for aero glass (actually better) since inactive and active have the same colour
 	DWORD hexColour = ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"ColorizationColor", 0xfffcb874);
 	GlassSharedData::g_ColorizationColor = Utils::FromArgb(hexColour);
 
