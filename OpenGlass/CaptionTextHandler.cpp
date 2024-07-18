@@ -262,6 +262,140 @@ void CaptionTextHandler::UpdateConfiguration(ConfigurationFramework::UpdateType 
 	}
 }
 
+struct GlowPartDefinition
+{
+	DWORD PartID;
+	DWORD unk1;
+	DWORD unk2;
+	DWORD unk3;
+};
+
+//Remake from w7 udwm
+inline __int64(__fastcall* CTopLevelWindow__CreateBitmapFromAtlas)(HTHEME hTheme, int iPartId, MARGINS* outMargins, void** outBitmapSource);
+
+HRESULT CTopLevelWindow__CreateButtonGlowsFromAtlas(HTHEME hTheme)
+{
+#ifdef DEBUG
+	OutputDebugStringW(std::format(L"CTopLevelWindow__CreateButtonGlowsFromAtlas").c_str());
+#endif
+	MARGINS margins{};
+	HRESULT hr = S_OK;
+	void* OutBitmapSourceBlue = nullptr;
+	void* OutBitmapSourceRed = nullptr;
+	void* OutBitmapSourceTool = nullptr;
+
+	const int MINMAXBUTTONGLOW = 93; //16 in windows 7
+	const int CLOSEBUTTONGLOW = 92; //11 in windows 7
+	const int TOOLCLOSEBUTTONGLOW = 94; //47 in windows 7
+
+	hr = CTopLevelWindow__CreateBitmapFromAtlas(hTheme, MINMAXBUTTONGLOW, &margins, &OutBitmapSourceBlue);
+	if (hr < 0)
+		return hr;
+	*(MARGINS*)(__int64(OutBitmapSourceBlue) + 0x30) = margins; //offset is the same as w7, so it shouldnt change
+
+	hr = CTopLevelWindow__CreateBitmapFromAtlas(hTheme, CLOSEBUTTONGLOW, &margins, &OutBitmapSourceRed);
+	if (hr < 0)
+		return hr;
+	*(MARGINS*)(__int64(OutBitmapSourceRed) + 0x30) = margins;
+
+	hr = CTopLevelWindow__CreateBitmapFromAtlas(hTheme, TOOLCLOSEBUTTONGLOW, &margins, &OutBitmapSourceTool);
+	if (hr < 0)
+		return hr;
+	*(MARGINS*)(__int64(OutBitmapSourceTool) + 0x30) = margins;
+
+	for (int i = 0; i < 4; ++i)
+	{
+		auto frame = (*uDwm::CTopLevelWindow::s_rgpwfWindowFrames)[i];
+		*(void**)(__int64(frame) + 0xD0) = OutBitmapSourceBlue;
+		*(void**)(__int64(frame) + 0xC8) = OutBitmapSourceRed;
+	}
+	for (int i = 4; i < 6; ++i)
+	{
+		auto frame = (*uDwm::CTopLevelWindow::s_rgpwfWindowFrames)[i];
+		*(void**)(__int64(frame) + 0xD0) = OutBitmapSourceTool;
+		*(void**)(__int64(frame) + 0xC8) = OutBitmapSourceTool;
+	}
+	return hr;
+	//old attempt at remaking the function from windows 7
+	/*
+	GlowPartDefinition partIds[3] = { {93,92,0,1},{93,92,2,3},{-1,94,4,5} };
+
+	GlowPartDefinition* def = &partIds[0];
+
+	int i = 0;
+
+	void* OutBitmapSource = nullptr;
+	while (1)
+	{
+		OutputDebugStringW(std::format(L"it {}", i).c_str());
+		def = &partIds[i];
+		int partId = def->PartID;
+		if (partId != -1)
+		{
+			hr = CTopLevelWindow__CreateBitmapFromAtlas(hTheme, partId, &margins, &OutBitmapSource);
+			OutputDebugStringW(std::format(L"1outbitmapsource: {}",OutBitmapSource).c_str());
+			if (hr < 0)
+				return hr;
+			
+
+			*(_MARGINS*)(__int64(OutBitmapSource) + 0x30) = margins;
+			if (*uDwm::CTopLevelWindow::s_rgpwfWindowFrames)
+			{
+				OutputDebugStringW(std::format(L"def->unk2 {} def->unk3 {}", def->unk2, def->unk3).c_str());
+				auto frame1 = (*uDwm::CTopLevelWindow::s_rgpwfWindowFrames)[def->unk2];
+				auto frame2 = (*uDwm::CTopLevelWindow::s_rgpwfWindowFrames)[def->unk3];
+				OutputDebugStringW(std::format(L"f1 {} f2 {}", frame1, frame2).c_str());
+				*(void**)(__int64(frame1) + 0xD0) = OutBitmapSource;
+				*(void**)(__int64(frame2) + 0xD0) = OutBitmapSource;
+				//*(void**)((*(uintptr_t*)(__int64(uDwm::CTopLevelWindow::s_rgpwfWindowFrames) + 8i64 * (unsigned int)def->unk2)) + 0xC8) = OutBitmapSource;
+				//*(void**)((*(uintptr_t*)(__int64(uDwm::CTopLevelWindow::s_rgpwfWindowFrames) + 8i64 * (unsigned int)def->unk3)) + 0xC8) = OutBitmapSource;
+
+				//*(uintptr_t*)(*(uintptr_t*)(__int64(uDwm::CTopLevelWindow::s_rgpwfWindowFrames) + 8i64 * (unsigned int)def->unk2) + 0xC8i64) = (uintptr_t)OutBitmapSource;
+				//*(uintptr_t*)(*(uintptr_t*)(__int64(uDwm::CTopLevelWindow::s_rgpwfWindowFrames) + 8i64 * (unsigned int)def->unk3) + 0xC8i64) = (uintptr_t)OutBitmapSource;
+			}
+			else
+				OutputDebugStringW(std::format(L"NULLL FRAMES").c_str());
+
+		}
+		if (partId == -1)
+			break;
+		
+		++i;
+		if (i >= 3)
+			return hr;
+	}
+	def = &partIds[0];
+	hr = CTopLevelWindow__CreateBitmapFromAtlas(hTheme, def->unk1, &margins, &OutBitmapSource);
+	OutputDebugStringW(std::format(L"2outbitmapsource: {}", OutBitmapSource).c_str());
+	if (hr < 0)
+		return hr;
+	*(_MARGINS*)(__int64(OutBitmapSource) + 0x30) = margins;
+	if (*uDwm::CTopLevelWindow::s_rgpwfWindowFrames)
+	{
+		OutputDebugStringW(std::format(L"def->unk2 {} def->unk3 {}", def->unk2, def->unk3).c_str());
+		auto frame1 = (*uDwm::CTopLevelWindow::s_rgpwfWindowFrames)[def->unk2];
+		auto frame2 = (*uDwm::CTopLevelWindow::s_rgpwfWindowFrames)[def->unk3];
+		OutputDebugStringW(std::format(L"f1 {} f2 {}", frame1, frame2).c_str());
+		*(void**)(__int64(frame1) + 0xC8) = OutBitmapSource;
+		*(void**)(__int64(frame2) + 0xC8) = OutBitmapSource;
+		//*(uintptr_t*)(*(uintptr_t*)(__int64(uDwm::CTopLevelWindow::s_rgpwfWindowFrames) + 8i64 * (unsigned int)def->unk2) + 0xC0i64) = (uintptr_t)OutBitmapSource;
+		//*(uintptr_t*)(*(uintptr_t*)(__int64(uDwm::CTopLevelWindow::s_rgpwfWindowFrames) + 8i64 * (unsigned int)def->unk3) + 0xC0i64) = (uintptr_t)OutBitmapSource;
+		//*(void**)((*(uintptr_t*)(__int64(uDwm::CTopLevelWindow::s_rgpwfWindowFrames) + 8i64 * (unsigned int)def->unk2)) + 0xC8) = OutBitmapSource;
+		//*(void**)((*(uintptr_t*)(__int64(uDwm::CTopLevelWindow::s_rgpwfWindowFrames) + 8i64 * (unsigned int)def->unk3)) + 0xC8) = OutBitmapSource;
+	}
+	else
+		OutputDebugStringW(std::format(L"NULLL FRAMES").c_str());
+
+	return hr;*/
+}
+
+inline HRESULT(__fastcall* CTopLevelWindow_CreateGlyphsFromAtlas)(HTHEME);
+HRESULT __fastcall CTopLevelWindow_CreateGlyphsFromAtlas_Hook(HTHEME hTheme)
+{
+	CTopLevelWindow__CreateButtonGlowsFromAtlas(hTheme);
+	return CTopLevelWindow_CreateGlyphsFromAtlas(hTheme);
+}
+
 HRESULT CaptionTextHandler::Startup()
 {
 	DWORD value{ 0ul };
@@ -274,6 +408,12 @@ HRESULT CaptionTextHandler::Startup()
 		HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND)
 	);
 	g_disableTextHooks = (value & 1) != 0;
+	uDwm::GetAddressFromSymbolMap("CTopLevelWindow::CreateBitmapFromAtlas", CTopLevelWindow__CreateBitmapFromAtlas);
+	uDwm::GetAddressFromSymbolMap("CTopLevelWindow::CreateGlyphsFromAtlas", CTopLevelWindow_CreateGlyphsFromAtlas);
+	HookHelper::Detours::Write([]()
+		{
+			HookHelper::Detours::Attach(&CTopLevelWindow_CreateGlyphsFromAtlas, CTopLevelWindow_CreateGlyphsFromAtlas_Hook);
+		});
 
 	if (!g_disableTextHooks)
 	{
