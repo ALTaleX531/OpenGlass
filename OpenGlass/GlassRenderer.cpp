@@ -6,6 +6,7 @@
 #include "GlassEffectManager.hpp"
 #include "GlassSharedData.hpp"
 #include "ReflectionRenderer.hpp"
+#include "GlassSharedStructures.hpp"
 
 using namespace OpenGlass;
 

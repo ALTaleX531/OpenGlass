@@ -262,63 +262,6 @@ void CaptionTextHandler::UpdateConfiguration(ConfigurationFramework::UpdateType 
 	}
 }
 
-
-//TODO: MOVE TO SEPERATE FILE!!
-inline __int64(__fastcall* CTopLevelWindow__CreateBitmapFromAtlas)(HTHEME hTheme, int iPartId, MARGINS* outMargins, void** outBitmapSource);
-
-//functional remake from w7 udwm (not 1 to 1 remake, but functions the same)
-HRESULT CTopLevelWindow__CreateButtonGlowsFromAtlas(HTHEME hTheme)
-{
-#ifdef DEBUG
-	OutputDebugStringW(std::format(L"CTopLevelWindow__CreateButtonGlowsFromAtlas").c_str());
-#endif
-	MARGINS margins{};
-	HRESULT hr = S_OK;
-	void* OutBitmapSourceBlue = nullptr;
-	void* OutBitmapSourceRed = nullptr;
-	void* OutBitmapSourceTool = nullptr;
-
-	const int MINMAXBUTTONGLOW = 93; //16 in windows 7
-	const int CLOSEBUTTONGLOW = 92; //11 in windows 7
-	const int TOOLCLOSEBUTTONGLOW = 94; //47 in windows 7
-
-	hr = CTopLevelWindow__CreateBitmapFromAtlas(hTheme, MINMAXBUTTONGLOW, &margins, &OutBitmapSourceBlue);
-	if (hr < 0)
-		return hr;
-	*(MARGINS*)(__int64(OutBitmapSourceBlue) + 0x30) = margins; //offset is the same as w7, so it shouldnt change
-
-	hr = CTopLevelWindow__CreateBitmapFromAtlas(hTheme, CLOSEBUTTONGLOW, &margins, &OutBitmapSourceRed);
-	if (hr < 0)
-		return hr;
-	*(MARGINS*)(__int64(OutBitmapSourceRed) + 0x30) = margins;
-
-	hr = CTopLevelWindow__CreateBitmapFromAtlas(hTheme, TOOLCLOSEBUTTONGLOW, &margins, &OutBitmapSourceTool);
-	if (hr < 0)
-		return hr;
-	*(MARGINS*)(__int64(OutBitmapSourceTool) + 0x30) = margins;
-
-	for (int i = 0; i < 4; ++i)
-	{
-		auto frame = (*uDwm::CTopLevelWindow::s_rgpwfWindowFrames)[i];
-		*(void**)(__int64(frame) + 0xD0) = OutBitmapSourceBlue;
-		*(void**)(__int64(frame) + 0xC8) = OutBitmapSourceRed;
-	}
-	for (int i = 4; i < 6; ++i)
-	{
-		auto frame = (*uDwm::CTopLevelWindow::s_rgpwfWindowFrames)[i];
-		*(void**)(__int64(frame) + 0xD0) = OutBitmapSourceTool;
-		*(void**)(__int64(frame) + 0xC8) = OutBitmapSourceTool;
-	}
-	return hr;
-}
-
-inline HRESULT(__fastcall* CTopLevelWindow_CreateGlyphsFromAtlas)(HTHEME);
-HRESULT __fastcall CTopLevelWindow_CreateGlyphsFromAtlas_Hook(HTHEME hTheme)
-{
-	CTopLevelWindow__CreateButtonGlowsFromAtlas(hTheme);
-	return CTopLevelWindow_CreateGlyphsFromAtlas(hTheme);
-}
-
 HRESULT CaptionTextHandler::Startup()
 {
 	DWORD value{ 0ul };
@@ -331,12 +274,6 @@ HRESULT CaptionTextHandler::Startup()
 		HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND)
 	);
 	g_disableTextHooks = (value & 1) != 0;
-	uDwm::GetAddressFromSymbolMap("CTopLevelWindow::CreateBitmapFromAtlas", CTopLevelWindow__CreateBitmapFromAtlas);
-	uDwm::GetAddressFromSymbolMap("CTopLevelWindow::CreateGlyphsFromAtlas", CTopLevelWindow_CreateGlyphsFromAtlas);
-	HookHelper::Detours::Write([]()
-		{
-			HookHelper::Detours::Attach(&CTopLevelWindow_CreateGlyphsFromAtlas, CTopLevelWindow_CreateGlyphsFromAtlas_Hook);
-		});
 
 	if (!g_disableTextHooks)
 	{

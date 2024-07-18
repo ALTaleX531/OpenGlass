@@ -2,6 +2,7 @@
 #include "framework.hpp"
 #include "cpprt.hpp"
 #include "uDwmProjection.hpp"
+#include "GlassSharedStructures.hpp"
 
 namespace OpenGlass::GlassEffectManager
 {

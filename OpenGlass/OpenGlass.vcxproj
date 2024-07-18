@@ -189,10 +189,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ButtonGlowHandler.hpp" />
     <ClInclude Include="CustomBlurEffect.hpp" />
     <ClInclude Include="CustomMsstyleLoader.hpp" />
     <ClInclude Include="dwmcoreProjection.hpp" />
     <ClInclude Include="GlassEffectManager.hpp" />
+    <ClInclude Include="GlassSharedStructures.hpp" />
     <ClInclude Include="ReflectionRenderer.hpp" />
     <ClInclude Include="GlassRenderer.hpp" />
     <ClInclude Include="GlassSharedData.hpp" />
@@ -215,6 +217,7 @@
     <ClInclude Include="wil.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ButtonGlowHandler.cpp" />
     <ClCompile Include="CustomBlurEffect.cpp" />
     <ClCompile Include="GlassEffectManager.cpp" />
     <ClCompile Include="VisualManager.cpp" />

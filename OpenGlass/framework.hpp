@@ -65,11 +65,4 @@
 
 #pragma comment(lib, "onecore.lib")
 
-namespace OpenGlass
-{
-	enum class Type : UCHAR
-	{
-		Blur = 0,
-		Aero = 1
-	};
-}
+

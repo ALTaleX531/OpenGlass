@@ -2,6 +2,7 @@
 #include "pch.h"
 #include "framework.hpp"
 #include "cpprt.hpp"
+#include "GlassSharedStructures.hpp"
 
 namespace OpenGlass
 {

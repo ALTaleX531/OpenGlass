@@ -5,6 +5,7 @@
 #include "GlassEffectManager.hpp"
 #include "ReflectionRenderer.hpp"
 #include "CustomBlurEffect.hpp"
+#include "GlassSharedStructures.hpp"
 
 using namespace OpenGlass;
 namespace OpenGlass::GlassEffectManager
