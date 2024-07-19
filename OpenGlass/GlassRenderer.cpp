@@ -265,7 +265,7 @@ HRESULT STDMETHODCALLTYPE GlassRenderer::MyCDrawingContext_DrawGeometry(
 	RETURN_IF_FAILED(geometryShape->GetTightBounds(&shapeWorldBounds, &matrix));
 	glassEffect->SetGlassRenderingParameters(
 		color,
-		g_glassOpacity,
+		((GlassSharedData::g_type == Type::Aero) ? 0.0f : g_glassOpacity),
 		g_blurAmount,
 		GlassSharedData::g_ColorizationAfterglowBalance,									// stays the same
 		bactive ? GlassSharedData::g_ColorizationBlurBalance : 0.4f * GlassSharedData::g_ColorizationBlurBalance + 0.6f,	// y = 0.4x + 60
