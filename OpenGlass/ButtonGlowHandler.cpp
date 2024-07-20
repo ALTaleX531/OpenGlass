@@ -4,50 +4,53 @@
 using namespace OpenGlass;
 namespace OpenGlass::ButtonGlowHandler
 {
+	constexpr int MARGIN_OFFSET = 0x30; //offset is the same as w7, so it shouldnt change
+
+	/*
+	* https://imgur.com/a/kHFLBON
+	* To find these offsets, look in CTopLevelWindow::UpdateButtonVisuals in uDWM.dll
+	* where offset can be found inside, used to get the image to pass into CButton::SetVisualStates
+	* there will be many calls, but they all get at the same 2 offset, which correspond to these
+	*/
+	constexpr int MINMAXBUTTONGLOWIMAGE = 0xD0; 
+	constexpr int CLOSEBUTTONGLOWIMAGE = 0xC8; 
+
 	static int MINMAXBUTTONGLOW = 93; //16 in windows 7
 	static int CLOSEBUTTONGLOW = 92; //11 in windows 7
 	static int TOOLCLOSEBUTTONGLOW = 94; //47 in windows 7
 
-	inline __int64(__fastcall* CTopLevelWindow__CreateBitmapFromAtlas)(HTHEME hTheme, int iPartId, MARGINS* outMargins, void** outBitmapSource);
+	inline HRESULT(__fastcall* CTopLevelWindow__CreateBitmapFromAtlas)(HTHEME hTheme, int iPartId, MARGINS* outMargins, void** outBitmapSource);
+	
+	//not 1 to 1 to the one in windows 7 udwm, however it achieves the same outcome whilst being simpler
 	HRESULT CTopLevelWindow__CreateButtonGlowsFromAtlas(HTHEME hTheme)
 	{
-#ifdef DEBUG
-		OutputDebugStringW(std::format(L"CTopLevelWindow__CreateButtonGlowsFromAtlas").c_str());
-#endif
 		MARGINS margins{};
-		HRESULT hr = S_OK;
 		void* OutBitmapSourceBlue = nullptr;
 		void* OutBitmapSourceRed = nullptr;
 		void* OutBitmapSourceTool = nullptr;
 
-		hr = CTopLevelWindow__CreateBitmapFromAtlas(hTheme, MINMAXBUTTONGLOW, &margins, &OutBitmapSourceBlue);
-		if (hr < 0)
-			return hr;
-		*(MARGINS*)(__int64(OutBitmapSourceBlue) + 0x30) = margins; //offset is the same as w7, so it shouldnt change
+		RETURN_IF_FAILED(CTopLevelWindow__CreateBitmapFromAtlas(hTheme, MINMAXBUTTONGLOW, &margins, &OutBitmapSourceBlue));
+		*(MARGINS*)(__int64(OutBitmapSourceBlue) + MARGIN_OFFSET) = margins;
 
-		hr = CTopLevelWindow__CreateBitmapFromAtlas(hTheme, CLOSEBUTTONGLOW, &margins, &OutBitmapSourceRed);
-		if (hr < 0)
-			return hr;
-		*(MARGINS*)(__int64(OutBitmapSourceRed) + 0x30) = margins;
+		RETURN_IF_FAILED(CTopLevelWindow__CreateBitmapFromAtlas(hTheme, CLOSEBUTTONGLOW, &margins, &OutBitmapSourceRed));
+		*(MARGINS*)(__int64(OutBitmapSourceRed) + MARGIN_OFFSET) = margins;
 
-		hr = CTopLevelWindow__CreateBitmapFromAtlas(hTheme, TOOLCLOSEBUTTONGLOW, &margins, &OutBitmapSourceTool);
-		if (hr < 0)
-			return hr;
-		*(MARGINS*)(__int64(OutBitmapSourceTool) + 0x30) = margins;
+		RETURN_IF_FAILED(CTopLevelWindow__CreateBitmapFromAtlas(hTheme, TOOLCLOSEBUTTONGLOW, &margins, &OutBitmapSourceTool));
+		*(MARGINS*)(__int64(OutBitmapSourceTool) + MARGIN_OFFSET) = margins;
 
 		for (int i = 0; i < 4; ++i)
 		{
 			auto frame = (*uDwm::CTopLevelWindow::s_rgpwfWindowFrames)[i];
-			*(void**)(__int64(frame) + 0xD0) = OutBitmapSourceBlue;
-			*(void**)(__int64(frame) + 0xC8) = OutBitmapSourceRed;
+			*(void**)(__int64(frame) + MINMAXBUTTONGLOWIMAGE) = OutBitmapSourceBlue;
+			*(void**)(__int64(frame) + CLOSEBUTTONGLOWIMAGE) = OutBitmapSourceRed;
 		}
 		for (int i = 4; i < 6; ++i)
 		{
 			auto frame = (*uDwm::CTopLevelWindow::s_rgpwfWindowFrames)[i];
-			*(void**)(__int64(frame) + 0xD0) = OutBitmapSourceTool;
-			*(void**)(__int64(frame) + 0xC8) = OutBitmapSourceTool;
+			*(void**)(__int64(frame) + MINMAXBUTTONGLOWIMAGE) = OutBitmapSourceTool;
+			*(void**)(__int64(frame) + CLOSEBUTTONGLOWIMAGE) = OutBitmapSourceTool;
 		}
-		return hr;
+		return S_OK;
 	}
 
 	HRESULT (__fastcall* CTopLevelWindow_CreateGlyphsFromAtlas)(HTHEME hTheme);
