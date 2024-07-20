@@ -2,13 +2,23 @@
 # OpenGlass
 A replica of the dead software glass8, also known as the upstream project of [DWMBlurGlass](https://github.com/Maplespe/DWMBlurGlass).  
 
-This branch does not rely on `dcomp` and `Windows.UI.Composition`, so it is very limited in functionality and it is not unusual to encounter all kinds of bugs, but its performance is much better than the master branch. Currently this branch ONLY supports Windows 10 2004-22H2.
+This branch does not rely on `dcomp` and `Windows.UI.Composition` and instead uses raw Direct2D to leverage better performance than the master branch, however due to it's early nature you may encounter more bugs and crashes. Currently this branch ONLY supports Windows 10 2004-22H2.
 > [!IMPORTANT]  
 > This software is intended for advanced users only. If you are a beginner and you do not have deeper knowledge of Windows (such as registry editing etc.) you should not install this software.  
 > For the average users, you should consider using [DWMBlurGlass](https://github.com/Maplespe/DWMBlurGlass).
 
 > [!WARNING]   
 > OpenGlass does NOT support and is NOT intended to support Windows Insider Preview, so if you want to use it in these Windows versions please do it at your own risk.
+
+## Demonstration
+![Screenshot_1](https://github.com/user-attachments/assets/87bd340e-f60f-427b-83dd-d5470af3628a)
+![Dj2ZNvKO1f](https://github.com/user-attachments/assets/69cb8c6e-1232-4d6a-8661-a8291c1eb40b)
+![BBNq9TdJNM](https://github.com/user-attachments/assets/f2bf46cc-0229-4952-a385-3cfca0df0c35)
+![XzSxjpAIWr](https://github.com/user-attachments/assets/4be75ef3-0862-494a-a4c7-e6679ec2f790)
+![paintdotnet_lRyttWoEq4](https://github.com/user-attachments/assets/9d52fb58-e6b8-438e-8801-28afc19ecdbc)
+> *.msstyles theme used for screenshots: [Aero10 by vaporvance](https://www.deviantart.com/vaporvance/art/Aero10-for-Windows-10-1903-22H2-909711949)*
+
+> *additional software used: [Windhawk](https://windhawk.net/), [Aero Window Manager](https://github.com/Dulappy/aero-window-manager) by @Dulappy*
 ## How to use this software
 1. Extract the files from the Release page to `C:\`, but please don't put them in `C:\Users\*`, otherwise OpenGlass won't work properly.
 2. Run `install.bat` as administrator, this will create a scheduled task for you to run the OpenGlass helper process on boot, which will monitor and automatically inject its component into Dwm.
@@ -26,10 +36,14 @@ The legacy branch can use most of the features of the master branch. The followi
 | master branch | Type | Description | legacy branch | Description | Remarks
 | ---- | ---- | ---- | ---- | ---- | ---- |
 | RoundRectRadius | DWORD | The radius of glass geometry, Win8 = 0, Win7 = 12 |  | Rounded corners are not anti-aliased. | **OK** |
+| og_ColorizationColorBalance | DWORD | Controls the balance of the solid color layer. Behaves the same as Windows 7. |  | **NOTE FOR og_ VARIANTS:** This is done so Windows doesn't override these values with bogus ones. | **OK** |
+| og_ColorizationAfterglowBalance | DWORD | Controls the balance of the multiply+blur layer. Behaves the same as Windows 7. |  |  | **OK** |
+| og_ColorizationrBlurBalance | DWORD | Controls the balance of the blur layer. Behaves the same as Windows 7. |  |  | **OK** |
 | CustomThemeMaterial | String | **Undocumented** |  |  | **Not implemented** |
 | MaterialOpacity | DWORD | **Undocumented** |  |  | **Not implemented** |
 | GlassLuminosity | DWORD | The luminosity of Acrylic/Mica effect |  |  | **Not implemented** |
-| GlassType | DWORD | The type of backdrop effect (0x0-0x4). 0x0=Blur. 0x01=Aero. 0x02=Acrylic. 0x03=Mica. 0x04=Solid. |  | Only 0x0 is implemented. | **OK** |
+| GlassOpacity | DWORD | Controls the opacity of the glass colorization |  | ***TODO:** deprecate this registry key for GlassType 0x1 and introduce an inactive variant for GlassType 0x0 (Vista style) | **OK*** |
+| GlassType | DWORD | The type of backdrop effect (0x0-0x4). 0x0=Blur. 0x01=Aero. 0x02=Acrylic. 0x03=Mica. 0x04=Solid. |  | Only 0x0 and 0x1 are implemented. | **OK** |
 | GlassOverrideBorder | DWORD | Specifies that the effect should extend to the border. The default value is 0. |  | The glass will override the border by default. | **Not implemented** |
 | GlassCrossFadeTime | DWORD | The cross fade time for backdrop switching. The default value is 87. |  |  | **Not supported** |
 | GlassOverrideAccent | DWORD | Overriding accent with the effect of OpenGlass. The default value is 0. |  | Some windows are overwritten resulting in full transparency. And the behavior of the overrides makes a difference. | **OK** |
@@ -70,13 +84,13 @@ PostMessage(FindWindow(TEXT("Dwm"), nullptr), WM_DWMCOLORIZATIONCHANGED, 0, 0); 
         stop AWM  
 
         In this case you are likely to get a crash of DWM or the other software working abnormally.
-- OpenGlass can be used with most windhawk mods, but some may have compatibility issues, especially community or personally written mods that can't be found in the windhawk marketplace.
+- OpenGlass can be used with most Windhawk mods, but some may have compatibility issues, especially community or personally written mods that can't be found in the windhawk marketplace.
 - This branch cannot be used with the master branch.
 
 ## Dependencies and References
 ### [Banner for OpenGlass](https://github.com/ALTaleX531/OpenGlass/discussions/11)
 Provided by [@aubymori](https://github.com/aubymori)  
-Wallpaper: [metalheart jawn](https://www.deviantart.com/kfh83/art/metalheart-jawn-2-1068250045) #2 by [@kfh83](https://github.com/kfh83)
+Wallpaper: [metalheart jawn #2](https://www.deviantart.com/kfh83/art/metalheart-jawn-2-1068250045) by [@kfh83](https://github.com/kfh83)
 ### [Microsoft Research Detours Package](https://github.com/microsoft/Detours)  
 Detours is a software package for monitoring and instrumenting API calls on Windows.  
 ### [VC-LTL - An elegant way to compile lighter binaries.](https://github.com/Chuyu-Team/VC-LTL5)  

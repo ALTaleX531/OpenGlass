@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "ConfigurationFramework.hpp"
 #include "CaptionTextHandler.hpp"
+#include "ButtonGlowHandler.hpp"
 #include "GlassFramework.hpp"
 #include "GlassRenderer.hpp"
 #include "CustomMsstyleLoader.hpp"
@@ -19,6 +20,7 @@ void ConfigurationFramework::Update(UpdateType type)
 	GlassRenderer::UpdateConfiguration(type);
 	CaptionTextHandler::UpdateConfiguration(type);
 	CustomMsstyleLoader::UpdateConfiguration(type);
+	ButtonGlowHandler::UpdateConfiguration(type);
 	DwmFlush();
 }
 

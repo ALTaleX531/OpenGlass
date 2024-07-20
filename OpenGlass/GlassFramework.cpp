@@ -67,6 +67,8 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCDrawGeometryInstruction_Create(uDwm
 			);
 			auto color{ g_capturedWindow->GetTitlebarColorizationParameters()->getArgbcolor() };
 			color.a *= 0.99f;
+			if (GlassSharedData::g_type == Type::Aero)
+				color.r = g_capturedWindow->TreatAsActiveWindow();
 			RETURN_IF_FAILED(solidBrush->Update(1.0, color));
 			return g_CDrawGeometryInstruction_Create_Org(solidBrush.get(), rgnGeometry.get(), instruction);
 		}
@@ -246,6 +248,8 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCRenderDataVisual_AddInstruction(uDw
 	}
 
 	color.a = 0.99f;
+	if (GlassSharedData::g_type == Type::Aero)
+		color.r = 1.0f;
 	winrt::com_ptr<uDwm::CRgnGeometryProxy> rgnGeometry{ nullptr };
 	uDwm::ResourceHelper::CreateGeometryFromHRGN(wil::unique_hrgn{ CreateRectRgn(static_cast<LONG>(rectangle.left), static_cast<LONG>(rectangle.top), static_cast<LONG>(rectangle.right), static_cast<LONG>(rectangle.bottom)) }.get(), rgnGeometry.put());
 	winrt::com_ptr<uDwm::CSolidColorLegacyMilBrushProxy> solidBrush{ nullptr };
@@ -331,6 +335,16 @@ void GlassFramework::UpdateConfiguration(ConfigurationFramework::UpdateType type
 		GlassSharedData::g_overrideAccent = static_cast<bool>(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"GlassOverrideAccent"));
 		g_roundRectRadius = static_cast<int>(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"RoundRectRadius"));
 	}
+
+	//Seperate keys for now until a way to readd the code that handles setting the actual values in registry is found
+	GlassSharedData::g_ColorizationAfterglowBalance = ((float)ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"OG_ColorizationAfterglowBalance",43) / 100);
+	GlassSharedData::g_ColorizationBlurBalance = ((float)ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"OG_ColorizationBlurBalance",49) / 100);
+	GlassSharedData::g_ColorizationColorBalance = ((float)ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"OG_ColorizationColorBalance",8) / 100);
+
+	//Get the colorizationColor from registry directly for aero glass type, a dwm function could be used, however mods or programs such as AWM hook into this and can
+	//cause issues, so the colour is taken directly from registry, which is fine for aero glass (actually better) since inactive and active have the same colour
+	DWORD hexColour = ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"ColorizationColor", 0xfffcb874);
+	GlassSharedData::g_ColorizationColor = Utils::FromArgb(hexColour);
 
 	auto lock{ wil::EnterCriticalSection(uDwm::CDesktopManager::s_csDwmInstance) };
 	if (!GlassSharedData::IsBackdropAllowed())

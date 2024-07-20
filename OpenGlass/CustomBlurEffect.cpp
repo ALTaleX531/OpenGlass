@@ -53,15 +53,134 @@ HRESULT CCustomBlurEffect::Initialize()
 		)
 	);
 
+	SetParams();
+
+	m_initialized = true;
+
+	return S_OK;
+}
+
+// CropInput -> ScaleDown (optional) -> Border -> DirectionalBlurX -> DirectionalBlurY -> ScaleUp (optional)
+HRESULT CCustomBlurEffect::InitializeAero()
+{
+	RETURN_IF_FAILED(
+		m_deviceContext->CreateEffect(
+			CLSID_D2D1Crop,
+			m_cropInputEffect.put()
+		)
+	);
+	RETURN_IF_FAILED(
+		m_deviceContext->CreateEffect(
+			CLSID_D2D1Scale,
+			m_scaleDownEffect.put()
+		)
+	);
+	RETURN_IF_FAILED(
+		m_deviceContext->CreateEffect(
+			CLSID_D2D1Border,
+			m_borderEffect.put()
+		)
+	);
+	RETURN_IF_FAILED(
+		m_deviceContext->CreateEffect(
+			CLSID_D2D1DirectionalBlurKernel,
+			m_directionalBlurXEffect.put()
+		)
+	);
+	RETURN_IF_FAILED(
+		m_deviceContext->CreateEffect(
+			CLSID_D2D1DirectionalBlurKernel,
+			m_directionalBlurYEffect.put()
+		)
+	);
+	RETURN_IF_FAILED(
+		m_deviceContext->CreateEffect(
+			CLSID_D2D1Scale,
+			m_scaleUpEffect.put()
+		)
+	);
+
+	// imma try n put whats relevant here
+	// ts is jus creating the effects
+
+	RETURN_IF_FAILED(
+		m_deviceContext->CreateEffect(
+			CLSID_D2D1Composite,
+			m_compositeEffect.put()
+		)
+	);
+	RETURN_IF_FAILED(
+		m_deviceContext->CreateEffect(
+			CLSID_D2D1Composite,
+			m_compositeEffect_pass2.put()
+	)
+	);
+
+	RETURN_IF_FAILED(
+		m_deviceContext->CreateEffect(
+			CLSID_D2D1Tint,
+			m_tintEffect.put()
+		)
+	);
+
+	RETURN_IF_FAILED(
+		m_deviceContext->CreateEffect(
+			CLSID_D2D1Saturation,
+			m_saturationEffect.put()
+		)
+	);
+
+	RETURN_IF_FAILED(
+		m_deviceContext->CreateEffect(
+			CLSID_D2D1ColorMatrix,
+			m_ColorizationAfterglowBalance.put()
+		)
+	);
+	RETURN_IF_FAILED(
+		m_deviceContext->CreateEffect(
+			CLSID_D2D1ColorMatrix,
+			m_ColorizationBlurBalance.put()
+		)
+	);
+
+	RETURN_IF_FAILED(
+		m_deviceContext->CreateEffect(
+			CLSID_D2D1ColorMatrix,
+			m_ColorizationColorBalance.put()
+		)
+	);
+
+	RETURN_IF_FAILED(
+		m_deviceContext->CreateEffect(
+			CLSID_D2D1Flood,
+			m_ColorizationColor.put()
+		)
+	);
+
 	/*
 	RETURN_IF_FAILED(
 		m_cropInputEffect->SetValue(D2D1_PROPERTY_CACHED, TRUE)
+	);*/
+
+	SetParamsAero();
+	
+
+	m_initialized = true;
+
+	return S_OK;
+}
+
+HRESULT CCustomBlurEffect::SetParams()
+{
+	/*
+	RETURN_IF_FAILED(
+	m_cropInputEffect->SetValue(D2D1_PROPERTY_CACHED, TRUE)
 	);*/
 	RETURN_IF_FAILED(
 		m_cropInputEffect->SetValue(
 			D2D1_CROP_PROP_BORDER_MODE,
 			D2D1_BORDER_MODE_SOFT
-		)
+	)
 	);
 	m_scaleDownEffect->SetInputEffect(0, m_cropInputEffect.get());
 	RETURN_IF_FAILED(m_scaleDownEffect->SetValue(D2D1_SCALE_PROP_SHARPNESS, 1.f));
@@ -69,40 +188,40 @@ HRESULT CCustomBlurEffect::Initialize()
 		m_scaleDownEffect->SetValue(
 			D2D1_SCALE_PROP_BORDER_MODE,
 			D2D1_BORDER_MODE_HARD
-		)
+	)
 	);
 	RETURN_IF_FAILED(
 		m_scaleDownEffect->SetValue(
 			D2D1_SCALE_PROP_INTERPOLATION_MODE,
 			D2D1_SCALE_INTERPOLATION_MODE_LINEAR
-		)
+	)
 	);
 	m_borderEffect->SetInputEffect(0, m_scaleDownEffect.get());
 	RETURN_IF_FAILED(
 		m_borderEffect->SetValue(
-			D2D1_BORDER_PROP_EDGE_MODE_X, 
+			D2D1_BORDER_PROP_EDGE_MODE_X,
 			D2D1_BORDER_EDGE_MODE_MIRROR
-		)
+	)
 	);
 	RETURN_IF_FAILED(
 		m_borderEffect->SetValue(
-			D2D1_BORDER_PROP_EDGE_MODE_Y, 
+			D2D1_BORDER_PROP_EDGE_MODE_Y,
 			D2D1_BORDER_EDGE_MODE_MIRROR
-		)
+	)
 	);
 	m_directionalBlurXEffect->SetInputEffect(0, m_borderEffect.get());
 	RETURN_IF_FAILED(
 		m_directionalBlurXEffect->SetValue(
-			D2D1_DIRECTIONALBLURKERNEL_PROP_DIRECTION, 
+			D2D1_DIRECTIONALBLURKERNEL_PROP_DIRECTION,
 			D2D1_DIRECTIONALBLURKERNEL_DIRECTION_X
-		)
+	)
 	);
 	m_directionalBlurYEffect->SetInputEffect(0, m_directionalBlurXEffect.get());
 	RETURN_IF_FAILED(
 		m_directionalBlurYEffect->SetValue(
-			D2D1_DIRECTIONALBLURKERNEL_PROP_DIRECTION, 
+			D2D1_DIRECTIONALBLURKERNEL_PROP_DIRECTION,
 			D2D1_DIRECTIONALBLURKERNEL_DIRECTION_Y
-		)
+	)
 	);
 	m_scaleUpEffect->SetInputEffect(0, m_directionalBlurYEffect.get());
 	RETURN_IF_FAILED(m_scaleUpEffect->SetValue(D2D1_SCALE_PROP_SHARPNESS, 1.f));
@@ -110,15 +229,187 @@ HRESULT CCustomBlurEffect::Initialize()
 		m_scaleUpEffect->SetValue(
 			D2D1_SCALE_PROP_BORDER_MODE,
 			D2D1_BORDER_MODE_HARD
-		)
+	)
 	);
 	RETURN_IF_FAILED(
 		m_scaleUpEffect->SetValue(
 			D2D1_SCALE_PROP_INTERPOLATION_MODE,
 			D2D1_SCALE_INTERPOLATION_MODE_LINEAR
-		)
+	)
 	);
-	m_initialized = true;
+
+	return S_OK;
+}
+
+HRESULT CCustomBlurEffect::SetParamsAero()
+{
+	// now here we start setting values, or atleast the default values
+	// imma have to investigate later in the file whats being done but otherwise
+
+
+
+	RETURN_IF_FAILED(
+		m_cropInputEffect->SetValue(
+			D2D1_CROP_PROP_BORDER_MODE,
+			D2D1_BORDER_MODE_SOFT
+	)
+	);
+	m_scaleDownEffect->SetInputEffect(0, m_cropInputEffect.get());
+	RETURN_IF_FAILED(m_scaleDownEffect->SetValue(D2D1_SCALE_PROP_SHARPNESS, 1.f));
+	RETURN_IF_FAILED(
+		m_scaleDownEffect->SetValue(
+			D2D1_SCALE_PROP_BORDER_MODE,
+			D2D1_BORDER_MODE_HARD
+	)
+	);
+	RETURN_IF_FAILED(
+		m_scaleDownEffect->SetValue(
+			D2D1_SCALE_PROP_INTERPOLATION_MODE,
+			D2D1_SCALE_INTERPOLATION_MODE_ANISOTROPIC
+	)
+	);
+	m_borderEffect->SetInputEffect(0, m_scaleDownEffect.get());
+	RETURN_IF_FAILED(
+		m_borderEffect->SetValue(
+			D2D1_BORDER_PROP_EDGE_MODE_X, 
+			D2D1_BORDER_EDGE_MODE_MIRROR
+	)
+	);
+	RETURN_IF_FAILED(
+		m_borderEffect->SetValue(
+			D2D1_BORDER_PROP_EDGE_MODE_Y, 
+			D2D1_BORDER_EDGE_MODE_MIRROR
+	)
+	);
+	m_directionalBlurXEffect->SetInputEffect(0, m_borderEffect.get());
+	RETURN_IF_FAILED(
+		m_directionalBlurXEffect->SetValue(
+			D2D1_DIRECTIONALBLURKERNEL_PROP_DIRECTION, 
+			D2D1_DIRECTIONALBLURKERNEL_DIRECTION_X
+	)
+	);
+	m_directionalBlurYEffect->SetInputEffect(0, m_directionalBlurXEffect.get());
+	RETURN_IF_FAILED(
+		m_directionalBlurYEffect->SetValue(
+			D2D1_DIRECTIONALBLURKERNEL_PROP_DIRECTION, 
+			D2D1_DIRECTIONALBLURKERNEL_DIRECTION_Y
+	)
+	);
+
+
+	// CREDITS: @kfh83, @wiktorwiktor12, @TorutheRedFox and @WackyIdeas. special shoutouts to @aubymori and @kawapure for testing/help
+	
+	// okay my conclusion is that i shouldnt tamper with whatever was already set up (no point in removing the scales or adding gaussian blur)
+	// so since all of the blur work is done here, starting my part of it:
+
+	// afterglow
+	m_saturationEffect->SetInputEffect(0, m_directionalBlurYEffect.get());
+	RETURN_IF_FAILED(
+		m_saturationEffect->SetValue(
+			D2D1_SATURATION_PROP_SATURATION, 
+			0.0f
+	)
+	);
+	
+	m_tintEffect->SetInputEffect(0, m_saturationEffect.get());
+	RETURN_IF_FAILED(
+		m_tintEffect->SetValue(
+			D2D1_TINT_PROP_COLOR, 
+			D2D1::Vector4F(m_Color.r, m_Color.g, m_Color.b, 1.0f)
+	)
+	);
+
+	
+	D2D1_MATRIX_5X4_F AfterglowBalanceM = D2D1::Matrix5x4F(m_colorizationAfterglowBalanceVal, 0.f, 0.f, 0.f,   
+														   0.f, m_colorizationAfterglowBalanceVal, 0.f, 0.f,   
+														   0.f, 0.f, m_colorizationAfterglowBalanceVal, 0.f,
+														   0.f, 0.f, 0.f, 1.f,   
+														   0.f, 0.f, 0.f, 0.f);
+
+	m_ColorizationAfterglowBalance->SetInputEffect(0, m_tintEffect.get());
+	RETURN_IF_FAILED(
+		m_ColorizationAfterglowBalance->SetValue(
+			D2D1_COLORMATRIX_PROP_COLOR_MATRIX, 
+			AfterglowBalanceM
+	)
+	);
+
+	// afterglow done
+	
+	// heres blur balance
+	D2D1_MATRIX_5X4_F BlurBalanceM = D2D1::Matrix5x4F(m_colorizationBlurBalanceVal, 0.f, 0.f, 0.f,
+													  0.f, m_colorizationBlurBalanceVal, 0.f, 0.f,
+													  0.f, 0.f, m_colorizationBlurBalanceVal, 0.f,
+													  0.f, 0.f, 0.f, 1.f,   
+													  0.f, 0.f, 0.f, 0.f);
+
+	m_ColorizationBlurBalance->SetInputEffect(0, m_directionalBlurYEffect.get());
+	RETURN_IF_FAILED(
+		m_ColorizationBlurBalance->SetValue(
+			D2D1_COLORMATRIX_PROP_COLOR_MATRIX, 
+			BlurBalanceM
+	)
+	);
+
+	// and finally ColorizationColor
+
+	RETURN_IF_FAILED(
+		m_ColorizationColor->SetValue(
+			D2D1_FLOOD_PROP_COLOR, 
+			D2D1::Vector4F(m_Color.r, m_Color.g, m_Color.b, 1.0f)
+	)
+	);
+
+	D2D1_MATRIX_5X4_F ColorBalanceM = D2D1::Matrix5x4F(m_colorizationColorBalanceVal, 0.f, 0.f, 0.f,
+													   0.f, m_colorizationColorBalanceVal, 0.f, 0.f,
+													   0.f, 0.f, m_colorizationColorBalanceVal, 0.f,
+													   0.f, 0.f, 0.f, 1.f,   
+													   0.f, 0.f, 0.f, 0.f);
+
+	m_ColorizationColorBalance->SetInputEffect(0, m_ColorizationColor.get());
+	RETURN_IF_FAILED(
+		m_ColorizationColorBalance->SetValue(
+			D2D1_COLORMATRIX_PROP_COLOR_MATRIX, 
+			ColorBalanceM
+	)
+	);
+
+
+	// imma blend it together jus to see
+	m_compositeEffect->SetInputEffect(0, m_ColorizationBlurBalance.get());
+	m_compositeEffect->SetInputEffect(1, m_ColorizationAfterglowBalance.get());
+	RETURN_IF_FAILED(
+		m_compositeEffect->SetValue(
+			D2D1_COMPOSITE_PROP_MODE, 
+			D2D1_COMPOSITE_MODE_PLUS
+	)
+	);
+
+	m_compositeEffect_pass2->SetInputEffect(0, m_compositeEffect.get());
+	m_compositeEffect_pass2->SetInputEffect(1, m_ColorizationColorBalance.get());
+	RETURN_IF_FAILED(
+		m_compositeEffect_pass2->SetValue(
+			D2D1_COMPOSITE_PROP_MODE, 
+			D2D1_COMPOSITE_MODE_PLUS
+	)
+	);
+	// okay
+
+	m_scaleUpEffect->SetInputEffect(0, m_compositeEffect_pass2.get());
+	RETURN_IF_FAILED(m_scaleUpEffect->SetValue(D2D1_SCALE_PROP_SHARPNESS, 1.f));
+	RETURN_IF_FAILED(
+		m_scaleUpEffect->SetValue(
+			D2D1_SCALE_PROP_BORDER_MODE,
+			D2D1_BORDER_MODE_HARD
+	)
+	);
+
+	RETURN_IF_FAILED(
+		m_scaleUpEffect->SetValue(
+			D2D1_SCALE_PROP_INTERPOLATION_MODE,
+			D2D1_SCALE_INTERPOLATION_MODE_ANISOTROPIC
+	)
+	);
 
 	return S_OK;
 }
@@ -148,12 +439,40 @@ HRESULT STDMETHODCALLTYPE CCustomBlurEffect::Invalidate(
 	ID2D1Image* inputImage,
 	const D2D1_RECT_F& imageRectangle,
 	const D2D1_RECT_F& imageBounds,
-	float blurAmount
+	float blurAmount,
+	float colorizationAfterglowBalanceVal,
+	float colorizationBlurBalanceVal,
+	float colorizationColorBalanceVal,
+	D2D1_COLOR_F color,
+	Type type
 )
 {
-	if (!m_initialized)
+	//colorizationAfterglowBalanceVal = 0.49f;
+	//colorizationBlurBalanceVal = 0.796f;
+	//colorizationColorBalanceVal = 0.08f;
+	if (!inputImage) return S_FALSE;
+
+	bool recalculateParams{ false };
+	if (m_blurAmount != blurAmount || m_colorizationAfterglowBalanceVal != colorizationAfterglowBalanceVal || 
+		m_colorizationBlurBalanceVal != colorizationBlurBalanceVal ||
+		m_colorizationColorBalanceVal != colorizationColorBalanceVal || (m_Color.r != color.r) || (m_Color.g != color.g) || (m_Color.b != color.b) || (m_Color.a != color.a) )
 	{
-		RETURN_IF_FAILED(Initialize());
+		m_blurAmount = blurAmount;
+		m_colorizationAfterglowBalanceVal = colorizationAfterglowBalanceVal;
+		m_colorizationBlurBalanceVal = colorizationBlurBalanceVal;
+		m_colorizationColorBalanceVal = colorizationColorBalanceVal;
+		m_Color = color;
+		recalculateParams = true;
+	}
+	
+	//todo: fix handling type changes at runtime
+	if (!m_initialized || m_type != type)
+	{
+		m_type = type;
+		if (m_type == Type::Blur)
+			RETURN_IF_FAILED(Initialize());
+		else if (m_type == Type::Aero)
+			RETURN_IF_FAILED(InitializeAero());
 	}
 	if (m_effectInput != inputImage)
 	{
@@ -161,12 +480,7 @@ HRESULT STDMETHODCALLTYPE CCustomBlurEffect::Invalidate(
 		m_cropInputEffect->SetInput(0, inputImage);
 	}
 
-	bool recalculateParams{ false };
-	if (m_blurAmount != blurAmount)
-	{
-		m_blurAmount = blurAmount;
-		recalculateParams = true;
-	}
+
 	if (memcmp(&m_imageRectangle, &imageRectangle, sizeof(D2D1_RECT_F)) != 0)
 	{
 		m_imageRectangle = imageRectangle;
@@ -294,6 +608,12 @@ HRESULT STDMETHODCALLTYPE CCustomBlurEffect::Invalidate(
 			(prescaleAmount.y != finalPrescaleAmount.y) ? D2D1_DIRECTIONALBLURKERNEL_OPTIMIZATION_TRANSFORM_SCALE : D2D1_DIRECTIONALBLURKERNEL_OPTIMIZATION_TRANSFORM_IDENDITY
 		)
 	);
+
+	if (m_type == Type::Blur)
+		RETURN_IF_FAILED(SetParams());
+	else if (m_type == Type::Aero)
+		RETURN_IF_FAILED(SetParamsAero());
+
 #ifdef _DEBUG
 	OutputDebugStringW(
 		std::format(

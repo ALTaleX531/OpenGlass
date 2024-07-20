@@ -476,6 +476,7 @@ namespace OpenGlass::dwmcore
 		{
 			DEFINE_INVOKER(CDrawingContext::GetCurrentVisual);
 			return INVOKE_MEMBERFUNCTION();
+			//return std::invoke(s_fn_ptr, (CDrawingContext*)(__int64(this) + 0x18) );
 		}
 		bool  STDMETHODCALLTYPE IsInLayer() const
 		{

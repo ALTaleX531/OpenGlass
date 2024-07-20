@@ -2,6 +2,7 @@
 #include "pch.h"
 #include "framework.hpp"
 #include "cpprt.hpp"
+#include "GlassSharedStructures.hpp"
 
 namespace OpenGlass
 {
@@ -23,7 +24,7 @@ namespace OpenGlass
 		D2D1_DIRECTIONALBLURKERNEL_OPTIMIZATION_TRANSFORM_IDENDITY,
 		D2D1_DIRECTIONALBLURKERNEL_OPTIMIZATION_TRANSFORM_SCALE
 	};
-
+	
 	// [Guid("01AA613C-2376-4B95-8A74-B94CA840D4D1")]
 	DECLARE_INTERFACE_IID_(ICustomBlurEffect, IUnknown, "01AA613C-2376-4B95-8A74-B94CA840D4D1")
 	{
@@ -31,7 +32,12 @@ namespace OpenGlass
 			ID2D1Image* inputImage,
 			const D2D1_RECT_F& imageRectangle,
 			const D2D1_RECT_F& imageBounds,
-			float blurAmount
+			float blurAmount,
+			float colorizationAfterglowBalanceVal,
+			float colorizationBlurBalanceVal,
+			float colorizationColorBalanceVal,
+			D2D1_COLOR_F color,
+			Type type
 		) = 0;
 		virtual HRESULT STDMETHODCALLTYPE Draw(
 			CONST D2D1_RECT_F & bounds,
@@ -46,6 +52,7 @@ namespace OpenGlass
 	{
 		bool m_initialized{ false };
 		float m_blurAmount{ 9.f };
+		Type m_type{Type::Blur};
 		D2D1_RECT_F m_imageRectangle{};
 		ID2D1Image* m_effectInput{ nullptr };
 		winrt::com_ptr<ID2D1Image> m_effectOutput{ nullptr };
@@ -56,10 +63,28 @@ namespace OpenGlass
 		winrt::com_ptr<ID2D1Effect> m_directionalBlurXEffect{};
 		winrt::com_ptr<ID2D1Effect> m_directionalBlurYEffect{};
 		winrt::com_ptr<ID2D1Effect> m_scaleUpEffect{};
+		
+		// new stuff
+		winrt::com_ptr<ID2D1Effect> m_compositeEffect{};
+		winrt::com_ptr<ID2D1Effect> m_compositeEffect_pass2{};
+		winrt::com_ptr<ID2D1Effect> m_saturationEffect{};
+		winrt::com_ptr<ID2D1Effect> m_tintEffect{};
+		winrt::com_ptr<ID2D1Effect> m_ColorizationAfterglowBalance{};
+		winrt::com_ptr<ID2D1Effect> m_ColorizationBlurBalance{};
+		winrt::com_ptr<ID2D1Effect> m_ColorizationColorBalance{};
+		winrt::com_ptr<ID2D1Effect> m_ColorizationColor{};
+
+		float m_colorizationAfterglowBalanceVal = 0.43f;
+		float m_colorizationBlurBalanceVal = 0.49f;
+		float m_colorizationColorBalanceVal = 0.08f;
+		D2D1_COLOR_F m_Color = { 116.0f / 255.0f, 184.0f / 255.0f, 252.0f / 255.0f,1.0f };
 
 		static const float k_optimizations[16];
 		static float DetermineOutputScale(float size, float blurAmount);
 		HRESULT Initialize();
+		HRESULT InitializeAero();
+		HRESULT SetParams();
+		HRESULT SetParamsAero();
 	public:
 		CCustomBlurEffect(ID2D1DeviceContext* deviceContext);
 
@@ -67,7 +92,12 @@ namespace OpenGlass
 			ID2D1Image* inputImage,
 			const D2D1_RECT_F& imageRectangle,
 			const D2D1_RECT_F& imageBounds,
-			float blurAmount
+			float blurAmount,
+			float colorizationAfterglowBalanceVal,
+			float colorizationBlurBalanceVal,
+			float colorizationColorBalanceVal,
+			D2D1_COLOR_F color,
+			Type type
 		) override;
 		HRESULT STDMETHODCALLTYPE Draw(
 			CONST D2D1_RECT_F& bounds,

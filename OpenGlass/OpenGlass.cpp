@@ -9,6 +9,7 @@
 #include "dwmcoreProjection.hpp"
 #include "GeometryRecorder.hpp"
 #include "CaptionTextHandler.hpp"
+#include "ButtonGlowHandler.hpp"
 #include "GlassFramework.hpp"
 #include "GlassRenderer.hpp"
 #include "CustomMsstyleLoader.hpp"
@@ -422,6 +423,7 @@ do_dwmcore_symbol_parsing:
 	GlassFramework::Startup();
 	GlassRenderer::Startup();
 	CaptionTextHandler::Startup();
+	ButtonGlowHandler::Startup();
 	GeometryRecorder::Startup();
 	CustomMsstyleLoader::Startup();
 	ConfigurationFramework::Load();
@@ -516,6 +518,7 @@ void OpenGlass::Shutdown()
 
 	GeometryRecorder::Shutdown();
 	CaptionTextHandler::Shutdown();
+	ButtonGlowHandler::Shutdown();
 	GlassRenderer::Shutdown();
 	GlassFramework::Shutdown();
 	CustomMsstyleLoader::Shutdown();

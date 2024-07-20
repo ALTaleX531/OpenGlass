@@ -604,6 +604,7 @@ namespace OpenGlass::uDwm
 	};
 	struct CTopLevelWindow : CVisual
 	{
+		inline static void*** s_rgpwfWindowFrames{ nullptr };
 		CRgnGeometryProxy* GetBorderGeometry() const
 		{
 			CRgnGeometryProxy* geometry{ nullptr };
@@ -1198,6 +1199,11 @@ namespace OpenGlass::uDwm
 
 			return interopDevice;
 		}
+		HTHEME __fastcall GetTheme(int a1)
+		{
+			DEFINE_INVOKER(CDesktopManager::GetTheme);
+			return INVOKE_MEMBERFUNCTION(a1);
+		}
 	};
 	FORCEINLINE HWND GetShellWindowForCurrentDesktop()
 	{
@@ -1224,6 +1230,7 @@ namespace OpenGlass::uDwm
 		if (
 			fullyUnDecoratedFunctionName.starts_with("CCompositor::") ||
 			fullyUnDecoratedFunctionName.starts_with("CText::") ||
+			fullyUnDecoratedFunctionName.starts_with("CButton::") ||
 			fullyUnDecoratedFunctionName.starts_with("CVisual::") ||
 			fullyUnDecoratedFunctionName.starts_with("CVisualProxy::") ||
 			fullyUnDecoratedFunctionName.starts_with("CCanvasVisual::") ||
@@ -1259,6 +1266,11 @@ namespace OpenGlass::uDwm
 		if (fullyUnDecoratedFunctionName == "CDesktopManager::s_csDwmInstance")
 		{
 			offset.To(g_moduleHandle, CDesktopManager::s_csDwmInstance);
+		}
+		if (fullyUnDecoratedFunctionName == "CTopLevelWindow::s_rgpwfWindowFrames")
+		{
+			uintptr_t address = (offset.value + (uintptr_t)g_moduleHandle);
+			CTopLevelWindow::s_rgpwfWindowFrames = (void***)(address);
 		}
 
 		return true;
