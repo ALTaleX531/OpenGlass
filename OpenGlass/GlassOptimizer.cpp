@@ -37,17 +37,20 @@ namespace OpenGlass::GlassOptimizer
 		const D2D1_VECTOR_2F& blurAmount,
 		D2D1_VECTOR_2F* scaleAmount
 	);
+	void STDMETHODCALLTYPE MyCBlurRenderingGraph_DeterminePreScale_Build22000(
+		const dwmcore::CDrawingContext* drawingContext,
+		const dwmcore::EffectInput& input1,
+		const dwmcore::EffectInput& input2,
+		D2D1_GAUSSIANBLUR_OPTIMIZATION optimization,
+		const D2D1_VECTOR_2F& blurAmount,
+		D2D1_VECTOR_2F* scaleAmount
+	);
 	HRESULT STDMETHODCALLTYPE MyCDrawingContext_GetBackdropImageFromRenderTarget(
 		dwmcore::CDrawingContext* This,
 		const D2D1_RECT_F& lprc,
 		bool notUsingFullTargetAsBackdropInput,
 		dwmcore::EffectInput** effectInput
 	);
-	/*HRESULT STDMETHODCALLTYPE MyCDrawingContext_PreSubgraph(
-		dwmcore::CDrawingContext* This,
-		dwmcore::CVisualTree* visualTree,
-		bool* conditionalBreak
-	);*/
 	HRESULT STDMETHODCALLTYPE MyCCustomBlur_Draw(
 		dwmcore::CCustomBlur* This,
 		dwmcore::CDrawingContext* drawingContext,
@@ -63,8 +66,8 @@ namespace OpenGlass::GlassOptimizer
 	decltype(&MyCOcclusionContext_PostSubgraph) g_COcclusionContext_PostSubgraph_Org{ nullptr };
 	decltype(&MyCCustomBlur_DetermineOutputScale) g_CCustomBlur_DetermineOutputScale_Org{ nullptr };
 	decltype(&MyCBlurRenderingGraph_DeterminePreScale) g_CBlurRenderingGraph_DeterminePreScale_Org{ nullptr };
+	decltype(&MyCBlurRenderingGraph_DeterminePreScale_Build22000) g_CBlurRenderingGraph_DeterminePreScale_Build22000_Org{ nullptr };
 	decltype(&MyCDrawingContext_GetBackdropImageFromRenderTarget) g_CDrawingContext_GetBackdropImageFromRenderTarget_Org{ nullptr };
-	//decltype(&MyCDrawingContext_PreSubgraph) g_CDrawingContext_PreSubgraph_Org{ nullptr };
 	decltype(&MyCCustomBlur_Draw) g_CCustomBlur_Draw_Org{ nullptr };
 
 	float g_additionalPreScaleAmount{ 0.5f };
@@ -74,7 +77,6 @@ namespace OpenGlass::GlassOptimizer
 	dwmcore::CVisual* g_visual{ nullptr };
 	dwmcore::MyDynArrayImpl<dwmcore::CZOrderedRect> g_validAntiOccluderList{};
 
-	//HWND g_hwnd{ nullptr };
 	enum D2D1_DIRECTIONALBLURKERNEL_PROP
 	{
 		D2D1_DIRECTIONALBLURKERNEL_PROP_STANDARD_DEVIATION,
@@ -203,6 +205,23 @@ void STDMETHODCALLTYPE GlassOptimizer::MyCBlurRenderingGraph_DeterminePreScale(
 		scaleAmount->y *= g_additionalPreScaleAmount;
 	}
 }
+void STDMETHODCALLTYPE GlassOptimizer::MyCBlurRenderingGraph_DeterminePreScale_Build22000(
+	const dwmcore::CDrawingContext* drawingContext,
+	const dwmcore::EffectInput& input1,
+	const dwmcore::EffectInput& input2,
+	D2D1_GAUSSIANBLUR_OPTIMIZATION optimization,
+	const D2D1_VECTOR_2F& blurAmount,
+	D2D1_VECTOR_2F* scaleAmount
+)
+{
+	g_CBlurRenderingGraph_DeterminePreScale_Build22000_Org(drawingContext, input1, input2, optimization, blurAmount, scaleAmount);
+	if (scaleAmount)
+	{
+		scaleAmount->x *= g_additionalPreScaleAmount;
+		scaleAmount->y *= g_additionalPreScaleAmount;
+	}
+}
+
 HRESULT STDMETHODCALLTYPE GlassOptimizer::MyCDrawingContext_GetBackdropImageFromRenderTarget(
 	dwmcore::CDrawingContext* This,
 	const D2D1_RECT_F& lprc,
@@ -229,19 +248,6 @@ HRESULT STDMETHODCALLTYPE GlassOptimizer::MyCDrawingContext_GetBackdropImageFrom
 	return g_CDrawingContext_GetBackdropImageFromRenderTarget_Org(This, lprc, true, effectInput);
 }
 
-//HRESULT STDMETHODCALLTYPE GlassOptimizer::MyCDrawingContext_PreSubgraph(
-//	dwmcore::CDrawingContext* This,
-//	dwmcore::CVisualTree* visualTree,
-//	bool* conditionalBreak
-//)
-//{
-//	HWND hwnd{ reinterpret_cast<dwmcore::CDrawingContext*>(This->GetD2DContextOwner())->GetCurrentVisual()->GetHwnd()};
-//	if (hwnd) { g_hwnd = hwnd; }
-//	HRESULT hr{ g_CDrawingContext_PreSubgraph_Org(This, visualTree, conditionalBreak) };
-//
-//	return hr;
-//}
-
 HRESULT STDMETHODCALLTYPE GlassOptimizer::MyCCustomBlur_Draw(
 	dwmcore::CCustomBlur* This,
 	dwmcore::CDrawingContext* /*drawingContext*/,
@@ -258,7 +264,6 @@ HRESULT STDMETHODCALLTYPE GlassOptimizer::MyCCustomBlur_Draw(
 		D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR,
 		D2D1_COMPOSITE_MODE_BOUNDED_SOURCE_COPY
 	);
-	//g_hwnd = nullptr;
 
 	return S_OK;
 }
@@ -279,8 +284,8 @@ HRESULT GlassOptimizer::Startup()
 	dwmcore::GetAddressFromSymbolMap("COcclusionContext::PostSubgraph", g_COcclusionContext_PostSubgraph_Org);
 	dwmcore::GetAddressFromSymbolMap("CCustomBlur::DetermineOutputScale", g_CCustomBlur_DetermineOutputScale_Org);
 	dwmcore::GetAddressFromSymbolMap("CBlurRenderingGraph::DeterminePreScale", g_CBlurRenderingGraph_DeterminePreScale_Org);
+	dwmcore::GetAddressFromSymbolMap("CBlurRenderingGraph::DeterminePreScale", g_CBlurRenderingGraph_DeterminePreScale_Build22000_Org);
 	dwmcore::GetAddressFromSymbolMap("CDrawingContext::GetBackdropImageFromRenderTarget", g_CDrawingContext_GetBackdropImageFromRenderTarget_Org);
-	//dwmcore::GetAddressFromSymbolMap("CDrawingContext::PreSubgraph", g_CDrawingContext_PreSubgraph_Org);
 	dwmcore::GetAddressFromSymbolMap("CCustomBlur::Draw", g_CCustomBlur_Draw_Org);
 	
 	return HookHelper::Detours::Write([]()
@@ -293,8 +298,11 @@ HRESULT GlassOptimizer::Startup()
 			HookHelper::Detours::Attach(&g_COcclusionContext_PostSubgraph_Org, MyCOcclusionContext_PostSubgraph);
 			HookHelper::Detours::Attach(&g_CCustomBlur_DetermineOutputScale_Org, MyCCustomBlur_DetermineOutputScale);
 			HookHelper::Detours::Attach(&g_CDrawingContext_GetBackdropImageFromRenderTarget_Org, MyCDrawingContext_GetBackdropImageFromRenderTarget);
-			//HookHelper::Detours::Attach(&g_CDrawingContext_PreSubgraph_Org, MyCDrawingContext_PreSubgraph);
 			HookHelper::Detours::Attach(&g_CCustomBlur_Draw_Org, MyCCustomBlur_Draw);
+		}
+		else if (os::buildNumber < os::build_w11_22h2)
+		{
+			HookHelper::Detours::Attach(&g_CBlurRenderingGraph_DeterminePreScale_Build22000_Org, MyCBlurRenderingGraph_DeterminePreScale_Build22000);
 		}
 		else
 		{
@@ -314,8 +322,11 @@ void GlassOptimizer::Shutdown()
 			HookHelper::Detours::Detach(&g_COcclusionContext_PostSubgraph_Org, MyCOcclusionContext_PostSubgraph);
 			HookHelper::Detours::Detach(&g_CCustomBlur_DetermineOutputScale_Org, MyCCustomBlur_DetermineOutputScale);
 			HookHelper::Detours::Detach(&g_CDrawingContext_GetBackdropImageFromRenderTarget_Org, MyCDrawingContext_GetBackdropImageFromRenderTarget);
-			//HookHelper::Detours::Detach(&g_CDrawingContext_PreSubgraph_Org, MyCDrawingContext_PreSubgraph);
 			HookHelper::Detours::Detach(&g_CCustomBlur_Draw_Org, MyCCustomBlur_Draw);
+		}
+		else if (os::buildNumber < os::build_w11_22h2)
+		{
+			HookHelper::Detours::Detach(&g_CBlurRenderingGraph_DeterminePreScale_Build22000_Org, MyCBlurRenderingGraph_DeterminePreScale_Build22000);
 		}
 		else
 		{
