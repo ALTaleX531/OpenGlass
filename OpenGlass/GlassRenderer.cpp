@@ -236,7 +236,7 @@ HRESULT STDMETHODCALLTYPE GlassRenderer::MyCDrawingContext_DrawGeometry(
 		Shared::g_blurAmount,
 		active ? Shared::g_colorBalance : (0.4f * Shared::g_colorBalance),		// y = 0.4x
 		Shared::g_afterglowBalance,													// stays the same
-		active ? Shared::g_glassOpacity : (0.4f * Shared::g_glassOpacity + 0.6f),	// y = 0.4x + 60
+		active ? Shared::g_blurBalance : (0.4f * Shared::g_blurBalance + 0.6f),	// y = 0.4x + 60
 		Shared::g_type
 	);
 
