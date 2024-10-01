@@ -24,28 +24,25 @@ namespace OpenGlass::Utils
 	FORCEINLINE const std::wstring_view GetResWStringView()
 	{
 		LPCWSTR buffer{ nullptr };
-		auto length{ LoadStringW(wil::GetModuleInstanceHandle(), id, reinterpret_cast<LPWSTR>(&buffer), 0) };
+		auto length = LoadStringW(wil::GetModuleInstanceHandle(), id, reinterpret_cast<LPWSTR>(&buffer), 0);
 		return { buffer, static_cast<size_t>(length) };
 	}
 	template <UINT id>
 	FORCEINLINE std::wstring GetResWString()
 	{
 		LPCWSTR buffer{ nullptr };
-		auto length{ LoadStringW(wil::GetModuleInstanceHandle(), id, reinterpret_cast<LPWSTR>(&buffer), 0) };
+		auto length = LoadStringW(wil::GetModuleInstanceHandle(), id, reinterpret_cast<LPWSTR>(&buffer), 0);
 		return { buffer, static_cast<size_t>(length) };
 	}
 
 	static std::wstring make_current_folder_file_wstring(std::wstring_view baseFileName)
 	{
-		static const auto s_current_module_path
+		static const auto s_current_module_path = []() -> std::wstring
 		{
-			[]() -> std::wstring
-			{
-				WCHAR filePath[MAX_PATH + 1] {};
-				GetModuleFileNameW(wil::GetModuleInstanceHandle(), filePath, _countof(filePath));
-				return std::wstring{ filePath };
-			} ()
-		};
+			WCHAR filePath[MAX_PATH + 1]{};
+			GetModuleFileNameW(wil::GetModuleInstanceHandle(), filePath, _countof(filePath));
+			return std::wstring{ filePath };
+		}();
 
 		WCHAR filePath[MAX_PATH + 1]{ L"" };
 		[&]()
@@ -67,7 +64,7 @@ namespace OpenGlass::Utils
 	// type = ..., desktop created by CreateDesktop?
 	FORCEINLINE bool WINAPI GetDesktopID(ULONG_PTR type, ULONG_PTR* desktopID)
 	{
-		static const auto pfnGetDesktopID{ reinterpret_cast<decltype(&GetDesktopID)>(GetProcAddress(GetModuleHandleW(L"user32.dll"), "GetDesktopID")) };
+		static const auto pfnGetDesktopID = reinterpret_cast<decltype(&GetDesktopID)>(GetProcAddress(GetModuleHandleW(L"user32.dll"), "GetDesktopID"));
 		if (pfnGetDesktopID) [[likely]]
 		{
 			return pfnGetDesktopID(type, desktopID);
@@ -109,7 +106,7 @@ namespace OpenGlass::Utils
 
 	FORCEINLINE D2D1_COLOR_F FromAbgr(DWORD color)
 	{
-		auto abgr{ reinterpret_cast<const UCHAR*>(&color) };
+		auto abgr = reinterpret_cast<const UCHAR*>(&color);
 		return
 		{
 			static_cast<float>(abgr[0]) / 255.f,
@@ -120,7 +117,7 @@ namespace OpenGlass::Utils
 	}
 	FORCEINLINE D2D1_COLOR_F FromArgb(DWORD color)
 	{
-		auto argb{ reinterpret_cast<const UCHAR*>(&color) };
+		auto argb = reinterpret_cast<const UCHAR*>(&color);
 		return
 		{
 			static_cast<float>(argb[2]) / 255.f,
@@ -138,8 +135,8 @@ namespace OpenGlass::Utils
 	}
 }
 
-#define DEFINE_INVOKER(fn) static const auto s_fn_ptr{ Utils::cast_pointer<decltype(&fn)>(g_symbolMap.at(#fn)) }
-#define DEFINE_USER_INVOKER(type, name) static const auto s_fn_ptr{ Utils::cast_pointer<decltype(&type)>(g_symbolMap.at(name)) }
-#define DEFINE_CUSTOM_INVOKER(type, name) static const auto s_fn_ptr{ Utils::cast_pointer<type>(g_symbolMap.at(name)) }
+#define DEFINE_INVOKER(fn) static const auto s_fn_ptr = Utils::cast_pointer<decltype(&fn)>(g_symbolMap.at(#fn))
+#define DEFINE_USER_INVOKER(type, name) static const auto s_fn_ptr = Utils::cast_pointer<decltype(&type)>(g_symbolMap.at(name))
+#define DEFINE_CUSTOM_INVOKER(type, name) static const auto s_fn_ptr = Utils::cast_pointer<type>(g_symbolMap.at(name))
 #define INVOKE_MEMBERFUNCTION(...) std::invoke(s_fn_ptr, this, ##__VA_ARGS__)
 #define INVOKE_FUNCTION(...) std::invoke(s_fn_ptr, ##__VA_ARGS__)

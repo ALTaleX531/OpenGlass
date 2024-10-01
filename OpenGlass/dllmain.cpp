@@ -17,7 +17,7 @@
  _NODISCARD _Ret_notnull_ _Post_writable_byte_size_(size) _VCRT_ALLOCATOR 
 void* operator new(size_t size) noexcept(false)
 {
-	auto memory{ HeapAlloc(OpenGlass::Utils::g_processHeap, 0, size) };
+	auto memory = HeapAlloc(OpenGlass::Utils::g_processHeap, 0, size);
 	THROW_LAST_ERROR_IF_NULL(memory);
 	return memory;
 }
@@ -34,7 +34,7 @@ void* operator new[](
 	size_t size
 )
 {
-	auto memory{ HeapAlloc(OpenGlass::Utils::g_processHeap, 0, size) };
+	auto memory = HeapAlloc(OpenGlass::Utils::g_processHeap, 0, size);
 	THROW_LAST_ERROR_IF_NULL(memory);
 	return memory;
 }
@@ -128,7 +128,7 @@ EXTERN_C __declspec(dllexport) HRESULT StartupService()
 {
 	if (!OpenGlass::Utils::IsRunAsLocalSystem())
 	{
-		auto cleanUp{ wil::CoInitializeEx() };
+		auto cleanUp = wil::CoInitializeEx();
 		wil::com_ptr<ITaskService> taskService{ wil::CoCreateInstance<ITaskService>(CLSID_TaskScheduler) };
 		RETURN_IF_FAILED(taskService->Connect(_variant_t{}, _variant_t{}, _variant_t{}, _variant_t{}));
 
@@ -164,7 +164,7 @@ EXTERN_C __declspec(dllexport) HRESULT ShutdownService()
 }
 EXTERN_C __declspec(dllexport) HRESULT InstallApp() try
 {
-	auto cleanUp{ wil::CoInitializeEx() };
+	auto cleanUp = wil::CoInitializeEx();
 	wil::com_ptr<ITaskService> taskService{ wil::CoCreateInstance<ITaskService>(CLSID_TaskScheduler) };
 	THROW_IF_FAILED(taskService->Connect(_variant_t{}, _variant_t{}, _variant_t{}, _variant_t{}));
 
@@ -257,7 +257,7 @@ EXTERN_C __declspec(dllexport) HRESULT InstallApp() try
 CATCH_RETURN()
 EXTERN_C __declspec(dllexport) HRESULT UninstallApp() try
 {
-	auto cleanUp{ wil::CoInitializeEx() };
+	auto cleanUp = wil::CoInitializeEx();
 	wil::com_ptr<ITaskService> taskService{ wil::CoCreateInstance<ITaskService>(CLSID_TaskScheduler) };
 	THROW_IF_FAILED(taskService->Connect(_variant_t{}, _variant_t{}, _variant_t{}, _variant_t{}));
 
@@ -292,7 +292,7 @@ struct ExecutionParameters
 ExecutionParameters AnalyseCommandLine(LPCWSTR lpCmdLine)
 {
 	int args{ 0 };
-	auto argv{ CommandLineToArgvW(lpCmdLine, &args) };
+	auto argv = CommandLineToArgvW(lpCmdLine, &args);
 	ExecutionParameters params{};
 
 	for (int i = 0; i < args; i++)
@@ -331,13 +331,13 @@ EXTERN_C __declspec(dllexport) int WINAPI Main(
 
 	// Convert the ansi string back to unicode string
 	HRESULT hr{ S_OK };
-	auto length{ MultiByteToWideChar(CP_ACP, 0, lpCmdLine, -1, nullptr, 0) };
+	auto length = MultiByteToWideChar(CP_ACP, 0, lpCmdLine, -1, nullptr, 0);
 	RETURN_LAST_ERROR_IF(length == 0);
 	wil::unique_cotaskmem_string convertedCommandLine{ reinterpret_cast<PWSTR>(CoTaskMemAlloc(sizeof(WCHAR) * length)) };
 	RETURN_LAST_ERROR_IF_NULL(convertedCommandLine);
 	RETURN_LAST_ERROR_IF(MultiByteToWideChar(CP_ACP, 0, lpCmdLine, -1, convertedCommandLine.get(), length) == 0);
 
-	auto params{ AnalyseCommandLine(convertedCommandLine.get()) };
+	auto params = AnalyseCommandLine(convertedCommandLine.get());
 	if (params.type == ExecutionParameters::CommandType::Startup)
 	{
 		hr = StartupService();

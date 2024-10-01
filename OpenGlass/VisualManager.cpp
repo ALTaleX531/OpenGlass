@@ -2,7 +2,7 @@
 #include "GlassFramework.hpp"
 #include "uDwmProjection.hpp"
 #include "VisualManager.hpp"
-#include "GlassSharedData.hpp"
+#include "Shared.hpp"
 #include "Utils.hpp"
 
 using namespace OpenGlass;
@@ -15,11 +15,13 @@ namespace OpenGlass::VisualManager
 		bool m_initialized{ false };
 		uDwm::CTopLevelWindow* m_window{ nullptr };
 		winrt::com_ptr<uDwm::CSolidColorLegacyMilBrushProxy> m_brush{ nullptr };
+		winrt::com_ptr<uDwm::CRgnGeometryProxy> m_geometry{ nullptr };
 		winrt::com_ptr<uDwm::CRgnGeometryProxy> m_captionRgnGeometry{ nullptr };
 		winrt::com_ptr<uDwm::CRgnGeometryProxy> m_topBorderRgnGeometry{ nullptr };
 		winrt::com_ptr<uDwm::CRgnGeometryProxy> m_leftBorderRgnGeometry{ nullptr };
 		winrt::com_ptr<uDwm::CRgnGeometryProxy> m_bottomBorderRgnGeometry{ nullptr };
 		winrt::com_ptr<uDwm::CRgnGeometryProxy> m_rightBorderRgnGeometry{ nullptr };
+		winrt::com_ptr<uDwm::CDrawGeometryInstruction> m_instruction{ nullptr };
 		winrt::com_ptr<uDwm::CDrawGeometryInstruction> m_captionDrawInstruction{ nullptr };
 		winrt::com_ptr<uDwm::CDrawGeometryInstruction> m_topBorderDrawInstruction{ nullptr };
 		winrt::com_ptr<uDwm::CDrawGeometryInstruction> m_leftBorderDrawInstruction{ nullptr };
@@ -40,7 +42,7 @@ namespace OpenGlass::VisualManager
 
 void VisualManager::RedrawTopLevelWindow(uDwm::CTopLevelWindow* window)
 {
-	if (auto clientBlurVisual{ window->GetClientBlurVisual() }; clientBlurVisual)
+	if (auto clientBlurVisual = window->GetClientBlurVisual(); clientBlurVisual)
 	{
 		LOG_IF_FAILED(clientBlurVisual->ClearInstructions());
 	}
@@ -60,7 +62,7 @@ VisualManager::CLegacyVisualOverrider::CLegacyVisualOverrider(uDwm::CTopLevelWin
 
 VisualManager::CLegacyVisualOverrider::~CLegacyVisualOverrider()
 {
-	auto legacyVisual{ m_window->GetLegacyVisualAddress() };
+	auto legacyVisual = m_window->GetLegacyVisualAddress();
 	if (*legacyVisual)
 	{
 		m_window->GetNonClientVisual()->GetVisualCollection()->Remove(*legacyVisual);
@@ -79,6 +81,20 @@ HRESULT VisualManager::CLegacyVisualOverrider::Initialize()
 	wil::unique_hrgn emptyRegion{ CreateRectRgn(0, 0, 0, 0) };
 	RETURN_LAST_ERROR_IF_NULL(emptyRegion);
 
+	RETURN_IF_FAILED(
+		uDwm::ResourceHelper::CreateGeometryFromHRGN(
+			emptyRegion.get(),
+			m_geometry.put()
+		)
+	);
+	RETURN_IF_FAILED(
+		uDwm::CDrawGeometryInstruction::Create(
+			m_brush.get(),
+			m_geometry.get(),
+			m_instruction.put()
+		)
+	);
+	// caption
 	RETURN_IF_FAILED(
 		uDwm::ResourceHelper::CreateGeometryFromHRGN(
 			emptyRegion.get(),
@@ -162,158 +178,180 @@ HRESULT STDMETHODCALLTYPE VisualManager::CLegacyVisualOverrider::UpdateNCBackgro
 	{
 		RETURN_IF_FAILED(Initialize());
 	}
-	auto legacyVisual{ m_window->GetLegacyVisual() };
+	auto legacyVisual = m_window->GetLegacyVisual();
 	if (!m_window->GetData()->IsWindowVisibleAndUncloaked() || m_window->IsTrullyMinimized())
 	{
 		return S_OK;
 	}
 	RETURN_IF_FAILED(legacyVisual->ClearInstructions());
-	RETURN_IF_FAILED(legacyVisual->AddInstruction(m_captionDrawInstruction.get()));
-	RETURN_IF_FAILED(legacyVisual->AddInstruction(m_topBorderDrawInstruction.get()));
-	RETURN_IF_FAILED(legacyVisual->AddInstruction(m_leftBorderDrawInstruction.get()));
-	RETURN_IF_FAILED(legacyVisual->AddInstruction(m_bottomBorderDrawInstruction.get()));
-	RETURN_IF_FAILED(legacyVisual->AddInstruction(m_rightBorderDrawInstruction.get()));
+	if (!Shared::g_enableGeometryMerging)
+	{
+		RETURN_IF_FAILED(legacyVisual->AddInstruction(m_captionDrawInstruction.get()));
+		RETURN_IF_FAILED(legacyVisual->AddInstruction(m_topBorderDrawInstruction.get()));
+		RETURN_IF_FAILED(legacyVisual->AddInstruction(m_leftBorderDrawInstruction.get()));
+		RETURN_IF_FAILED(legacyVisual->AddInstruction(m_bottomBorderDrawInstruction.get()));
+		RETURN_IF_FAILED(legacyVisual->AddInstruction(m_rightBorderDrawInstruction.get()));
+	}
+	else
+	{
+		RETURN_IF_FAILED(legacyVisual->AddInstruction(m_instruction.get()));
+	}
 
-	auto color{ m_window->GetTitlebarColorizationParameters()->getArgbcolor() };
-	color.a *= 0.99f;
-	if (GlassSharedData::g_type == Type::Aero)
-		color.r = m_window->TreatAsActiveWindow(); //HACK!!: Send active or inactive window data through the red channel
+	auto color = 
+		Shared::g_forceAccentColorization ?
+		dwmcore::Convert_D2D1_COLOR_F_sRGB_To_D2D1_COLOR_F_scRGB(m_window->TreatAsActiveWindow() ? Shared::g_accentColor : Shared::g_accentColorInactive) :
+		m_window->GetTitlebarColorizationParameters()->getArgbcolor();
+	color.a = m_window->TreatAsActiveWindow() ? 0.5f : 0.0f;
+
 	RETURN_IF_FAILED(m_brush->Update(1.0, color));
 
 	wil::unique_hrgn emptyRegion{ CreateRectRgn(0, 0, 0, 0) };
-	if (m_window->GetData()->IsFullGlass())
+	if (!Shared::g_enableGeometryMerging)
 	{
+		if (m_window->GetData()->IsFullGlass())
+		{
+			RETURN_IF_FAILED(
+				uDwm::ResourceHelper::CreateGeometryFromHRGN(
+					borderRgn,
+					reinterpret_cast<uDwm::CRgnGeometryProxy**>(&m_captionRgnGeometry)
+				)
+			);
+			RETURN_IF_FAILED(
+				uDwm::ResourceHelper::CreateGeometryFromHRGN(
+					emptyRegion.get(),
+					reinterpret_cast<uDwm::CRgnGeometryProxy**>(&m_topBorderRgnGeometry)
+				)
+			);
+			RETURN_IF_FAILED(
+				uDwm::ResourceHelper::CreateGeometryFromHRGN(
+					emptyRegion.get(),
+					reinterpret_cast<uDwm::CRgnGeometryProxy**>(&m_leftBorderRgnGeometry)
+				)
+			);
+			RETURN_IF_FAILED(
+				uDwm::ResourceHelper::CreateGeometryFromHRGN(
+					emptyRegion.get(),
+					reinterpret_cast<uDwm::CRgnGeometryProxy**>(&m_bottomBorderRgnGeometry)
+				)
+			);
+			RETURN_IF_FAILED(
+				uDwm::ResourceHelper::CreateGeometryFromHRGN(
+					emptyRegion.get(),
+					reinterpret_cast<uDwm::CRgnGeometryProxy**>(&m_rightBorderRgnGeometry)
+				)
+			);
+
+			return S_OK;
+		}
+
+		RECT borderBox{};
+		GetRgnBox(borderRgn, &borderBox);
+		RECT captionBox{};
+		GetRgnBox(captionRgn, &captionBox);
+
 		RETURN_IF_FAILED(
 			uDwm::ResourceHelper::CreateGeometryFromHRGN(
-				borderRgn,
+				captionRgn,
 				reinterpret_cast<uDwm::CRgnGeometryProxy**>(&m_captionRgnGeometry)
 			)
 		);
+		wil::unique_hrgn borderPartRgn // top border
+		{
+			CreateRectRgn(
+				borderBox.left,
+				borderBox.top,
+				borderBox.right,
+				captionBox.top
+			)
+		};
+		RETURN_LAST_ERROR_IF_NULL(borderPartRgn);
+		CombineRgn(borderPartRgn.get(), borderPartRgn.get(), borderRgn, RGN_AND);
 		RETURN_IF_FAILED(
 			uDwm::ResourceHelper::CreateGeometryFromHRGN(
-				emptyRegion.get(),
+				borderPartRgn.get(),
 				reinterpret_cast<uDwm::CRgnGeometryProxy**>(&m_topBorderRgnGeometry)
 			)
 		);
+
+		borderPartRgn.reset( // left border 
+			CreateRectRgn(
+				borderBox.left,
+				borderBox.top,
+				captionBox.left,
+				borderBox.bottom
+			)
+		);
+		RETURN_LAST_ERROR_IF_NULL(borderPartRgn);
+		CombineRgn(borderPartRgn.get(), borderPartRgn.get(), borderRgn, RGN_AND);
 		RETURN_IF_FAILED(
 			uDwm::ResourceHelper::CreateGeometryFromHRGN(
-				emptyRegion.get(),
+				borderPartRgn.get(),
 				reinterpret_cast<uDwm::CRgnGeometryProxy**>(&m_leftBorderRgnGeometry)
 			)
 		);
+
+		borderPartRgn.reset( // bottom border
+			CreateRectRgn(
+				captionBox.left,
+				captionBox.bottom,
+				captionBox.right,
+				borderBox.bottom
+			)
+		);
+		RETURN_LAST_ERROR_IF_NULL(borderPartRgn);
+		CombineRgn(borderPartRgn.get(), borderPartRgn.get(), borderRgn, RGN_AND);
 		RETURN_IF_FAILED(
 			uDwm::ResourceHelper::CreateGeometryFromHRGN(
-				emptyRegion.get(),
+				borderPartRgn.get(),
 				reinterpret_cast<uDwm::CRgnGeometryProxy**>(&m_bottomBorderRgnGeometry)
 			)
 		);
+
+		borderPartRgn.reset( // right border
+			CreateRectRgn(
+				captionBox.right,
+				borderBox.top,
+				borderBox.right,
+				borderBox.bottom
+			)
+		);
+		RETURN_LAST_ERROR_IF_NULL(borderPartRgn);
+		CombineRgn(borderPartRgn.get(), borderPartRgn.get(), borderRgn, RGN_AND);
 		RETURN_IF_FAILED(
 			uDwm::ResourceHelper::CreateGeometryFromHRGN(
-				emptyRegion.get(),
+				borderPartRgn.get(),
 				reinterpret_cast<uDwm::CRgnGeometryProxy**>(&m_rightBorderRgnGeometry)
 			)
 		);
-
-		return S_OK;
 	}
-
-	RECT borderBox{};
-	GetRgnBox(borderRgn, &borderBox);
-	RECT captionBox{};
-	GetRgnBox(captionRgn, &captionBox);
-
-	RETURN_IF_FAILED(
-		uDwm::ResourceHelper::CreateGeometryFromHRGN(
-			captionRgn,
-			reinterpret_cast<uDwm::CRgnGeometryProxy**>(&m_captionRgnGeometry)
-		)
-	);
-	wil::unique_hrgn borderPartRgn // top border
+	else
 	{
-		CreateRectRgn(
-			borderBox.left,
-			borderBox.top,
-			borderBox.right,
-			captionBox.top
-		)
-	};
-	RETURN_LAST_ERROR_IF_NULL(borderPartRgn);
-	CombineRgn(borderPartRgn.get(), borderPartRgn.get(), borderRgn, RGN_AND);
-	RETURN_IF_FAILED(
-		uDwm::ResourceHelper::CreateGeometryFromHRGN(
-			borderPartRgn.get(),
-			reinterpret_cast<uDwm::CRgnGeometryProxy**>(&m_topBorderRgnGeometry)
-		)
-	);
-
-	borderPartRgn.reset( // left border 
-		CreateRectRgn(
-			borderBox.left, 
-			borderBox.top, 
-			captionBox.left,
-			borderBox.bottom
-		) 
-	);
-	RETURN_LAST_ERROR_IF_NULL(borderPartRgn);
-	CombineRgn(borderPartRgn.get(), borderPartRgn.get(), borderRgn, RGN_AND);
-	RETURN_IF_FAILED(
-		uDwm::ResourceHelper::CreateGeometryFromHRGN(
-			borderPartRgn.get(),
-			reinterpret_cast<uDwm::CRgnGeometryProxy**>(&m_leftBorderRgnGeometry)
-		)
-	);
-
-	borderPartRgn.reset( // bottom border
-		CreateRectRgn(
-			captionBox.left,
-			captionBox.bottom,
-			captionBox.right,
-			borderBox.bottom
-		)
-	);
-	RETURN_LAST_ERROR_IF_NULL(borderPartRgn);
-	CombineRgn(borderPartRgn.get(), borderPartRgn.get(), borderRgn, RGN_AND);
-	RETURN_IF_FAILED(
-		uDwm::ResourceHelper::CreateGeometryFromHRGN(
-			borderPartRgn.get(),
-			reinterpret_cast<uDwm::CRgnGeometryProxy**>(&m_bottomBorderRgnGeometry)
-		)
-	);
-
-	borderPartRgn.reset( // right border
-		CreateRectRgn(
-			captionBox.right,
-			borderBox.top,
-			borderBox.right,
-			borderBox.bottom
-		)
-	);
-	RETURN_LAST_ERROR_IF_NULL(borderPartRgn);
-	CombineRgn(borderPartRgn.get(), borderPartRgn.get(), borderRgn, RGN_AND);
-	RETURN_IF_FAILED(
-		uDwm::ResourceHelper::CreateGeometryFromHRGN(
-			borderPartRgn.get(),
-			reinterpret_cast<uDwm::CRgnGeometryProxy**>(&m_rightBorderRgnGeometry)
-		)
-	);
+		CombineRgn(emptyRegion.get(), captionRgn, borderRgn, RGN_OR);
+		RETURN_IF_FAILED(
+			uDwm::ResourceHelper::CreateGeometryFromHRGN(
+				emptyRegion.get(),
+				reinterpret_cast<uDwm::CRgnGeometryProxy**>(&m_geometry)
+			)
+		);
+	}
 
 	return S_OK;
 }
 
-winrt::com_ptr<VisualManager::ILegacyVisualOverrider> VisualManager::GetOrCreateLegacyVisualOverrider(uDwm::CTopLevelWindow* window, bool createIfNecessary)
+winrt::com_ptr<ILegacyVisualOverrider> VisualManager::GetOrCreateLegacyVisualOverrider(uDwm::CTopLevelWindow* window, bool createIfNecessary)
 {
-	auto it{ g_visualMap.find(window) };
+	auto it = g_visualMap.find(window);
 
 	if (createIfNecessary)
 	{
-		auto data{ window->GetData() };
+		auto data = window->GetData();
 
 		if (
 			data &&
 			it == g_visualMap.end()
 		)
 		{
-			auto result{ g_visualMap.emplace(window, winrt::make<CLegacyVisualOverrider>(window)) };
+			auto result = g_visualMap.emplace(window, winrt::make<CLegacyVisualOverrider>(window));
 			if (result.second == true)
 			{
 				it = result.first;
@@ -326,7 +364,7 @@ winrt::com_ptr<VisualManager::ILegacyVisualOverrider> VisualManager::GetOrCreate
 
 void VisualManager::RemoveLegacyVisualOverrider(uDwm::CTopLevelWindow* window)
 {
-	auto it{ g_visualMap.find(window) };
+	auto it = g_visualMap.find(window);
 
 	if (it != g_visualMap.end())
 	{

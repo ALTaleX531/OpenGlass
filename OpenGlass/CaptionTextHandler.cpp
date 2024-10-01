@@ -197,7 +197,7 @@ HRESULT STDMETHODCALLTYPE CaptionTextHandler::MyCText_SetSize(uDwm::CText* This,
 		return g_CText_SetSize_Org(This, size);
 	}
 
-	auto oldWidth{ This->GetWidth() };
+	auto oldWidth = This->GetWidth();
 	HRESULT hr{ g_CText_SetSize_Org(This, size) };
 
 	if (oldWidth != size->cx)
@@ -212,10 +212,10 @@ HRESULT STDMETHODCALLTYPE CaptionTextHandler::MyCMatrixTransformProxy_Update(str
 {
 	if (g_textVisual)
 	{
-		matrix->DX -= static_cast<DOUBLE>(g_textGlowSize);
+		matrix->DX -= static_cast<DOUBLE>(g_textGlowSize) * (g_textVisual->IsRTL() ? -1.f : 1.f);
 		if (g_centerCaption)
 		{
-			auto offset{ floor(static_cast<DOUBLE>(g_textVisual->GetWidth() - g_textWidth) / 2.) };
+			auto offset = floor(static_cast<DOUBLE>(g_textVisual->GetWidth() - g_textWidth) / 2.);
 			matrix->DX += g_textVisual->IsRTL() ? -offset : offset;
 		}
 		matrix->DY = static_cast<DOUBLE>(static_cast<LONG>(static_cast<DOUBLE>(g_textVisual->GetHeight() - g_textHeight) / 2. - 0.5));
@@ -227,10 +227,10 @@ HRESULT STDMETHODCALLTYPE CaptionTextHandler::MyCChannel_MatrixTransformUpdate(d
 {
 	if (g_textVisual)
 	{
-		matrix->DX -= static_cast<DOUBLE>(g_textGlowSize);
+		matrix->DX -= static_cast<DOUBLE>(g_textGlowSize) * (g_textVisual->IsRTL() ? -1.f : 1.f);
 		if (g_centerCaption)
 		{
-			auto offset{ floor(static_cast<DOUBLE>(g_textVisual->GetWidth() - g_textWidth) / 2.) };
+			auto offset = floor(static_cast<DOUBLE>(g_textVisual->GetWidth() - g_textWidth) / 2.);
 			matrix->DX += g_textVisual->IsRTL() ? -offset : offset;
 		}
 		matrix->DY = static_cast<DOUBLE>(static_cast<LONG>(static_cast<DOUBLE>(g_textVisual->GetHeight() - g_textHeight) / 2. - 0.5));
@@ -245,7 +245,7 @@ void CaptionTextHandler::UpdateConfiguration(ConfigurationFramework::UpdateType 
 	{
 		g_centerCaption = static_cast<bool>(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"CenterCaption", FALSE));
 		g_textGlowSize = standardGlowSize;
-		auto glowSize{ ConfigurationFramework::DwmTryDwordFromHKCUAndHKLM(L"TextGlowSize") };
+		auto glowSize = ConfigurationFramework::DwmTryDwordFromHKCUAndHKLM(L"TextGlowSize");
 		if (!glowSize.has_value())
 		{
 			glowSize = ConfigurationFramework::DwmTryDwordFromHKCUAndHKLM(L"TextGlowMode");

@@ -4,7 +4,7 @@
 #include "dwmcoreProjection.hpp"
 #include "GeometryRecorder.hpp"
 #include "VisualManager.hpp"
-#include "GlassSharedData.hpp"
+#include "Shared.hpp"
 
 using namespace OpenGlass;
 
@@ -36,6 +36,8 @@ namespace OpenGlass::GlassFramework
 	uDwm::CRenderDataVisual* g_accentRenderDataVisual{ nullptr };
 	DWORD g_accentState{};
 	int g_roundRectRadius{};
+
+	UINT g_dwOverlayTestMode{};
 }
 
 HRGN WINAPI GlassFramework::MyCreateRoundRectRgn(int x1, int y1, int x2, int y2, int w, int h)
@@ -59,18 +61,14 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCDrawGeometryInstruction_Create(uDwm
 		{
 			winrt::com_ptr<uDwm::CRgnGeometryProxy> rgnGeometry{ nullptr };
 			uDwm::ResourceHelper::CreateGeometryFromHRGN(region, rgnGeometry.put());
-			winrt::com_ptr<uDwm::CSolidColorLegacyMilBrushProxy> solidBrush{ nullptr };
-			RETURN_IF_FAILED(
-				uDwm::CDesktopManager::s_pDesktopManagerInstance->GetCompositor()->CreateSolidColorLegacyMilBrushProxy(
-					solidBrush.put()
-				)
-			);
-			auto color{ g_capturedWindow->GetTitlebarColorizationParameters()->getArgbcolor() };
-			color.a *= 0.99f;
-			if (GlassSharedData::g_type == Type::Aero)
-				color.r = g_capturedWindow->TreatAsActiveWindow();
-			RETURN_IF_FAILED(solidBrush->Update(1.0, color));
-			return g_CDrawGeometryInstruction_Create_Org(solidBrush.get(), rgnGeometry.get(), instruction);
+
+			auto color = 
+				Shared::g_forceAccentColorization ?
+				dwmcore::Convert_D2D1_COLOR_F_sRGB_To_D2D1_COLOR_F_scRGB(g_capturedWindow->TreatAsActiveWindow() ? Shared::g_accentColor : Shared::g_accentColorInactive) :
+				g_capturedWindow->GetTitlebarColorizationParameters()->getArgbcolor();
+			color.a = g_capturedWindow->TreatAsActiveWindow() ? 0.5f : 0.0f;
+			RETURN_IF_FAILED(reinterpret_cast<uDwm::CSolidColorLegacyMilBrushProxy*>(brush)->Update(1.0, color));
+			return g_CDrawGeometryInstruction_Create_Org(brush, rgnGeometry.get(), instruction);
 		}
 	}
 
@@ -81,11 +79,11 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCDrawGeometryInstruction_Create(uDwm
 // and make sure the borders are splitted to improve performance
 HRESULT STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_UpdateNCAreaBackground(uDwm::CTopLevelWindow* This)
 {
-	if (!GlassSharedData::IsBackdropAllowed())
+	if (!Shared::IsBackdropAllowed())
 	{
 		return g_CTopLevelWindow_UpdateNCAreaBackground_Org(This);
 	}
-	auto data{ This->GetData() };
+	auto data = This->GetData();
 	if (!data)
 	{
 		return g_CTopLevelWindow_UpdateNCAreaBackground_Org(This);
@@ -93,6 +91,15 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_UpdateNCAreaBackgrou
 
 	HRESULT hr{ S_OK };
 
+	if (auto brush = This->GetClientBlurVisualBrush(); brush)
+	{
+		auto color =
+			Shared::g_forceAccentColorization ?
+			dwmcore::Convert_D2D1_COLOR_F_sRGB_To_D2D1_COLOR_F_scRGB(This->TreatAsActiveWindow() ? Shared::g_accentColor : Shared::g_accentColorInactive) :
+			This->GetTitlebarColorizationParameters()->getArgbcolor();
+		color.a = This->TreatAsActiveWindow() ? 0.5f : 0.0f;
+		LOG_IF_FAILED(brush->Update(1.0, color));
+	}
 	if (This->HasNonClientBackground())
 	{
 		GeometryRecorder::BeginCapture();
@@ -113,13 +120,13 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_UpdateNCAreaBackgrou
 
 		if (SUCCEEDED(hr))
 		{
-			auto legacyVisualOverride{ VisualManager::GetOrCreateLegacyVisualOverrider(This, true) };
+			auto legacyVisualOverride = VisualManager::GetOrCreateLegacyVisualOverrider(This, true);
 			// the titlebar region has been updated
 			// let's update our backdrop region
 			if (GeometryRecorder::GetGeometryCount() && legacyVisualOverride)
 			{
-				auto captionGeometry{ This->GetCaptionGeometry() };
-				auto borderGeometry{ This->GetBorderGeometry() };
+				auto captionGeometry = This->GetCaptionGeometry();
+				auto borderGeometry = This->GetBorderGeometry();
 
 				HRGN captionRegion{ GeometryRecorder::GetRegionFromGeometry(captionGeometry) };
 				HRGN borderRegion{ GeometryRecorder::GetRegionFromGeometry(borderGeometry) };
@@ -142,11 +149,11 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_UpdateNCAreaBackgrou
 // make the visual of DwmEnableBlurBehind visible
 HRESULT STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_UpdateClientBlur(uDwm::CTopLevelWindow* This)
 {
-	if (!GlassSharedData::IsBackdropAllowed())
+	if (!Shared::IsBackdropAllowed())
 	{
 		return g_CTopLevelWindow_UpdateClientBlur_Org(This);
 	}
-	auto data{ This->GetData() };
+	auto data = This->GetData();
 	if (!data)
 	{
 		return g_CTopLevelWindow_UpdateClientBlur_Org(This);
@@ -164,17 +171,17 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_UpdateClientBlur(uDw
 // convert accent_state=3 or 4 into 2 and replace its solid rectangle instruction into draw glass instruction
 HRESULT STDMETHODCALLTYPE GlassFramework::MyCAccent_UpdateAccentPolicy(uDwm::CAccent* This, LPCRECT lprc, uDwm::ACCENT_POLICY* policy, uDwm::CBaseGeometryProxy* geometry)
 {
-	if (!GlassSharedData::IsBackdropAllowed())
+	if (!Shared::IsBackdropAllowed())
 	{
 		return g_CAccent_UpdateAccentPolicy_Org(This, lprc, policy, geometry);
 	}
-	if (!GlassSharedData::g_overrideAccent)
+	if (!Shared::g_overrideAccent)
 	{
 		return g_CAccent_UpdateAccentPolicy_Org(This, lprc, policy, geometry);
 	}
 
 	HRESULT hr{ S_OK };
-	auto accentPolicy{ *policy };
+	auto accentPolicy = *policy;
 	if (accentPolicy.AccentState == 3 || accentPolicy.AccentState == 4)
 	{
 		accentPolicy.AccentState = 2;
@@ -190,11 +197,11 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCAccent_UpdateAccentPolicy(uDwm::CAc
 
 HRESULT STDMETHODCALLTYPE GlassFramework::MyCAccent__UpdateSolidFill(uDwm::CAccent* This, uDwm::CRenderDataVisual* visual, DWORD color, const D2D1_RECT_F* lprc, float opacity)
 {
-	if (!GlassSharedData::IsBackdropAllowed())
+	if (!Shared::IsBackdropAllowed())
 	{
 		return g_CAccent__UpdateSolidFill_Org(This, visual, color, lprc, opacity);
 	}
-	if (!GlassSharedData::g_overrideAccent)
+	if (!Shared::g_overrideAccent)
 	{
 		return g_CAccent__UpdateSolidFill_Org(This, visual, color, lprc, opacity);
 	}
@@ -204,7 +211,7 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCAccent__UpdateSolidFill(uDwm::CAcce
 	}
 	uDwm::CWindowData* data{ nullptr };
 	{
-		auto lock{ wil::EnterCriticalSection(uDwm::CDesktopManager::s_csDwmInstance) };
+		auto lock = wil::EnterCriticalSection(uDwm::CDesktopManager::s_csDwmInstance);
 		if (FAILED(uDwm::CDesktopManager::s_pDesktopManagerInstance->GetWindowList()->GetSyncedWindowDataByHwnd(This->GetHwnd(), &data)) || !data)
 		{
 			return g_CAccent__UpdateSolidFill_Org(This, visual, color, lprc, opacity);
@@ -226,11 +233,11 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCAccent__UpdateSolidFill(uDwm::CAcce
 
 HRESULT STDMETHODCALLTYPE GlassFramework::MyCRenderDataVisual_AddInstruction(uDwm::CRenderDataVisual* This, uDwm::CRenderDataInstruction* instruction)
 {
-	if (!GlassSharedData::IsBackdropAllowed())
+	if (!Shared::IsBackdropAllowed())
 	{
 		return g_CRenderDataVisual_AddInstruction_Org(This, instruction);
 	}
-	if (!GlassSharedData::g_overrideAccent)
+	if (!Shared::g_overrideAccent)
 	{
 		return g_CRenderDataVisual_AddInstruction_Org(This, instruction);
 	}
@@ -239,17 +246,16 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCRenderDataVisual_AddInstruction(uDw
 		return g_CRenderDataVisual_AddInstruction_Org(This, instruction);
 	}
 
-	auto drawRectangleInstruction{ reinterpret_cast<uDwm::CSolidRectangleInstruction*>(instruction) };
-	auto rectangle{ drawRectangleInstruction->GetRectangle() };
-	auto color{ drawRectangleInstruction->GetColor() };
+	auto drawRectangleInstruction = reinterpret_cast<uDwm::CSolidRectangleInstruction*>(instruction);
+	auto rectangle = drawRectangleInstruction->GetRectangle();
+	auto color = drawRectangleInstruction->GetColor();
 	if (g_accentState == 4 && color.a == 0.f && color.r == 0.f && color.g == 0.f && color.b == 0.f)
 	{
 		return g_CRenderDataVisual_AddInstruction_Org(This, instruction);
 	}
 
-	color.a = 0.99f;
-	if (GlassSharedData::g_type == Type::Aero)
-		color.r = 1.0f;
+	color.a = 0.5f;
+
 	winrt::com_ptr<uDwm::CRgnGeometryProxy> rgnGeometry{ nullptr };
 	uDwm::ResourceHelper::CreateGeometryFromHRGN(wil::unique_hrgn{ CreateRectRgn(static_cast<LONG>(rectangle.left), static_cast<LONG>(rectangle.top), static_cast<LONG>(rectangle.right), static_cast<LONG>(rectangle.bottom)) }.get(), rgnGeometry.put());
 	winrt::com_ptr<uDwm::CSolidColorLegacyMilBrushProxy> solidBrush{ nullptr };
@@ -278,12 +284,12 @@ enum class BackgroundType
 */
 DWORD STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_CalculateBackgroundType(uDwm::CTopLevelWindow* This)
 {
-	if (!GlassSharedData::IsBackdropAllowed())
+	if (!Shared::IsBackdropAllowed())
 	{
 		return g_CTopLevelWindow_CalculateBackgroundType_Org(This);
 	}
 
-	auto result{ g_CTopLevelWindow_CalculateBackgroundType_Org(This) };
+	auto result = g_CTopLevelWindow_CalculateBackgroundType_Org(This);
 	if (result == 4 || result == 3 || result == 2)
 	{
 		result = 0;
@@ -295,18 +301,18 @@ DWORD STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_CalculateBackgroundTyp
 // trick dwm into thinking the system backdrop is not exist
 HRESULT STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_UpdateSystemBackdropVisual(uDwm::CTopLevelWindow* This)
 {
-	if (!GlassSharedData::IsBackdropAllowed())
+	if (!Shared::IsBackdropAllowed())
 	{
 		return g_CTopLevelWindow_UpdateSystemBackdropVisual_Org(This);
 	}
-	auto data{ This->GetData() };
+	auto data = This->GetData();
 	if (!data)
 	{
 		return g_CTopLevelWindow_UpdateSystemBackdropVisual_Org(This);
 	}
 
 	HRESULT hr{ S_OK };
-	auto oldSystemBackdropType{ *reinterpret_cast<DWORD*>(reinterpret_cast<ULONG_PTR>(data) + 204) };
+	auto oldSystemBackdropType = *reinterpret_cast<DWORD*>(reinterpret_cast<ULONG_PTR>(data) + 204);
 	// trick dwm into thinking the window does not enable system backdrop
 	*reinterpret_cast<DWORD*>(reinterpret_cast<ULONG_PTR>(data) + 204) = 0;
 	hr = g_CTopLevelWindow_UpdateSystemBackdropVisual_Org(This);
@@ -326,28 +332,27 @@ void GlassFramework::UpdateConfiguration(ConfigurationFramework::UpdateType type
 {
 	if (type & ConfigurationFramework::UpdateType::Framework)
 	{
-		GlassSharedData::g_disableOnBattery = static_cast<bool>(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"DisableGlassOnBattery", TRUE));
-		GlassSharedData::g_batteryMode = Utils::IsBatterySaverEnabled();
+		Shared::g_disableOnBattery = static_cast<bool>(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"DisableGlassOnBattery", TRUE));
+		Shared::g_batteryMode = Utils::IsBatterySaverEnabled();
 	}
 	if (type & ConfigurationFramework::UpdateType::Backdrop)
 	{
-		GlassSharedData::g_transparencyEnabled = Utils::IsTransparencyEnabled(ConfigurationFramework::GetPersonalizeKey());
-		GlassSharedData::g_overrideAccent = static_cast<bool>(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"GlassOverrideAccent"));
+		Shared::g_transparencyEnabled = Utils::IsTransparencyEnabled(ConfigurationFramework::GetPersonalizeKey());
+		Shared::g_enableGeometryMerging = static_cast<bool>(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"EnableGeometryMerging"));
+		Shared::g_overrideAccent = static_cast<bool>(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"GlassOverrideAccent"));
 		g_roundRectRadius = static_cast<int>(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"RoundRectRadius"));
+
+		if (Shared::g_forceAccentColorization = static_cast<bool>(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"ForceAccentColorization")); Shared::g_forceAccentColorization)
+		{
+			auto accentColor = ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"AccentColor");
+			auto accentColorInactive = ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"AccentColorInactive", accentColor);
+			Shared::g_accentColor = Utils::FromAbgr(accentColor);
+			Shared::g_accentColorInactive = Utils::FromAbgr(accentColorInactive);
+		}
 	}
 
-	//Seperate keys for now until a way to readd the code that handles setting the actual values in registry is found
-	GlassSharedData::g_ColorizationAfterglowBalance = ((float)ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"OG_ColorizationAfterglowBalance",43) / 100);
-	GlassSharedData::g_ColorizationBlurBalance = ((float)ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"OG_ColorizationBlurBalance",49) / 100);
-	GlassSharedData::g_ColorizationColorBalance = ((float)ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"OG_ColorizationColorBalance",8) / 100);
-
-	//Get the colorizationColor from registry directly for aero glass type, a dwm function could be used, however mods or programs such as AWM hook into this and can
-	//cause issues, so the colour is taken directly from registry, which is fine for aero glass (actually better) since inactive and active have the same colour
-	DWORD hexColour = ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"ColorizationColor", 0xfffcb874);
-	GlassSharedData::g_ColorizationColor = Utils::FromArgb(hexColour);
-
-	auto lock{ wil::EnterCriticalSection(uDwm::CDesktopManager::s_csDwmInstance) };
-	if (!GlassSharedData::IsBackdropAllowed())
+	auto lock = wil::EnterCriticalSection(uDwm::CDesktopManager::s_csDwmInstance);
+	if (!Shared::IsBackdropAllowed())
 	{
 		VisualManager::ShutdownLegacyVisualOverrider();
 	}
@@ -355,13 +360,13 @@ void GlassFramework::UpdateConfiguration(ConfigurationFramework::UpdateType type
 	{
 		ULONG_PTR desktopID{ 0 };
 		Utils::GetDesktopID(1, &desktopID);
-		auto windowList{ uDwm::CDesktopManager::s_pDesktopManagerInstance->GetWindowList()->GetWindowListForDesktop(desktopID) };
-		for (auto i{ windowList->Blink }; i != windowList; i = i->Blink)
+		auto windowList = uDwm::CDesktopManager::s_pDesktopManagerInstance->GetWindowList()->GetWindowListForDesktop(desktopID);
+		for (auto i = windowList->Blink; i != windowList; i = i->Blink)
 		{
-			auto data{ reinterpret_cast<uDwm::CWindowData*>(i) };
-			auto hwnd{ data->GetHwnd() };
+			auto data = reinterpret_cast<uDwm::CWindowData*>(i);
+			auto hwnd = data->GetHwnd();
 			if (!hwnd || !IsWindow(hwnd)) { continue; }
-			auto window{ data->GetWindow() };
+			auto window = data->GetWindow();
 			if (!window) { continue; }
 
 			VisualManager::RedrawTopLevelWindow(window);
@@ -372,6 +377,9 @@ void GlassFramework::UpdateConfiguration(ConfigurationFramework::UpdateType type
 
 HRESULT GlassFramework::Startup()
 {
+	g_dwOverlayTestMode = *dwmcore::CCommonRegistryData::m_dwOverlayTestMode;
+	*dwmcore::CCommonRegistryData::m_dwOverlayTestMode = 0x5;
+
 	uDwm::GetAddressFromSymbolMap("CDrawGeometryInstruction::Create", g_CDrawGeometryInstruction_Create_Org);
 	uDwm::GetAddressFromSymbolMap("CTopLevelWindow::UpdateNCAreaBackground", g_CTopLevelWindow_UpdateNCAreaBackground_Org);
 	uDwm::GetAddressFromSymbolMap("CTopLevelWindow::UpdateClientBlur", g_CTopLevelWindow_UpdateClientBlur_Org);
@@ -383,7 +391,6 @@ HRESULT GlassFramework::Startup()
 	uDwm::GetAddressFromSymbolMap("CTopLevelWindow::~CTopLevelWindow", g_CTopLevelWindow_Destructor_Org);
 
 	g_CreateRoundRectRgn_Org = reinterpret_cast<decltype(g_CreateRoundRectRgn_Org)>(HookHelper::WriteIAT(uDwm::g_moduleHandle, "gdi32.dll", "CreateRoundRectRgn", MyCreateRoundRectRgn));
-	
 	
 	return HookHelper::Detours::Write([]()
 	{
@@ -407,6 +414,8 @@ HRESULT GlassFramework::Startup()
 
 void GlassFramework::Shutdown()
 {
+	*dwmcore::CCommonRegistryData::m_dwOverlayTestMode = g_dwOverlayTestMode;
+
 	HookHelper::Detours::Write([]()
 	{
 		HookHelper::Detours::Detach(&g_CDrawGeometryInstruction_Create_Org, MyCDrawGeometryInstruction_Create);
@@ -435,13 +444,13 @@ void GlassFramework::Shutdown()
 	VisualManager::ShutdownLegacyVisualOverrider();
 	ULONG_PTR desktopID{ 0 };
 	Utils::GetDesktopID(1, &desktopID);
-	auto windowList{ uDwm::CDesktopManager::s_pDesktopManagerInstance->GetWindowList()->GetWindowListForDesktop(desktopID) };
-	for (auto i{ windowList->Blink }; i != windowList; i = i->Blink)
+	auto windowList = uDwm::CDesktopManager::s_pDesktopManagerInstance->GetWindowList()->GetWindowListForDesktop(desktopID);
+	for (auto i = windowList->Blink; i != windowList; i = i->Blink)
 	{
-		auto data{ reinterpret_cast<uDwm::CWindowData*>(i) };
-		auto hwnd{ data->GetHwnd() };
+		auto data = reinterpret_cast<uDwm::CWindowData*>(i);
+		auto hwnd = data->GetHwnd();
 		if (!hwnd || !IsWindow(hwnd)) { continue; }
-		auto window{ data->GetWindow() };
+		auto window = data->GetWindow();
 		if (!window) { continue; }
 
 		VisualManager::RedrawTopLevelWindow(window);

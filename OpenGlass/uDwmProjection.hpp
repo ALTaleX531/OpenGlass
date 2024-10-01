@@ -13,7 +13,7 @@ namespace OpenGlass::uDwm
 	template <typename T>
 	FORCEINLINE T GetAddressFromSymbolMap(std::string_view functionName)
 	{
-		auto it{ g_symbolMap.find(std::string{ functionName }) };
+		auto it = g_symbolMap.find(std::string{ functionName });
 		return it != g_symbolMap.end() ? Utils::cast_pointer<T>(it->second) : nullptr;
 	}
 	template <typename T>
@@ -36,7 +36,7 @@ namespace OpenGlass::uDwm
 	{
 		[[nodiscard]] void* operator new(size_t size) noexcept(false)
 		{
-			auto memory{ HeapAlloc(OpenGlass::Utils::g_processHeap, 0, size) };
+			auto memory = HeapAlloc(OpenGlass::Utils::g_processHeap, 0, size);
 			THROW_LAST_ERROR_IF_NULL(memory);
 			return memory;
 		}
@@ -52,7 +52,7 @@ namespace OpenGlass::uDwm
 		}
 		size_t Release()
 		{
-			auto result{ InterlockedDecrement(reinterpret_cast<DWORD*>(this) + 2) };
+			auto result = InterlockedDecrement(reinterpret_cast<DWORD*>(this) + 2);
 			if (!result)
 			{
 				delete this;
@@ -305,7 +305,7 @@ namespace OpenGlass::uDwm
 		STDMETHOD(DrawTileImage)(UINT imageHandleTableIndex, const D2D1_RECT_F& rect, float opacity, const D2D1_POINT_2F& point) PURE;
 		STDMETHOD(DrawVisual)(UINT visualHandleTableIndex) PURE;
 		STDMETHOD(Pop)() PURE;
-		STDMETHOD(PushTransform)(UINT transformHandleTableInfex) PURE;
+		STDMETHOD(PushTransform)(UINT transformHandleTableIndex) PURE;
 		STDMETHOD(DrawSolidRectangle)(const D2D1_RECT_F& rect, const D2D1_COLOR_F& color) PURE;
 	};
 	struct CRenderDataInstruction : CResource
@@ -438,10 +438,15 @@ namespace OpenGlass::uDwm
 	struct CTopLevelWindow;
 	struct CWindowData : CBaseObject
 	{
-		bool STDMETHODCALLTYPE IsWindowVisibleAndUncloaked()
+		bool STDMETHODCALLTYPE IsWindowVisibleAndUncloaked() const
 		{
 			DEFINE_INVOKER(CWindowData::IsWindowVisibleAndUncloaked);
 			return INVOKE_MEMBERFUNCTION();
+		}
+		HRESULT STDMETHODCALLTYPE GetWindowRestoreRect(LPRECT lprc, bool unknown)
+		{
+			DEFINE_INVOKER(CWindowData::GetWindowRestoreRect);
+			return INVOKE_MEMBERFUNCTION(lprc, unknown);
 		}
 		ULONG_PTR GetDesktopID() const
 		{
@@ -623,7 +628,7 @@ namespace OpenGlass::uDwm
 			}
 			else
 			{
-				auto legacyBackgroundVisual{ reinterpret_cast<CVisual* const*>(this)[39] };
+				auto legacyBackgroundVisual = reinterpret_cast<CVisual* const*>(this)[39];
 				if (legacyBackgroundVisual)
 				{
 					geometry = reinterpret_cast<CRgnGeometryProxy* const*>(legacyBackgroundVisual)[40];
@@ -650,7 +655,7 @@ namespace OpenGlass::uDwm
 			}
 			else
 			{
-				auto legacyBackgroundVisual{ reinterpret_cast<CVisual* const*>(this)[39] };
+				auto legacyBackgroundVisual = reinterpret_cast<CVisual* const*>(this)[39];
 				if (legacyBackgroundVisual)
 				{
 					geometry = reinterpret_cast<CRgnGeometryProxy* const*>(legacyBackgroundVisual)[39];
@@ -658,6 +663,17 @@ namespace OpenGlass::uDwm
 			}
 
 			return geometry;
+		}
+		CSolidColorLegacyMilBrushProxy* GetClientBlurVisualBrush() const
+		{
+			CSolidColorLegacyMilBrushProxy* brush{ nullptr };
+
+			if (os::buildNumber < os::build_w11_21h2)
+			{
+				brush = reinterpret_cast<CSolidColorLegacyMilBrushProxy* const*>(this)[96];
+			}
+
+			return brush;
 		}
 		void GetBorderMargins(MARGINS* margins) const
 		{
@@ -1068,6 +1084,11 @@ namespace OpenGlass::uDwm
 			DEFINE_INVOKER(CWindowList::GetSyncedWindowDataByHwnd);
 			return INVOKE_MEMBERFUNCTION(hwnd, windowData);
 		}
+		CWindowData* STDMETHODCALLTYPE FindWindowDataByHwnd(HWND hwnd)
+		{
+			DEFINE_INVOKER(CWindowList::FindWindowDataByHwnd);
+			return INVOKE_MEMBERFUNCTION(hwnd);
+		}
 	};
 
 	struct CCompositor
@@ -1199,11 +1220,6 @@ namespace OpenGlass::uDwm
 
 			return interopDevice;
 		}
-		HTHEME __fastcall GetTheme(int a1)
-		{
-			DEFINE_INVOKER(CDesktopManager::GetTheme);
-			return INVOKE_MEMBERFUNCTION(a1);
-		}
 	};
 	FORCEINLINE HWND GetShellWindowForCurrentDesktop()
 	{
@@ -1244,6 +1260,7 @@ namespace OpenGlass::uDwm
 			fullyUnDecoratedFunctionName.starts_with("CAccent::") ||
 			fullyUnDecoratedFunctionName == "CWindowList::UpdateAccentBlurRect" ||
 			fullyUnDecoratedFunctionName == "CWindowList::GetSyncedWindowDataByHwnd" ||
+			fullyUnDecoratedFunctionName == "CWindowList::FindWindowDataByHwnd" ||
 			fullyUnDecoratedFunctionName == "CWindowList::GetWindowListForDesktop" ||
 			fullyUnDecoratedFunctionName == "CWindowList::GetRootVisualForDesktop" ||
 			fullyUnDecoratedFunctionName == "CWindowList::GetShellWindowForDesktop" ||

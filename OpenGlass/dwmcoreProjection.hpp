@@ -12,13 +12,13 @@ namespace OpenGlass::dwmcore
 	template <typename T>
 	FORCEINLINE T GetAddressFromSymbolMap(std::string_view functionName)
 	{
-		auto it{ g_symbolMap.find(std::string{ functionName }) };
+		auto it = g_symbolMap.find(std::string{ functionName });
 		return it != g_symbolMap.end() ? Utils::cast_pointer<T>(it->second) : nullptr;
 	}
 	template <typename T>
 	FORCEINLINE void GetAddressFromSymbolMap(std::string_view functionName, T& target)
 	{
-		auto it{ g_symbolMap.find(std::string{ functionName }) };
+		auto it = g_symbolMap.find(std::string{ functionName });
 		if (it != g_symbolMap.end()) [[likely]]
 		{
 			target = Utils::cast_pointer<T>(it->second);
@@ -82,7 +82,7 @@ namespace OpenGlass::dwmcore
 			size_t size
 		)
 		{
-			auto memory{ HeapAlloc(OpenGlass::Utils::g_processHeap, 0, size) };
+			auto memory = HeapAlloc(OpenGlass::Utils::g_processHeap, 0, size);
 			THROW_LAST_ERROR_IF_NULL(memory);
 			return memory;
 		}
@@ -120,17 +120,17 @@ namespace OpenGlass::dwmcore
 		}
 		void Add(const T& object)
 		{
-			auto newSize{ this->size + 1u };
+			auto newSize = this->size + 1u;
 			if (newSize < this->size)
 			{
 				FAIL_FAST_HR(static_cast<HRESULT>(0x80070216ul));
 			}
 			else
 			{
-				auto bufferSize{ this->size * sizeof(T) };
+				auto bufferSize = this->size * sizeof(T);
 				if (newSize > this->capacity)
 				{
-					auto tmp{ std::unique_ptr<T[]>(this->data)};
+					auto tmp = std::unique_ptr<T[]>(this->data);
 
 					this->capacity *= 2;
 					this->data = new T[this->capacity];
@@ -328,6 +328,11 @@ namespace OpenGlass::dwmcore
 		{
 			return reinterpret_cast<ID2D1DeviceContext* const*>(this)[30];
 		}
+		void STDMETHODCALLTYPE GetClip(ID2DContextOwner* owner, D2D1_RECT_F* clipRect, D2D1_ANTIALIAS_MODE* mode) const
+		{
+			DEFINE_INVOKER(CD2DContext::GetClip);
+			return INVOKE_MEMBERFUNCTION(owner, clipRect, mode);
+		}
 	};
 	struct IDeviceTarget;
 	struct IDeviceSurface
@@ -361,15 +366,12 @@ namespace OpenGlass::dwmcore
 		}
 		HRESULT GetD2DBitmap(ID2D1Bitmap1** bitmap) const
 		{
-			auto deviceTarget{ GetDeviceTarget() };
-			auto deviceSurface
-			{ 
-				reinterpret_cast<IDeviceSurface*>(
-					reinterpret_cast<ULONG_PTR>(deviceTarget) +
-					*reinterpret_cast<int*>(reinterpret_cast<ULONG_PTR*>(deviceTarget)[1] + 16) + 
-					8ull
-				)
-			};
+			auto deviceTarget = GetDeviceTarget();
+			auto deviceSurface = reinterpret_cast<IDeviceSurface*>(
+				reinterpret_cast<ULONG_PTR>(deviceTarget) +
+				*reinterpret_cast<int*>(reinterpret_cast<ULONG_PTR*>(deviceTarget)[1] + 16) +
+				8ull
+			);
 
 			return deviceSurface->GetD2DBitmap(bitmap, false);
 		}
@@ -476,7 +478,6 @@ namespace OpenGlass::dwmcore
 		{
 			DEFINE_INVOKER(CDrawingContext::GetCurrentVisual);
 			return INVOKE_MEMBERFUNCTION();
-			//return std::invoke(s_fn_ptr, (CDrawingContext*)(__int64(this) + 0x18) );
 		}
 		bool  STDMETHODCALLTYPE IsInLayer() const
 		{
@@ -553,8 +554,17 @@ namespace OpenGlass::dwmcore
 		return INVOKE_FUNCTION(value, mode);
 	}
 
+	namespace CCommonRegistryData
+	{
+		inline PULONG m_dwOverlayTestMode{ nullptr };
+	}
+
 	inline bool OnSymbolParsing(std::string_view functionName, std::string_view fullyUnDecoratedFunctionName, const HookHelper::OffsetStorage& offset, const PSYMBOL_INFO /*originalSymInfo*/)
 	{
+		if (fullyUnDecoratedFunctionName == "CCommonRegistryData::m_dwOverlayTestMode")
+		{
+			offset.To(g_moduleHandle, CCommonRegistryData::m_dwOverlayTestMode);
+		}
 		if (
 			fullyUnDecoratedFunctionName.starts_with("CArrayBasedCoverageSet::") ||
 			fullyUnDecoratedFunctionName.starts_with("CZOrderedRect::") ||
@@ -573,6 +583,7 @@ namespace OpenGlass::dwmcore
 			fullyUnDecoratedFunctionName == "CDirtyRegion::SetFullDirty" ||
 			fullyUnDecoratedFunctionName == "CDirtyRegion::_Add" ||
 			fullyUnDecoratedFunctionName == "CVisual::GetHwnd" ||
+			fullyUnDecoratedFunctionName == "CD2DContext::GetClip" ||
 			(
 				fullyUnDecoratedFunctionName.starts_with("CDrawingContext::") &&
 				fullyUnDecoratedFunctionName != "CDrawingContext::IsOccluded"

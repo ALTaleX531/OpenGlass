@@ -7,9 +7,10 @@
 *.rsuser
 *.suo
 *.user
+*.vcxproj.user
 *.userosscache
 *.sln.docstates
-*.vcxproj.user
+*.filters
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -355,5 +356,4 @@ MigrationBackup/
 *.zip
 /OpenGlass/Archieve
 /Theme
-*.filters
 /OpenGlass/OpenGlass.vcxproj.user

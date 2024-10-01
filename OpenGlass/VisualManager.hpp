@@ -4,7 +4,7 @@
 #include "uDwmProjection.hpp"
 #include "ConfigurationFramework.hpp"
 
-namespace OpenGlass::VisualManager
+namespace OpenGlass
 {
 	// [Guid("B1FDFCD4-F35C-44FD-8BF0-C2E7E6571461")]
 	DECLARE_INTERFACE_IID_(ILegacyVisualOverrider, IUnknown, "B1FDFCD4-F35C-44FD-8BF0-C2E7E6571461")
@@ -15,9 +15,12 @@ namespace OpenGlass::VisualManager
 		) = 0;
 	};
 
-	winrt::com_ptr<ILegacyVisualOverrider> GetOrCreateLegacyVisualOverrider(uDwm::CTopLevelWindow* window, bool createIfNecessary = false);
-	void RemoveLegacyVisualOverrider(uDwm::CTopLevelWindow* window);
-	void ShutdownLegacyVisualOverrider();
+	namespace VisualManager
+	{
+		winrt::com_ptr<ILegacyVisualOverrider> GetOrCreateLegacyVisualOverrider(uDwm::CTopLevelWindow* window, bool createIfNecessary = false);
+		void RemoveLegacyVisualOverrider(uDwm::CTopLevelWindow* window);
+		void ShutdownLegacyVisualOverrider();
 
-	void RedrawTopLevelWindow(uDwm::CTopLevelWindow* window);
+		void RedrawTopLevelWindow(uDwm::CTopLevelWindow* window);
+	}
 }

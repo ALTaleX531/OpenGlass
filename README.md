@@ -29,6 +29,8 @@ This branch does not rely on `dcomp` and `Windows.UI.Composition` and instead us
 
 ## Documentation
 The legacy branch can use most of the features of the master branch. The following table lists the difference with master branch. The legacy branch uses the colors stored by `CTopLevelWindow`, so you can change the color settings using AWM without problems. 
+> [!NOTE]  
+> Starting from 1.2, if the GlassType is 0x1, then it will use the value of `ColorizationColor`, `ColorizationAfterglow`, `ColorizationBlurBalance`.
 
 - `Not implemented` means that this feature has not yet been implemented but is possible in the future.
 - `Not supported` means that this feature is impossible to be implemented in current structure.
@@ -36,20 +38,20 @@ The legacy branch can use most of the features of the master branch. The followi
 | master branch | Type | Description | legacy branch | Description | Remarks
 | ---- | ---- | ---- | ---- | ---- | ---- |
 | RoundRectRadius | DWORD | The radius of glass geometry, Win8 = 0, Win7 = 12 |  | Rounded corners are not anti-aliased. | **OK** |
-| og_ColorizationColorBalance | DWORD | Controls the balance of the solid color layer. Behaves the same as Windows 7. |  | **NOTE FOR og_ VARIANTS:** This is done so Windows doesn't override these values with bogus ones. | **OK** |
-| og_ColorizationAfterglowBalance | DWORD | Controls the balance of the multiply+blur layer. Behaves the same as Windows 7. |  |  | **OK** |
-| og_ColorizationrBlurBalance | DWORD | Controls the balance of the blur layer. Behaves the same as Windows 7. |  |  | **OK** |
+|  | DWORD | **Not supported** | ColorizationBlurBalanceOverride | Override the value of `ColorizationBlurBalance`. | **OK** |
+|  | DWORD | **Not supported** | ColorizationColorOverride | Override the value of `ColorizationColor`. | **OK** |
+|  | DWORD | **Not supported** | ColorizationAfterglowOverride | Override the value of `ColorizationAfterglow`. | **OK** |
 | CustomThemeMaterial | String | **Undocumented** |  |  | **Not implemented** |
 | MaterialOpacity | DWORD | **Undocumented** |  |  | **Not implemented** |
 | GlassLuminosity | DWORD | The luminosity of Acrylic/Mica effect |  |  | **Not implemented** |
-| GlassOpacity | DWORD | Controls the opacity of the glass colorization |  | ***TODO:** deprecate this registry key for GlassType 0x1 and introduce an inactive variant for GlassType 0x0 (Vista style) | **OK*** |
+| GlassOpacity | DWORD | Controls the opacity of the glass colorization |  | This registry item is only used when `GlassType` is 0x0, otherwise `Colorization***` will be used. | **OK*** |
 | GlassType | DWORD | The type of backdrop effect (0x0-0x4). 0x0=Blur. 0x01=Aero. 0x02=Acrylic. 0x03=Mica. 0x04=Solid. |  | Only 0x0 and 0x1 are implemented. | **OK** |
 | GlassOverrideBorder | DWORD | Specifies that the effect should extend to the border. The default value is 0. |  | The glass will override the border by default. | **Not implemented** |
 | GlassCrossFadeTime | DWORD | The cross fade time for backdrop switching. The default value is 87. |  |  | **Not supported** |
 | GlassOverrideAccent | DWORD | Overriding accent with the effect of OpenGlass. The default value is 0. |  | Some windows are overwritten resulting in full transparency. And the behavior of the overrides makes a difference. | **OK** |
 | GlassAdditionalPreScaleAmount | DWORD | Additional prescaling factor for backdrop input image, the smaller the value the more significant the performance improvement, the lower the quality of the glass. The default value is 90% for Windows 10 but 95% for Windows 11. |  |  | **Not implemented** |
-| ForceAccentColorization | DWORD | When this option is on, OpenGlass will always uses the colors from `AccentColor` and `AccentColorInactive`, which will ignore all the system settings related to color. You can turn it on when there exists third-party softwares that break the auto-coloring. |  |  | **Not implemented** |
 | GlassCrossFadeEasingFunction | DWORD | The easing function for cross fade animation. 0x0=Linear. 0x1=CubicBezier. The Default value is 0. |  |  | **Not supported** |
+|  | DWORD | **Not supported** | EnableGeometryMerging | Merge multiple blurred regions into one. The default value is 0.<br><br> **!!! THIS OPTION IS VERY DANGEROUS, IT HAS A SIGNIFICANT NEGATIVE IMPACT ON PERFORMANCE, USE IT AT YOUR OWN RISK !!!** | **OK** |
 
 > [!TIP]  
 > Check out the code to discover more details!

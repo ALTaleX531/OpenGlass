@@ -38,14 +38,18 @@ namespace OpenGlass::CustomMsstyleLoader
 		DWORD unknwon2;
 		CHAR themeFooter[4]{ "end" };
 
+		bool IsValid() const
+		{
+			return sharableSectionView && unsharableSectionView;
+		}
 		~CUxThemeFile()
 		{
-			auto unknown{ *unsharableSectionView.get() };
+			auto unknown = *unsharableSectionView.get();
 			sharableSectionView.reset();
 			unsharableSectionView.reset();
 			if ((unknown & 4) != 0 && (unknown & 2) == 0)
 			{
-				static const auto s_ClearTheme{ reinterpret_cast<HRESULT(WINAPI*)(HANDLE sharableSection, HANDLE unsharableSection, BOOL clearWhatever)>(GetProcAddress(GetModuleHandleW(L"uxtheme.dll"), MAKEINTRESOURCEA(84))) };
+				static const auto s_ClearTheme = reinterpret_cast<HRESULT(WINAPI*)(HANDLE sharableSection, HANDLE unsharableSection, BOOL clearWhatever)>(GetProcAddress(GetModuleHandleW(L"uxtheme.dll"), MAKEINTRESOURCEA(84)));
 				if (s_ClearTheme) [[likely]]
 				{
 					LOG_IF_FAILED(s_ClearTheme(sharableSection.release(), unsharableSection.release(), FALSE));
@@ -85,9 +89,9 @@ HTHEME WINAPI CustomMsstyleLoader::MyOpenThemeData(
 	LPCWSTR pszClassList
 )
 {
-	if (g_msstyleThemeFile)
+	if (g_msstyleThemeFile && g_msstyleThemeFile->IsValid())
 	{
-		static const auto s_OpenThemeDataFromFile{ reinterpret_cast<HTHEME(WINAPI*)(CUxThemeFile* hThemeFile, HWND hWnd, LPCWSTR pszClassList, DWORD dwFlags)>(GetProcAddress(GetModuleHandleW(L"uxtheme.dll"), MAKEINTRESOURCEA(16))) };
+		static const auto s_OpenThemeDataFromFile = reinterpret_cast<HTHEME(WINAPI*)(CUxThemeFile * hThemeFile, HWND hWnd, LPCWSTR pszClassList, DWORD dwFlags)>(GetProcAddress(GetModuleHandleW(L"uxtheme.dll"), MAKEINTRESOURCEA(16)));
 		if (s_OpenThemeDataFromFile) [[likely]]
 		{
 			return s_OpenThemeDataFromFile(g_msstyleThemeFile.get(), hwnd, pszClassList, 0);
@@ -122,7 +126,7 @@ void CustomMsstyleLoader::UpdateConfiguration(ConfigurationFramework::UpdateType
 					WCHAR colorSchemeName[MAX_PATH + 1]{};
 					WCHAR sizeName[MAX_PATH + 1]{};
 
-					static const auto s_GetThemeDefaults{ reinterpret_cast<HRESULT(WINAPI*)(LPCWSTR pszThemeFileName, LPWSTR pszColorName, DWORD dwColorNameLen, LPWSTR pszSizeName, DWORD dwSizeNameLen)>(GetProcAddress(GetModuleHandleW(L"uxtheme.dll"), MAKEINTRESOURCEA(7)))};
+					static const auto s_GetThemeDefaults = reinterpret_cast<HRESULT(WINAPI*)(LPCWSTR pszThemeFileName, LPWSTR pszColorName, DWORD dwColorNameLen, LPWSTR pszSizeName, DWORD dwSizeNameLen)>(GetProcAddress(GetModuleHandleW(L"uxtheme.dll"), MAKEINTRESOURCEA(7)));
 					if (s_GetThemeDefaults && g_useMsstyleDefaultScheme)
 					{
 						THROW_IF_FAILED(s_GetThemeDefaults(g_msstyleThemePath.c_str(), colorSchemeName, MAX_PATH, sizeName, MAX_PATH));
@@ -133,7 +137,7 @@ void CustomMsstyleLoader::UpdateConfiguration(ConfigurationFramework::UpdateType
 					}
 
 					g_msstyleThemeFile = std::make_unique<CUxThemeFile>();
-					static const auto s_LoaderLoadTheme{ GetProcAddress(GetModuleHandleW(L"uxtheme.dll"), MAKEINTRESOURCEA(92)) };
+					static const auto s_LoaderLoadTheme = GetProcAddress(GetModuleHandleW(L"uxtheme.dll"), MAKEINTRESOURCEA(92));
 					if (s_LoaderLoadTheme) [[likely]]
 					{
 						HRESULT hr{ S_OK };

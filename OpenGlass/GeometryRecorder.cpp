@@ -129,7 +129,7 @@ void GeometryRecorder::BeginCapture()
 }
 HRGN GeometryRecorder::GetRegionFromGeometry(uDwm::CBaseGeometryProxy* geometry)
 {
-	auto it{ g_geometryMap.find(geometry) };
+	auto it = g_geometryMap.find(geometry);
 	if (it == g_geometryMap.end())
 	{
 		return nullptr;

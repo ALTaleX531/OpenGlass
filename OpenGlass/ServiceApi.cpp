@@ -10,7 +10,7 @@ namespace OpenGlass
 	std::unordered_map<DWORD, std::pair<DWORD, std::chrono::steady_clock::time_point>> g_dwmInjectionMap{};
 	std::chrono::steady_clock::time_point g_dwmInjectionCheckPoint{};
 	bool g_serverClosed{ false };
-	auto g_openGlassDllPath{ wil::GetModuleFileNameW<std::wstring, MAX_PATH + 1>(wil::GetModuleInstanceHandle()) };
+	auto g_openGlassDllPath = wil::GetModuleFileNameW<std::wstring, MAX_PATH + 1>(wil::GetModuleInstanceHandle());
 }
 using namespace OpenGlass;
 
@@ -84,8 +84,8 @@ HRESULT Server::InjectDllToDwm(DWORD processId, bool inject)
 	OutputDebugStringW(std::format(L"dwm {}. (PID: {})\n", inject ? L"injected" : L"uninjected", processId).c_str());
 #endif // _DEBUG
 
-	auto bufferSize{ (g_openGlassDllPath.size() + 1) * sizeof(WCHAR) };
-	auto remoteAddress{ inject ? VirtualAllocEx(processHandle.get(), nullptr, bufferSize, MEM_COMMIT, PAGE_READWRITE) : nullptr };
+	auto bufferSize = (g_openGlassDllPath.size() + 1) * sizeof(WCHAR);
+	auto remoteAddress = inject ? VirtualAllocEx(processHandle.get(), nullptr, bufferSize, MEM_COMMIT, PAGE_READWRITE) : nullptr;
 	if (inject)
 	{
 		RETURN_LAST_ERROR_IF_NULL(remoteAddress);
@@ -99,18 +99,16 @@ HRESULT Server::InjectDllToDwm(DWORD processId, bool inject)
 		}
 	});
 
-	auto startRoutine
-	{ 
-		inject ? 
+	auto startRoutine = 
+		inject ?
 		reinterpret_cast<LPTHREAD_START_ROUTINE>(LoadLibraryW) :
-		reinterpret_cast<LPTHREAD_START_ROUTINE>(FreeLibrary)
-	};
+		reinterpret_cast<LPTHREAD_START_ROUTINE>(FreeLibrary);
 	if (inject)
 	{
 		RETURN_IF_WIN32_BOOL_FALSE(WriteProcessMemory(processHandle.get(), remoteAddress, static_cast<LPCVOID>(g_openGlassDllPath.c_str()), bufferSize, nullptr));
 	}
 	wil::unique_handle threadHandle{ nullptr };
-	static const auto s_pfnNtCreateThreadEx{ reinterpret_cast<NTSTATUS(NTAPI*)(PHANDLE, ACCESS_MASK, LPVOID, HANDLE, LPTHREAD_START_ROUTINE, LPVOID, ULONG, SIZE_T, SIZE_T, SIZE_T, LPVOID)>(GetProcAddress(GetModuleHandleW(L"ntdll.dll"), "NtCreateThreadEx")) };
+	static const auto s_pfnNtCreateThreadEx = reinterpret_cast<NTSTATUS(NTAPI*)(PHANDLE, ACCESS_MASK, LPVOID, HANDLE, LPTHREAD_START_ROUTINE, LPVOID, ULONG, SIZE_T, SIZE_T, SIZE_T, LPVOID)>(GetProcAddress(GetModuleHandleW(L"ntdll.dll"), "NtCreateThreadEx"));
 	NTSTATUS ntstatus{ s_pfnNtCreateThreadEx(&threadHandle, PROCESS_ALL_ACCESS, nullptr, processHandle.get(), startRoutine, inject ? remoteAddress : moduleHandle, 0x0, 0x0, 0x0, 0x0, nullptr)};
 	RETURN_IF_NTSTATUS_FAILED(ntstatus);
 	RETURN_LAST_ERROR_IF(WaitForSingleObject(threadHandle.get(), 1000) != WAIT_OBJECT_0);
@@ -121,8 +119,8 @@ HRESULT Server::InjectDllToDwm(DWORD processId, bool inject)
 DWORD Server::InjectionThreadProc(LPVOID)
 {
 	RETURN_IF_FAILED(SetThreadDescription(GetCurrentThread(), L"OpenGlass Injection Thread"));
-	constexpr auto SE_DEBUG_PRIVILEGE{ 0x14 };
-	static const auto s_pfnRtlAdjustPrivilege{ reinterpret_cast<NTSTATUS(NTAPI*)(int, BOOLEAN, BOOLEAN, PBOOLEAN)>(GetProcAddress(GetModuleHandleW(L"ntdll.dll"), "RtlAdjustPrivilege")) };
+	constexpr auto SE_DEBUG_PRIVILEGE = 0x14;
+	static const auto s_pfnRtlAdjustPrivilege = reinterpret_cast<NTSTATUS(NTAPI*)(int, BOOLEAN, BOOLEAN, PBOOLEAN)>(GetProcAddress(GetModuleHandleW(L"ntdll.dll"), "RtlAdjustPrivilege"));
 	
 	BOOLEAN result = false; 
 	s_pfnRtlAdjustPrivilege(SE_DEBUG_PRIVILEGE, true, false, &result);
@@ -161,12 +159,12 @@ DWORD Server::InjectionThreadProc(LPVOID)
 			{
 				return;
 			}
-			auto currentTimeStamp{ std::chrono::steady_clock::now() };
+			auto currentTimeStamp = std::chrono::steady_clock::now();
 
 			if (!IsDllAlreadyLoadedByDwm(processId))
 			{
 				// DWM crashes constantly
-				auto it{ g_dwmInjectionMap.find(sessionId) };
+				auto it = g_dwmInjectionMap.find(sessionId);
 				if (it != g_dwmInjectionMap.end())
 				{
 					auto IsProcessAlive = [](DWORD processId)
@@ -181,8 +179,8 @@ DWORD Server::InjectionThreadProc(LPVOID)
 					};
 					if (currentTimeStamp - it->second.second <= std::chrono::seconds{ 15 } && !IsProcessAlive(it->second.first))
 					{
-						auto title{ Utils::GetResWStringView<IDS_STRING101>() };
-						auto content{ Utils::GetResWStringView<IDS_STRING105>() };
+						auto title = Utils::GetResWStringView<IDS_STRING101>();
+						auto content = Utils::GetResWStringView<IDS_STRING105>();
 						DWORD response{ IDTIMEOUT };
 						LOG_IF_WIN32_BOOL_FALSE(
 							WTSSendMessageW(

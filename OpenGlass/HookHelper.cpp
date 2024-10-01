@@ -93,7 +93,7 @@ HMODULE HookHelper::GetProcessModule(HANDLE processHandle, std::wstring_view dll
 		return targetModule;
 	}
 	DWORD moduleCount{ bytesNeeded / sizeof(HMODULE) };
-	auto moduleList{ std::make_unique<HMODULE[]>(moduleCount) };
+	auto moduleList = std::make_unique<HMODULE[]>(moduleCount);
 	if (!EnumProcessModules(processHandle, moduleList.get(), bytesNeeded, &bytesNeeded))
 	{
 		return targetModule;
@@ -122,17 +122,14 @@ void HookHelper::WalkIAT(PVOID baseAddress, std::string_view dllName, std::funct
 	THROW_HR_IF_NULL(E_INVALIDARG, callback);
 
 	ULONG size{ 0ul };
-	auto importDescriptor
-	{
-		static_cast<PIMAGE_IMPORT_DESCRIPTOR>(
-			ImageDirectoryEntryToData(
-				baseAddress,
-				TRUE,
-				IMAGE_DIRECTORY_ENTRY_IMPORT,
-				&size
-			)
+	auto importDescriptor = static_cast<PIMAGE_IMPORT_DESCRIPTOR>(
+		ImageDirectoryEntryToData(
+			baseAddress,
+			TRUE,
+			IMAGE_DIRECTORY_ENTRY_IMPORT,
+			&size
 		)
-	};
+	);
 
 	THROW_HR_IF_NULL(E_INVALIDARG, importDescriptor);
 
@@ -152,7 +149,7 @@ void HookHelper::WalkIAT(PVOID baseAddress, std::string_view dllName, std::funct
 
 	THROW_HR_IF(HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND), !found);
 
-	auto thunk{ reinterpret_cast<PIMAGE_THUNK_DATA>(reinterpret_cast<UINT_PTR>(baseAddress) + importDescriptor->FirstThunk) };
+	auto thunk = reinterpret_cast<PIMAGE_THUNK_DATA>(reinterpret_cast<UINT_PTR>(baseAddress) + importDescriptor->FirstThunk);
 	auto nameThunk = reinterpret_cast<PIMAGE_THUNK_DATA>(reinterpret_cast<UINT_PTR>(baseAddress) + importDescriptor->OriginalFirstThunk);
 
 	bool result{ true };
@@ -192,17 +189,14 @@ void HookHelper::WalkDelayloadIAT(PVOID baseAddress, std::string_view dllName, s
 	THROW_HR_IF_NULL(E_INVALIDARG, callback);
 
 	ULONG size{ 0ul };
-	auto importDescriptor
-	{
-		static_cast<PIMAGE_DELAYLOAD_DESCRIPTOR>(
-			ImageDirectoryEntryToData(
-				baseAddress,
-				TRUE,
-				IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT,
-				&size
-			)
+	auto importDescriptor = static_cast<PIMAGE_DELAYLOAD_DESCRIPTOR>(
+		ImageDirectoryEntryToData(
+			baseAddress,
+			TRUE,
+			IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT,
+			&size
 		)
-	};
+	);
 
 	THROW_HR_IF_NULL(E_INVALIDARG, importDescriptor);
 
@@ -224,7 +218,7 @@ void HookHelper::WalkDelayloadIAT(PVOID baseAddress, std::string_view dllName, s
 
 	THROW_HR_IF(HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND), !found);
 
-	auto attributes{ importDescriptor->Attributes.RvaBased };
+	auto attributes = importDescriptor->Attributes.RvaBased;
 	THROW_WIN32_IF_MSG(ERROR_FILE_NOT_FOUND, attributes != 1, "Unsupported delay loaded dll![%hs]", dllName.data());
 
 	auto moduleHandle = reinterpret_cast<HMODULE*>(
@@ -317,7 +311,7 @@ PVOID HookHelper::WriteIAT(PVOID baseAddress, std::string_view dllName, LPCSTR t
 {
 	PVOID originalFunction{ nullptr };
 
-	auto functionAddress{ GetIAT(baseAddress, dllName, targetFunctionNameOrOrdinal) };
+	auto functionAddress = GetIAT(baseAddress, dllName, targetFunctionNameOrOrdinal);
 	if (functionAddress)
 	{
 		originalFunction = *functionAddress;
@@ -332,7 +326,7 @@ std::pair<HMODULE, PVOID> HookHelper::WriteDelayloadIAT(PVOID baseAddress, std::
 	HMODULE originalModule{ nullptr };
 	PVOID originalFunction{ nullptr };
 
-	auto [moduleHandle, functionAddress] {GetDelayloadIAT(baseAddress, dllName, targetFunctionNameOrOrdinal, true)};
+	auto [moduleHandle, functionAddress] = GetDelayloadIAT(baseAddress, dllName, targetFunctionNameOrOrdinal, true);
 	if (functionAddress)
 	{
 		originalModule = *moduleHandle;
