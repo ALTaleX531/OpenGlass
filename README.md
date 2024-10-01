@@ -53,6 +53,8 @@ The legacy branch can use some of the features of the master branch. Options whi
 | ColorizationGlassReflectionParallaxIntensity | DWORD | Controls intensity of the parallax effect (I.E when moving the windows side to side) of the glass streaks. | 
 | BlurDeviation | DWORD | Controls the radius (intensity) of the gaussian blur effect. |
 | TextGlowSize | DWORD | Controls the size of the titlebar text glow effect. |
+| RoundRectRadius | DWORD | Controls radius of the blur behind, like a rounded rectangle. Win8 = 0, Win7 = 12 | 
+
 
 
 > [!TIP]  
