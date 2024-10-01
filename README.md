@@ -52,6 +52,8 @@ The legacy branch can use some of the features of the master branch. Options whi
 | ColorizationGlassReflectionIntensity | DWORD | Controls the opacity of the glass streaks effect in the window. |
 | ColorizationGlassReflectionParallaxIntensity | DWORD | Controls intensity of the parallax effect (I.E when moving the windows side to side) of the glass streaks. | 
 | BlurDeviation | DWORD | Controls the radius (intensity) of the gaussian blur effect. |
+| TextGlowSize | DWORD | Controls the size of the titlebar text glow effect. |
+
 
 > [!TIP]  
 > Check out the code to discover more details!
