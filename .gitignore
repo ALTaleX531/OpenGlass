@@ -349,12 +349,11 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
-/TranslucentFlyouts/Archieve
-/TranslucentFlyouts/Archive
 
 # Custom rules
 *.rar
 *.zip
 /OpenGlass/Archieve
 /Theme
-/OpenGlass/OpenGlass.vcxproj.filters
+*.filters
+/OpenGlass/OpenGlass.vcxproj.user
