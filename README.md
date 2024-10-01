@@ -31,7 +31,7 @@ This branch does not rely on `dcomp` and `Windows.UI.Composition` and instead us
 The legacy branch can use some of the features of the master branch. Options which are not listed below are not supported in the Legacy branch, vice versa. 
 > [!NOTE]  
 > Starting from 1.2, if the GlassType is 0x1, then it will use the value of `ColorizationColor`, `ColorizationAfterglow`, `ColorizationBlurBalance`, `ColorizationColorBalance`, `ColorizationAfterglowBalance`, unless an override key is made as shown below.
-> > [!IMPORTANT]  
+> [!IMPORTANT]  
 > Unless specified, the options below are stored in `HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\DWM`. 
 
 
