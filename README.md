@@ -49,6 +49,9 @@ The legacy branch can use some of the features of the master branch. Options whi
 | GlassType | DWORD | The type of backdrop effect. Currently, only 2 options are supported: 0x0=Basic blur and 0x01=Aero |
 | GlassOverrideAccent | DWORD | Overrides surfaces with accent policies with OpenGlass effects, I.E: the taskbar. Set to 1 to enable. |
 | EnableGeometryMerging | DWORD | Merges multiple  blur surfaces to render as one. Most notably, this will eliminate the "artifact" near the titlebar edges. **!! THIS OPTION MAY HAVE A SEVERE IMPACT ON PERFORMANCE. USE AT YOUR OWN RISK. !!** |
+| ColorizationGlassReflectionIntensity | DWORD | Controls the opacity of the glass streaks effect in the window. |
+| ColorizationGlassReflectionParallaxIntensity | DWORD | Controls intensity of the parallax effect (I.E when moving the windows side to side) of the glass streaks. | 
+| BlurDeviation | DWORD | Controls the radius (intensity) of the gaussian blur effect. |
 
 > [!TIP]  
 > Check out the code to discover more details!
