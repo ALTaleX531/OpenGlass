@@ -28,30 +28,27 @@ This branch does not rely on `dcomp` and `Windows.UI.Composition` and instead us
 6. When you experience a crash, OpenGlass is supposed to generate a large memory dump file in the `dumps` directory of the folder where it is located, please submit it to the developer if possible, this can help fix known or potential issues.
 
 ## Documentation
-The legacy branch can use most of the features of the master branch. The following table lists the difference with master branch. The legacy branch uses the colors stored by `CTopLevelWindow`, so you can change the color settings using AWM without problems. 
+The legacy branch can use some of the features of the master branch. Options which are not listed below are not supported in the Legacy branch, vice versa. 
 > [!NOTE]  
-> Starting from 1.2, if the GlassType is 0x1, then it will use the value of `ColorizationColor`, `ColorizationAfterglow`, `ColorizationBlurBalance`.
+> Starting from 1.2, if the GlassType is 0x1, then it will use the value of `ColorizationColor`, `ColorizationAfterglow`, `ColorizationBlurBalance`, `ColorizationColorBalance`, `ColorizationAfterglowBalance`, unless an override key is made as shown below.
 
-- `Not implemented` means that this feature has not yet been implemented but is possible in the future.
-- `Not supported` means that this feature is impossible to be implemented in current structure.
 
-| master branch | Type | Description | legacy branch | Description | Remarks
-| ---- | ---- | ---- | ---- | ---- | ---- |
-| RoundRectRadius | DWORD | The radius of glass geometry, Win8 = 0, Win7 = 12 |  | Rounded corners are not anti-aliased. | **OK** |
-|  | DWORD | **Not supported** | ColorizationBlurBalanceOverride | Override the value of `ColorizationBlurBalance`. | **OK** |
-|  | DWORD | **Not supported** | ColorizationColorOverride | Override the value of `ColorizationColor`. | **OK** |
-|  | DWORD | **Not supported** | ColorizationAfterglowOverride | Override the value of `ColorizationAfterglow`. | **OK** |
-| CustomThemeMaterial | String | **Undocumented** |  |  | **Not implemented** |
-| MaterialOpacity | DWORD | **Undocumented** |  |  | **Not implemented** |
-| GlassLuminosity | DWORD | The luminosity of Acrylic/Mica effect |  |  | **Not implemented** |
-| GlassOpacity | DWORD | Controls the opacity of the glass colorization |  | This registry item is only used when `GlassType` is 0x0, otherwise `Colorization***` will be used. | **OK*** |
-| GlassType | DWORD | The type of backdrop effect (0x0-0x4). 0x0=Blur. 0x01=Aero. 0x02=Acrylic. 0x03=Mica. 0x04=Solid. |  | Only 0x0 and 0x1 are implemented. | **OK** |
-| GlassOverrideBorder | DWORD | Specifies that the effect should extend to the border. The default value is 0. |  | The glass will override the border by default. | **Not implemented** |
-| GlassCrossFadeTime | DWORD | The cross fade time for backdrop switching. The default value is 87. |  |  | **Not supported** |
-| GlassOverrideAccent | DWORD | Overriding accent with the effect of OpenGlass. The default value is 0. |  | Some windows are overwritten resulting in full transparency. And the behavior of the overrides makes a difference. | **OK** |
-| GlassAdditionalPreScaleAmount | DWORD | Additional prescaling factor for backdrop input image, the smaller the value the more significant the performance improvement, the lower the quality of the glass. The default value is 90% for Windows 10 but 95% for Windows 11. |  |  | **Not implemented** |
-| GlassCrossFadeEasingFunction | DWORD | The easing function for cross fade animation. 0x0=Linear. 0x1=CubicBezier. The Default value is 0. |  |  | **Not supported** |
-|  | DWORD | **Not supported** | EnableGeometryMerging | Merge multiple blurred regions into one. The default value is 0.<br><br> **!!! THIS OPTION IS VERY DANGEROUS, IT HAS A SIGNIFICANT NEGATIVE IMPACT ON PERFORMANCE, USE IT AT YOUR OWN RISK !!!** | **OK** |
+**Colorization settings**
+
+| Key Name | Type | Description | 
+| -------- | ---- | ----------- |
+| ColorizationColorOverride | DWORD | Overrides the default Windows `ColorizationColor`. The color is in ARGB (i.e 0x6B74B8FC). If this is not set, it'll use the equivalent original registry key. |
+| ColorizationAfterglowOveride | DWORD | Overrides the default Windows `ColorizationAfterglow`. The color is in ARGB (i.e 0x6B74B8FC). If this is not set, it'll use the equivalent original registry key.  |
+| ColorizationColorBalanceOverride | DWORD | Overrides the default Windows `ColorizationColorBalance`. This key is typically controlled by the intensity slider in Control panel. If you were using the old shader fork previously, this is the equivalent to `og_ColorizationColorBalance`. If this is not set, it'll use the equivalent original registry key. |
+| ColorizationAfterglowBalanceOverride | DWORD | Overrides the default Windows `ColorizationAfterglowBalance`. This key is typically controlled by the intensity slider in Control panel. If you were using the old shader fork previously, this is the equivalent to `og_ColorizationColorBalance`. If this is not set, it'll use the equivalent original registry key. |
+| ColorizationBlurBalanceOverride | DWORD | Overrides the default Windows `ColorizationBlurBalance`. This key is typically controlled by the intensity slider in Control panel. If you were using the old shader fork previously, this is the equivalent to `og_ColorizationBlurBalance`. If this is not set, it'll use the equivalent original registry key. |
+
+**Glass settings**
+| Key Name | Type | Description | 
+| -------- | ---- | ----------- |
+| GlassType | DWORD | The type of backdrop effect. Currently, only 2 options are supported: 0x0=Basic blur and 0x01=Aero |
+| GlassOverrideAccent | DWORD | Overrides surfaces with accent policies with OpenGlass effects, I.E: the taskbar. Set to 1 to enable. |
+| EnableGeometryMerging | DWORD | Merges multiple  blur surfaces to render as one. Most notably, this will eliminate the "artifact" near the titlebar edges. **!! THIS OPTION MAY HAVE A SEVERE IMPACT ON PERFORMANCE. USE AT YOUR OWN RISK. !!** |
 
 > [!TIP]  
 > Check out the code to discover more details!
