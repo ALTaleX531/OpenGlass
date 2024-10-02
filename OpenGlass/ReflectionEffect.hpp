@@ -199,8 +199,7 @@ namespace OpenGlass::ReflectionEffect
 		D2D1_RECT_F bounds{};
 		RETURN_IF_FAILED(geometry->GetBounds(nullptr, &bounds));
 
-		//D2D1_POINT_2F point{ offset.x >= 0.f ? bounds.left : 0.f, offset.y >= 0.f ? bounds.top : 0.f };
-		D2D1_POINT_2F point{ bounds.left, bounds.top };
+		D2D1_POINT_2F point{ offset.x >= 0.f ? bounds.left : 0.f, offset.y >= 0.f ? bounds.top : 0.f };
 		D2D1_RECT_F cropRect
 		{
 			offset.x * (1.f - parallaxIntensity),
