@@ -33,7 +33,7 @@ The legacy branch can use some of the features of the master branch. Options whi
 > Starting from 1.2, if the GlassType is 0x1, then it will use the value of `ColorizationColor`, `ColorizationAfterglow`, `ColorizationBlurBalance`, `ColorizationColorBalance`, `ColorizationAfterglowBalance`, unless an override key is made as shown below.
 
 > [!IMPORTANT]  
-> Unless specified, the options below are stored in `HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\DWM`. 
+> Unless specified, the options below are stored in `HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\DWM` and `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\DWM`. OpenGlass prefers to read the settings in the HKCU.
 
 
 **Colorization settings**
@@ -57,6 +57,8 @@ The legacy branch can use some of the features of the master branch. Options whi
 | BlurDeviation | DWORD | Controls the radius (intensity) of the gaussian blur effect. |
 | TextGlowSize | DWORD | Controls the size of the titlebar text glow effect. |
 | RoundRectRadius | DWORD | Controls radius of the blur behind, like a rounded rectangle. Win8 = 0, Win7 = 12 | 
+| CustomThemeMsstyle | String | path to msstyle file. | 
+| CustomThemeMsstyleUseDefaults | DWORD | Color scheme uses the result from GetThemeDefaults | 
 
 
 
