@@ -230,12 +230,12 @@ HRESULT STDMETHODCALLTYPE GlassRenderer::MyCDrawingContext_DrawGeometry(
 	}
 	*/
 	glassEffect->SetGlassRenderingParameters(
-		(Shared::g_type == Shared::Type::Aero) ? color : Shared::g_color,
+		(Shared::g_type == Shared::Type::Aero) ? Shared::g_color : color,
 		Shared::g_afterglow,
 		Shared::g_glassOpacity,
 		Shared::g_blurAmount,
 		active ? Shared::g_colorBalance : (0.4f * Shared::g_colorBalance),		// y = 0.4x
-		Shared::g_afterglowBalance,													// stays the same
+		Shared::g_afterglowBalance,												// stays the same
 		active ? Shared::g_blurBalance : (0.4f * Shared::g_blurBalance + 0.6f),	// y = 0.4x + 60
 		Shared::g_type
 	);
