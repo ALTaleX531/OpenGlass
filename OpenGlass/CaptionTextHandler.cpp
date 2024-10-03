@@ -212,7 +212,7 @@ HRESULT STDMETHODCALLTYPE CaptionTextHandler::MyCMatrixTransformProxy_Update(str
 {
 	if (g_textVisual)
 	{
-		matrix->DX -= static_cast<DOUBLE>(g_textGlowSize);
+		matrix->DX -= static_cast<DOUBLE>(g_textGlowSize) * (g_textVisual->IsRTL() ? -1.f : 1.f);
 		if (g_centerCaption)
 		{
 			auto offset{ floor(static_cast<DOUBLE>(g_textVisual->GetWidth() - g_textWidth) / 2.) };
@@ -227,7 +227,7 @@ HRESULT STDMETHODCALLTYPE CaptionTextHandler::MyCChannel_MatrixTransformUpdate(d
 {
 	if (g_textVisual)
 	{
-		matrix->DX -= static_cast<DOUBLE>(g_textGlowSize);
+		matrix->DX -= static_cast<DOUBLE>(g_textGlowSize) * (g_textVisual->IsRTL() ? -1.f : 1.f);
 		if (g_centerCaption)
 		{
 			auto offset{ floor(static_cast<DOUBLE>(g_textVisual->GetWidth() - g_textWidth) / 2.) };

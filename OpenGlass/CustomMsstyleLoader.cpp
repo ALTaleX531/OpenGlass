@@ -38,6 +38,10 @@ namespace OpenGlass::CustomMsstyleLoader
 		DWORD unknwon2;
 		CHAR themeFooter[4]{ "end" };
 
+		bool IsValid() const
+		{
+			return sharableSectionView && unsharableSectionView;
+		}
 		~CUxThemeFile()
 		{
 			auto unknown{ *unsharableSectionView.get() };
@@ -85,7 +89,7 @@ HTHEME WINAPI CustomMsstyleLoader::MyOpenThemeData(
 	LPCWSTR pszClassList
 )
 {
-	if (g_msstyleThemeFile)
+	if (g_msstyleThemeFile && g_msstyleThemeFile->IsValid())
 	{
 		static const auto s_OpenThemeDataFromFile{ reinterpret_cast<HTHEME(WINAPI*)(CUxThemeFile* hThemeFile, HWND hWnd, LPCWSTR pszClassList, DWORD dwFlags)>(GetProcAddress(GetModuleHandleW(L"uxtheme.dll"), MAKEINTRESOURCEA(16))) };
 		if (s_OpenThemeDataFromFile) [[likely]]
