@@ -51,7 +51,7 @@ The legacy branch can use some of the features of the master branch. Options whi
 | -------- | ---- | ----------- |
 | GlassType | DWORD | The type of backdrop effect. Currently, only 2 options are supported: 0x0=Basic blur and 0x01=Aero |
 | GlassOverrideAccent | DWORD | Overrides surfaces with accent policies with OpenGlass effects, I.E: the taskbar. Set to 1 to enable. |
-| EnableGeometryMerging | DWORD | Merges multiple  blur surfaces to render as one. Most notably, this will eliminate the "artifact" near the titlebar edges. **!! THIS OPTION MAY HAVE A SEVERE IMPACT ON PERFORMANCE. USE AT YOUR OWN RISK. !!** |
+| EnableGeometryMerging | DWORD | Merges multiple  blur surfaces to render as one. Most notably, this will eliminate the "artifact" near the titlebar edges. <br><br>**!! THIS OPTION MAY HAVE A SEVERE IMPACT ON PERFORMANCE. USE AT YOUR OWN RISK. !!** |
 | ColorizationGlassReflectionIntensity | DWORD | Controls the opacity of the glass streaks effect in the window. |
 | ColorizationGlassReflectionParallaxIntensity | DWORD | Controls intensity of the parallax effect (I.E when moving the windows side to side) of the glass streaks. | 
 | BlurDeviation | DWORD | Controls the radius (intensity) of the gaussian blur effect. |
@@ -59,7 +59,7 @@ The legacy branch can use some of the features of the master branch. Options whi
 | RoundRectRadius | DWORD | Controls radius of the blur behind, like a rounded rectangle. Win8 = 0, Win7 = 12 | 
 | CustomThemeMsstyle | String | path to msstyle file. | 
 | CustomThemeMsstyleUseDefaults | DWORD | Color scheme uses the result from GetThemeDefaults | 
-
+| EnableFullDirty | DWORD | Make the dirty region extend to the entire desktop by using a hack. This will eliminate the "flickering" caused by redrawing due to missing glass safety zones, thus useful for those using a high blur radius. As a price, your entire desktop is rendered instead of just the necessary regions, but the occlusion optimization still works fine. <br><br>**!! THIS OPTION DEFINITELY HAVE A IMPACT ON PERFORMANCE. USE AT YOUR OWN RISK. !!** |
 
 
 > [!TIP]  
