@@ -207,6 +207,14 @@ namespace OpenGlass::dwmcore
 
 	typedef D2D1_MATRIX_5X4_F CMILMatrix;
 	struct CLegacyMilBrush : CResource {};
+	struct CSolidColorLegacyMilBrush : CLegacyMilBrush
+	{
+		const D2D1_COLOR_F& GetRealizedColor() const
+		{
+			return *reinterpret_cast<D2D1_COLOR_F*>(reinterpret_cast<ULONG_PTR>(this) + 88);
+		}
+	};
+
 	struct CTransform : CResource {};
 	struct CShape
 	{
@@ -577,13 +585,13 @@ namespace OpenGlass::dwmcore
 			fullyUnDecoratedFunctionName == "CChannel::CombinedGeometryUpdate" ||
 			fullyUnDecoratedFunctionName == "CResource::GetOwningProcessId" ||
 			fullyUnDecoratedFunctionName == "CRenderData::TryDrawCommandAsDrawList" ||
-			fullyUnDecoratedFunctionName == "CRenderData::DrawSolidColorRectangle" ||
 			fullyUnDecoratedFunctionName == "CGeometry::GetShapeData" ||
 			fullyUnDecoratedFunctionName == "CGeometry::~CGeometry" ||
 			fullyUnDecoratedFunctionName == "CDirtyRegion::SetFullDirty" ||
 			fullyUnDecoratedFunctionName == "CDirtyRegion::_Add" ||
 			fullyUnDecoratedFunctionName == "CVisual::GetHwnd" ||
 			fullyUnDecoratedFunctionName == "CD2DContext::GetClip" ||
+			fullyUnDecoratedFunctionName == "CSolidColorLegacyMilBrush::IsOfType" ||
 			(
 				fullyUnDecoratedFunctionName.starts_with("CDrawingContext::") &&
 				fullyUnDecoratedFunctionName != "CDrawingContext::IsOccluded"

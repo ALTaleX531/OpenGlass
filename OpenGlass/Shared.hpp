@@ -54,4 +54,6 @@ namespace OpenGlass::Shared
 
 		return true;
 	}
+
+	inline bool g_enableFullDirty{ false };
 }

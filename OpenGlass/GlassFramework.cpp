@@ -38,6 +38,7 @@ namespace OpenGlass::GlassFramework
 	int g_roundRectRadius{};
 
 	UINT g_dwOverlayTestMode{};
+	winrt::com_ptr<IDCompositionVisual2> g_hackVisual{ nullptr };
 }
 
 HRGN WINAPI GlassFramework::MyCreateRoundRectRgn(int x1, int y1, int x2, int y2, int w, int h)
@@ -55,21 +56,12 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCDrawGeometryInstruction_Create(uDwm
 {
 	if (g_capturedWindow && g_capturedWindow->GetData()->GetHwnd() != uDwm::GetShellWindowForCurrentDesktop())
 	{
-		HRGN region{ GeometryRecorder::GetRegionFromGeometry(geometry) };
-		RECT rgnBox{};
-		if (GetRgnBox(region, &rgnBox) != NULLREGION && !IsRectEmpty(&rgnBox))
-		{
-			winrt::com_ptr<uDwm::CRgnGeometryProxy> rgnGeometry{ nullptr };
-			uDwm::ResourceHelper::CreateGeometryFromHRGN(region, rgnGeometry.put());
-
-			auto color = 
-				Shared::g_forceAccentColorization ?
-				dwmcore::Convert_D2D1_COLOR_F_sRGB_To_D2D1_COLOR_F_scRGB(g_capturedWindow->TreatAsActiveWindow() ? Shared::g_accentColor : Shared::g_accentColorInactive) :
-				g_capturedWindow->GetTitlebarColorizationParameters()->getArgbcolor();
-			color.a = g_capturedWindow->TreatAsActiveWindow() ? 0.5f : 0.0f;
-			RETURN_IF_FAILED(reinterpret_cast<uDwm::CSolidColorLegacyMilBrushProxy*>(brush)->Update(1.0, color));
-			return g_CDrawGeometryInstruction_Create_Org(brush, rgnGeometry.get(), instruction);
-		}
+		auto color =
+			Shared::g_forceAccentColorization ?
+			dwmcore::Convert_D2D1_COLOR_F_sRGB_To_D2D1_COLOR_F_scRGB(g_capturedWindow->TreatAsActiveWindow() ? Shared::g_accentColor : Shared::g_accentColorInactive) :
+			g_capturedWindow->GetTitlebarColorizationParameters()->getArgbcolor();
+		color.a = g_capturedWindow->TreatAsActiveWindow() ? 0.5f : 0.0f;
+		RETURN_IF_FAILED(reinterpret_cast<uDwm::CSolidColorLegacyMilBrushProxy*>(brush)->Update(1.0, color));
 	}
 
 	return g_CDrawGeometryInstruction_Create_Org(brush, geometry, instruction);
@@ -349,6 +341,10 @@ void GlassFramework::UpdateConfiguration(ConfigurationFramework::UpdateType type
 			Shared::g_accentColor = Utils::FromAbgr(accentColor);
 			Shared::g_accentColorInactive = Utils::FromAbgr(accentColorInactive);
 		}
+
+		Shared::g_enableFullDirty = static_cast<bool>(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"EnableFullDirty"));
+		Shared::g_enableFullDirty ? g_hackVisual.as<IDCompositionVisualDebug>()->EnableRedrawRegions() : g_hackVisual.as<IDCompositionVisualDebug>()->DisableRedrawRegions();
+		LOG_IF_FAILED(uDwm::CDesktopManager::s_pDesktopManagerInstance->GetDCompDevice()->Commit());
 	}
 
 	auto lock = wil::EnterCriticalSection(uDwm::CDesktopManager::s_csDwmInstance);
@@ -379,6 +375,8 @@ HRESULT GlassFramework::Startup()
 {
 	g_dwOverlayTestMode = *dwmcore::CCommonRegistryData::m_dwOverlayTestMode;
 	*dwmcore::CCommonRegistryData::m_dwOverlayTestMode = 0x5;
+
+	RETURN_IF_FAILED(uDwm::CDesktopManager::s_pDesktopManagerInstance->GetDCompDevice()->CreateVisual(g_hackVisual.put()));
 
 	uDwm::GetAddressFromSymbolMap("CDrawGeometryInstruction::Create", g_CDrawGeometryInstruction_Create_Org);
 	uDwm::GetAddressFromSymbolMap("CTopLevelWindow::UpdateNCAreaBackground", g_CTopLevelWindow_UpdateNCAreaBackground_Org);
@@ -456,4 +454,6 @@ void GlassFramework::Shutdown()
 		VisualManager::RedrawTopLevelWindow(window);
 		LOG_IF_FAILED(window->ValidateVisual());
 	}
+
+	g_hackVisual = nullptr;
 }

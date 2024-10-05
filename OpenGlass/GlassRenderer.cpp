@@ -11,6 +11,10 @@ using namespace OpenGlass;
 
 namespace OpenGlass::GlassRenderer
 {
+	bool STDMETHODCALLTYPE MyCSolidColorLegacyMilBrush_IsOfType(
+		dwmcore::CSolidColorLegacyMilBrush* This, 
+		UINT type
+	);
 	HRESULT STDMETHODCALLTYPE MyCRenderData_TryDrawCommandAsDrawList(
 		dwmcore::CResource* This,
 		dwmcore::CDrawingContext* drawingContext,
@@ -20,19 +24,6 @@ namespace OpenGlass::GlassRenderer
 		int commandType,
 		dwmcore::CResource** resources,
 		bool* succeeded
-	);
-	HRESULT STDMETHODCALLTYPE MyCRenderData_DrawSolidColorRectangle(
-		dwmcore::CResource* This,
-		dwmcore::CDrawingContext* drawingContext,
-		dwmcore::CResource* drawListEntryBuilder,
-		bool unknwon,
-		const D2D1_RECT_F& lprc,
-		const D2D1_COLOR_F& color
-	);
-	HRESULT STDMETHODCALLTYPE MyCDrawingContext_DrawSolidRectangle(
-		dwmcore::IDrawingContext* This,
-		const D2D1_RECT_F& rectangle,
-		const D2D1_COLOR_F& color
 	);
 	HRESULT STDMETHODCALLTYPE MyCDrawingContext_DrawGeometry(
 		dwmcore::IDrawingContext* This,
@@ -53,10 +44,8 @@ namespace OpenGlass::GlassRenderer
 	);
 	void STDMETHODCALLTYPE MyCGeometry_Destructor(dwmcore::CGeometry* This);
 
+	decltype(&MyCSolidColorLegacyMilBrush_IsOfType) g_CSolidColorLegacyMilBrush_IsOfType_Org{ nullptr };
 	decltype(&MyCRenderData_TryDrawCommandAsDrawList) g_CRenderData_TryDrawCommandAsDrawList_Org{ nullptr };
-	decltype(&MyCRenderData_DrawSolidColorRectangle) g_CRenderData_DrawSolidColorRectangle_Org{ nullptr };
-	decltype(&MyCDrawingContext_DrawSolidRectangle) g_CDrawingContext_DrawSolidRectangle_Org{ nullptr };
-	decltype(&MyCDrawingContext_DrawSolidRectangle)* g_CDrawingContext_DrawSolidRectangle_Org_Address{ nullptr };
 	decltype(&MyCDrawingContext_DrawGeometry) g_CDrawingContext_DrawGeometry_Org{ nullptr };
 	decltype(&MyCDrawingContext_DrawGeometry)* g_CDrawingContext_DrawGeometry_Org_Address{ nullptr };
 	decltype(&MyID2D1DeviceContext_FillGeometry) g_ID2D1DeviceContext_FillGeometry_Org{ nullptr };
@@ -65,10 +54,19 @@ namespace OpenGlass::GlassRenderer
 	decltype(&MyCGeometry_Destructor) g_CGeometry_Destructor_Org{ nullptr };
 	PVOID* g_CSolidColorLegacyMilBrush_vftable{ nullptr };
 
-	std::optional<D2D1_COLOR_F> g_drawColor{};
 	IGlassEffect* g_glassEffectNoRef{ nullptr };
 	ID2D1Device* g_deviceNoRef{ nullptr };
 	dwmcore::IDrawingContext* g_drawingContextNoRef{ nullptr };
+	bool g_solidColorLegacyMilBrush{ false };
+}
+
+bool STDMETHODCALLTYPE GlassRenderer::MyCSolidColorLegacyMilBrush_IsOfType(
+	dwmcore::CSolidColorLegacyMilBrush* This, 
+	UINT type
+)
+{
+	g_solidColorLegacyMilBrush = true;
+	return g_CSolidColorLegacyMilBrush_IsOfType_Org(This, type);
 }
 
 HRESULT STDMETHODCALLTYPE GlassRenderer::MyCRenderData_TryDrawCommandAsDrawList(
@@ -82,69 +80,22 @@ HRESULT STDMETHODCALLTYPE GlassRenderer::MyCRenderData_TryDrawCommandAsDrawList(
 	bool* succeeded
 )
 {
-	g_drawColor = std::nullopt;
-	HRESULT hr{ g_CRenderData_TryDrawCommandAsDrawList_Org(This, drawingContext, drawListCache, drawListEntryBuilder, unknwon, commandType, resources, succeeded) };
-	if (SUCCEEDED(hr) && g_drawColor)
-	{
-		*succeeded = false;
-	}
-	return hr;
-}
-HRESULT STDMETHODCALLTYPE GlassRenderer::MyCRenderData_DrawSolidColorRectangle(
-	dwmcore::CResource* This,
-	dwmcore::CDrawingContext* drawingContext,
-	dwmcore::CResource* drawListEntryBuilder,
-	bool unknwon,
-	const D2D1_RECT_F& lprc,
-	const D2D1_COLOR_F& color
-)
-{
-	if (
-		color.a != 1.f &&
-		Shared::IsBackdropAllowed()
-	)
-	{
-		g_drawColor = color;
+	g_solidColorLegacyMilBrush = false;
+	auto hr = g_CRenderData_TryDrawCommandAsDrawList_Org(This, drawingContext, drawListCache, drawListEntryBuilder, unknwon, commandType, resources, succeeded);
 
-		if (!g_CDrawingContext_DrawSolidRectangle_Org)
-		{
-			g_CDrawingContext_DrawSolidRectangle_Org_Address = reinterpret_cast<decltype(g_CDrawingContext_DrawSolidRectangle_Org_Address)>(&(HookHelper::vtbl_of(drawingContext->GetInterface())[2]));
-			g_CDrawingContext_DrawSolidRectangle_Org = HookHelper::WritePointer(g_CDrawingContext_DrawSolidRectangle_Org_Address, MyCDrawingContext_DrawSolidRectangle);
-		}
+	if (SUCCEEDED(hr) && g_solidColorLegacyMilBrush && commandType == 461)
+	{
 		if (!g_CDrawingContext_DrawGeometry_Org)
 		{
 			g_CDrawingContext_DrawGeometry_Org_Address = reinterpret_cast<decltype(g_CDrawingContext_DrawGeometry_Org_Address)>(&(HookHelper::vtbl_of(drawingContext->GetInterface())[4]));
 			g_CDrawingContext_DrawGeometry_Org = HookHelper::WritePointer(g_CDrawingContext_DrawGeometry_Org_Address, MyCDrawingContext_DrawGeometry);
 		}
+		*succeeded = false;
 
 		return S_OK;
 	}
 
-	return g_CRenderData_DrawSolidColorRectangle_Org(
-		This,
-		drawingContext,
-		drawListEntryBuilder,
-		unknwon,
-		lprc,
-		color
-	);
-}
-
-
-HRESULT STDMETHODCALLTYPE GlassRenderer::MyCDrawingContext_DrawSolidRectangle(
-	dwmcore::IDrawingContext* This,
-	const D2D1_RECT_F& rectangle,
-	const D2D1_COLOR_F& color
-)
-{
-	if (!g_drawColor.has_value())
-	{
-		return g_CDrawingContext_DrawSolidRectangle_Org(This, rectangle, color);
-	}
-
-	D2D1_COLOR_F convertedColor{ dwmcore::Convert_D2D1_COLOR_F_scRGB_To_D2D1_COLOR_F_sRGB(g_drawColor.value()) };
-	g_drawColor = std::nullopt;
-	return g_CDrawingContext_DrawSolidRectangle_Org(This, rectangle, convertedColor);
+	return hr;
 }
 
 HRESULT STDMETHODCALLTYPE GlassRenderer::MyCDrawingContext_DrawGeometry(
@@ -156,15 +107,13 @@ HRESULT STDMETHODCALLTYPE GlassRenderer::MyCDrawingContext_DrawGeometry(
 	if (
 		!brush ||
 		!geometry ||
-		HookHelper::vtbl_of(brush) != g_CSolidColorLegacyMilBrush_vftable ||
-		!g_drawColor.has_value()
+		HookHelper::vtbl_of(brush) != g_CSolidColorLegacyMilBrush_vftable
 	)
 	{
 		return g_CDrawingContext_DrawGeometry_Org(This, brush, geometry);
 	}
 
-	auto cleanUp = wil::scope_exit([] { g_drawColor = std::nullopt; });
-	auto color = dwmcore::Convert_D2D1_COLOR_F_scRGB_To_D2D1_COLOR_F_sRGB(g_drawColor.value());
+	auto color = dwmcore::Convert_D2D1_COLOR_F_scRGB_To_D2D1_COLOR_F_sRGB(reinterpret_cast<dwmcore::CSolidColorLegacyMilBrush*>(brush)->GetRealizedColor());
 
 	// shape is nullptr or empty
 	dwmcore::CShapePtr geometryShape{};
@@ -296,6 +245,16 @@ HRESULT STDMETHODCALLTYPE GlassRenderer::MyCDirtyRegion__Add(
 	const D2D1_RECT_F& lprc
 )
 {
+	if (Shared::g_enableFullDirty)
+	{
+		return g_CDirtyRegion__Add_Org(
+			This,
+			visual,
+			unknown,
+			lprc
+		);
+	}
+
 	// at high blur radius, there is no need to extend that much,
 	// it will only cause severe flickering
 	float extendAmount{ min(Shared::g_blurAmount * 3.f + 0.5f, 15.5f) };
@@ -379,15 +338,15 @@ void GlassRenderer::UpdateConfiguration(ConfigurationFramework::UpdateType type)
 HRESULT GlassRenderer::Startup()
 {
 	dwmcore::GetAddressFromSymbolMap("CRenderData::TryDrawCommandAsDrawList", g_CRenderData_TryDrawCommandAsDrawList_Org);
-	dwmcore::GetAddressFromSymbolMap("CRenderData::DrawSolidColorRectangle", g_CRenderData_DrawSolidColorRectangle_Org);
 	dwmcore::GetAddressFromSymbolMap("CDirtyRegion::_Add", g_CDirtyRegion__Add_Org);
 	dwmcore::GetAddressFromSymbolMap("CGeometry::~CGeometry", g_CGeometry_Destructor_Org);
 	dwmcore::GetAddressFromSymbolMap("CSolidColorLegacyMilBrush::`vftable'", g_CSolidColorLegacyMilBrush_vftable);
+	dwmcore::GetAddressFromSymbolMap("CSolidColorLegacyMilBrush::IsOfType", g_CSolidColorLegacyMilBrush_IsOfType_Org);
 
 	return HookHelper::Detours::Write([]()
 	{
+		HookHelper::Detours::Attach(&g_CSolidColorLegacyMilBrush_IsOfType_Org, MyCSolidColorLegacyMilBrush_IsOfType);
 		HookHelper::Detours::Attach(&g_CRenderData_TryDrawCommandAsDrawList_Org, MyCRenderData_TryDrawCommandAsDrawList);
-		HookHelper::Detours::Attach(&g_CRenderData_DrawSolidColorRectangle_Org, MyCRenderData_DrawSolidColorRectangle);
 		HookHelper::Detours::Attach(&g_CDirtyRegion__Add_Org, MyCDirtyRegion__Add);
 		HookHelper::Detours::Attach(&g_CGeometry_Destructor_Org, MyCGeometry_Destructor);
 	});
@@ -397,8 +356,8 @@ void GlassRenderer::Shutdown()
 {
 	HookHelper::Detours::Write([]()
 	{
+		HookHelper::Detours::Detach(&g_CSolidColorLegacyMilBrush_IsOfType_Org, MyCSolidColorLegacyMilBrush_IsOfType);
 		HookHelper::Detours::Detach(&g_CRenderData_TryDrawCommandAsDrawList_Org, MyCRenderData_TryDrawCommandAsDrawList);
-		HookHelper::Detours::Detach(&g_CRenderData_DrawSolidColorRectangle_Org, MyCRenderData_DrawSolidColorRectangle);
 		HookHelper::Detours::Detach(&g_CDirtyRegion__Add_Org, MyCDirtyRegion__Add);
 		HookHelper::Detours::Detach(&g_CGeometry_Destructor_Org, MyCGeometry_Destructor);
 	});
@@ -414,12 +373,6 @@ void GlassRenderer::Shutdown()
 		HookHelper::WritePointer(g_CDrawingContext_DrawGeometry_Org_Address, g_CDrawingContext_DrawGeometry_Org);
 		g_CDrawingContext_DrawGeometry_Org_Address = nullptr;
 		g_CDrawingContext_DrawGeometry_Org = nullptr;
-	}
-	if (g_CDrawingContext_DrawSolidRectangle_Org)
-	{
-		HookHelper::WritePointer(g_CDrawingContext_DrawSolidRectangle_Org_Address, g_CDrawingContext_DrawSolidRectangle_Org);
-		g_CDrawingContext_DrawSolidRectangle_Org_Address = nullptr;
-		g_CDrawingContext_DrawSolidRectangle_Org = nullptr;
 	}
 
 	GlassEffectFactory::Shutdown();
