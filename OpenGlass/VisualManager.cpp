@@ -9,6 +9,7 @@ using namespace OpenGlass;
 namespace OpenGlass::VisualManager
 {
 	std::unordered_map<uDwm::CTopLevelWindow*, winrt::com_ptr<ILegacyVisualOverrider>> g_visualMap{};
+	std::unordered_map<uDwm::CAnimatedGlassSheet*, winrt::com_ptr<IAnimatedGlassSheetOverrider>> g_sheetMap{};
 
 	class CLegacyVisualOverrider : public winrt::implements<CLegacyVisualOverrider, ILegacyVisualOverrider>
 	{
@@ -37,7 +38,94 @@ namespace OpenGlass::VisualManager
 			HRGN borderRgn
 		) override;
 	};
-	void RedrawTopLevelWindow(uDwm::CTopLevelWindow* window);
+	class CAnimatedGlassSheetOverrider : public winrt::implements<CAnimatedGlassSheetOverrider, IAnimatedGlassSheetOverrider>
+	{
+		bool m_initialized{ false };
+		uDwm::CAnimatedGlassSheet* m_sheet{ nullptr };
+		winrt::com_ptr<uDwm::CCanvasVisual> m_visual{ nullptr };
+		winrt::com_ptr<uDwm::CRgnGeometryProxy> m_geometry{ nullptr };
+		RECT m_offsets{};
+
+		HRESULT Initialize()
+		{
+			RETURN_IF_FAILED(
+				uDwm::CCanvasVisual::Create(
+					m_visual.put()
+				)
+			);
+			winrt::com_ptr<uDwm::CSolidColorLegacyMilBrushProxy> brush{ nullptr };
+			RETURN_IF_FAILED(
+				uDwm::CDesktopManager::s_pDesktopManagerInstance->GetCompositor()->CreateSolidColorLegacyMilBrushProxy(
+					brush.put()
+				)
+			);
+			RETURN_IF_FAILED(brush->Update(1.0, D2D1::ColorF(0x000000, 0.25f)));
+
+			wil::unique_hrgn emptyRegion{ CreateRectRgn(0, 0, 0, 0) };
+			RETURN_LAST_ERROR_IF_NULL(emptyRegion);
+
+			RETURN_IF_FAILED(
+				uDwm::ResourceHelper::CreateGeometryFromHRGN(
+					emptyRegion.get(),
+					m_geometry.put()
+				)
+			);
+			winrt::com_ptr<uDwm::CDrawGeometryInstruction> instruction{ nullptr };
+			RETURN_IF_FAILED(
+				uDwm::CDrawGeometryInstruction::Create(
+					brush.get(),
+					m_geometry.get(),
+					instruction.put()
+				)
+			);
+			RETURN_IF_FAILED(m_visual->AddInstruction(instruction.get()));
+			RETURN_IF_FAILED(
+				m_sheet->GetVisualCollection()->InsertRelative(
+					m_visual.get(),
+					nullptr,
+					false,
+					true
+				)
+			);
+
+			m_initialized = true;
+			return S_OK;
+		}
+	public:
+		CAnimatedGlassSheetOverrider(uDwm::CAnimatedGlassSheet* sheet) : m_sheet{ sheet } {};
+		virtual ~CAnimatedGlassSheetOverrider()
+		{
+			if (m_initialized && m_visual)
+			{
+				LOG_IF_FAILED(m_sheet->GetVisualCollection()->Remove(m_visual.get()));
+			}
+		}
+		HRESULT STDMETHODCALLTYPE OnRectUpdated(LPCRECT lprc) override
+		{
+			if (!m_initialized)
+			{
+				RETURN_IF_FAILED(Initialize());
+			}
+
+			RETURN_IF_FAILED(
+				uDwm::ResourceHelper::CreateGeometryFromHRGN(
+					wil::unique_hrgn
+					{ 
+						CreateRoundRectRgn(
+							0 - m_sheet->GetAtlasPaddingLeft(),
+							0 - m_sheet->GetAtlasPaddingTop(),
+							wil::rect_width(*lprc) - m_sheet->GetAtlasPaddingRight(),
+							wil::rect_height(*lprc) - m_sheet->GetAtlasPaddingBottom(),
+							Shared::g_roundRectRadius,
+							Shared::g_roundRectRadius
+						) 
+					}.get(), 
+					reinterpret_cast<uDwm::CRgnGeometryProxy**>(&m_geometry)
+				)
+			);
+			return S_OK;
+		}
+	};
 }
 
 void VisualManager::RedrawTopLevelWindow(uDwm::CTopLevelWindow* window)
@@ -338,7 +426,7 @@ HRESULT STDMETHODCALLTYPE VisualManager::CLegacyVisualOverrider::UpdateNCBackgro
 	return S_OK;
 }
 
-winrt::com_ptr<ILegacyVisualOverrider> VisualManager::GetOrCreateLegacyVisualOverrider(uDwm::CTopLevelWindow* window, bool createIfNecessary)
+winrt::com_ptr<ILegacyVisualOverrider> VisualManager::LegacyVisualOverrider::GetOrCreate(uDwm::CTopLevelWindow* window, bool createIfNecessary)
 {
 	auto it = g_visualMap.find(window);
 
@@ -362,7 +450,7 @@ winrt::com_ptr<ILegacyVisualOverrider> VisualManager::GetOrCreateLegacyVisualOve
 	return it == g_visualMap.end() ? nullptr : it->second;
 }
 
-void VisualManager::RemoveLegacyVisualOverrider(uDwm::CTopLevelWindow* window)
+void VisualManager::LegacyVisualOverrider::Remove(uDwm::CTopLevelWindow* window)
 {
 	auto it = g_visualMap.find(window);
 
@@ -372,7 +460,43 @@ void VisualManager::RemoveLegacyVisualOverrider(uDwm::CTopLevelWindow* window)
 	}
 }
 
-void VisualManager::ShutdownLegacyVisualOverrider()
+void VisualManager::LegacyVisualOverrider::Shutdown()
 {
 	g_visualMap.clear();
+}
+
+
+
+winrt::com_ptr<IAnimatedGlassSheetOverrider> VisualManager::AnimatedGlassSheetOverrider::GetOrCreate(uDwm::CAnimatedGlassSheet* sheet, bool createIfNecessary)
+{
+	auto it = g_sheetMap.find(sheet);
+
+	if (createIfNecessary)
+	{
+		if (it == g_sheetMap.end())
+		{
+			auto result = g_sheetMap.emplace(sheet, winrt::make<CAnimatedGlassSheetOverrider>(sheet));
+			if (result.second == true)
+			{
+				it = result.first;
+			}
+		}
+	}
+
+	return it == g_sheetMap.end() ? nullptr : it->second;
+}
+
+void VisualManager::AnimatedGlassSheetOverrider::Remove(uDwm::CAnimatedGlassSheet* sheet)
+{
+	auto it = g_sheetMap.find(sheet);
+
+	if (it != g_sheetMap.end())
+	{
+		g_sheetMap.erase(it);
+	}
+}
+
+void VisualManager::AnimatedGlassSheetOverrider::Shutdown()
+{
+	g_sheetMap.clear();
 }

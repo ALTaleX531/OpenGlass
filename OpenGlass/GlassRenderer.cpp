@@ -132,6 +132,18 @@ HRESULT STDMETHODCALLTYPE GlassRenderer::MyCDrawingContext_DrawGeometry(
 		return This->GetDrawingContext()->FillShapeWithColor(geometryShape.ptr, &color);
 	}
 
+	if (!g_ID2D1DeviceContext_FillGeometry_Org)
+	{
+		g_ID2D1DeviceContext_FillGeometry_Org_Address = reinterpret_cast<decltype(g_ID2D1DeviceContext_FillGeometry_Org_Address)>(&HookHelper::vtbl_of(This->GetDrawingContext()->GetD2DContext()->GetDeviceContext())[0x17]);
+		g_ID2D1DeviceContext_FillGeometry_Org = HookHelper::WritePointer(g_ID2D1DeviceContext_FillGeometry_Org_Address, MyID2D1DeviceContext_FillGeometry);
+	}
+
+	if (color.a == 0.25f)
+	{
+		g_drawingContextNoRef = This;
+		return This->GetDrawingContext()->FillShapeWithColor(geometryShape.ptr, &color);
+	}
+
 	winrt::com_ptr<ID2D1Device> device{ nullptr };
 	auto context = This->GetDrawingContext()->GetD2DContext()->GetDeviceContext();
 	context->GetDevice(device.put());
@@ -154,11 +166,6 @@ HRESULT STDMETHODCALLTYPE GlassRenderer::MyCDrawingContext_DrawGeometry(
 	RETURN_IF_FAILED(This->GetDrawingContext()->FlushD2D());
 	g_glassEffectNoRef = glassEffect.get();
 	g_drawingContextNoRef = This;
-	if (!g_ID2D1DeviceContext_FillGeometry_Org)
-	{
-		g_ID2D1DeviceContext_FillGeometry_Org_Address = reinterpret_cast<decltype(g_ID2D1DeviceContext_FillGeometry_Org_Address)>(&HookHelper::vtbl_of(This->GetDrawingContext()->GetD2DContext()->GetDeviceContext())[0x17]);
-		g_ID2D1DeviceContext_FillGeometry_Org = HookHelper::WritePointer(g_ID2D1DeviceContext_FillGeometry_Org_Address, MyID2D1DeviceContext_FillGeometry);
-	}
 
 	// hack! but a bit better
 	auto active = color.a == 0.5f;
@@ -202,36 +209,46 @@ void STDMETHODCALLTYPE GlassRenderer::MyID2D1DeviceContext_FillGeometry(
 	winrt::com_ptr<ID2D1SolidColorBrush> solidColorBrush{ nullptr };
 	if (
 		SUCCEEDED(brush->QueryInterface(solidColorBrush.put())) && 
-		g_glassEffectNoRef && 
 		g_drawingContextNoRef
 	)
 	{
-		D2D1_RECT_F clipWorldBounds{};
-		D2D1_ANTIALIAS_MODE mode{};
-		g_drawingContextNoRef->GetDrawingContext()->GetD2DContext()->GetClip(
-			g_drawingContextNoRef->GetDrawingContext()->GetD2DContextOwner(),
-			&clipWorldBounds,
-			&mode
-		);
-
-		auto hr = g_glassEffectNoRef->Render(This, geometry, clipWorldBounds);
-		if (FAILED(hr))
+		if (g_glassEffectNoRef)
 		{
-			LOG_HR(hr);
-			g_ID2D1DeviceContext_FillGeometry_Org(This, geometry, brush, opacityBrush);
-		}
-		LOG_IF_FAILED(
-			ReflectionEffect::Render(
+			D2D1_RECT_F clipWorldBounds{};
+			D2D1_ANTIALIAS_MODE mode{};
+			g_drawingContextNoRef->GetDrawingContext()->GetD2DContext()->GetClip(
+				g_drawingContextNoRef->GetDrawingContext()->GetD2DContextOwner(),
+				&clipWorldBounds,
+				&mode
+			);
+
+			auto hr = g_glassEffectNoRef->Render(
 				This, 
-				geometry,
-				Shared::g_reflectionIntensity,
-				Shared::g_reflectionParallaxIntensity
-			)
-		);
+				geometry, 
+				clipWorldBounds,
+				g_drawingContextNoRef->GetDrawingContext()->IsNormalDesktopRender()
+			);
+			if (FAILED(hr))
+			{
+				LOG_HR(hr);
+				g_ID2D1DeviceContext_FillGeometry_Org(This, geometry, brush, opacityBrush);
+			}
+
+			g_glassEffectNoRef = nullptr;
+		}
+		else
+		{
+			LOG_IF_FAILED(
+				ReflectionEffect::Render(
+					This,
+					geometry,
+					Shared::g_reflectionIntensity,
+					0.f
+				)
+			);
+		}
 
 		g_drawingContextNoRef = nullptr;
-		g_glassEffectNoRef = nullptr;
-
 		return;
 	}
 	return g_ID2D1DeviceContext_FillGeometry_Org(This, geometry, brush, opacityBrush);

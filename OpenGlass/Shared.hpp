@@ -14,6 +14,7 @@ namespace OpenGlass::Shared
 	inline bool g_overrideAccent{ false };
 	inline bool g_batteryMode{ false };
 	inline bool g_transparencyEnabled{ true };
+	inline int g_roundRectRadius{};
 	inline float g_blurAmount{ 9.f };
 	inline float g_glassOpacity{ 0.63f };
 	// exclusively used by aero backdrop

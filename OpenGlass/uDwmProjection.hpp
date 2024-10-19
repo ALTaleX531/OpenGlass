@@ -1062,6 +1062,45 @@ namespace OpenGlass::uDwm
 			return parameters;
 		}
 	};
+	struct CLivePreview : CVisual
+	{
+		CVisual* GetGlassContainerVisual() const
+		{
+			return reinterpret_cast<CVisual* const*>(this)[64];
+		}
+	};
+	struct CAnimatedGlassSheet : CVisual 
+	{
+		const RECT& GetSourceRect() const
+		{
+			return reinterpret_cast<RECT const*>(this)[24];
+		}
+		const RECT& GetDestinationRect() const
+		{
+			return reinterpret_cast<RECT const*>(this)[25];
+		}
+		const RECT& GetAdjustedDestinationRect()
+		{
+			return reinterpret_cast<RECT const*>(this)[26];
+		}
+
+		LONG GetAtlasPaddingTop() const
+		{
+			return reinterpret_cast<RECT const*>(this)[30].left;
+		}
+		LONG GetAtlasPaddingLeft() const
+		{
+			return reinterpret_cast<RECT const*>(this)[29].right;
+		}
+		LONG GetAtlasPaddingRight() const
+		{
+			return -reinterpret_cast<RECT const*>(this)[29].bottom;
+		}
+		LONG GetAtlasPaddingBottom() const
+		{
+			return -reinterpret_cast<RECT const*>(this)[30].top;
+		}
+	};
 	struct CWindowList : CBaseObject
 	{
 		PRLIST_ENTRY STDMETHODCALLTYPE GetWindowListForDesktop(ULONG_PTR desktopID)
@@ -1130,6 +1169,10 @@ namespace OpenGlass::uDwm
 		bool IsWindowAnimationEnabled() const
 		{
 			return reinterpret_cast<bool const*>(this)[22];
+		}
+		CLivePreview* GetLivePreview() const
+		{
+			return reinterpret_cast<CLivePreview* const*>(this)[64];
 		}
 		CCompositor* GetCompositor() const
 		{
@@ -1268,7 +1311,10 @@ namespace OpenGlass::uDwm
 			fullyUnDecoratedFunctionName == "CSolidColorLegacyMilBrushProxy::Update" ||
 			(fullyUnDecoratedFunctionName.starts_with("ResourceHelper::") && fullyUnDecoratedFunctionName != "ResourceHelper::CreateRectangleGeometry") ||
 			functionName == "?CreateRectangleGeometry@ResourceHelper@@SAJPEBUtagRECT@@PEAPEAVCRectangleGeometryProxy@@@Z" ||
-			functionName == "?CreateRectangleGeometry@ResourceHelper@@SAJPEBUtagRECT@@PEAPEAVCResource@@@Z"
+			functionName == "?CreateRectangleGeometry@ResourceHelper@@SAJPEBUtagRECT@@PEAPEAVCResource@@@Z" ||
+			fullyUnDecoratedFunctionName == "CAnimatedGlassSheet::OnRectUpdated" ||
+			fullyUnDecoratedFunctionName == "CAnimatedGlassSheet::~CAnimatedGlassSheet" ||
+			fullyUnDecoratedFunctionName == "CLivePreview::_UpdateGlassVisual"
 		)
 		{
 			g_symbolMap.insert_or_assign(

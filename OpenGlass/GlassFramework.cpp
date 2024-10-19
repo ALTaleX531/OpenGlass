@@ -21,6 +21,18 @@ namespace OpenGlass::GlassFramework
 	HRESULT STDMETHODCALLTYPE MyCTopLevelWindow_UpdateSystemBackdropVisual(uDwm::CTopLevelWindow* This);
 	void STDMETHODCALLTYPE MyCTopLevelWindow_Destructor(uDwm::CTopLevelWindow* This);
 
+	void STDMETHODCALLTYPE MyCAnimatedGlassSheet_OnRectUpdated(uDwm::CAnimatedGlassSheet* This, LPCRECT lprc);
+	void STDMETHODCALLTYPE MyCAnimatedGlassSheet_Destructor(uDwm::CAnimatedGlassSheet* This);
+
+	HRESULT STDMETHODCALLTYPE MyCLivePreview__UpdateGlassVisual(uDwm::CLivePreview* This);
+	HRESULT STDMETHODCALLTYPE MyCTopLevelWindow_CloneVisualTreeForLivePreview(
+		uDwm::CTopLevelWindow* This, 
+		bool cloneForReflection, 
+		bool reserved1, 
+		bool reserved2, 
+		uDwm::CTopLevelWindow** cloned
+	);
+
 	decltype(&MyCreateRoundRectRgn) g_CreateRoundRectRgn_Org{ nullptr };
 	decltype(&MyCDrawGeometryInstruction_Create) g_CDrawGeometryInstruction_Create_Org{ nullptr };
 	decltype(&MyCTopLevelWindow_UpdateNCAreaBackground) g_CTopLevelWindow_UpdateNCAreaBackground_Org{ nullptr };
@@ -32,10 +44,15 @@ namespace OpenGlass::GlassFramework
 	decltype(&MyCTopLevelWindow_UpdateSystemBackdropVisual) g_CTopLevelWindow_UpdateSystemBackdropVisual_Org{ nullptr };
 	decltype(&MyCTopLevelWindow_Destructor) g_CTopLevelWindow_Destructor_Org{ nullptr };
 
+	decltype(&MyCAnimatedGlassSheet_OnRectUpdated) g_CAnimatedGlassSheet_OnRectUpdated_Org{ nullptr };
+	decltype(&MyCAnimatedGlassSheet_Destructor) g_CAnimatedGlassSheet_Destructor_Org{ nullptr };
+
+	decltype(&MyCLivePreview__UpdateGlassVisual) g_CLivePreview__UpdateGlassVisual_Org{ nullptr };
+	decltype(&MyCTopLevelWindow_CloneVisualTreeForLivePreview) g_CTopLevelWindow_CloneVisualTreeForLivePreview_Org{ nullptr };
+
 	uDwm::CTopLevelWindow* g_capturedWindow{ nullptr };
 	uDwm::CRenderDataVisual* g_accentRenderDataVisual{ nullptr };
 	DWORD g_accentState{};
-	int g_roundRectRadius{};
 
 	UINT g_dwOverlayTestMode{};
 	winrt::com_ptr<IDCompositionVisual2> g_hackVisual{ nullptr };
@@ -43,12 +60,12 @@ namespace OpenGlass::GlassFramework
 
 HRGN WINAPI GlassFramework::MyCreateRoundRectRgn(int x1, int y1, int x2, int y2, int w, int h)
 {
-	if (g_roundRectRadius == -1)
+	if (Shared::g_roundRectRadius == -1)
 	{
 		return g_CreateRoundRectRgn_Org(x1, y1, x2, y2, w, h);
 	}
 
-	return g_CreateRoundRectRgn_Org(x1, y1, x2, y2, g_roundRectRadius, g_roundRectRadius);
+	return g_CreateRoundRectRgn_Org(x1, y1, x2, y2, Shared::g_roundRectRadius, Shared::g_roundRectRadius);
 }
 
 // restore the blur region set by DwmEnableBlurBehind and make sure the region isn't overlap with the non client region
@@ -112,7 +129,7 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_UpdateNCAreaBackgrou
 
 		if (SUCCEEDED(hr))
 		{
-			auto legacyVisualOverride = VisualManager::GetOrCreateLegacyVisualOverrider(This, true);
+			auto legacyVisualOverride = VisualManager::LegacyVisualOverrider::GetOrCreate(This, true);
 			// the titlebar region has been updated
 			// let's update our backdrop region
 			if (GeometryRecorder::GetGeometryCount() && legacyVisualOverride)
@@ -131,7 +148,7 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_UpdateNCAreaBackgrou
 	}
 	else
 	{
-		VisualManager::RemoveLegacyVisualOverrider(This);
+		VisualManager::LegacyVisualOverrider::Remove(This);
 		hr = g_CTopLevelWindow_UpdateNCAreaBackground_Org(This);
 	}
 
@@ -249,7 +266,20 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCRenderDataVisual_AddInstruction(uDw
 	color.a = 0.5f;
 
 	winrt::com_ptr<uDwm::CRgnGeometryProxy> rgnGeometry{ nullptr };
-	uDwm::ResourceHelper::CreateGeometryFromHRGN(wil::unique_hrgn{ CreateRectRgn(static_cast<LONG>(rectangle.left), static_cast<LONG>(rectangle.top), static_cast<LONG>(rectangle.right), static_cast<LONG>(rectangle.bottom)) }.get(), rgnGeometry.put());
+	RETURN_IF_FAILED(
+		uDwm::ResourceHelper::CreateGeometryFromHRGN(
+			wil::unique_hrgn
+			{ 
+				CreateRectRgn(
+					static_cast<LONG>(rectangle.left), 
+					static_cast<LONG>(rectangle.top), 
+					static_cast<LONG>(rectangle.right), 
+					static_cast<LONG>(rectangle.bottom)
+				) 
+			}.get(), 
+			rgnGeometry.put()
+		)
+	);
 	winrt::com_ptr<uDwm::CSolidColorLegacyMilBrushProxy> solidBrush{ nullptr };
 	RETURN_IF_FAILED(
 		uDwm::CDesktopManager::s_pDesktopManagerInstance->GetCompositor()->CreateSolidColorLegacyMilBrushProxy(
@@ -316,8 +346,105 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_UpdateSystemBackdrop
 // release resources
 void STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_Destructor(uDwm::CTopLevelWindow* This)
 {
-	VisualManager::RemoveLegacyVisualOverrider(This);
-	g_CTopLevelWindow_Destructor_Org(This);
+	VisualManager::LegacyVisualOverrider::Remove(This);
+	return g_CTopLevelWindow_Destructor_Org(This);
+}
+
+void STDMETHODCALLTYPE GlassFramework::MyCAnimatedGlassSheet_OnRectUpdated(uDwm::CAnimatedGlassSheet* This, LPCRECT lprc)
+{
+	if (auto sheetOverrider = VisualManager::AnimatedGlassSheetOverrider::GetOrCreate(This, true); sheetOverrider)
+	{
+		LOG_IF_FAILED(sheetOverrider->OnRectUpdated(lprc));
+	}
+
+	return g_CAnimatedGlassSheet_OnRectUpdated_Org(This, lprc);
+}
+void STDMETHODCALLTYPE GlassFramework::MyCAnimatedGlassSheet_Destructor(uDwm::CAnimatedGlassSheet* This)
+{
+	VisualManager::AnimatedGlassSheetOverrider::Remove(This);
+	return g_CAnimatedGlassSheet_Destructor_Org(This);
+}
+
+// reserved
+HRESULT STDMETHODCALLTYPE GlassFramework::MyCLivePreview__UpdateGlassVisual(uDwm::CLivePreview* This)
+{
+	return g_CLivePreview__UpdateGlassVisual_Org(This);
+}
+HRESULT STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_CloneVisualTreeForLivePreview(
+	uDwm::CTopLevelWindow* This,
+	bool cloneForReflection,
+	bool reserved1,
+	bool reserved2,
+	uDwm::CTopLevelWindow** cloned
+)
+{
+	auto hr = g_CTopLevelWindow_CloneVisualTreeForLivePreview_Org(
+		This,
+		cloneForReflection,
+		reserved1,
+		reserved2,
+		cloned
+	);
+
+	if (SUCCEEDED(hr) && cloneForReflection)
+	{
+		winrt::com_ptr<uDwm::CCanvasVisual> visual{ nullptr };
+		RETURN_IF_FAILED(
+			uDwm::CCanvasVisual::Create(
+				visual.put()
+			)
+		);
+		winrt::com_ptr<uDwm::CSolidColorLegacyMilBrushProxy> brush{ nullptr };
+		RETURN_IF_FAILED(
+			uDwm::CDesktopManager::s_pDesktopManagerInstance->GetCompositor()->CreateSolidColorLegacyMilBrushProxy(
+				brush.put()
+			)
+		);
+		RETURN_IF_FAILED(brush->Update(1.0, D2D1::ColorF(0x000000, 0.25f)));
+
+		RECT windowRect{};
+		This->GetActualWindowRect(&windowRect, true, true, false);
+
+		wil::unique_hrgn region
+		{ 
+			CreateRoundRectRgn(
+				windowRect.left,
+				windowRect.top,
+				windowRect.right,
+				windowRect.bottom,
+				Shared::g_roundRectRadius,
+				Shared::g_roundRectRadius
+			) 
+		};
+		RETURN_LAST_ERROR_IF_NULL(region);
+
+		winrt::com_ptr<uDwm::CRgnGeometryProxy> geometry{ nullptr };
+		RETURN_IF_FAILED(
+			uDwm::ResourceHelper::CreateGeometryFromHRGN(
+				region.get(),
+				geometry.put()
+			)
+		);
+		winrt::com_ptr<uDwm::CDrawGeometryInstruction> instruction{ nullptr };
+		RETURN_IF_FAILED(
+			uDwm::CDrawGeometryInstruction::Create(
+				brush.get(),
+				geometry.get(),
+				instruction.put()
+			)
+		);
+		RETURN_IF_FAILED(visual->AddInstruction(instruction.get()));
+		RETURN_IF_FAILED(
+			(*cloned)->GetNonClientVisual()->GetVisualCollection()->InsertRelative(
+				visual.get(),
+				nullptr,
+				false,
+				true
+			)
+		);
+	};
+
+	return hr;
 }
 
 void GlassFramework::UpdateConfiguration(ConfigurationFramework::UpdateType type)
@@ -332,7 +459,7 @@ void GlassFramework::UpdateConfiguration(ConfigurationFramework::UpdateType type
 		Shared::g_transparencyEnabled = Utils::IsTransparencyEnabled(ConfigurationFramework::GetPersonalizeKey());
 		Shared::g_enableGeometryMerging = static_cast<bool>(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"EnableGeometryMerging"));
 		Shared::g_overrideAccent = static_cast<bool>(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"GlassOverrideAccent"));
-		g_roundRectRadius = static_cast<int>(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"RoundRectRadius"));
+		Shared::g_roundRectRadius = static_cast<int>(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"RoundRectRadius"));
 
 		if (Shared::g_forceAccentColorization = static_cast<bool>(ConfigurationFramework::DwmGetDwordFromHKCUAndHKLM(L"ForceAccentColorization")); Shared::g_forceAccentColorization)
 		{
@@ -350,7 +477,7 @@ void GlassFramework::UpdateConfiguration(ConfigurationFramework::UpdateType type
 	auto lock = wil::EnterCriticalSection(uDwm::CDesktopManager::s_csDwmInstance);
 	if (!Shared::IsBackdropAllowed())
 	{
-		VisualManager::ShutdownLegacyVisualOverrider();
+		VisualManager::LegacyVisualOverrider::Shutdown();
 	}
 	else
 	{
@@ -387,6 +514,10 @@ HRESULT GlassFramework::Startup()
 	uDwm::GetAddressFromSymbolMap("CTopLevelWindow::CalculateBackgroundType", g_CTopLevelWindow_CalculateBackgroundType_Org);
 	uDwm::GetAddressFromSymbolMap("CTopLevelWindow::UpdateSystemBackdropVisual", g_CTopLevelWindow_UpdateSystemBackdropVisual_Org);
 	uDwm::GetAddressFromSymbolMap("CTopLevelWindow::~CTopLevelWindow", g_CTopLevelWindow_Destructor_Org);
+	uDwm::GetAddressFromSymbolMap("CAnimatedGlassSheet::OnRectUpdated", g_CAnimatedGlassSheet_OnRectUpdated_Org);
+	uDwm::GetAddressFromSymbolMap("CAnimatedGlassSheet::~CAnimatedGlassSheet", g_CAnimatedGlassSheet_Destructor_Org);
+	uDwm::GetAddressFromSymbolMap("CLivePreview::_UpdateGlassVisual", g_CLivePreview__UpdateGlassVisual_Org);
+	uDwm::GetAddressFromSymbolMap("CTopLevelWindow::CloneVisualTreeForLivePreview", g_CTopLevelWindow_CloneVisualTreeForLivePreview_Org);
 
 	g_CreateRoundRectRgn_Org = reinterpret_cast<decltype(g_CreateRoundRectRgn_Org)>(HookHelper::WriteIAT(uDwm::g_moduleHandle, "gdi32.dll", "CreateRoundRectRgn", MyCreateRoundRectRgn));
 	
@@ -407,6 +538,11 @@ HRESULT GlassFramework::Startup()
 		{
 			HookHelper::Detours::Attach(&g_CTopLevelWindow_CalculateBackgroundType_Org, MyCTopLevelWindow_CalculateBackgroundType);
 		}
+		HookHelper::Detours::Attach(&g_CAnimatedGlassSheet_OnRectUpdated_Org, MyCAnimatedGlassSheet_OnRectUpdated);
+		HookHelper::Detours::Attach(&g_CAnimatedGlassSheet_Destructor_Org, MyCAnimatedGlassSheet_Destructor);
+
+		//HookHelper::Detours::Attach(&g_CLivePreview__UpdateGlassVisual_Org, MyCLivePreview__UpdateGlassVisual);
+		HookHelper::Detours::Attach(&g_CTopLevelWindow_CloneVisualTreeForLivePreview_Org, MyCTopLevelWindow_CloneVisualTreeForLivePreview);
 	});
 }
 
@@ -431,6 +567,11 @@ void GlassFramework::Shutdown()
 		{
 			HookHelper::Detours::Detach(&g_CTopLevelWindow_CalculateBackgroundType_Org, MyCTopLevelWindow_CalculateBackgroundType);
 		}
+		HookHelper::Detours::Detach(&g_CAnimatedGlassSheet_OnRectUpdated_Org, MyCAnimatedGlassSheet_OnRectUpdated);
+		HookHelper::Detours::Detach(&g_CAnimatedGlassSheet_Destructor_Org, MyCAnimatedGlassSheet_Destructor);
+
+		//HookHelper::Detours::Detach(&g_CLivePreview__UpdateGlassVisual_Org, MyCLivePreview__UpdateGlassVisual);
+		HookHelper::Detours::Detach(&g_CTopLevelWindow_CloneVisualTreeForLivePreview_Org, MyCTopLevelWindow_CloneVisualTreeForLivePreview);
 	});
 
 	if (g_CreateRoundRectRgn_Org)
@@ -439,7 +580,8 @@ void GlassFramework::Shutdown()
 	}
 
 	g_capturedWindow = nullptr;
-	VisualManager::ShutdownLegacyVisualOverrider();
+	VisualManager::LegacyVisualOverrider::Shutdown();
+	VisualManager::AnimatedGlassSheetOverrider::Shutdown();
 	ULONG_PTR desktopID{ 0 };
 	Utils::GetDesktopID(1, &desktopID);
 	auto windowList = uDwm::CDesktopManager::s_pDesktopManagerInstance->GetWindowList()->GetWindowListForDesktop(desktopID);

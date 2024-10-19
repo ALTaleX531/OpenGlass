@@ -22,7 +22,8 @@ namespace OpenGlass
 		virtual HRESULT STDMETHODCALLTYPE Render(
 			ID2D1DeviceContext* context,
 			ID2D1Geometry* geometry,
-			const D2D1_RECT_F& clipWorldBounds
+			const D2D1_RECT_F& clipWorldBounds,
+			bool normalDesktopRender
 		) = 0;
 	};
 

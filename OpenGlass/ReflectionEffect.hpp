@@ -8,7 +8,7 @@ namespace OpenGlass::ReflectionEffect
 {
 	namespace Details
 	{
-		bool g_reflectionTexturePathChanged{ false };
+		inline bool g_reflectionTexturePathChanged{ false };
 		inline winrt::com_ptr<ID2D1Effect> g_reflectionBitmapSourceEffect{ nullptr };
 		inline winrt::com_ptr<ID2D1Effect> g_cropEffect{ nullptr };
 		inline std::wstring g_reflectionTexturePath{};
@@ -55,7 +55,7 @@ namespace OpenGlass::ReflectionEffect
 			RETURN_IF_FAILED(
 				Details::g_reflectionBitmapSourceEffect->SetValue(
 					D2D1_BITMAPSOURCE_PROP_INTERPOLATION_MODE,
-					D2D1_INTERPOLATION_MODE_LINEAR
+					D2D1_INTERPOLATION_MODE_ANISOTROPIC
 				)
 			);
 			RETURN_IF_FAILED(
@@ -189,12 +189,12 @@ namespace OpenGlass::ReflectionEffect
 		if (!glassOffset)
 		{
 			offset = D2D1::Point2F(matrix.dx, matrix.dy);
-			matrix.dx = matrix.dy = 0.f;
 		}
 		else
 		{
 			offset = *glassOffset;
 		}
+		matrix.dx = matrix.dy = 0.f;
 
 		D2D1_RECT_F bounds{};
 		RETURN_IF_FAILED(geometry->GetBounds(nullptr, &bounds));
@@ -230,7 +230,7 @@ namespace OpenGlass::ReflectionEffect
 				D2D1::IdentityMatrix(),
 				reflectionIntensity,
 				nullptr,
-				D2D1_LAYER_OPTIONS1_INITIALIZE_FROM_BACKGROUND
+				D2D1_LAYER_OPTIONS1_NONE
 			),
 			nullptr
 		);

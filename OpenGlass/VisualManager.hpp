@@ -14,12 +14,27 @@ namespace OpenGlass
 			HRGN borderRgn
 		) = 0;
 	};
+	// [Guid("1DC3F5F6-F825-438D-A5DB-041A167BDE85")]
+	DECLARE_INTERFACE_IID_(IAnimatedGlassSheetOverrider, IUnknown, "1DC3F5F6-F825-438D-A5DB-041A167BDE85")
+	{
+		virtual HRESULT STDMETHODCALLTYPE OnRectUpdated(LPCRECT lprc) = 0;
+	};
 
 	namespace VisualManager
 	{
-		winrt::com_ptr<ILegacyVisualOverrider> GetOrCreateLegacyVisualOverrider(uDwm::CTopLevelWindow* window, bool createIfNecessary = false);
-		void RemoveLegacyVisualOverrider(uDwm::CTopLevelWindow* window);
-		void ShutdownLegacyVisualOverrider();
+		namespace LegacyVisualOverrider
+		{
+			winrt::com_ptr<ILegacyVisualOverrider> GetOrCreate(uDwm::CTopLevelWindow* window, bool createIfNecessary = false);
+			void Remove(uDwm::CTopLevelWindow* window);
+			void Shutdown();
+		}
+
+		namespace AnimatedGlassSheetOverrider
+		{
+			winrt::com_ptr<IAnimatedGlassSheetOverrider> GetOrCreate(uDwm::CAnimatedGlassSheet* sheet, bool createIfNecessary = false);
+			void Remove(uDwm::CAnimatedGlassSheet* sheet);
+			void Shutdown();
+		}
 
 		void RedrawTopLevelWindow(uDwm::CTopLevelWindow* window);
 	}

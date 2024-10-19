@@ -5,6 +5,7 @@
 #include "GlassEffect.hpp"
 #include "AeroEffect.hpp"
 #include "BlurEffect.hpp"
+#include "ReflectionEffect.hpp"
 #include "Shared.hpp"
 
 using namespace OpenGlass;
@@ -24,6 +25,8 @@ namespace OpenGlass::GlassEffectFactory
 		Shared::Type m_type{ Shared::Type::Blur };
 		PVOID m_originalVTable{ nullptr };
 
+		D2D1_SIZE_F m_canvasSize{};
+		D2D1_POINT_2F m_glassOffset{};
 		std::unordered_map<ID2D1Bitmap1*, winrt::com_ptr<ID2D1Bitmap1>> m_inputMap{};
 		std::variant<std::nullptr_t, winrt::com_ptr<IBlurEffect>, winrt::com_ptr<IAeroEffect>> m_customEffect{ nullptr };
 	public:
@@ -40,7 +43,8 @@ namespace OpenGlass::GlassEffectFactory
 		HRESULT STDMETHODCALLTYPE Render(
 			ID2D1DeviceContext* context,
 			ID2D1Geometry* geometry,
-			const D2D1_RECT_F& clipWorldBounds
+			const D2D1_RECT_F& clipWorldBounds,
+			bool normalDesktopRender
 		) override;
 	};
 }
@@ -73,7 +77,8 @@ void STDMETHODCALLTYPE GlassEffectFactory::CGlassEffect::SetGlassRenderingParame
 HRESULT STDMETHODCALLTYPE GlassEffectFactory::CGlassEffect::Render(
 	ID2D1DeviceContext* context,
 	ID2D1Geometry* geometry,
-	const D2D1_RECT_F& clipWorldBounds
+	const D2D1_RECT_F& clipWorldBounds,
+	bool normalDesktopRender
 )
 {
 	winrt::com_ptr<ID2D1Bitmap1> targetBitmap{ nullptr };
@@ -339,6 +344,22 @@ HRESULT STDMETHODCALLTYPE GlassEffectFactory::CGlassEffect::Render(
 
 	context->PopLayer();
 	context->SetTransform(matrix);
+
+	if (normalDesktopRender)
+	{
+		m_canvasSize = context->GetSize();
+		m_glassOffset = D2D1::Point2F(matrix.dx, matrix.dy);
+	}
+	RETURN_IF_FAILED(
+		ReflectionEffect::Render(
+			context,
+			geometry,
+			Shared::g_reflectionIntensity,
+			Shared::g_reflectionParallaxIntensity,
+			&m_canvasSize,
+			&m_glassOffset
+		)
+	);
 
 	return S_OK;
 }
