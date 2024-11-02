@@ -182,7 +182,12 @@ namespace OpenGlass::uDwm
 		}
 		VisualCollection* GetVisualCollection() const
 		{
-			return const_cast<VisualCollection*>(reinterpret_cast<VisualCollection const*>(reinterpret_cast<const char*>(this) + 32));
+			if (os::buildNumber < os::build_w11_24h2)
+			{
+				return const_cast<VisualCollection*>(reinterpret_cast<VisualCollection const*>(reinterpret_cast<const char*>(this) + 32));
+			}
+
+			return const_cast<VisualCollection*>(reinterpret_cast<VisualCollection const*>(reinterpret_cast<const char*>(this) + 144));
 		}
 		CVisualProxy* GetVisualProxy() const
 		{
@@ -201,9 +206,13 @@ namespace OpenGlass::uDwm
 			{
 				properties = &reinterpret_cast<BYTE const*>(this)[84];
 			}
-			else
+			else if (os::buildNumber < os::build_w11_24h2)
 			{
 				properties = &reinterpret_cast<BYTE const*>(this)[92];
+			}
+			else
+			{
+				properties = &reinterpret_cast<BYTE const*>(this)[36];
 			}
 
 			bool allowed{ true };
@@ -222,9 +231,13 @@ namespace OpenGlass::uDwm
 			{
 				properties = &reinterpret_cast<BYTE*>(this)[84];
 			}
-			else
+			else if (os::buildNumber < os::build_w11_24h2)
 			{
 				properties = &reinterpret_cast<BYTE*>(this)[92];
+			}
+			else
+			{
+				properties = &reinterpret_cast<BYTE*>(this)[36];
 			}
 
 			bool allowed{ false };
@@ -482,6 +495,10 @@ namespace OpenGlass::uDwm
 			{
 				window = reinterpret_cast<CTopLevelWindow* const*>(this)[48];
 			}
+			else if (os::buildNumber < os::build_w11_24h2)
+			{
+				window = reinterpret_cast<CTopLevelWindow* const*>(this)[55];
+			}
 			else
 			{
 				window = reinterpret_cast<CTopLevelWindow* const*>(this)[55];
@@ -526,6 +543,10 @@ namespace OpenGlass::uDwm
 			{
 				darkMode = (reinterpret_cast<BYTE const*>(this)[669] & 4) != 0;
 			}
+			else if (os::buildNumber < os::build_w11_24h2)
+			{
+				darkMode = (reinterpret_cast<BYTE const*>(this)[677] & 4) != 0;
+			}
 			else
 			{
 				darkMode = (reinterpret_cast<BYTE const*>(this)[677] & 4) != 0;
@@ -552,6 +573,10 @@ namespace OpenGlass::uDwm
 			else if (os::buildNumber < os::build_w11_22h2)
 			{
 				attribute = *reinterpret_cast<const DWORD*>(reinterpret_cast<BYTE const*>(this) + 664);
+			}
+			else if (os::buildNumber < os::build_w11_24h2)
+			{
+				attribute = *reinterpret_cast<const DWORD*>(reinterpret_cast<BYTE const*>(this) + 672);
 			}
 			else
 			{
@@ -606,12 +631,20 @@ namespace OpenGlass::uDwm
 			{
 				geometry = reinterpret_cast<CRgnGeometryProxy* const*>(this)[71];
 			}
-			else
+			else if (os::buildNumber < os::build_w11_24h2)
 			{
 				auto legacyBackgroundVisual{ reinterpret_cast<CVisual* const*>(this)[39] };
 				if (legacyBackgroundVisual)
 				{
 					geometry = reinterpret_cast<CRgnGeometryProxy* const*>(legacyBackgroundVisual)[40];
+				}
+			}
+			else
+			{
+				auto legacyBackgroundVisual{ reinterpret_cast<CVisual* const*>(this)[34] };
+				if (legacyBackgroundVisual)
+				{
+					geometry = reinterpret_cast<CRgnGeometryProxy* const*>(legacyBackgroundVisual)[34];
 				}
 			}
 
@@ -633,12 +666,20 @@ namespace OpenGlass::uDwm
 			{
 				geometry = reinterpret_cast<CRgnGeometryProxy* const*>(this)[72];
 			}
-			else
+			else if (os::buildNumber < os::build_w11_24h2)
 			{
 				auto legacyBackgroundVisual{ reinterpret_cast<CVisual* const*>(this)[39] };
 				if (legacyBackgroundVisual)
 				{
 					geometry = reinterpret_cast<CRgnGeometryProxy* const*>(legacyBackgroundVisual)[39];
+				}
+			}
+			else
+			{
+				auto legacyBackgroundVisual{ reinterpret_cast<CVisual* const*>(this)[34] };
+				if (legacyBackgroundVisual)
+				{
+					geometry = reinterpret_cast<CRgnGeometryProxy* const*>(legacyBackgroundVisual)[33];
 				}
 			}
 
@@ -701,9 +742,13 @@ namespace OpenGlass::uDwm
 			{
 				windowData = reinterpret_cast<CWindowData* const*>(this)[91];
 			}
-			else
+			else if (os::buildNumber < os::build_w11_24h2)
 			{
 				windowData = reinterpret_cast<CWindowData* const*>(this)[94];
+			}
+			else
+			{
+				windowData = reinterpret_cast<CWindowData* const*>(this)[89];
 			}
 
 			return windowData;
@@ -743,9 +788,13 @@ namespace OpenGlass::uDwm
 			{
 				visual = reinterpret_cast<CCanvasVisual* const*>(this)[34];
 			}
-			else
+			else if (os::buildNumber < os::build_w11_22h2)
 			{
 				visual = reinterpret_cast<CCanvasVisual* const*>(this)[36];
+			}
+			else
+			{
+				visual = reinterpret_cast<CCanvasVisual* const*>(this)[31];
 			}
 
 			return visual;
@@ -766,9 +815,13 @@ namespace OpenGlass::uDwm
 			{
 				visual = reinterpret_cast<CVisual* const*>(this)[69];
 			}
-			else
+			else if (os::buildNumber < os::build_w11_24h2)
 			{
 				visual = reinterpret_cast<CVisual* const*>(this)[73];
+			}
+			else
+			{
+				visual = reinterpret_cast<CVisual* const*>(this)[68];
 			}
 
 			return visual;
@@ -789,9 +842,13 @@ namespace OpenGlass::uDwm
 			{
 				visual = reinterpret_cast<CVisual* const*>(this)[70];
 			}
-			else
+			else if (os::buildNumber < os::build_w11_22h2)
 			{
 				visual = reinterpret_cast<CVisual* const*>(this)[74];
+			}
+			else
+			{
+				visual = reinterpret_cast<CVisual* const*>(this)[69];
 			}
 
 			return visual;
@@ -812,9 +869,13 @@ namespace OpenGlass::uDwm
 			{
 				accent = reinterpret_cast<CAccent* const*>(this)[35];
 			}
-			else
+			else if (os::buildNumber < os::build_w11_24h2)
 			{
 				accent = reinterpret_cast<CAccent* const*>(this)[37];
+			}
+			else
+			{
+				accent = reinterpret_cast<CAccent* const*>(this)[32];
 			}
 
 			return accent;
@@ -835,9 +896,13 @@ namespace OpenGlass::uDwm
 			{
 				visual = reinterpret_cast<CCanvasVisual* const*>(this)[37];
 			}
-			else
+			else if (os::buildNumber < os::build_w11_24h2)
 			{
 				visual = reinterpret_cast<CCanvasVisual* const*>(this)[39];
+			}
+			else
+			{
+				visual = reinterpret_cast<CCanvasVisual* const*>(this)[34];
 			}
 
 			return visual;
@@ -858,9 +923,13 @@ namespace OpenGlass::uDwm
 			{
 				visual = reinterpret_cast<CCanvasVisual* const*>(this)[39];
 			}
-			else
+			else if (os::buildNumber < os::build_w11_24h2)
 			{
 				visual = reinterpret_cast<CCanvasVisual* const*>(this)[42];
+			}
+			else
+			{
+				visual = reinterpret_cast<CCanvasVisual* const*>(this)[37];
 			}
 
 			return visual;
@@ -876,9 +945,13 @@ namespace OpenGlass::uDwm
 			{
 				visual = reinterpret_cast<CVisual* const*>(this)[38];
 			}
-			else
+			else if (os::buildNumber < os::build_w11_24h2)
 			{
 				visual = reinterpret_cast<CVisual* const*>(this)[40];
+			}
+			else
+			{
+				visual = reinterpret_cast<CVisual* const*>(this)[35];
 			}
 
 			return visual;
@@ -893,9 +966,13 @@ namespace OpenGlass::uDwm
 			else if (os::buildNumber < os::build_w11_22h2)
 			{
 			}
-			else
+			else if (os::buildNumber < os::build_w11_24h2)
 			{
 				visual = reinterpret_cast<CCanvasVisual* const*>(this)[41];
+			}
+			else
+			{
+				visual = reinterpret_cast<CCanvasVisual* const*>(this)[36];
 			}
 
 			return visual;
@@ -916,9 +993,13 @@ namespace OpenGlass::uDwm
 			{
 				rtlMirrored = (reinterpret_cast<DWORD const*>(this)[152] & 0x20000) != 0;
 			}
-			else
+			else if(os::buildNumber < os::build_w11_24h2)
 			{
 				rtlMirrored = (reinterpret_cast<DWORD const*>(this)[156] & 0x20000) != 0;
+			}
+			else
+			{
+				rtlMirrored = (reinterpret_cast<DWORD const*>(this)[146] & 0x20000) != 0;
 			}
 
 			return rtlMirrored;
@@ -956,12 +1037,19 @@ namespace OpenGlass::uDwm
 					!reinterpret_cast<DWORD const*>(this)[159] &&
 					!reinterpret_cast<DWORD const*>(this)[160];
 			}
-			else
+			else if (os::buildNumber < os::build_w11_24h2)
 			{
 				nonClientEmpty = !reinterpret_cast<DWORD const*>(this)[161] &&
 					!reinterpret_cast<DWORD const*>(this)[162] &&
 					!reinterpret_cast<DWORD const*>(this)[163] &&
 					!reinterpret_cast<DWORD const*>(this)[164];
+			}
+			else
+			{
+				nonClientEmpty = !reinterpret_cast<DWORD const*>(this)[151] &&
+					!reinterpret_cast<DWORD const*>(this)[152] &&
+					!reinterpret_cast<DWORD const*>(this)[153] &&
+					!reinterpret_cast<DWORD const*>(this)[154];
 			}
 
 			if (nonClientEmpty)
@@ -1031,7 +1119,12 @@ namespace OpenGlass::uDwm
 		HRESULT STDMETHODCALLTYPE GetSyncedWindowDataByHwnd(HWND hwnd, CWindowData** windowData)
 		{
 			DEFINE_INVOKER(CWindowList::GetSyncedWindowDataByHwnd);
-			return INVOKE_MEMBERFUNCTION(hwnd, windowData);
+			auto hr = INVOKE_MEMBERFUNCTION(hwnd, windowData);
+			if (os::buildNumber >= os::build_w11_24h2)
+			{
+				return S_OK;
+			}
+			return hr;
 		}
 	};
 
@@ -1101,9 +1194,13 @@ namespace OpenGlass::uDwm
 			{
 				windowList = reinterpret_cast<CWindowList* const*>(this)[52];
 			}
-			else
+			else if (os::buildNumber < os::build_w11_24h2)
 			{
 				windowList = reinterpret_cast<CWindowList* const*>(this)[54];
+			}
+			else
+			{
+				windowList = reinterpret_cast<CWindowList* const*>(this)[53];
 			}
 			return windowList;
 		}
@@ -1119,9 +1216,13 @@ namespace OpenGlass::uDwm
 			{
 				factory = reinterpret_cast<IWICImagingFactory2* const*>(this)[30];
 			}
-			else
+			else if (os::buildNumber < os::build_w11_24h2)
 			{
 				factory = reinterpret_cast<IWICImagingFactory2* const*>(this)[31];
+			}
+			else
+			{
+				factory = reinterpret_cast<IWICImagingFactory2* const*>(this)[30];
 			}
 
 			return factory;
@@ -1138,9 +1239,13 @@ namespace OpenGlass::uDwm
 			{
 				d2dDevice = reinterpret_cast<ID2D1Device**>(reinterpret_cast<void* const*>(this)[6])[3];
 			}
-			else
+			else if (os::buildNumber < os::build_w11_24h2)
 			{
 				d2dDevice = reinterpret_cast<ID2D1Device**>(reinterpret_cast<void* const*>(this)[7])[3];
+			}
+			else
+			{
+				d2dDevice = reinterpret_cast<ID2D1Device**>(reinterpret_cast<void* const*>(this)[7])[4];
 			}
 
 			return d2dDevice;
@@ -1156,6 +1261,10 @@ namespace OpenGlass::uDwm
 			else if (os::buildNumber < os::build_w11_22h2)
 			{
 				interopDevice = reinterpret_cast<dcomp::IDCompositionDesktopDevicePartner**>(reinterpret_cast<void* const*>(this)[5])[4];
+			}
+			else if (os::buildNumber < os::build_w11_24h2)
+			{
+				interopDevice = reinterpret_cast<dcomp::IDCompositionDesktopDevicePartner**>(reinterpret_cast<void* const*>(this)[6])[4];
 			}
 			else
 			{

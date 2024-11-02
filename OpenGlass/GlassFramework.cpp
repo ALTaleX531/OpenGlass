@@ -164,12 +164,21 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_UpdateNCAreaBackgrou
 			oldSystemBackdropType = *reinterpret_cast<DWORD*>(reinterpret_cast<ULONG_PTR>(data) + 204);
 			*reinterpret_cast<DWORD*>(reinterpret_cast<ULONG_PTR>(data) + 204) = 0;
 		}
+		if (os::buildNumber >= os::build_w11_24h2)
+		{
+			oldSystemBackdropType = reinterpret_cast<DWORD*>(data)[200];
+			reinterpret_cast<DWORD*>(data)[200] = 0;
+		}
 
 		hr = g_CTopLevelWindow_UpdateNCAreaBackground_Org(This);
 
 		if (os::buildNumber == os::build_w11_21h2)
 		{
 			*reinterpret_cast<DWORD*>(reinterpret_cast<ULONG_PTR>(data) + 204) = oldSystemBackdropType;
+		}
+		if (os::buildNumber >= os::build_w11_24h2)
+		{
+			reinterpret_cast<DWORD*>(data)[200] = oldSystemBackdropType;
 		}
 
 		if (SUCCEEDED(hr))
@@ -426,8 +435,25 @@ void STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_Destructor(uDwm::CTopLe
 // thumbnail/aero peek
 HRESULT STDMETHODCALLTYPE GlassFramework::MyCTopLevelWindow_InitializeVisualTreeClone(uDwm::CTopLevelWindow* This, uDwm::CTopLevelWindow* window, UINT cloneOptions)
 {
+	auto data{ This->GetData() };
+	if (!data)
+	{
+		return g_CTopLevelWindow_InitializeVisualTreeClone_Org(This, window, cloneOptions);
+	}
+
+	DWORD oldSystemBackdropType{ 0 };
+	if (os::buildNumber >= os::build_w11_24h2)
+	{
+		oldSystemBackdropType = reinterpret_cast<DWORD*>(data)[200];
+		reinterpret_cast<DWORD*>(data)[200] = 0;
+	}
+
 	HRESULT hr{ g_CTopLevelWindow_InitializeVisualTreeClone_Org(This, window, cloneOptions) };
-	
+
+	if (os::buildNumber == os::build_w11_21h2)
+	{
+		*reinterpret_cast<DWORD*>(reinterpret_cast<ULONG_PTR>(data) + 204) = oldSystemBackdropType;
+	}
 	if (SUCCEEDED(hr))
 	{
 		BackdropManager::TryClone(This, window);
@@ -506,7 +532,7 @@ HRESULT STDMETHODCALLTYPE GlassFramework::MyCWindowList_UpdateAccentBlurRect(uDw
 	uDwm::CWindowData* data{ nullptr };
 	uDwm::CTopLevelWindow* window{ nullptr };
 	auto lock{ wil::EnterCriticalSection(uDwm::CDesktopManager::s_csDwmInstance) };
-	if (SUCCEEDED(hr) && SUCCEEDED(This->GetSyncedWindowDataByHwnd(milCmd->GetHwnd(), &data)) && data && (window = data->GetWindow()))
+	if (SUCCEEDED(hr) && SUCCEEDED(hr = This->GetSyncedWindowDataByHwnd(milCmd->GetHwnd(), &data)) && data && (window = data->GetWindow()))
 	{
 		auto kind{ static_cast<BackdropManager::CompositedBackdropKind>(GetActualBackdropKind(window)) };
 		auto lprc{ milCmd->GetRect() };
