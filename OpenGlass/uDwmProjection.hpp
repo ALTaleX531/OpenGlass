@@ -1234,9 +1234,11 @@ namespace OpenGlass::uDwm
 	protected:
 		CVisual* m_parentVisual{ nullptr };
 		winrt::com_ptr<CVisual> m_udwmVisual{ nullptr };
-		winrt::com_ptr<IDCompositionVisual2> m_dcompVisual{ nullptr };
-		winrt::com_ptr<dcomp::InteropCompositionTarget> m_dcompTarget{ nullptr };
+
+		wuc::ContainerVisual m_rootVisual{ nullptr };
+		winrt::com_ptr<dcomp::IInteropVisualTarget> m_visualTarget{ nullptr };
 		winrt::com_ptr<dcomp::IDCompositionDesktopDevicePartner> m_dcompDevice{ nullptr };
+
 		wuc::VisualCollection m_visualCollection{ nullptr };
 
 		void InitializeInteropDevice(dcomp::IDCompositionDesktopDevicePartner* interopDevice)
@@ -1245,26 +1247,27 @@ namespace OpenGlass::uDwm
 		}
 		virtual HRESULT InitializeVisual()
 		{
-			// initialize dcomp visual
-			RETURN_IF_FAILED(m_dcompDevice->CreateVisual(m_dcompVisual.put()));
-#ifdef _DEBUG
-			m_dcompVisual.as<IDCompositionVisualDebug>()->EnableRedrawRegions();
-#endif
-			m_visualCollection = dcomp::GetVisualPartnerWinRTInterop(m_dcompVisual.get())->GetVisualCollection();
+			auto compositor = m_dcompDevice.as<wuc::Compositor>();
+			m_rootVisual = compositor.CreateContainerVisual();
+			m_visualCollection = m_rootVisual.Children();
 
 			// create shared target
 			RETURN_IF_FAILED(
 				m_dcompDevice->CreateSharedResource(
-					IID_PPV_ARGS(m_dcompTarget.put())
+					IID_PPV_ARGS(m_visualTarget.put())
 				)
 			);
-			RETURN_IF_FAILED(m_dcompTarget->SetRoot(m_dcompVisual.get()));
+			RETURN_IF_FAILED(
+				m_visualTarget.as<dcomp::IVisualTargetPartner>()->SetRoot(
+					m_rootVisual.as<ABI::Windows::UI::Composition::IVisual>().get()
+				)
+			);
 			RETURN_IF_FAILED(m_dcompDevice->Commit());
 
 			// interop with udwm and dwmcore
 			wil::unique_handle resourceHandle{ nullptr };
 			RETURN_IF_FAILED(
-				m_dcompDevice->OpenSharedResourceHandle(m_dcompTarget.get(), resourceHandle.put())
+				m_dcompDevice->OpenSharedResourceHandle(m_visualTarget.get(), resourceHandle.put())
 			);
 
 			if (os::buildNumber < os::build_w10_1903)
@@ -1328,15 +1331,15 @@ namespace OpenGlass::uDwm
 
 				m_udwmVisual = nullptr;
 			}
-			if (m_dcompVisual)
+			if (m_rootVisual)
 			{
 #ifdef _DEBUG
-				m_dcompVisual.as<IDCompositionVisualDebug>()->DisableRedrawRegions();
+				m_rootVisual.as<IDCompositionVisualDebug>()->DisableRedrawRegions();
 #endif
 				m_visualCollection.RemoveAll();
-				m_dcompVisual = nullptr;
+				m_rootVisual = nullptr;
 			}
-			m_dcompTarget = nullptr;
+			m_visualTarget = nullptr;
 		}
 
 		CSpriteVisual(CVisual* parentVisual) : m_parentVisual{ parentVisual } {}

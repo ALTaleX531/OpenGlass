@@ -176,7 +176,7 @@ namespace OpenGlass::BackdropManager
 		}
 		auto GetDCompVisual() const
 		{
-			return m_dcompVisual.as<wuc::Visual>();
+			return m_rootVisual;
 		}
 		bool CanBeTrimmed() override
 		{
@@ -357,7 +357,7 @@ HRESULT BackdropManager::CCompositedBackdropVisual::InitializeVisual()
 	m_pathGeometry.Path(wuc::CompositionPath{ Win2D::CanvasGeometry::CreateGeometryFromHRGN(factory.get(), m_compositedRgn.get()).as<wg::IGeometrySource2D>() });
 	//RETURN_IF_FAILED(uDwm::ResourceHelper::CreateGeometryFromHRGN(m_compositedRgn.get(), m_rgnGeometryProxy.put()));
 
-	m_dcompVisual.as<wuc::Visual>().Clip(compositor.CreateGeometricClip(m_pathGeometry));
+	m_rootVisual.Clip(compositor.CreateGeometricClip(m_pathGeometry));
 	//m_udwmVisual->GetVisualProxy()->SetClip(m_rgnGeometryProxy.get());
 	m_visualCollection.InsertAtBottom(m_wucRootVisual);
 
@@ -402,7 +402,7 @@ void BackdropManager::CCompositedBackdropVisual::OnBackdropRegionChanged(wil::un
 
 	if (m_visible != isVisible)
 	{
-		m_dcompVisual.as<wuc::Visual>().IsVisible(isVisible);
+		m_rootVisual.IsVisible(isVisible);
 		m_visible = isVisible;
 	}
 
@@ -422,7 +422,7 @@ void BackdropManager::CCompositedBackdropVisual::OnBackdropRegionChanged(wil::un
 	}
 	if (m_clipApplied2 != clipApplied)
 	{
-		m_dcompVisual.as<wuc::Visual>().Clip(clipApplied ? m_dcompDevice.as<wuc::Compositor>().CreateGeometricClip(m_pathGeometry) : nullptr);
+		m_rootVisual.Clip(clipApplied ? m_dcompDevice.as<wuc::Compositor>().CreateGeometricClip(m_pathGeometry) : nullptr);
 		m_clipApplied2 = clipApplied;
 	}
 
