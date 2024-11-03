@@ -788,7 +788,7 @@ namespace OpenGlass::uDwm
 			{
 				visual = reinterpret_cast<CCanvasVisual* const*>(this)[34];
 			}
-			else if (os::buildNumber < os::build_w11_22h2)
+			else if (os::buildNumber < os::build_w11_24h2)
 			{
 				visual = reinterpret_cast<CCanvasVisual* const*>(this)[36];
 			}
@@ -842,7 +842,7 @@ namespace OpenGlass::uDwm
 			{
 				visual = reinterpret_cast<CVisual* const*>(this)[70];
 			}
-			else if (os::buildNumber < os::build_w11_22h2)
+			else if (os::buildNumber < os::build_w11_24h2)
 			{
 				visual = reinterpret_cast<CVisual* const*>(this)[74];
 			}
