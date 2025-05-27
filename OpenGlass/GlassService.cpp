@@ -128,12 +128,12 @@ HRESULT GlassService::InjectOpenGlassDLL(DWORD processId, bool inject)
 		remoteAddress = HookHelper::GetProcessModule(processHandle.get(), Util::g_thisModulePath.c_str());
 	}
 	[[maybe_unused]] const auto cleanup = wil::scope_exit([&processHandle, remoteAddress, inject]
-	{
-		if (inject && remoteAddress)
 		{
-			VirtualFreeEx(processHandle.get(), remoteAddress, 0, MEM_RELEASE);
-		}
-	});
+			if (inject && remoteAddress)
+			{
+				VirtualFreeEx(processHandle.get(), remoteAddress, 0, MEM_RELEASE);
+			}
+		});
 
 	if (inject)
 	{
@@ -141,7 +141,7 @@ HRESULT GlassService::InjectOpenGlassDLL(DWORD processId, bool inject)
 	}
 
 	static const auto s_pfnNtCreateThreadEx = reinterpret_cast<NTSTATUS(NTAPI*)(PHANDLE, ACCESS_MASK, LPVOID, HANDLE, LPTHREAD_START_ROUTINE, LPVOID, ULONG, SIZE_T, SIZE_T, SIZE_T, LPVOID)>(GetProcAddress(GetModuleHandleW(L"ntdll.dll"), "NtCreateThreadEx"));
-	
+
 	wil::unique_handle threadHandle{ nullptr };
 	const auto startRoutine =
 		inject ?
@@ -150,31 +150,31 @@ HRESULT GlassService::InjectOpenGlassDLL(DWORD processId, bool inject)
 			reinterpret_cast<ULONG_PTR>(OpenGlass::UnInitializationThreadEntryPoint)-
 			reinterpret_cast<ULONG_PTR>(wil::GetModuleInstanceHandle()) +
 			reinterpret_cast<ULONG_PTR>(remoteAddress)
-		);
+			);
 	NTSTATUS ntstatus
-	{ 
+	{
 		s_pfnNtCreateThreadEx(
-			threadHandle.put(), 
-			PROCESS_ALL_ACCESS, 
-			nullptr, 
-			processHandle.get(), 
-			startRoutine, 
+			threadHandle.put(),
+			PROCESS_ALL_ACCESS,
+			nullptr,
+			processHandle.get(),
+			startRoutine,
 			remoteAddress,
-			0, 
-			0, 
-			0, 
-			0, 
+			0,
+			0,
+			0,
+			0,
 			nullptr
-		) 
+		)
 	};
 	RETURN_IF_NTSTATUS_FAILED(ntstatus);
-	
+
 	if (inject)
 	{
 		const auto waitResult = WaitForSingleObject(threadHandle.get(), 1000);
 		if (waitResult == WAIT_TIMEOUT)
 		{
-			#pragma warning(suppress:6258)
+#pragma warning(suppress:6258)
 			RETURN_IF_WIN32_BOOL_FALSE(TerminateThread(threadHandle.get(), HRESULT_FROM_WIN32(ERROR_POSSIBLE_DEADLOCK)));
 			return HRESULT_FROM_WIN32(ERROR_POSSIBLE_DEADLOCK);
 		}
@@ -190,20 +190,20 @@ HRESULT GlassService::InjectOpenGlassDLL(DWORD processId, bool inject)
 		}
 
 		ntstatus = s_pfnNtCreateThreadEx(
-			threadHandle.put(), 
-			PROCESS_ALL_ACCESS, 
-			nullptr, 
-			processHandle.get(), 
+			threadHandle.put(),
+			PROCESS_ALL_ACCESS,
+			nullptr,
+			processHandle.get(),
 			reinterpret_cast<LPTHREAD_START_ROUTINE>(
 				reinterpret_cast<ULONG_PTR>(OpenGlass::InitializationThreadEntryPoint) -
 				reinterpret_cast<ULONG_PTR>(wil::GetModuleInstanceHandle()) +
 				reinterpret_cast<ULONG_PTR>(remoteDllAddress)
-			), 
-			nullptr, 
-			0, 
-			0, 
-			0, 
-			0, 
+				),
+			nullptr,
+			0,
+			0,
+			0,
+			0,
 			nullptr
 		);
 		RETURN_IF_NTSTATUS_FAILED(ntstatus);
@@ -300,6 +300,8 @@ HRESULT GlassService::RunInjectionThread()
 		return S_OK;
 	};
 
+	FILE* logfp = fopen("c:\\openglass\\log.txt", "w");
+
 	HRESULT hr{ S_OK };
 	do
 	{
@@ -317,89 +319,100 @@ HRESULT GlassService::RunInjectionThread()
 				it++;
 			}
 		}
-		DWORD activeSessionId{ 0ul };
-		if (activeSessionId = WTSGetActiveConsoleSessionId(); activeSessionId == 0xFFFFFFFF)
-		{
-			goto wait_until_next_cycle;
-		}
+
+		PWTS_SESSION_INFO pSessionInfo = nullptr;
+		DWORD count = 0;
+
 		if (g_injectionThreadStatus == ThreadStatus::Paused)
 		{
 			goto wait_until_next_cycle;
 		}
 
-		WalkDwmProcesses([&hr, activeSessionId](DWORD processId) -> bool
-		{
-			if (g_injectionThreadStatus == ThreadStatus::Paused)
-			{
-				return false;
-			}
+		if (WTSEnumerateSessions(WTS_CURRENT_SERVER_HANDLE, 0, 1, &pSessionInfo, &count)) {
+			for (DWORD i = 0; i < count; ++i) {
+				DWORD activeSessionId = pSessionInfo[i].SessionId;
+				DWORD bytesReturned = 0;
+				WTS_CONNECTSTATE_CLASS* state = nullptr;
+				if (WTSQuerySessionInformation(WTS_CURRENT_SERVER_HANDLE, activeSessionId, WTSConnectState, reinterpret_cast<LPTSTR*>(&state), &bytesReturned)) {
+					if (*state == WTSActive || *state == WTSConnected) {
+						WalkDwmProcesses([&hr, activeSessionId](DWORD processId) -> bool
+							{
+								if (g_injectionThreadStatus == ThreadStatus::Paused)
+								{
+									return false;
+								}
 
-			DWORD sessionId{ 0 };
-			if (!ProcessIdToSessionId(processId, &sessionId))
-			{
-				return true;
-			}
-			if (activeSessionId != sessionId)
-			{
-				return true;
-			}
+								DWORD sessionId{ 0 };
+								if (!ProcessIdToSessionId(processId, &sessionId))
+								{
+									return true;
+								}
+								if (activeSessionId != sessionId)
+								{
+									return true;
+								}
 
-			if (!IsDwmProcess(processId))
-			{
-				return true;
-			}
+								if (!IsDwmProcess(processId))
+								{
+									return true;
+								}
 
-			if (!IsOpenGlassAlreadyLoaded(processId))
-			{
-				auto currentTimeStamp = std::chrono::steady_clock::now();
+								if (!IsOpenGlassAlreadyLoaded(processId))
+								{
+									auto currentTimeStamp = std::chrono::steady_clock::now();
 
-				const auto it = g_dwmInjectionMap.find(sessionId);
-				if (it != g_dwmInjectionMap.end())
-				{
-					const auto& [injectionSessionId, injectionTimeStamp] = *it;
+									const auto it = g_dwmInjectionMap.find(sessionId);
+									if (it != g_dwmInjectionMap.end())
+									{
+										const auto& [injectionSessionId, injectionTimeStamp] = *it;
 
-					// DWM constantly crashes
-					if (currentTimeStamp - injectionTimeStamp <= std::chrono::seconds{ 30 })
-					{
-						auto title = Util::GetResourceStringView<IDS_STRING101>();
-						auto content = Util::GetResourceStringView<IDS_STRING109>();
-						DWORD response{ IDTIMEOUT };
-						WTSSendMessageW(
-							WTS_CURRENT_SERVER_HANDLE,
-							sessionId,
-							const_cast<LPWSTR>(title.data()),
-							static_cast<DWORD>(title.size() * sizeof(WCHAR)),
-							const_cast<LPWSTR>(content.data()),
-							static_cast<DWORD>(content.size() * sizeof(WCHAR)),
-							MB_ICONERROR | MB_ABORTRETRYIGNORE,
-							0,
-							&response,
-							TRUE
-						);
-						g_injectionThreadStatus = response == IDABORT ? ThreadStatus::Paused : ThreadStatus::Running;
-						
-						if (g_injectionThreadStatus == ThreadStatus::Paused)
-						{
-							hr = E_ABORT;
-							ShutdownService();
-							return false;
-						}
-						if (response == IDIGNORE)
-						{
-							g_dwmInjectionMap.erase(it);
-							return false;
-						}
+										// DWM constantly crashes
+										if (currentTimeStamp - injectionTimeStamp <= std::chrono::seconds{ 30 })
+										{
+											auto title = Util::GetResourceStringView<IDS_STRING101>();
+											auto content = Util::GetResourceStringView<IDS_STRING109>();
+											DWORD response{ IDTIMEOUT };
+											WTSSendMessageW(
+												WTS_CURRENT_SERVER_HANDLE,
+												sessionId,
+												const_cast<LPWSTR>(title.data()),
+												static_cast<DWORD>(title.size() * sizeof(WCHAR)),
+												const_cast<LPWSTR>(content.data()),
+												static_cast<DWORD>(content.size() * sizeof(WCHAR)),
+												MB_ICONERROR | MB_ABORTRETRYIGNORE,
+												0,
+												&response,
+												TRUE
+											);
+											g_injectionThreadStatus = response == IDABORT ? ThreadStatus::Paused : ThreadStatus::Running;
+
+											if (g_injectionThreadStatus == ThreadStatus::Paused)
+											{
+												hr = E_ABORT;
+												ShutdownService();
+												return false;
+											}
+											if (response == IDIGNORE)
+											{
+												g_dwmInjectionMap.erase(it);
+												return false;
+											}
+										}
+									}
+
+									if (const auto hresult = InjectOpenGlassDLL(processId, true); SUCCEEDED(hresult))
+									{
+										g_dwmInjectionMap.insert_or_assign(sessionId, currentTimeStamp);
+									}
+								}
+
+								return true;
+							});
 					}
 				}
-
-				if (const auto hresult = InjectOpenGlassDLL(processId, true); SUCCEEDED(hresult))
-				{
-					g_dwmInjectionMap.insert_or_assign(sessionId, currentTimeStamp);
-				}
 			}
-
-			return true;
-		});
+			WTSFreeMemory(pSessionInfo);
+		}
 
 	wait_until_next_cycle:
 		SleepEx(g_injectionThreadStatus == ThreadStatus::Paused ? INFINITE : 2000ul, TRUE);
@@ -415,6 +428,8 @@ HRESULT GlassService::RunInjectionThread()
 
 		return true;
 	});
+
+	fclose(logfp);
 	
 	return hr;
 }
