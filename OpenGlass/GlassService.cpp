@@ -128,12 +128,12 @@ HRESULT GlassService::InjectOpenGlassDLL(DWORD processId, bool inject)
 		remoteAddress = HookHelper::GetProcessModule(processHandle.get(), Util::g_thisModulePath.c_str());
 	}
 	[[maybe_unused]] const auto cleanup = wil::scope_exit([&processHandle, remoteAddress, inject]
+	{
+		if (inject && remoteAddress)
 		{
-			if (inject && remoteAddress)
-			{
-				VirtualFreeEx(processHandle.get(), remoteAddress, 0, MEM_RELEASE);
-			}
-		});
+			VirtualFreeEx(processHandle.get(), remoteAddress, 0, MEM_RELEASE);
+		}
+	});
 
 	if (inject)
 	{
@@ -141,7 +141,7 @@ HRESULT GlassService::InjectOpenGlassDLL(DWORD processId, bool inject)
 	}
 
 	static const auto s_pfnNtCreateThreadEx = reinterpret_cast<NTSTATUS(NTAPI*)(PHANDLE, ACCESS_MASK, LPVOID, HANDLE, LPTHREAD_START_ROUTINE, LPVOID, ULONG, SIZE_T, SIZE_T, SIZE_T, LPVOID)>(GetProcAddress(GetModuleHandleW(L"ntdll.dll"), "NtCreateThreadEx"));
-
+	
 	wil::unique_handle threadHandle{ nullptr };
 	const auto startRoutine =
 		inject ?
@@ -150,20 +150,20 @@ HRESULT GlassService::InjectOpenGlassDLL(DWORD processId, bool inject)
 			reinterpret_cast<ULONG_PTR>(OpenGlass::UnInitializationThreadEntryPoint)-
 			reinterpret_cast<ULONG_PTR>(wil::GetModuleInstanceHandle()) +
 			reinterpret_cast<ULONG_PTR>(remoteAddress)
-			);
+		);
 	NTSTATUS ntstatus
-	{
+	{ 
 		s_pfnNtCreateThreadEx(
-			threadHandle.put(),
-			PROCESS_ALL_ACCESS,
-			nullptr,
-			processHandle.get(),
-			startRoutine,
+			threadHandle.put(), 
+			PROCESS_ALL_ACCESS, 
+			nullptr, 
+			processHandle.get(), 
+			startRoutine, 
 			remoteAddress,
-			0,
-			0,
-			0,
-			0,
+			0, 
+			0, 
+			0, 
+			0, 
 			nullptr
 		)
 	};
@@ -174,7 +174,7 @@ HRESULT GlassService::InjectOpenGlassDLL(DWORD processId, bool inject)
 		const auto waitResult = WaitForSingleObject(threadHandle.get(), 1000);
 		if (waitResult == WAIT_TIMEOUT)
 		{
-#pragma warning(suppress:6258)
+			#pragma warning(suppress:6258)
 			RETURN_IF_WIN32_BOOL_FALSE(TerminateThread(threadHandle.get(), HRESULT_FROM_WIN32(ERROR_POSSIBLE_DEADLOCK)));
 			return HRESULT_FROM_WIN32(ERROR_POSSIBLE_DEADLOCK);
 		}
@@ -190,20 +190,20 @@ HRESULT GlassService::InjectOpenGlassDLL(DWORD processId, bool inject)
 		}
 
 		ntstatus = s_pfnNtCreateThreadEx(
-			threadHandle.put(),
-			PROCESS_ALL_ACCESS,
-			nullptr,
-			processHandle.get(),
+			threadHandle.put(), 
+			PROCESS_ALL_ACCESS, 
+			nullptr, 
+			processHandle.get(), 
 			reinterpret_cast<LPTHREAD_START_ROUTINE>(
 				reinterpret_cast<ULONG_PTR>(OpenGlass::InitializationThreadEntryPoint) -
 				reinterpret_cast<ULONG_PTR>(wil::GetModuleInstanceHandle()) +
 				reinterpret_cast<ULONG_PTR>(remoteDllAddress)
-				),
-			nullptr,
-			0,
-			0,
-			0,
-			0,
+			), 
+			nullptr, 
+			0, 
+			0, 
+			0, 
+			0, 
 			nullptr
 		);
 		RETURN_IF_NTSTATUS_FAILED(ntstatus);
@@ -299,8 +299,6 @@ HRESULT GlassService::RunInjectionThread()
 		while (Process32NextW(snapshot.get(), &pe));
 		return S_OK;
 	};
-
-	FILE* logfp = fopen("c:\\openglass\\log.txt", "w");
 
 	HRESULT hr{ S_OK };
 	do
@@ -428,8 +426,6 @@ HRESULT GlassService::RunInjectionThread()
 
 		return true;
 	});
-
-	fclose(logfp);
 	
 	return hr;
 }
