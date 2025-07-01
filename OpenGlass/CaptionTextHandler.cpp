@@ -170,12 +170,13 @@ int WINAPI CaptionTextHandler::MyDrawTextW(
 
 	const auto calcGlowClipRect = [](LPCRECT lprc, RECT& glowClipRect, bool mirrored)
 	{
+		auto& visibleMargins = g_window->GetMarginsVisibleOutside(g_window->IsWindowMaximized());
 		if (!mirrored)
 		{
 			glowClipRect.left = std::max(
 				glowClipRect.left,
 				lprc->left -
-				(g_textVisual->GetX() + (g_centerCaption ? static_cast<LONG>(std::round(static_cast<DOUBLE>(g_textVisual->GetWidth() - g_textSize.cx) / 2.)) : 0l))
+				(g_textVisual->GetX() + (g_centerCaption ? static_cast<LONG>(std::round(static_cast<DOUBLE>(g_textVisual->GetWidth() - g_textSize.cx) / 2.)) : (-visibleMargins.cxLeftWidth)))
 			);
 		}
 		else
@@ -183,7 +184,7 @@ int WINAPI CaptionTextHandler::MyDrawTextW(
 			glowClipRect.right = std::min(
 				glowClipRect.right,
 				lprc->right +
-				(g_textVisual->GetX() + (g_centerCaption ? static_cast<LONG>(std::round(static_cast<DOUBLE>(g_textVisual->GetWidth() - g_textSize.cx) / 2.)) : 0l))
+				(g_textVisual->GetX() + (g_centerCaption ? static_cast<LONG>(std::round(static_cast<DOUBLE>(g_textVisual->GetWidth() - g_textSize.cx) / 2.)) : (-visibleMargins.cxRightWidth)))
 			);
 		}
 	};
