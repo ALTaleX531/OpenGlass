@@ -34,8 +34,8 @@ IDB_REFLECTION          PNG                     "reflection.png"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,6,1,2889
- PRODUCTVERSION 2,6,1,2889
+ FILEVERSION 2,6,2,2891
+ PRODUCTVERSION 2,6,2,2891
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -52,12 +52,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "ALTaleX"
             VALUE "FileDescription", "Aero Glass Extension for Desktop Window Manager"
-            VALUE "FileVersion", "2.6.1.2889"
+            VALUE "FileVersion", "2.6.2.2891"
             VALUE "InternalName", "Aero Glass for Win10+"
             VALUE "LegalCopyright", "Copyright (C) 2024-2026 ALTaleX531"
             VALUE "OriginalFilename", "OpenGlass.dll"
             VALUE "ProductName", "OpenGlass"
-            VALUE "ProductVersion", "2.6.1.2889"
+            VALUE "ProductVersion", "2.6.2.2891"
         END
     END
     BLOCK "VarFileInfo"

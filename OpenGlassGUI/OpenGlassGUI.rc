@@ -51,7 +51,7 @@ END
 
 VS_VERSION_INFO VERSIONINFO
  FILEVERSION 1,0,0,1
- PRODUCTVERSION 2,6,1,2889
+ PRODUCTVERSION 2,6,2,2891
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -68,12 +68,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "ALTaleX"
             VALUE "FileDescription", "Aero Glass Extension Configuration Utility"
-            VALUE "FileVersion", "1.0.0.1"
+            VALUE "FileVersion", "1.1.0.13"
             VALUE "InternalName", "Aero Glass for Win10+"
             VALUE "LegalCopyright", "Copyright (C) 2024-2026 ALTaleX531"
             VALUE "OriginalFilename", "OpenGlassGUI.exe"
             VALUE "ProductName", "OpenGlass"
-            VALUE "ProductVersion", "2.6.1.2889"
+            VALUE "ProductVersion", "2.6.2.2891"
         END
     END
     BLOCK "VarFileInfo"
