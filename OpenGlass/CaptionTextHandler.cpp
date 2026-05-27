@@ -534,6 +534,17 @@ void CaptionTextHandler::MyID2D1DeviceContext_DrawTextLayout(
 		solidColorBrush->SetColor(Color::FromAbgr(textColorOverride));
 	}
 
+	DWRITE_LINE_METRICS lineMetrics{};
+	UINT32 lineCount{};
+	THROW_IF_FAILED(
+		textLayout->GetLineMetrics(
+			&lineMetrics,
+			1,
+			&lineCount
+		)
+	);
+	g_isTrimmed = lineMetrics.isTrimmed;
+
 	if (!g_textGlowSize)
 	{
 		return g_ID2D1DeviceContext_DrawTextLayout_Org(
@@ -712,17 +723,6 @@ void CaptionTextHandler::MyID2D1DeviceContext_DrawTextLayout(
 			textBoundingBox.right + static_cast<float>(g_contentMargins.cxRightWidth),
 			textBoundingBox.bottom + static_cast<float>(g_contentMargins.cyBottomHeight)
 		};
-
-		DWRITE_LINE_METRICS lineMetrics{};
-		UINT32 lineCount{};
-		THROW_IF_FAILED(
-			textLayout->GetLineMetrics(
-				&lineMetrics,
-				1,
-				&lineCount
-			)
-		);
-		g_isTrimmed = lineMetrics.isTrimmed;
 
 		const auto calcGlowClipRect = [&windowState](const D2D1_RECT_F& textRect, D2D1_RECT_F& glowClipRect, bool mirrored)
 		{
