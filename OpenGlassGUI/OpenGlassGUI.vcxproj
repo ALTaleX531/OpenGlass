@@ -43,14 +43,6 @@
       <!-- However, vcpkg might default to valid settings. -->
     </ClCompile>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)'=='Release' or '$(Configuration)'=='ReleaseSigned'">
-    <ClCompile>
-      <WholeProgramOptimization>false</WholeProgramOptimization>
-    </ClCompile>
-    <Link>
-      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
-    </Link>
-  </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="OpenGlassGUI.hpp" />
     <ClInclude Include="MainFrame.hpp" />
