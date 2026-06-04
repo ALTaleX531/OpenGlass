@@ -221,41 +221,34 @@ namespace OpenGlass::DWM
 	using HMIL_CONNECTION = HANDLE;
 	struct IDwmChannel {};
 	struct IDwmWindow {};
+
+	enum class MILCMD;
+	struct MILCMD_COMBINEDGEOMETRY
+	{
+		MILCMD Type;
+		UINT Handle;
+		D2D1_COMBINE_MODE GeometryCombineMode;
+		UINT hGeometry1;
+		UINT hGeometry2;
+	};
 }
 namespace OpenGlass::dwmcore
 {
 	using namespace DWM;
 	struct CChannel : IDwmChannel
 	{
-		DECLSPEC_PROJECTION HRESULT MatrixTransformUpdate(
+		DECLSPEC_INDIRECT_PROJECTION HRESULT QueryResourceInterface(UINT handleId, REFIID iid, PVOID* ppv)
+		{
+			return HANDLE_PROJECTION_FUNCTION(CChannel::QueryResourceInterface, this, handleId, iid, ppv);
+		}
+		DECLSPEC_INDIRECT_PROJECTION HRESULT CombinedGeometryUpdate(
 			UINT handleId,
-			MilMatrix3x2D* matrix
-		);
-		DECLSPEC_PROJECTION HRESULT SolidColorLegacyMilBrushUpdate(
-			UINT handleId,
-			double opacity,
-			const D2D1_COLOR_F& color,
-			UINT opacityAnimationsHandleId,
-			UINT transformHandleId,
-			UINT relativeTransformHandleId
-		);
-		DECLSPEC_PROJECTION HRESULT ImageLegacyMilBrushUpdate(
-			UINT handleId,
-			double opacity,
-			const D2D1_RECT_F& viewport,
-			const D2D1_RECT_F& viewbox,
-			UINT opacityAnimationsHandleId,
-			UINT transformHandleId,
-			UINT relativeTransformHandleId,
-			MilBrushMappingMode viewportUnits,
-			MilBrushMappingMode viewboxUnits,
-			UINT viewportAnimationsHandleId,
-			UINT viewboxAnimationsHandleId,
-			MilStretch stretchMode,
-			MilTileMode tileMode,
-			MilHorizontalAlignment alignmentX,
-			MilVerticalAlignment alignmentY,
-			UINT imageSourceHandleId
-		);
+			D2D1_COMBINE_MODE mode,
+			UINT geometry1HandleId,
+			UINT geometry2HandleId
+		)
+		{
+			return HANDLE_PROJECTION_FUNCTION(CChannel::CombinedGeometryUpdate, this, handleId, mode, geometry1HandleId, geometry2HandleId);
+		}
 	};
 }

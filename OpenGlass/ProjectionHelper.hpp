@@ -199,7 +199,10 @@ namespace OpenGlass
 	}
 }
 
-#define DECLSPEC_PROJECTION DECLSPEC_NOINLINE inline
+// use direct projection for small, hot functions to allow inlining the stub into the caller for better performance
+#define DECLSPEC_DIRECT_PROJECTION inline
+// use indirect projection for symbol-dependent functions to avoid inlining the stub
+#define DECLSPEC_INDIRECT_PROJECTION DECLSPEC_NOINLINE inline
 #define HANDLE_PROJECTION_FUNCTION(function, ...) \
 std::invoke(Util::force_cast_to<decltype(&function)>(reinterpret_cast<PVOID>(Util::compile_time_hash(#function, 0ull))), ##__VA_ARGS__)
 

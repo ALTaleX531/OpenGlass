@@ -77,4 +77,9 @@ namespace OpenGlass::HookHelper
 	{
 		return reinterpret_cast<T*>(*reinterpret_cast<PVOID*>(const_cast<void*>(This)));
 	}
+	template <typename T = LPCVOID>
+	FORCEINLINE T& get_vftable_reference_from(const void* This)
+	{
+		return *reinterpret_cast<T*>(const_cast<void*>(This));
+	}
 }

@@ -3,6 +3,7 @@
 #include "cpprt.hpp"
 #include "HookHelper.hpp"
 #include "DxgiPrivates.hpp"
+#include <winrt/windows.ui.h>
 
 namespace OpenGlass::Util
 {
@@ -1051,6 +1052,17 @@ namespace OpenGlass
 				(std::min(static_cast<DWORD>(color.b * 255.f + 0.5f), 255ul) << 16) |
 				(std::min(static_cast<DWORD>(color.g * 255.f + 0.5f), 255ul) << 8) |
 				(std::min(static_cast<DWORD>(color.r * 255.f + 0.5f), 255ul) << 0);
+		}
+
+		FORCEINLINE constexpr winrt::Windows::UI::Color ToWinUIColor(const D2D1_COLOR_F& color)
+		{
+			return
+			{
+				static_cast<uint8_t>(std::min(static_cast<DWORD>(color.a * 255.f + 0.5f), 255ul)),
+				static_cast<uint8_t>(std::min(static_cast<DWORD>(color.r * 255.f + 0.5f), 255ul)),
+				static_cast<uint8_t>(std::min(static_cast<DWORD>(color.g * 255.f + 0.5f), 255ul)),
+				static_cast<uint8_t>(std::min(static_cast<DWORD>(color.b * 255.f + 0.5f), 255ul))
+			};
 		}
 	}
 
