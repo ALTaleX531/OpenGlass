@@ -25,39 +25,23 @@ namespace OpenGlass::GlassFrameDemodernizer
 	{
 		// call ???
 		0xE8, 0x00, 0x00, 0x00, 0x00,
+		// mov     r15b, 1
+		0x41, 0xB7, 0x01,
 		// test al, al
 		0x84, 0xC0
 	};
 	UCHAR g_callCDesktopManager_IsHighContrastMode_replacedInstruction[]
 	{
+		// mov     r15b, 1
+		0x41, 0xB7, 0x01,
+		// nop
+		// nop
+		// nop
+		0x90, 0x90, 0x90,
 		// move al, 0x01
 		0xB0, 0x01,
-		// nop
-		// nop
-		// nop
-		0x90, 0x90, 0x90,
 		// test al, al
 		0x84, 0xC0
-	};
-	UCHAR g_callCTopLevelWindow_IsShadowNCAreaPart_inlined_Instructions[]
-	{
-		// lea eax, [???-12h]
-		0x8D, 0x00, 0xEE,
-		// cmp eax, 3
-		0x83, 0xF8, 0x03,
-		// ja short loc_xxxxxxxx
-		0x77,
-	};
-	UCHAR g_callCTopLevelWindow_IsShadowNCAreaPart_inlined_replacedInstructions[]
-	{
-		// lea eax, [???-12h]
-		0x8D, 0x00, 0xEE,
-		// nop
-		// nop
-		// nop
-		0x90, 0x90, 0x90,
-		// jmp
-		0xEB,
 	};
 	UCHAR g_callCTopLevelWindow_IsShadowNCAreaPart_Instructions[]
 	{
@@ -100,8 +84,8 @@ HRESULT GlassFrameDemodernizer::MyCTopLevelWindow_ValidateVisual(uDWM::CTopLevel
 	const auto old_extendedFrameMargins = extendedFrameMargins;
 	const auto old_nonclientAttribute = nonclientAttribute;
 
-	g_systemBackdrop = (uDWM::g_versionInfo.build == os::build_w11_21h2 && old_systemBackdropType) || (uDWM::g_versionInfo.build > os::build_w11_21h2 && old_systemBackdropType >= DWMSBT_MAINWINDOW);
-	systemBackdropType = (uDWM::g_versionInfo.build == os::build_w11_21h2 ? DWMSBT_AUTO : DWMSBT_NONE);
+	g_systemBackdrop = old_systemBackdropType >= DWMSBT_MAINWINDOW;
+	systemBackdropType = DWMSBT_NONE;
 	if (g_systemBackdrop)
 	{
 		// known issue: 
@@ -145,64 +129,13 @@ HRESULT GlassFrameDemodernizer::MyCTopLevelWindow_ValidateVisual(uDWM::CTopLevel
 
 HRESULT GlassFrameDemodernizer::MyCTopLevelWindow_UpdateNCAreaBackground(uDWM::CTopLevelWindow* This)
 {
-	uDWM::CAtlasedImage const** atlasedImagePtrs[3]{};
-
 	auto& highContrastMode = uDWM::CDesktopManager::GetInstance()->GetIsHighContrastMode();
 	const auto old_highContrastMode = highContrastMode;
 
-	// windows 11 rtm lacks null pointer check when high contrast mode is enabled
-	// so we manually add it here
-	if (
-		uDWM::g_versionInfo.build == os::build_w11_21h2 && 
-		uDWM::g_versionInfo.revision == os::revision_21h2_rtm_0 &&
-		(
-			atlasedImagePtrs[0] = reinterpret_cast<uDWM::CAtlasedImage const**>(This) + 43,
-			atlasedImagePtrs[1] = reinterpret_cast<uDWM::CAtlasedImage const**>(This) + 44,
-			atlasedImagePtrs[2] = reinterpret_cast<uDWM::CAtlasedImage const**>(This) + 46,
-
-			std::any_of(
-				std::begin(atlasedImagePtrs),
-				std::end(atlasedImagePtrs),
-				[](auto atlasedImagePtr) { return *atlasedImagePtr == nullptr; }
-			)
-		)
-	)
-	{
-		struct CAtlasedImageStub
-		{
-			BYTE padding[24];
-			DWORD size;
-		};
-		static const CAtlasedImageStub s_atlasedImageStub{};
-
-		for (auto& atlasedImagePtr : atlasedImagePtrs)
-		{
-			if (*atlasedImagePtr == nullptr)
-			{
-				*atlasedImagePtr = reinterpret_cast<uDWM::CAtlasedImage const*>(&s_atlasedImageStub);
-			}
-			else
-			{
-				atlasedImagePtr = nullptr;
-			}
-		}
-	}
-	else
-	{
-		memset(atlasedImagePtrs, 0, sizeof(atlasedImagePtrs));
-		highContrastMode = true;
-	}
-	const auto highContrastFakeScope = wil::scope_exit([&highContrastMode, old_highContrastMode, &atlasedImagePtrs]
+	highContrastMode = true;
+	const auto highContrastFakeScope = wil::scope_exit([&highContrastMode, old_highContrastMode]
 	{
 		highContrastMode = old_highContrastMode;
-		for (auto& atlasedImagePtr : atlasedImagePtrs)
-		{
-			if (atlasedImagePtr)
-			{
-				*atlasedImagePtr = nullptr;
-				atlasedImagePtr = nullptr;
-			}
-		}
 	});
 
 	return g_CTopLevelWindow_UpdateNCAreaBackground_Org(This);
@@ -242,11 +175,6 @@ void GlassFrameDemodernizer::Update(GlassEngine::UpdateType type)
 
 void GlassFrameDemodernizer::Startup()
 {
-	if (uDWM::g_versionInfo.build < os::build_w11_21h2)
-	{
-		return;
-	}
-
 	uDWM::g_projectionArray.ApplyToVariable("CTopLevelWindow::ValidateVisual", g_CTopLevelWindow_ValidateVisual_Org);
 	uDWM::g_projectionArray.ApplyToVariable("CTopLevelWindow::UpdateNCAreaBackground", g_CTopLevelWindow_UpdateNCAreaBackground_Org);
 	uDWM::g_projectionArray.ApplyToVariable("SetMargin", g_SetMargin_Org);
@@ -301,78 +229,41 @@ void GlassFrameDemodernizer::Startup()
 	} while (i);
 
 	CTopLevelWindow_UpdateWindowVisuals_Instructions = CTopLevelWindow_UpdateWindowVisuals_Instructions_Previous;
-	if (uDWM::g_versionInfo.build < os::build_w11_24h2)
-	{
-		i = 450'000;
-		do
-		{
-			g_callCTopLevelWindow_IsShadowNCAreaPart_inlined_replacedInstructions[1] = g_callCTopLevelWindow_IsShadowNCAreaPart_inlined_Instructions[1] = CTopLevelWindow_UpdateWindowVisuals_Instructions[1];
-			if (
-				memcmp(
-					CTopLevelWindow_UpdateWindowVisuals_Instructions,
-					g_callCTopLevelWindow_IsShadowNCAreaPart_inlined_Instructions,
-					sizeof(g_callCTopLevelWindow_IsShadowNCAreaPart_inlined_Instructions)
-				) == 0
-			)
-			{
-				std::vector<UCHAR> backup(sizeof(g_callCTopLevelWindow_IsShadowNCAreaPart_inlined_Instructions), 0);
-				memcpy_s(
-					backup.data(),
-					backup.size(),
-					CTopLevelWindow_UpdateWindowVisuals_Instructions,
-					sizeof(g_callCTopLevelWindow_IsShadowNCAreaPart_inlined_Instructions)
-				);
-				g_instructionsBackup.insert_or_assign(
-					CTopLevelWindow_UpdateWindowVisuals_Instructions,
-					backup
-				);
-				g_instructionsToReplace.insert_or_assign(
-					CTopLevelWindow_UpdateWindowVisuals_Instructions,
-					std::vector(std::begin(g_callCTopLevelWindow_IsShadowNCAreaPart_inlined_replacedInstructions), std::end(g_callCTopLevelWindow_IsShadowNCAreaPart_inlined_replacedInstructions))
-				);
-				break;
-			}
 
-			CTopLevelWindow_UpdateWindowVisuals_Instructions += 1;
-			i--;
-		} while (i);
-	}
-	else
+	i = 1500;
+	do
 	{
-		i = 1500;
-		do
+		*reinterpret_cast<DWORD*>(&g_callCTopLevelWindow_IsShadowNCAreaPart_Instructions[1]) = static_cast<DWORD>(CTopLevelWindow_IsShadowNCAreaPart_Instructions - (CTopLevelWindow_UpdateWindowVisuals_Instructions + 5));
+		if (
+			memcmp(
+				CTopLevelWindow_UpdateWindowVisuals_Instructions,
+				g_callCTopLevelWindow_IsShadowNCAreaPart_Instructions,
+				sizeof(g_callCTopLevelWindow_IsShadowNCAreaPart_Instructions)
+			) == 0
+		)
 		{
-			*reinterpret_cast<DWORD*>(&g_callCTopLevelWindow_IsShadowNCAreaPart_Instructions[1]) = static_cast<DWORD>(CTopLevelWindow_IsShadowNCAreaPart_Instructions - (CTopLevelWindow_UpdateWindowVisuals_Instructions + 5));
-			if (
-				memcmp(
-					CTopLevelWindow_UpdateWindowVisuals_Instructions,
-					g_callCTopLevelWindow_IsShadowNCAreaPart_Instructions,
-					sizeof(g_callCTopLevelWindow_IsShadowNCAreaPart_Instructions)
-				) == 0
-			)
-			{
-				std::vector<UCHAR> backup(sizeof(g_callCTopLevelWindow_IsShadowNCAreaPart_Instructions), 0);
-				memcpy_s(
-					backup.data(),
-					backup.size(),
-					CTopLevelWindow_UpdateWindowVisuals_Instructions,
-					sizeof(g_callCTopLevelWindow_IsShadowNCAreaPart_Instructions)
-				);
-				g_instructionsBackup.insert_or_assign(
-					CTopLevelWindow_UpdateWindowVisuals_Instructions,
-					backup
-				);
-				g_instructionsToReplace.insert_or_assign(
-					CTopLevelWindow_UpdateWindowVisuals_Instructions,
-					std::vector(std::begin(g_callCTopLevelWindow_IsShadowNCAreaPart_replacedInstructions), std::end(g_callCTopLevelWindow_IsShadowNCAreaPart_replacedInstructions))
-				);
-				break;
-			}
+			std::vector<UCHAR> backup(sizeof(g_callCTopLevelWindow_IsShadowNCAreaPart_Instructions), 0);
+			memcpy_s(
+				backup.data(),
+				backup.size(),
+				CTopLevelWindow_UpdateWindowVisuals_Instructions,
+				sizeof(g_callCTopLevelWindow_IsShadowNCAreaPart_Instructions)
+			);
+			g_instructionsBackup.insert_or_assign(
+				CTopLevelWindow_UpdateWindowVisuals_Instructions,
+				backup
+			);
+			g_instructionsToReplace.insert_or_assign(
+				CTopLevelWindow_UpdateWindowVisuals_Instructions,
+				std::vector(std::begin(g_callCTopLevelWindow_IsShadowNCAreaPart_replacedInstructions), std::end(g_callCTopLevelWindow_IsShadowNCAreaPart_replacedInstructions))
+			);
+			break;
+		}
 
-			CTopLevelWindow_UpdateWindowVisuals_Instructions += 1;
-			i--;
-		} while (i);
-	}
+		CTopLevelWindow_UpdateWindowVisuals_Instructions += 1;
+		i--;
+	} while (i);
+
 	for (const auto& [address, instructions] : g_instructionsToReplace)
 	{
 		HookHelper::PatchInstructions(
@@ -394,11 +285,6 @@ void GlassFrameDemodernizer::Startup()
 
 void GlassFrameDemodernizer::Shutdown()
 {
-	if (uDWM::g_versionInfo.build < os::build_w11_21h2)
-	{
-		return;
-	}
-
 	HookHelper::PatchFunctions(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
