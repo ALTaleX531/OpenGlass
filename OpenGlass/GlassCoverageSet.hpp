@@ -26,7 +26,7 @@ namespace OpenGlass
 		) const = 0;
 		virtual bool IsVisible(
 			const D2D1_RECT_F& coverage,
-			const dwmcore::CArrayBasedCoverageSet* occlusionCoverageSet
+			const dwmcore::COcclusionContext* occlusionContext
 		) const = 0;
 		virtual bool IsEmpty() const = 0;
 	};
@@ -34,7 +34,7 @@ namespace OpenGlass
 	class CArrayBasedGlassCoverageSet : public winrt::implements<CArrayBasedGlassCoverageSet, IGlassCoverageSet, winrt::non_agile, winrt::no_weak_ref>
 	{
 		DWM::MyDynArrayImpl<dwmcore::CZOrderedRect> m_array{};
-		static std::unordered_map<const dwmcore::CArrayBasedCoverageSet*, winrt::com_ptr<IGlassCoverageSet>> s_map;
+		static std::unordered_map<const dwmcore::COcclusionContext*, winrt::com_ptr<IGlassCoverageSet>> s_map;
 	public:
 		void SetDeviceTransform(const dwmcore::CMILMatrix* matrix) override;
 		HRESULT Add(
@@ -54,15 +54,15 @@ namespace OpenGlass
 		) const override;
 		bool IsVisible(
 			const D2D1_RECT_F& coverage,
-			const dwmcore::CArrayBasedCoverageSet* occlusionCoverageSet
+			const dwmcore::COcclusionContext* occlusionContext
 		) const override;
 		bool IsEmpty() const override;
 
 		static winrt::com_ptr<IGlassCoverageSet> GetOrCreate(
-			const dwmcore::CArrayBasedCoverageSet* coverageSet,
+			const dwmcore::COcclusionContext* occlusionContext,
 			bool createIfNecessary = false
 		);
-		static void Remove(const dwmcore::CArrayBasedCoverageSet* coverageSet);
+		static void Remove(const dwmcore::COcclusionContext* occlusionContext);
 		static void RemoveAll();
 	};
 }

@@ -77,14 +77,21 @@ void GlassEngine::Update(UpdateType type, bool redrawNow)
 		if (redrawNow)
 		{
 			GlassKernel::RedrawAllTopLevelWindow(false);
+			LOG_IF_FAILED(uDWM::CDesktopManager::GetInstance()->GetCompositor()->ForceRender());
 		}
 	}
-	THROW_IF_FAILED(DwmFlush());
+
+	LOG_IF_FAILED(DwmFlush());
 }
 
 void GlassEngine::Startup()
 {
 	Shared::g_disabledHooks = GetDwordFromRegistry(L"DisabledHooks", 0);
+
+	// wait for compositor thread to be idle before starting up,
+	// to avoid racing with it and causing potential deadlock or other issues
+	LOG_IF_FAILED(DwmFlush());
+
 	GlassKernel::Startup();
 	GlassIntegrity::Startup();
 	GlassRenderer::Startup();
@@ -102,6 +109,8 @@ void GlassEngine::Startup()
 		GlassReflectionHandler::Startup();
 		GlassKernel::RedrawAllTopLevelWindow(true);
 	}
+
+	LOG_IF_FAILED(uDWM::CDesktopManager::GetInstance()->GetCompositor()->ForceRender());
 }
 void GlassEngine::Shutdown()
 {
@@ -119,12 +128,13 @@ void GlassEngine::Shutdown()
 		GlassKernel::RedrawAllTopLevelWindow(true);
 	}
 
-	for (int i = 0; i < 10; i++)
-	{
-		THROW_IF_FAILED(DwmFlush());
-	}
+	// wait for compositor thread to be idle before shutting down,
+	// to avoid racing with it and causing potential deadlock or other issues
+	LOG_IF_FAILED(DwmFlush());
 
 	GlassRenderer::Shutdown();
 	GlassIntegrity::Shutdown();
 	GlassKernel::Shutdown();
+
+	LOG_IF_FAILED(uDWM::CDesktopManager::GetInstance()->GetCompositor()->ForceRender());
 }
