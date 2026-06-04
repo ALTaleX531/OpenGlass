@@ -11,7 +11,7 @@ Extract offsets from the udwm.dll currently loaded in IDA Pro. Follow every phas
 
 ## Build-agnostic principles
 
-- **uDWM is stable within codebase generations.** Offsets only change at recompile boundaries, not at every Windows revision. For example, 2004 through Win10 22H2 all share the 19041 binary; 24H2 and 25H2 share the 26100 binary.
+- **uDWM is stable within codebase generations.** Offsets only change at recompile boundaries, not at every Windows revision. For example, 2004 through Win10 22H2 all share the 19041 binary; 24H2 and 25H2 share the 26100 binary; 26H1+ uses the 28100 binary where MIL infrastructure has been removed.
 - **Constructor first** — each class's constructor reveals the full member layout. Decompile it before chasing individual accessors.
 - **Named confirmation functions** — each offset has a specific function that accesses it (listed in each phase). Go there directly; do not infer from nearby code in unrelated functions.
 - **No "Get" thunks** — uDWM member access is inlined. Do NOT search for `GetOffset`, `GetSize`, `GetHwnd` as standalone functions.
@@ -39,6 +39,7 @@ Each offset struct in [uDwmProjection.Offsets.hpp](../../../OpenGlass/uDwmProjec
 
 | Feature check | Means at least |
 |---|---|
+| MIL compositor removed; `CContainerVisual` base class restructured | Windows 11 26H1 (28100+) |
 | `CContainerVisual` present (search `??0CContainerVisual` or check if CTopLevelWindow ctor takes `CWindowData*`) | Windows 11 24H2 |
 | `CDWriteText` present (search `??0CDWriteText` or `CDWriteText::Create`) | Windows 11 22H2 |
 | `CAcrylicSheet` present (search `??0CAcrylicSheet`) instead of `CAnimatedGlassSheet` | Windows 11 21H2 |
@@ -131,7 +132,8 @@ Most CWindowData getters are inlined. See [uDwmProjection.Offsets.hpp](../../../
 
 **Key structural notes**:
 - Pre-24H2: base class is `CVisual`, constructor takes no parameters
-- 24H2+: base class is `CContainerVisual`, constructor takes `CWindowData*`
+- 24H2-25H2: base class is `CContainerVisual`, constructor takes `CWindowData*`
+- 26H1+ (28100): class hierarchy may be restructured; MIL-dependent members and methods removed. Verify all existing offsets against the binary — do not assume any survive from 26100.
 - In 22H2+: CWindowData reverse-link established in constructor or `BlurBehindChange`: `*(QWORD*)(data + GetWindow_Index) = this`
 
 For each specific offset, see the comment in [uDwmProjection.Offsets.hpp](../../../OpenGlass/uDwmProjection.Offsets.hpp).
