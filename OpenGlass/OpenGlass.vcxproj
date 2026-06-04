@@ -52,27 +52,25 @@
     <ClInclude Include="CustomThemeAtlasLoader.hpp" />
     <ClInclude Include="D2DPrivates.hpp" />
     <ClInclude Include="D3DGlassRealizer.hpp" />
-    <ClInclude Include="DCompPrivates.hpp" />
+    <ClInclude Include="DCompProjection.hpp" />
     <ClInclude Include="Dwm.hpp" />
     <ClInclude Include="dwmcoreProjection.hpp" />
     <ClInclude Include="dwmcoreProjection.Offsets.hpp" />
     <ClInclude Include="DxgiPrivates.hpp" />
-    <ClInclude Include="GlassEffectBrush.hpp" />
     <ClInclude Include="GlassFrameDemodernizer.hpp" />
     <ClInclude Include="GlassFrameEnhancer.hpp" />
     <ClInclude Include="GlassRealizer.hpp" />
     <ClInclude Include="GlassCoverageSet.hpp" />
     <ClInclude Include="GlassFrameHandler.hpp" />
     <ClInclude Include="GlassKernel.hpp" />
-    <ClInclude Include="GlassReflectionBrush.hpp" />
     <ClInclude Include="GlassIntegrity.hpp" />
     <ClInclude Include="GlassSafetyZoneLayer.hpp" />
     <ClInclude Include="MaterialRealizer.hpp" />
     <ClInclude Include="module.hpp" />
     <ClInclude Include="MsstyleInternals.hpp" />
     <ClInclude Include="ProjectionHelper.hpp" />
-    <ClInclude Include="ReflectionRealizer.hpp" />
     <ClInclude Include="GlassRenderer.hpp" />
+    <ClInclude Include="ReflectionVisual.hpp" />
     <ClInclude Include="RenderingEffect.hpp" />
     <ClInclude Include="Shared.hpp" />
     <ClInclude Include="GlassService.hpp" />
@@ -104,13 +102,11 @@
     <ClCompile Include="CustomThemeAtlasLoader.cpp" />
     <ClCompile Include="D3DGlassRealizer.cpp" />
     <ClCompile Include="GlassCoverageSet.cpp" />
-    <ClCompile Include="GlassEffectBrush.cpp" />
     <ClCompile Include="GlassFrameDemodernizer.cpp" />
     <ClCompile Include="GlassFrameEnhancer.cpp" />
     <ClCompile Include="GlassRealizer.cpp" />
     <ClCompile Include="GlassFrameHandler.cpp" />
     <ClCompile Include="GlassKernel.cpp" />
-    <ClCompile Include="GlassReflectionBrush.cpp" />
     <ClCompile Include="GlassIntegrity.cpp" />
     <ClCompile Include="GlassRenderer.cpp" />
     <ClCompile Include="GlassSafetyZoneLayer.cpp" />
@@ -126,7 +122,7 @@
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="MaterialRealizer.cpp" />
-    <ClCompile Include="ReflectionRealizer.cpp" />
+    <ClCompile Include="ReflectionVisual.cpp" />
     <ClCompile Include="SymbolDownloader.cpp" />
     <ClCompile Include="SymbolParser.cpp" />
     <ClCompile Include="ServiceHandler.cpp" />

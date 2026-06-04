@@ -580,13 +580,7 @@ void OpenGlass::Startup()
 	if (
 		constexpr std::array supportList
 		{
-			os::build_w10_1809,
-			os::build_w10_1903,
-			os::build_w10_2004,
-			os::build_server_2022,
-			os::build_w11_21h2,
-			os::build_w11_22h2,
-			os::build_w11_24h2,
+			os::build_w11_26h1
 		};
 		std::find(supportList.begin(), supportList.end(), uDWM::g_versionInfo.build) == supportList.end() ||
 		std::find(supportList.begin(), supportList.end(), dwmcore::g_versionInfo.build) == supportList.end()
