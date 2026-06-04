@@ -289,7 +289,7 @@ HRESULT GlassFrameHandler::MyCGlassColorizationParameters_AdjustWindowColorizati
 	const auto active = (flag & 1) != 0;
 	const auto maximized = GlassKernel::g_window ? GlassKernel::g_window->TreatAsMaximized() : false;
 
-	This->color = Color::ToArgb(
+	This->color = Color::ToAbgr(
 		Color::scRGBTosRGB(
 			GlassKernel::RealizeWindowColorization(
 				GlassKernel::GetBaseColor(Shared::IsTransparencyDisabled(), maximized),
@@ -607,9 +607,17 @@ void GlassFrameHandler::Startup()
 	}
 
 	uDWM::g_projectionArray.ApplyToVariable("CGlassColorizationParameters::AdjustWindowColorization", g_CGlassColorizationParameters_AdjustWindowColorization_Org);
-	uDWM::g_projectionArray.ApplyToVariable("ResourceHelper::CreateGeometryFromHRGN", g_ResourceHelper_CreateGeometryFromHRGN_Org);
-	uDWM::g_projectionArray.ApplyToVariable("CTopLevelWindow::UpdateNCAreaBackground", g_CTopLevelWindow_UpdateNCAreaBackground_Org);
+	dwmcore::g_projectionArray.ApplyToVariable("CChannel::CombinedGeometryUpdate", g_CChannel_CombinedGeometryUpdate_Org);
+	uDWM::g_projectionArray.ApplyToVariable("CLegacyNonClientBackground::ClearAll", g_CLegacyNonClientBackground_ClearAll_Org);
+	uDWM::g_projectionArray.ApplyToVariable("CLegacyNonClientBackground::HasSomethingToRender", g_CLegacyNonClientBackground_HasSomethingToRender_Org);
+	uDWM::g_projectionArray.ApplyToVariable("CLegacyNonClientBackground::SetCaptionRect", g_CLegacyNonClientBackground_SetCaptionRect_Org);
+	uDWM::g_projectionArray.ApplyToVariable("CLegacyNonClientBackground::SetBorderRects", g_CLegacyNonClientBackground_SetBorderRects_Org);
+	uDWM::g_projectionArray.ApplyToVariable("CLegacyNonClientBackground::SetCaptionColor", g_CLegacyNonClientBackground_SetCaptionColor_Org);
+	uDWM::g_projectionArray.ApplyToVariable("CLegacyNonClientBackground::~CLegacyNonClientBackground", g_CLegacyNonClientBackground_Destructor_Org);
+	uDWM::g_projectionArray.ApplyToVariable("CRectangleVisual::SetRect", g_CRectangleVisual_SetRect_Org);
 	uDWM::g_projectionArray.ApplyToVariable("CTopLevelWindow::UpdateClientBlur", g_CTopLevelWindow_UpdateClientBlur_Org);
+	uDWM::g_projectionArray.ApplyToVariable("CTopLevelWindow::UpdateNCAreaBackground", g_CTopLevelWindow_UpdateNCAreaBackground_Org);
+	uDWM::g_projectionArray.ApplyToVariable("CTopLevelWindow::EdgeBorderMustBeOpaque", g_CTopLevelWindow_EdgeBorderMustBeOpaque_Org);
 	uDWM::g_projectionArray.ApplyToVariable("CTopLevelWindow::ValidateVisual", g_CTopLevelWindow_ValidateVisual_Org);
 	uDWM::g_projectionArray.ApplyToVariable("CTopLevelWindow::~CTopLevelWindow", g_CTopLevelWindow_Destructor_Org);
 
@@ -617,12 +625,22 @@ void GlassFrameHandler::Startup()
 		std::initializer_list<HookHelper::DetourInfo>
 		{
 			{ &g_CGlassColorizationParameters_AdjustWindowColorization_Org, &MyCGlassColorizationParameters_AdjustWindowColorization },
-			{ &g_ResourceHelper_CreateGeometryFromHRGN_Org, &MyResourceHelper_CreateGeometryFromHRGN },
-			{ &g_CTopLevelWindow_UpdateNCAreaBackground_Org, &MyCTopLevelWindow_UpdateNCAreaBackground },
-			{ &g_CTopLevelWindow_UpdateClientBlur_Org, &MyCTopLevelWindow_UpdateClientBlur },
 
+			{ &g_CChannel_CombinedGeometryUpdate_Org, &MyCChannel_CombinedGeometryUpdate },
+			{ &g_CLegacyNonClientBackground_ClearAll_Org, &MyCLegacyNonClientBackground_ClearAll },
+			{ &g_CLegacyNonClientBackground_HasSomethingToRender_Org, &MyCLegacyNonClientBackground_HasSomethingToRender },
+			{ &g_CLegacyNonClientBackground_SetCaptionRect_Org, &MyCLegacyNonClientBackground_SetCaptionRect },
+			{ &g_CLegacyNonClientBackground_SetBorderRects_Org, &MyCLegacyNonClientBackground_SetBorderRects },
+			{ &g_CLegacyNonClientBackground_SetCaptionColor_Org, &MyCLegacyNonClientBackground_SetCaptionColor },
+			{ &g_CLegacyNonClientBackground_Destructor_Org, &MyCLegacyNonClientBackground_Destructor },
+
+			{ &g_CRectangleVisual_SetRect_Org, &MyCRectangleVisual_SetRect },
+			{ &g_CTopLevelWindow_UpdateClientBlur_Org, &MyCTopLevelWindow_UpdateClientBlur },
+			{ &g_CTopLevelWindow_UpdateNCAreaBackground_Org, &MyCTopLevelWindow_UpdateNCAreaBackground },
+			{ &g_CTopLevelWindow_EdgeBorderMustBeOpaque_Org, &MyCTopLevelWindow_EdgeBorderMustBeOpaque },
+
+			{ &g_CTopLevelWindow_ValidateVisual_Org, &MyCTopLevelWindow_ValidateVisual },
 			{ &g_CTopLevelWindow_Destructor_Org, &MyCTopLevelWindow_Destructor },
-			{ &g_CTopLevelWindow_ValidateVisual_Org, &MyCTopLevelWindow_ValidateVisual }
 		},
 		true
 	);
@@ -639,17 +657,28 @@ void GlassFrameHandler::Shutdown()
 		std::initializer_list<HookHelper::DetourInfo>
 		{
 			{ &g_CGlassColorizationParameters_AdjustWindowColorization_Org, &MyCGlassColorizationParameters_AdjustWindowColorization },
-			{ &g_ResourceHelper_CreateGeometryFromHRGN_Org, &MyResourceHelper_CreateGeometryFromHRGN },
-			{ &g_CTopLevelWindow_UpdateNCAreaBackground_Org, &MyCTopLevelWindow_UpdateNCAreaBackground },
-			{ &g_CTopLevelWindow_UpdateClientBlur_Org, &MyCTopLevelWindow_UpdateClientBlur },
 
+			{ &g_CChannel_CombinedGeometryUpdate_Org, &MyCChannel_CombinedGeometryUpdate },
+			{ &g_CLegacyNonClientBackground_ClearAll_Org, &MyCLegacyNonClientBackground_ClearAll },
+			{ &g_CLegacyNonClientBackground_HasSomethingToRender_Org, &MyCLegacyNonClientBackground_HasSomethingToRender },
+			{ &g_CLegacyNonClientBackground_SetCaptionRect_Org, &MyCLegacyNonClientBackground_SetCaptionRect },
+			{ &g_CLegacyNonClientBackground_SetBorderRects_Org, &MyCLegacyNonClientBackground_SetBorderRects },
+			{ &g_CLegacyNonClientBackground_SetCaptionColor_Org, &MyCLegacyNonClientBackground_SetCaptionColor },
+			{ &g_CLegacyNonClientBackground_Destructor_Org, &MyCLegacyNonClientBackground_Destructor },
+
+			{ &g_CRectangleVisual_SetRect_Org, &MyCRectangleVisual_SetRect },
+			{ &g_CTopLevelWindow_UpdateClientBlur_Org, &MyCTopLevelWindow_UpdateClientBlur },
+			{ &g_CTopLevelWindow_UpdateNCAreaBackground_Org, &MyCTopLevelWindow_UpdateNCAreaBackground },
+			{ &g_CTopLevelWindow_EdgeBorderMustBeOpaque_Org, &MyCTopLevelWindow_EdgeBorderMustBeOpaque },
+
+			{ &g_CTopLevelWindow_ValidateVisual_Org, &MyCTopLevelWindow_ValidateVisual },
 			{ &g_CTopLevelWindow_Destructor_Org, &MyCTopLevelWindow_Destructor },
-			{ &g_CTopLevelWindow_ValidateVisual_Org, &MyCTopLevelWindow_ValidateVisual }
 		},
 		false
 	);
 
-	SwitchToThread();
+	RemoveAllReflectionVisuals();
+	RemoveAllEffectVisuals();
 
-	g_combinedRgn.reset();
+	SwitchToThread();
 }
