@@ -6,11 +6,11 @@ using namespace OpenGlass;
 
 namespace OpenGlass::CaptionMetricsTweaker
 {
-	void MyCButton_SetSize(uDWM::CButton* This, const SIZE* size);
+	void MyCButton_SendSetSize(uDWM::CButton* This, const SIZE* size);
 	HRESULT MyCTopLevelWindow_UpdateNCAreaPositionsAndSizes(uDWM::CTopLevelWindow* This);
 
-	decltype(&MyCButton_SetSize) g_CButton_SetSize_Org{ nullptr };
-	decltype(&MyCButton_SetSize)* g_CButton_SetSize_Org_Address{ nullptr };
+	decltype(&MyCButton_SendSetSize) g_CButton_SendSetSize_Org{ nullptr };
+	decltype(&MyCButton_SendSetSize)* g_CButton_SendSetSize_Org_Address{ nullptr };
 	decltype(&MyCTopLevelWindow_UpdateNCAreaPositionsAndSizes) g_CTopLevelWindow_UpdateNCAreaPositionsAndSizes_Org{ nullptr };
 
 	enum CaptionButtons : UINT
@@ -91,7 +91,7 @@ HRESULT CaptionMetricsTweaker::MyCTopLevelWindow_UpdateNCAreaPositionsAndSizes(u
 	}
 
 	auto maximized = This->IsWindowMaximized();
-	auto toolWindow = This->IsToolWindow();
+	auto toolWindow = This->HasThinRenderedBorder();
 	auto loneButton = This->IsLoneButton();
 
 	auto& visibleMargins = This->GetFrameOutsideMargins(maximized);
@@ -105,7 +105,7 @@ HRESULT CaptionMetricsTweaker::MyCTopLevelWindow_UpdateNCAreaPositionsAndSizes(u
 		{
 			MARGINS inset = { 0x7FFFFFFF, offsetRight, offsetTop, 0x7FFFFFFF };
 
-			g_CButton_SetSize_Org(button, &buttonSize);
+			button->SetSize(&buttonSize);
 			button->SetInsetFromParent(inset);
 			button->GetGlyphOpacity() = 1.f;
 
@@ -155,20 +155,20 @@ HRESULT CaptionMetricsTweaker::MyCTopLevelWindow_UpdateNCAreaPositionsAndSizes(u
 		iconVisual->SetInsetFromParentLeft(cxLeft);
 	}
 
-	if (auto textVisual = This->GetTextVisual(); textVisual)
+	if (auto dwriteTextVisual = This->GetDWriteTextVisual(); dwriteTextVisual)
 	{
 		if (auto iconVisual = This->GetIconVisual(); iconVisual && cxLeft > 0)
 		{
 			cxLeft += iconVisual->GetWidth() ? iconVisual->GetWidth() + 5 : 0;
 		}
 		MARGINS inset = { cxLeft, offsetRight, visibleMargins.cyTopHeight, 0x7FFFFFFF };
-		textVisual->SetInsetFromParent(inset);
+		dwriteTextVisual->SetInsetFromParent(inset);
 	}
 
 	return hr;
 }
 
-void CaptionMetricsTweaker::MyCButton_SetSize(uDWM::CButton* This, const SIZE* size)
+void CaptionMetricsTweaker::MyCButton_SendSetSize(uDWM::CButton* This, const SIZE* size)
 {
 	if (Shared::g_captionHeight.has_value())
 	{
@@ -177,10 +177,10 @@ void CaptionMetricsTweaker::MyCButton_SetSize(uDWM::CButton* This, const SIZE* s
 			size->cx,
 			std::min(size->cy, static_cast<LONG>(Shared::g_captionHeight.value() * uDWM::CDesktopManager::GetInstance()->GetDPIValue()))
 		};
-		return g_CButton_SetSize_Org(This, &replacedSize);
+		return g_CButton_SendSetSize_Org(This, &replacedSize);
 	}
 
-	return g_CButton_SetSize_Org(This, size);
+	return g_CButton_SendSetSize_Org(This, size);
 }
 
 void CaptionMetricsTweaker::Update(GlassEngine::UpdateType type)
@@ -200,14 +200,22 @@ void CaptionMetricsTweaker::Startup()
 
 	uDWM::g_projectionArray.ApplyToVariable("CTopLevelWindow::UpdateNCAreaPositionsAndSizes", g_CTopLevelWindow_UpdateNCAreaPositionsAndSizes_Org);
 
-	PVOID CVisual_SetSize_Org{ nullptr };
-	uDWM::g_projectionArray.ApplyToVariable("CVisual::SetSize", CVisual_SetSize_Org);
-	for (auto& vf : std::span{ uDWM::CButton::vftable, 20 })
+	PVOID CVisual_SendSetOffset_Org{ nullptr };
+	uDWM::g_projectionArray.ApplyToVariable("CVisual::SendSetOffset", CVisual_SendSetOffset_Org);
+
+	bool replaceNextFunction = false;
+	for (auto& vf : std::span{ uDWM::CButton::vftable, 32 })
 	{
-		if (vf == CVisual_SetSize_Org)
+		if (vf == CVisual_SendSetOffset_Org)
 		{
-			g_CButton_SetSize_Org_Address = reinterpret_cast<decltype(g_CButton_SetSize_Org_Address)>(&vf);
-			HookHelper::PatchPointerT(g_CButton_SetSize_Org_Address, MyCButton_SetSize, &g_CButton_SetSize_Org);
+			replaceNextFunction = true;
+		}
+		if (replaceNextFunction)
+		{
+			replaceNextFunction = false;
+			g_CButton_SendSetSize_Org_Address = reinterpret_cast<decltype(g_CButton_SendSetSize_Org_Address)>(&vf);
+			HookHelper::PatchPointerT(g_CButton_SendSetSize_Org_Address, MyCButton_SendSetSize, &g_CButton_SendSetSize_Org);
+			break;
 		}
 	}
 
@@ -237,8 +245,8 @@ void CaptionMetricsTweaker::Shutdown()
 
 	SwitchToThread();
 
-	if (g_CButton_SetSize_Org)
+	if (g_CButton_SendSetSize_Org)
 	{
-		HookHelper::PatchPointerT(g_CButton_SetSize_Org_Address, g_CButton_SetSize_Org);
+		HookHelper::PatchPointerT(g_CButton_SendSetSize_Org_Address, g_CButton_SendSetSize_Org);
 	}
 }
