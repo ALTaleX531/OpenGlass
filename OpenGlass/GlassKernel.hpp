@@ -5,58 +5,8 @@
 
 namespace OpenGlass::GlassKernel
 {
-	inline const uDWM::CTopLevelWindow* g_window{ nullptr };
-	inline RECT g_roundedBounds{};
-	inline int g_diameter{ 0 };
-	inline std::optional<bool> g_redirectFirstCreateRectRgnCall{};
-
-	class AlphaChannelReinterpreter
-	{
-		std::bitset<16> m_flag{};
-	public:
-		bool GetIsValid() const
-		{
-			return m_flag.test(0);
-		}
-		bool GetIsActive() const
-		{
-			return m_flag.test(1);
-		}
-		bool GetIsMaximized() const
-		{
-			return m_flag.test(2);
-		}
-		void SetIsActive(bool value)
-		{
-			m_flag.set(1, value);
-		}
-		void SetIsMaximized(bool value)
-		{
-			m_flag.set(2, value);
-		}
-
-		float ToFloat() const
-		{
-			const auto value = ((m_flag.to_ulong() << 8) | 0x3F000001);
-			return *reinterpret_cast<float const*>(&value);
-		}
-		AlphaChannelReinterpreter(float value)
-		{
-			if ((*reinterpret_cast<DWORD const*>(&value) & 0xFF0000FF) == 0x3F000001)
-			{
-				m_flag = (*reinterpret_cast<DWORD const*>(&value) & 0x00FFFF00) >> 8;
-				m_flag.set(0);
-			}
-		}
-		AlphaChannelReinterpreter(
-			bool active,
-			bool maximized
-		)
-		{
-			SetIsActive(active);
-			SetIsMaximized(maximized);
-		}
-	};
+	inline uDWM::CTopLevelWindow* g_window{ nullptr };
+	abi::ICompositionSurface* GetOrCreateReflectionSurface();
 
 	void RedrawAllTopLevelWindow(bool deepRedraw);
 	float GetBlurRadius();
