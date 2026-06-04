@@ -13,10 +13,30 @@ This utility returns the full glass effect to the window frame like [glass8](htt
 - Windows Server 2022
 
 > [!IMPORTANT]
-> **OpenGlass is not supported on Windows 11 26H1 or any versions with build 28000 and above.** Microsoft has removed the legacy MIL infrastructure in these builds, which makes it impossible for OpenGlass to continue supporting them. See [#260](https://github.com/ALTaleX531/OpenGlass/issues/260) for details.
+> This branch (`legacy`) does **NOT** support Windows 11 26H1 (build 28000+) due to the removal of the legacy MIL compositor. See [#260](https://github.com/ALTaleX531/OpenGlass/issues/260).
+>
+> For 26H1+ support, switch to the [`milcomp`](https://github.com/ALTaleX531/OpenGlass/tree/milcomp) branch.
 
 > [!NOTE]
 > OpenGlass only supports Windows builds from the General Availability channel. Builds from other channels (such as Canary, Dev, Release Preview and Beta) and Windows Server versions other than 2022 are **NOT supported**. Running on unsupported builds can crash DWM.
+
+## Branches
+
+This repository maintains two parallel development lines:
+
+| Branch | Target | Architecture | Status |
+|--------|--------|-------------|--------|
+| `legacy` (main, aka millegacy) | Windows 10 1809 – Windows 11 25H2 | MIL compositor draw stream hooks | Stable |
+| [`milcomp`](https://github.com/ALTaleX531/OpenGlass/tree/milcomp) | Windows 11 26H1+ | Windows.UI.Composition visual hooks | Experimental |
+
+**Key differences**:
+- `legacy` relies on the legacy MIL compositor, which was removed in Windows 11 build 28000+.
+- `milcomp` bypasses the removed MIL infrastructure by working at the compositor level, supporting builds 28000+.
+
+Choose `milcomp` if you're on Windows 11 26H1 or later. Otherwise, use `legacy`.
+
+> [!CAUTION]
+> The `milcomp` branch is experimental and may be unstable. Crashes have been observed in certain scenarios (such as interacting with virtual desktop thumbnails) where the root cause could not be conclusively identified, analysis suggests possible heap corruption originating within DWM itself. Use at your own risk.
 
 ## Who should use OpenGlass?
 
