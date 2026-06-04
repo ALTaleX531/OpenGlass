@@ -6,17 +6,10 @@
 
 namespace OpenGlass::GlassIntegrity
 {
-	void DestroyDeviceResources(dwmcore::CD2DContext* d2dContext);
+	inline std::unordered_set<dwmcore::CVisual*> g_glassVisualSet{};
+	inline std::unordered_map<dwmcore::CGeometry*, std::bitset<2>> g_glassStatusByGeometry{};
 
-	void FlipOccludersCheckpoint(dwmcore::CArrayBasedCoverageSet* coverageSet);
-	inline auto FlipOccludersCheckpointScoped(dwmcore::CArrayBasedCoverageSet* coverageSet)
-	{
-		FlipOccludersCheckpoint(coverageSet);
-		return wil::scope_exit([coverageSet]
-		{
-			FlipOccludersCheckpoint(coverageSet);
-		});
-	}
+	void DestroyDeviceResources(dwmcore::CD2DContext* d2dContext);
 
 	void Update(GlassEngine::UpdateType type);
 	void Startup();
