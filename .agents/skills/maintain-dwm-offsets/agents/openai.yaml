@@ -1,0 +1,13 @@
+interface:
+  display_name: "Maintain DWM Offsets"
+  short_description: "Audit dwmcore and uDWM projection offsets"
+  default_prompt: "Use $maintain-dwm-offsets to audit the requested DWM projection offsets with IDA evidence."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "ida-pro-mcp"
+      description: "Read-only binary analysis through connected IDA Pro instances"
+
+policy:
+  allow_implicit_invocation: false

@@ -8,14 +8,23 @@ This utility returns the full glass effect to the window frame like [glass8](htt
 
 ## Supported Windows versions
 
-- Windows 10 1809-22H2
-- Windows 11 21H2-26H2
+- Windows 10 build 17763 (1809) through build 19045 (22H2)
+- Windows 11 builds below 28000 on `legacy`, including build 26200 (25H2)
+- Windows 11 builds 28000 and later on the experimental `milcomp` branch
 - Windows Server 2022
 
 > [!IMPORTANT]
-> This branch (`legacy`) does **NOT** support Windows 11 26H1 (build 28000+) due to the removal of the legacy MIL compositor. See [#260](https://github.com/ALTaleX531/OpenGlass/issues/260).
+> This branch (`legacy`) does **not** support build 28000 or later because the legacy MIL compositor path it hooks is no longer available. See [#260](https://github.com/ALTaleX531/OpenGlass/issues/260).
 >
-> For 26H1+ support, switch to the [`milcomp`](https://github.com/ALTaleX531/OpenGlass/tree/milcomp) branch.
+> For build 28000 and later, use the experimental [`milcomp`](https://github.com/ALTaleX531/OpenGlass/tree/milcomp) branch.
+
+Windows release names are not a linear compatibility scale. Microsoft describes Windows 11 26H1/build 28000 as a platform release for selected new devices rather than an in-place feature update from 24H2 or 25H2, and Windows Insider development can use parallel build trains. OpenGlass therefore evaluates three separate facts:
+
+1. the marketing release name (for user-facing context);
+2. the exact OS build and revision (for selecting an offset interval); and
+3. the compositor capabilities present in the actual DWM binaries (for selecting an implementation branch).
+
+Use the build number and verified compositor path to choose a branch; do not select one from `26H1` or `26H2` alone. See Microsoft's [Windows 11 release information](https://learn.microsoft.com/en-us/windows/release-health/windows11-release-information), [build 28000 announcement](https://blogs.windows.com/windows-insider/2025/11/07/announcing-windows-11-insider-preview-build-28000-canary-channel/), and [parallel 26H1 Insider build trains](https://blogs.windows.com/windows-insider/2026/06/08/announcing-new-builds-8-june-2026-2/) for the upstream release model.
 
 > [!NOTE]
 > OpenGlass only supports Windows builds from the General Availability channel. Builds from other channels (such as Canary, Dev, Release Preview and Beta) and Windows Server versions other than 2022 are **NOT supported**. Running on unsupported builds can crash DWM.
@@ -26,14 +35,14 @@ This repository maintains two parallel development lines:
 
 | Branch | Target | Architecture | Status |
 |--------|--------|-------------|--------|
-| `legacy` (main, aka millegacy) | Windows 10 1809 – Windows 11 25H2 | MIL compositor draw stream hooks | Stable |
-| [`milcomp`](https://github.com/ALTaleX531/OpenGlass/tree/milcomp) | Windows 11 26H1+ | Windows.UI.Composition visual hooks | Experimental |
+| `legacy` (main, aka millegacy) | Builds 17763 through 27999, including Windows 11 25H2/build 26200 | MIL compositor draw stream hooks | Stable |
+| [`milcomp`](https://github.com/ALTaleX531/OpenGlass/tree/milcomp) | Builds 28000 and later | Windows.UI.Composition visual hooks | Experimental |
 
 **Key differences**:
-- `legacy` relies on the legacy MIL compositor, which was removed in Windows 11 build 28000+.
-- `milcomp` bypasses the removed MIL infrastructure by working at the compositor level, supporting builds 28000+.
+- `legacy` relies on the legacy MIL compositor path and is limited to builds below 28000.
+- `milcomp` bypasses that removed path by working at the Windows.UI.Composition level for builds 28000 and later.
 
-Choose `milcomp` if you're on Windows 11 26H1 or later. Otherwise, use `legacy`.
+Choose `milcomp` when the actual OS build is 28000 or later. Otherwise, use `legacy`. Marketing release labels are explanatory only.
 
 > [!CAUTION]
 > The `milcomp` branch is experimental and may be unstable. Crashes have been observed in certain scenarios (such as interacting with virtual desktop thumbnails) where the root cause could not be conclusively identified, analysis suggests possible heap corruption originating within DWM itself. Use at your own risk.
@@ -187,15 +196,20 @@ Official releases use the `ReleaseSigned` configuration. This configuration uses
 
 OpenGlass reads internal `dwmcore.dll` and `uDWM.dll` struct members via hardcoded byte offsets that change between Windows builds. When a new build arrives, these offsets must be updated.
 
-### Automated update (LLM-driven)
+### Agent-assisted audit
 
-Two 7-phase skills methodically extract all offsets from IDA Pro. Each offset struct in the `.Offsets.hpp` files has inline comments documenting the verification function and pseudocode pattern.
+The repository provides the explicit `$maintain-dwm-offsets` skill for general coding agents. It supports focused projection checks, cross-build comparisons, per-module audits, and explicitly requested full audits. Each offset struct in the `.Offsets.hpp` files also has inline routing comments.
 
-**Setup**: Install the [ida-pro-mcp](https://github.com/mrexodia/ida-pro-mcp) MCP server to connect Claude Code to IDA Pro.
+**Setup**: Connect the agent to IDA Pro through [ida-pro-mcp](https://github.com/mrexodia/ida-pro-mcp). The repository declares this capability dependency but does not commit machine-specific MCP ports or launch configuration.
 
-1. Open the new DLL in IDA Pro, wait for auto-analysis, then select **Edit** > **Plugins** > **MCP** to activate the plugin
-2. Run `/extract-dwmcore-offsets` or `/extract-udwm-offsets` in Claude Code
-3. Review the Phase 7 report: verify changed/removed/not-verified offsets against the binary, then either let Claude Code apply the edits or manually update [dwmcoreProjection.Offsets.hpp](OpenGlass/dwmcoreProjection.Offsets.hpp) / [uDwmProjection.Offsets.hpp](OpenGlass/uDwmProjection.Offsets.hpp)
+1. Open the exact DLL in IDA Pro and wait for auto-analysis to finish.
+2. Invoke `$maintain-dwm-offsets` with the module, samples, and desired audit scope.
+3. Review the report's linter-selected interval, sample identity, semantic evidence, findings, unverified items, runtime-validation status, and suggested right-boundary entries.
+4. Apply changes to [dwmcoreProjection.Offsets.hpp](OpenGlass/dwmcoreProjection.Offsets.hpp) or [uDwmProjection.Offsets.hpp](OpenGlass/uDwmProjection.Offsets.hpp) only after the relevant values have independent semantic evidence.
+
+Run `python .agents/skills/maintain-dwm-offsets/scripts/lint_offset_tables.py .` before and after editing a projection table. Add `--version BUILD.REVISION` to show the selected entry and its exclusive right-boundary interval. The linter inventories both branch shapes and checks structural invariants without evaluating offset expressions or rewriting files.
+
+Keep the verification layers separate: the linter checks table structure, the semantic audit derives values from an exact DLL, and real-OS validation exercises service injection, recovery, and rendering. A successful static audit is not a release-readiness claim; use the skill's real-OS checklist before claiming support for a new layout interval.
 
 ### Manual update
 
