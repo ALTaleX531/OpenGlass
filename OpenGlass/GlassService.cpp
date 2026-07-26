@@ -14,8 +14,9 @@ namespace OpenGlass::GlassService
 	{
 		std::chrono::steady_clock::time_point injectionTimeStamp;
 		wil::unique_handle processHandle;
+		UINT retryCount{ 0 };
 
-		CDwmProcessInfo(std::chrono::steady_clock::time_point t, HANDLE h) : injectionTimeStamp(t), processHandle(h) {}
+		CDwmProcessInfo(std::chrono::steady_clock::time_point t, HANDLE h) : injectionTimeStamp(t), processHandle(h), retryCount(0) {}
 	};
 	std::unordered_map<DWORD, CDwmProcessInfo> g_dwmInjectionMap{};
 	std::unordered_set<DWORD> g_dwmInjectionBlackList{};
@@ -31,6 +32,17 @@ namespace OpenGlass::GlassService
 	HRESULT OpenUserRegistryForDwm(RequestBuffer& content, DWORD processId);
 	HRESULT RunInjectionThread();
 	HRESULT RunServerThread();
+
+	// Check if the crash dialog is disabled via registry
+	FORCEINLINE bool IsCrashDialogDisabled()
+	{
+		DWORD value{ 1 };
+		if (SUCCEEDED(wil::reg::get_value_dword_nothrow(HKEY_LOCAL_MACHINE, L"SOFTWARE\\Microsoft\\Windows\\DWM", L"DisableCrashDialog", &value)))
+		{
+			return value == 1;
+		}
+		return false; // Default: dialog is enabled
+	}
 }
 
 HRESULT GlassService::OpenUserRegistryForDwm(RequestBuffer& content, DWORD processId) try
@@ -301,7 +313,7 @@ HRESULT GlassService::RunInjectionThread()
 		auto currentTimeStamp = std::chrono::steady_clock::now();
 		for (auto it = g_dwmInjectionMap.begin(); it != g_dwmInjectionMap.end(); )
 		{
-			const auto& [injectionTimeStamp, _] = it->second;
+			const auto& [injectionTimeStamp, __, ___] = it->second;
 			if (currentTimeStamp - injectionTimeStamp >= std::chrono::minutes{ 3 })
 			{
 				it = g_dwmInjectionMap.erase(it);
@@ -366,40 +378,58 @@ HRESULT GlassService::RunInjectionThread()
 				const auto it = g_dwmInjectionMap.find(sessionId);
 				if (it != g_dwmInjectionMap.end())
 				{
-					const auto& [injectionTimeStamp, processHandle] = it->second;
+					auto& [injectionTimeStamp, processHandle, retryCount] = it->second;
 
 					DWORD exitCode{ 0 };
 					LOG_IF_WIN32_BOOL_FALSE(GetExitCodeProcess(processHandle.get(), &exitCode));
 					// DWM constantly crashes or manual fast fail triggered by user
 					if (currentTimeStamp - injectionTimeStamp <= std::chrono::seconds{ 15 } || exitCode == 0xC0000409)
 					{
-						auto title = Util::GetResourceStringView<IDS_STRING101>();
-						auto content = Util::GetResourceStringView<IDS_STRING109>();
-						DWORD response{ IDTIMEOUT };
-						WTSSendMessageW(
-							WTS_CURRENT_SERVER_HANDLE,
-							sessionId,
-							const_cast<LPWSTR>(title.data()),
-							static_cast<DWORD>(title.size() * sizeof(WCHAR)),
-							const_cast<LPWSTR>(content.data()),
-							static_cast<DWORD>(content.size() * sizeof(WCHAR)),
-							MB_ICONERROR | MB_ABORTRETRYIGNORE,
-							0,
-							&response,
-							TRUE
-						);
-						g_injectionThreadStatus = response == IDABORT ? ThreadStatus::Stopped : ThreadStatus::Running;
+						// Only show the crash dialog if not disabled via registry
+						if (!IsCrashDialogDisabled())
+						{
+							auto title = Util::GetResourceStringView<IDS_STRING101>();
+							auto content = Util::GetResourceStringView<IDS_STRING109>();
+							DWORD response{ IDTIMEOUT };
+							WTSSendMessageW(
+								WTS_CURRENT_SERVER_HANDLE,
+								sessionId,
+								const_cast<LPWSTR>(title.data()),
+								static_cast<DWORD>(title.size() * sizeof(WCHAR)),
+								const_cast<LPWSTR>(content.data()),
+								static_cast<DWORD>(content.size() * sizeof(WCHAR)),
+								MB_ICONERROR | MB_ABORTRETRYIGNORE,
+								0,
+								&response,
+								TRUE
+							);
+							g_injectionThreadStatus = response == IDABORT ? ThreadStatus::Stopped : ThreadStatus::Running;
 
-						if (g_injectionThreadStatus == ThreadStatus::Stopped)
-						{
-							hr = E_ABORT;
-							return false;
+							if (g_injectionThreadStatus == ThreadStatus::Stopped)
+							{
+								hr = E_ABORT;
+								return false;
+							}
+							if (response == IDIGNORE)
+							{
+								g_dwmInjectionMap.erase(it);
+								g_dwmInjectionBlackList.emplace(processId);
+								return false;
+							}
 						}
-						if (response == IDIGNORE)
+						else
 						{
+							// Crash dialog disabled - automatically retry
+							if (++retryCount >= 3)
+							{
+								// Max retries reached - add to blacklist
+								g_dwmInjectionMap.erase(it);
+								g_dwmInjectionBlackList.emplace(processId);
+								return true;
+							}
+							Sleep(1000);
 							g_dwmInjectionMap.erase(it);
-							g_dwmInjectionBlackList.emplace(processId);
-							return false;
+							return true;
 						}
 					}
 				}
