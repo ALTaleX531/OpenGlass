@@ -558,7 +558,8 @@ namespace OpenGlass::dwmcore
 				Util::OffsetInfo{ .offset = 1428, .build = os::build_w11_24h2, .revision = 0 },
 				Util::OffsetInfo{ .offset = 1316, .build = os::build_w11_24h2, .revision = os::revision_24h2_with_25h2_code_staged },
 				Util::OffsetInfo{ .offset = 1708, .build = os::build_w11_24h2, .revision = os::revision_kb5083631 },
-				Util::OffsetInfo{ .offset = 1684, .build = 0, .revision = 0 }
+				Util::OffsetInfo{ .offset = 1684, .build = os::build_w11_24h2, .revision = os::revision_kb5101684 },
+				Util::OffsetInfo{ .offset = 1668, .build = 0, .revision = 0 }
 			};
 		}
 	};
@@ -591,7 +592,8 @@ namespace OpenGlass::dwmcore
 				Util::OffsetInfo{ .offset = 1208, .build = os::build_w11_24h2, .revision = 0 },
 				Util::OffsetInfo{ .offset = 1180, .build = os::build_w11_24h2, .revision = os::revision_24h2_with_25h2_code_staged },
 				Util::OffsetInfo{ .offset = 1572, .build = os::build_w11_24h2, .revision = os::revision_kb5083631 },
-				Util::OffsetInfo{ .offset = 1548, .build = 0, .revision = 0 }
+				Util::OffsetInfo{ .offset = 1548, .build = os::build_w11_24h2, .revision = os::revision_kb5101684 },
+				Util::OffsetInfo{ .offset = 1532, .build = 0, .revision = 0 }
 			};
 		}
 	};
@@ -610,7 +612,8 @@ namespace OpenGlass::dwmcore
 				Util::OffsetInfo{ .offset = 1204, .build = os::build_w11_24h2, .revision = 0 },
 				Util::OffsetInfo{ .offset = 1172, .build = os::build_w11_24h2, .revision = os::revision_24h2_with_25h2_code_staged },
 				Util::OffsetInfo{ .offset = 1564, .build = os::build_w11_24h2, .revision = os::revision_kb5083631 },
-				Util::OffsetInfo{ .offset = 1540, .build = 0, .revision = 0 }
+				Util::OffsetInfo{ .offset = 1540, .build = os::build_w11_24h2, .revision = os::revision_kb5101684 },
+				Util::OffsetInfo{ .offset = 1524, .build = 0, .revision = 0 }
 			};
 		}
 	};
@@ -629,7 +632,8 @@ namespace OpenGlass::dwmcore
 				Util::OffsetInfo{ .offset = 448, .build = os::build_w11_24h2, .revision = 0 },
 				Util::OffsetInfo{ .offset = 568, .build = os::build_w11_24h2, .revision = os::revision_24h2_with_25h2_code_staged },
 				Util::OffsetInfo{ .offset = 616, .build = os::build_w11_24h2, .revision = os::revision_kb5083631 },
-				Util::OffsetInfo{ .offset = 592, .build = 0, .revision = 0 }
+				Util::OffsetInfo{ .offset = 592, .build = os::build_w11_24h2, .revision = os::revision_kb5101684 },
+				Util::OffsetInfo{ .offset = 576, .build = 0, .revision = 0 }
 			};
 		}
 	};

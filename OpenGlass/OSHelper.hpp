@@ -50,6 +50,7 @@ namespace OpenGlass::os
 		revision_24h2_kb5067036 = 7019,
 		revision_25h2_kb5068861 = 7019,
 		revision_kb5083631 = 8328,
+		revision_kb5101684 = 8972,
 	};
 }
 
