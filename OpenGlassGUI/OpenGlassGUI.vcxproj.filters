@@ -11,6 +11,12 @@
 		</Filter>
 	</ItemGroup>
 	<ItemGroup>
+		<ClInclude Include="ColorizationPresets.hpp">
+			<Filter>Header Files</Filter>
+		</ClInclude>
+		<ClInclude Include="ColorSwatchButton.hpp">
+			<Filter>Header Files</Filter>
+		</ClInclude>
 		<ClInclude Include="Diagnostics.hpp">
 			<Filter>Header Files</Filter>
 		</ClInclude>
@@ -37,10 +43,16 @@
 		</ClInclude>
 	</ItemGroup>
 	<ItemGroup>
+		<ClCompile Include="ColorSwatchButton.cpp">
+			<Filter>Source Files</Filter>
+		</ClCompile>
 		<ClCompile Include="Diagnostics.cpp">
 			<Filter>Source Files</Filter>
 		</ClCompile>
 		<ClCompile Include="OpenGlassGUI.cpp">
+			<Filter>Source Files</Filter>
+		</ClCompile>
+		<ClCompile Include="MainFrame.ColorPresets.cpp">
 			<Filter>Source Files</Filter>
 		</ClCompile>
 		<ClCompile Include="MainFrame.Core.cpp">

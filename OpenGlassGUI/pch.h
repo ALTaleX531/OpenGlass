@@ -10,9 +10,14 @@
 #include <wx/slider.h>
 #include <wx/gauge.h>
 #include <wx/commandlinkbutton.h>
+#include <wx/collpane.h>
+#include <wx/dcmemory.h>
+#include <wx/graphics.h>
 #include <wx/artprov.h>
 #include <wx/simplebook.h>
 #include <wx/snglinst.h>
+#include <wx/tglbtn.h>
+#include <wx/wrapsizer.h>
 #include <wil/resource.h>
 #include <wil/registry.h>
 #include <commctrl.h>

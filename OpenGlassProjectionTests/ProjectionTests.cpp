@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "ProjectionFixture.hpp"
 #include "RegistryValueResolver.hpp"
+#include "../OpenGlassGUI/ColorizationPresets.hpp"
 
 using namespace OpenGlass;
 using namespace OpenGlassProjectionTests;
@@ -322,6 +323,125 @@ namespace
 			));
 		}
 	}
+
+	void TestColorizationPresets()
+	{
+		using namespace ColorizationPresets;
+
+		constexpr std::array expectedVista
+		{
+			std::pair{ std::wstring_view{ L"Default" }, 0x45409EFEu },
+			std::pair{ std::wstring_view{ L"Graphite" }, 0xA3000000u },
+			std::pair{ std::wstring_view{ L"Blue" }, 0xA8004ADEu },
+			std::pair{ std::wstring_view{ L"Teal" }, 0x82008CA5u },
+			std::pair{ std::wstring_view{ L"Red" }, 0x9CCE0C0Fu },
+			std::pair{ std::wstring_view{ L"Orange" }, 0xA6FF7700u },
+			std::pair{ std::wstring_view{ L"Pink" }, 0x49F93EE7u },
+			std::pair{ std::wstring_view{ L"Frost" }, 0xCCEFF7F7u }
+		};
+		constexpr std::array expectedWindows7
+		{
+			std::pair{ std::wstring_view{ L"Sky" }, 0x6B74B8FCu },
+			std::pair{ std::wstring_view{ L"Twilight" }, 0xA80046ADu },
+			std::pair{ std::wstring_view{ L"Sea" }, 0x8032CDCDu },
+			std::pair{ std::wstring_view{ L"Leaf" }, 0x6614A600u },
+			std::pair{ std::wstring_view{ L"Lime" }, 0x6697D937u },
+			std::pair{ std::wstring_view{ L"Sun" }, 0x54FADC0Eu },
+			std::pair{ std::wstring_view{ L"Pumpkin" }, 0x80FF9C00u },
+			std::pair{ std::wstring_view{ L"Ruby" }, 0xA8CE0F0Fu },
+			std::pair{ std::wstring_view{ L"Fuchsia" }, 0x66FF0099u },
+			std::pair{ std::wstring_view{ L"Blush" }, 0x70FCC7F8u },
+			std::pair{ std::wstring_view{ L"Violet" }, 0x856E3BA1u },
+			std::pair{ std::wstring_view{ L"Lavender" }, 0x528D5A94u },
+			std::pair{ std::wstring_view{ L"Taupe" }, 0x6698844Cu },
+			std::pair{ std::wstring_view{ L"Chocolate" }, 0xA84F1B1Bu },
+			std::pair{ std::wstring_view{ L"Slate" }, 0x80555555u },
+			std::pair{ std::wstring_view{ L"Frost" }, 0x54FCFCFCu }
+		};
+		Check(Vista.size() == expectedVista.size());
+		Check(Windows7.size() == expectedWindows7.size());
+		for (size_t index = 0; index < Vista.size(); index++)
+		{
+			Check(Vista[index].name == expectedVista[index].first);
+			Check(Vista[index].argb == expectedVista[index].second);
+		}
+		for (size_t index = 0; index < Windows7.size(); index++)
+		{
+			Check(Windows7[index].name == expectedWindows7[index].first);
+			Check(Windows7[index].argb == expectedWindows7[index].second);
+		}
+
+		std::vector<std::wstring_view> ids;
+		for (const auto family : { Family::Vista, Family::Windows7 })
+		{
+			for (const auto& preset : Get(family))
+			{
+				Check(preset.family == family);
+				Check(std::find(ids.begin(), ids.end(), preset.id) == ids.end());
+				ids.push_back(preset.id);
+			}
+		}
+
+		constexpr std::array expectedVistaOpacity{ 27u, 64u, 66u, 51u, 61u, 65u, 29u, 80u };
+		Check(ClassicIntensityMinimum == 10);
+		Check(ClassicIntensityMaximum == 85);
+		for (size_t index = 0; index < Vista.size(); index++)
+		{
+			Check(CalculateVistaOpacity(Vista[index].argb) == expectedVistaOpacity[index]);
+		}
+		Check(CalculateVistaOpacity(0x00000000) == 0);
+		Check(CalculateVistaOpacity(0xFF000000) == 100);
+		Check(CalculateIntensityAlpha(0) == 0);
+		Check(CalculateIntensityAlpha(100) == 255);
+		for (const auto& preset : Windows7)
+		{
+			Check(CalculateIntensityAlpha(CalculateVistaOpacity(preset.argb)) == (preset.argb >> 24));
+		}
+
+		constexpr Windows7Parameters sky
+		{
+			0x6B74B8FC,
+			0x6B74B8FC,
+			8,
+			43,
+			49
+		};
+		constexpr Windows7Parameters skyOpaque
+		{
+			0x6B74B8FC,
+			0x6B74B8FC,
+			42,
+			10,
+			48
+		};
+		Check(CalculateWindows7Parameters(0x6B74B8FC, false) == sky);
+		Check(CalculateWindows7Parameters(0x6B74B8FC, true) == skyOpaque);
+		Check(CalculateWindows7Parameters(0xA80046AD, false).colorBalance == 56);
+		Check(CalculateWindows7Parameters(0xA80046AD, false).afterglowBalance == 11);
+		Check(CalculateWindows7Parameters(0xA80046AD, false).blurBalance == 33);
+		Check(CalculateWindows7Parameters(0xA8CE0F0F, false).colorBalance == 56);
+		Check(CalculateWindows7Parameters(0xA8CE0F0F, false).afterglowBalance == 11);
+		Check(CalculateWindows7Parameters(0xA8CE0F0F, false).blurBalance == 33);
+		Check(CalculateWindows7Parameters(0x65000000, false).colorBalance == 5);
+		Check(CalculateWindows7Parameters(0x65000000, false).afterglowBalance == 44);
+		Check(CalculateWindows7Parameters(0x65000000, false).blurBalance == 51);
+		Check(CalculateWindows7Parameters(0x66000000, false).colorBalance == 5);
+		Check(CalculateWindows7Parameters(0x66000000, false).afterglowBalance == 45);
+		Check(CalculateWindows7Parameters(0x66000000, false).blurBalance == 50);
+		Check(CalculateWindows7Parameters(0xBD000000, false).colorBalance == 70);
+		Check(CalculateWindows7Parameters(0xBD000000, false).afterglowBalance == 0);
+		Check(CalculateWindows7Parameters(0xBD000000, false).blurBalance == 30);
+
+		const auto vistaApplication = BuildApplication(Vista.front(), false);
+		Check(vistaApplication.color == Vista.front().argb);
+		Check(vistaApplication.vistaOpacity == 27u);
+		Check(!vistaApplication.windows7);
+
+		const auto windows7Application = BuildApplication(Windows7.front(), false);
+		Check(windows7Application.color == Windows7.front().argb);
+		Check(!windows7Application.vistaOpacity);
+		Check(windows7Application.windows7 == sky);
+	}
 }
 
 int OpenGlassProjectionTests::Target(int value)
@@ -342,5 +462,6 @@ int main()
 	TestDisjointProjectedBindings();
 	TestInvalidMetadata();
 	TestOverridableRegistryValueResolution();
+	TestColorizationPresets();
 	return g_failures;
 }

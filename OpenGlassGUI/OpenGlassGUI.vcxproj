@@ -44,6 +44,8 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+	<ClInclude Include="ColorizationPresets.hpp" />
+	<ClInclude Include="ColorSwatchButton.hpp" />
     <ClInclude Include="Diagnostics.hpp" />
     <ClInclude Include="OpenGlassGUI.hpp" />
     <ClInclude Include="MainFrame.hpp" />
@@ -54,8 +56,10 @@
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
+	<ClCompile Include="ColorSwatchButton.cpp" />
     <ClCompile Include="Diagnostics.cpp" />
     <ClCompile Include="OpenGlassGUI.cpp" />
+	<ClCompile Include="MainFrame.ColorPresets.cpp" />
     <ClCompile Include="MainFrame.Core.cpp" />
     <ClCompile Include="MainFrame.State.cpp" />
     <ClCompile Include="MainFrame.Tabs.cpp" />

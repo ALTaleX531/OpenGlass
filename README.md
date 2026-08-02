@@ -59,6 +59,8 @@ OpenGlass is for advanced users who are comfortable editing the Windows registry
 2. **Configuration**: Use the OpenGlass GUI or edit the [registry](#configuration) directly (manual registry edits require restarting OpenGlass or changing system color settings to apply).
 3. **Reference**: Review the release notes and source code to stay informed about behavior changes and technical updates.
 
+The GUI's **Glass colors** page includes the original Windows Vista and Windows 7 color presets. The displayed family follows **Glass type**, but changing the type does not apply a preset. The compact controls mirror the classic control panel: select a swatch, enable or disable transparency, and adjust color intensity. **Detailed colorization settings** contains active/inactive colors and Windows 7 composition parameters, while **Advanced colorization settings** contains low-level blending controls. Reflection opacity variants on **Theme** and text color overrides on **Appearance** are also collapsed by default. Changes apply immediately, and **Revert** restores the values from before editing. Windows 7 composition values use the documented [`dwm_colorization_calculator`](https://github.com/ALTaleX531/dwm_colorization_calculator) conversion.
+
 > [!TIP]
 > **Emergency Exit**: Long press <kbd>Ctrl</kbd>+<kbd>Win</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd> to immediately terminate DWM if the system becomes unresponsive.
 
@@ -79,6 +81,10 @@ If you encounter crashes or technical bugs:
 - `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\DWM` (system-wide fallback)
 
 **Key inheritance**: Missing keys use predefined defaults. Variants (e.g., `XXXInactive`, `XXXMaximized`) inherit from their base key if not explicitly set. For the colorization keys that have an `Override` form, resolution is `HKCU Override → HKCU base → HKLM Override → HKLM base → default`. This preserves per-user precedence while allowing an Override in either scope to resist resets by `uxtheme.dll` on Windows 10+. Explicit edits to these values in the GUI create the Override form. Use the reset button beside an active Override to remove it from the current editing scope and return to the next inherited value.
+
+Built-in Vista presets write `ColorizationColorOverride` and derive `GlassOpacity` from the preset alpha. Built-in Windows 7 presets write color, afterglow, and the three composition-parameter Override values using the current opaque-blend state. Presets do not change opaque blend, reflection intensity, inactive colors, or advanced blending settings.
+
+**Enable transparency** is the inverse presentation of `ColorizationOpaqueBlend`. For Vista glass, **Color intensity** edits `GlassOpacity`; for Windows 7 glass it edits the color and afterglow alpha and recalculates the three composition balances. Both historical sliders use the classic 10–85% range.
 
 ## Registry reference
 

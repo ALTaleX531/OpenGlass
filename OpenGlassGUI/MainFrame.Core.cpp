@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "MainFrame.hpp"
+#include "ColorSwatchButton.hpp"
 #include "Symbols.hpp"
 
 namespace OpenGlass
@@ -1032,6 +1033,7 @@ namespace OpenGlass
 		auto updateOverridableDword = [this, updateDword](const std::wstring& overrideKey, DWORD value) {
 			updateDword(overrideKey, value, ChangeType::Colorization);
 			UpdateOptionStatusIcons();
+			UpdateColorizationPresetSelection();
 		};
 		auto blurRadiusToDeviation = [](int radius) -> DWORD {
 			int val = (radius * 10 + 2) / 3;
@@ -1092,7 +1094,7 @@ namespace OpenGlass
 
 			if (m_chkEnableInactiveOpacity && !m_chkEnableInactiveOpacity->IsChecked())
 			{
-				m_slGlassOpacityInactive->SetValue(m_slGlassOpacity->GetValue());
+				m_slGlassOpacityInactive->SetValue(m_slColorIntensity->GetValue());
 				syncSliderTooltip(m_slGlassOpacityInactive);
 			}
 
@@ -1657,19 +1659,58 @@ namespace OpenGlass
 			{
 				updateDword(L"GlassType", sel, ChangeType::Colorization);
 			}
-			UpdateUIVisibility();
+			LoadSettings(false);
 		});
 
-		m_chkOpaqueBlend->Bind(wxEVT_CHECKBOX, [this, updateDword, deleteValue]([[maybe_unused]] wxCommandEvent& e) {
-			if (!e.IsChecked())
+		for (const auto& [preset, button] : m_presetButtons)
+		{
+			button->Bind(wxEVT_TOGGLEBUTTON, [this, preset](wxCommandEvent& event) {
+				ApplyColorizationPreset(*preset);
+				event.Skip();
+			});
+		}
+
+		m_chkEnableTransparency->Bind(wxEVT_CHECKBOX, [this](wxCommandEvent& e) {
+			RegistryConfig* config = GetConfigForKey(L"ColorizationOpaqueBlend");
+			if (!config)
 			{
-				deleteValue(L"ColorizationOpaqueBlend");
-				NotifySettingsChange(ChangeType::Colorization);
+				return;
+			}
+
+			const bool opaque = !e.IsChecked();
+			const ColorizationPresets::Preset* matchedPreset = FindMatchingWindows7Preset(!opaque);
+			TrackSettingChange(L"ColorizationOpaqueBlend");
+			if (opaque)
+			{
+				config->SetDword(L"ColorizationOpaqueBlend", 1);
 			}
 			else
 			{
-				updateDword(L"ColorizationOpaqueBlend", 1, ChangeType::Colorization);
+				config->DeleteValue(L"ColorizationOpaqueBlend");
 			}
+
+			if (matchedPreset)
+			{
+				const auto parameters = ColorizationPresets::CalculateWindows7Parameters(
+					matchedPreset->argb,
+					opaque
+				);
+				const std::pair<PCWSTR, DWORD> values[]
+				{
+					{ L"ColorizationColorBalanceOverride", parameters.colorBalance },
+					{ L"ColorizationAfterglowBalanceOverride", parameters.afterglowBalance },
+					{ L"ColorizationBlurBalanceOverride", parameters.blurBalance }
+				};
+				for (const auto& [name, value] : values)
+				{
+					TrackSettingChange(name);
+					config->SetDword(name, value);
+				}
+			}
+
+			SetDirty(true);
+			NotifySettingsChange(ChangeType::Colorization);
+			LoadSettings(false);
 		});
 
 		m_cpColorizationColor->Bind(wxEVT_COLOURPICKER_CHANGED, [this, updateOverridableDword, updateInheritance](wxColourPickerEvent& e) {
@@ -1704,19 +1745,71 @@ namespace OpenGlass
 				updateDword(L"ColorizationColorInactive", colorToDwordIgnoreAlpha(L"ColorizationColorInactive", e.GetColour()), ChangeType::Colorization);
 		});
 
-		m_slGlassOpacity->Bind(wxEVT_SLIDER, [this, updateDword, updateInheritance, deleteValue, setSliderTooltipValue](wxCommandEvent& e) {
+		m_slColorIntensity->Bind(wxEVT_SLIDER, [this, updateDword, updateInheritance, deleteValue, setSliderTooltipValue](wxCommandEvent& e) {
 			int val = e.GetInt();
-			if (val == 63)
+			if (m_rbGlassType->GetSelection() == 0)
 			{
-				deleteValue(L"GlassOpacity");
-				NotifySettingsChange(ChangeType::Colorization);
+				if (val == 63)
+				{
+					deleteValue(L"GlassOpacity");
+					NotifySettingsChange(ChangeType::Colorization);
+				}
+				else
+				{
+					updateDword(L"GlassOpacity", val, ChangeType::Colorization);
+				}
+				setSliderTooltipValue(m_slColorIntensity, val);
+				updateInheritance();
+				UpdateColorizationPresetSelection();
+				return;
 			}
-			else
+
+			RegistryConfig* config = GetConfigForKey(L"ColorizationColorOverride");
+			if (!config)
 			{
-				updateDword(L"GlassOpacity", val, ChangeType::Colorization);
+				return;
 			}
-			setSliderTooltipValue(m_slGlassOpacity, val);
-			updateInheritance();
+
+			const DWORD alpha = ColorizationPresets::CalculateIntensityAlpha(val) << 24;
+			const DWORD color = alpha | (ResolveOverridableDword(
+				L"ColorizationColor",
+				L"ColorizationColorOverride",
+				0xFF000000
+			).value & 0x00FFFFFF);
+			const DWORD afterglow = alpha | (ResolveOverridableDword(
+				L"ColorizationAfterglow",
+				L"ColorizationAfterglowOverride",
+				0
+			).value & 0x00FFFFFF);
+			const auto parameters = ColorizationPresets::CalculateWindows7Parameters(
+				color,
+				!m_chkEnableTransparency->IsChecked()
+			);
+			const std::pair<PCWSTR, DWORD> values[]
+			{
+				{ L"ColorizationColorOverride", color },
+				{ L"ColorizationAfterglowOverride", afterglow },
+				{ L"ColorizationColorBalanceOverride", parameters.colorBalance },
+				{ L"ColorizationAfterglowBalanceOverride", parameters.afterglowBalance },
+				{ L"ColorizationBlurBalanceOverride", parameters.blurBalance }
+			};
+			for (const auto& [name, value] : values)
+			{
+				TrackSettingChange(name);
+				config->SetDword(name, value);
+			}
+
+			SetDirty(true);
+			NotifySettingsChange(ChangeType::Colorization);
+			setSliderTooltipValue(m_slColorIntensity, val);
+			m_slColorBalance->SetValue(parameters.colorBalance);
+			m_slAfterglowBalance->SetValue(parameters.afterglowBalance);
+			m_slBlurBalance->SetValue(parameters.blurBalance);
+			setSliderTooltipValue(m_slColorBalance, parameters.colorBalance);
+			setSliderTooltipValue(m_slAfterglowBalance, parameters.afterglowBalance);
+			setSliderTooltipValue(m_slBlurBalance, parameters.blurBalance);
+			UpdateOptionStatusIcons();
+			UpdateColorizationPresetSelection();
 		});
 
 		m_chkEnableInactiveOpacity->Bind(wxEVT_CHECKBOX, [this, updateDword, updateInheritance, deleteValue]([[maybe_unused]] wxCommandEvent& e) {

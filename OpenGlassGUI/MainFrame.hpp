@@ -1,12 +1,15 @@
 #pragma once
 #include "pch.h"
 #include "Diagnostics.hpp"
+#include "ColorizationPresets.hpp"
 #include "RegistryValueResolver.hpp"
 #include "RegistryConfig.hpp"
 #include "Symbols.hpp"
 
 namespace OpenGlass
 {
+	class ColorSwatchButton;
+
 	enum class ChangeType {
 		Colorization,
 		Theme,
@@ -43,6 +46,9 @@ namespace OpenGlass
 		void UpdateOptionStatusIcons();
 		void AddPathWarningIcon(wxWindow* parent, wxBoxSizer* row, wxFilePickerCtrl* picker, wxCheckBox* checkbox, const wxString& title);
 		void UpdatePathWarningIcons();
+		void ApplyColorizationPreset(const ColorizationPresets::Preset& preset);
+		[[nodiscard]] const ColorizationPresets::Preset* FindMatchingWindows7Preset(bool opaque) const;
+		void UpdateColorizationPresetSelection();
 		void NotifySettingsChange(ChangeType type = ChangeType::Both);
 		void UpdateUIVisibility();
 		void OnClose(wxCloseEvent& event);
@@ -152,9 +158,14 @@ namespace OpenGlass
 		wxScrolledWindow* m_glassColorsPanel{ nullptr };
 		wxSizer* m_glassColorsRootSizer{ nullptr };
 		wxRadioBox* m_rbGlassType{ nullptr };
-		wxCheckBox* m_chkOpaqueBlend{ nullptr };
+		wxStaticBoxSizer* m_colorPresetsGroupSizer{ nullptr };
+		wxWrapSizer* m_vistaPresetSizer{ nullptr };
+		wxWrapSizer* m_windows7PresetSizer{ nullptr };
+		std::vector<std::pair<const ColorizationPresets::Preset*, ColorSwatchButton*>> m_presetButtons;
+		wxCheckBox* m_chkEnableTransparency{ nullptr };
+		wxSlider* m_slColorIntensity{ nullptr };
+		wxSizer* m_detailedColorizationSizer{ nullptr };
 		wxColourPickerCtrl* m_cpColorizationColor{ nullptr };
-		wxSlider* m_slGlassOpacity{ nullptr };
 		
 		wxCheckBox* m_chkEnableInactiveColor{ nullptr }; // Added
 		wxColourPickerCtrl* m_cpColorizationColorInactive{ nullptr };
@@ -166,7 +177,6 @@ namespace OpenGlass
 		wxColourPickerCtrl* m_cpColorCaption{ nullptr };
 		
 		// Sizers for dynamic visibility
-		wxSizer* m_vistaGroupSizer{ nullptr };
 		wxSizer* m_win7GroupSizer{ nullptr };
 		wxSizer* m_inactiveColumnSizer{ nullptr };
 		wxSizer* m_afterglowColumnSizer{ nullptr }; // Added

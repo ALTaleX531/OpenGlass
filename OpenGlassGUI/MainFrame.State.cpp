@@ -222,7 +222,7 @@ namespace OpenGlass
 		};
 
 		m_rbGlassType->SetSelection(std::clamp<int>(m_config->GetDword(L"GlassType", 0), 0, 1));
-		m_chkOpaqueBlend->SetValue(m_config->GetDword(L"ColorizationOpaqueBlend", 0) != 0);
+		m_chkEnableTransparency->SetValue(m_config->GetDword(L"ColorizationOpaqueBlend", 0) == 0);
 
 		const DWORD activeColor = ResolveOverridableDword(
 			L"ColorizationColor",
@@ -230,8 +230,16 @@ namespace OpenGlass
 			0xFF000000
 		).value;
 		m_cpColorizationColor->SetColour(dwordToColor(activeColor));
-		m_slGlassOpacity->SetValue(m_config->GetDword(L"GlassOpacity", 63));
-		syncSliderTooltip(m_slGlassOpacity);
+		const bool isVistaGlass = m_rbGlassType->GetSelection() == 0;
+		m_slColorIntensity->SetRange(
+			ColorizationPresets::ClassicIntensityMinimum,
+			ColorizationPresets::ClassicIntensityMaximum
+		);
+		const DWORD colorIntensity = isVistaGlass
+			? m_config->GetDword(L"GlassOpacity", 63)
+			: ColorizationPresets::CalculateVistaOpacity(activeColor);
+		m_slColorIntensity->SetValue(colorIntensity);
+		syncSliderTooltip(m_slColorIntensity);
 
 		auto loadOptColor = [&](wxCheckBox* chk, wxColourPickerCtrl* cp, const std::wstring& key, DWORD defVal) {
 			DWORD val = m_config->GetDword(key, 0xFFFFFFFE);
@@ -393,23 +401,26 @@ namespace OpenGlass
 		if (m_glassColorsGroupSizer && m_vistaOpacitySizer)
 			m_glassColorsGroupSizer->Show(m_vistaOpacitySizer, isVista, true);
 
+		if (m_colorPresetsGroupSizer)
+		{
+			if (m_vistaPresetSizer)
+			{
+				m_colorPresetsGroupSizer->Show(m_vistaPresetSizer, isVista, true);
+			}
+			if (m_windows7PresetSizer)
+			{
+				m_colorPresetsGroupSizer->Show(m_windows7PresetSizer, !isVista, true);
+			}
+		}
+
 		// IMPORTANT: m_rbGlassType->GetContainingSizer() is the *row* that hosts the radiobox,
 		// not the page root sizer. Use the Glass Colors page/root sizer for visibility changes.
 		wxWindow* page = m_glassColorsPanel;
-		wxSizer* root = m_glassColorsRootSizer;
-		if (!root && page)
+		if (m_detailedColorizationSizer)
 		{
-			root = page->GetSizer();
-		}
-		if (root)
-		{
-			if (m_vistaGroupSizer)
-			{
-				root->Show(m_vistaGroupSizer, isVista, true);
-			}
 			if (m_win7GroupSizer)
 			{
-				root->Show(m_win7GroupSizer, !isVista, true);
+				m_detailedColorizationSizer->Show(m_win7GroupSizer, !isVista, true);
 			}
 		}
 
@@ -424,5 +435,6 @@ namespace OpenGlass
 
 		UpdateOptionStatusIcons();
 		UpdatePathWarningIcons();
+		UpdateColorizationPresetSelection();
 	}
 }
