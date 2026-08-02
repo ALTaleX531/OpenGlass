@@ -1,24 +1,24 @@
 ---
 name: maintain-dwm-offsets
-description: Audit, compare, and maintain OpenGlass dwmcore.dll and uDWM.dll projection offsets with IDA evidence. Use when investigating a new Windows DWM binary, checking one projection member or vtable slot, comparing builds or revisions, validating legacy or milcomp offset tables, or preparing evidence-backed changes to dwmcoreProjection.Offsets.hpp or uDwmProjection.Offsets.hpp.
+description: Audit, compare, and maintain OpenGlass dwmcore.dll and uDWM.dll Layout and Symbol schemas with paired PE/PDB identity and IDA evidence. Use when investigating a new Windows DWM binary, checking one projection member, vtable slot, complete symbol name, or hook, comparing exact builds or revisions, validating legacy or milcomp projection metadata, or preparing evidence-backed schema changes.
 ---
 
-# Maintain DWM offsets
+# Maintain DWM projections
 
-Treat an offset as verified only when its semantic role is demonstrated in the selected binary. Do not infer a table from a Windows marketing name, image size, nearby members, or a previous build.
+Treat a Layout offset or Symbol match as verified only when its semantic role is demonstrated in the selected binary. Do not infer schema data from a Windows marketing name, image size, nearby members, or a previous build.
 
 ## Select the scope
 
 1. Identify the requested module: `dwmcore.dll`, `uDWM.dll`, or both.
 2. Identify the requested depth:
-   - **Projection item**: verify only named members or slots and their direct dependencies.
-   - **Build comparison**: verify the same items in every selected sample.
-   - **Module audit**: enumerate every projection consumed by that module.
+   - **Projection item**: verify only named schema IDs and their direct dependencies.
+   - **Build comparison**: verify the same IDs in every selected sample.
+   - **Module audit**: enumerate every schema item consumed by that module.
    - **Full audit**: audit both modules and all loaded samples. Do this only when explicitly requested.
-3. Detect the checked-out branch and the actual projection consumers before using a branch-specific checklist. Read [branches.md](references/branches.md).
-4. Run `python .agents/skills/maintain-dwm-offsets/scripts/lint_offset_tables.py .` to inventory and structurally lint the current tables before analysis.
+3. Require the DWM architecture: `legacy` or `milcomp`. Confirm its actual consumers and read [architectures.md](references/architectures.md). Never infer architecture from the Git branch, marketing version, or symbol name.
+4. Route the stable ID to the matching inventory. For a Layout, run `python .agents/skills/maintain-dwm-offsets/scripts/lint_offset_tables.py . --architecture legacy|milcomp --module udwm|dwmcore --id STABLE_ID`. For a Symbol or hook, run `python .agents/skills/maintain-dwm-offsets/scripts/lint_symbol_descriptors.py . --architecture legacy|milcomp --module udwm|dwmcore --id STABLE_ID`; do not pass a Symbol ID to the Layout linter. Run the other linter without `--id` only when that inventory or a direct dependency is also in scope. Each selected module schema is still fully linted.
 
-Do not silently expand a focused request into a full audit. Do not modify an IDB or production offset table unless the user explicitly asks for those changes.
+Do not silently expand a focused request into a full audit. Do not modify an IDB or production schema unless the user explicitly asks for those changes. Files under `$(IntDir)\Generated\Projection` are disposable build artifacts and must never be edited.
 
 ## Establish evidence
 
@@ -28,26 +28,32 @@ For each sample:
 
 1. Record module, architecture, path, hash, PE/file version when available, and PDB identity when available.
 2. Treat folder names and labels such as `25H2` or `26H1` as hints until binary metadata corroborates them.
-3. After establishing the exact PE build and revision, run the linter with `--version BUILD.REVISION` and record the selected interval and source expression. Do not choose an entry by eye.
-4. Locate the semantic accessor, mutator, constructor, dispatcher, producer/consumer pair, or call chain for the requested projection. Use byte patterns and fixed registers only to discover candidates.
-5. Derive the byte offset or vtable slot, including any adjusted `this` subobject displacement.
-6. Cross-check with an independent function or constructor. If that is unavailable, mark the result provisional.
-7. Separate absence of a symbol from absence of a class, member, interface, or capability.
+3. For a Layout, after establishing the exact PE build and revision, run the Layout linter with `--version BUILD.REVISION` (or the full `10.0.BUILD.REVISION`) and record the selected schema ID, interval, entry, and raw `offset` expression. This versioned run also performs the structural lint, so it replaces rather than duplicates the initial inventory command. Do not choose a case by eye.
+4. For a Symbol, run `python .agents/skills/maintain-dwm-offsets/scripts/audit_symbol_names.py . --architecture legacy|milcomp --module udwm|dwmcore --version BUILD.REVISION --image PATH_TO_DLL --symbol-path PATH_TO_SYMBOLS [--configuration release|debug] [--dbghelp PATH_TO_DBGHELP] [--id STABLE_ID]`. The default configuration is Release, so Debug-only descriptors remain inactive. Record the selected DbgHelp path, version, and hash plus the PDB identity and hash because exact `UNDNAME_COMPLETE` text is resolver-version input. Only a CodeView GUID/age-matched PDB and matching PE version is production name evidence. An unpaired PDB is discovery-only. Discovery can still return a successful process exit when the requested names resolve; automation making a production claim must require `evidence: production_candidate` and `pdb.paired: true`, not merely exit code zero.
+   For fast discovery before a schema audit, use `python Scripts/dump_symbols.py --input IMAGE [--output SYMBOL_CACHE] [--grep TEXT]`. The cache defaults to `%TEMP%\symbols`; the command downloads the image-matched public PDB and prints complete names, but does not replace the identity-rich audit report.
+5. Locate the semantic accessor, mutator, constructor, dispatcher, producer/consumer pair, or call chain for the requested projection. Use byte patterns and fixed registers only to discover candidates.
+6. Derive the byte offset, vtable slot, or typed ABI, including any adjusted `this` subobject displacement.
+7. Cross-check with an independent function or constructor. If unavailable, mark the result provisional.
+8. Separate absence of an exact PDB name match from absence of a class, member, interface, or capability.
 
 For dwmcore-specific anchors and fallbacks, read [dwmcore.md](references/dwmcore.md). For uDWM-specific anchors and class transitions, read [udwm.md](references/udwm.md). Read only the relevant module reference for a focused request.
 
 ## Propose changes safely
 
-Before editing a projection table:
+Before editing a Layout or Symbol schema item:
 
 1. Confirm the user requested implementation rather than analysis only.
-2. Re-read `OpenGlass/Util.hpp` and the comments immediately above the target table.
-3. Express results using right-boundary `OffsetInfo` semantics; never treat `.build` as an introduction marker.
-4. Preserve a final `{ .build = 0, .revision = 0 }` only when the projection remains valid for the open-ended interval. A table without that terminal entry may intentionally describe a removed feature.
-5. Change only independently verified items. Leave uncertainty in the report rather than guessing a value.
-6. Re-run the linter, its unit tests, and the relevant build checks.
+2. Re-read `OpenGlass/ProjectionSchemas/<architecture>/README.md`, `OpenGlass/ProjectionHelper.hpp`, and the target item's `notes`. Treat useful reverse-engineering notes as evidence metadata: retain semantic anchors, constructor or xref routes, adjusted-`this`, ABI traps, ICF/inlining ambiguity, and cross-check guidance verbatim unless new semantic evidence explicitly corrects it. Do not add notes that merely restate an exact PDB name, range, visibility, ordinary consumer, or migration provenance.
+3. Edit only `OpenGlass/ProjectionSchemas/<architecture>/udwm.json` or `dwmcore.json`. Keep its stable `id`/`name`; never hand-edit generated C++ or add a manual projection array/binding step.
+4. Express Layout right boundaries as exact `until: { build, revision }` objects. Use `otherwise: true` only when the Layout remains valid for the open-ended interval. Without it, later versions resolve to `unsupported`; do not equate that mechanically with feature removal.
+5. Preserve every `offset` expression as C++ source text, including negative values and `sizeof` arithmetic. Never evaluate or simplify it in Python.
+6. Store only the exact, unmodified `UnDecorateSymbolName(..., UNDNAME_COMPLETE)` output in `symbol_names`. Multiple names may describe historical aliases only when their typed ABI is identical. Split ABI changes into typed, non-overlapping Symbol variants. Raw Symbols must use their exact function-pointer type; reserve `BYTE*` plus `usage: "code_address"` for instruction-pattern anchors. The only projected compatibility exceptions are explicit, typed `discard_return` and `extra_trailing_argument` variants verified by codegen; do not use them for reordered or removed arguments. Never use name-only, substring, decorated-name, or first-match fallbacks.
+7. A projected Optional or version-inactive function requires an ABI-compatible schema fallback. Declare wrappers `inline` and keep their bodies as pure `OPENGLASS_MUSTTAIL return Projection::Invoke<&Target>(...)` dispatches. Normal Release/LTCG may inline the wrapper. Do not use `__forceinline`: it is not a guarantee and produces C4714 warnings when MSVC refuses it. Musttail is Release-only because MSVC cannot guarantee it under Debug `/Od`. Fallback/range logic belongs in schema bindings and cold commit code. A wrapper is not itself a consumer: require a real runtime call site or a direct typed Symbol consumer such as a Detour, and delete unused wrappers/descriptors instead of retaining unnecessary Required gates.
+8. Private DWM fields in handler translation units must be consumed through typed Layout accessors. Add a schema Layout instead of integer-cast offsets, private-pointer arithmetic, or padding-based fake layouts. `address()` and `ref()` preserve constness; reserve `mutable_address()` and `mutable_ref()` for a projected class facade whose established API intentionally returns a mutable private subobject from a const method. Never use them from handler code as a constness bypass. Codegen intentionally does not parse arbitrary C++; inspect relevant consumers during review rather than treating a textual cast scan as proof.
+9. Change only independently verified items. Leave uncertainty in the report rather than guessing.
+10. Re-run the generator tests, both linters and their tests, `OpenGlassProjectionTests`, and a normal Release build. Record PE size changes as diagnostics rather than treating a historical byte count as a permanent correctness condition.
 
-The `{ 0, 0 }` terminal is the runtime's open-ended fallback. It is not evidence that the value is correct for an unanalyzed future build.
+An open-ended Layout or Symbol range is runtime behavior, not evidence that it is correct for an unanalyzed future build.
 
 When preparing a support claim or release, read [release-validation.md](references/release-validation.md). Static lint, a successful build, and an IDA semantic audit do not replace real-OS validation.
 
@@ -56,11 +62,11 @@ When preparing a support claim or release, read [release-validation.md](referenc
 Always return these sections, even for a single projection item:
 
 - **Samples**: module, architecture, hashes, verified version/PDB data, and unverified labels.
-- **Linter selection**: requested build/revision, selected entry and interval, or `unsupported`.
+- **Linter selection**: architecture and requested build/revision; for a Layout, the selected schema ID, entry and interval or `unsupported`; for a Symbol, the active range, status, matched complete name and RVA. Use `not applicable` when the audited item has no corresponding selection.
 - **Evidence**: functions or call chains used and how each value was derived.
-- **Findings**: verified values, feature/class presence, and comparison results.
+- **Findings**: verified values, exact complete-name resolution, feature/class presence, and comparisons.
 - **Unverified**: missing anchors, ICF ambiguity, inlining ambiguity, or metadata gaps.
-- **Suggested table entries**: right-boundary entries or `none`; do not emit edits unless requested.
+- **Suggested schema**: exact Layout cases or typed Symbol name/range/fallback changes; do not emit edits unless requested.
 - **Runtime validation**: `not run`, `passed`, or `failed`; IDA-only work normally reports `not run`.
 
-For an implemented change, also report linter/test/build results and confirm whether any IDB was modified.
+For an implemented change, also report generator/linter/test/build/audit results and confirm whether any IDB was modified.

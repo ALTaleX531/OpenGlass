@@ -6,8 +6,13 @@
     <Platform Name="x64" />
   </Configurations>
   <Project Path="Common/Common.vcxitems" Id="9d3a67c5-e5ca-42ae-8b06-491c60e86ebe" />
-  <Project Path="OpenGlass/OpenGlass.vcxproj" Id="80009307-7b06-4785-af83-3f5d6db7deb6" />
+  <Project Path="OpenGlass/OpenGlass.Shared.vcxitems" Id="7d0401b4-2563-4c44-aef7-7dc75b21bc7e" />
+  <Project Path="OpenGlass/OpenGlass.Legacy.vcxproj" Id="80009307-7b06-4785-af83-3f5d6db7deb6" />
+  <Project Path="OpenGlass/OpenGlass.MILComp.vcxproj" Id="b87e35ea-0f8f-41ad-9e92-8abf6c054539" />
   <Project Path="OpenGlassHost/OpenGlassHost.vcxproj" Id="6c2d5b3d-4fe4-4e68-8e58-7b5a5d1a3d40" />
   <Project Path="OpenGlassGUI/OpenGlassGUI.vcxproj" Id="431e83fa-6d49-43e5-bb53-73da2b428258" />
-  <Project Path="OpenGlassTest/OpenGlassTest.vcxproj" Id="e7e2c6a4-36b2-4a61-9e2b-6b3d2b8b8c4f" />
+  <Project Path="Scripts/OpenGlassSetup.Legacy.vcxproj" Id="6b7a053c-755e-4f66-9690-122eea79ddd5" />
+  <Project Path="Scripts/OpenGlassSetup.MILComp.vcxproj" Id="20b395a3-2242-4c07-94e5-e62a1b05903b" />
+  <Project Path="OpenGlassRenderTest/OpenGlassRenderTest.vcxproj" Id="e7e2c6a4-36b2-4a61-9e2b-6b3d2b8b8c4f" />
+  <Project Path="OpenGlassProjectionTests/OpenGlassProjectionTests.vcxproj" Id="93c9a3f3-1d4f-4a51-ae95-7e98c0b1e6b4" />
 </Solution>

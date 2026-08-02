@@ -1,0 +1,532 @@
+#include "pch.h"
+#include "HookHelper.hpp"
+#include "uDWMProjection.hpp"
+#include "dwmcoreProjection.hpp"
+#include "Shared.hpp"
+#include "GlassKernel.hpp"
+#include "GlassIntegrity.hpp"
+#include "GlassRenderer.hpp"
+#include "GlassRealizer.hpp"
+#include "D3DGlassRealizer.hpp"
+#include "MaterialRealizer.hpp"
+#include "D2DPrivates.hpp"
+
+using namespace OpenGlass;
+
+namespace OpenGlass::GlassRenderer
+{
+	HRESULT MyCColorBrush_Draw(
+		dwmcore::CColorBrush* This,
+		dwmcore::CDrawingContext* drawingContext,
+		const D2D1_SIZE_F& worldSize,
+		dwmcore::CDrawListCache* drawListCache
+	);
+
+	void MyID2D1DeviceContext_FillGeometry(
+		ID2D1DeviceContext* This,
+		ID2D1Geometry* geometry,
+		ID2D1Brush* brush,
+		ID2D1Brush* opacityBrush
+	);
+
+	decltype(&MyCColorBrush_Draw) g_CColorBrush_Draw_Org{ nullptr };
+	decltype(&MyCColorBrush_Draw)* g_CColorBrush_Draw_Org_Address{ nullptr };
+
+	decltype(&MyID2D1DeviceContext_FillGeometry) g_ID2D1DeviceContext_FillGeometry_Org{ nullptr };
+	decltype(&MyID2D1DeviceContext_FillGeometry)* g_ID2D1DeviceContext_FillGeometry_Org_Address{ nullptr };
+
+	enum RenderFlag
+	{
+		RenderFlag_SolidColor,
+		RenderFlag_Backdrop,
+		RenderFlag_Reflection
+	};
+
+	struct CDeviceResources
+	{
+		winrt::com_ptr<ID2D1SolidColorBrush> m_brush{};
+		std::variant<std::monostate, CGlassRealizer, CD3DGlassRealizer> m_glassRealizer{};
+		CMaterialRealizer m_materialRealizer{};
+	};
+
+	Shared::GlassType g_type{ Shared::GlassType::Invalid };
+	CAeroParams g_params{};
+
+	MaterialContext g_materialContext{};
+
+	std::span<const D2D1_RECT_F> g_rectangleSpan{};
+	D2D1_RECT_F g_drawingWorldBounds{};
+
+	std::unordered_map<dwmcore::CD2DContext*, CDeviceResources> g_deviceResources{};
+	CDeviceResources* g_currentDeviceResources{};
+	dwmcore::CDrawingContext* g_drawingContextNoRef{};
+	std::bitset<4> g_renderFlag{};
+	bool g_colorIsOpaque{};
+	bool g_shapeIsRectangles{};
+
+	constexpr size_t MAX_RECTANGLES_ON_STACK{ 16 };
+	dwmcore::CShapePtr GetShapeRenderingData(
+		const dwmcore::CDrawingContext* drawingContext,
+		const dwmcore::CShape* shape,
+		const dwmcore::CMILMatrix* matrix,
+		D2D1_RECT_F& drawingWorldBounds,
+		D2D1_RECT_F& shapeWorldBounds,
+		std::unique_ptr<D2D1_RECT_F[]>& rectangles,
+		D2D1_RECT_F rectanglesOnStack[MAX_RECTANGLES_ON_STACK],
+		UINT& rectanglesCount,
+		std::span<const D2D1_RECT_F>& rectangleSpan,
+		bool& shapeIsRectangles
+	)
+	{
+		drawingWorldBounds = {};
+		rectangles.reset();
+		rectanglesCount = 0;
+		shapeIsRectangles = false;
+		dwmcore::CShapePtr renderingShape{};
+		THROW_IF_FAILED(shape->CopyShape(matrix, renderingShape.put()));
+
+		D2D1_RECT_F* buffer = nullptr;
+
+		LOG_IF_FAILED(shape->GetTightBounds(&shapeWorldBounds, matrix));
+		drawingContext->GetClipBoundsWorld(drawingWorldBounds, false);
+
+		if (renderingShape->IsRectangles(&rectanglesCount)) [[likely]]
+		{
+			buffer = rectanglesCount > MAX_RECTANGLES_ON_STACK ? (
+				rectangles = std::make_unique_for_overwrite<D2D1_RECT_F[]>(rectanglesCount),
+				rectangles.get()
+			) :
+			rectanglesOnStack;
+			if (
+				renderingShape->GetRectangles(
+					buffer,
+					rectanglesCount
+				)
+			) [[likely]]
+			{
+				shapeIsRectangles = true;
+			}
+		}
+
+		if (!shapeIsRectangles) [[unlikely]]
+		{
+			rectanglesCount = 1;
+			rectangles.reset();
+			buffer = rectanglesOnStack;
+			renderingShape->GetTightBounds(rectanglesOnStack, nullptr);
+		}
+
+		rectangleSpan = { buffer, rectanglesCount };
+		return renderingShape;
+	}
+}
+
+HRESULT GlassRenderer::MyCColorBrush_Draw(
+	dwmcore::CColorBrush* This,
+	dwmcore::CDrawingContext* drawingContext,
+	const D2D1_SIZE_F& worldSize,
+	dwmcore::CDrawListCache* drawListCache
+)
+{
+	do
+	{
+		const auto visual = drawingContext->GetCurrentVisual();
+		if (!visual || !GlassIntegrity::g_glassVisualSet.contains(visual))
+		{
+			break;
+		}
+
+		const auto geometry = visual->GetClipNoRef();
+		if (!geometry)
+		{
+			break;
+		}
+
+		dwmcore::CShapePtr geometryShape{};
+		if (
+			FAILED(geometry->GetShapeData(nullptr, &geometryShape)) ||
+			!geometryShape ||
+			geometryShape->IsEmpty()
+		)
+		{
+			return S_OK;
+		}
+
+		const auto occlusionContext = drawingContext->GetOcclusion();
+		const auto d2dContext = drawingContext->GetD3DDevice()->GetD2DContext();
+		const auto context = d2dContext->GetDeviceContext();
+		const auto matrix = drawingContext->GetWorldTransform();
+
+		UINT rectanglesCount{};
+		std::unique_ptr<D2D1_RECT_F[]> rectangles{};
+		D2D1_RECT_F shapeWorldBounds{};
+		D2D1_RECT_F rectanglesOnStack[MAX_RECTANGLES_ON_STACK]{};
+
+		const auto renderingShape = GetShapeRenderingData(
+			drawingContext,
+			geometryShape.get(),
+			matrix,
+			g_drawingWorldBounds,
+			shapeWorldBounds,
+			rectangles,
+			rectanglesOnStack,
+			rectanglesCount,
+			g_rectangleSpan,
+			g_shapeIsRectangles
+		);
+
+		D2D1_RECT_F renderingShapeBounds{};
+		RETURN_IF_FAILED(renderingShape->GetTightBounds(&renderingShapeBounds, nullptr));
+		RectF::IntersectUnsafe(g_drawingWorldBounds, renderingShapeBounds);
+		if (
+			occlusionContext &&
+			occlusionContext->IsOccluded(
+				g_drawingWorldBounds,
+				drawingContext->GetD2DContextOwner()->GetCurrentZ(),
+				true
+			)
+		)
+		{
+			return S_OK;
+		}
+
+		g_drawingContextNoRef = drawingContext;
+		g_currentDeviceResources = &g_deviceResources.try_emplace(d2dContext).first->second;
+		const auto transformScope = wil::scope_exit([drawingContext]
+		{
+			g_currentDeviceResources = nullptr;
+			g_drawingContextNoRef = nullptr;
+		});
+
+		auto color = Color::sRGBToscRGB(This->GetColor(), 1.f);
+		const auto sdrBoost = drawingContext->GetSDRBoost();
+
+		d2dContext->EnsureBeginDraw();
+		bool colorSpaceIsScRGB = false;
+		if (
+			winrt::com_ptr<ID2D1Bitmap1> renderTargetBitmap{ nullptr };
+			SUCCEEDED(Util::GetTargetBitmapFromD2DContext(context, renderTargetBitmap))
+		)
+		{
+			if (
+				const auto format = renderTargetBitmap->GetPixelFormat().format;
+				format == DXGI_FORMAT_R16G16B16A16_FLOAT ||
+				format == DXGI_FORMAT_R32G32B32A32_FLOAT
+			)
+			{
+				colorSpaceIsScRGB = true;
+			}
+		}
+
+		const auto expansion = GlassKernel::IsCurrentCVIFullyTransparent() ? 0.f : GlassKernel::GetBlurRadius();
+		//const auto glassCoverageSet = CArrayBasedGlassCoverageSet::GetOrCreate(occlusionContext->GetArrayBasedCoverageSet());
+
+		{
+			const auto active = GlassIntegrity::g_glassStatusByGeometry[geometry].test(0);
+			const auto maximized = GlassIntegrity::g_glassStatusByGeometry[geometry].test(1);
+
+			const auto realizedGlassColorizationParameters = GlassKernel::RealizeWindowColorization(
+				GlassKernel::GetBaseColor(Shared::IsTransparencyDisabled(), maximized),
+				GlassKernel::GetSourceColor(active),
+				GlassKernel::GetColorizationOpacity(active, maximized),
+				Shared::IsTransparencyDisabled(),
+				false
+			);
+
+			if (
+				!(
+					Shared::IsTransparencyDisabled() ||
+					Shared::IsGlassFullyOpaque(
+						realizedGlassColorizationParameters.color.a,
+						realizedGlassColorizationParameters.blurBalance,
+						realizedGlassColorizationParameters.afterglowBalance
+					)
+				) &&
+				expansion/* &&
+				glassCoverageSet*/
+			)
+			{
+				g_type = Shared::g_type;
+				g_params.blurAmount = Shared::g_blurAmount;
+				g_params.optimization = Shared::g_blurOptimization;
+				if (colorSpaceIsScRGB)
+				{
+					g_params.color = Color::sRGBToscRGB(realizedGlassColorizationParameters.color, sdrBoost);
+					// according to windows 7 implementation
+					// afterglow is always in sRGB color space
+					// even when the render target is in scRGB color space.
+					g_params.afterglow = realizedGlassColorizationParameters.afterglow;
+					//g_params.afterglow = Color::sRGBToscRGB(realizedGlassColorizationParameters.afterglow, 1.f);
+				}
+				else
+				{
+					g_params.color = realizedGlassColorizationParameters.color;
+					g_params.afterglow = realizedGlassColorizationParameters.afterglow;
+				}
+				if (g_type == Shared::GlassType::Blur)
+				{
+					g_params.color.r *= g_params.color.a;
+					g_params.color.g *= g_params.color.a;
+					g_params.color.b *= g_params.color.a;
+				}
+				else if (g_type == Shared::GlassType::Aero)
+				{
+					g_params.color.r *= realizedGlassColorizationParameters.colorBalance;
+					g_params.color.g *= realizedGlassColorizationParameters.colorBalance;
+					g_params.color.b *= realizedGlassColorizationParameters.colorBalance;
+					g_params.color.a = 1.f;
+
+					g_params.afterglow.r *= realizedGlassColorizationParameters.afterglowBalance;
+					g_params.afterglow.g *= realizedGlassColorizationParameters.afterglowBalance;
+					g_params.afterglow.b *= realizedGlassColorizationParameters.afterglowBalance;
+					g_params.afterglow.a = 1.f;
+
+					g_params.blurBalance = realizedGlassColorizationParameters.blurBalance;
+				}
+
+				if (
+					std::holds_alternative<std::monostate>(g_currentDeviceResources->m_glassRealizer) ||
+					Shared::g_useD3DRendering != std::holds_alternative<CD3DGlassRealizer>(g_currentDeviceResources->m_glassRealizer)
+				)
+				{
+					if (Shared::g_useD3DRendering)
+					{
+						g_currentDeviceResources->m_glassRealizer.emplace<CD3DGlassRealizer>();
+					}
+					else
+					{
+						g_currentDeviceResources->m_glassRealizer.emplace<CGlassRealizer>();
+					}
+				}
+				g_renderFlag.set(RenderFlag_Backdrop, true);
+
+				g_materialContext.opacity = Shared::g_materialIntensity;
+			}
+
+			color = realizedGlassColorizationParameters.GetEffectivescRGBBlendColor(sdrBoost);
+		}
+
+		if (!colorSpaceIsScRGB)
+		{
+			color = Color::scRGBTosRGB(color, sdrBoost);
+		}
+
+		if (!g_renderFlag.test(RenderFlag_Backdrop))
+		{
+			g_colorIsOpaque = color.a == 1.f;
+			g_renderFlag.set(RenderFlag_SolidColor, true);
+		}
+
+		if (g_renderFlag.any())
+		{
+			if (!g_currentDeviceResources->m_brush)
+			{
+				RETURN_IF_FAILED(context->CreateSolidColorBrush(color, g_currentDeviceResources->m_brush.put()));
+			}
+			else
+			{
+				g_currentDeviceResources->m_brush->SetColor(color);
+			}
+
+			if (!g_ID2D1DeviceContext_FillGeometry_Org)
+			{
+				g_ID2D1DeviceContext_FillGeometry_Org_Address = reinterpret_cast<decltype(g_ID2D1DeviceContext_FillGeometry_Org_Address)>(&HookHelper::get_vftable_from(context)[0x17]);
+				HookHelper::PatchPointerT(
+					g_ID2D1DeviceContext_FillGeometry_Org_Address,
+					MyID2D1DeviceContext_FillGeometry,
+					&g_ID2D1DeviceContext_FillGeometry_Org
+				);
+			}
+
+			return drawingContext->FillShapeWithBrush(renderingShape.get(), g_currentDeviceResources->m_brush.get());
+		}
+
+		return S_OK;
+	}
+	while (false);
+
+	return g_CColorBrush_Draw_Org(This, drawingContext, worldSize, drawListCache);
+}
+
+void GlassRenderer::MyID2D1DeviceContext_FillGeometry(
+	ID2D1DeviceContext* This,
+	ID2D1Geometry* geometry,
+	ID2D1Brush* brush,
+	ID2D1Brush* opacityBrush
+)
+{
+	const auto fillGeometryScope = wil::scope_exit([] { g_renderFlag.reset(); });
+	if (
+		!g_currentDeviceResources ||
+		opacityBrush
+	)
+	{
+		return g_ID2D1DeviceContext_FillGeometry_Org(This, geometry, brush, opacityBrush);
+	}
+
+	const auto primitiveBlend = This->GetPrimitiveBlend();
+	const auto antialiasMode = This->GetAntialiasMode();
+	D2D1_MATRIX_3X2_F matrix{};
+	This->GetTransform(&matrix);
+	This->SetPrimitiveBlend(D2D1_PRIMITIVE_BLEND_COPY);
+	This->SetAntialiasMode(D2D1_ANTIALIAS_MODE_ALIASED);
+	This->SetTransform(D2D1::IdentityMatrix());
+
+	if (g_renderFlag.test(RenderFlag_SolidColor))
+	{
+		const auto primitiveBlendSolidColor = This->GetPrimitiveBlend();
+		if (!g_colorIsOpaque)
+		{
+			This->SetPrimitiveBlend(D2D1_PRIMITIVE_BLEND_SOURCE_OVER);
+		}
+
+		g_ID2D1DeviceContext_FillGeometry_Org(This, geometry, brush, opacityBrush);
+
+		if (!g_colorIsOpaque)
+		{
+			This->SetPrimitiveBlend(primitiveBlendSolidColor);
+		}
+	}
+	if (g_renderFlag.test(RenderFlag_Backdrop))
+	{
+		LOG_IF_FAILED(This->Flush());
+
+		if (std::holds_alternative<CGlassRealizer>(g_currentDeviceResources->m_glassRealizer))
+		{
+			LOG_IF_FAILED(
+				std::get<CGlassRealizer>(g_currentDeviceResources->m_glassRealizer).Render(
+					This,
+					geometry,
+					g_drawingWorldBounds,
+					g_rectangleSpan,
+					g_params,
+					g_type
+				)
+			);
+		}
+		else
+		{
+			auto& d3dGlassRealizer = std::get<CD3DGlassRealizer>(g_currentDeviceResources->m_glassRealizer);
+
+			const auto deviceTarget = g_drawingContextNoRef->GetDeviceTarget();
+			const auto deviceTexture = deviceTarget->GetDeviceTexture();
+
+			auto texture2D = deviceTexture->GetTexture2D();
+			const auto renderTargetView = deviceTarget->GetRenderTargetView();
+			const auto shaderResourceView = deviceTexture->GetShaderResourceView();
+
+			winrt::com_ptr<ID3D11Texture2D> backBufferTexture{};
+			if (!texture2D)
+			{
+				winrt::com_ptr<ID2D1Bitmap1> renderTargetBitmap{};
+				THROW_IF_FAILED(Util::GetTargetBitmapFromD2DContext(This, renderTargetBitmap));
+				THROW_IF_FAILED(Util::GetTextureFromD2DBitmap(renderTargetBitmap.get(), backBufferTexture));
+				texture2D = backBufferTexture.get();
+			}
+
+			LOG_IF_FAILED(
+				d3dGlassRealizer.Render(
+					g_drawingContextNoRef->GetD3DDevice()->GetDevice(),
+					g_drawingContextNoRef->GetD3DDevice()->GetImmediateContext(),
+					texture2D,
+					renderTargetView,
+					shaderResourceView,
+					geometry,
+					g_drawingWorldBounds,
+					g_rectangleSpan,
+					g_params,
+					g_type
+				)
+			);
+		}
+
+		LOG_IF_FAILED(
+			g_currentDeviceResources->m_materialRealizer.Render(
+				This,
+				g_rectangleSpan,
+				g_materialContext
+			)
+		);
+	}
+
+	This->SetAntialiasMode(antialiasMode);
+	This->SetPrimitiveBlend(primitiveBlend);
+	This->SetTransform(matrix);
+}
+
+void GlassRenderer::DestroyDeviceResources(dwmcore::CD2DContext* d2dContext)
+{
+	g_deviceResources.erase(d2dContext);
+}
+
+void GlassRenderer::Update(GlassEngine::UpdateType type)
+{
+	if (type & GlassEngine::UpdateType::Theme)
+	{
+		WCHAR materialTexturePath[MAX_PATH]{};
+		GlassEngine::GetStringFromRegistry(L"CustomThemeMaterial", materialTexturePath);
+		PathUnquoteSpacesW(materialTexturePath);
+		Shared::g_materialTexturePath.assign(materialTexturePath);
+
+		for (auto& [_, deviceResources] : g_deviceResources)
+		{
+			deviceResources.m_materialRealizer.Reset();
+		}
+	}
+	if (type & GlassEngine::UpdateType::Backdrop)
+	{
+		auto value = GlassEngine::GetDwordFromRegistry(L"GlassOpacity", 63);
+		Shared::g_glassOpacity = std::clamp(static_cast<float>(value) / 100.f, 0.f, 1.f);
+		Shared::g_glassOpacityInactive = std::clamp(static_cast<float>(GlassEngine::GetDwordFromRegistry(L"GlassOpacityInactive", value)) / 100.f, 0.f, 1.f);
+
+		value = GlassEngine::GetDwordFromRegistry(L"ColorizationAfterglowOverride", GlassEngine::GetDwordFromRegistry(L"ColorizationAfterglow"));
+		Shared::g_afterglow = Color::FromArgb(value);
+
+		value = GlassEngine::GetDwordFromRegistry(L"ColorizationBlurBalanceOverride", GlassEngine::GetDwordFromRegistry(L"ColorizationBlurBalance"));
+		Shared::g_blurBalance = std::clamp(static_cast<float>(value) / 100.f, 0.f, 1.f);
+
+		value = GlassEngine::GetDwordFromRegistry(L"ColorizationColorBalanceOverride", GlassEngine::GetDwordFromRegistry(L"ColorizationColorBalance"));
+		Shared::g_colorBalance = std::clamp(static_cast<float>(value) / 100.f, 0.f, 1.f);
+
+		value = GlassEngine::GetDwordFromRegistry(L"ColorizationAfterglowBalanceOverride", GlassEngine::GetDwordFromRegistry(L"ColorizationAfterglowBalance"));
+		Shared::g_afterglowBalance = std::clamp(static_cast<float>(value) / 100.f, 0.f, 1.f);
+
+		value = GlassEngine::GetDwordFromRegistry(L"MaterialOpacity");
+		Shared::g_materialIntensity = std::clamp(static_cast<float>(value) / 100.f, 0.f, 1.f);
+	}
+}
+
+DECLSPEC_NOINLINE void GlassRenderer::Startup()
+{
+	if (!g_CColorBrush_Draw_Org)
+	{
+		g_CColorBrush_Draw_Org_Address = dwmcore::CColorBrush_Draw_VtableSlot.address(dwmcore::CColorBrush::vftable);
+		HookHelper::PatchPointerT(
+			g_CColorBrush_Draw_Org_Address,
+			MyCColorBrush_Draw,
+			&g_CColorBrush_Draw_Org
+		);
+	}
+}
+
+void GlassRenderer::Shutdown()
+{
+	SwitchToThread();
+
+	if (g_ID2D1DeviceContext_FillGeometry_Org)
+	{
+		HookHelper::PatchPointerT(
+			g_ID2D1DeviceContext_FillGeometry_Org_Address,
+			g_ID2D1DeviceContext_FillGeometry_Org
+		);
+	}
+	if (g_CColorBrush_Draw_Org)
+	{
+		HookHelper::PatchPointerT(
+			g_CColorBrush_Draw_Org_Address,
+			g_CColorBrush_Draw_Org
+		);
+	}
+
+	g_deviceResources.clear();
+}

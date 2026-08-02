@@ -1,5 +1,10 @@
 #define MyAppName "OpenGlass"
-#define MyAppVersion "2.6.2.2891"
+#ifndef MyAppVersion
+#error MyAppVersion must be supplied by the packaging target
+#endif
+#ifndef DwmArchitecture
+#error DwmArchitecture must be supplied by the packaging target
+#endif
 #define MyAppPublisher "ALTaleX"
 #define MyAppURL "https://github.com/ALTaleX531/OpenGlass"
 #define MyAppExeName "OpenGlassGUI.exe"
@@ -12,12 +17,15 @@
 #define BuildPath MyProjPath + "\Build\x64\Release"
 #endif
 #define MyAppBuildPath BuildPath
-#define MyAppInstallerVersion "1.0.0.1"
+#ifndef OutputPath
+#define OutputPath MyAppBuildPath
+#endif
+#define MyAppOutputPath OutputPath
 
 [Setup]
 AppId={{D3D1BC7D-5E24-4B33-9383-7934271A3B05}}
 AppName={#MyAppName}
-VersionInfoVersion={#MyAppInstallerVersion}
+VersionInfoVersion={#MyAppVersion}
 AppVersion={#MyAppVersion}
 AppVerName={#MyAppName} v{#MyAppVersion}
 AppPublisher={#MyAppPublisher}
@@ -35,7 +43,7 @@ DisableProgramGroupPage=auto
 UsePreviousGroup=yes
 AllowNoIcons=yes
 LicenseFile={#MyProjPath}\LICENSE.txt
-OutputDir={#MyAppBuildPath}
+OutputDir={#MyAppOutputPath}
 OutputBaseFilename={#MyAppSetupName}
 Compression=lzma
 SolidCompression=yes
@@ -163,6 +171,22 @@ Filename: "{sys}\taskkill.exe"; Parameters: "/IM ""{#MyAppExeName}"" /F"; Flags:
 Filename: "{sys}\sc.exe"; Parameters: "delete OpenGlassHost"; Flags: runhidden; RunOnceId: "DeleteService"
 
 [Code]
+
+function InitializeSetup(): Boolean;
+var
+  Version: TWindowsVersion;
+begin
+  GetWindowsVersionEx(Version);
+#if DwmArchitecture == "0"
+  Result := Version.Build < 28000;
+  if not Result then
+    MsgBox('This Legacy package supports only Windows builds below 28000. Use the MILComp package for this system.', mbCriticalError, MB_OK);
+#else
+  Result := Version.Build >= 28000;
+  if not Result then
+    MsgBox('This MILComp package supports only Windows builds 28000 and later. Use the Legacy package for this system.', mbCriticalError, MB_OK);
+#endif
+end;
 
 type
   IMMERSIVE_COLOR_PREFERENCE = record

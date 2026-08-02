@@ -25,17 +25,18 @@
 
   <!-- Resolve a stable root for paths (SolutionDir may be empty when building the project directly). -->
   <PropertyGroup>
-    <CppProjectBuildRoot Condition="'$(CppProjectBuildRoot)'=='' and '$(SolutionDir)'!=''">$(SolutionDir)</CppProjectBuildRoot>
-    <CppProjectBuildRoot Condition="'$(CppProjectBuildRoot)'==''">$(MSBuildProjectDirectory)\..\</CppProjectBuildRoot>
+    <CppProjectBuildRoot Condition="'$(CppProjectBuildRoot)'==''">$(MSBuildThisFileDirectory)..\</CppProjectBuildRoot>
   </PropertyGroup>
 
   <!-- Common output & analysis defaults (keeps repo layout consistent across projects). -->
   <PropertyGroup>
-    <OutDir>$(CppProjectBuildRoot)Build\$(PlatformShortName)\$(Configuration)\</OutDir>
+    <OutDir>$(CppProjectBuildRoot)Build\$(PlatformShortName)\$(Configuration)\common\</OutDir>
     <IntDir>$(CppProjectBuildRoot)Cache\$(ProjectName)\$(PlatformShortName)\$(Configuration)\</IntDir>
     <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
+
+  <Import Project="$(MSBuildThisFileDirectory)Version.props" />
 
   <!-- Default per-config defines if the project didn't override them -->
   <PropertyGroup Condition="'$(Configuration)'=='Debug' and '$(CppProjectConfigDefines)'==''">
@@ -115,9 +116,8 @@
     </Link>
   </ItemDefinitionGroup>
 
-  <!-- Optional signing & packaging (kept separate for clarity). -->
+  <!-- Optional signing is project-local. Packaging is an explicit repository target. -->
   <Import Project="$(MSBuildThisFileDirectory)CppProject.Signing.props" Condition="Exists('$(MSBuildThisFileDirectory)CppProject.Signing.props')" />
-  <Import Project="$(MSBuildThisFileDirectory)CppProject.Packaging.props" Condition="Exists('$(MSBuildThisFileDirectory)CppProject.Packaging.props')" />
 
   <!-- Automatically import Common.vcxitems for shared headers and items -->
   <ImportGroup Label="Shared">

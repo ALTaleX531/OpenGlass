@@ -4,32 +4,43 @@ OpenGlass restores Aero-style glass effects by loading `OpenGlass.dll` into `dwm
 
 ## Repository map
 
-- `OpenGlass/`: core DLL, DWM hooks, projections, effects, symbol loading, and service implementation.
+- `OpenGlass/`: shared core DLL code, two explicit architecture projects, private DWM implementations under `Architecture/`, and independent schemas under `ProjectionSchemas/`.
 - `OpenGlassHost/`: service wrapper that loads the core DLL and starts `ServiceMain`.
 - `OpenGlassGUI/`: wxWidgets configuration UI and symbol-download experience.
-- `OpenGlassTest/`: interactive GPU/effect benchmark, not a hermetic unit-test suite.
-- `Common/`: shared MSBuild configuration; `Scripts/`: Inno Setup packaging.
+- `OpenGlassRenderTest/`: interactive GPU/effect benchmark, not a hermetic unit-test suite.
+- `OpenGlassProjectionTests/`: non-injecting typed registry, resolution, ABI, Layout, and Detour tests.
+- `Common/`: shared MSBuild configuration; `Scripts/`: generation, verification, and Inno Setup packaging.
 
 Runtime flow: the Service Control Manager starts `OpenGlassHost.exe`; the host loads `OpenGlass.dll`; service code validates and injects into `dwm.exe`; a named pipe supplies the target session's HKCU handle; injected hooks read configuration and render the effect. The GUI writes settings immediately and notifies DWM—its Save action confirms current state, while Revert/close may restore captured values.
 
-## Branch architecture
+## Build architecture
 
-- `legacy` supports the legacy MIL compositor path from Windows 10 build 17763 through Windows 11 builds below 28000. Its projection headers retain historical `OffsetInfo` intervals.
-- `milcomp` targets the build 28000+ compositor family through Windows.UI.Composition visual hooks. Its projection surface is smaller and structurally different.
+- `OpenGlass.Legacy.vcxproj` builds the Legacy MIL compositor path for Windows 10 build 17763 through Windows 11 builds below 28000.
+- `OpenGlass.MILComp.vcxproj` builds the MILComp compositor path for build 28000+ through Windows.UI.Composition visual hooks. Its projection schema and ABI remain independent.
+- `OpenGlass.Shared.vcxitems` explicitly lists shared source. Architecture-private code lives under `OpenGlass/Architecture/Legacy/` or `MILComp/`; do not introduce source wildcards or spread architecture-selection `#ifdef`s through shared business code.
 
-Determine compatibility from the OS build/revision and verified binary capabilities. Marketing labels such as 25H2, 26H1, or 26H2 are not sufficient. Likewise, symbol presence, object layout, and feature availability are separate facts: do not derive one from another or from allocation size alone.
+Determine compatibility from the OS build/revision and verified binary capabilities. Marketing labels such as 25H2, 26H1, or 26H2 are insufficient. Symbol presence, object layout, and feature availability are also separate facts: do not derive one from another or from allocation size alone.
 
 ## Build and verification
 
-Requirements are Visual Studio/MSBuild with the v145 C++ toolset, Windows SDK 10.0, vcpkg manifest integration, and the repository's overlay ports. Dependencies are statically linked and declared in `vcpkg.json`.
+Requirements are Visual Studio/MSBuild with the v145 C++ toolset, Windows SDK 10.0, Python 3, vcpkg manifest integration, and the repository's overlay ports. Dependencies are statically linked and declared in `vcpkg.json`.
 
 ```powershell
 msbuild OpenGlass.slnx /m /restore /p:Configuration=Release /p:Platform=x64
 ```
 
-Use `Release` for normal local verification. `ReleaseSigned` requires the signing environment defined by the shared signing props and must not be treated as a general developer build. If `ISCC.exe` is on PATH, a Release GUI build packages the installer automatically; pass `/p:OpenGlassInstallerEnabled=false` when packaging is not part of the check.
+Use `Release` for normal local verification. `ReleaseSigned` requires the shared signing environment and is not a general developer build. A Release or ReleaseSigned solution build packages both installers when Inno Setup is available; it reports a skip without failing when `ISCC.exe` is absent. Set `OpenGlassInstallerEnabled=false` to suppress packaging explicitly.
 
-`OpenGlassTest.exe` is interactive and GPU-dependent. Report whether it was built or manually exercised; do not call it an automated test. Never install the service, inject into DWM, kill DWM, or write registry settings merely to validate an unrelated source or documentation change.
+The solution builds Host and GUI once into `Build\x64\<Configuration>\common\`, the two DLLs into `legacy\` and `milcomp\`, and uses two explicit Utility projects to package them without coupling installer generation to the GUI. To package only one architecture directly, use:
+
+```powershell
+msbuild Scripts/OpenGlass.Packaging.proj /m /p:Configuration=Release /p:Architecture=legacy
+msbuild Scripts/OpenGlass.Packaging.proj /m /p:Configuration=Release /p:Architecture=milcomp
+```
+
+Python generates projection metadata into `$(IntDir)\Generated\Projection`. Generated files are build artifacts: never edit, copy into the source tree, or commit them. PE size and projected-wrapper machine code may be inspected while developing the projection mechanism, but they are not fixed repository acceptance gates.
+
+`OpenGlassRenderTest.exe` is interactive and GPU-dependent. Report whether it was built or manually exercised; do not call it an automated test. Never install the service, inject into DWM, kill DWM, or write registry settings merely to validate an unrelated source or documentation change.
 
 ## Editing conventions
 
@@ -42,24 +53,45 @@ Use `Release` for normal local verification. `ReleaseSigned` requires the signin
 
 ## DWM projections and offsets
 
-Projection tables live in `OpenGlass/dwmcoreProjection.Offsets.hpp` and `OpenGlass/uDwmProjection.Offsets.hpp`. Read `OpenGlass/Util.hpp` before changing them.
+`OpenGlass/ProjectionSchemas/legacy/` and `milcomp/` are the only editable projection inventories. Each architecture has independent `udwm.json` and `dwmcore.json` files containing typed Symbols, projected bindings, exact `UNDNAME_COMPLETE` symbol names, version ranges, Layout cases, fallbacks, and audit notes. Use `notes` only for non-obvious reverse-engineering guidance such as semantic anchors, constructor or xref routes, adjusted-`this`, ABI traps, ICF/inlining ambiguity, and independent cross-checks. Do not duplicate facts already expressed by `symbol_names`, ranges, or ordinary consumer references, and never replace useful guidance with generic migration or PDB provenance. `Scripts/projection_codegen.py` requires `--architecture legacy|milcomp` and emits generated C++ only under the selected project's `$(IntDir)`. The compatibility `*.Offsets.hpp` headers only include generated declarations; they are not a second data source.
 
-`OffsetInfo.build` and `.revision` form an exclusive right boundary: an entry applies while the runtime version is before that threshold. A final `{ .build = 0, .revision = 0 }` is the runtime's open-ended fallback and must be last; it does not prove correctness on future unanalyzed builds. Its absence may deliberately mean the member or feature was removed. Do not add a terminal entry merely to satisfy a mechanical pattern.
+Handler code must access private DWM fields through typed projection accessors. Add or correct a schema Layout instead of embedding object arithmetic or padding-based fake layouts in handlers. Codegen deliberately does not pretend to parse arbitrary C++; enforce this architectural boundary in review rather than relying on cast-spelling heuristics. This rule does not cover instruction-pattern navigation, COM vtable slots, or ordinary application-owned storage.
 
-Use `$maintain-dwm-offsets` from `.agents/skills/maintain-dwm-offsets/` when asked to inspect DWM binaries, compare layouts, audit a projection, or update these tables. The skill defaults to read-only IDA and repository analysis. A production offset change requires explicit authorization and independent semantic evidence from the exact binary; folder names and prior table values are not evidence.
+`FieldHandle::address()` and `ref()` preserve the base object's constness. Use `mutable_address()` or `mutable_ref()` only inside a projected class facade whose established API intentionally exposes a mutable private subobject from a const method; never use them directly from handler code to bypass constness.
 
-Keep three verification layers distinct: the table linter proves structural invariants, an IDA semantic audit establishes a value for an exact binary, and real-OS validation exercises the injection/rendering path. None substitutes for the next.
+A Layout case's `until` object is an exclusive right boundary: it applies while the exact module build/revision is before that boundary. An `otherwise: true` case is the explicit open end and must be last; it does not prove correctness on unanalyzed future builds. Without it, later versions resolve to the normal `unsupported` state. Preserve `offset` expressions literally, including negative values and `sizeof` arithmetic; Python must never evaluate them.
 
-Run the structural linter before and after any projection change. Add `--version BUILD.REVISION` to mechanically resolve the active entry and interval:
+Generated `SymbolHandle` and `FieldHandle` values encode only module/index/type. Required Symbols are a global startup prerequisite. Both modules follow `Reset → Collect → Validate → Commit`, and neither publishes slots or variables unless both validate. Optional or version-inactive projected functions must have an ABI-compatible fallback; otherwise inactive calls use the typed FailFast thunk. Do not introduce component feature masks or partial readiness.
+
+Raw Symbols must declare their real function-pointer ABI. Use `BYTE*` with `usage: "code_address"` only for instruction-pattern navigation that intentionally treats a symbol as bytes. If a projected ABI changes across builds, use disjoint descriptors for the same target. The exceptional `abi_compatibility` forms (`discard_return` and `extra_trailing_argument`) require an explicit source type and are compile-time checked; never hide an ABI change by placing incompatible complete names in one descriptor.
+
+After `Freeze`, `FieldHandle::read/ref/address` must directly load the selected module offset and perform address arithmetic; they must not call the registry, scan version cases, validate descriptors, allocate, lock, or throw. The explicit `offset()` API remains a checked cold-path diagnostic. Metadata clarity takes priority over byte packing because descriptor traversal is startup-only.
+
+Every projected wrapper must be `inline` and contain only an `OPENGLASS_MUSTTAIL return Projection::Invoke<&Target>(...)` dispatch. `OPENGLASS_MUSTTAIL` expands to `[[msvc::musttail]]` outside Debug; `/Od` Debug uses a normal debuggable forwarder. Normal Release/LTCG may inline the wrapper into a direct call through the typed slot, but `inline` is not treated as a guarantee. Do not use `__forceinline`: MSVC may still refuse it and emit C4714 warnings. Do not add range checks, `.get()`, fallback logic, runtime instruction patching, or `VirtualProtect` to projected wrappers. A wrapper declaration alone is not a consumer: every projected function must have a real runtime call site or a direct typed Symbol consumer such as a Detour. Remove unused wrappers and descriptors rather than making them needless Required startup gates. Raw symbol access, Detour preparation, and pattern anchors use the checked cold path.
+
+Use `$maintain-dwm-offsets` from `.agents/skills/maintain-dwm-offsets/` when asked to inspect DWM binaries, compare layouts, audit a projection, or update the schemas. The skill defaults to read-only IDA and repository analysis. A production schema change requires explicit authorization and independent semantic evidence from the exact binary; folder names and prior values are not evidence.
+
+Keep three verification layers distinct: static verification combines schema lint with a paired PE/PDB name audit; an IDA semantic audit establishes ABI and meaning; and real-OS validation exercises the injection/rendering path. Exact DbgHelp output and uniqueness do not substitute for semantic or runtime evidence.
+
+Use `Scripts/dump_symbols.py --input IMAGE [--output SYMBOL_CACHE] [--grep TEXT]` for quick complete-name discovery directly from an image. The symbol cache defaults to `%TEMP%\symbols`. Its output is convenient schema input, not a production audit report; use `audit_symbol_names.py` to record PE/PDB identity and IDA to establish semantics.
 
 ```powershell
-python .agents/skills/maintain-dwm-offsets/scripts/lint_offset_tables.py .
+python .agents/skills/maintain-dwm-offsets/scripts/lint_offset_tables.py . --architecture legacy --module udwm --id STABLE_ID --version BUILD.REVISION
+python .agents/skills/maintain-dwm-offsets/scripts/lint_symbol_descriptors.py . --architecture legacy
+python .agents/skills/maintain-dwm-offsets/scripts/audit_symbol_names.py . --architecture legacy --module udwm --version BUILD.REVISION --image PATH_TO_DLL --symbol-path PATH_TO_SYMBOLS --configuration release
+python -m unittest discover -s .agents/skills/maintain-dwm-offsets/tests -p "test_*.py"
+python Scripts/test_dump_symbols.py
+python Scripts/test_projection_codegen.py
+msbuild OpenGlassProjectionTests/OpenGlassProjectionTests.vcxproj /m /p:Configuration=Release /p:Platform=x64
+msbuild OpenGlass/OpenGlass.Legacy.vcxproj /m /p:Configuration=Release /p:Platform=x64
+msbuild OpenGlass/OpenGlass.MILComp.vcxproj /m /p:Configuration=Release /p:Platform=x64
 ```
 
 ## Safety
 
 - Do not modify or save an IDB during an audit-only request.
 - Do not infer that a class is removed because one decorated name is absent; check semantic anchors and callers.
+- Symbol matching uses exact, unmodified DbgHelp `UNDNAME_COMPLETE` output. Do not restore name-only, substring, decorated-name, or first-match fallbacks.
 - Do not assume nearby flags remain adjacent across builds.
 - Do not analyze multiple IDA MCP instances concurrently; instance selection is shared routing state. Reselect and verify the intended module before each query batch.
 - Do not publish or claim support for a build until both module projections and the relevant runtime path have been verified.

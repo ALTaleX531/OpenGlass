@@ -1,7 +1,7 @@
 interface:
-  display_name: "Maintain DWM Offsets"
-  short_description: "Audit dwmcore and uDWM projection offsets"
-  default_prompt: "Use $maintain-dwm-offsets to audit the requested DWM projection offsets with IDA evidence."
+  display_name: "Maintain DWM Projections"
+  short_description: "Audit dwmcore and uDWM projection schemas"
+  default_prompt: "Use $maintain-dwm-offsets to audit the requested legacy or milcomp DWM Layout or Symbol schema items with exact-binary IDA evidence."
 
 dependencies:
   tools:

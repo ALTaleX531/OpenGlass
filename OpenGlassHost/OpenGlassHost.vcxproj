@@ -43,8 +43,10 @@
     </Link>
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <Optimization>MinSpace</Optimization>
-      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <Optimization Condition="'$(Configuration)'!='Debug'">MinSpace</Optimization>
+      <FavorSizeOrSpeed Condition="'$(Configuration)'!='Debug'">Size</FavorSizeOrSpeed>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <SDLCheck>false</SDLCheck>
       <BufferSecurityCheck>false</BufferSecurityCheck>
     </ClCompile>
   </ItemDefinitionGroup>
@@ -62,14 +64,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\OpenGlass\OpenGlass.vcxproj">
-      <Project>{80009307-7B06-4785-AF83-3F5D6DB7DEB6}</Project>
-      <!-- Keep build ordering (OpenGlass.dll must exist), but do NOT link against its import library.
-           We load OpenGlass.dll explicitly after validating signature and expected location. -->
-      <LinkLibraryDependencies>false</LinkLibraryDependencies>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="OpenGlassHost.rc" />

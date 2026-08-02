@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Package" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\Common\Version.props" />
+  <Import Project="..\Common\CppProject.Signing.props" />
+  <PropertyGroup>
+    <Configuration Condition="'$(Configuration)'==''">Release</Configuration>
+    <Platform>x64</Platform>
+    <Architecture Condition="'$(Architecture)'==''">legacy</Architecture>
+    <BuildDependencies Condition="'$(BuildDependencies)'==''">true</BuildDependencies>
+    <OpenGlassIsccTool Condition="'$(OpenGlassIsccTool)'==''">ISCC.exe</OpenGlassIsccTool>
+    <OpenGlassSignTool Condition="'$(OpenGlassSignTool)'==''">signtool.exe</OpenGlassSignTool>
+    <OpenGlassRoot>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\'))</OpenGlassRoot>
+    <CommonOutput>$(OpenGlassRoot)Build\x64\$(Configuration)\common\</CommonOutput>
+    <ArchitectureOutput>$(OpenGlassRoot)Build\x64\$(Configuration)\$(Architecture)\</ArchitectureOutput>
+    <InstallerOutput>$(OpenGlassRoot)Build\x64\$(Configuration)\</InstallerOutput>
+    <PackagingRoot>$(OpenGlassRoot)Cache\Packaging\$(Configuration)\$(Architecture)\</PackagingRoot>
+    <SignedStage>$(PackagingRoot)signed\</SignedStage>
+    <UnsignedStage>$(PackagingRoot)unsigned\</UnsignedStage>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Architecture)'=='legacy'">
+    <ArchitectureLabel>Legacy</ArchitectureLabel>
+    <ArchitectureCode>0</ArchitectureCode>
+    <ArchitectureProject>$(OpenGlassRoot)OpenGlass\OpenGlass.Legacy.vcxproj</ArchitectureProject>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Architecture)'=='milcomp'">
+    <ArchitectureLabel>MILComp</ArchitectureLabel>
+    <ArchitectureCode>1</ArchitectureCode>
+    <ArchitectureProject>$(OpenGlassRoot)OpenGlass\OpenGlass.MILComp.vcxproj</ArchitectureProject>
+  </PropertyGroup>
+  <ItemGroup>
+    <OpenGlassBuildProject Include="$(ArchitectureProject)" />
+    <OpenGlassBuildProject Include="$(OpenGlassRoot)OpenGlassHost\OpenGlassHost.vcxproj" />
+    <OpenGlassBuildProject Include="$(OpenGlassRoot)OpenGlassGUI\OpenGlassGUI.vcxproj" />
+    <SignedInput Include="$(ArchitectureOutput)OpenGlass.dll"><Destination>$(SignedStage)OpenGlass.dll</Destination></SignedInput>
+    <SignedInput Include="$(CommonOutput)OpenGlassHost.exe"><Destination>$(SignedStage)OpenGlassHost.exe</Destination></SignedInput>
+    <SignedInput Include="$(CommonOutput)OpenGlassGUI.exe"><Destination>$(SignedStage)OpenGlassGUI.exe</Destination></SignedInput>
+    <UnsignedInput Include="$(ArchitectureOutput)Unsigned\OpenGlass.dll"><Destination>$(UnsignedStage)OpenGlass.dll</Destination></UnsignedInput>
+    <UnsignedInput Include="$(CommonOutput)Unsigned\OpenGlassHost.exe"><Destination>$(UnsignedStage)OpenGlassHost.exe</Destination></UnsignedInput>
+    <UnsignedInput Include="$(CommonOutput)Unsigned\OpenGlassGUI.exe"><Destination>$(UnsignedStage)OpenGlassGUI.exe</Destination></UnsignedInput>
+  </ItemGroup>
+
+  <Target Name="ValidatePackagingInputs">
+    <Error Condition="'$(ArchitectureProject)'==''" Text="Architecture must be 'legacy' or 'milcomp'." />
+    <Error Condition="'$(Configuration)'!='Release' and '$(Configuration)'!='ReleaseSigned'" Text="Packaging requires Configuration=Release or ReleaseSigned." />
+    <Exec Command="where &quot;$(OpenGlassIsccTool)&quot;" IgnoreExitCode="true" ConsoleToMSBuild="true">
+      <Output TaskParameter="ExitCode" PropertyName="OpenGlassIsccExitCode" />
+    </Exec>
+    <Error Condition="'$(OpenGlassIsccExitCode)'!='0'" Text="Inno Setup Compiler was not found. Set OpenGlassIsccTool to ISCC.exe." />
+  </Target>
+
+  <Target Name="RestoreDependencies" DependsOnTargets="ValidatePackagingInputs" Condition="'$(BuildDependencies)'=='true'">
+    <MSBuild Projects="@(OpenGlassBuildProject)" Targets="Restore" BuildInParallel="false" Properties="Configuration=$(Configuration);Platform=x64" />
+  </Target>
+
+  <Target Name="BuildSelectedArchitecture" DependsOnTargets="RestoreDependencies" Condition="'$(BuildDependencies)'=='true'">
+    <MSBuild Projects="@(OpenGlassBuildProject)" Targets="Build" BuildInParallel="false" Properties="Configuration=$(Configuration);Platform=x64" />
+  </Target>
+
+  <Target Name="StageSignedFiles" DependsOnTargets="ValidatePackagingInputs;BuildSelectedArchitecture">
+    <MakeDir Directories="$(SignedStage);$(InstallerOutput)" />
+    <Copy SourceFiles="@(SignedInput)" DestinationFiles="@(SignedInput->'%(Destination)')" SkipUnchangedFiles="true" />
+  </Target>
+
+  <Target Name="StageUnsignedFiles" DependsOnTargets="StageSignedFiles" Condition="'$(Configuration)'=='ReleaseSigned'">
+    <MakeDir Directories="$(UnsignedStage)" />
+    <Copy SourceFiles="@(UnsignedInput)" DestinationFiles="@(UnsignedInput->'%(Destination)')" SkipUnchangedFiles="true" />
+  </Target>
+
+  <Target Name="Package" DependsOnTargets="StageSignedFiles;StageUnsignedFiles">
+    <Exec Condition="'$(Configuration)'=='Release'"
+          Command="&quot;$(OpenGlassIsccTool)&quot; /DMyAppVersion=$(OpenGlassProductVersion) /DDwmArchitecture=$(ArchitectureCode) /DBuildPath=&quot;$(SignedStage)&quot; /DOutputPath=&quot;$(InstallerOutput)&quot; /DSetupName=OpenGlassSetup.$(ArchitectureLabel) &quot;$(OpenGlassRoot)Scripts\OpenGlass.iss&quot;" />
+    <Exec Condition="'$(Configuration)'=='ReleaseSigned'"
+          Command="&quot;$(OpenGlassIsccTool)&quot; /DMyAppVersion=$(OpenGlassProductVersion) /DDwmArchitecture=$(ArchitectureCode) /DBuildPath=&quot;$(UnsignedStage)&quot; /DOutputPath=&quot;$(InstallerOutput)&quot; /DSetupName=OpenGlassSetup.$(ArchitectureLabel) &quot;$(OpenGlassRoot)Scripts\OpenGlass.iss&quot;" />
+    <Exec Condition="'$(Configuration)'=='ReleaseSigned'"
+          Command="&quot;$(OpenGlassIsccTool)&quot; /DMyAppVersion=$(OpenGlassProductVersion) /DDwmArchitecture=$(ArchitectureCode) /DBuildPath=&quot;$(SignedStage)&quot; /DOutputPath=&quot;$(InstallerOutput)&quot; /DSetupName=OpenGlassSetup.$(ArchitectureLabel).Signed &quot;$(OpenGlassRoot)Scripts\OpenGlass.iss&quot;" />
+    <Exec Condition="'$(Configuration)'=='ReleaseSigned' and '$(OpenGlassSignArgs)'!=''"
+          Command="&quot;$(OpenGlassSignTool)&quot; $(OpenGlassSignArgs) &quot;$(InstallerOutput)OpenGlassSetup.$(ArchitectureLabel).Signed.exe&quot;" />
+  </Target>
+</Project>

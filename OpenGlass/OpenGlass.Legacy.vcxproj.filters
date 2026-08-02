@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Architecture"><UniqueIdentifier>{5B7F36E1-3DB9-4FB9-AE45-5AEE95DD1844}</UniqueIdentifier></Filter>
+    <Filter Include="Architecture\Legacy"><UniqueIdentifier>{6152F26A-C7CF-4755-9467-A44325993E3F}</UniqueIdentifier></Filter>
+    <Filter Include="Architecture\Legacy\Header Files"><UniqueIdentifier>{60DBB3A9-8A93-416F-9B50-C5CE113E92A0}</UniqueIdentifier></Filter>
+    <Filter Include="Architecture\Legacy\Source Files"><UniqueIdentifier>{89ECA3AC-C055-489C-A903-0595292342B4}</UniqueIdentifier></Filter>
+    <Filter Include="Projection Schemas"><UniqueIdentifier>{40AC6149-D527-48A0-89FC-7798866DBFC3}</UniqueIdentifier></Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Architecture\Legacy\dcompPrivates.hpp"><Filter>Architecture\Legacy\Header Files</Filter></ClInclude>
+    <ClInclude Include="Architecture\Legacy\Dwm.hpp"><Filter>Architecture\Legacy\Header Files</Filter></ClInclude>
+    <ClInclude Include="Architecture\Legacy\dwmcoreProjection.hpp"><Filter>Architecture\Legacy\Header Files</Filter></ClInclude>
+    <ClInclude Include="Architecture\Legacy\dwmcoreProjection.Offsets.hpp"><Filter>Architecture\Legacy\Header Files</Filter></ClInclude>
+    <ClInclude Include="Architecture\Legacy\GlassCoverageSet.hpp"><Filter>Architecture\Legacy\Header Files</Filter></ClInclude>
+    <ClInclude Include="Architecture\Legacy\GlassEffectBrush.hpp"><Filter>Architecture\Legacy\Header Files</Filter></ClInclude>
+    <ClInclude Include="Architecture\Legacy\GlassIntegrity.hpp"><Filter>Architecture\Legacy\Header Files</Filter></ClInclude>
+    <ClInclude Include="Architecture\Legacy\GlassKernel.hpp"><Filter>Architecture\Legacy\Header Files</Filter></ClInclude>
+    <ClInclude Include="Architecture\Legacy\GlassReflectionBrush.hpp"><Filter>Architecture\Legacy\Header Files</Filter></ClInclude>
+    <ClInclude Include="Architecture\Legacy\ReflectionRealizer.hpp"><Filter>Architecture\Legacy\Header Files</Filter></ClInclude>
+    <ClInclude Include="Architecture\Legacy\uDwmProjection.hpp"><Filter>Architecture\Legacy\Header Files</Filter></ClInclude>
+    <ClInclude Include="Architecture\Legacy\uDwmProjection.Offsets.hpp"><Filter>Architecture\Legacy\Header Files</Filter></ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Architecture\Legacy\AccentOverrider.cpp"><Filter>Architecture\Legacy\Source Files</Filter></ClCompile>
+    <ClCompile Include="Architecture\Legacy\ButtonGlowHandler.cpp"><Filter>Architecture\Legacy\Source Files</Filter></ClCompile>
+    <ClCompile Include="Architecture\Legacy\CaptionMetricsTweaker.cpp"><Filter>Architecture\Legacy\Source Files</Filter></ClCompile>
+    <ClCompile Include="Architecture\Legacy\CaptionTextHandler.cpp"><Filter>Architecture\Legacy\Source Files</Filter></ClCompile>
+    <ClCompile Include="Architecture\Legacy\GlassCoverageSet.cpp"><Filter>Architecture\Legacy\Source Files</Filter></ClCompile>
+    <ClCompile Include="Architecture\Legacy\GlassEffectBrush.cpp"><Filter>Architecture\Legacy\Source Files</Filter></ClCompile>
+    <ClCompile Include="Architecture\Legacy\GlassEngine.cpp"><Filter>Architecture\Legacy\Source Files</Filter></ClCompile>
+    <ClCompile Include="Architecture\Legacy\GlassFrameDemodernizer.cpp"><Filter>Architecture\Legacy\Source Files</Filter></ClCompile>
+    <ClCompile Include="Architecture\Legacy\GlassFrameEnhancer.cpp"><Filter>Architecture\Legacy\Source Files</Filter></ClCompile>
+    <ClCompile Include="Architecture\Legacy\GlassFrameHandler.cpp"><Filter>Architecture\Legacy\Source Files</Filter></ClCompile>
+    <ClCompile Include="Architecture\Legacy\GlassIntegrity.cpp"><Filter>Architecture\Legacy\Source Files</Filter></ClCompile>
+    <ClCompile Include="Architecture\Legacy\GlassKernel.cpp"><Filter>Architecture\Legacy\Source Files</Filter></ClCompile>
+    <ClCompile Include="Architecture\Legacy\GlassReflectionBrush.cpp"><Filter>Architecture\Legacy\Source Files</Filter></ClCompile>
+    <ClCompile Include="Architecture\Legacy\GlassReflectionHandler.cpp"><Filter>Architecture\Legacy\Source Files</Filter></ClCompile>
+    <ClCompile Include="Architecture\Legacy\GlassRenderer.cpp"><Filter>Architecture\Legacy\Source Files</Filter></ClCompile>
+    <ClCompile Include="Architecture\Legacy\OpenGlass.cpp"><Filter>Architecture\Legacy\Source Files</Filter></ClCompile>
+    <ClCompile Include="Architecture\Legacy\ReflectionRealizer.cpp"><Filter>Architecture\Legacy\Source Files</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ProjectionSchemas\legacy\dwmcore.json"><Filter>Projection Schemas</Filter></None>
+    <None Include="ProjectionSchemas\legacy\README.md"><Filter>Projection Schemas</Filter></None>
+    <None Include="ProjectionSchemas\legacy\udwm.json"><Filter>Projection Schemas</Filter></None>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,778 @@
+{
+  "schema_version": 2,
+  "module": "dwmcore",
+  "namespace": "OpenGlass::dwmcore",
+  "tag": "ProjectionModuleTag",
+  "symbols": [
+    {
+      "name": "Symbol_CChannel_CombinedGeometryUpdate",
+      "id": "CChannel::CombinedGeometryUpdate",
+      "symbol_names": [
+        "public: virtual long __cdecl CChannel::CombinedGeometryUpdate(unsigned int,enum MilCombineMode::Enum,unsigned int,unsigned int) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CChannel::CombinedGeometryUpdate",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CVisual_GetHwnd",
+      "id": "CVisual::GetHwnd",
+      "symbol_names": [
+        "protected: virtual struct HWND__ * __ptr64 __cdecl CVisual::GetHwnd(void)const __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CVisual::GetHwnd",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CVisual_GetClipNoRef",
+      "id": "CVisual::GetClipNoRef",
+      "symbol_names": [
+        "public: class CGeometry * __ptr64 __cdecl CVisual::GetClipNoRef(void)const __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CVisual::GetClipNoRef",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CVisual_SetClip",
+      "id": "CVisual::SetClip",
+      "symbol_names": [
+        "public: void __cdecl CVisual::SetClip(class CGeometry * __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "CVisual_SetClip_t"
+    },
+    {
+      "name": "Symbol_CVisual_CollectOcclusion",
+      "id": "CVisual::CollectOcclusion",
+      "symbol_names": [
+        "public: virtual long __cdecl CVisual::CollectOcclusion(class COcclusionContext * __ptr64,class COcclusionInfo * __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "CVisual_CollectOcclusion_t"
+    },
+    {
+      "name": "Symbol_CSpriteVisual_vftable",
+      "id": "CSpriteVisual::vftable",
+      "symbol_names": [
+        "const CSpriteVisual::`vftable'"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CSpriteVisual::vftable",
+      "kind": "projected_variable",
+      "notes": "Primary CSpriteVisual vtable used as an exact dynamic-type anchor by the CVisual::SetClip detour. Cross-check the constructor assignment if multiple interface vtables appear in a future PDB."
+    },
+    {
+      "name": "Symbol_CSpriteVisual_CSpriteVisual",
+      "id": "CSpriteVisual::~CSpriteVisual",
+      "symbol_names": [
+        "public: virtual __cdecl CSpriteVisual::~CSpriteVisual(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "CSpriteVisual_Destructor_t",
+      "notes": "Select the complete-object destructor compatible with the detour signature; do not substitute a deleting destructor with the same base name."
+    },
+    {
+      "name": "Symbol_CColorBrush_vftable",
+      "id": "CColorBrush::vftable",
+      "symbol_names": [
+        "const CColorBrush::`vftable'{for `CContent'}"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CColorBrush::vftable",
+      "kind": "projected_variable",
+      "notes": "Use the CContent subobject vtable assigned at offset 0 by CColorBrush::CColorBrush. Its slots 25 and 26 are CBrush::AddOcclusionInformation and CBrush::Draw; other same-name vtables belong to different interface subobjects."
+    },
+    {
+      "name": "Symbol_CMatrixStack_GetTopByReference",
+      "id": "CMatrixStack::GetTopByReference",
+      "symbol_names": [
+        "public: class CMILMatrix const * __ptr64 __cdecl CMatrixStack::GetTopByReference(void)const __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CMatrixStack::GetTopByReference",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CZOrderedRect_UpdateDeviceRect",
+      "id": "CZOrderedRect::UpdateDeviceRect",
+      "symbol_names": [
+        "public: void __cdecl CZOrderedRect::UpdateDeviceRect(class CMILMatrix const * __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CZOrderedRect::UpdateDeviceRect",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CShape_CopyShape",
+      "id": "CShape::CopyShape",
+      "symbol_names": [
+        "public: long __cdecl CShape::CopyShape(class CMILMatrix const * __ptr64,class CShape * __ptr64 * __ptr64)const __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CShape::CopyShape",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CShape_AllowsOcclusion",
+      "id": "CShape::AllowsOcclusion",
+      "symbol_names": [
+        "public: virtual bool __cdecl CShape::AllowsOcclusion(void)const __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "CShape_AllowsOcclusion_t"
+    },
+    {
+      "name": "Symbol_CGeometry_GetShapeData",
+      "id": "CGeometry::GetShapeData",
+      "symbol_names": [
+        "public: long __cdecl CGeometry::GetShapeData(struct D2D_SIZE_F const * __ptr64,class CShapePtr * __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CGeometry::GetShapeData",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CGeometry_CGeometry",
+      "id": "CGeometry::~CGeometry",
+      "symbol_names": [
+        "protected: virtual __cdecl CGeometry::~CGeometry(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "CGeometry_Destructor_t",
+      "notes": "Select the destructor variant whose explicit-this signature matches the hook; do not substitute a deleting destructor with the same base name."
+    },
+    {
+      "name": "Symbol_CCombinedGeometry_vftable",
+      "id": "CCombinedGeometry::vftable",
+      "symbol_names": [
+        "const CCombinedGeometry::`vftable'{for `CGeometry'}"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CCombinedGeometry::vftable",
+      "kind": "projected_variable",
+      "notes": "Use the CGeometry subobject vtable assigned at offset 0 by CCombinedGeometry::CCombinedGeometry. The separate CCyclicResourceListEntry vtable belongs to the secondary subobject and is not the CGeometry pointer consumed by SetClip and occlusion checks."
+    },
+    {
+      "name": "Symbol_CCombinedGeometry_ProcessUpdate",
+      "id": "CCombinedGeometry::ProcessUpdate",
+      "symbol_names": [
+        "public: long __cdecl CCombinedGeometry::ProcessUpdate(class CResourceTable * __ptr64,struct tagMILCMD_COMBINEDGEOMETRY const * __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "CCombinedGeometry_ProcessUpdate_t"
+    },
+    {
+      "name": "Symbol_CD2DContext_DestroyDeviceResources",
+      "id": "CD2DContext::DestroyDeviceResources",
+      "symbol_names": [
+        "protected: long __cdecl CD2DContext::DestroyDeviceResources(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "CD2DContext_DestroyDeviceResources_t"
+    },
+    {
+      "name": "Symbol_CD2DContext_EnsureBeginDraw",
+      "id": "CD2DContext::EnsureBeginDraw",
+      "symbol_names": [
+        "private: void __cdecl CD2DContext::EnsureBeginDraw(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CD2DContext::EnsureBeginDraw",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CDrawingContext_GetOcclusion",
+      "id": "CDrawingContext::GetOcclusion",
+      "symbol_names": [
+        "public: class COcclusionContext const * __ptr64 __cdecl CDrawingContext::GetOcclusion(void)const __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CDrawingContext::GetOcclusion",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CDrawingContext_GetClipBoundsWorld",
+      "id": "CDrawingContext::GetClipBoundsWorld",
+      "symbol_names": [
+        "public: void __cdecl CDrawingContext::GetClipBoundsWorld(class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> * __ptr64,bool)const __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CDrawingContext::GetClipBoundsWorld",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CDrawingContext_FillShapeWithBrush",
+      "id": "CDrawingContext::FillShapeWithBrush",
+      "symbol_names": [
+        "public: long __cdecl CDrawingContext::FillShapeWithBrush(class CShape const & __ptr64,struct ID2D1Brush * __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CDrawingContext::FillShapeWithBrush",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CDrawingContext_FlushD2D",
+      "id": "CDrawingContext::FlushD2D",
+      "symbol_names": [
+        "public: long __cdecl CDrawingContext::FlushD2D(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CDrawingContext::FlushD2D",
+      "kind": "projected_function",
+      "notes": "GlassIntegrity and GlassKernel flush pending D2D work around injected state transitions; keep this distinct from EnsureBeginDraw, which refreshes the selected target afterward."
+    },
+    {
+      "name": "Symbol_CDrawingContext_ApplyRenderStateInternal",
+      "id": "CDrawingContext::ApplyRenderStateInternal",
+      "symbol_names": [
+        "private: long __cdecl CDrawingContext::ApplyRenderStateInternal(bool) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CDrawingContext::ApplyRenderStateInternal",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CDrawingContext_GetCurrentVisual",
+      "id": "CDrawingContext::GetCurrentVisual",
+      "symbol_names": [
+        "public: class CVisual * __ptr64 __cdecl CDrawingContext::GetCurrentVisual(void)const __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CDrawingContext::GetCurrentVisual",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CDrawingContext_DrawVisualTree",
+      "id": "CDrawingContext::DrawVisualTree",
+      "symbol_names": [
+        "public: long __cdecl CDrawingContext::DrawVisualTree(class CVisualTree const * __ptr64,class TMil3DRect<float,class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded>,struct D3D_RECT_F,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class COcclusionContext const * __ptr64,enum ClearMode::Enum,float,class CVisual * __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "CDrawingContext_DrawVisualTree_t"
+    },
+    {
+      "name": "Symbol_CDrawingContext_PreSubgraph",
+      "id": "CDrawingContext::PreSubgraph",
+      "symbol_names": [
+        "public: long __cdecl CDrawingContext::PreSubgraph(class CVisualTree const * __ptr64,bool * __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "CDrawingContext_PreSubgraph_t"
+    },
+    {
+      "name": "Symbol_CCachedVisualImage_CCachedTarget_Update",
+      "id": "CCachedVisualImage::CCachedTarget::Update",
+      "symbol_names": [
+        "public: long __cdecl CCachedVisualImage::CCachedTarget::Update(class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const & __ptr64,enum MilStretch::Enum,class RenderTargetInfo const & __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "CCachedVisualImage_CCachedTarget_Update_t"
+    },
+    {
+      "name": "Symbol_COcclusionContext_CheckAndRecordOverlayCandidate",
+      "id": "COcclusionContext::CheckAndRecordOverlayCandidate",
+      "symbol_names": [
+        "public: long __cdecl COcclusionContext::CheckAndRecordOverlayCandidate(class CVisual * __ptr64,class CCompositionSurfaceInfo * __ptr64,class CMILMatrix const & __ptr64,class CShape const * __ptr64,struct TMILFlagsEnum<enum MilSourceModification::FlagsEnum>) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "COcclusionContext_CheckAndRecordOverlayCandidate_t"
+    },
+    {
+      "name": "Symbol_COcclusionContext_Compute",
+      "id": "COcclusionContext::Compute",
+      "symbol_names": [
+        "protected: long __cdecl COcclusionContext::Compute(class CVisualTree const * __ptr64,class gsl::span<class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const ,-1> const & __ptr64,float,class gsl::span<class COverlayContext * __ptr64,-1> const & __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "COcclusionContext_Compute_t"
+    },
+    {
+      "name": "Symbol_COcclusionContext_COcclusionContext",
+      "id": "COcclusionContext::~COcclusionContext",
+      "symbol_names": [
+        "public: __cdecl COcclusionContext::~COcclusionContext(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "COcclusionContext_Destructor_t"
+    },
+    {
+      "name": "Symbol_COcclusionContext_SetDeviceTransform",
+      "id": "COcclusionContext::SetDeviceTransform",
+      "symbol_names": [
+        "public: long __cdecl COcclusionContext::SetDeviceTransform(class CMILMatrix const * __ptr64)const __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&COcclusionContext::SetDeviceTransform",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_COcclusionContext_IsOccluded",
+      "id": "COcclusionContext::IsOccluded",
+      "symbol_names": [
+        "public: bool __cdecl COcclusionContext::IsOccluded(class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&COcclusionContext::IsOccluded",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_COcclusionContext_CollectRectangleForOcclusion",
+      "id": "COcclusionContext::CollectRectangleForOcclusion",
+      "symbol_names": [
+        "private: void __cdecl COcclusionContext::CollectRectangleForOcclusion(class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const & __ptr64,bool) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&COcclusionContext::CollectRectangleForOcclusion",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CTreeDirty_GetOptimizedRect",
+      "id": "CTreeDirty::GetOptimizedRect",
+      "symbol_names": [
+        "public: class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> __cdecl CTreeDirty::GetOptimizedRect(unsigned int,class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const & __ptr64,class COcclusionContext const & __ptr64,class CRegion * __ptr64,class CMILMatrix const * __ptr64,class gsl::span<class CVisual const * __ptr64,-1> const & __ptr64)const __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "CTreeDirty_GetOptimizedRect_t"
+    },
+    {
+      "name": "Symbol_GetCurrentFrameId",
+      "id": "GetCurrentFrameId",
+      "symbol_names": [
+        "unsigned __int64 __cdecl GetCurrentFrameId(void)"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&GetCurrentFrameId",
+      "kind": "projected_function",
+      "notes": "Global composition-frame accessor cross-checked against COcclusionContext_GetFrameId before dirty-rect and DrawVisualTree occlusion data is trusted."
+    }
+  ],
+  "layouts": [
+    {
+      "name": "CColorBrush_AddOcclusionInformation_VtableSlot",
+      "id": "CColorBrush.AddOcclusionInformation.vtable_slot",
+      "kind": "vtable_slot",
+      "type": "CColorBrush_AddOcclusionInformation_t",
+      "cases": [
+        {
+          "offset": "25 * (LONGLONG)sizeof(PVOID)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CColorBrush private vtable slot used by GlassIntegrity to intercept occlusion information production."
+    },
+    {
+      "name": "CColorBrush_Draw_VtableSlot",
+      "id": "CColorBrush.Draw.vtable_slot",
+      "kind": "vtable_slot",
+      "type": "CColorBrush_Draw_t",
+      "cases": [
+        {
+          "offset": "26 * (LONGLONG)sizeof(PVOID)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CColorBrush private vtable slot used by GlassRenderer to intercept the draw path."
+    },
+    {
+      "name": "CDrawingContext_DeviceTarget",
+      "id": "CDrawingContext.DeviceTarget",
+      "kind": "field",
+      "type": "IDeviceTarget*",
+      "cases": [
+        {
+          "offset": "3 * (LONGLONG)sizeof(PVOID)",
+          "otherwise": true
+        }
+      ],
+      "notes": "MILComp CDrawingContext rendering paths obtain the device target from this field."
+    },
+    {
+      "name": "CColorBrush_GetColor",
+      "id": "CColorBrush_GetColor",
+      "kind": "field",
+      "type": "D2D1_COLOR_F",
+      "cases": [
+        {
+          "offset": "104",
+          "otherwise": true
+        }
+      ],
+      "notes": "CColorBrush"
+    },
+    {
+      "name": "CArrayBasedCoverageSet_GetOccluderArray",
+      "id": "CArrayBasedCoverageSet_GetOccluderArray",
+      "kind": "field",
+      "type": "DynArray<CZOrderedRect>",
+      "cases": [
+        {
+          "offset": "0",
+          "otherwise": true
+        }
+      ],
+      "notes": "CArrayBasedCoverageSet::CalcVisibleArea\n*(QWORD *)this → base pointer; *(DWORD *)(this + 24) → count\nAlways at offset 0 within CArrayBasedCoverageSet"
+    },
+    {
+      "name": "RenderTargetInfo_GetSDRBoost",
+      "id": "RenderTargetInfo_GetSDRBoost",
+      "kind": "field",
+      "type": "float",
+      "cases": [
+        {
+          "offset": "16",
+          "otherwise": true
+        }
+      ],
+      "notes": "Render target info"
+    },
+    {
+      "name": "ID2DContextOwner_GetCurrentZ",
+      "id": "ID2DContextOwner_GetCurrentZ",
+      "kind": "vtable_slot",
+      "type": "ID2DContextOwner_GetCurrentZ_t",
+      "cases": [
+        {
+          "offset": "8",
+          "otherwise": true
+        }
+      ],
+      "notes": "ID2DContextOwner vtable from CDrawingContext::Create (at this + 24).\nRead the vtable — function names in each slot are self-explanatory.\nGetCurrentZ: slot ?\nslot_index × sizeof(ULONG_PTR)"
+    },
+    {
+      "name": "ID2DContextOwner_GetCurrentRenderTargetInfo",
+      "id": "ID2DContextOwner_GetCurrentRenderTargetInfo",
+      "kind": "vtable_slot",
+      "type": "ID2DContextOwner_GetCurrentRenderTargetInfo_t",
+      "cases": [
+        {
+          "offset": "16",
+          "otherwise": true
+        }
+      ],
+      "notes": "ID2DContextOwner vtable from CDrawingContext::Create (at this + 24).\nGetCurrentRenderTargetInfo: slot ?\nslot_index × sizeof(ULONG_PTR)"
+    },
+    {
+      "name": "CD2DContext_GetDeviceContext",
+      "id": "CD2DContext_GetDeviceContext",
+      "kind": "field",
+      "type": "ID2D1DeviceContext*",
+      "cases": [
+        {
+          "offset": "25 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CD2DContext::GetDeviceContext / CD3DDevice structure\nD2D1 device context embedded at CD3DDevice + N (via D2D1 API calls)"
+    },
+    {
+      "name": "CD3DDevice_GetDevice",
+      "id": "CD3DDevice_GetDevice",
+      "kind": "field",
+      "type": "ID3D11Device*",
+      "cases": [
+        {
+          "offset": "68 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CD3DDevice\nDecompile CD3DDevice::CreateTexture → trace the ID3D11Device::CreateTexture2D call,\nthe ID3D11Device* is loaded from *(QWORD *)(this + N)"
+    },
+    {
+      "name": "CD3DDevice_GetImmediateContext",
+      "id": "CD3DDevice_GetImmediateContext",
+      "kind": "field",
+      "type": "ID3D11DeviceContext*",
+      "cases": [
+        {
+          "offset": "69 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CD3DDevice — adjacent pointer to GetDevice\nGetImmediateContext = GetDevice + 1×PTR"
+    },
+    {
+      "name": "CD3DDevice_GetD2DContext",
+      "id": "CD3DDevice_GetD2DContext",
+      "kind": "field",
+      "type": "CD2DContext",
+      "cases": [
+        {
+          "offset": "16",
+          "otherwise": true
+        }
+      ],
+      "notes": "CD2DContext::GetDevice\nreturn (CD3DDevice *)(this - N) → N is the CD2DContext offset within CD3DDevice"
+    },
+    {
+      "name": "IDeviceTarget_GetRenderTargetView",
+      "id": "IDeviceTarget_GetRenderTargetView",
+      "kind": "vtable_slot",
+      "type": "IDeviceTarget_GetRenderTargetView_t",
+      "cases": [
+        {
+          "offset": "22 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "IDeviceTarget vtable — known systemic ICF, unresolvable\nThis function slot has been merged with CPassthroughEffect/CKernelTransport symbols across builds\nslot_index × sizeof(ULONG_PTR)"
+    },
+    {
+      "name": "IDeviceTarget_GetDeviceTexture",
+      "id": "IDeviceTarget_GetDeviceTexture",
+      "kind": "field",
+      "type": "IDeviceTexture",
+      "cases": [
+        {
+          "offset": "-16",
+          "otherwise": true
+        }
+      ],
+      "notes": "CDeviceTextureTarget constructor — IDeviceTarget at +256, IDeviceTexture at +240\nNegative offset = IDeviceTexture_offset - IDeviceTarget_offset"
+    },
+    {
+      "name": "IDeviceTexture_GetTexture2D",
+      "id": "IDeviceTexture_GetTexture2D",
+      "kind": "vtable_slot",
+      "type": "IDeviceTexture_GetTexture2D_t",
+      "cases": [
+        {
+          "offset": "15 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CDeviceTextureTarget has complex inheritance (possible diamond):\nCD2DBitmap → CDeviceResourceT → CMILCOMBaseT → ...\n9+ vtable pointers: ID2DBitmapCacheSource, IPixelFormat, IBitmapUnlock,\nIDeviceResource (standalone + embedded in combined vtables for\nIDeviceTexture and IDeviceTarget).\nFocus on extracting the specific offset, not full inheritance graph.\nCDeviceTextureTarget::GetTexture2D at vtable slot ?\nslot_index × sizeof(ULONG_PTR)"
+    },
+    {
+      "name": "IDeviceTexture_GetShaderResourceView",
+      "id": "IDeviceTexture_GetShaderResourceView",
+      "kind": "vtable_slot",
+      "type": "IDeviceTexture_GetShaderResourceView_t",
+      "cases": [
+        {
+          "offset": "16 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CDeviceTextureTarget::GetShaderResourceView at vtable slot ?\nslot_index × sizeof(ULONG_PTR)"
+    },
+    {
+      "name": "CDrawingContext_GetD3DDevice",
+      "id": "CDrawingContext_GetD3DDevice",
+      "kind": "field",
+      "type": "CD3DDevice*",
+      "cases": [
+        {
+          "offset": "4 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CDrawingContext::FlushD2D\n*((QWORD *)this + 4) → CD3DDevice* (non-virtual, raw this)"
+    },
+    {
+      "name": "CDrawingContext_GetD2DContextOwner",
+      "id": "CDrawingContext_GetD2DContextOwner",
+      "kind": "field",
+      "type": "ID2DContextOwner",
+      "cases": [
+        {
+          "offset": "16",
+          "otherwise": true
+        }
+      ],
+      "notes": "CDrawingContext::Create / CDrawingContext::FlushD2D\nID2DContextOwner vtable at this + 16; this + N cast to ID2DContextOwner*"
+    },
+    {
+      "name": "CDrawingContext_GetWorldTransform",
+      "id": "CDrawingContext_GetWorldTransform",
+      "kind": "field",
+      "type": "CMatrixStack",
+      "cases": [
+        {
+          "offset": "280",
+          "otherwise": true
+        }
+      ],
+      "notes": "CDrawingContext::GetWorldTransform3x2 (virtual, slot 0 of ID2DContextOwner vtable)\nthis adjusted to CDrawingContext + 16 (ID2DContextOwner subobject)\n*(QWORD *)(this + N/8) → matrix stack data pointer; *(DWORD *)(this + N/4) → count\nActual base offset = subobject_offset(16) + adjusted_offset"
+    },
+    {
+      "name": "CDrawingContext_GetDeviceTransform",
+      "id": "CDrawingContext_GetDeviceTransform",
+      "kind": "field",
+      "type": "CMILMatrix",
+      "cases": [
+        {
+          "offset": "88",
+          "otherwise": true
+        }
+      ],
+      "notes": "CDrawingContext::UpdateDeviceTransform\nCMILMatrix::Multiply((char *)this + N, ...) — device transform matrix embedded inline"
+    },
+    {
+      "name": "COcclusionContext_GetFrameId",
+      "id": "COcclusionContext_GetFrameId",
+      "kind": "field",
+      "type": "ULONGLONG",
+      "cases": [
+        {
+          "offset": "16",
+          "otherwise": true
+        }
+      ],
+      "notes": "COcclusionContext::IsCurrent (~30B)\n*((QWORD *)this + 2) == *((QWORD *)g_pComposition + 111) → global frame ID comparison"
+    },
+    {
+      "name": "COcclusionContext_GetCurrentZ",
+      "id": "COcclusionContext_GetCurrentZ",
+      "kind": "field",
+      "type": "UINT",
+      "cases": [
+        {
+          "offset": "1268",
+          "otherwise": true
+        }
+      ],
+      "notes": "COcclusionContext::FlushOcclusionRects\n*(DWORD *)(this + N) read, then value += 2 written back — unique \"+2\" pattern\nAdjacent DWORD (+4) is the push-skip counter — do NOT confuse\nNOTE: GetCurrentZ, GetDeviceTransform, GetDeviceTransformFlag, and\nGetArrayBasedCoverageSet tend to shift by the SAME byte delta across CUs.\nIf all four differ by the same amount, trust the data."
+    },
+    {
+      "name": "COcclusionContext_GetWorldTransform",
+      "id": "COcclusionContext_GetWorldTransform",
+      "kind": "field",
+      "type": "CMatrixStack",
+      "cases": [
+        {
+          "offset": "24",
+          "otherwise": true
+        }
+      ],
+      "notes": "COcclusionContext constructor / GetWorldTransform\n*(QWORD *)(this + N) → matrix stack data; *(DWORD *)(this + N + 8) → count"
+    },
+    {
+      "name": "COcclusionContext_GetDeviceTransform",
+      "id": "COcclusionContext_GetDeviceTransform",
+      "kind": "field",
+      "type": "CMILMatrix",
+      "cases": [
+        {
+          "offset": "1132",
+          "otherwise": true
+        }
+      ],
+      "notes": "COcclusionContext::UpdateDeviceTransform\nCMILMatrix::Multiply((char *)this + N, a2, result) — device-space matrix embedded inline"
+    },
+    {
+      "name": "COcclusionContext_GetDeviceTransformFlag",
+      "id": "COcclusionContext_GetDeviceTransformFlag",
+      "kind": "field",
+      "type": "UINT",
+      "cases": [
+        {
+          "offset": "1124",
+          "otherwise": true
+        }
+      ],
+      "notes": "COcclusionContext::FlushOcclusionRects / UpdateDeviceTransform\nif (*((BYTE *)this + N)) → use device transform, else use nullptr\nInvariant: DeviceTransformFlag = DeviceTransform_Offset - 4 or -8"
+    },
+    {
+      "name": "COcclusionContext_GetArrayBasedCoverageSet",
+      "id": "COcclusionContext_GetArrayBasedCoverageSet",
+      "kind": "field",
+      "type": "CArrayBasedCoverageSet",
+      "cases": [
+        {
+          "offset": "584",
+          "otherwise": true
+        }
+      ],
+      "notes": "COcclusionContext::FlushOcclusionRects\nCArrayBasedCoverageSet::Add((char *)this + N, ...) — DynArray at byte offset N\nConstructor initializes inline buffer at this + N + 16"
+    }
+  ],
+  "notes": [
+    "MILComp compositor projection inventory; ABI evidence remains independent from Legacy."
+  ]
+}

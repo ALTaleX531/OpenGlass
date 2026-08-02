@@ -1,6 +1,6 @@
 # dwmcore evidence guide
 
-Start from comments above the target table; they are routing hints, not proof. Gate each class independently.
+Start from the target schema item's `notes`; they are routing hints, not proof. Gate each class independently.
 
 ## High-value anchors
 
@@ -43,4 +43,4 @@ Treat every algorithmic anchor as candidate navigation and verify it in the exac
 
 ## Removal decisions
 
-To end a table without a terminal build, demonstrate that the semantic member/interface is absent from the relevant class or that the consumer path no longer exists. Failure to find one decorated name is insufficient.
+To end a Layout without an open-ended case, demonstrate that the semantic member/interface is absent from the relevant class or that the consumer path no longer exists. Failure to find one decorated name is insufficient.

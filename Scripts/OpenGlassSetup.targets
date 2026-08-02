@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <OpenGlassInstallerEnabled Condition="'$(OpenGlassInstallerEnabled)'==''">true</OpenGlassInstallerEnabled>
+    <OpenGlassIsccTool Condition="'$(OpenGlassIsccTool)'==''">ISCC.exe</OpenGlassIsccTool>
+  </PropertyGroup>
+
+  <Target Name="OpenGlassPackageInstaller"
+          AfterTargets="Build"
+          Condition="'$(OpenGlassInstallerEnabled)'=='true' and ('$(Configuration)'=='Release' or '$(Configuration)'=='ReleaseSigned')">
+    <Exec Command="where &quot;$(OpenGlassIsccTool)&quot;"
+          IgnoreExitCode="true"
+          ConsoleToMSBuild="true">
+      <Output TaskParameter="ExitCode" PropertyName="OpenGlassIsccExitCode" />
+    </Exec>
+    <Message Condition="'$(OpenGlassIsccExitCode)'!='0'"
+             Text="ISCC not found in PATH; $(OpenGlassPackagingArchitecture) installer packaging skipped."
+             Importance="High" />
+    <MSBuild Condition="'$(OpenGlassIsccExitCode)'=='0'"
+             Projects="$(MSBuildThisFileDirectory)OpenGlass.Packaging.proj"
+             Targets="Package"
+             BuildInParallel="false"
+             Properties="Configuration=$(Configuration);Platform=x64;Architecture=$(OpenGlassPackagingArchitecture);BuildDependencies=false;OpenGlassIsccTool=$(OpenGlassIsccTool)" />
+  </Target>
+</Project>

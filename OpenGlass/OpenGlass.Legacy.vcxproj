@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\Common\NuGet.props" Condition="Exists('..\Common\NuGet.props')" />
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64"><Configuration>Debug</Configuration><Platform>x64</Platform></ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64"><Configuration>Release</Configuration><Platform>x64</Platform></ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseSigned|x64"><Configuration>ReleaseSigned</Configuration><Platform>x64</Platform></ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <ProjectGuid>{80009307-7B06-4785-AF83-3F5D6DB7DEB6}</ProjectGuid>
+    <RootNamespace>OpenGlass</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Label="CppProject.SharedInputs">
+    <CppProjectModuleDef>module.def</CppProjectModuleDef>
+    <CppProjectDefines>OPENGLASS_EXPORTS;OPENGLASS_DWM_LEGACY=1;_WINDOWS;_USRDLL;</CppProjectDefines>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <Import Project="..\Common\CppProject.Configuration.props" />
+  <PropertyGroup Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <Import Project="..\Common\CppProject.props" />
+  <PropertyGroup>
+    <TargetName>OpenGlass</TargetName>
+    <OpenGlassDwmArchitecture>Legacy</OpenGlassDwmArchitecture>
+    <OutDir>$(CppProjectBuildRoot)Build\$(PlatformShortName)\$(Configuration)\legacy\</OutDir>
+    <ProjectionGeneratedDir>$(IntDir)Generated\Projection</ProjectionGeneratedDir>
+    <ProjectionSchemaDir>$(ProjectDir)ProjectionSchemas\legacy</ProjectionSchemaDir>
+    <ProjectionPython Condition="'$(ProjectionPython)'==''">python</ProjectionPython>
+  </PropertyGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <DebugInformationFormat Condition="'$(Configuration)'!='Debug'">OldStyle</DebugInformationFormat>
+      <AdditionalIncludeDirectories>$(ProjectionGeneratedDir);$(ProjectDir)Architecture\Legacy;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>OPENGLASS_DWM_LEGACY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>ntdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="OpenGlass.Shared.vcxitems" Label="Shared" />
+  <ItemGroup>
+    <ClInclude Include="Architecture\Legacy\dcompPrivates.hpp" />
+    <ClInclude Include="Architecture\Legacy\Dwm.hpp" />
+    <ClInclude Include="Architecture\Legacy\dwmcoreProjection.hpp" />
+    <ClInclude Include="Architecture\Legacy\dwmcoreProjection.Offsets.hpp" />
+    <ClInclude Include="Architecture\Legacy\GlassCoverageSet.hpp" />
+    <ClInclude Include="Architecture\Legacy\GlassEffectBrush.hpp" />
+    <ClInclude Include="Architecture\Legacy\GlassIntegrity.hpp" />
+    <ClInclude Include="Architecture\Legacy\GlassKernel.hpp" />
+    <ClInclude Include="Architecture\Legacy\GlassReflectionBrush.hpp" />
+    <ClInclude Include="Architecture\Legacy\ReflectionRealizer.hpp" />
+    <ClInclude Include="Architecture\Legacy\uDwmProjection.hpp" />
+    <ClInclude Include="Architecture\Legacy\uDwmProjection.Offsets.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Architecture\Legacy\AccentOverrider.cpp" />
+    <ClCompile Include="Architecture\Legacy\ButtonGlowHandler.cpp" />
+    <ClCompile Include="Architecture\Legacy\CaptionMetricsTweaker.cpp" />
+    <ClCompile Include="Architecture\Legacy\CaptionTextHandler.cpp" />
+    <ClCompile Include="Architecture\Legacy\GlassCoverageSet.cpp" />
+    <ClCompile Include="Architecture\Legacy\GlassEffectBrush.cpp" />
+    <ClCompile Include="Architecture\Legacy\GlassEngine.cpp" />
+    <ClCompile Include="Architecture\Legacy\GlassFrameDemodernizer.cpp" />
+    <ClCompile Include="Architecture\Legacy\GlassFrameEnhancer.cpp" />
+    <ClCompile Include="Architecture\Legacy\GlassFrameHandler.cpp" />
+    <ClCompile Include="Architecture\Legacy\GlassIntegrity.cpp" />
+    <ClCompile Include="Architecture\Legacy\GlassKernel.cpp" />
+    <ClCompile Include="Architecture\Legacy\GlassReflectionBrush.cpp" />
+    <ClCompile Include="Architecture\Legacy\GlassReflectionHandler.cpp" />
+    <ClCompile Include="Architecture\Legacy\GlassRenderer.cpp" />
+    <ClCompile Include="Architecture\Legacy\OpenGlass.cpp" />
+    <ClCompile Include="Architecture\Legacy\ReflectionRealizer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ProjectionSchemas\legacy\dwmcore.json" />
+    <None Include="ProjectionSchemas\legacy\README.md" />
+    <None Include="ProjectionSchemas\legacy\udwm.json" />
+  </ItemGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='ReleaseSigned'">
+    <ClCompile><PreprocessorDefinitions>OPENGLASS_ENFORCE_SIGNING=1;%(PreprocessorDefinitions)</PreprocessorDefinitions></ClCompile>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <Target Name="GenerateProjectionMetadata"
+          BeforeTargets="ClCompile"
+          Inputs="$(ProjectionSchemaDir)\udwm.json;$(ProjectionSchemaDir)\dwmcore.json;$(ProjectDir)..\Scripts\projection_codegen.py;$(ProjectDir)OSHelper.hpp;@(ClCompile);@(ClInclude)"
+          Outputs="$(ProjectionGeneratedDir)\udwm.Layouts.generated.hpp;$(ProjectionGeneratedDir)\udwm.Symbols.generated.hpp;$(ProjectionGeneratedDir)\dwmcore.Layouts.generated.hpp;$(ProjectionGeneratedDir)\dwmcore.Symbols.generated.hpp;$(ProjectionGeneratedDir)\ProjectionRegistry.generated.inc">
+    <MakeDir Directories="$(ProjectionGeneratedDir)" />
+    <Exec Command="&quot;$(ProjectionPython)&quot; --version" IgnoreExitCode="true" ConsoleToMSBuild="true"><Output TaskParameter="ExitCode" PropertyName="ProjectionPythonExitCode" /></Exec>
+    <Error Condition="'$(ProjectionPythonExitCode)'!='0'" Text="OpenGlass projection generation requires Python 3. Set ProjectionPython to a working python.exe." />
+    <Exec Command="&quot;$(ProjectionPython)&quot; &quot;$(ProjectDir)..\Scripts\projection_codegen.py&quot; --repo &quot;$(ProjectDir)..&quot; --architecture legacy --output &quot;$(ProjectionGeneratedDir)&quot;" />
+  </Target>
+  <Target Name="CleanProjectionMetadata" AfterTargets="Clean"><RemoveDir Directories="$(ProjectionGeneratedDir)" /></Target>
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\Common\NuGet.targets" Condition="Exists('..\Common\NuGet.targets')" />
+  </ImportGroup>
+</Project>

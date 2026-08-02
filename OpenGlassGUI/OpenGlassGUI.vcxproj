@@ -71,11 +71,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OpenGlass\OpenGlass.vcxproj">
-      <Project>{80009307-7B06-4785-AF83-3F5D6DB7DEB6}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <LinkLibraryDependencies>false</LinkLibraryDependencies>
-    </ProjectReference>
     <ProjectReference Include="..\OpenGlassHost\OpenGlassHost.vcxproj">
       <Project>{6C2D5B3D-4FE4-4E68-8E58-7B5A5D1A3D40}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>

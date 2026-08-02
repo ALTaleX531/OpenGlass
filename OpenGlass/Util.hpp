@@ -3,6 +3,7 @@
 #include "cpprt.hpp"
 #include "HookHelper.hpp"
 #include "DxgiPrivates.hpp"
+#include <winrt/windows.ui.h>
 
 namespace OpenGlass::Util
 {
@@ -10,11 +11,6 @@ namespace OpenGlass::Util
 	inline const auto g_thisModulePath = wil::GetModuleFileNameW<std::wstring, MAX_PATH>(wil::GetModuleInstanceHandle());
 
 	using unique_rouninitialize_call = wil::unique_call<decltype(&::RoUninitialize), ::RoUninitialize>;
-
-	consteval size_t compile_time_hash(const char* str, size_t seed)
-	{
-		return 0 == *str ? seed : compile_time_hash(str + 1, seed ^ (*str + 0x9e3779b9 + (seed << 6) + (seed >> 2)));
-	}
 
 	// ptr to complex
 	template <typename T>
@@ -37,36 +33,11 @@ namespace OpenGlass::Util
 		ULONG revision;
 	};
 
-	struct OffsetInfo
-	{
-		// offset valid until build is xxx, revision is xxx
-		LONGLONG offset;
-		ULONG build;
-		ULONG revision;
-	};
-
-	template <typename T>
-	struct DereferenceAt
-	{
-		using TPointerT = std::remove_const_t<T>*;
-
-		FORCEINLINE static auto operator()(const void* ptr, ULONGLONG offset)
-		{
-			return *TPointerT(ULONG_PTR(ptr) + offset);
-		}
-	};
-
-	template <typename T = void*>
-	struct OffsetBy
-	{
-		FORCEINLINE static auto operator()(const void* ptr, LONGLONG offset)
-		{
-			return T(ULONG_PTR(ptr) + offset);
-		}
-	};
-
 	template <ULONG build, ULONG revision>
-	FORCEINLINE constexpr bool VersionBefore(ULONG runtimeBuild, ULONG runtimeRevision)
+	FORCEINLINE constexpr bool VersionBefore(
+		ULONG runtimeBuild,
+		ULONG runtimeRevision
+	)
 	{
 		if constexpr (!build)
 		{
@@ -76,60 +47,8 @@ namespace OpenGlass::Util
 		{
 			return runtimeBuild < build;
 		}
-		else
-		{
-			return (runtimeBuild < build) || (runtimeBuild == build && runtimeRevision < revision);
-		}
-	}
-
-	// Offset lookup by build/revision intervals.
-	// Each OffsetInfo .build is a RIGHT boundary: the offset applies to builds
-	// BEFORE that threshold. Entries must be sorted in ascending build order.
-	//
-	//  { .offset = A, .build = B1 }   valid for [earliest, B1)
-	//  { .offset = B, .build = B2 }   valid for [B1, B2)
-	//  { .offset = C, .build = 0  }   valid for [B2, ...) terminal entry
-	//
-	// build == 0 is the TERMINAL sentinel: it matches the last supported system
-	// AND any future build. If the running system is newer than what the table
-	// knows about, this value is our best guess (assuming layout didn't change).
-	// Without a terminal entry, unknown builds throw E_UNEXPECTED
-	// (the running system was never supposed to reference this offset).
-	template <typename StorageT, size_t i = 0>
-	FORCEINLINE constexpr LONGLONG FindOffsetRecursive(ULONG build, ULONG revision)
-	{
-		constexpr auto offsetInfo = StorageT{}()[i];
-		static_assert((offsetInfo.build == 0 && offsetInfo.revision == 0) || offsetInfo.build != 0, "The offset array is malformed.");
-
-		if constexpr (offsetInfo.build == 0)
-		{
-			static_assert(i + 1 == std::size(StorageT{}()), "The offset array is incorrectly truncated.");
-			return offsetInfo.offset;
-		}
-		else
-		{
-			if (VersionBefore<offsetInfo.build, offsetInfo.revision>(build, revision))
-			{
-				return offsetInfo.offset;
-			}
-			else if constexpr (i + 1 < std::size(StorageT{}()))
-			{
-				constexpr auto nextOffsetInfo = StorageT{}()[i + 1];
-				static_assert(VersionBefore<nextOffsetInfo.build, nextOffsetInfo.revision>(offsetInfo.build, offsetInfo.revision), "The offset array should be sorted in ascending order.");
-				return FindOffsetRecursive<StorageT, i + 1>(build, revision);
-			}
-			else
-			{
-				THROW_HR(E_UNEXPECTED);
-			}
-		}
-	}
-	
-	template <typename StorageT, typename MethodT>
-	FORCEINLINE auto PointerExecuteUnsafe(const void* ptr, ULONG build, ULONG revision)
-	{
-		const auto offset = FindOffsetRecursive<StorageT>(build, revision);
-		return MethodT{}(ptr, offset);
+		return runtimeBuild < build ||
+			(runtimeBuild == build && runtimeRevision < revision);
 	}
 
 	inline auto make_current_folder_file(std::wstring_view baseFileName)
@@ -1051,6 +970,16 @@ namespace OpenGlass
 				(std::min(static_cast<DWORD>(color.b * 255.f + 0.5f), 255ul) << 16) |
 				(std::min(static_cast<DWORD>(color.g * 255.f + 0.5f), 255ul) << 8) |
 				(std::min(static_cast<DWORD>(color.r * 255.f + 0.5f), 255ul) << 0);
+		}
+		FORCEINLINE constexpr winrt::Windows::UI::Color ToWinUIColor(const D2D1_COLOR_F& color)
+		{
+			return
+			{
+				static_cast<uint8_t>(std::min(static_cast<DWORD>(color.a * 255.f + 0.5f), 255ul)),
+				static_cast<uint8_t>(std::min(static_cast<DWORD>(color.r * 255.f + 0.5f), 255ul)),
+				static_cast<uint8_t>(std::min(static_cast<DWORD>(color.g * 255.f + 0.5f), 255ul)),
+				static_cast<uint8_t>(std::min(static_cast<DWORD>(color.b * 255.f + 0.5f), 255ul))
+			};
 		}
 	}
 

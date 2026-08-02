@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Architecture"><UniqueIdentifier>{7B210887-2C72-4908-A7CD-B1DA63300E0B}</UniqueIdentifier></Filter>
+    <Filter Include="Architecture\MILComp"><UniqueIdentifier>{39638024-67A1-4A13-9EC6-04E42B2A5543}</UniqueIdentifier></Filter>
+    <Filter Include="Architecture\MILComp\Header Files"><UniqueIdentifier>{89AC91C0-38E6-4B02-9F84-9F5881EC426B}</UniqueIdentifier></Filter>
+    <Filter Include="Architecture\MILComp\Source Files"><UniqueIdentifier>{0BF547F2-2667-471E-B010-CF585DC06859}</UniqueIdentifier></Filter>
+    <Filter Include="Projection Schemas"><UniqueIdentifier>{D8D7D3AE-DF5A-4817-A46E-A39AC8D7CE91}</UniqueIdentifier></Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Architecture\MILComp\DCompProjection.hpp"><Filter>Architecture\MILComp\Header Files</Filter></ClInclude>
+    <ClInclude Include="Architecture\MILComp\Dwm.hpp"><Filter>Architecture\MILComp\Header Files</Filter></ClInclude>
+    <ClInclude Include="Architecture\MILComp\dwmcoreProjection.hpp"><Filter>Architecture\MILComp\Header Files</Filter></ClInclude>
+    <ClInclude Include="Architecture\MILComp\dwmcoreProjection.Offsets.hpp"><Filter>Architecture\MILComp\Header Files</Filter></ClInclude>
+    <ClInclude Include="Architecture\MILComp\GlassCoverageSet.hpp"><Filter>Architecture\MILComp\Header Files</Filter></ClInclude>
+    <ClInclude Include="Architecture\MILComp\GlassIntegrity.hpp"><Filter>Architecture\MILComp\Header Files</Filter></ClInclude>
+    <ClInclude Include="Architecture\MILComp\GlassKernel.hpp"><Filter>Architecture\MILComp\Header Files</Filter></ClInclude>
+    <ClInclude Include="Architecture\MILComp\ReflectionVisual.hpp"><Filter>Architecture\MILComp\Header Files</Filter></ClInclude>
+    <ClInclude Include="Architecture\MILComp\uDwmProjection.hpp"><Filter>Architecture\MILComp\Header Files</Filter></ClInclude>
+    <ClInclude Include="Architecture\MILComp\uDwmProjection.Offsets.hpp"><Filter>Architecture\MILComp\Header Files</Filter></ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Architecture\MILComp\AccentOverrider.cpp"><Filter>Architecture\MILComp\Source Files</Filter></ClCompile>
+    <ClCompile Include="Architecture\MILComp\ButtonGlowHandler.cpp"><Filter>Architecture\MILComp\Source Files</Filter></ClCompile>
+    <ClCompile Include="Architecture\MILComp\CaptionMetricsTweaker.cpp"><Filter>Architecture\MILComp\Source Files</Filter></ClCompile>
+    <ClCompile Include="Architecture\MILComp\CaptionTextHandler.cpp"><Filter>Architecture\MILComp\Source Files</Filter></ClCompile>
+    <ClCompile Include="Architecture\MILComp\GlassCoverageSet.cpp"><Filter>Architecture\MILComp\Source Files</Filter></ClCompile>
+    <ClCompile Include="Architecture\MILComp\GlassEngine.cpp"><Filter>Architecture\MILComp\Source Files</Filter></ClCompile>
+    <ClCompile Include="Architecture\MILComp\GlassFrameDemodernizer.cpp"><Filter>Architecture\MILComp\Source Files</Filter></ClCompile>
+    <ClCompile Include="Architecture\MILComp\GlassFrameEnhancer.cpp"><Filter>Architecture\MILComp\Source Files</Filter></ClCompile>
+    <ClCompile Include="Architecture\MILComp\GlassFrameHandler.cpp"><Filter>Architecture\MILComp\Source Files</Filter></ClCompile>
+    <ClCompile Include="Architecture\MILComp\GlassIntegrity.cpp"><Filter>Architecture\MILComp\Source Files</Filter></ClCompile>
+    <ClCompile Include="Architecture\MILComp\GlassKernel.cpp"><Filter>Architecture\MILComp\Source Files</Filter></ClCompile>
+    <ClCompile Include="Architecture\MILComp\GlassReflectionHandler.cpp"><Filter>Architecture\MILComp\Source Files</Filter></ClCompile>
+    <ClCompile Include="Architecture\MILComp\GlassRenderer.cpp"><Filter>Architecture\MILComp\Source Files</Filter></ClCompile>
+    <ClCompile Include="Architecture\MILComp\OpenGlass.cpp"><Filter>Architecture\MILComp\Source Files</Filter></ClCompile>
+    <ClCompile Include="Architecture\MILComp\ReflectionVisual.cpp"><Filter>Architecture\MILComp\Source Files</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <MASM Include="Architecture\MILComp\GlassFrameHandler.Shims.asm"><Filter>Architecture\MILComp\Source Files</Filter></MASM>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ProjectionSchemas\milcomp\dwmcore.json"><Filter>Projection Schemas</Filter></None>
+    <None Include="ProjectionSchemas\milcomp\README.md"><Filter>Projection Schemas</Filter></None>
+    <None Include="ProjectionSchemas\milcomp\udwm.json"><Filter>Projection Schemas</Filter></None>
+  </ItemGroup>
+</Project>

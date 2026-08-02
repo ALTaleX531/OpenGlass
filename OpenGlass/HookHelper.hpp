@@ -14,6 +14,13 @@ namespace OpenGlass::HookHelper
 		LPVOID detour;
 
 		template <function_pointer T> FORCEINLINE DetourInfo(T* p1, T p2, bool condition = true) : original(condition ? reinterpret_cast<LPVOID*>(p1) : nullptr), detour(condition ? reinterpret_cast<LPVOID>(p2) : nullptr) {}
+		template <typename Storage, function_pointer T>
+		requires requires(Storage* storage) { storage->detour_storage(); }
+		FORCEINLINE DetourInfo(Storage* p1, T p2, bool condition = true) :
+			original(condition ? reinterpret_cast<LPVOID*>(p1->detour_storage()) : nullptr),
+			detour(condition ? reinterpret_cast<LPVOID>(p2) : nullptr)
+		{
+		}
 	};
 
 	struct ImportFunctionDetourInfo : DetourInfo
@@ -76,5 +83,10 @@ namespace OpenGlass::HookHelper
 	FORCEINLINE T* get_vftable_from(const void* This)
 	{
 		return reinterpret_cast<T*>(*reinterpret_cast<PVOID*>(const_cast<void*>(This)));
+	}
+	template <typename T = LPCVOID>
+	FORCEINLINE T& get_vftable_reference_from(const void* This)
+	{
+		return *reinterpret_cast<T*>(const_cast<void*>(This));
 	}
 }

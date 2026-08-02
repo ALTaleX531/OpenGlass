@@ -1,4 +1,4 @@
-# Evidence and table semantics
+# Evidence and schema semantics
 
 ## Sample identity
 
@@ -18,21 +18,22 @@ Windows marketing releases, OS build trains, and compositor capabilities are sep
 
 - **Verified**: a semantic accessor/mutator and an independent constructor, dispatcher, caller, or callee agree.
 - **Provisional**: one strong semantic access exists but no independent confirmation is available.
-- **Inferred**: correlation with neighboring members, size deltas, or a prior build only. Never write inferred values to production tables.
+- **Inferred**: correlation with neighboring members, size deltas, or a prior build only. Never write inferred values to production schemas.
 - **Unverified**: the relevant code path or sample identity cannot be established.
 
 Optimized identical-code folding can merge functions. A merged symbol can support class or capability presence, but it does not by itself identify the intended vtable slot. Report ICF ambiguity explicitly.
 
-## OffsetInfo intervals
+## Layout intervals
 
-`Util::OffsetInfo::build` and `.revision` form the lookup interval's exclusive right boundary, not the version where a feature first appeared. Entries are evaluated in source order against `(build, revision)`.
+Each schema `until: { build, revision }` case ends at an exclusive right boundary; the boundary is not the version where a feature first appeared. Cases are evaluated in schema order against the module's exact `(build, revision)`.
 
-- `{ build = B, revision = R }` covers supported versions before that boundary and after the preceding boundary.
-- `{ build = 0, revision = 0 }` is the open-ended runtime fallback and must be last. It is not proof that the value remains correct on unanalyzed future builds.
+- A case with `until` covers supported versions before that boundary and after the preceding boundary.
+- A case with `otherwise: true` is the explicit open-ended runtime fallback and must be last. It is not proof that the value remains correct on unanalyzed future builds.
 - The absence of a terminal entry can be intentional when a member, class, or feature ceased to exist.
 - Multiple boundaries for the same build must have increasing revisions.
+- The schema's `offset` string is C++ source text. Linters and agents preserve it verbatim and never evaluate it.
 
-Read `OpenGlass/Util.hpp`, `OpenGlass/OSHelper.hpp`, and the target table before proposing C++.
+Read `OpenGlass/ProjectionSchemas/README.md`, `OpenGlass/OSHelper.hpp`, and the target schema item before proposing a change.
 
 ## Cross-validation rules
 
@@ -51,12 +52,12 @@ For every item, record:
 
 | Item | Value |
 |---|---|
-| Projection name | Exact C++ table/type name |
+| Schema ID | Exact stable Layout, VtableSlot, or Symbol ID |
 | Semantic role | Member, subobject displacement, or vtable slot |
 | Value and unit | Byte offset or slot multiplied by pointer size |
 | Primary evidence | Function and decisive expression/instruction |
 | Cross-check | Independent evidence or `none` |
 | Status | verified, provisional, removed, absent, ICF, or unverified |
-| Suggested interval | Right boundary, terminal, or none |
+| Suggested interval | `until` right boundary, `otherwise`, or none |
 
-An audit is complete only when every projection consumed by the checked-out branch has a record. A count copied from an older skill is not a completion criterion.
+An audit is complete only when every projection consumed by the checked-out implementation has a record. A count copied from an older skill or generated manifest is not a completion criterion.

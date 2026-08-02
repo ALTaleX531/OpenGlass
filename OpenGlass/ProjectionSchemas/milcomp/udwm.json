@@ -1,0 +1,1440 @@
+{
+  "schema_version": 2,
+  "module": "udwm",
+  "namespace": "OpenGlass::uDWM",
+  "tag": "ProjectionModuleTag",
+  "symbols": [
+    {
+      "name": "Symbol_CVisual_UpdateOffset",
+      "id": "CVisual::UpdateOffset",
+      "symbol_names": [
+        "protected: virtual long __cdecl CVisual::UpdateOffset(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "CVisual_UpdateOffset_t"
+    },
+    {
+      "name": "Symbol_CVisual_SendSetOffset",
+      "id": "CVisual::SendSetOffset",
+      "symbol_names": [
+        "protected: virtual long __cdecl CVisual::SendSetOffset(struct tagPOINT const & __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "CVisual_SendSetOffset_t"
+    },
+    {
+      "name": "Symbol_CVisual_SetSize",
+      "id": "CVisual::SetSize",
+      "symbol_names": [
+        "public: void __cdecl CVisual::SetSize(struct tagSIZE const * __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CVisual::SetSize",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CVisual_SetInsetFromParent",
+      "id": "CVisual::SetInsetFromParent",
+      "symbol_names": [
+        "public: void __cdecl CVisual::SetInsetFromParent(struct _MARGINS const & __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CVisual::SetInsetFromParent",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CVisual_SetInsetFromParentLeft",
+      "id": "CVisual::SetInsetFromParentLeft",
+      "symbol_names": [
+        "public: void __cdecl CVisual::SetInsetFromParentLeft(int) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CVisual::SetInsetFromParentLeft",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CVisual_SetDirtyFlags",
+      "id": "CVisual::SetDirtyFlags",
+      "symbol_names": [
+        "protected: virtual void __cdecl CVisual::SetDirtyFlags(class DirtyFlags) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CVisual::SetDirtyFlags",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CVisualProxy_SetSize",
+      "id": "CVisualProxy::SetSize",
+      "symbol_names": [
+        "public: long __cdecl CVisualProxy::SetSize(double,double) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CVisualProxy::SetSize",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_VisualCollection_Remove",
+      "id": "VisualCollection::Remove",
+      "symbol_names": [
+        "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&VisualCollection::Remove",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_VisualCollection_InsertRelative",
+      "id": "VisualCollection::InsertRelative",
+      "symbol_names": [
+        "public: long __cdecl VisualCollection::InsertRelative(class CVisual * __ptr64,class CVisual * __ptr64,bool,bool) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&VisualCollection::InsertRelative",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CContainerVisual_InitializeVisualTreeClone",
+      "id": "CContainerVisual::InitializeVisualTreeClone",
+      "symbol_names": [
+        "public: long __cdecl CContainerVisual::InitializeVisualTreeClone(class CContainerVisual * __ptr64,enum CloneOptions) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CContainerVisual::InitializeVisualTreeClone",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CRectangleVisual_SetRect",
+      "id": "CRectangleVisual::SetRect",
+      "symbol_names": [
+        "public: void __cdecl CRectangleVisual::SetRect(class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const & __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CRectangleVisual::SetRect",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CRectangleVisual_UpdateClip",
+      "id": "CRectangleVisual::UpdateClip",
+      "symbol_names": [
+        "public: long __cdecl CRectangleVisual::UpdateClip(class CBaseGeometryProxy * __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CRectangleVisual::UpdateClip",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CSolidRectangleVisual_UpdateColor",
+      "id": "CSolidRectangleVisual::UpdateColor",
+      "symbol_names": [
+        "public: long __cdecl CSolidRectangleVisual::UpdateColor(struct _D3DCOLORVALUE const & __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CSolidRectangleVisual::UpdateColor",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CSolidRectangleVisual_Create",
+      "id": "CSolidRectangleVisual::Create",
+      "symbol_names": [
+        "public: static long __cdecl CSolidRectangleVisual::Create(class CSolidRectangleVisual * __ptr64 * __ptr64)"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CSolidRectangleVisual::Create",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CSpriteVisual_SendSetSize",
+      "id": "CSpriteVisual::SendSetSize",
+      "symbol_names": [
+        "protected: virtual long __cdecl CSpriteVisual::SendSetSize(struct tagSIZE const & __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "CSpriteVisual_SendSetSize_t"
+    },
+    {
+      "name": "Symbol_CSpriteVisual_CloneVisualTree",
+      "id": "CSpriteVisual::CloneVisualTree",
+      "symbol_names": [
+        "public: virtual long __cdecl CSpriteVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,enum CloneOptions) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "CSpriteVisual_CloneVisualTree_t"
+    },
+    {
+      "name": "Symbol_CSpriteVisual_Create",
+      "id": "CSpriteVisual::Create",
+      "symbol_names": [
+        "public: static long __cdecl CSpriteVisual::Create(class CSpriteVisual * __ptr64 * __ptr64)"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CSpriteVisual::Create",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CSpriteVisual_GetBrush",
+      "id": "CSpriteVisual::GetBrush",
+      "symbol_names": [
+        "public: long __cdecl CSpriteVisual::GetBrush<struct Windows::UI::Composition::ICompositionBrush>(struct Windows::UI::Composition::ICompositionBrush * __ptr64 * __ptr64)const __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CSpriteVisual::GetBrush",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CSpriteVisual_SetBrush",
+      "id": "CSpriteVisual::SetBrush",
+      "symbol_names": [
+        "public: long __cdecl CSpriteVisual::SetBrush<struct Windows::UI::Composition::ICompositionBrush * __ptr64>(struct Windows::UI::Composition::ICompositionBrush * __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CSpriteVisual::SetBrush",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CDWriteText_ValidateVisual",
+      "id": "CDWriteText::ValidateVisual",
+      "symbol_names": [
+        "public: virtual long __cdecl CDWriteText::ValidateVisual(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "CDWriteText_ValidateVisual_t"
+    },
+    {
+      "name": "Symbol_CDWriteText_InitializeVisualTreeClone",
+      "id": "CDWriteText::InitializeVisualTreeClone",
+      "symbol_names": [
+        "protected: long __cdecl CDWriteText::InitializeVisualTreeClone(class CDWriteText * __ptr64,enum CloneOptions) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "CDWriteText_InitializeVisualTreeClone_t"
+    },
+    {
+      "name": "Symbol_CThemePartPrimitive_ShouldClone",
+      "id": "CThemePartPrimitive::ShouldClone",
+      "symbol_names": [
+        "private: bool __cdecl CThemePartPrimitive::ShouldClone(enum CloneOptions)const __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "CThemePartPrimitive_ShouldClone_t"
+    },
+    {
+      "name": "Symbol_CButton_vftable",
+      "id": "CButton::vftable",
+      "symbol_names": [
+        "const CButton::`vftable'"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CButton::vftable",
+      "kind": "projected_variable"
+    },
+    {
+      "name": "Symbol_CLegacyNonClientBackground_ClearAll",
+      "id": "CLegacyNonClientBackground::ClearAll",
+      "symbol_names": [
+        "public: void __cdecl CLegacyNonClientBackground::ClearAll(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CLegacyNonClientBackground::ClearAll",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CLegacyNonClientBackground_HasSomethingToRender",
+      "id": "CLegacyNonClientBackground::HasSomethingToRender",
+      "symbol_names": [
+        "public: bool __cdecl CLegacyNonClientBackground::HasSomethingToRender(void)const __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "CLegacyNonClientBackground_HasSomethingToRender_t"
+    },
+    {
+      "name": "Symbol_CLegacyNonClientBackground_SetCaptionRect",
+      "id": "CLegacyNonClientBackground::SetCaptionRect",
+      "symbol_names": [
+        "public: long __cdecl CLegacyNonClientBackground::SetCaptionRect(struct tagRECT const & __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "CLegacyNonClientBackground_SetCaptionRect_t"
+    },
+    {
+      "name": "Symbol_CLegacyNonClientBackground_SetBorderRects",
+      "id": "CLegacyNonClientBackground::SetBorderRects",
+      "symbol_names": [
+        "public: long __cdecl CLegacyNonClientBackground::SetBorderRects(struct tagRECT const & __ptr64,struct tagRECT const & __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "CLegacyNonClientBackground_SetBorderRects_t"
+    },
+    {
+      "name": "Symbol_CLegacyNonClientBackground_SetCaptionColor",
+      "id": "CLegacyNonClientBackground::SetCaptionColor",
+      "symbol_names": [
+        "public: long __cdecl CLegacyNonClientBackground::SetCaptionColor(struct _D3DCOLORVALUE const & __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "CLegacyNonClientBackground_SetCaptionColor_t"
+    },
+    {
+      "name": "Symbol_CLegacyNonClientBackground_CLegacyNonClientBackground",
+      "id": "CLegacyNonClientBackground::~CLegacyNonClientBackground",
+      "symbol_names": [
+        "public: virtual __cdecl CLegacyNonClientBackground::~CLegacyNonClientBackground(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "CLegacyNonClientBackground_Destructor_t"
+    },
+    {
+      "name": "Symbol_CWindowBorder_EnableBorder",
+      "id": "CWindowBorder::EnableBorder",
+      "symbol_names": [
+        "public: long __cdecl CWindowBorder::EnableBorder(bool) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CWindowBorder::EnableBorder",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_vftable",
+      "id": "CTopLevelWindow::vftable",
+      "symbol_names": [
+        "const CTopLevelWindow::`vftable'"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CTopLevelWindow::vftable",
+      "kind": "projected_variable"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_GetActualWindowRect",
+      "id": "CTopLevelWindow::GetActualWindowRect",
+      "symbol_names": [
+        "public: struct tagRECT __cdecl CTopLevelWindow::GetActualWindowRect(bool,bool,bool)const __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CTopLevelWindow::GetActualWindowRect",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_TreatAsActiveWindow",
+      "id": "CTopLevelWindow::TreatAsActiveWindow",
+      "symbol_names": [
+        "private: bool __cdecl CTopLevelWindow::TreatAsActiveWindow(void)const __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CTopLevelWindow::TreatAsActiveWindow",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_OnBlurBehindUpdated",
+      "id": "CTopLevelWindow::OnBlurBehindUpdated",
+      "symbol_names": [
+        "public: void __cdecl CTopLevelWindow::OnBlurBehindUpdated(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CTopLevelWindow::OnBlurBehindUpdated",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_OnSystemBackdropUpdated",
+      "id": "CTopLevelWindow::OnSystemBackdropUpdated",
+      "symbol_names": [
+        "public: void __cdecl CTopLevelWindow::OnSystemBackdropUpdated(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CTopLevelWindow::OnSystemBackdropUpdated",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_EdgeBorderMustBeOpaque",
+      "id": "CTopLevelWindow::EdgeBorderMustBeOpaque",
+      "symbol_names": [
+        "private: int __cdecl CTopLevelWindow::EdgeBorderMustBeOpaque(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "CTopLevelWindow_EdgeBorderMustBeOpaque_t"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_UpdateNCAreaBackground",
+      "id": "CTopLevelWindow::UpdateNCAreaBackground",
+      "symbol_names": [
+        "private: long __cdecl CTopLevelWindow::UpdateNCAreaBackground(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "CTopLevelWindow_UpdateNCAreaBackground_t"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_UpdateNCAreaPositionsAndSizes",
+      "id": "CTopLevelWindow::UpdateNCAreaPositionsAndSizes",
+      "symbol_names": [
+        "private: long __cdecl CTopLevelWindow::UpdateNCAreaPositionsAndSizes(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "CTopLevelWindow_UpdateNCAreaPositionsAndSizes_t"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_UpdateClientBlur",
+      "id": "CTopLevelWindow::UpdateClientBlur",
+      "symbol_names": [
+        "private: long __cdecl CTopLevelWindow::UpdateClientBlur(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "CTopLevelWindow_UpdateClientBlur_t"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_ValidateVisual",
+      "id": "CTopLevelWindow::ValidateVisual",
+      "symbol_names": [
+        "public: virtual long __cdecl CTopLevelWindow::ValidateVisual(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "CTopLevelWindow_ValidateVisual_t"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_UpdateWindowVisuals",
+      "id": "CTopLevelWindow::UpdateWindowVisuals",
+      "symbol_names": [
+        "private: long __cdecl CTopLevelWindow::UpdateWindowVisuals(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "CTopLevelWindow_UpdateWindowVisuals_t"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_CTopLevelWindow",
+      "id": "CTopLevelWindow::~CTopLevelWindow",
+      "symbol_names": [
+        "private: virtual __cdecl CTopLevelWindow::~CTopLevelWindow(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "CTopLevelWindow_Destructor_t"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_IsShadowNCAreaPart",
+      "id": "CTopLevelWindow::IsShadowNCAreaPart",
+      "symbol_names": [
+        "private: static bool __cdecl CTopLevelWindow::IsShadowNCAreaPart(unsigned int)"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "CTopLevelWindow_IsShadowNCAreaPart_t"
+    },
+    {
+      "name": "Symbol_SetMargin",
+      "id": "SetMargin",
+      "symbol_names": [
+        "bool __cdecl SetMargin(struct _MARGINS * __ptr64,int,int,int,int,struct _MARGINS const * __ptr64)"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "SetMargin_t"
+    },
+    {
+      "name": "Symbol_CGlassColorizationParameters_AdjustWindowColorization",
+      "id": "CGlassColorizationParameters::AdjustWindowColorization",
+      "symbol_names": [
+        "public: void __cdecl CGlassColorizationParameters::AdjustWindowColorization(union GpCC const * __ptr64,float,struct TMILFlagsEnum<enum ColorizationFlags::FlagsEnum>) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "CGlassColorizationParameters_AdjustWindowColorization_t"
+    },
+    {
+      "name": "Symbol_CWindowList_GetWindowListForDesktop",
+      "id": "CWindowList::GetWindowListForDesktop",
+      "symbol_names": [
+        "public: struct _LIST_ENTRY * __ptr64 __cdecl CWindowList::GetWindowListForDesktop(unsigned __int64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CWindowList::GetWindowListForDesktop",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CCompositor_ForceRender",
+      "id": "CCompositor::ForceRender",
+      "symbol_names": [
+        "public: long __cdecl CCompositor::ForceRender(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CCompositor::ForceRender",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CDesktopManager_s_pDesktopManagerInstance",
+      "id": "CDesktopManager::s_pDesktopManagerInstance",
+      "symbol_names": [
+        "private: static class CDesktopManager * __ptr64 __ptr64 CDesktopManager::s_pDesktopManagerInstance"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CDesktopManager::s_pDesktopManagerInstance",
+      "kind": "projected_variable"
+    },
+    {
+      "name": "Symbol_CDesktopManager_s_csDwmInstance",
+      "id": "CDesktopManager::s_csDwmInstance",
+      "symbol_names": [
+        "public: static class CDwmCS CDesktopManager::s_csDwmInstance"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CDesktopManager::s_csDwmInstance",
+      "kind": "projected_variable"
+    },
+    {
+      "name": "Symbol_CDesktopManager_IsHighContrastMode",
+      "id": "CDesktopManager::IsHighContrastMode",
+      "symbol_names": [
+        "public: static bool __cdecl CDesktopManager::IsHighContrastMode(void)"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "CDesktopManager_IsHighContrastMode_t"
+    },
+    {
+      "name": "Symbol_CGraphicsDeviceManager_ReleaseGraphicsDevice",
+      "id": "CGraphicsDeviceManager::ReleaseGraphicsDevice",
+      "symbol_names": [
+        "protected: long __cdecl CGraphicsDeviceManager::ReleaseGraphicsDevice(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "CGraphicsDeviceManager_ReleaseGraphicsDevice_t"
+    },
+    {
+      "name": "Symbol_ResourceHelper_CreateGeometryFromHRGN",
+      "id": "ResourceHelper::CreateGeometryFromHRGN",
+      "symbol_names": [
+        "public: static long __cdecl ResourceHelper::CreateGeometryFromHRGN(struct HRGN__ * __ptr64,class CRgnGeometryProxy * __ptr64 * __ptr64)"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&ResourceHelper::CreateGeometryFromHRGN",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_ResourceHelper_CreateCombinedGeometry",
+      "id": "ResourceHelper::CreateCombinedGeometry",
+      "symbol_names": [
+        "public: static long __cdecl ResourceHelper::CreateCombinedGeometry(class CBaseGeometryProxy const * __ptr64,class CBaseGeometryProxy const * __ptr64,enum MilCombineMode::Enum,class CCombinedGeometryProxy * __ptr64 * __ptr64)"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&ResourceHelper::CreateCombinedGeometry",
+      "kind": "projected_function"
+    }
+  ],
+  "layouts": [
+    {
+      "name": "CBaseObject_ReferenceCount",
+      "id": "CBaseObject.ReferenceCount",
+      "kind": "field",
+      "type": "DWORD",
+      "cases": [
+        {
+          "offset": "2 * (LONGLONG)sizeof(DWORD)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CBaseObject::AddRef and Release update the interlocked reference count stored immediately after the vtable pointer."
+    },
+    {
+      "name": "CResourceProxy_Channel",
+      "id": "CResourceProxy.Channel",
+      "kind": "field",
+      "type": "IDwmChannel*",
+      "cases": [
+        {
+          "offset": "2 * (LONGLONG)sizeof(PVOID)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CResourceProxy channel pointer consumed by MIL resource proxy operations."
+    },
+    {
+      "name": "CResourceProxy_HandleId",
+      "id": "CResourceProxy.HandleId",
+      "kind": "field",
+      "type": "UINT",
+      "cases": [
+        {
+          "offset": "3 * (LONGLONG)sizeof(PVOID)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CResourceProxy channel resource handle consumed by MIL resource proxy operations."
+    },
+    {
+      "name": "CResource_Proxy",
+      "id": "CResource.Proxy",
+      "kind": "field",
+      "type": "CResourceProxy*",
+      "cases": [
+        {
+          "offset": "2 * (LONGLONG)sizeof(PVOID)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CResource stores its CResourceProxy pointer after the base object state."
+    },
+    {
+      "name": "CVisualProxy_DCompVisualProxy",
+      "id": "CVisualProxy.DCompVisualProxy",
+      "kind": "field",
+      "type": "IUnknown*",
+      "cases": [
+        {
+          "offset": "0x20",
+          "otherwise": true
+        }
+      ],
+      "notes": "CVisualProxy constructor stores the DirectComposition visual proxy returned by channel vtable slot 13; the object exposes IDCompositionVisualRestricted."
+    },
+    {
+      "name": "CSpriteVisualProxy_SpriteVisualPartner",
+      "id": "CSpriteVisualProxy.SpriteVisualPartner",
+      "kind": "field",
+      "type": "IUnknown*",
+      "cases": [
+        {
+          "offset": "0x28",
+          "otherwise": true
+        }
+      ],
+      "notes": "CSpriteVisualProxy constructor queries the DComp visual proxy for the WinRT ISpriteVisual partner and stores it here."
+    },
+    {
+      "name": "CGlassColorizationResources_Color",
+      "id": "CGlassColorizationResources.Color",
+      "kind": "field",
+      "type": "D2D1_COLOR_F",
+      "cases": [
+        {
+          "offset": "sizeof(float)",
+          "otherwise": true
+        }
+      ],
+      "notes": "Color consumed together with Balance by CGlassColorizationResources::getArgbcolor."
+    },
+    {
+      "name": "CGlassColorizationResources_Balance",
+      "id": "CGlassColorizationResources.Balance",
+      "kind": "field",
+      "type": "float",
+      "cases": [
+        {
+          "offset": "8 * (LONGLONG)sizeof(float)",
+          "otherwise": true
+        }
+      ],
+      "notes": "Balance consumed together with Color by CGlassColorizationResources::getArgbcolor."
+    },
+    {
+      "name": "CVisual_IsRTLMirrored_ByteOffset",
+      "id": "CVisual_IsRTLMirrored_ByteOffset",
+      "kind": "field",
+      "type": "BYTE",
+      "cases": [
+        {
+          "offset": "36",
+          "otherwise": true
+        }
+      ],
+      "notes": "CVisual::SetRTLMirror"
+    },
+    {
+      "name": "CVisual_GetScale",
+      "id": "CVisual_GetScale",
+      "kind": "field",
+      "type": "D2D1_SIZE_F",
+      "cases": [
+        {
+          "offset": "104",
+          "otherwise": true
+        }
+      ],
+      "notes": "CVisual::SetScale"
+    },
+    {
+      "name": "CVisual_GetSize",
+      "id": "CVisual_GetSize",
+      "kind": "field",
+      "type": "SIZE",
+      "cases": [
+        {
+          "offset": "8 * (LONGLONG)sizeof(SIZE)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CVisual::SetSize"
+    },
+    {
+      "name": "CVisual_GetOffset",
+      "id": "CVisual_GetOffset",
+      "kind": "field",
+      "type": "POINT",
+      "cases": [
+        {
+          "offset": "7 * (LONGLONG)sizeof(POINT)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CVisual::SetOffset"
+    },
+    {
+      "name": "CVisual_GetVisualCollection",
+      "id": "CVisual_GetVisualCollection",
+      "kind": "field",
+      "type": "VisualCollection",
+      "cases": [
+        {
+          "offset": "136",
+          "otherwise": true
+        }
+      ],
+      "notes": "xref to VisualCollection::VisualCollection, find CContainerVisual::CContainerVisual:\nVisualCollection::VisualCollection((VisualCollection *)(this + 17));"
+    },
+    {
+      "name": "CVisual_GetVisualProxy",
+      "id": "CVisual_GetVisualProxy",
+      "kind": "field",
+      "type": "CVisualProxy*",
+      "cases": [
+        {
+          "offset": "2 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CVisual::SendSetOffset"
+    },
+    {
+      "name": "CVisual_GetTransformParent",
+      "id": "CVisual_GetTransformParent",
+      "kind": "vtable_slot",
+      "type": "CVisual_GetTransformParent_t",
+      "cases": [
+        {
+          "offset": "8 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "xrefs to CVisual::`vftable'"
+    },
+    {
+      "name": "CVisual_GetDirtyFlags",
+      "id": "CVisual_GetDirtyFlags",
+      "kind": "field",
+      "type": "DWORD",
+      "cases": [
+        {
+          "offset": "8 * sizeof(DWORD)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CVisual::SetDirtyFlags"
+    },
+    {
+      "name": "CRectangleVisual_GetRect",
+      "id": "CRectangleVisual_GetRect",
+      "kind": "field",
+      "type": "D2D1_RECT_F",
+      "cases": [
+        {
+          "offset": "192",
+          "otherwise": true
+        }
+      ],
+      "notes": "CRectangleVisual::SetRect"
+    },
+    {
+      "name": "CLegacyNonClientBackground_GetBorderInnerBounds",
+      "id": "CLegacyNonClientBackground_GetBorderInnerBounds",
+      "kind": "field",
+      "type": "D2D1_RECT_F",
+      "cases": [
+        {
+          "offset": "240",
+          "otherwise": true
+        }
+      ],
+      "notes": "CLegacyNonClientBackground::SetBorderRects"
+    },
+    {
+      "name": "CLegacyNonClientBackground_GetBorderOuterBounds",
+      "id": "CLegacyNonClientBackground_GetBorderOuterBounds",
+      "kind": "field",
+      "type": "D2D1_RECT_F",
+      "cases": [
+        {
+          "offset": "256",
+          "otherwise": true
+        }
+      ],
+      "notes": "CLegacyNonClientBackground::SetBorderRects"
+    },
+    {
+      "name": "CLegacyNonClientBackground_GetBorderColor",
+      "id": "CLegacyNonClientBackground_GetBorderColor",
+      "kind": "field",
+      "type": "D2D1_COLOR_F",
+      "cases": [
+        {
+          "offset": "224",
+          "otherwise": true
+        }
+      ],
+      "notes": "CLegacyNonClientBackground::SetBorderColor"
+    },
+    {
+      "name": "CLegacyNonClientBackground_GetCaptionColor",
+      "id": "CLegacyNonClientBackground_GetCaptionColor",
+      "kind": "field",
+      "type": "D2D1_COLOR_F",
+      "cases": [
+        {
+          "offset": "208",
+          "otherwise": true
+        }
+      ],
+      "notes": "CLegacyNonClientBackground::SetCaptionColor"
+    },
+    {
+      "name": "CLegacyNonClientBackground_GetBorderVisual",
+      "id": "CLegacyNonClientBackground_GetBorderVisual",
+      "kind": "field",
+      "type": "CNineGridVisual*",
+      "cases": [
+        {
+          "offset": "200",
+          "otherwise": true
+        }
+      ],
+      "notes": "CLegacyNonClientBackground::EnsureBorderSprite"
+    },
+    {
+      "name": "CLegacyNonClientBackground_GetCaptionVisual",
+      "id": "CLegacyNonClientBackground_GetCaptionVisual",
+      "kind": "field",
+      "type": "CRectangleVisual*",
+      "cases": [
+        {
+          "offset": "192",
+          "otherwise": true
+        }
+      ],
+      "notes": "CLegacyNonClientBackground::EnsureCaptionSprite"
+    },
+    {
+      "name": "IText_GetDWriteText_NegativeOffset",
+      "id": "IText_GetDWriteText_NegativeOffset",
+      "kind": "field",
+      "type": "CDWriteText",
+      "cases": [
+        {
+          "offset": "-184",
+          "otherwise": true
+        }
+      ],
+      "notes": "xrefs to CDWriteText::`vftable'{for `IText'} → find CDWriteText constructor\nConstructor reveals the IText vtable subobject offset within CDWriteText.\nNegative offset = -(subobject offset) to go from IText* back to CDWriteText*."
+    },
+    {
+      "name": "IText_RTL_Index",
+      "id": "IText_RTL_Index",
+      "kind": "field",
+      "type": "bool",
+      "cases": [
+        {
+          "offset": "280",
+          "otherwise": true
+        }
+      ],
+      "notes": "xrefs to CDWriteText::`vftable'{for `IText'} → decompile SetRTLReading on IText vtable\nLook for byte bit-test and conditional branch on the memory operand"
+    },
+    {
+      "name": "IText_Reverse_Index",
+      "id": "IText_Reverse_Index",
+      "kind": "field",
+      "type": "bool",
+      "cases": [
+        {
+          "offset": "281",
+          "otherwise": true
+        }
+      ],
+      "notes": "xrefs to CDWriteText::`vftable'{for `IText'} → decompile SetReverseAlignment on IText vtable\nSame pattern: byte bit-test at an adjacent absolute offset"
+    },
+    {
+      "name": "CDWriteText_GetTextInterface",
+      "id": "CDWriteText_GetTextInterface",
+      "kind": "field",
+      "type": "IText",
+      "cases": [
+        {
+          "offset": "184",
+          "otherwise": true
+        }
+      ],
+      "notes": "CDWriteText::CDWriteText\nxrefs to CDWriteText::`vftable'{for `IText'}"
+    },
+    {
+      "name": "CThemePartPrimitive_GetPartId",
+      "id": "CThemePartPrimitive_GetPartId",
+      "kind": "field",
+      "type": "DWORD",
+      "cases": [
+        {
+          "offset": "18 * sizeof(DWORD)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CThemePartPrimitive::ShouldClone\nCThemePartPrimitive::ShouldDraw"
+    },
+    {
+      "name": "CButton_GetGlyphOpacity",
+      "id": "CButton_GetGlyphOpacity",
+      "kind": "field",
+      "type": "float",
+      "cases": [
+        {
+          "offset": "75 * sizeof(DWORD)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CButton::SetVisualStates\nWARNING: Use SetVisualStates (base/default glyph opacity), NOT\nUpdateCurrentGlyphOpacity (runtime/current opacity, different DWORD offset)."
+    },
+    {
+      "name": "CWindowData_GetHwnd",
+      "id": "CWindowData_GetHwnd",
+      "kind": "field",
+      "type": "HWND",
+      "cases": [
+        {
+          "offset": "5 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CWindowData::IsGhostWindow\nxrefs to GetPropW — first parameter is the HWND, trace back to the CWindowData offset"
+    },
+    {
+      "name": "CWindowData_GetWindow_Index",
+      "id": "CWindowData_GetWindow_Index",
+      "kind": "field",
+      "type": "CTopLevelWindow*",
+      "cases": [
+        {
+          "offset": "55 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CWindowList::EnsureTopLevelWindow"
+    },
+    {
+      "name": "CWindowData_GetSystemBackdropType_Index",
+      "id": "CWindowData_GetSystemBackdropType_Index",
+      "kind": "field",
+      "type": "DWM_SYSTEMBACKDROP_TYPE",
+      "cases": [
+        {
+          "offset": "51 * sizeof(DWORD)",
+          "otherwise": true
+        }
+      ]
+    },
+    {
+      "name": "CWindowData_GetWindowDPI",
+      "id": "CWindowData_GetWindowDPI",
+      "kind": "field",
+      "type": "UINT",
+      "cases": [
+        {
+          "offset": "87 * sizeof(DWORD)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CTopLevelWindow::CalculateOutsideMargins\nxrefs to GetSystemMetricsForDpi"
+    },
+    {
+      "name": "CWindowData_GetNonClientAttribute",
+      "id": "CWindowData_GetNonClientAttribute",
+      "kind": "field",
+      "type": "BYTE",
+      "cases": [
+        {
+          "offset": "672",
+          "otherwise": true
+        }
+      ],
+      "notes": "CWindowList::BlurBehindChange\ndata[x] & y"
+    },
+    {
+      "name": "CWindowData_GetClientBlurAttribute",
+      "id": "CWindowData_GetClientBlurAttribute",
+      "kind": "field",
+      "type": "BYTE",
+      "cases": [
+        {
+          "offset": "673",
+          "otherwise": true
+        }
+      ],
+      "notes": "CWindowList::ForceIconicRepresentationChange\nCWindowList::AlphaChange\ndata[x] & y"
+    },
+    {
+      "name": "CWindowData_GetExtendedFrameMargins",
+      "id": "CWindowData_GetExtendedFrameMargins",
+      "kind": "field",
+      "type": "MARGINS",
+      "cases": [
+        {
+          "offset": "96",
+          "otherwise": true
+        }
+      ]
+    },
+    {
+      "name": "CTopLevelWindow_GetData_Index",
+      "id": "CTopLevelWindow_GetData_Index",
+      "kind": "field",
+      "type": "CWindowData*",
+      "cases": [
+        {
+          "offset": "87 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CWindowList::EnsureTopLevelWindow"
+    },
+    {
+      "name": "CTopLevelWindow_GetIconVisual_Index",
+      "id": "CTopLevelWindow_GetIconVisual_Index",
+      "kind": "field",
+      "type": "CImage*",
+      "cases": [
+        {
+          "offset": "65 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CTopLevelWindow::UpdateIcon\n(CImage *)this[x];"
+    },
+    {
+      "name": "CTopLevelWindow_GetDWriteTextVisual_Index",
+      "id": "CTopLevelWindow_GetDWriteTextVisual_Index",
+      "kind": "field",
+      "type": "CDWriteText*",
+      "cases": [
+        {
+          "offset": "63 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "xrefs to CDWriteText::Create"
+    },
+    {
+      "name": "CTopLevelWindow_GetLegacyVisual_Index",
+      "id": "CTopLevelWindow_GetLegacyVisual_Index",
+      "kind": "field",
+      "type": "CLegacyNonClientBackground*",
+      "cases": [
+        {
+          "offset": "32 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CTopLevelWindow::UpdateNCAreaBackground\nxrefs to CLegacyNonClientBackground::Create"
+    },
+    {
+      "name": "CTopLevelWindow_GetClientBlurVisual_Index",
+      "id": "CTopLevelWindow_GetClientBlurVisual_Index",
+      "kind": "field",
+      "type": "CSolidRectangleVisual*",
+      "cases": [
+        {
+          "offset": "35 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CTopLevelWindow::UpdateClientBlur\nxrefs to CSolidRectangleVisual::Create"
+    },
+    {
+      "name": "CTopLevelWindow_GetWindowBorder_Index",
+      "id": "CTopLevelWindow_GetWindowBorder_Index",
+      "kind": "field",
+      "type": "CWindowBorder*",
+      "cases": [
+        {
+          "offset": "26 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "xrefs to CWindowBorder::Create"
+    },
+    {
+      "name": "CTopLevelWindow_GetIsBorderUpdatesSuppressed_ByteIndex",
+      "id": "CTopLevelWindow_GetIsBorderUpdatesSuppressed_ByteIndex",
+      "kind": "field",
+      "type": "bool",
+      "cases": [
+        {
+          "offset": "792",
+          "otherwise": true
+        }
+      ],
+      "notes": "CTopLevelWindow::SetSuppressBorderUpdates (could be inlined)\nCTopLevelWindow::UpdateWindowVisuals\nif ( this[x] )\ngoto y;"
+    },
+    {
+      "name": "CTopLevelWindow_IsWindowMaximized",
+      "id": "CTopLevelWindow_IsWindowMaximized",
+      "kind": "field",
+      "type": "DWORD",
+      "cases": [
+        {
+          "offset": "184",
+          "otherwise": true
+        }
+      ],
+      "notes": "xrefs to CText::SetRTLReading/CVisual::SetRTLMirror\nCTopLevelWindow::UpdateNCAreaPositionsAndSizes\nthis[184] & 4"
+    },
+    {
+      "name": "CTopLevelWindow_StateDwordIndex",
+      "id": "CTopLevelWindow_StateDwordIndex",
+      "kind": "field",
+      "type": "DWORD",
+      "cases": [
+        {
+          "offset": "142 * sizeof(DWORD)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CTopLevelWindow::GetButtonHeightAndOffset\nCTopLevelWindow::UpdateNCAreaButton\nxrefs to CTopLevelWindow::HasThinRenderedBorder"
+    },
+    {
+      "name": "CTopLevelWindow_GetCaptionColorizationParameters_Index",
+      "id": "CTopLevelWindow_GetCaptionColorizationParameters_Index",
+      "kind": "field",
+      "type": "CGlassColorizationResources*",
+      "cases": [
+        {
+          "offset": "70 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CTopLevelWindow::UpdateColorizationColor\nCTopLevelWindow::UpdateNCAreaBackground\nif ( y1 == 0x7FFFFFFF && y2 == 0x7FFFFFFF && y3 == 0x7FFFFFFF && y4 == 0x7FFFFFFF )\nz = this[x]\nelse\nz = this[w]"
+    },
+    {
+      "name": "CTopLevelWindow_GetButton_BasePointerIndex",
+      "id": "CTopLevelWindow_GetButton_BasePointerIndex",
+      "kind": "field",
+      "type": "BYTE",
+      "cases": [
+        {
+          "offset": "59 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "xrefs to CButton::Create"
+    },
+    {
+      "name": "CWindowData_GetFrameThickness",
+      "id": "CWindowData_GetFrameThickness",
+      "kind": "field",
+      "type": "DWORD",
+      "cases": [
+        {
+          "offset": "112",
+          "otherwise": true
+        }
+      ],
+      "notes": "CTopLevelWindow::GetBorderMargins/CTopLevelWindow::_GetRightFrameThickness\nif ( y <= 0 )\ny = data[x]"
+    },
+    {
+      "name": "CTopLevelWindow_GetFrameOutsideMargins_Zoomed",
+      "id": "CTopLevelWindow_GetFrameOutsideMargins_Zoomed",
+      "kind": "field",
+      "type": "MARGINS",
+      "cases": [
+        {
+          "offset": "620",
+          "otherwise": true
+        }
+      ],
+      "notes": "CTopLevelWindow::UpdateNCAreaPositionsAndSizes\nx = x1;\nif ( !zoomed )\nx = x2;\ny = this[x]"
+    },
+    {
+      "name": "CTopLevelWindow_GetFrameOutsideMargins_Normal",
+      "id": "CTopLevelWindow_GetFrameOutsideMargins_Normal",
+      "kind": "field",
+      "type": "MARGINS",
+      "cases": [
+        {
+          "offset": "604",
+          "otherwise": true
+        }
+      ],
+      "notes": "CTopLevelWindow::UpdateNCAreaPositionsAndSizes\nx = x1;\nif ( !zoomed )\nx = x2;\ny = this[x]  (Normal path, same function as Zoomed)"
+    },
+    {
+      "name": "CTopLevelWindow_GetFrameInsideMargins",
+      "id": "CTopLevelWindow_GetFrameInsideMargins",
+      "kind": "field",
+      "type": "MARGINS",
+      "cases": [
+        {
+          "offset": "147 * sizeof(DWORD)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CTopLevelWindow::UpdateNCAreaBackground\nif ( this[x1] == 0x7FFFFFFF && this[x2] == 0x7FFFFFFF && this[x3] == 0x7FFFFFFF && this[x4] == 0x7FFFFFFF )\nz = this[y]\nelse\nz = this[w]\n\n(x = min(x1, x2, x3, x4))"
+    },
+    {
+      "name": "CTopLevelWindow_GetBorderMargins",
+      "id": "CTopLevelWindow_GetBorderMargins",
+      "kind": "field",
+      "type": "MARGINS",
+      "cases": [
+        {
+          "offset": "572",
+          "otherwise": true
+        }
+      ],
+      "notes": "CTopLevelWindow::GetBorderMargins\nmargins = (MARGINS)this[x]"
+    },
+    {
+      "name": "CDesktopManager_GetGraphicsDeviceManager_Index",
+      "id": "CDesktopManager_GetGraphicsDeviceManager_Index",
+      "kind": "field",
+      "type": "void*",
+      "cases": [
+        {
+          "offset": "7 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CDesktopManager::Initialize\nCGraphicsDeviceManager::Create → stored at this + N"
+    },
+    {
+      "name": "CDesktopManager_GetCompositor_Index",
+      "id": "CDesktopManager_GetCompositor_Index",
+      "kind": "field",
+      "type": "CCompositor*",
+      "cases": [
+        {
+          "offset": "6 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CDesktopManager::Initialize\nCCompositor::Create(connection, &this->compositor)"
+    },
+    {
+      "name": "CDesktopManager_GetWindowList_Index",
+      "id": "CDesktopManager_GetWindowList_Index",
+      "kind": "field",
+      "type": "CWindowList*",
+      "cases": [
+        {
+          "offset": "53 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CDesktopManager::Initialize / CLivePreview::_FadeOutToGlass\n*((QWORD *)CDesktopManager::s_pDesktopManagerInstance + N) → CWindowList*"
+    },
+    {
+      "name": "CDesktopManager_GetWICFactory_Index",
+      "id": "CDesktopManager_GetWICFactory_Index",
+      "kind": "field",
+      "type": "IWICImagingFactory*",
+      "cases": [
+        {
+          "offset": "30 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CDesktopManager::Initialize\nWICCreateImagingFactory_Proxy(567, &this->wicFactory)"
+    },
+    {
+      "name": "CDesktopManager_GetIsHighContrastMode_BoolIndex",
+      "id": "CDesktopManager_GetIsHighContrastMode_BoolIndex",
+      "kind": "field",
+      "type": "bool",
+      "cases": [
+        {
+          "offset": "27",
+          "otherwise": true
+        }
+      ],
+      "notes": "CDesktopManager::InitializeHighContrast\nthis[26] = IsHighContrastMode"
+    },
+    {
+      "name": "CDesktopManager_HasMaximizedWindows_BoolIndex",
+      "id": "CDesktopManager_HasMaximizedWindows_BoolIndex",
+      "kind": "field",
+      "type": "bool",
+      "cases": [
+        {
+          "offset": "21",
+          "otherwise": true
+        }
+      ],
+      "notes": "CWindowList::CheckForMaximizedChange\ns_pDesktopManagerInstance[N] = hasMaximized"
+    },
+    {
+      "name": "CDesktopManager_GetDPIValue_Index",
+      "id": "CDesktopManager_GetDPIValue_Index",
+      "kind": "field",
+      "type": "double",
+      "cases": [
+        {
+          "offset": "52 * (LONGLONG)sizeof(double)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CDesktopManager::SetupDPIValues\n*((double *)this + N) = GetDpiForSystem() / 96.0"
+    },
+    {
+      "name": "CGraphicsDeviceManager_GetD2DDevice_Index",
+      "id": "CGraphicsDeviceManager_GetD2DDevice_Index",
+      "kind": "field",
+      "type": "ID2D1Device*",
+      "cases": [
+        {
+          "offset": "4 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CDesktopManager::EnsureDCompositionInteropDevice → D2D1CreateFactory → stores at this + N"
+    },
+    {
+      "name": "CCompositor_GetInteropCompositorDCompDevicePartner",
+      "id": "CCompositor_GetInteropCompositorDCompDevicePartner",
+      "kind": "field",
+      "type": "IDCompositionDesktopDevicePartner6*",
+      "cases": [
+        {
+          "offset": "4 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CDesktopManager::EnsureDCompositionInteropDevice/CCompositor::InitializeInteropCompositor\nxrefs to RoGetActivationFactory(\"Windows.UI.Composition.Compositor\")\nQueryInterface GUID_d14b6158_c3fa_4bce_9c1f_b61d8665eab0\nRetrieves IDCompositionDesktopDevicePartner from CCompositor's DComp device at index 4"
+    }
+  ],
+  "notes": [
+    "MILComp compositor projection inventory; ABI evidence remains independent from Legacy."
+  ]
+}

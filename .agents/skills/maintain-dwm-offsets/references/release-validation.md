@@ -2,7 +2,7 @@
 
 Use this gate before claiming support for a new layout interval or publishing a release. Exact OS build/revision, module PE/PDB identities, and observed compositor capabilities are authoritative; marketing labels are not.
 
-Static table lint, an x64 Release build, and an IDA semantic audit are prerequisites, not substitutes for a real-OS run. A virtual machine can pre-screen installation and failure paths but cannot satisfy GPU, DWM recovery, or multi-display coverage.
+Static schema lint, an x64 Release build, and an IDA semantic audit are prerequisites, not substitutes for a real-OS run. PE size and projected-wrapper machine code may be inspected while changing the projection mechanism, but they are diagnostics rather than fixed release gates. A virtual machine can pre-screen installation and failure paths but cannot satisfy GPU, DWM recovery, or multi-display coverage.
 
 ## Recovery prerequisites
 
@@ -34,7 +34,7 @@ Do not perform first injection through the machine's only remote connection or i
 | RV-09 | GPU residency | Interactive effects and normal desktop use remain stable for the declared test duration |
 | RV-10 | Unsupported or damaged input | Mismatched versions, symbols, or artifact pairs are rejected without injection or DWM failure |
 
-For a new right boundary, run the relevant scenarios on a supported version immediately before the boundary, the first available version at or after it, and the newest version included in the support claim. A screenshot of an idle desktop is not runtime coverage. `OpenGlassTest.exe` is an interactive GPU exercise, not an automated test.
+For a new right boundary, run the relevant scenarios on a supported version immediately before the boundary, the first available version at or after it, and the newest version included in the support claim. A screenshot of an idle desktop is not runtime coverage. `OpenGlassRenderTest.exe` is an interactive GPU exercise, not an automated test.
 
 ## Non-waivable failures
 

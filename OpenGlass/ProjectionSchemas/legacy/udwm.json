@@ -1,0 +1,3907 @@
+{
+  "schema_version": 2,
+  "module": "udwm",
+  "namespace": "OpenGlass::uDWM",
+  "tag": "ProjectionModuleTag",
+  "symbols": [
+    {
+      "name": "Symbol_CResource_Create",
+      "id": "CResource::Create",
+      "symbol_names": [
+        "public: static long __cdecl CResource::Create(enum DwmResourceType::Enum,struct IDwmChannel * __ptr64,class CResource * __ptr64 * __ptr64)"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": {
+        "build": 18362,
+        "revision": 0
+      },
+      "target": "&CResource::Create",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CSolidColorLegacyMilBrushProxy_Update",
+      "id": "CSolidColorLegacyMilBrushProxy::Update",
+      "symbol_names": [
+        "public: long __cdecl CSolidColorLegacyMilBrushProxy::Update(double,struct _D3DCOLORVALUE const & __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 18362,
+        "revision": 0
+      },
+      "max_exclusive": null,
+      "target": "&CSolidColorLegacyMilBrushProxy::Update",
+      "kind": "projected_function",
+      "fallback": "&Fallback_CSolidColorLegacyMilBrushProxy_Update"
+    },
+    {
+      "name": "Symbol_CImageLegacyMilBrushProxy_Update",
+      "id": "CImageLegacyMilBrushProxy::Update",
+      "symbol_names": [
+        "public: long __cdecl CImageLegacyMilBrushProxy::Update(double,struct MilRectF const & __ptr64,struct MilRectF const & __ptr64,class CDoubleResourceProxy const * __ptr64,enum MilBrushMappingMode::Enum,enum MilBrushMappingMode::Enum,class CRectResourceProxy const * __ptr64,class CRectResourceProxy const * __ptr64,enum MilStretch::Enum,enum MilTileMode::Enum,enum MilHorizontalAlignment::Enum,enum MilVerticalAlignment::Enum,class CBaseImageProxy const * __ptr64) __ptr64",
+        "public: long __cdecl CImageLegacyMilBrushProxy::Update(double,struct D2D_RECT_F const & __ptr64,struct D2D_RECT_F const & __ptr64,class CDoubleResourceProxy const * __ptr64,enum MilBrushMappingMode::Enum,enum MilBrushMappingMode::Enum,class CRectResourceProxy const * __ptr64,class CRectResourceProxy const * __ptr64,enum MilStretch::Enum,enum MilTileMode::Enum,enum MilHorizontalAlignment::Enum,enum MilVerticalAlignment::Enum,class CBaseImageProxy const * __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 19041,
+        "revision": 0
+      },
+      "max_exclusive": null,
+      "target": "&CImageLegacyMilBrushProxy::Update",
+      "kind": "projected_function",
+      "fallback": "&Fallback_CImageLegacyMilBrushProxy_Update",
+      "notes": "Before build 19041, CImageLegacyMilBrushProxy::Update takes resource handle IDs rather than resource-proxy pointers. Keep the public typed wrapper on the ABI-compatible CChannel::ImageLegacyMilBrushUpdate fallback for that range; the pointer-form uDWM symbol becomes active at build 19041."
+    },
+    {
+      "name": "Symbol_CVisual_UpdateOffset",
+      "id": "CVisual::UpdateOffset",
+      "symbol_names": [
+        "protected: virtual long __cdecl CVisual::UpdateOffset(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 22621,
+        "revision": 0
+      },
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "BYTE*",
+      "usage": "code_address"
+    },
+    {
+      "name": "Symbol_CVisual_SetSize_Pre26100",
+      "id": "CVisual::SetSize",
+      "symbol_names": [
+        "public: virtual long __cdecl CVisual::SetSize(struct tagSIZE const * __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": {
+        "build": 26100,
+        "revision": 0
+      },
+      "target": "&CVisual::SetSize",
+      "kind": "projected_function",
+      "type": "HRESULT (*)(CVisual*, const SIZE*)",
+      "abi_compatibility": "discard_return",
+      "notes": "The pre-26100 PDB ABI returns long, while every OpenGlass consumer intentionally discards that result. Keep this explicit compatibility variant separate from the void-returning 26100+ ABI."
+    },
+    {
+      "name": "Symbol_CVisual_SetSize",
+      "id": "CVisual::SetSize",
+      "symbol_names": [
+        "public: virtual void __cdecl CVisual::SetSize(struct tagSIZE const * __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 26100,
+        "revision": 0
+      },
+      "max_exclusive": null,
+      "target": "&CVisual::SetSize",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CVisual_SetInsetFromParent",
+      "id": "CVisual::SetInsetFromParent",
+      "symbol_names": [
+        "public: void __cdecl CVisual::SetInsetFromParent(struct _MARGINS const & __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CVisual::SetInsetFromParent",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CVisual_SetInsetFromParentLeft",
+      "id": "CVisual::SetInsetFromParentLeft",
+      "symbol_names": [
+        "public: void __cdecl CVisual::SetInsetFromParentLeft(int) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CVisual::SetInsetFromParentLeft",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CVisual_SetDirtyFlags",
+      "id": "CVisual::SetDirtyFlags",
+      "symbol_names": [
+        "public: virtual void __cdecl CVisual::SetDirtyFlags(unsigned long) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CVisual::SetDirtyFlags",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CVisual_RenderRecursive",
+      "id": "CVisual::RenderRecursive",
+      "symbol_names": [
+        "public: virtual long __cdecl CVisual::RenderRecursive(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CVisual::RenderRecursive",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CVisualProxy_SetSize",
+      "id": "CVisualProxy::SetSize",
+      "symbol_names": [
+        "public: long __cdecl CVisualProxy::SetSize(double,double) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 22621,
+        "revision": 0
+      },
+      "max_exclusive": null,
+      "target": "&CVisualProxy::SetSize",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_VisualCollection_Remove",
+      "id": "VisualCollection::Remove",
+      "symbol_names": [
+        "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&VisualCollection::Remove",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_VisualCollection_InsertRelative",
+      "id": "VisualCollection::InsertRelative",
+      "symbol_names": [
+        "public: long __cdecl VisualCollection::InsertRelative(class CVisual * __ptr64,class CVisual * __ptr64,bool,bool) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&VisualCollection::InsertRelative",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CText_ValidateResources",
+      "id": "CText::ValidateResources",
+      "symbol_names": [
+        "private: long __cdecl CText::ValidateResources(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": {
+        "build": 22621,
+        "revision": 0
+      },
+      "kind": "raw",
+      "type": "HRESULT (*)(CText*)"
+    },
+    {
+      "name": "Symbol_CText_CloneVisualTree",
+      "id": "CText::CloneVisualTree",
+      "symbol_names": [
+        "public: virtual long __cdecl CText::CloneVisualTree(class CVisual * __ptr64 * __ptr64,enum CloneOptions) __ptr64",
+        "public: virtual long __cdecl CText::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": {
+        "build": 19041,
+        "revision": 0
+      },
+      "kind": "raw",
+      "type": "HRESULT (*)(CText*, CText**, bool, bool, bool)"
+    },
+    {
+      "name": "Symbol_CText_InitializeVisualTreeClone",
+      "id": "CText::InitializeVisualTreeClone",
+      "symbol_names": [
+        "protected: long __cdecl CText::InitializeVisualTreeClone(class CText * __ptr64,enum CloneOptions) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 19041,
+        "revision": 0
+      },
+      "max_exclusive": {
+        "build": 22621,
+        "revision": 0
+      },
+      "kind": "raw",
+      "type": "HRESULT (*)(CText*, CText*, UINT)"
+    },
+    {
+      "name": "Symbol_CDWriteText_ValidateVisual",
+      "id": "CDWriteText::ValidateVisual",
+      "symbol_names": [
+        "public: virtual long __cdecl CDWriteText::ValidateVisual(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 22621,
+        "revision": 0
+      },
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "HRESULT (*)(CDWriteText*)"
+    },
+    {
+      "name": "Symbol_CDWriteText_InitializeVisualTreeClone",
+      "id": "CDWriteText::InitializeVisualTreeClone",
+      "symbol_names": [
+        "protected: long __cdecl CDWriteText::InitializeVisualTreeClone(class CDWriteText * __ptr64,enum CloneOptions) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 22621,
+        "revision": 0
+      },
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "HRESULT (*)(CDWriteText*, CDWriteText*, UINT)"
+    },
+    {
+      "name": "Symbol_CSpriteVisual_SetSize",
+      "id": "CSpriteVisual::SetSize",
+      "symbol_names": [
+        "public: virtual long __cdecl CSpriteVisual::SetSize(struct tagSIZE const * __ptr64) __ptr64",
+        "public: virtual void __cdecl CSpriteVisual::SetSize(struct tagSIZE const * __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 22621,
+        "revision": 0
+      },
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "BYTE*",
+      "usage": "code_address"
+    },
+    {
+      "name": "Symbol_CAtlasedRectsVisual_CloneVisualTree",
+      "id": "CAtlasedRectsVisual::CloneVisualTree",
+      "symbol_names": [
+        "public: virtual long __cdecl CAtlasedRectsVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,enum CloneOptions) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 19041,
+        "revision": 0
+      },
+      "max_exclusive": {
+        "build": 22621,
+        "revision": 0
+      },
+      "kind": "raw",
+      "type": "BYTE*",
+      "usage": "code_address"
+    },
+    {
+      "name": "Symbol_CAtlasedRectsVisual_InitializeVisualTreeClone",
+      "id": "CAtlasedRectsVisual::InitializeVisualTreeClone",
+      "symbol_names": [
+        "protected: long __cdecl CAtlasedRectsVisual::InitializeVisualTreeClone(class CAtlasedRectsVisual * __ptr64,enum CloneOptions) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 19041,
+        "revision": 0
+      },
+      "max_exclusive": {
+        "build": 22621,
+        "revision": 0
+      },
+      "target": "&CAtlasedRectsVisual::InitializeVisualTreeClone",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CTopLevelAtlasedRectsVisual_ShouldCloneAtlasImage_Pre_19041",
+      "id": "CTopLevelAtlasedRectsVisual::ShouldCloneAtlasImage",
+      "symbol_names": [
+        "protected: virtual bool __cdecl CTopLevelAtlasedRectsVisual::ShouldCloneAtlasImage(class CAtlasedImage const * __ptr64,bool,bool,bool) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": {
+        "build": 19041,
+        "revision": 0
+      },
+      "kind": "raw",
+      "type": "bool (*)(CTopLevelAtlasedRectsVisual*, const CAtlasedImage*, bool, bool, bool)"
+    },
+    {
+      "name": "Symbol_CTopLevelAtlasedRectsVisual_ShouldCloneAtlasImage_19041",
+      "id": "CTopLevelAtlasedRectsVisual::ShouldCloneAtlasImage",
+      "symbol_names": [
+        "protected: virtual bool __cdecl CTopLevelAtlasedRectsVisual::ShouldCloneAtlasImage(class CAtlasedImage const * __ptr64,enum CloneOptions) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 19041,
+        "revision": 0
+      },
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "bool (*)(CTopLevelAtlasedRectsVisual*, const CAtlasedImage*, UINT)"
+    },
+    {
+      "name": "Symbol_CButton_vftable",
+      "id": "CButton::`vftable'",
+      "symbol_names": [
+        "const CButton::`vftable'"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CButton::vftable",
+      "kind": "projected_variable"
+    },
+    {
+      "name": "Symbol_CButton_Create",
+      "id": "CButton::Create",
+      "symbol_names": [
+        "public: static long __cdecl CButton::Create(class CButton * __ptr64 * __ptr64)"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 19041,
+        "revision": 0
+      },
+      "max_exclusive": {
+        "build": 22621,
+        "revision": 0
+      },
+      "target": "&CButton::Create",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CButton_SetVisualStates_Win10",
+      "id": "CButton::SetVisualStates",
+      "symbol_names": [
+        "public: long __cdecl CButton::SetVisualStates(class CBitmapSourceArray const & __ptr64,class CBitmapSourceArray const & __ptr64,class CBitmapSource * __ptr64,float) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": {
+        "build": 22000,
+        "revision": 0
+      },
+      "target": "&CButton::SetVisualStates_Win10",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CButton_SetVisualStates_Win11",
+      "id": "CButton::SetVisualStates",
+      "symbol_names": [
+        "public: long __cdecl CButton::SetVisualStates(class CBitmapSourceArray const & __ptr64,class CBitmapSourceArray const & __ptr64,float) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 22000,
+        "revision": 0
+      },
+      "max_exclusive": {
+        "build": 22621,
+        "revision": 0
+      },
+      "target": "&CButton::SetVisualStates_Win11",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CButton_UpdateCrossfade",
+      "id": "CButton::UpdateCrossfade",
+      "symbol_names": [
+        "private: void __cdecl CButton::UpdateCrossfade(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "void (*)(CButton*)"
+    },
+    {
+      "name": "Symbol_CButton_DrawStateW",
+      "id": "CButton::DrawStateW",
+      "symbol_names": [
+        "private: void __cdecl CButton::DrawStateW(class CAtlasButton * __ptr64,enum CButton::ButtonStates) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 22000,
+        "revision": 0
+      },
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "void (*)(void*, void*, UINT)"
+    },
+    {
+      "name": "Symbol_CAtlasButton_AppendAtlas",
+      "id": "CAtlasButton::AppendAtlas",
+      "symbol_names": [
+        "protected: virtual long __cdecl CAtlasButton::AppendAtlas(struct AtlasedRects & __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 22000,
+        "revision": 0
+      },
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "HRESULT (*)(void*, void*)"
+    },
+    {
+      "name": "Symbol_CAtlasButton_AddApproximateAtlasSize",
+      "id": "CAtlasButton::AddApproximateAtlasSize",
+      "symbol_names": [
+        "protected: virtual void __cdecl CAtlasButton::AddApproximateAtlasSize(unsigned int * __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 22000,
+        "revision": 0
+      },
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "void (*)(void*, UINT*)"
+    },
+    {
+      "name": "Symbol_CAtlasedImage_AppendAtlasNineGrid",
+      "id": "CAtlasedImage::AppendAtlasNineGrid",
+      "symbol_names": [
+        "protected: virtual long __cdecl CAtlasedImage::AppendAtlasNineGrid(struct AtlasedRects & __ptr64,class CBitmapSource * __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 22000,
+        "revision": 0
+      },
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "HRESULT (*)(void*, void*, CBitmapSource*)"
+    },
+    {
+      "name": "Symbol_CAtlasedImage_AddNineGridAtlasSize",
+      "id": "CAtlasedImage::AddNineGridAtlasSize",
+      "symbol_names": [
+        "protected: virtual void __cdecl CAtlasedImage::AddNineGridAtlasSize(struct _MARGINS const & __ptr64,unsigned int * __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 22000,
+        "revision": 0
+      },
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "void (*)(void*, const MARGINS&, UINT*)"
+    },
+    {
+      "name": "Symbol_CAtlasedImage_SetDirtyFlags",
+      "id": "CAtlasedImage::SetDirtyFlags",
+      "symbol_names": [
+        "protected: void __cdecl CAtlasedImage::SetDirtyFlags(unsigned long,unsigned long) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 22000,
+        "revision": 0
+      },
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "void (*)(void*, UINT, UINT)"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_UpdateButtonVisuals",
+      "id": "CTopLevelWindow::UpdateButtonVisuals",
+      "symbol_names": [
+        "private: long __cdecl CTopLevelWindow::UpdateButtonVisuals(struct CTopLevelWindow::WindowFrame const * __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 22000,
+        "revision": 0
+      },
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "HRESULT (*)(void*, const void*)"
+    },
+    {
+      "name": "Symbol_CVisual_MoveToFront",
+      "id": "CVisual::MoveToFront",
+      "symbol_names": [
+        "public: long __cdecl CVisual::MoveToFront(bool) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 22000,
+        "revision": 0
+      },
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "HRESULT (*)(void*, int)"
+    },
+    {
+      "name": "Symbol_CButton_RedrawVisual",
+      "id": "CButton::RedrawVisual",
+      "symbol_names": [
+        "private: long __cdecl CButton::RedrawVisual(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 22000,
+        "revision": 0
+      },
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "HRESULT (*)(void*)"
+    },
+    {
+      "name": "Symbol_CAtlasedRectsVisual_RemoveAtlasImage",
+      "id": "CAtlasedRectsVisual::RemoveAtlasImage",
+      "symbol_names": [
+        "public: void __cdecl CAtlasedRectsVisual::RemoveAtlasImage(class CAtlasedImage * __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 22000,
+        "revision": 0
+      },
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "void (*)(void*, void*)"
+    },
+    {
+      "name": "Symbol_CAtlasedRectsVisual_AddAtlasImage",
+      "id": "CAtlasedRectsVisual::AddAtlasImage",
+      "symbol_names": [
+        "public: long __cdecl CAtlasedRectsVisual::AddAtlasImage(class CAtlasedImage * __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 26100,
+        "revision": 0
+      },
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "HRESULT (*)(void*, void*)"
+    },
+    {
+      "name": "Symbol_CAtlasedRectsVisual_InsertAtlasImageAtIndex",
+      "id": "CAtlasedRectsVisual::InsertAtlasImageAtIndex",
+      "symbol_names": [
+        "public: long __cdecl CAtlasedRectsVisual::InsertAtlasImageAtIndex(class CAtlasedImage * __ptr64,unsigned int) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 22000,
+        "revision": 0
+      },
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "HRESULT (*)(void*, void*, UINT)"
+    },
+    {
+      "name": "Symbol_CDrawGeometryInstruction_Create",
+      "id": "CDrawGeometryInstruction::Create",
+      "symbol_names": [
+        "public: static long __cdecl CDrawGeometryInstruction::Create(class CBaseLegacyMilBrushProxy * __ptr64,class CBaseGeometryProxy * __ptr64,class CDrawGeometryInstruction * __ptr64 * __ptr64)",
+        "public: static long __cdecl CDrawGeometryInstruction::Create(class CResource * __ptr64,class CResource * __ptr64,class CDrawGeometryInstruction * __ptr64 * __ptr64)"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CDrawGeometryInstruction::Create",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CRenderDataVisual_Create_Pre_W10_1903",
+      "id": "CRenderDataVisual::Create",
+      "symbol_names": [
+        "public: static long __cdecl CRenderDataVisual::Create(struct IDwmChannel * __ptr64,class CRenderDataVisual * __ptr64 * __ptr64)"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": {
+        "build": 18362,
+        "revision": 0
+      },
+      "target": "&CRenderDataVisual::Create_Pre_W10_1903",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CRenderDataVisual_Create_At_Least_W10_1903",
+      "id": "CRenderDataVisual::Create",
+      "symbol_names": [
+        "public: static long __cdecl CRenderDataVisual::Create(class CRenderDataVisual * __ptr64 * __ptr64)"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 18362,
+        "revision": 0
+      },
+      "max_exclusive": null,
+      "target": "&CRenderDataVisual::Create_At_Least_W10_1903",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CRenderDataVisual_AddInstruction",
+      "id": "CRenderDataVisual::AddInstruction",
+      "symbol_names": [
+        "public: long __cdecl CRenderDataVisual::AddInstruction(class CRenderDataInstruction * __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CRenderDataVisual::AddInstruction",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CRenderDataVisual_ClearInstructions",
+      "id": "CRenderDataVisual::ClearInstructions",
+      "symbol_names": [
+        "public: long __cdecl CRenderDataVisual::ClearInstructions(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CRenderDataVisual::ClearInstructions",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CRenderDataVisual_UpdateRenderData",
+      "id": "CRenderDataVisual::UpdateRenderData",
+      "symbol_names": [
+        "public: virtual long __cdecl CRenderDataVisual::UpdateRenderData(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CRenderDataVisual::UpdateRenderData",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CAccent_UpdateAccentPolicy",
+      "id": "CAccent::UpdateAccentPolicy",
+      "symbol_names": [
+        "public: long __cdecl CAccent::UpdateAccentPolicy(struct tagRECT const * __ptr64,struct ACCENT_POLICY const * __ptr64,class CBaseGeometryProxy * __ptr64) __ptr64",
+        "public: long __cdecl CAccent::UpdateAccentPolicy(struct tagRECT const * __ptr64,struct ACCENT_POLICY const * __ptr64,class CResource * __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "HRESULT (*)(CAccent*, LPCRECT, ACCENT_POLICY*, CBaseGeometryProxy*)"
+    },
+    {
+      "name": "Symbol_CAccent__UpdateSolidFill",
+      "id": "CAccent::_UpdateSolidFill",
+      "symbol_names": [
+        "protected: long __cdecl CAccent::_UpdateSolidFill(class CRenderDataVisual * __ptr64,unsigned long,class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const * __ptr64,float) __ptr64",
+        "protected: long __cdecl CAccent::_UpdateSolidFill(class CRenderDataVisual * __ptr64,unsigned long,class TMilRect_<float,struct D2D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const * __ptr64,float) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "HRESULT (*)(CAccent*, CRenderDataVisual*, UINT, const D2D1_RECT_F&, float)"
+    },
+    {
+      "name": "Symbol_CAccent_SetClipRegion",
+      "id": "CAccent::SetClipRegion",
+      "symbol_names": [
+        "public: void __cdecl CAccent::SetClipRegion(class CBaseGeometryProxy * __ptr64) __ptr64",
+        "public: void __cdecl CAccent::SetClipRegion(class CResource * __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "void (*)(CAccent*, CBaseGeometryProxy*)"
+    },
+    {
+      "name": "Symbol_CAccent__CAccent",
+      "id": "CAccent::~CAccent",
+      "symbol_names": [
+        "protected: virtual __cdecl CAccent::~CAccent(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "void (*)(CAccent*)"
+    },
+    {
+      "name": "Symbol_CWindowBorder_EnableBorder",
+      "id": "CWindowBorder::EnableBorder",
+      "symbol_names": [
+        "public: long __cdecl CWindowBorder::EnableBorder(bool) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 22000,
+        "revision": 0
+      },
+      "max_exclusive": null,
+      "target": "&CWindowBorder::EnableBorder",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_vftable",
+      "id": "CTopLevelWindow::`vftable'",
+      "symbol_names": [
+        "const CTopLevelWindow::`vftable'"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CTopLevelWindow::vftable",
+      "kind": "projected_variable"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_CloneVisualTreeForLivePreview_Win10",
+      "id": "CTopLevelWindow::CloneVisualTreeForLivePreview",
+      "symbol_names": [
+        "public: long __cdecl CTopLevelWindow::CloneVisualTreeForLivePreview(bool,bool,bool,class CTopLevelWindow * __ptr64 * __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": {
+        "build": 22621,
+        "revision": 0
+      },
+      "target": "&CTopLevelWindow::CloneVisualTreeForLivePreview_Win10",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_CloneVisualTreeForLivePreview_Win11",
+      "id": "CTopLevelWindow::CloneVisualTreeForLivePreview",
+      "symbol_names": [
+        "public: long __cdecl CTopLevelWindow::CloneVisualTreeForLivePreview(bool,class CTopLevelWindow * __ptr64 * __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 22621,
+        "revision": 0
+      },
+      "max_exclusive": null,
+      "target": "&CTopLevelWindow::CloneVisualTreeForLivePreview_Win11",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_GetActualWindowRect",
+      "id": "CTopLevelWindow::GetActualWindowRect",
+      "symbol_names": [
+        "public: struct tagRECT __cdecl CTopLevelWindow::GetActualWindowRect(bool,bool,bool)const __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CTopLevelWindow::GetActualWindowRect",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_TreatAsActiveWindow",
+      "id": "CTopLevelWindow::TreatAsActiveWindow",
+      "symbol_names": [
+        "private: bool __cdecl CTopLevelWindow::TreatAsActiveWindow(void) __ptr64",
+        "private: bool __cdecl CTopLevelWindow::TreatAsActiveWindow(void)const __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CTopLevelWindow::TreatAsActiveWindow",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_OnBlurBehindUpdated",
+      "id": "CTopLevelWindow::OnBlurBehindUpdated",
+      "symbol_names": [
+        "public: void __cdecl CTopLevelWindow::OnBlurBehindUpdated(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CTopLevelWindow::OnBlurBehindUpdated",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_OnAccentPolicyUpdated",
+      "id": "CTopLevelWindow::OnAccentPolicyUpdated",
+      "symbol_names": [
+        "public: void __cdecl CTopLevelWindow::OnAccentPolicyUpdated(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CTopLevelWindow::OnAccentPolicyUpdated",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_s_rgpwfWindowFrames",
+      "id": "CTopLevelWindow::s_rgpwfWindowFrames",
+      "symbol_names": [
+        "private: static class DynArray<struct CTopLevelWindow::WindowFrame * __ptr64,0> CTopLevelWindow::s_rgpwfWindowFrames"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CTopLevelWindow::s_rgpwfWindowFrames",
+      "kind": "projected_variable"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_UpdateNCAreaBackground",
+      "id": "CTopLevelWindow::UpdateNCAreaBackground",
+      "symbol_names": [
+        "private: long __cdecl CTopLevelWindow::UpdateNCAreaBackground(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "HRESULT (*)(CTopLevelWindow*)"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_UpdateNCAreaPositionsAndSizes",
+      "id": "CTopLevelWindow::UpdateNCAreaPositionsAndSizes",
+      "symbol_names": [
+        "private: long __cdecl CTopLevelWindow::UpdateNCAreaPositionsAndSizes(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "HRESULT (*)(CTopLevelWindow*)"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_UpdateClientBlur",
+      "id": "CTopLevelWindow::UpdateClientBlur",
+      "symbol_names": [
+        "private: long __cdecl CTopLevelWindow::UpdateClientBlur(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "HRESULT (*)(CTopLevelWindow*)"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_ValidateVisual",
+      "id": "CTopLevelWindow::ValidateVisual",
+      "symbol_names": [
+        "public: virtual long __cdecl CTopLevelWindow::ValidateVisual(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "HRESULT (*)(CTopLevelWindow*)"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_UpdateWindowVisuals",
+      "id": "CTopLevelWindow::UpdateWindowVisuals",
+      "symbol_names": [
+        "private: long __cdecl CTopLevelWindow::UpdateWindowVisuals(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 22000,
+        "revision": 0
+      },
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "BYTE*",
+      "usage": "code_address"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow__CTopLevelWindow",
+      "id": "CTopLevelWindow::~CTopLevelWindow",
+      "symbol_names": [
+        "protected: virtual __cdecl CTopLevelWindow::~CTopLevelWindow(void) __ptr64",
+        "private: virtual __cdecl CTopLevelWindow::~CTopLevelWindow(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "void (*)(CTopLevelWindow*)"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_IsShadowNCAreaPart",
+      "id": "CTopLevelWindow::IsShadowNCAreaPart",
+      "symbol_names": [
+        "private: static bool __cdecl CTopLevelWindow::IsShadowNCAreaPart(unsigned int)"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 26100,
+        "revision": 0
+      },
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "BYTE*",
+      "usage": "code_address"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_CreateBitmapFromAtlas",
+      "id": "CTopLevelWindow::CreateBitmapFromAtlas",
+      "symbol_names": [
+        "public: static long __cdecl CTopLevelWindow::CreateBitmapFromAtlas(void * __ptr64 const,int,struct _MARGINS * __ptr64,class CBitmapSource * __ptr64 * __ptr64)"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "HRESULT (WINAPI*)(HTHEME, int, MARGINS*, void**)"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_CreateGlyphsFromAtlas",
+      "id": "CTopLevelWindow::CreateGlyphsFromAtlas",
+      "symbol_names": [
+        "private: static long __cdecl CTopLevelWindow::CreateGlyphsFromAtlas(void * __ptr64 const)"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "HRESULT (WINAPI*)(HTHEME)"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_EnsureImages_Pre_18362",
+      "id": "CTopLevelWindow::EnsureImages",
+      "symbol_names": [
+        "public: static long __cdecl CTopLevelWindow::EnsureImages(struct IDwmChannel * __ptr64)"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": {
+        "build": 18362,
+        "revision": 0
+      },
+      "kind": "raw",
+      "type": "HRESULT (*)(IDwmChannel*)"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_EnsureImages_18362",
+      "id": "CTopLevelWindow::EnsureImages",
+      "symbol_names": [
+        "public: static long __cdecl CTopLevelWindow::EnsureImages(void)"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 18362,
+        "revision": 0
+      },
+      "max_exclusive": {
+        "build": 26100,
+        "revision": 0
+      },
+      "kind": "raw",
+      "type": "HRESULT (*)()"
+    },
+    {
+      "name": "Symbol_SetMargin",
+      "id": "SetMargin",
+      "symbol_names": [
+        "bool __cdecl SetMargin(struct _MARGINS * __ptr64,int,int,int,int,struct _MARGINS const * __ptr64)"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 22000,
+        "revision": 0
+      },
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "bool (WINAPI*)(MARGINS*, int, int, int, int, const MARGINS*)"
+    },
+    {
+      "name": "Symbol_CLivePreview__UpdateResources",
+      "id": "CLivePreview::_UpdateResources",
+      "symbol_names": [
+        "private: long __cdecl CLivePreview::_UpdateResources(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 22000,
+        "revision": 0
+      },
+      "max_exclusive": null,
+      "target": "&CLivePreview::_UpdateResources",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CLivePreview__FadeOutToGlass",
+      "id": "CLivePreview::_FadeOutToGlass",
+      "symbol_names": [
+        "private: long __cdecl CLivePreview::_FadeOutToGlass(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 22000,
+        "revision": 0
+      },
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "HRESULT (*)(CLivePreview*)"
+    },
+    {
+      "name": "Symbol_CLivePreview__UpdateInstructions",
+      "id": "CLivePreview::_UpdateInstructions",
+      "symbol_names": [
+        "private: long __cdecl CLivePreview::_UpdateInstructions(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": {
+        "build": 22000,
+        "revision": 0
+      },
+      "kind": "raw",
+      "type": "HRESULT (*)(CLivePreview*)"
+    },
+    {
+      "name": "Symbol_CLivePreview__UpdateResourcesForMonitorHelper",
+      "id": "CLivePreview::_UpdateResourcesForMonitorHelper",
+      "symbol_names": [
+        "private: long __cdecl CLivePreview::_UpdateResourcesForMonitorHelper(class CTopLevelWindow const * __ptr64,struct LivePreviewResource * __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 26100,
+        "revision": 0
+      },
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "HRESULT (*)(CLivePreview*, const CTopLevelWindow*, LivePreviewResource*)"
+    },
+    {
+      "name": "Symbol_CAnimatedGlassSheet_OnRectUpdated",
+      "id": "CAnimatedGlassSheet::OnRectUpdated",
+      "symbol_names": [
+        "private: void __cdecl CAnimatedGlassSheet::OnRectUpdated(struct tagRECT const * __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": {
+        "build": 22000,
+        "revision": 0
+      },
+      "kind": "raw",
+      "type": "void (*)(CAnimatedGlassSheet*, LPCRECT)"
+    },
+    {
+      "name": "Symbol_CAnimatedGlassSheet__CAnimatedGlassSheet",
+      "id": "CAnimatedGlassSheet::~CAnimatedGlassSheet",
+      "symbol_names": [
+        "public: virtual __cdecl CAnimatedGlassSheet::~CAnimatedGlassSheet(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": {
+        "build": 22000,
+        "revision": 0
+      },
+      "kind": "raw",
+      "type": "void (*)(CAnimatedGlassSheet*)"
+    },
+    {
+      "name": "Symbol_CGlassColorizationParameters_AdjustWindowColorization",
+      "id": "CGlassColorizationParameters::AdjustWindowColorization",
+      "symbol_names": [
+        "public: void __cdecl CGlassColorizationParameters::AdjustWindowColorization(union GpCC const * __ptr64,float,struct TMILFlagsEnum<enum ColorizationFlags::FlagsEnum>) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "void (*)(CGlassColorizationParameters*, const GpCC*, float, UINT)"
+    },
+    {
+      "name": "Symbol_CWindowList_GetWindowListForDesktop",
+      "id": "CWindowList::GetWindowListForDesktop",
+      "symbol_names": [
+        "public: struct _LIST_ENTRY * __ptr64 __cdecl CWindowList::GetWindowListForDesktop(unsigned __int64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CWindowList::GetWindowListForDesktop",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CDesktopManager_s_pDesktopManagerInstance",
+      "id": "CDesktopManager::s_pDesktopManagerInstance",
+      "symbol_names": [
+        "private: static class CDesktopManager * __ptr64 __ptr64 CDesktopManager::s_pDesktopManagerInstance"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CDesktopManager::s_pDesktopManagerInstance",
+      "kind": "projected_variable"
+    },
+    {
+      "name": "Symbol_CDesktopManager_s_csDwmInstance",
+      "id": "CDesktopManager::s_csDwmInstance",
+      "symbol_names": [
+        "public: static class CDwmCS CDesktopManager::s_csDwmInstance"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&CDesktopManager::s_csDwmInstance",
+      "kind": "projected_variable"
+    },
+    {
+      "name": "Symbol_CDesktopManager_IsHighContrastMode",
+      "id": "CDesktopManager::IsHighContrastMode",
+      "symbol_names": [
+        "public: static bool __cdecl CDesktopManager::IsHighContrastMode(void)"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 22000,
+        "revision": 0
+      },
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "BYTE*",
+      "usage": "code_address"
+    },
+    {
+      "name": "Symbol_CDesktopManager_ReleaseDXGIAdapter",
+      "id": "CDesktopManager::ReleaseDXGIAdapter",
+      "symbol_names": [
+        "private: long __cdecl CDesktopManager::ReleaseDXGIAdapter(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": {
+        "build": 20348,
+        "revision": 0
+      },
+      "kind": "raw",
+      "type": "HRESULT (*)(CDesktopManager*)"
+    },
+    {
+      "name": "Symbol_CGraphicsDeviceManager_ReleaseGraphicsDevice",
+      "id": "CGraphicsDeviceManager::ReleaseGraphicsDevice",
+      "symbol_names": [
+        "protected: long __cdecl CGraphicsDeviceManager::ReleaseGraphicsDevice(void) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 20348,
+        "revision": 0
+      },
+      "max_exclusive": null,
+      "kind": "raw",
+      "type": "HRESULT (*)(void*)"
+    },
+    {
+      "name": "Symbol_CCompositor_CreateSolidColorLegacyMilBrushProxy",
+      "id": "CCompositor::CreateProxy<CSolidColorLegacyMilBrushProxy>",
+      "symbol_names": [
+        "protected: long __cdecl CCompositor::CreateProxy<class CSolidColorLegacyMilBrushProxy>(class CSolidColorLegacyMilBrushProxy * __ptr64 * __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 18362,
+        "revision": 0
+      },
+      "max_exclusive": null,
+      "target": "&CCompositor::CreateSolidColorLegacyMilBrushProxy",
+      "kind": "projected_function",
+      "fallback": "&Fallback_CCompositor_CreateSolidColorLegacyMilBrushProxy"
+    },
+    {
+      "name": "Symbol_CCompositor_CreateImageLegacyMilBrushProxy",
+      "id": "CCompositor::CreateProxy<CImageLegacyMilBrushProxy>",
+      "symbol_names": [
+        "protected: long __cdecl CCompositor::CreateProxy<class CImageLegacyMilBrushProxy>(class CImageLegacyMilBrushProxy * __ptr64 * __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 18362,
+        "revision": 0
+      },
+      "max_exclusive": null,
+      "target": "&CCompositor::CreateImageLegacyMilBrushProxy",
+      "kind": "projected_function",
+      "fallback": "&Fallback_CCompositor_CreateImageLegacyMilBrushProxy"
+    },
+    {
+      "name": "Symbol_ResourceHelper_CreateGeometryFromHRGN",
+      "id": "ResourceHelper::CreateGeometryFromHRGN",
+      "symbol_names": [
+        "public: static long __cdecl ResourceHelper::CreateGeometryFromHRGN(struct HRGN__ * __ptr64,class CRgnGeometryProxy * __ptr64 * __ptr64)",
+        "public: static long __cdecl ResourceHelper::CreateGeometryFromHRGN(struct HRGN__ * __ptr64,class CResource * __ptr64 * __ptr64)"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&ResourceHelper::CreateGeometryFromHRGN",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_ResourceHelper_CreateCombinedGeometry",
+      "id": "ResourceHelper::CreateCombinedGeometry",
+      "symbol_names": [
+        "public: static long __cdecl ResourceHelper::CreateCombinedGeometry(class CBaseGeometryProxy const * __ptr64,class CBaseGeometryProxy const * __ptr64,enum MilCombineMode::Enum,class CCombinedGeometryProxy * __ptr64 * __ptr64)",
+        "public: static long __cdecl ResourceHelper::CreateCombinedGeometry(class CResource const * __ptr64,class CResource const * __ptr64,enum MilCombineMode::Enum,class CResource * __ptr64 * __ptr64)"
+      ],
+      "requirement": "required",
+      "min_inclusive": null,
+      "max_exclusive": null,
+      "target": "&ResourceHelper::CreateCombinedGeometry",
+      "kind": "projected_function"
+    }
+  ],
+  "layouts": [
+    {
+      "name": "CBaseObject_ReferenceCount",
+      "id": "CBaseObject.ReferenceCount",
+      "kind": "field",
+      "type": "DWORD",
+      "cases": [
+        {
+          "offset": "2 * (LONGLONG)sizeof(DWORD)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CBaseObject::AddRef and Release update the interlocked reference count stored immediately after the vtable pointer."
+    },
+    {
+      "name": "CResourceProxy_Channel",
+      "id": "CResourceProxy.Channel",
+      "kind": "field",
+      "type": "IDwmChannel*",
+      "cases": [
+        {
+          "offset": "2 * (LONGLONG)sizeof(PVOID)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CResourceProxy channel pointer consumed by legacy MIL brush fallbacks."
+    },
+    {
+      "name": "CResourceProxy_HandleId",
+      "id": "CResourceProxy.HandleId",
+      "kind": "field",
+      "type": "UINT",
+      "cases": [
+        {
+          "offset": "3 * (LONGLONG)sizeof(PVOID)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CResourceProxy channel resource handle consumed by legacy MIL brush fallbacks."
+    },
+    {
+      "name": "CResource_Proxy",
+      "id": "CResource.Proxy",
+      "kind": "field",
+      "type": "CResourceProxy*",
+      "cases": [
+        {
+          "offset": "0",
+          "until": {
+            "build": "os::build_w10_1903",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "2 * (LONGLONG)sizeof(PVOID)",
+          "otherwise": true
+        }
+      ],
+      "notes": "Before build 18362 the CResource object itself exposes the proxy layout; later builds store a CResourceProxy pointer after the base object state."
+    },
+    {
+      "name": "CGlassColorizationResources_Color",
+      "id": "CGlassColorizationResources.Color",
+      "kind": "field",
+      "type": "D2D1_COLOR_F",
+      "cases": [
+        {
+          "offset": "sizeof(float)",
+          "otherwise": true
+        }
+      ],
+      "notes": "Color consumed together with Balance by CGlassColorizationResources::getArgbcolor."
+    },
+    {
+      "name": "CGlassColorizationResources_Balance",
+      "id": "CGlassColorizationResources.Balance",
+      "kind": "field",
+      "type": "float",
+      "cases": [
+        {
+          "offset": "8 * (LONGLONG)sizeof(float)",
+          "otherwise": true
+        }
+      ],
+      "notes": "Balance consumed together with Color by CGlassColorizationResources::getArgbcolor."
+    },
+    {
+      "name": "CVisual_IsRTLMirrored_ByteOffset",
+      "id": "CVisual_IsRTLMirrored_ByteOffset",
+      "kind": "field",
+      "type": "BYTE",
+      "cases": [
+        {
+          "offset": "84",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "92",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "36",
+          "otherwise": true
+        }
+      ],
+      "notes": "CVisual::SetRTLMirror"
+    },
+    {
+      "name": "CVisual_GetScale_MilSizeD",
+      "id": "CVisual_GetScale_MilSizeD",
+      "kind": "field",
+      "type": "MilSizeD",
+      "cases": [
+        {
+          "offset": "168",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "176",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        }
+      ],
+      "notes": "CVisual::SetScale"
+    },
+    {
+      "name": "CVisual_GetScale_D2D1_SIZE_F",
+      "id": "CVisual_GetScale_D2D1_SIZE_F",
+      "kind": "field",
+      "type": "D2D1_SIZE_F",
+      "cases": [
+        {
+          "offset": "112",
+          "otherwise": true
+        }
+      ],
+      "notes": "CVisual::SetScale"
+    },
+    {
+      "name": "CVisual_GetSize",
+      "id": "CVisual_GetSize",
+      "kind": "field",
+      "type": "SIZE",
+      "cases": [
+        {
+          "offset": "15 * (LONGLONG)sizeof(SIZE)",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "16 * (LONGLONG)sizeof(SIZE)",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "9 * (LONGLONG)sizeof(SIZE)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CVisual::SetSize"
+    },
+    {
+      "name": "CVisual_GetOffset",
+      "id": "CVisual_GetOffset",
+      "kind": "field",
+      "type": "POINT",
+      "cases": [
+        {
+          "offset": "14 * (LONGLONG)sizeof(POINT)",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "15 * (LONGLONG)sizeof(POINT)",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "8 * (LONGLONG)sizeof(POINT)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CVisual::SetOffset"
+    },
+    {
+      "name": "CVisual_SetExcludeSubtree_ByteOffset",
+      "id": "CVisual_SetExcludeSubtree_ByteOffset",
+      "kind": "field",
+      "type": "BYTE",
+      "cases": [
+        {
+          "offset": "84",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "92",
+          "otherwise": true
+        }
+      ],
+      "notes": "CVisual::InitializeVisualTreeClone\nif ( (this[x] & 8) == 0 )"
+    },
+    {
+      "name": "CVisual_GetVisualCollection",
+      "id": "CVisual_GetVisualCollection",
+      "kind": "field",
+      "type": "VisualCollection",
+      "cases": [
+        {
+          "offset": "32",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "144",
+          "otherwise": true
+        }
+      ],
+      "notes": "CVisual_GetVisualCollection\nPre-24H2: constructor assigns &VisualCollection::vftable → xrefs to find\noffset 24H2+: xref to VisualCollection::VisualCollection, find\nCContainerVisual::CContainerVisual:\n  VisualCollection::VisualCollection((VisualCollection *)(this + 18));"
+    },
+    {
+      "name": "CVisual_GetVisualProxy",
+      "id": "CVisual_GetVisualProxy",
+      "kind": "field",
+      "type": "CVisualProxy*",
+      "cases": [
+        {
+          "offset": "2 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CVisual::ConnectToParent\nxref to CVisualProxy::InsertChildAt"
+    },
+    {
+      "name": "CVisual_GetTransformParent",
+      "id": "CVisual_GetTransformParent",
+      "kind": "vtable_slot",
+      "type": "CVisual* (*)(const CVisual*)",
+      "cases": [
+        {
+          "offset": "10 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_22h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "11 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "8 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "xrefs to CVisual::`vftable'"
+    },
+    {
+      "name": "CVisual_GetDirtyFlags",
+      "id": "CVisual_GetDirtyFlags",
+      "kind": "field",
+      "type": "DWORD",
+      "cases": [
+        {
+          "offset": "20 * sizeof(DWORD)",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "22 * sizeof(DWORD)",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "8 * sizeof(DWORD)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CVisual::SetDirtyFlags"
+    },
+    {
+      "name": "CVisual__ValidateVisual",
+      "id": "CVisual__ValidateVisual",
+      "kind": "vtable_slot",
+      "type": "HRESULT (*)(CVisual*)",
+      "cases": [
+        {
+          "offset": "6 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "4 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "xrefs to CVisual::`vftable'"
+    },
+    {
+      "name": "CRenderDataVisual_GetInstructions",
+      "id": "CRenderDataVisual_GetInstructions",
+      "kind": "field",
+      "type": "DynArray<CRenderDataInstruction*>",
+      "cases": [
+        {
+          "offset": "248",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "256",
+          "until": {
+            "build": "os::build_w11_23h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "256",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "208",
+          "otherwise": true
+        }
+      ],
+      "notes": "CRenderDataVisual::AddInstruction\nCRenderDataVisual::ClearInstructions\nxrefs to DynArrayImpl<0>::Grow\nWARNING: Look for DynArray base in AddInstruction/ClearInstructions, NOT\nWriteInstruction (iterates the array)"
+    },
+    {
+      "name": "CDrawGeometryInstruction_GetBrush",
+      "id": "CDrawGeometryInstruction_GetBrush",
+      "kind": "field",
+      "type": "CBaseLegacyMilBrushProxy*",
+      "cases": [
+        {
+          "offset": "2 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CDrawGeometryInstruction::Create\nCDrawGeometryInstruction::WriteInstruction"
+    },
+    {
+      "name": "CDrawGeometryInstruction_GetGeometry",
+      "id": "CDrawGeometryInstruction_GetGeometry",
+      "kind": "field",
+      "type": "CBaseGeometryProxy*",
+      "cases": [
+        {
+          "offset": "3 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ]
+    },
+    {
+      "name": "CText_RTL_FlagByteOffset",
+      "id": "CText_RTL_FlagByteOffset",
+      "kind": "field",
+      "type": "BYTE",
+      "cases": [
+        {
+          "offset": "280",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "288",
+          "otherwise": true
+        }
+      ],
+      "notes": "CText::SetRTLReading"
+    },
+    {
+      "name": "IText_GetDWriteText_NegativeOffset",
+      "id": "IText_GetDWriteText_NegativeOffset",
+      "kind": "field",
+      "type": "CDWriteText",
+      "cases": [
+        {
+          "offset": "-272",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "-168",
+          "otherwise": true
+        }
+      ],
+      "notes": "xrefs to CDWriteText::`vftable'{for `IText'} → find CDWriteText constructor\nConstructor reveals the IText vtable subobject offset within CDWriteText.\nNegative offset = -(subobject offset) to go from IText* back to CDWriteText*."
+    },
+    {
+      "name": "IText_RTL_Index",
+      "id": "IText_RTL_Index",
+      "kind": "field",
+      "type": "bool",
+      "cases": [
+        {
+          "offset": "256",
+          "otherwise": true
+        }
+      ],
+      "notes": "xrefs to CDWriteText::`vftable'{for `IText'} → decompile SetRTLReading on\nIText vtable Look for byte bit-test and conditional branch on the memory\noperand"
+    },
+    {
+      "name": "IText_Reverse_Index",
+      "id": "IText_Reverse_Index",
+      "kind": "field",
+      "type": "bool",
+      "cases": [
+        {
+          "offset": "257",
+          "otherwise": true
+        }
+      ],
+      "notes": "xrefs to CDWriteText::`vftable'{for `IText'} → decompile SetReverseAlignment\non IText vtable Same pattern: byte bit-test at an adjacent absolute offset"
+    },
+    {
+      "name": "CDWriteText_GetTextInterface",
+      "id": "CDWriteText_GetTextInterface",
+      "kind": "field",
+      "type": "IText",
+      "cases": [
+        {
+          "offset": "272",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "168",
+          "otherwise": true
+        }
+      ],
+      "notes": "CDWriteText::CDWriteText\nxrefs to CDWriteText::`vftable'{for `IText'}"
+    },
+    {
+      "name": "CBitmapSource_GetNineGridMargins",
+      "id": "CBitmapSource_GetNineGridMargins",
+      "kind": "field",
+      "type": "MARGINS",
+      "cases": [
+        {
+          "offset": "0x30",
+          "otherwise": true
+        }
+      ],
+      "notes": "CBitmapSource returned by CTopLevelWindow::CreateBitmapFromAtlas. ButtonGlowHandler stores the returned nine-grid margins here and later passes them to CAtlasedImage::AddNineGridAtlasSize. Audit status: inherited from the existing consumer; independent semantic confirmation remains required."
+    },
+    {
+      "name": "CAtlasedRectsVisual_GetAtlasImageCount",
+      "id": "CAtlasedRectsVisual_GetAtlasImageCount",
+      "kind": "field",
+      "type": "DWORD",
+      "cases": [
+        {
+          "offset": "272",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        }
+      ],
+      "notes": "ButtonGlowHandler::MoveAtlasImageToEnd passes this count to CAtlasedRectsVisual::InsertAtlasImageAtIndex after removing an image. The consumer is restricted to pre-24H2 builds. Audit status: inherited from the existing consumer; independent semantic confirmation remains required."
+    },
+    {
+      "name": "CAtlasedImage_GetParent",
+      "id": "CAtlasedImage_GetParent",
+      "kind": "field",
+      "type": "CAtlasedRectsVisual*",
+      "cases": [
+        {
+          "offset": "80",
+          "otherwise": true
+        }
+      ],
+      "notes": "ButtonGlowHandler::CButton_RedrawVisual_Hook uses the owning CAtlasedRectsVisual to restore atlas-image z-order. Audit status: inherited from the existing consumer; independent semantic confirmation remains required."
+    },
+    {
+      "name": "CAtlasedImage_GetSize",
+      "id": "CAtlasedImage_GetSize",
+      "kind": "field",
+      "type": "DWORD",
+      "cases": [
+        {
+          "offset": "24",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "195"
+          }
+        }
+      ],
+      "notes": "CTopLevelWindow::UpdateNCAreaBackground on build 22000.194 dereferences this size while processing the three NCArea atlas-image pointers. The descriptor exists only for the exact workaround range; later builds are unsupported. Audit status: inherited from the existing workaround; independent semantic confirmation remains required."
+    },
+    {
+      "name": "CAtlasedImage_GetPartId",
+      "id": "CAtlasedImage_GetPartId",
+      "kind": "field",
+      "type": "DWORD",
+      "cases": [
+        {
+          "offset": "33 * sizeof(DWORD)",
+          "until": {
+            "build": "os::build_w10_1903",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "30 * sizeof(DWORD)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CTopLevelAtlasedRectsVisual::ShouldCloneAtlasImage\nCTopLevelAtlasedRectsVisual::ShouldDrawAtlasImage\nWARNING: The PartId range check is (value - 9) > 8. Use ShouldDrawAtlasImage\nor ShouldCloneAtlasImage, NOT CAtlasedImage::SetDirtyFlags (different DWORD)."
+    },
+    {
+      "name": "CButton_GetGlyphOpacity",
+      "id": "CButton_GetGlyphOpacity",
+      "kind": "field",
+      "type": "float",
+      "cases": [
+        {
+          "offset": "101 * sizeof(DWORD)",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "89 * sizeof(DWORD)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CButton::SetVisualStates\nWARNING: Use SetVisualStates (base/default glyph opacity), NOT\nUpdateCurrentGlyphOpacity (runtime/current opacity, different DWORD offset)."
+    },
+    {
+      "name": "CButton_GetButtonState",
+      "id": "CButton_GetButtonState",
+      "kind": "field",
+      "type": "BYTE",
+      "cases": [
+        {
+          "offset": "280",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "288",
+          "otherwise": true
+        }
+      ],
+      "notes": "CButton::RedrawVisual\nCButton::DrawStateW\nthis[x] & y"
+    },
+    {
+      "name": "CButton_GetTimeline",
+      "id": "CButton_GetTimeline",
+      "kind": "field",
+      "type": "CTimeline*",
+      "cases": [
+        {
+          "offset": "49 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CButton::RedrawVisual\nxrefs to CButton::ActivateTimeline"
+    },
+    {
+      "name": "CButton_GetGlyphBitmapArray",
+      "id": "CButton_GetGlyphBitmapArray",
+      "kind": "field",
+      "type": "CBitmapSourceArray",
+      "cases": [
+        {
+          "offset": "304",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "312",
+          "otherwise": true
+        }
+      ],
+      "notes": "CButton::SetVisualStates"
+    },
+    {
+      "name": "CButton_GetButtonBitmapArray",
+      "id": "CButton_GetButtonBitmapArray",
+      "kind": "field",
+      "type": "CBitmapSourceArray",
+      "cases": [
+        {
+          "offset": "336",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "344",
+          "otherwise": true
+        }
+      ],
+      "notes": "CButton::SetVisualStates"
+    },
+    {
+      "name": "CButton_GetVisualState",
+      "id": "CButton_GetVisualState",
+      "kind": "field",
+      "type": "DWORD",
+      "cases": [
+        {
+          "offset": "376",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "328",
+          "otherwise": true
+        }
+      ],
+      "notes": "CButton glow — see PR #287\nCButton::DrawStateW — visual state flags for hover/press detection"
+    },
+    {
+      "name": "CButton_GetFirstAtlasImage",
+      "id": "CButton_GetFirstAtlasImage",
+      "kind": "field",
+      "type": "void*",
+      "cases": [
+        {
+          "offset": "296",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "248",
+          "otherwise": true
+        }
+      ],
+      "notes": "CButton glow — see PR #287\nCButton::AppendAtlas — first atlas image (glow nine-grid)"
+    },
+    {
+      "name": "CButton_GetSecondAtlasImage",
+      "id": "CButton_GetSecondAtlasImage",
+      "kind": "field",
+      "type": "void*",
+      "cases": [
+        {
+          "offset": "304",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "256",
+          "otherwise": true
+        }
+      ],
+      "notes": "CButton glow — see PR #287\nCButton::AppendAtlas — second atlas image"
+    },
+    {
+      "name": "CAccent_GetAccentPolicy",
+      "id": "CAccent_GetAccentPolicy",
+      "kind": "field",
+      "type": "ACCENT_POLICY",
+      "cases": [
+        {
+          "offset": "280",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "288",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "240",
+          "otherwise": true
+        }
+      ],
+      "notes": "CAccent::UpdateAccentPolicy"
+    },
+    {
+      "name": "CWindowData_GetHwnd",
+      "id": "CWindowData_GetHwnd",
+      "kind": "field",
+      "type": "HWND",
+      "cases": [
+        {
+          "offset": "5 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CWindowData::IsGhostWindow\nxrefs to GetPropW — first parameter is the HWND, trace back to the\nCWindowData offset"
+    },
+    {
+      "name": "CWindowData_GetWindow_Index",
+      "id": "CWindowData_GetWindow_Index",
+      "kind": "field",
+      "type": "CTopLevelWindow*",
+      "cases": [
+        {
+          "offset": "49 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w10_1903",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "50 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w10_2004",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "48 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "55 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CWindowList::EnsureTopLevelWindow"
+    },
+    {
+      "name": "CWindowData_GetAccentPolicy",
+      "id": "CWindowData_GetAccentPolicy",
+      "kind": "field",
+      "type": "ACCENT_POLICY",
+      "cases": [
+        {
+          "offset": "152",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "168",
+          "otherwise": true
+        }
+      ],
+      "notes": "CTopLevelWindow::UpdateAccent"
+    },
+    {
+      "name": "CWindowData_GetSystemBackdropType_Index",
+      "id": "CWindowData_GetSystemBackdropType_Index",
+      "kind": "field",
+      "type": "DWM_SYSTEMBACKDROP_TYPE",
+      "cases": [
+        {
+          "offset": "51 * sizeof(DWORD)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CWindowList::SetSystemBackdropType"
+    },
+    {
+      "name": "CWindowData_GetWindowDPI",
+      "id": "CWindowData_GetWindowDPI",
+      "kind": "field",
+      "type": "UINT",
+      "cases": [
+        {
+          "offset": "324",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "348",
+          "until": {
+            "build": "os::build_w11_22h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "87 * sizeof(DWORD)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CTopLevelWindow::CalculateOutsideMargins\nxrefs to GetSystemMetricsForDpi"
+    },
+    {
+      "name": "CWindowData_GetNonClientAttribute",
+      "id": "CWindowData_GetNonClientAttribute",
+      "kind": "field",
+      "type": "BYTE",
+      "cases": [
+        {
+          "offset": "596",
+          "until": {
+            "build": "os::build_w10_1903",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "604",
+          "until": {
+            "build": "os::build_w10_2004",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "608",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "664",
+          "until": {
+            "build": "os::build_w11_22h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "672",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "os::revision_24h2_kb5067036"
+          }
+        },
+        {
+          "offset": "736",
+          "otherwise": true
+        }
+      ],
+      "notes": "CWindowList::BlurBehindChange\ndata[x] & y"
+    },
+    {
+      "name": "CWindowData_GetClientBlurAttribute",
+      "id": "CWindowData_GetClientBlurAttribute",
+      "kind": "field",
+      "type": "BYTE",
+      "cases": [
+        {
+          "offset": "597",
+          "until": {
+            "build": "os::build_w10_1903",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "605",
+          "until": {
+            "build": "os::build_w10_2004",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "609",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "665",
+          "until": {
+            "build": "os::build_w11_22h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "673",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "os::revision_24h2_kb5067036"
+          }
+        },
+        {
+          "offset": "737",
+          "otherwise": true
+        }
+      ],
+      "notes": "CWindowList::ForceIconicRepresentationChange\nCWindowList::AlphaChange\ndata[x] & y"
+    },
+    {
+      "name": "CWindowData_GetWindowRect",
+      "id": "CWindowData_GetWindowRect",
+      "kind": "field",
+      "type": "RECT",
+      "cases": [
+        {
+          "offset": "48",
+          "otherwise": true
+        }
+      ],
+      "notes": "CTopLevelWindow::GetActualWindowRect\nxrefs to OffsetRect"
+    },
+    {
+      "name": "CWindowData_GetClientMargins",
+      "id": "CWindowData_GetClientMargins",
+      "kind": "field",
+      "type": "MARGINS",
+      "cases": [
+        {
+          "offset": "64",
+          "otherwise": true
+        }
+      ],
+      "notes": "CTopLevelWindow::CalculateOutsideMargins\nif (data[x1] >= y1 && datap[x2] >= y2 && data[x3] >= y3 && data[x4] >= y4)"
+    },
+    {
+      "name": "CWindowData_GetExtendedFrameMargins",
+      "id": "CWindowData_GetExtendedFrameMargins",
+      "kind": "field",
+      "type": "MARGINS",
+      "cases": [
+        {
+          "offset": "80",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "96",
+          "otherwise": true
+        }
+      ],
+      "notes": "CTopLevelWindow::IsSheetOfGlass"
+    },
+    {
+      "name": "CLivePreview_GetThumbnailVisual",
+      "id": "CLivePreview_GetThumbnailVisual",
+      "kind": "field",
+      "type": "CRenderDataVisual*",
+      "cases": [
+        {
+          "offset": "64 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w10_2004",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "62 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "63 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_22h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "59 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "53 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CLivePreview\nCLivePreview::_FadeOutToGlass\nxrefs to VisualCollection::InsertRelative\nif ( *(DWORD *)this[x] + y) )\n    goto z;"
+    },
+    {
+      "name": "CLivePreview_GetGlassVisual",
+      "id": "CLivePreview_GetGlassVisual",
+      "kind": "field",
+      "type": "CRenderDataVisual*",
+      "cases": [
+        {
+          "offset": "66 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w10_2004",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "64 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "65 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_22h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "61 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "55 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CLivePreview::_UpdateInstructions\nxrefs to CRenderDataVisual::ClearInstructions"
+    },
+    {
+      "name": "CLivePreview_GetLivePreviewResourceArray",
+      "id": "CLivePreview_GetLivePreviewResourceArray",
+      "kind": "field",
+      "type": "DynArray<LivePreviewResource>",
+      "cases": [
+        {
+          "offset": "368",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "376",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "328",
+          "otherwise": true
+        }
+      ],
+      "notes": "CLivePreview::s_UpdateResourcesForMonitor\nxrefs to CLivePreview::s_UpdateResourcesForMonitor"
+    },
+    {
+      "name": "CLivePreview_GetLivePreviewVisualArray",
+      "id": "CLivePreview_GetLivePreviewVisualArray",
+      "kind": "field",
+      "type": "DynArray<LivePreviewVisual>",
+      "cases": [
+        {
+          "offset": "304",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "312",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "264",
+          "otherwise": true
+        }
+      ],
+      "notes": "CLivePreview::OnWindowShowHide\nxrefs to DynArray<LivePreviewVisual,0>::InsertAt"
+    },
+    {
+      "name": "CTopLevelWindow_WindowFrame_GetCornerRadius",
+      "id": "CTopLevelWindow_WindowFrame_GetCornerRadius",
+      "kind": "field",
+      "type": "UINT32",
+      "cases": [
+        {
+          "offset": "471 * sizeof(UINT32)",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "466 * sizeof(UINT32)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CTopLevelWindow::EnsureImages\ni = 6\nwhile ((--i) > 0)\n{\n    CTopLevelWindow::s_rgpwfWindowFrames[y][x] = 0\n}"
+    },
+    {
+      "name": "CTopLevelWindow_WindowFrame_GetCloseButtonGlowImage",
+      "id": "CTopLevelWindow_WindowFrame_GetCloseButtonGlowImage",
+      "kind": "field",
+      "type": "CBitmapSource*",
+      "cases": [
+        {
+          "offset": "0xC8",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        }
+      ],
+      "notes": "CTopLevelWindow::UpdateButtonVisuals passes this WindowFrame image to CButton::SetVisualStates for the close button on pre-Windows 11 builds. Audit status: inherited from ButtonGlowHandler's existing pre-21H2 path; independent semantic confirmation remains required."
+    },
+    {
+      "name": "CTopLevelWindow_WindowFrame_GetMinMaxButtonGlowImage",
+      "id": "CTopLevelWindow_WindowFrame_GetMinMaxButtonGlowImage",
+      "kind": "field",
+      "type": "CBitmapSource*",
+      "cases": [
+        {
+          "offset": "0xD0",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        }
+      ],
+      "notes": "CTopLevelWindow::UpdateButtonVisuals passes this WindowFrame image to CButton::SetVisualStates for minimize/maximize buttons on pre-Windows 11 builds. Audit status: inherited from ButtonGlowHandler's existing pre-21H2 path; independent semantic confirmation remains required."
+    },
+    {
+      "name": "CTopLevelWindow_GetNCAreaAtlasImage1",
+      "id": "CTopLevelWindow_GetNCAreaAtlasImage1",
+      "kind": "field",
+      "type": "CAtlasedImage const*",
+      "cases": [
+        {
+          "offset": "43 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "195"
+          }
+        }
+      ],
+      "notes": "First CAtlasedImage pointer read by CTopLevelWindow::UpdateNCAreaBackground on build 22000.194. GlassFrameDemodernizer temporarily supplies a zero-size sentinel when the pointer is null. The descriptor exists only for the exact workaround range."
+    },
+    {
+      "name": "CTopLevelWindow_GetNCAreaAtlasImage2",
+      "id": "CTopLevelWindow_GetNCAreaAtlasImage2",
+      "kind": "field",
+      "type": "CAtlasedImage const*",
+      "cases": [
+        {
+          "offset": "44 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "195"
+          }
+        }
+      ],
+      "notes": "Second CAtlasedImage pointer read by CTopLevelWindow::UpdateNCAreaBackground on build 22000.194. GlassFrameDemodernizer temporarily supplies a zero-size sentinel when the pointer is null. The descriptor exists only for the exact workaround range."
+    },
+    {
+      "name": "CTopLevelWindow_GetNCAreaAtlasImage3",
+      "id": "CTopLevelWindow_GetNCAreaAtlasImage3",
+      "kind": "field",
+      "type": "CAtlasedImage const*",
+      "cases": [
+        {
+          "offset": "46 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "195"
+          }
+        }
+      ],
+      "notes": "Third CAtlasedImage pointer read by CTopLevelWindow::UpdateNCAreaBackground on build 22000.194. GlassFrameDemodernizer temporarily supplies a zero-size sentinel when the pointer is null. The descriptor exists only for the exact workaround range."
+    },
+    {
+      "name": "CTopLevelWindow_GetData_Index",
+      "id": "CTopLevelWindow_GetData_Index",
+      "kind": "field",
+      "type": "CWindowData*",
+      "cases": [
+        {
+          "offset": "90 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w10_2004",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "91 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_server_2022",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "92 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "94 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "89 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CWindowList::EnsureTopLevelWindow"
+    },
+    {
+      "name": "CTopLevelWindow_GetTextVisual_Index",
+      "id": "CTopLevelWindow_GetTextVisual_Index",
+      "kind": "field",
+      "type": "CText*",
+      "cases": [
+        {
+          "offset": "64 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w10_2004",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "65 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "67 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_22h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "70 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "65 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "xrefs to CText::Create"
+    },
+    {
+      "name": "CTopLevelWindow_GetIconVisual_Index",
+      "id": "CTopLevelWindow_GetIconVisual_Index",
+      "kind": "field",
+      "type": "CImage*",
+      "cases": [
+        {
+          "offset": "65 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w10_2004",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "66 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "68 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_22h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "72 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_23h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "67 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CTopLevelWindow::UpdateIcon\n(CImage *)this[x];"
+    },
+    {
+      "name": "CTopLevelWindow_GetDWriteTextVisual_Index",
+      "id": "CTopLevelWindow_GetDWriteTextVisual_Index",
+      "kind": "field",
+      "type": "CDWriteText*",
+      "cases": [
+        {
+          "offset": "70 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "65 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "xrefs to CDWriteText::Create"
+    },
+    {
+      "name": "CTopLevelWindow_GetAccent_Index",
+      "id": "CTopLevelWindow_GetAccent_Index",
+      "kind": "field",
+      "type": "CAccent*",
+      "cases": [
+        {
+          "offset": "33 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w10_2004",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "34 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "35 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_22h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "37 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "32 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CTopLevelWindow::UpdateAccent\nxrefs to CAccent::Create"
+    },
+    {
+      "name": "CTopLevelWindow_GetLegacyVisual_Index",
+      "id": "CTopLevelWindow_GetLegacyVisual_Index",
+      "kind": "field",
+      "type": "CCanvasVisual*",
+      "cases": [
+        {
+          "offset": "35 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w10_2004",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "36 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "37 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_22h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "39 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "34 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CTopLevelWindow::UpdateNCAreaBackground\nxrefs to CLegacyNonClientBackground::Create (windows 11 22h2+)"
+    },
+    {
+      "name": "CTopLevelWindow_GetClientBlurVisual_Index",
+      "id": "CTopLevelWindow_GetClientBlurVisual_Index",
+      "kind": "field",
+      "type": "CCanvasVisual*",
+      "cases": [
+        {
+          "offset": "36 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w10_2004",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "37 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "39 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_22h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "42 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "37 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CTopLevelWindow::UpdateClientBlur\nxrefs to CRenderDataVisual::AddInstruction"
+    },
+    {
+      "name": "CTopLevelWindow_GetWindowBorder_Index",
+      "id": "CTopLevelWindow_GetWindowBorder_Index",
+      "kind": "field",
+      "type": "CWindowBorder*",
+      "cases": [
+        {
+          "offset": "33 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_22h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "34 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "28 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "xrefs to CWindowBorder::Create"
+    },
+    {
+      "name": "CTopLevelWindow_GetIsBorderUpdatesSuppressed_ByteIndex",
+      "id": "CTopLevelWindow_GetIsBorderUpdatesSuppressed_ByteIndex",
+      "kind": "field",
+      "type": "bool",
+      "cases": [
+        {
+          "offset": "888",
+          "until": {
+            "build": "os::build_w11_22h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "864",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "832",
+          "otherwise": true
+        }
+      ],
+      "notes": "CTopLevelWindow::SetSuppressBorderUpdates (could be inlined)\nCTopLevelWindow::UpdateWindowVisuals\nif ( this[x] )\n    goto y;"
+    },
+    {
+      "name": "CTopLevelWindow_StateDwordIndex",
+      "id": "CTopLevelWindow_StateDwordIndex",
+      "kind": "field",
+      "type": "DWORD",
+      "cases": [
+        {
+          "offset": "146 * sizeof(DWORD)",
+          "until": {
+            "build": "os::build_w10_2004",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "148 * sizeof(DWORD)",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "152 * sizeof(DWORD)",
+          "until": {
+            "build": "os::build_w11_22h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "156 * sizeof(DWORD)",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "146 * sizeof(DWORD)",
+          "otherwise": true
+        }
+      ],
+      "notes": "xrefs to CText::SetRTLReading/CVisual::SetRTLMirror"
+    },
+    {
+      "name": "CTopLevelWindow_GetCaptionColorizationParameters_Index",
+      "id": "CTopLevelWindow_GetCaptionColorizationParameters_Index",
+      "kind": "field",
+      "type": "CGlassColorizationResources*",
+      "cases": [
+        {
+          "offset": "72 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w10_2004",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "73 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "75 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_22h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "77 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "71 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CTopLevelWindow::UpdateColorizationColor\nCTopLevelWindow::UpdateNCAreaBackground\nif ( y1 == 0x7FFFFFFF && y2 == 0x7FFFFFFF && y3 == 0x7FFFFFFF && y4 ==\n0x7FFFFFFF )\n z = this[x]\nelse\n z = this[w]"
+    },
+    {
+      "name": "CTopLevelWindow_GetButton_BasePointerIndex",
+      "id": "CTopLevelWindow_GetButton_BasePointerIndex",
+      "kind": "field",
+      "type": "BYTE",
+      "cases": [
+        {
+          "offset": "60 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w10_2004",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "61 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "63 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_22h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "66 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "61 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "xrefs to CButton::Create"
+    },
+    {
+      "name": "CWindowData_GetFrameThickness",
+      "id": "CWindowData_GetFrameThickness",
+      "kind": "field",
+      "type": "DWORD",
+      "cases": [
+        {
+          "offset": "96",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "112",
+          "otherwise": true
+        }
+      ],
+      "notes": "CTopLevelWindow::GetBorderMargins/CTopLevelWindow::_GetRightFrameThickness\nif ( y <= 0 )\n    y = data[x]"
+    },
+    {
+      "name": "CTopLevelWindow_GetFrameOutsideMargins_Zoomed",
+      "id": "CTopLevelWindow_GetFrameOutsideMargins_Zoomed",
+      "kind": "field",
+      "type": "MARGINS",
+      "cases": [
+        {
+          "offset": "636",
+          "until": {
+            "build": "os::build_w10_2004",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "644",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "660",
+          "until": {
+            "build": "os::build_w11_22h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "676",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "636",
+          "otherwise": true
+        }
+      ],
+      "notes": "CTopLevelWindow::UpdateNCAreaPositionsAndSizes\nx = x1;\nif ( !zoomed )\n    x = x2;\ny = this[x]"
+    },
+    {
+      "name": "CTopLevelWindow_GetFrameOutsideMargins_Normal",
+      "id": "CTopLevelWindow_GetFrameOutsideMargins_Normal",
+      "kind": "field",
+      "type": "MARGINS",
+      "cases": [
+        {
+          "offset": "620",
+          "until": {
+            "build": "os::build_w10_2004",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "628",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "644",
+          "until": {
+            "build": "os::build_w11_22h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "660",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "620",
+          "otherwise": true
+        }
+      ],
+      "notes": "CTopLevelWindow::UpdateNCAreaPositionsAndSizes\nx = x1;\nif ( !zoomed )\n    x = x2;\ny = this[x]  (Normal path, same function as Zoomed)"
+    },
+    {
+      "name": "CTopLevelWindow_GetFrameInsideMargins",
+      "id": "CTopLevelWindow_GetFrameInsideMargins",
+      "kind": "field",
+      "type": "MARGINS",
+      "cases": [
+        {
+          "offset": "151 * sizeof(DWORD)",
+          "until": {
+            "build": "os::build_w10_2004",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "153 * sizeof(DWORD)",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "157 * sizeof(DWORD)",
+          "until": {
+            "build": "os::build_w11_22h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "161 * sizeof(DWORD)",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "151 * sizeof(DWORD)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CTopLevelWindow::UpdateNCAreaBackground\nif ( this[x1] == 0x7FFFFFFF && this[x2] == 0x7FFFFFFF && this[x3] ==\n0x7FFFFFFF && this[x4] == 0x7FFFFFFF )\n z = this[y]\nelse\n z = this[w]\n\n(x = min(x1, x2, x3, x4))"
+    },
+    {
+      "name": "CTopLevelWindow_GetBorderMargins",
+      "id": "CTopLevelWindow_GetBorderMargins",
+      "kind": "field",
+      "type": "MARGINS",
+      "cases": [
+        {
+          "offset": "588",
+          "until": {
+            "build": "os::build_w10_2004",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "596",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "612",
+          "until": {
+            "build": "os::build_w11_22h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "628",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "588",
+          "otherwise": true
+        }
+      ],
+      "notes": "CTopLevelWindow::GetBorderMargins\nmargins = (MARGINS)this[x]"
+    },
+    {
+      "name": "CTopLevelWindow_GetBorderGeometry_Index_OnThis",
+      "id": "CTopLevelWindow_GetBorderGeometry_Index_OnThis",
+      "kind": "field",
+      "type": "CRgnGeometryProxy*",
+      "cases": [
+        {
+          "offset": "68 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w10_2004",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "69 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "71 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_22h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "68 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CTopLevelWindow: indices that moved to LegacyVisual on >= 22H2\nCTopLevelWindow::UpdateNCAreaBackground\n...\nCDrawGeometryInstruction::Create({border brush}, {border geometry}, {border\ninstruction})\n...\nCDrawGeometryInstruction::Create({caption brush}, {caption geometry},\n{caption instruction})\n...\nCRenderDataVisual::AddInstruction({legacy visual}, {border instruction})\n...\nCRenderDataVisual::AddInstruction({legacy visual}, {caption instruction})"
+    },
+    {
+      "name": "CTopLevelWindow_GetBorderGeometry_Index_OnLegacy",
+      "id": "CTopLevelWindow_GetBorderGeometry_Index_OnLegacy",
+      "kind": "field",
+      "type": "CRgnGeometryProxy*",
+      "cases": [
+        {
+          "offset": "40 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "34 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CLegacyNonClientBackground::SetBorderRegion"
+    },
+    {
+      "name": "CTopLevelWindow_GetCaptionGeometry_Index_OnThis",
+      "id": "CTopLevelWindow_GetCaptionGeometry_Index_OnThis",
+      "kind": "field",
+      "type": "CRgnGeometryProxy*",
+      "cases": [
+        {
+          "offset": "69 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w10_2004",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "70 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "72 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_22h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "69 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CTopLevelWindow::UpdateNCAreaBackground\n...\nCDrawGeometryInstruction::Create({border brush}, {border geometry}, {border\ninstruction})\n...\nCDrawGeometryInstruction::Create({caption brush}, {caption geometry},\n{caption instruction})\n...\nCRenderDataVisual::AddInstruction({legacy visual}, {border instruction})\n...\nCRenderDataVisual::AddInstruction({legacy visual}, {caption instruction})"
+    },
+    {
+      "name": "CTopLevelWindow_GetCaptionGeometry_Index_OnLegacy",
+      "id": "CTopLevelWindow_GetCaptionGeometry_Index_OnLegacy",
+      "kind": "field",
+      "type": "CRgnGeometryProxy*",
+      "cases": [
+        {
+          "offset": "39 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "33 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CLegacyNonClientBackground::SetCaptionRegion"
+    },
+    {
+      "name": "CTopLevelWindow_GetCaptionBrush_Index_OnThis",
+      "id": "CTopLevelWindow_GetCaptionBrush_Index_OnThis",
+      "kind": "field",
+      "type": "CSolidColorLegacyMilBrushProxy*",
+      "cases": [
+        {
+          "offset": "94 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w10_2004",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "95 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "99 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_22h2",
+            "revision": "0"
+          }
+        }
+      ],
+      "notes": "CTopLevelWindow::UpdateNCAreaBackground\n{caption color}.a = 1.f\n...\nCSolidColorLegacyMilBrushProxy::Update({caption brush}, 1.0, {caption color})"
+    },
+    {
+      "name": "CTopLevelWindow_GetCaptionBrush_Index_OnLegacy",
+      "id": "CTopLevelWindow_GetCaptionBrush_Index_OnLegacy",
+      "kind": "field",
+      "type": "CSolidColorLegacyMilBrushProxy*",
+      "cases": [
+        {
+          "offset": "37 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "31 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CLegacyNonClientBackground::SetCaptionColor"
+    },
+    {
+      "name": "CTopLevelWindow_GetBorderBrush_Index_OnThis",
+      "id": "CTopLevelWindow_GetBorderBrush_Index_OnThis",
+      "kind": "field",
+      "type": "CSolidColorLegacyMilBrushProxy*",
+      "cases": [
+        {
+          "offset": "93 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w10_2004",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "94 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "98 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_22h2",
+            "revision": "0"
+          }
+        }
+      ],
+      "notes": "CTopLevelWindow::UpdateNCAreaBackground\n...\nCSolidColorLegacyMilBrushProxy::Update({border brush}, {opacity}, {border\ncolor})"
+    },
+    {
+      "name": "CTopLevelWindow_GetBorderBrush_Index_OnLegacy",
+      "id": "CTopLevelWindow_GetBorderBrush_Index_OnLegacy",
+      "kind": "field",
+      "type": "CSolidColorLegacyMilBrushProxy*",
+      "cases": [
+        {
+          "offset": "38 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "30 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CLegacyNonClientBackground::SetBorderColor"
+    },
+    {
+      "name": "CTopLevelWindow_GetClientBlurBrush_Index_OnThis",
+      "id": "CTopLevelWindow_GetClientBlurBrush_Index_OnThis",
+      "kind": "field",
+      "type": "CSolidColorLegacyMilBrushProxy*",
+      "cases": [
+        {
+          "offset": "95 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w10_2004",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "96 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "100 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_22h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "98 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "93 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CTopLevelWindow::UpdateClientBlur\nCSolidColorLegacyMilBrushProxy::Update({client blur brush}, 1.0, {client blur\ncolor});"
+    },
+    {
+      "name": "LivePreviewResource_GetGlassBoundingRect",
+      "id": "LivePreviewResource_GetGlassBoundingRect",
+      "kind": "field",
+      "type": "RECT",
+      "cases": [
+        {
+          "offset": "40",
+          "otherwise": true
+        }
+      ],
+      "notes": "CLivePreview::_UpdateResourcesForMonitor\nSetRectEmpty((LPRECT)((char *)resource + 40))"
+    },
+    {
+      "name": "LivePreviewResource_GetWindowBoundingGeometry",
+      "id": "LivePreviewResource_GetWindowBoundingGeometry",
+      "kind": "field",
+      "type": "CRectangleGeometryProxy*",
+      "cases": [
+        {
+          "offset": "2 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CLivePreview::_UpdateResourcesForMonitor\nResourceHelper::CreateRectangleGeometry(..., (CRectangleGeometryProxy\n**)resource + 2)"
+    },
+    {
+      "name": "LivePreviewResource_GetWindowVisualBrush",
+      "id": "LivePreviewResource_GetWindowVisualBrush",
+      "kind": "field",
+      "type": "CBaseLegacyMilBrushProxy*",
+      "cases": [
+        {
+          "offset": "4 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CLivePreview::_UpdateResourcesForMonitor\nCImageLegacyMilBrushProxy::Update(resource[4], resource + 32, ...)"
+    },
+    {
+      "name": "LivePreviewResource_GetGlassBoundingGeometry",
+      "id": "LivePreviewResource_GetGlassBoundingGeometry",
+      "kind": "field",
+      "type": "CRectangleGeometryProxy*",
+      "cases": [
+        {
+          "offset": "7 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CLivePreview::_UpdateResourcesForMonitor\nResourceHelper::CreateRectangleGeometry(..., (CRectangleGeometryProxy\n**)resource + 7)"
+    },
+    {
+      "name": "LivePreviewResource_GetGlassVisualBrush",
+      "id": "LivePreviewResource_GetGlassVisualBrush",
+      "kind": "field",
+      "type": "CBaseLegacyMilBrushProxy*",
+      "cases": [
+        {
+          "offset": "9 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CLivePreview::_UpdateResourcesForMonitor\nCImageLegacyMilBrushProxy::Update(resource[9], resource + 72, ...)"
+    },
+    {
+      "name": "LivePreviewResource_GetReflectionRegion",
+      "id": "LivePreviewResource_GetReflectionRegion",
+      "kind": "field",
+      "type": "HRGN",
+      "cases": [
+        {
+          "offset": "12 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CLivePreview::_UpdateResourcesForMonitor\n*((QWORD *)resource + 12) = CreateRectRgn(0, 0, 0, 0)"
+    },
+    {
+      "name": "LivePreviewResource_GetReflectionGeometry",
+      "id": "LivePreviewResource_GetReflectionGeometry",
+      "kind": "field",
+      "type": "CRgnGeometryProxy*",
+      "cases": [
+        {
+          "offset": "13 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CLivePreview::_UpdateResourcesForMonitor\nResourceHelper::CreateGeometryFromHRGN(resource[12], (CRgnGeometryProxy\n**)resource + 13)"
+    },
+    {
+      "name": "LivePreviewResource_IsWindowBoundingRectNotEmpty_Index",
+      "id": "LivePreviewResource_IsWindowBoundingRectNotEmpty_Index",
+      "kind": "field",
+      "type": "bool*",
+      "cases": [
+        {
+          "offset": "128",
+          "otherwise": true
+        }
+      ],
+      "notes": "CLivePreview::_UpdateResourcesForMonitor\n*((BYTE *)resource + 128) = !IsRectEmpty(resource)"
+    },
+    {
+      "name": "LivePreviewResource_IsGlassBoundingRectNotEmpty_Index",
+      "id": "LivePreviewResource_IsGlassBoundingRectNotEmpty_Index",
+      "kind": "field",
+      "type": "bool*",
+      "cases": [
+        {
+          "offset": "129",
+          "otherwise": true
+        }
+      ],
+      "notes": "CLivePreview::_UpdateResourcesForMonitor\n*((BYTE *)resource + 129) = !IsRectEmpty((const RECT *)((char *)resource +\n40))"
+    },
+    {
+      "name": "CDesktopManager_GetThemeHandle",
+      "id": "CDesktopManager_GetThemeHandle",
+      "kind": "field",
+      "type": "HTHEME",
+      "cases": [
+        {
+          "offset": "69 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CDesktopManager theme handle consumed by ButtonGlowHandler::EnsureGlowBitmapsLoaded and refreshed by CTopLevelWindow::CreateGlyphsFromAtlas. Audit status: inherited from the existing consumer; independent semantic confirmation remains required."
+    },
+    {
+      "name": "CDesktopManager_GetLivePreview_Index",
+      "id": "CDesktopManager_GetLivePreview_Index",
+      "kind": "field",
+      "type": "CLivePreview*",
+      "cases": [
+        {
+          "offset": "64 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "55 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "57 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CDesktopManager::Initialize\nCLivePreview::Create(&this->livePreview)"
+    },
+    {
+      "name": "CDesktopManager_GetCompositor_Index",
+      "id": "CDesktopManager_GetCompositor_Index",
+      "kind": "field",
+      "type": "CCompositor*",
+      "cases": [
+        {
+          "offset": "5 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_22h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "6 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CDesktopManager::Initialize\nCCompositor::Create(connection, &this->compositor)"
+    },
+    {
+      "name": "CDesktopManager_GetWindowList_Index",
+      "id": "CDesktopManager_GetWindowList_Index",
+      "kind": "field",
+      "type": "CWindowList*",
+      "cases": [
+        {
+          "offset": "61 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_server_2022",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "53 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "51 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "os::revision_21h2_post_rtm_0"
+          }
+        },
+        {
+          "offset": "52 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_22h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "54 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "53 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CDesktopManager::Initialize / CLivePreview::_FadeOutToGlass\n*((QWORD *)CDesktopManager::s_pDesktopManagerInstance + N) → CWindowList*"
+    },
+    {
+      "name": "CDesktopManager_GetWICFactory_Index",
+      "id": "CDesktopManager_GetWICFactory_Index",
+      "kind": "field",
+      "type": "IWICImagingFactory*",
+      "cases": [
+        {
+          "offset": "39 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_server_2022",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "248",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "29 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "os::revision_21h2_post_rtm_0"
+          }
+        },
+        {
+          "offset": "30 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_22h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "31 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "30 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CDesktopManager::Initialize\nWICCreateImagingFactory_Proxy(567, &this->wicFactory)"
+    },
+    {
+      "name": "CDesktopManager_GetIsHighContrastMode_BoolIndex",
+      "id": "CDesktopManager_GetIsHighContrastMode_BoolIndex",
+      "kind": "field",
+      "type": "bool",
+      "cases": [
+        {
+          "offset": "26",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "27",
+          "otherwise": true
+        }
+      ],
+      "notes": "CDesktopManager::InitializeHighContrast\nthis[26] = IsHighContrastMode"
+    },
+    {
+      "name": "CDesktopManager_HasMaximizedWindows_BoolIndex",
+      "id": "CDesktopManager_HasMaximizedWindows_BoolIndex",
+      "kind": "field",
+      "type": "bool",
+      "cases": [
+        {
+          "offset": "21",
+          "otherwise": true
+        }
+      ],
+      "notes": "CWindowList::CheckForMaximizedChange\ns_pDesktopManagerInstance[N] = hasMaximized"
+    },
+    {
+      "name": "CDesktopManager_GetDPIValue_Index",
+      "id": "CDesktopManager_GetDPIValue_Index",
+      "kind": "field",
+      "type": "double",
+      "cases": [
+        {
+          "offset": "60 * (LONGLONG)sizeof(double)",
+          "until": {
+            "build": "os::build_server_2022",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "52 * (LONGLONG)sizeof(double)",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "51 * (LONGLONG)sizeof(double)",
+          "until": {
+            "build": "os::build_w11_22h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "53 * (LONGLONG)sizeof(double)",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "52 * (LONGLONG)sizeof(double)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CDesktopManager::SetupDPIValues\n*((double *)this + N) = GetDpiForSystem() / 96.0"
+    },
+    {
+      "name": "CDesktopManager_GetD2DDevice_OnThis_Index",
+      "id": "CDesktopManager_GetD2DDevice_OnThis_Index",
+      "kind": "field",
+      "type": "ID2D1Device*",
+      "cases": [
+        {
+          "offset": "29 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "Pre-21H2: D2D device stored directly on CDesktopManager\nCDesktopManager::EnsureDCompositionInteropDevice → D2D1CreateFactory → stores\nat this + N"
+    },
+    {
+      "name": "CDesktopManager_GetDCompDevice_OnThis_Index",
+      "id": "CDesktopManager_GetDCompDevice_OnThis_Index",
+      "kind": "field",
+      "type": "IDCompositionDesktopDevicePartner*",
+      "cases": [
+        {
+          "offset": "27 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "Pre-21H2: DComp device stored directly on CDesktopManager\nxrefs to RoGetActivationFactory(\"Windows.UI.Composition.Compositor\")\nQueryInterface GUID_d14b6158_c3fa_4bce_9c1f_b61d8665eab0\nCDesktopManager::EnsureDCompositionInteropDevice → DCompositionCreateDevice3\n→ stores at this + N"
+    },
+    {
+      "name": "CCompositor_GetChannel_Index",
+      "id": "CCompositor_GetChannel_Index",
+      "kind": "field",
+      "type": "IDwmChannel*",
+      "cases": [
+        {
+          "offset": "2 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "3 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CCompositor::Initialize\n*((QWORD *)this + N) = MilConnection_CreateChannel(connection, &channel)\n>= 24H2 uses index 3; earlier uses index 2"
+    },
+    {
+      "name": "CCompositor_GetInteropCompositorDCompDevicePartner",
+      "id": "CCompositor_GetInteropCompositorDCompDevicePartner",
+      "kind": "field",
+      "type": "IDCompositionDesktopDevicePartner*",
+      "cases": [
+        {
+          "offset": "4 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CDesktopManager::EnsureDCompositionInteropDevice/CCompositor::InitializeInteropCompositor\nxrefs to RoGetActivationFactory(\"Windows.UI.Composition.Compositor\")\nQueryInterface GUID_d14b6158_c3fa_4bce_9c1f_b61d8665eab0\nRetrieves IDCompositionDesktopDevicePartner from CCompositor's DComp device\nat index 4"
+    },
+    {
+      "name": "CAnimatedGlassSheet_GetSourceRect",
+      "id": "CAnimatedGlassSheet_GetSourceRect",
+      "kind": "field",
+      "type": "RECT",
+      "cases": [
+        {
+          "offset": "24 * (LONGLONG)sizeof(RECT)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CAnimatedGlassSheet::Initialize / AdjustTargetRect / StartRectAnimation /\nUpdateRectAnimation this->sourceRect"
+    },
+    {
+      "name": "CAnimatedGlassSheet_GetDestinationRect",
+      "id": "CAnimatedGlassSheet_GetDestinationRect",
+      "kind": "field",
+      "type": "RECT",
+      "cases": [
+        {
+          "offset": "25 * (LONGLONG)sizeof(RECT)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CAnimatedGlassSheet::Initialize / AdjustTargetRect / StartRectAnimation /\nUpdateRectAnimation this->destinationRect"
+    },
+    {
+      "name": "CAnimatedGlassSheet_GetAdjustedDestinationRect",
+      "id": "CAnimatedGlassSheet_GetAdjustedDestinationRect",
+      "kind": "field",
+      "type": "RECT",
+      "cases": [
+        {
+          "offset": "26 * (LONGLONG)sizeof(RECT)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CAnimatedGlassSheet::AdjustTargetRect / UpdateRectAnimation\nthis->adjustedDestinationRect"
+    },
+    {
+      "name": "CAnimatedGlassSheet_GetAtlasPaddingTop_Rect",
+      "id": "CAnimatedGlassSheet_GetAtlasPaddingTop_Rect",
+      "kind": "field",
+      "type": "RECT",
+      "cases": [
+        {
+          "offset": "30 * (LONGLONG)sizeof(RECT)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CAnimatedGlassSheet::Initialize\nAtlas padding insets for the glass sheet region"
+    },
+    {
+      "name": "CAnimatedGlassSheet_GetAtlasPaddingLeft_Rect",
+      "id": "CAnimatedGlassSheet_GetAtlasPaddingLeft_Rect",
+      "kind": "field",
+      "type": "RECT",
+      "cases": [
+        {
+          "offset": "29 * (LONGLONG)sizeof(RECT)",
+          "otherwise": true
+        }
+      ]
+    },
+    {
+      "name": "CAnimatedGlassSheet_GetAtlasPaddingRight_Rect",
+      "id": "CAnimatedGlassSheet_GetAtlasPaddingRight_Rect",
+      "kind": "field",
+      "type": "RECT",
+      "cases": [
+        {
+          "offset": "29 * (LONGLONG)sizeof(RECT)",
+          "otherwise": true
+        }
+      ]
+    },
+    {
+      "name": "CAnimatedGlassSheet_GetAtlasPaddingBottom_Rect",
+      "id": "CAnimatedGlassSheet_GetAtlasPaddingBottom_Rect",
+      "kind": "field",
+      "type": "RECT",
+      "cases": [
+        {
+          "offset": "30 * (LONGLONG)sizeof(RECT)",
+          "otherwise": true
+        }
+      ]
+    },
+    {
+      "name": "CDesktopManager_GetGraphicsManager_Index",
+      "id": "CDesktopManager_GetGraphicsManager_Index",
+      "kind": "field",
+      "type": "void*",
+      "cases": [
+        {
+          "offset": "6 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_22h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "7 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CDesktopManager::Initialize\nCGraphicsDeviceManager::Create → stored at this + N\nFor builds < 22H2, index = 6; for 22H2 and later, index = 7"
+    },
+    {
+      "name": "CGraphicsManager_GetD2DDevice_Index",
+      "id": "CGraphicsManager_GetD2DDevice_Index",
+      "kind": "field",
+      "type": "ID2D1Device*",
+      "cases": [
+        {
+          "offset": "2 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "3 * sizeof(ULONG_PTR)",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "4 * sizeof(ULONG_PTR)",
+          "otherwise": true
+        }
+      ],
+      "notes": "CGraphicsDeviceManager::InitializeGraphicsDevice\nD2D1CreateFactory → stores D2D device at this + N"
+    }
+  ],
+  "notes": [
+    "Reverse-engineering guidance migrated verbatim from the pre-codegen offset table:",
+    "============================================================================\nuDWM Offset Stability Rules\n============================================================================\nuDWM.dll is NOT recompiled for every Windows build. Offsets only change at\nrecompile boundaries (codebase generations):\n\n  17763 — Windows 10 1809 (minimum supported)\n  18362 — Windows 10 1903, 1909\n  19041 — Windows 10 2004, 20H2, 21H1, 21H2, 22H2\n  20348 — Windows Server 2022\n  22000 — Windows 11 21H2 RTM (Build 22000)\n  22621 — Windows 11 22H2, 23H2\n  26100 — Windows 11 24H2, 25H2\n  28100 — Windows 11 26H1+ (MIL infrastructure removed)\n\nFeature gates:\n  GetSystemBackdropType → 21H2+\n  GetDWriteTextVisual_Index → 22H2+ (appears with CDWriteText)\n  _OnLegacy variants → 22H2+ (CLegacyNonClientBackground introduced)\n  CWindowBorder / GetWindowBorder_Index → 21H2+ (NOT 22H2+)\n  CAnimatedGlassSheet → pre-21H2; replaced by CAcrylicSheet in 21H2+\n\nInterval semantics: until<BUILD, REVISION>() supplies an exclusive RIGHT\nboundary. otherwise() is the explicit open-ended fallback. If otherwise()\nis absent, later versions are unsupported.\n============================================================================",
+    "This schema is the editable source of truth; generated headers must preserve these notes."
+  ]
+}

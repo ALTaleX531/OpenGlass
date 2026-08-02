@@ -25,11 +25,11 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
-    <UseDebugLibraries Condition="'$(UseDebugLibraries)'==''">true</UseDebugLibraries>
+    <UseDebugLibraries>true</UseDebugLibraries>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Release' or '$(Configuration)'=='ReleaseSigned'">
-    <UseDebugLibraries Condition="'$(UseDebugLibraries)'==''">false</UseDebugLibraries>
+    <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization Condition="'$(WholeProgramOptimization)'==''">true</WholeProgramOptimization>
   </PropertyGroup>
 </Project>

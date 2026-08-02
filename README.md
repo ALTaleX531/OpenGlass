@@ -9,43 +9,43 @@ This utility returns the full glass effect to the window frame like [glass8](htt
 ## Supported Windows versions
 
 - Windows 10 build 17763 (1809) through build 19045 (22H2)
-- Windows 11 builds below 28000 on `legacy`, including build 26200 (25H2)
-- Windows 11 builds 28000 and later on the experimental `milcomp` branch
+- Windows 11 builds below 28000 with the Legacy package, including build 26200 (25H2)
+- Windows 11 builds 28000 and later with the experimental MILComp package
 - Windows Server 2022
 
 > [!IMPORTANT]
-> This branch (`legacy`) does **not** support build 28000 or later because the legacy MIL compositor path it hooks is no longer available. See [#260](https://github.com/ALTaleX531/OpenGlass/issues/260).
+> The Legacy DLL does **not** support build 28000 or later because the legacy MIL compositor path it hooks is no longer available. See [#260](https://github.com/ALTaleX531/OpenGlass/issues/260).
 >
-> For build 28000 and later, use the experimental [`milcomp`](https://github.com/ALTaleX531/OpenGlass/tree/milcomp) branch.
+> For build 28000 and later, use `OpenGlassSetup.MILComp.exe` rather than the Legacy installer.
 
 Windows release names are not a linear compatibility scale. Microsoft describes Windows 11 26H1/build 28000 as a platform release for selected new devices rather than an in-place feature update from 24H2 or 25H2, and Windows Insider development can use parallel build trains. OpenGlass therefore evaluates three separate facts:
 
 1. the marketing release name (for user-facing context);
 2. the exact OS build and revision (for selecting an offset interval); and
-3. the compositor capabilities present in the actual DWM binaries (for selecting an implementation branch).
+3. the compositor capabilities present in the actual DWM binaries (for selecting a DLL architecture).
 
-Use the build number and verified compositor path to choose a branch; do not select one from `26H1` or `26H2` alone. See Microsoft's [Windows 11 release information](https://learn.microsoft.com/en-us/windows/release-health/windows11-release-information), [build 28000 announcement](https://blogs.windows.com/windows-insider/2025/11/07/announcing-windows-11-insider-preview-build-28000-canary-channel/), and [parallel 26H1 Insider build trains](https://blogs.windows.com/windows-insider/2026/06/08/announcing-new-builds-8-june-2026-2/) for the upstream release model.
+Use the build number and verified compositor path to choose an architecture; do not select one from `26H1` or `26H2` alone. See Microsoft's [Windows 11 release information](https://learn.microsoft.com/en-us/windows/release-health/windows11-release-information), [build 28000 announcement](https://blogs.windows.com/windows-insider/2025/11/07/announcing-windows-11-insider-preview-build-28000-canary-channel/), and [parallel 26H1 Insider build trains](https://blogs.windows.com/windows-insider/2026/06/08/announcing-new-builds-8-june-2026-2/) for the upstream release model.
 
 > [!NOTE]
 > OpenGlass only supports Windows builds from the General Availability channel. Builds from other channels (such as Canary, Dev, Release Preview and Beta) and Windows Server versions other than 2022 are **NOT supported**. Running on unsupported builds can crash DWM.
 
-## Branches
+## DWM architectures
 
-This repository maintains two parallel development lines:
+One source tree builds two architecture-specific `OpenGlass.dll` files:
 
-| Branch | Target | Architecture | Status |
-|--------|--------|-------------|--------|
-| `legacy` (main, aka millegacy) | Builds 17763 through 27999, including Windows 11 25H2/build 26200 | MIL compositor draw stream hooks | Stable |
-| [`milcomp`](https://github.com/ALTaleX531/OpenGlass/tree/milcomp) | Builds 28000 and later | Windows.UI.Composition visual hooks | Experimental |
+| Build target | Target | Architecture | Status |
+|--------------|--------|--------------|--------|
+| `OpenGlass.Legacy.vcxproj` | Builds 17763 through 27999, including Windows 11 25H2/build 26200 | MIL compositor draw stream hooks | Stable |
+| `OpenGlass.MILComp.vcxproj` | Builds 28000 and later | Windows.UI.Composition visual hooks | Experimental |
 
 **Key differences**:
 - `legacy` relies on the legacy MIL compositor path and is limited to builds below 28000.
 - `milcomp` bypasses that removed path by working at the Windows.UI.Composition level for builds 28000 and later.
 
-Choose `milcomp` when the actual OS build is 28000 or later. Otherwise, use `legacy`. Marketing release labels are explanatory only.
+Choose MILComp when the actual OS build is 28000 or later. Otherwise, use Legacy. Marketing release labels are explanatory only.
 
 > [!CAUTION]
-> The `milcomp` branch is experimental and may be unstable. Crashes have been observed in certain scenarios (such as interacting with virtual desktop thumbnails) where the root cause could not be conclusively identified, analysis suggests possible heap corruption originating within DWM itself. Use at your own risk.
+> The MILComp architecture remains experimental. Injection and rendering have been validated on build 28000 and 28100 samples; virtual-desktop preview, symbol failure, download retry, and DWM recovery paths have also been exercised. These results apply only to the tested binaries, and unverified revisions remain unsupported.
 
 ## Who should use OpenGlass?
 
@@ -134,7 +134,7 @@ These settings are intended for `HKLM` and should only be modified if necessary.
 | Key Name | Type | Description |
 | -------- | ---- | ----------- |
 | DisableGlassOnBattery | DWORD | <ul><li>0x1 = When energy saver is on then the glass effect will be opaque to decrease energy consumption (default)</li><li>0x0 = glass effect won't be opaque on energy saver</li></ul> |
-| DisabledHooks | DWORD | Controls which module's hooks are disabled, which will also control the availability of features. <br><br><ul><li>0x0 = No hooks are disabled (default)</li><li>0x1 = Disables hooks for [CaptionTextHandler.cpp](OpenGlass/CaptionTextHandler.cpp)</li><li>0x2 = Disables hooks for [AccentOverrider.cpp](OpenGlass/AccentOverrider.cpp)</li><li>0x4 = Disables hooks for [GlassFrameHandler.cpp](OpenGlass/GlassFrameHandler.cpp)</li><li>0x8 = Disables hooks for [GlassReflectionHandler.cpp](OpenGlass/GlassReflectionHandler.cpp)</li><li>0x10 = Disables hooks for [CaptionMetricsTweaker.cpp](OpenGlass/CaptionMetricsTweaker.cpp)</li></ul><br>⚠️ Should only be used to maintain compatibility with third-party applications. |
+| DisabledHooks | DWORD | Controls which architecture-specific handler hooks are disabled, which also controls feature availability. Implementations live under [Legacy](OpenGlass/Architecture/Legacy/) and [MILComp](OpenGlass/Architecture/MILComp/). <br><br><ul><li>0x0 = No hooks are disabled (default)</li><li>0x1 = Disables CaptionTextHandler hooks</li><li>0x2 = Disables AccentOverrider hooks</li><li>0x4 = Disables GlassFrameHandler hooks</li><li>0x8 = Disables GlassReflectionHandler hooks</li><li>0x10 = Disables CaptionMetricsTweaker hooks</li></ul><br>⚠️ Should only be used to maintain compatibility with third-party applications. |
 | GlassSafetyZoneMode | DWORD | Set 0 to disable glass safety zone. (default = 1) |
 
 ## Credits
@@ -183,37 +183,53 @@ OpenGlass borrowed its C++ project structure.
 
 1. Run `vcpkg integrate install` so dependencies are picked up automatically by MSBuild.
 2. Open `OpenGlass.slnx` in Visual Studio.
-3. Select the `Release` configuration and press `F5`.
+3. Select the `Release` configuration and build either `OpenGlass.Legacy` or `OpenGlass.MILComp`; Host and GUI are shared and build once.
 
 > [!TIP]
-> **InnoSetup is not required.** You may see errors related to the installer project during build. These do not block compilation and DLLs/executables are still produced.
+> **Inno Setup is not required for normal builds.** A Release solution build automatically generates both installers when `ISCC.exe` is available and otherwise reports that packaging was skipped. The `Scripts/OpenGlass.Packaging.proj` target remains available for explicitly packaging only `/p:Architecture=legacy` or `/p:Architecture=milcomp`.
 
 ### ReleaseSigned configuration
 
 Official releases use the `ReleaseSigned` configuration. This configuration uses macros to prevent digital signature from being abused. **Do not mix `ReleaseSigned` binaries with plain `Release` binaries**. Signed and unsigned components are not compatible. If you compile with the plain `Release` configuration, some features may behave differently when loaded alongside official signed DLLs.
 
-## Maintaining offset tables
+## Maintaining DWM projections
 
-OpenGlass reads internal `dwmcore.dll` and `uDWM.dll` struct members via hardcoded byte offsets that change between Windows builds. When a new build arrives, these offsets must be updated.
+OpenGlass describes the private `dwmcore.dll` and `uDWM.dll` ABI with generated typed Symbol and Layout handles backed by startup-time module registries. Layout offsets and required symbols can change between Windows builds and must be audited against the exact binaries. Legacy and MILComp schemas remain independent.
+
+For quick signature discovery, `dump_symbols.py` asks DbgHelp to download the PDB matched to an input image and prints exact `UNDNAME_COMPLETE` names:
+
+```powershell
+python Scripts/dump_symbols.py --input "$env:WINDIR\System32\dwmcore.dll" --grep "COcclusionContext::PreSubgraph"
+```
+
+Symbols are cached under `%TEMP%\symbols` by default; pass `--output PATH` to override it. Add `--rva` when an image-relative address is useful. This is a discovery convenience; use the paired audit tool and IDA semantic analysis before changing a production descriptor.
 
 ### Agent-assisted audit
 
-The repository provides the explicit `$maintain-dwm-offsets` skill for general coding agents. It supports focused projection checks, cross-build comparisons, per-module audits, and explicitly requested full audits. Each offset struct in the `.Offsets.hpp` files also has inline routing comments.
+The repository provides the explicit `$maintain-dwm-offsets` skill for general coding agents. It supports focused projection checks, cross-build comparisons, per-module audits, and explicitly requested full audits. Select `legacy` or `milcomp` explicitly; schema `notes` contain the reverse-engineering routing evidence.
 
 **Setup**: Connect the agent to IDA Pro through [ida-pro-mcp](https://github.com/mrexodia/ida-pro-mcp). The repository declares this capability dependency but does not commit machine-specific MCP ports or launch configuration.
 
 1. Open the exact DLL in IDA Pro and wait for auto-analysis to finish.
 2. Invoke `$maintain-dwm-offsets` with the module, samples, and desired audit scope.
-3. Review the report's linter-selected interval, sample identity, semantic evidence, findings, unverified items, runtime-validation status, and suggested right-boundary entries.
-4. Apply changes to [dwmcoreProjection.Offsets.hpp](OpenGlass/dwmcoreProjection.Offsets.hpp) or [uDwmProjection.Offsets.hpp](OpenGlass/uDwmProjection.Offsets.hpp) only after the relevant values have independent semantic evidence.
+3. Review the report's linter-selected interval, active Required/Optional state, sample identity, semantic evidence, findings, unverified items, runtime-validation status, and suggested descriptor changes.
+4. Apply changes to the matching Layout or Symbol descriptor only after the value, complete PDB name, and typed ABI have the required independent evidence.
 
-Run `python .agents/skills/maintain-dwm-offsets/scripts/lint_offset_tables.py .` before and after editing a projection table. Add `--version BUILD.REVISION` to show the selected entry and its exclusive right-boundary interval. The linter inventories both branch shapes and checks structural invariants without evaluating offset expressions or rewriting files.
+Run both read-only linters before and after editing descriptors:
 
-Keep the verification layers separate: the linter checks table structure, the semantic audit derives values from an exact DLL, and real-OS validation exercises service injection, recovery, and rendering. A successful static audit is not a release-readiness claim; use the skill's real-OS checklist before claiming support for a new layout interval.
+```powershell
+python .agents/skills/maintain-dwm-offsets/scripts/lint_offset_tables.py . --architecture legacy --version BUILD.REVISION
+python .agents/skills/maintain-dwm-offsets/scripts/lint_symbol_descriptors.py . --architecture legacy
+python .agents/skills/maintain-dwm-offsets/scripts/audit_symbol_names.py . --architecture legacy --module udwm --version BUILD.REVISION --image PATH_TO_DLL --symbol-path PATH_TO_SYMBOLS --configuration release
+```
+
+The Layout linter preserves offset expressions as source text, resolves exact exclusive-right-boundary intervals, and reports an intentional `unsupported` result when no case applies. The Symbol linter checks stable IDs, module ownership, ranges, requirements, complete-name candidates, signature variants, and consumer references. The name auditor additionally verifies the image/PDB GUID and age before resolving exact DbgHelp `UNDNAME_COMPLETE` output, records the DbgHelp identity, and excludes Debug-only descriptors unless `--configuration debug` is requested.
+
+Keep three verification layers separate: static verification combines descriptor lint with paired PE/PDB name auditing, an IDA semantic audit establishes ABI and meaning, and real-OS validation exercises service injection, recovery, and rendering. A successful static audit is not a release-readiness claim; use the skill's real-OS checklist before claiming support for a new layout interval.
 
 ### Manual update
 
-If IDA Pro is not available, locate the accessor functions named in each offset struct's comment (see `.Offsets.hpp` files) using a disassembler, find the member-accessing instructions, and read the displacement bytes.
+If IDA Pro is not available, use another disassembler to follow the semantic anchors named beside each descriptor. Do not infer a Layout merely from a neighboring member, or infer a Symbol's ABI from a short name or the first same-name result.
 
 ## Support
 

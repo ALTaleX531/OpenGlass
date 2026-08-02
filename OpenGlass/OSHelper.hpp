@@ -40,6 +40,7 @@ namespace OpenGlass::os
 		build_w11_23h2 = 22631,
 		build_w11_24h2 = 26100,
 		build_w11_25h2 = 26200,
+		build_w11_26h1 = 28000,
 	};
 	enum os_revision : ULONG
 	{

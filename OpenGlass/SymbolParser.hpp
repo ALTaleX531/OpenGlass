@@ -1,21 +1,23 @@
 #pragma once
-#include "pch.h"
 #include "HookHelper.hpp"
+#include "pch.h"
 
 namespace OpenGlass
 {
+	namespace Projection
+	{
+		class ModuleRegistry;
+	}
+
 	class CSymbolParser
 	{
-		static BOOL CALLBACK EnumSymbolsCallback(
-			PSYMBOL_INFO pSymInfo,
-			ULONG SymbolSize,
-			PVOID UserContext
-		);
+		struct EnumerationContext;
+		static BOOL CALLBACK EnumProjectionSymbolsCallback(PSYMBOL_INFO pSymInfo, ULONG SymbolSize, PVOID UserContext);
+
 	public:
 		CSymbolParser(LPCWSTR symbolsPath);
 		~CSymbolParser() noexcept;
 
-		using Callback = bool(PSYMBOL_INFO info, ULONG size);
-		HRESULT ParsePdb(HMODULE moduleHandle, Callback* callback);
+		HRESULT ParsePdb(HMODULE moduleHandle, Projection::ModuleRegistry& registry);
 	};
-}
+} // namespace OpenGlass

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <OpenGlassProductVersion>3.0.0.3329</OpenGlassProductVersion>
+    <OpenGlassProductVersionComma>3,0,0,3329</OpenGlassProductVersionComma>
+    <OpenGlassVersionGeneratedDir>$(IntDir)Generated\Version\</OpenGlassVersionGeneratedDir>
+    <OpenGlassVersionHeader>$(OpenGlassVersionGeneratedDir)OpenGlassVersion.h</OpenGlassVersionHeader>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>$(OpenGlassVersionGeneratedDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <Target Name="GenerateOpenGlassVersionHeader"
+          BeforeTargets="ResourceCompile"
+          Inputs="$(MSBuildThisFileFullPath);$(MSBuildProjectFullPath)"
+          Outputs="$(OpenGlassVersionHeader)">
+    <MakeDir Directories="$(OpenGlassVersionGeneratedDir)" />
+    <ItemGroup>
+      <_OpenGlassVersionLine Include="#define OPENGLASS_PRODUCT_VERSION $(OpenGlassProductVersionComma)" />
+      <_OpenGlassVersionLine Include="#define OPENGLASS_PRODUCT_VERSION_STRING &quot;$(OpenGlassProductVersion)&quot;" />
+      <_OpenGlassVersionLine Condition="'$(OpenGlassDwmArchitecture)'!=''" Include="#define OPENGLASS_DWM_ARCHITECTURE &quot;$(OpenGlassDwmArchitecture)&quot;" />
+    </ItemGroup>
+    <WriteLinesToFile File="$(OpenGlassVersionHeader)"
+                      Lines="@(_OpenGlassVersionLine)"
+                      Overwrite="true"
+                      WriteOnlyWhenDifferent="true"
+                      Encoding="UTF-8" />
+  </Target>
+</Project>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\Common\NuGet.props" Condition="Exists('..\Common\NuGet.props')" />
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64"><Configuration>Debug</Configuration><Platform>x64</Platform></ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64"><Configuration>Release</Configuration><Platform>x64</Platform></ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseSigned|x64"><Configuration>ReleaseSigned</Configuration><Platform>x64</Platform></ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <ProjectGuid>{B87E35EA-0F8F-41AD-9E92-8ABF6C054539}</ProjectGuid>
+    <RootNamespace>OpenGlass</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Label="CppProject.SharedInputs">
+    <CppProjectModuleDef>module.def</CppProjectModuleDef>
+    <CppProjectDefines>OPENGLASS_EXPORTS;OPENGLASS_DWM_MILCOMP=1;_WINDOWS;_USRDLL;</CppProjectDefines>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <Import Project="..\Common\CppProject.Configuration.props" />
+  <PropertyGroup Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <Import Project="..\Common\CppProject.props" />
+  <PropertyGroup>
+    <TargetName>OpenGlass</TargetName>
+    <OpenGlassDwmArchitecture>MILComp</OpenGlassDwmArchitecture>
+    <OutDir>$(CppProjectBuildRoot)Build\$(PlatformShortName)\$(Configuration)\milcomp\</OutDir>
+    <ProjectionGeneratedDir>$(IntDir)Generated\Projection</ProjectionGeneratedDir>
+    <ProjectionSchemaDir>$(ProjectDir)ProjectionSchemas\milcomp</ProjectionSchemaDir>
+    <ProjectionPython Condition="'$(ProjectionPython)'==''">python</ProjectionPython>
+  </PropertyGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.props" />
+  </ImportGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <DebugInformationFormat Condition="'$(Configuration)'!='Debug'">OldStyle</DebugInformationFormat>
+      <AdditionalIncludeDirectories>$(ProjectionGeneratedDir);$(ProjectDir)Architecture\MILComp;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>OPENGLASS_DWM_MILCOMP=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>ntdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="OpenGlass.Shared.vcxitems" Label="Shared" />
+  <ItemGroup>
+    <ClInclude Include="Architecture\MILComp\DCompProjection.hpp" />
+    <ClInclude Include="Architecture\MILComp\Dwm.hpp" />
+    <ClInclude Include="Architecture\MILComp\dwmcoreProjection.hpp" />
+    <ClInclude Include="Architecture\MILComp\dwmcoreProjection.Offsets.hpp" />
+    <ClInclude Include="Architecture\MILComp\GlassCoverageSet.hpp" />
+    <ClInclude Include="Architecture\MILComp\GlassIntegrity.hpp" />
+    <ClInclude Include="Architecture\MILComp\GlassKernel.hpp" />
+    <ClInclude Include="Architecture\MILComp\ReflectionVisual.hpp" />
+    <ClInclude Include="Architecture\MILComp\uDwmProjection.hpp" />
+    <ClInclude Include="Architecture\MILComp\uDwmProjection.Offsets.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Architecture\MILComp\AccentOverrider.cpp" />
+    <ClCompile Include="Architecture\MILComp\ButtonGlowHandler.cpp" />
+    <ClCompile Include="Architecture\MILComp\CaptionMetricsTweaker.cpp" />
+    <ClCompile Include="Architecture\MILComp\CaptionTextHandler.cpp" />
+    <ClCompile Include="Architecture\MILComp\GlassCoverageSet.cpp" />
+    <ClCompile Include="Architecture\MILComp\GlassEngine.cpp" />
+    <ClCompile Include="Architecture\MILComp\GlassFrameDemodernizer.cpp" />
+    <ClCompile Include="Architecture\MILComp\GlassFrameEnhancer.cpp" />
+    <ClCompile Include="Architecture\MILComp\GlassFrameHandler.cpp" />
+    <ClCompile Include="Architecture\MILComp\GlassIntegrity.cpp" />
+    <ClCompile Include="Architecture\MILComp\GlassKernel.cpp" />
+    <ClCompile Include="Architecture\MILComp\GlassReflectionHandler.cpp" />
+    <ClCompile Include="Architecture\MILComp\GlassRenderer.cpp" />
+    <ClCompile Include="Architecture\MILComp\OpenGlass.cpp" />
+    <ClCompile Include="Architecture\MILComp\ReflectionVisual.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <MASM Include="Architecture\MILComp\GlassFrameHandler.Shims.asm" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ProjectionSchemas\milcomp\dwmcore.json" />
+    <None Include="ProjectionSchemas\milcomp\README.md" />
+    <None Include="ProjectionSchemas\milcomp\udwm.json" />
+  </ItemGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='ReleaseSigned'">
+    <ClCompile><PreprocessorDefinitions>OPENGLASS_ENFORCE_SIGNING=1;%(PreprocessorDefinitions)</PreprocessorDefinitions></ClCompile>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <Target Name="GenerateProjectionMetadata"
+          BeforeTargets="ClCompile"
+          Inputs="$(ProjectionSchemaDir)\udwm.json;$(ProjectionSchemaDir)\dwmcore.json;$(ProjectDir)..\Scripts\projection_codegen.py;$(ProjectDir)OSHelper.hpp;@(ClCompile);@(ClInclude)"
+          Outputs="$(ProjectionGeneratedDir)\udwm.Layouts.generated.hpp;$(ProjectionGeneratedDir)\udwm.Symbols.generated.hpp;$(ProjectionGeneratedDir)\dwmcore.Layouts.generated.hpp;$(ProjectionGeneratedDir)\dwmcore.Symbols.generated.hpp;$(ProjectionGeneratedDir)\ProjectionRegistry.generated.inc">
+    <MakeDir Directories="$(ProjectionGeneratedDir)" />
+    <Exec Command="&quot;$(ProjectionPython)&quot; --version" IgnoreExitCode="true" ConsoleToMSBuild="true"><Output TaskParameter="ExitCode" PropertyName="ProjectionPythonExitCode" /></Exec>
+    <Error Condition="'$(ProjectionPythonExitCode)'!='0'" Text="OpenGlass projection generation requires Python 3. Set ProjectionPython to a working python.exe." />
+    <Exec Command="&quot;$(ProjectionPython)&quot; &quot;$(ProjectDir)..\Scripts\projection_codegen.py&quot; --repo &quot;$(ProjectDir)..&quot; --architecture milcomp --output &quot;$(ProjectionGeneratedDir)&quot;" />
+  </Target>
+  <Target Name="CleanProjectionMetadata" AfterTargets="Clean"><RemoveDir Directories="$(ProjectionGeneratedDir)" /></Target>
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets" />
+    <Import Project="..\Common\NuGet.targets" Condition="Exists('..\Common\NuGet.targets')" />
+  </ImportGroup>
+</Project>

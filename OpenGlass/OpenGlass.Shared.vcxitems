@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{7D0401B4-2563-4C44-AEF7-7DC75B21BC7E}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(MSBuildThisFileDirectory);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)AccentOverrider.hpp"><Link>Header Files\AccentOverrider.hpp</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)AeroColorizationEffect.hpp"><Link>Header Files\AeroColorizationEffect.hpp</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)AeroEffect.hpp"><Link>Header Files\AeroEffect.hpp</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)BlurEffect.hpp"><Link>Header Files\BlurEffect.hpp</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Buffer2D.hpp"><Link>Header Files\Buffer2D.hpp</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ButtonGlowHandler.hpp"><Link>Header Files\ButtonGlowHandler.hpp</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CaptionMetricsTweaker.hpp"><Link>Header Files\CaptionMetricsTweaker.hpp</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CaptionTextHandler.hpp"><Link>Header Files\CaptionTextHandler.hpp</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)cpprt.hpp"><Link>Header Files\cpprt.hpp</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomBlurEffect.hpp"><Link>Header Files\CustomBlurEffect.hpp</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomThemeAtlasLoader.hpp"><Link>Header Files\CustomThemeAtlasLoader.hpp</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)D2DPrivates.hpp"><Link>Header Files\D2DPrivates.hpp</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)D3DGlassRealizer.hpp"><Link>Header Files\D3DGlassRealizer.hpp</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)DxgiPrivates.hpp"><Link>Header Files\DxgiPrivates.hpp</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)framework.hpp"><Link>Header Files\framework.hpp</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)GlassEngine.hpp"><Link>Header Files\GlassEngine.hpp</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)GlassFrameDemodernizer.hpp"><Link>Header Files\GlassFrameDemodernizer.hpp</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)GlassFrameEnhancer.hpp"><Link>Header Files\GlassFrameEnhancer.hpp</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)GlassFrameHandler.hpp"><Link>Header Files\GlassFrameHandler.hpp</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)GlassRealizer.hpp"><Link>Header Files\GlassRealizer.hpp</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)GlassReflectionHandler.hpp"><Link>Header Files\GlassReflectionHandler.hpp</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)GlassRenderer.hpp"><Link>Header Files\GlassRenderer.hpp</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)GlassSafetyZoneLayer.hpp"><Link>Header Files\GlassSafetyZoneLayer.hpp</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)GlassService.hpp"><Link>Header Files\GlassService.hpp</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)HookHelper.hpp"><Link>Header Files\HookHelper.hpp</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)MaterialRealizer.hpp"><Link>Header Files\MaterialRealizer.hpp</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)module.hpp"><Link>Header Files\module.hpp</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)MsstyleInternals.hpp"><Link>Header Files\MsstyleInternals.hpp</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenGlass.hpp"><Link>Header Files\OpenGlass.hpp</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OSHelper.hpp"><Link>Header Files\OSHelper.hpp</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)pch.h"><Link>Header Files\pch.h</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ProjectionHelper.hpp"><Link>Header Files\ProjectionHelper.hpp</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)RenderingEffect.hpp"><Link>Header Files\RenderingEffect.hpp</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)resource.h"><Link>Header Files\resource.h</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Shared.hpp"><Link>Header Files\Shared.hpp</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)SymbolDownloader.hpp"><Link>Header Files\SymbolDownloader.hpp</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)SymbolParser.hpp"><Link>Header Files\SymbolParser.hpp</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Util.hpp"><Link>Header Files\Util.hpp</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)wil.hpp"><Link>Header Files\wil.hpp</Link></ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)AeroColorizationEffect.cpp"><Link>Source Files\AeroColorizationEffect.cpp</Link></ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)AeroEffect.cpp"><Link>Source Files\AeroEffect.cpp</Link></ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)BlurEffect.cpp"><Link>Source Files\BlurEffect.cpp</Link></ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)CustomBlurEffect.cpp"><Link>Source Files\CustomBlurEffect.cpp</Link></ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)CustomThemeAtlasLoader.cpp"><Link>Source Files\CustomThemeAtlasLoader.cpp</Link></ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)D3DGlassRealizer.cpp"><Link>Source Files\D3DGlassRealizer.cpp</Link></ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)dllmain.cpp"><Link>Source Files\dllmain.cpp</Link></ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)GlassRealizer.cpp"><Link>Source Files\GlassRealizer.cpp</Link></ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)GlassSafetyZoneLayer.cpp"><Link>Source Files\GlassSafetyZoneLayer.cpp</Link></ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)GlassService.cpp"><Link>Source Files\GlassService.cpp</Link></ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)HookHelper.cpp"><Link>Source Files\HookHelper.cpp</Link></ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)MaterialRealizer.cpp"><Link>Source Files\MaterialRealizer.cpp</Link></ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)module.cpp"><Link>Source Files\module.cpp</Link></ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)pch.cpp"><Link>Source Files\pch.cpp</Link><PrecompiledHeader>Create</PrecompiledHeader></ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)ProjectionRegistry.cpp"><Link>Source Files\ProjectionRegistry.cpp</Link><PrecompiledHeader>NotUsing</PrecompiledHeader><Optimization Condition="'$(Configuration)'!='Debug'">MinSpace</Optimization><FavorSizeOrSpeed Condition="'$(Configuration)'!='Debug'">Size</FavorSizeOrSpeed></ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)ProjectionRuntime.cpp"><Link>Source Files\ProjectionRuntime.cpp</Link><PrecompiledHeader>NotUsing</PrecompiledHeader><Optimization Condition="'$(Configuration)'!='Debug'">MinSpace</Optimization><FavorSizeOrSpeed Condition="'$(Configuration)'!='Debug'">Size</FavorSizeOrSpeed></ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)ServiceHandler.cpp"><Link>Source Files\ServiceHandler.cpp</Link></ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)SymbolDownloader.cpp"><Link>Source Files\SymbolDownloader.cpp</Link></ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)SymbolParser.cpp"><Link>Source Files\SymbolParser.cpp</Link></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)AeroColorizationEffect.cso"><Link>Shader Binaries\AeroColorizationEffect.cso</Link></None>
+    <None Include="$(MSBuildThisFileDirectory)Blur.Common.hlsli"><Link>Shader Includes\Blur.Common.hlsli</Link></None>
+    <None Include="$(MSBuildThisFileDirectory)Blur.PS_BlurH.cso"><Link>Shader Binaries\Blur.PS_BlurH.cso</Link></None>
+    <None Include="$(MSBuildThisFileDirectory)Blur.PS_BlurV.cso"><Link>Shader Binaries\Blur.PS_BlurV.cso</Link></None>
+    <None Include="$(MSBuildThisFileDirectory)Blur.PS_BlurV_Vista.cso"><Link>Shader Binaries\Blur.PS_BlurV_Vista.cso</Link></None>
+    <None Include="$(MSBuildThisFileDirectory)Blur.VS.cso"><Link>Shader Binaries\Blur.VS.cso</Link></None>
+    <None Include="$(MSBuildThisFileDirectory)Common.hlsli"><Link>Shader Includes\Common.hlsli</Link></None>
+    <None Include="$(MSBuildThisFileDirectory)module.def"><Link>Misc Files\module.def</Link></None>
+    <None Include="$(MSBuildThisFileDirectory)packages.config"><Link>Misc Files\packages.config</Link></None>
+    <Image Include="$(MSBuildThisFileDirectory)reflection.png"><Link>Image Files\reflection.png</Link></Image>
+    <ResourceCompile Include="$(MSBuildThisFileDirectory)OpenGlass.rc"><Link>Resource Files\OpenGlass.rc</Link></ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="$(MSBuildThisFileDirectory)AeroColorizationEffect.hlsl"><Link>Shader Files\AeroColorizationEffect.hlsl</Link><ShaderType>Pixel</ShaderType><CompileD2DCustomEffect>true</CompileD2DCustomEffect><EntryPointName>AeroColorizationEffect</EntryPointName></FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)Blur.PS_BlurH.hlsl"><Link>Shader Files\Blur.PS_BlurH.hlsl</Link><ShaderType>Pixel</ShaderType></FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)Blur.PS_BlurV.hlsl"><Link>Shader Files\Blur.PS_BlurV.hlsl</Link><ShaderType>Pixel</ShaderType></FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)Blur.PS_BlurV_Vista.hlsl"><Link>Shader Files\Blur.PS_BlurV_Vista.hlsl</Link><ShaderType>Pixel</ShaderType></FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)Blur.VS.hlsl"><Link>Shader Files\Blur.VS.hlsl</Link><ShaderType>Vertex</ShaderType></FxCompile>
+  </ItemGroup>
+</Project>
