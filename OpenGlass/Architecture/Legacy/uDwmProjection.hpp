@@ -51,7 +51,12 @@ namespace OpenGlass::uDWM
 	{
 		CResourceProxy* GetProxy() const
 		{
-			return CResource_Proxy.read(this);
+			auto storage = CResource_Proxy.mutable_address(this);
+			if (g_versionInfo.build < os::build_w10_1903)
+			{
+				return reinterpret_cast<CResourceProxy*>(storage);
+			}
+			return *reinterpret_cast<CResourceProxy**>(storage);
 		}
 		inline static HRESULT Create(DwmResourceType type, IDwmChannel* channel, CResource** resource)
 		{

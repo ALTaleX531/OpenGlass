@@ -1307,7 +1307,7 @@
       "name": "CResource_Proxy",
       "id": "CResource.Proxy",
       "kind": "field",
-      "type": "CResourceProxy*",
+      "type": "BYTE",
       "cases": [
         {
           "offset": "0",
@@ -1321,7 +1321,7 @@
           "otherwise": true
         }
       ],
-      "notes": "Before build 18362 the CResource object itself exposes the proxy layout; later builds store a CResourceProxy pointer after the base object state."
+      "notes": "On build 17763, CResource::Create allocates 32 bytes and writes the vtable at +0, reference count at +8, IDwmChannel* at +16, and resource handle at +24. CResource::Initialize and WrapExistingResource write the same +16/+24 pair, while CResource::~CResource independently consumes it. The CResource object therefore exposes the proxy view itself before build 18362, so offset 0 is its address rather than a pointer field. Starting with build 18362, offset 2 * sizeof(PVOID) stores a CResourceProxy pointer. CResource::GetProxy must branch before interpreting this storage; reading the pre-18362 offset 0 as CResourceProxy* instead reads the object's vtable pointer."
     },
     {
       "name": "CGlassColorizationResources_Color",
