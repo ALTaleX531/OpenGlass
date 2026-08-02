@@ -66,7 +66,7 @@ OpenGlass is for advanced users who are comfortable editing the Windows registry
 
 If you encounter crashes or technical bugs:
 
-1. **Collect Dumps**: Follow the [WER guidelines](https://learn.microsoft.com/en-us/windows/win32/wer/collecting-user-mode-dumps) to enable user-mode crash dumps if DWM fails.
+1. **Collect Dumps**: Run OpenGlass GUI as Administrator, open the **Diagnostics** tab, choose a dump folder, and select **Enable full dumps**. The default is `.\dumps` beside `OpenGlassGUI.exe`. This creates the per-application `HKLM\SOFTWARE\Microsoft\Windows\Windows Error Reporting\LocalDumps\dwm.exe` configuration with `DumpType=2` and `DumpCount=1`; **Disable dumps** removes that per-application configuration. The installer protects the default folder for WER collection of DWM crashes and administrator access, and removes it with its contents during uninstall. System-wide WER settings may still apply independently. See Microsoft's [WER guidelines](https://learn.microsoft.com/en-us/windows/win32/wer/collecting-user-mode-dumps) for the underlying behavior and folder-permission requirements.
 2. **Submit a Report**: Open a GitHub issue with your **Windows build**, **registry settings**, **steps to reproduce**, and **visual evidence** (screenshots/recordings) if necessary.
 
 ## Configuration
@@ -78,7 +78,7 @@ If you encounter crashes or technical bugs:
 - `HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\DWM` (per-user, checked first)
 - `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\DWM` (system-wide fallback)
 
-**Key inheritance**: Missing keys use predefined defaults. Variants (e.g., `XXXInactive`, `XXXMaximized`) inherit from their base key if not explicitly set. Keys with the `Override` suffix take precedence and resist resets by `uxtheme.dll` on Windows 10+.
+**Key inheritance**: Missing keys use predefined defaults. Variants (e.g., `XXXInactive`, `XXXMaximized`) inherit from their base key if not explicitly set. For the colorization keys that have an `Override` form, resolution is `HKCU Override → HKCU base → HKLM Override → HKLM base → default`. This preserves per-user precedence while allowing an Override in either scope to resist resets by `uxtheme.dll` on Windows 10+. Explicit edits to these values in the GUI create the Override form. Use the reset button beside an active Override to remove it from the current editing scope and return to the next inherited value.
 
 ## Registry reference
 

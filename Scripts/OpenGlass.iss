@@ -126,9 +126,12 @@ Source: "{#MyAppBuildPath}\OpenGlassGUI.exe"; DestDir: "{app}"; Flags: ignorever
 [Dirs]
 ; Writable symbols directory (kept separate from binaries in {app})
 Name: "{app}\symbols"
+; Full DWM dumps can contain sensitive process memory; do not grant ordinary users access.
+Name: "{app}\dumps"
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{app}\symbols"
+Type: filesandordirs; Name: "{app}\dumps"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: checkablealone
@@ -154,6 +157,8 @@ Filename: "{sys}\icacls.exe"; Parameters: """{app}"" /inheritance:r /grant:r *S-
 Filename: "{sys}\icacls.exe"; Parameters: """{app}\OpenGlassHost.exe"" /inheritance:r /grant:r *S-1-5-18:F *S-1-5-32-544:D"; Flags: runhidden waituntilterminated
 ; Harden {app}\symbols (writable cache): SYSTEM/Admins = Full, Users = R, Window Manager = RWD
 Filename: "{sys}\icacls.exe"; Parameters: """{app}\symbols"" /inheritance:r /grant:r *S-1-5-18:(OI)(CI)F *S-1-5-32-544:(OI)(CI)F *S-1-5-32-545:(OI)(CI)R *S-1-5-90-0:(OI)(CI)RWD"; Flags: runhidden waituntilterminated
+; Harden {app}\dumps: SYSTEM/Admins = Full, Window Manager = Modify; no ordinary-user access to dump contents
+Filename: "{sys}\icacls.exe"; Parameters: """{app}\dumps"" /inheritance:r /grant:r *S-1-5-18:(OI)(CI)F *S-1-5-32-544:(OI)(CI)F *S-1-5-90-0:(OI)(CI)M"; Flags: runhidden waituntilterminated
 
 ; Create the service
 Filename: "{sys}\sc.exe"; Parameters: "delete OpenGlassHost"; Flags: runhidden waituntilterminated

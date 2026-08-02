@@ -142,7 +142,7 @@ namespace OpenGlass
 		CreateThemeTab();
 		CreateAppearanceTab();
 		CreateGlassColorsTab();
-		CreateSymbolsTab();
+		CreateDiagnosticsTab();
 
 		m_notebook->SetSelection(2);
 
@@ -241,6 +241,13 @@ namespace OpenGlass
 		m_symbolDownloadRunning = true;
 		m_btnDownloadSymbols->Enable(false);
 		m_btnCancelSymbolDownload->Enable(true);
+		m_dpSymbolCacheDirectory->Enable(false);
+		std::wstring symbolDirectory = m_dpSymbolCacheDirectory->GetPath().ToStdWstring();
+		if (symbolDirectory.empty())
+		{
+			symbolDirectory = GetSymbolCacheDirectory();
+			m_dpSymbolCacheDirectory->SetPath(symbolDirectory);
+		}
 		UpdateSymbolDownloadResult(wxART_INFORMATION, wxEmptyString, wxEmptyString);
 		UpdateSymbolDownloadProgress(SymbolDownloadProgress{
 			0,
@@ -249,7 +256,7 @@ namespace OpenGlass
 			L"Preparing symbol download."
 		});
 
-		m_symbolDownloadThread = std::jthread([this](std::stop_token stopToken)
+		m_symbolDownloadThread = std::jthread([this, symbolDirectory = std::move(symbolDirectory)](std::stop_token stopToken)
 		{
 			const auto progressCallback = [this](const SymbolDownloadProgress& progress)
 			{
@@ -259,7 +266,7 @@ namespace OpenGlass
 				});
 			};
 
-			const SymbolDownloadOutcome outcome = DownloadSymbols(stopToken, progressCallback);
+			const SymbolDownloadOutcome outcome = DownloadSymbols(symbolDirectory, stopToken, progressCallback);
 			CallAfter([this, outcome]
 			{
 				FinishSymbolDownload(outcome);
@@ -267,7 +274,7 @@ namespace OpenGlass
 		});
 	}
 
-	void MainFrame::RefreshSymbolDownloadLayout()
+	void MainFrame::RefreshDiagnosticsLayout()
 	{
 		WrapStaticTextToParentWidth(m_lblSymbolDownloadDetail, m_symbolDownloadDetailText);
 		WrapStaticTextToParentWidth(m_lblSymbolDownloadResult, m_symbolDownloadResultText);
@@ -339,7 +346,7 @@ namespace OpenGlass
 			m_symbolDownloadResultText.clear();
 			m_lblSymbolDownloadResult->SetLabel(wxEmptyString);
 			m_pnlSymbolDownloadResult->Hide();
-			RefreshSymbolDownloadLayout();
+			RefreshDiagnosticsLayout();
 			return;
 		}
 
@@ -360,7 +367,7 @@ namespace OpenGlass
 		m_symbolDownloadResultText = message;
 		WrapStaticTextToParentWidth(m_lblSymbolDownloadResult, m_symbolDownloadResultText);
 		m_pnlSymbolDownloadResult->Show();
-		RefreshSymbolDownloadLayout();
+		RefreshDiagnosticsLayout();
 	}
 
 	void MainFrame::FinishSymbolDownload(const SymbolDownloadOutcome& outcome)
@@ -368,6 +375,7 @@ namespace OpenGlass
 		m_symbolDownloadRunning = false;
 		m_btnDownloadSymbols->Enable(m_isAdmin);
 		m_btnCancelSymbolDownload->Enable(false);
+		m_dpSymbolCacheDirectory->Enable(m_isAdmin);
 
 		switch (outcome.result)
 		{
@@ -376,7 +384,7 @@ namespace OpenGlass
 				100,
 				false,
 				L"Symbols downloaded successfully.",
-				L"The local symbol cache has been updated."
+				std::format(L"The symbol cache has been updated:\n{}", outcome.symbolDirectory)
 			});
 			UpdateSymbolDownloadResult(wxART_INFORMATION, wxEmptyString, wxEmptyString);
 			break;
@@ -410,6 +418,103 @@ namespace OpenGlass
 		}
 	}
 
+	void MainFrame::RefreshDwmCrashDumpConfiguration()
+	{
+		DwmCrashDumpConfiguration configuration;
+		const HRESULT result = QueryDwmCrashDumpConfiguration(configuration);
+		if (FAILED(result))
+		{
+			m_dwmCrashDumpStatusText = wxString::Format(
+				L"Unable to read the dwm.exe WER configuration (HRESULT 0x%08lX).",
+				static_cast<unsigned long>(result)
+			);
+			m_btnEnableDwmCrashDumps->Enable(m_isAdmin);
+			m_btnDisableDwmCrashDumps->Enable(m_isAdmin && configuration.enabled);
+			RefreshDiagnosticsLayout();
+			return;
+		}
+
+		m_btnEnableDwmCrashDumps->Enable(m_isAdmin);
+		m_btnDisableDwmCrashDumps->Enable(m_isAdmin && configuration.enabled);
+		if (!configuration.enabled)
+		{
+			m_dwmCrashDumpStatusText = L"Disabled. No per-application WER LocalDumps configuration exists for dwm.exe. System-wide WER settings, if present, may still apply.";
+			RefreshDiagnosticsLayout();
+			return;
+		}
+
+		if (!configuration.dumpFolder.empty())
+		{
+			m_dpDwmCrashDumpFolder->SetPath(configuration.dumpFolder);
+		}
+
+		const wxString folder = configuration.dumpFolder.empty()
+			? wxString{ L"Windows default" }
+			: wxString{ configuration.dumpFolder };
+		if (configuration.dumpType == 2 && configuration.dumpCount == 1 && !configuration.dumpFolder.empty())
+		{
+			m_dwmCrashDumpStatusText = wxString::Format(
+				L"Enabled for dwm.exe: full dump, keep 1, folder: %s",
+				folder
+			);
+		}
+		else
+		{
+			m_dwmCrashDumpStatusText = wxString::Format(
+				L"Enabled with custom settings for dwm.exe: DumpType=%lu, DumpCount=%lu, folder: %s. Click Enable full dumps to apply the recommended OpenGlass settings.",
+				configuration.dumpType,
+				configuration.dumpCount,
+				folder
+			);
+		}
+		RefreshDiagnosticsLayout();
+	}
+
+	void MainFrame::SetDwmCrashDumpsEnabled(bool enabled)
+	{
+		if (!m_isAdmin)
+		{
+			return;
+		}
+
+		HRESULT result{};
+		if (enabled)
+		{
+			std::wstring requestedFolder = m_dpDwmCrashDumpFolder->GetPath().ToStdWstring();
+			if (requestedFolder.empty())
+			{
+				requestedFolder = GetDefaultDwmCrashDumpFolder();
+			}
+
+			std::wstring configuredFolder;
+			result = EnableDwmCrashDumps(requestedFolder, configuredFolder);
+			if (SUCCEEDED(result))
+			{
+				m_dpDwmCrashDumpFolder->SetPath(configuredFolder);
+			}
+		}
+		else
+		{
+			result = DisableDwmCrashDumps();
+		}
+
+		if (FAILED(result))
+		{
+			wxMessageBox(
+				wxString::Format(
+					enabled
+						? L"Failed to enable WER crash dumps (HRESULT 0x%08lX)."
+						: L"Failed to disable WER crash dumps (HRESULT 0x%08lX).",
+					static_cast<unsigned long>(result)
+				),
+				L"WER crash dumps",
+				wxOK | wxICON_ERROR,
+				this
+			);
+		}
+		RefreshDwmCrashDumpConfiguration();
+	}
+
 	bool MainFrame::IsSystemSettingKey(const std::wstring& key) const
 	{
 		return key == L"DisableGlassOnBattery"
@@ -424,6 +529,59 @@ namespace OpenGlass
 			return m_systemConfig.get();
 		}
 		return m_config.get();
+	}
+
+	ResolvedRegistryValue<DWORD> MainFrame::ResolveOverridableDword(
+		const std::wstring& key,
+		const std::wstring& overrideKey,
+		DWORD defaultValue
+	) const
+	{
+		auto query = [](const RegistryConfig* config, const std::wstring& name) -> std::optional<DWORD>
+		{
+			DWORD value{};
+			if (config && config->TryGetDword(name, value))
+			{
+				return value;
+			}
+			return std::nullopt;
+		};
+
+		std::optional<DWORD> userOverride;
+		std::optional<DWORD> userBase;
+		const RegistryConfig* machineConfig = m_systemConfig.get();
+		if (m_config && !m_config->IsHklm())
+		{
+			userOverride = query(m_config.get(), overrideKey);
+			userBase = query(m_config.get(), key);
+		}
+		else if (m_config)
+		{
+			machineConfig = m_config.get();
+		}
+
+		return ResolveOverridableRegistryValue(
+			userOverride,
+			userBase,
+			query(machineConfig, overrideKey),
+			query(machineConfig, key),
+			defaultValue
+		);
+	}
+
+	void MainFrame::ResetOverridableDword(const std::wstring& key, const std::wstring& overrideKey)
+	{
+		RegistryConfig* config = GetConfigForKey(key);
+		if (!config || !config->HasValue(overrideKey))
+		{
+			return;
+		}
+
+		TrackSettingChange(overrideKey);
+		config->DeleteValue(overrideKey);
+		SetDirty(true);
+		NotifySettingsChange(ChangeType::Colorization);
+		LoadSettings(false);
 	}
 
 	void MainFrame::BackupCurrentSetting(const std::wstring& name)
@@ -559,6 +717,18 @@ namespace OpenGlass
 		const wxBitmap infoBmp = wxArtProvider::GetBitmap(wxART_INFORMATION, wxART_MESSAGE_BOX, iconSize);
 		const wxBitmap warnBmp = wxArtProvider::GetBitmap(wxART_WARNING, wxART_MESSAGE_BOX, iconSize);
 		auto* info = new wxStaticBitmap(parent, wxID_ANY, infoBmp);
+		wxButton* reset = nullptr;
+		if (!overrideKey.empty())
+		{
+			reset = new wxButton(parent, wxID_ANY, L"↶", wxDefaultPosition, wxSize(28, -1), wxBU_EXACTFIT);
+			reset->SetName(L"Reset Override");
+			reset->SetToolTip(L"Remove the Override value in the current scope and use the next inherited value.");
+			reset->Hide();
+			reset->Bind(wxEVT_BUTTON, [this, key, overrideKey](wxCommandEvent&)
+			{
+				ResetOverridableDword(key, overrideKey);
+			});
+		}
 		auto* warn = new wxStaticBitmap(parent, wxID_ANY, warnBmp);
 		info->SetMinSize(iconSize);
 		warn->SetMinSize(iconSize);
@@ -568,6 +738,10 @@ namespace OpenGlass
 		warn->Hide();
 
 		row->Add(info, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT | wxLEFT, 2);
+		if (reset)
+		{
+			row->Add(reset, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT | wxLEFT, 2);
+		}
 		row->Add(warn, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT | wxLEFT, 2);
 
 		const bool vistaIrrelevant = key.find(L"Afterglow") != std::wstring::npos
@@ -575,7 +749,7 @@ namespace OpenGlass
 		const bool win7Irrelevant = key == L"GlassOpacityInactive"
 			|| key == L"ColorizationColorInactive"
 			|| key == L"GlassOpacity";
-		m_optionStatus.push_back({ info, warn, key, overrideKey, vistaIrrelevant, win7Irrelevant });
+		m_optionStatus.push_back({ info, reset, warn, key, overrideKey, vistaIrrelevant, win7Irrelevant });
 	}
 
 	void MainFrame::UpdateOptionStatusIcons()
@@ -592,7 +766,6 @@ namespace OpenGlass
 		const bool hasUserKey = userConfig.HasKey();
 		std::unordered_map<std::wstring, bool> hkcuHasValueCache;
 		std::unordered_map<std::wstring, bool> activeHasValueCache;
-		std::unordered_map<std::wstring, bool> systemHasValueCache;
 
 		for (auto& item : m_optionStatus)
 		{
@@ -619,6 +792,11 @@ namespace OpenGlass
 					item.overrideIcon->Show(false);
 					needLayout = true;
 				}
+				if (item.resetOverrideButton && item.resetOverrideButton->IsShown())
+				{
+					item.resetOverrideButton->Show(false);
+					needLayout = true;
+				}
 				if (item.hkcuWarnIcon && item.hkcuWarnIcon->IsShown())
 				{
 					item.hkcuWarnIcon->Show(false);
@@ -643,42 +821,55 @@ namespace OpenGlass
 				continue;
 			}
 
-			bool overrideExists = false;
+			bool selectedOverrideExists = false;
 			if (!item.overrideKey.empty())
 			{
-				auto& cache = (activeConfig == m_systemConfig.get()) ? systemHasValueCache : activeHasValueCache;
-				auto it = cache.find(item.overrideKey);
-				if (it == cache.end())
+				auto it = activeHasValueCache.find(item.overrideKey);
+				if (it == activeHasValueCache.end())
 				{
-					overrideExists = activeConfig->HasValue(item.overrideKey);
-					cache.emplace(item.overrideKey, overrideExists);
+					selectedOverrideExists = activeConfig->HasValue(item.overrideKey);
+					activeHasValueCache.emplace(item.overrideKey, selectedOverrideExists);
 				}
 				else
 				{
-					overrideExists = it->second;
+					selectedOverrideExists = it->second;
 				}
 			}
-			const std::wstring& activeKey = overrideExists ? item.overrideKey : item.key;
 			const bool editingHklm = activeConfig->IsHklm();
 			bool hkcuHasValue = false;
 			if (editingHklm && hasUserKey)
 			{
-				auto it = hkcuHasValueCache.find(activeKey);
-				if (it == hkcuHasValueCache.end())
+				auto hasCachedUserValue = [&](const std::wstring& name)
 				{
-					const bool hasValue = userConfig.HasValue(activeKey);
-					hkcuHasValueCache.emplace(activeKey, hasValue);
-					hkcuHasValue = hasValue;
-				}
-				else
-				{
-					hkcuHasValue = it->second;
-				}
+					auto it = hkcuHasValueCache.find(name);
+					if (it != hkcuHasValueCache.end())
+					{
+						return it->second;
+					}
+					const bool exists = userConfig.HasValue(name);
+					hkcuHasValueCache.emplace(name, exists);
+					return exists;
+				};
+				hkcuHasValue = hasCachedUserValue(item.key)
+					|| (!item.overrideKey.empty() && hasCachedUserValue(item.overrideKey));
 			}
 
 			if (item.overrideIcon)
 			{
-				bool show = isRelevant && overrideExists;
+				bool show = false;
+				if (!item.overrideKey.empty())
+				{
+					const auto resolved = ResolveOverridableDword(item.key, item.overrideKey, 0);
+					show = isRelevant && resolved.IsOverride();
+					if (resolved.source == RegistryValueSource::MachineOverride && !editingHklm)
+					{
+						item.overrideIcon->SetToolTip(L"Effective value is inherited from an HKLM Override key.");
+					}
+					else
+					{
+						item.overrideIcon->SetToolTip(L"Effective value is coming from an Override key in the current scope.");
+					}
+				}
 				if (item.key == L"ColorizationColorInactive")
 				{
 					show = false;
@@ -686,6 +877,15 @@ namespace OpenGlass
 				if (item.overrideIcon->IsShown() != show)
 				{
 					item.overrideIcon->Show(show);
+					needLayout = true;
+				}
+			}
+			if (item.resetOverrideButton)
+			{
+				const bool show = isRelevant && selectedOverrideExists;
+				if (item.resetOverrideButton->IsShown() != show)
+				{
+					item.resetOverrideButton->Show(show);
 					needLayout = true;
 				}
 			}
@@ -828,6 +1028,10 @@ namespace OpenGlass
 			config->SetDword(name, val);
 			SetDirty(true);
 			NotifySettingsChange(type);
+		};
+		auto updateOverridableDword = [this, updateDword](const std::wstring& overrideKey, DWORD value) {
+			updateDword(overrideKey, value, ChangeType::Colorization);
+			UpdateOptionStatusIcons();
 		};
 		auto blurRadiusToDeviation = [](int radius) -> DWORD {
 			int val = (radius * 10 + 2) / 3;
@@ -1468,11 +1672,18 @@ namespace OpenGlass
 			}
 		});
 
-		m_cpColorizationColor->Bind(wxEVT_COLOURPICKER_CHANGED, [this, updateDword, colorToDwordIgnoreAlpha, updateInheritance](wxColourPickerEvent& e) {
-			const std::wstring key = m_config->HasValue(L"ColorizationColorOverride")
-				? L"ColorizationColorOverride"
-				: L"ColorizationColor";
-			updateDword(key, colorToDwordIgnoreAlpha(key, e.GetColour()), ChangeType::Colorization);
+		m_cpColorizationColor->Bind(wxEVT_COLOURPICKER_CHANGED, [this, updateOverridableDword, updateInheritance](wxColourPickerEvent& e) {
+			const DWORD currentValue = ResolveOverridableDword(
+				L"ColorizationColor",
+				L"ColorizationColorOverride",
+				0xFF000000
+			).value;
+			const wxColour color = e.GetColour();
+			const DWORD value = (currentValue & 0xFF000000)
+				| (color.Red() << 16)
+				| (color.Green() << 8)
+				| color.Blue();
+			updateOverridableDword(L"ColorizationColorOverride", value);
 			updateInheritance();
 		});
 
@@ -1647,32 +1858,52 @@ namespace OpenGlass
 		bindOpacity(m_chModeColorizationOpacityMaximized, m_slColorizationOpacityMaximized, L"ColorizationOpacityMaximized", 0xFFFFFFFF, 0xFFFFFFFE, false);
 		bindOpacity(m_chModeColorizationOpacityInactiveMaximized, m_slColorizationOpacityInactiveMaximized, L"ColorizationOpacityInactiveMaximized", 0xFFFFFFFF, 0xFFFFFFFE, false);
 
-		m_slBlurBalance->Bind(wxEVT_SLIDER, [this, updateDword, setSliderTooltipValue](wxCommandEvent& e) {
-			const std::wstring key = m_config->HasValue(L"ColorizationBlurBalanceOverride")
-				? L"ColorizationBlurBalanceOverride"
-				: L"ColorizationBlurBalance";
-			updateDword(key, e.GetInt(), ChangeType::Colorization);
+		m_slBlurBalance->Bind(wxEVT_SLIDER, [this, updateOverridableDword, setSliderTooltipValue](wxCommandEvent& e) {
+			updateOverridableDword(L"ColorizationBlurBalanceOverride", e.GetInt());
 			setSliderTooltipValue(m_slBlurBalance, e.GetInt());
 		});
-		m_slAfterglowBalance->Bind(wxEVT_SLIDER, [this, updateDword, setSliderTooltipValue](wxCommandEvent& e) {
-			const std::wstring key = m_config->HasValue(L"ColorizationAfterglowBalanceOverride")
-				? L"ColorizationAfterglowBalanceOverride"
-				: L"ColorizationAfterglowBalance";
-			updateDword(key, e.GetInt(), ChangeType::Colorization);
+		m_slAfterglowBalance->Bind(wxEVT_SLIDER, [this, updateOverridableDword, setSliderTooltipValue](wxCommandEvent& e) {
+			updateOverridableDword(L"ColorizationAfterglowBalanceOverride", e.GetInt());
 			setSliderTooltipValue(m_slAfterglowBalance, e.GetInt());
 		});
-		m_slColorBalance->Bind(wxEVT_SLIDER, [this, updateDword, setSliderTooltipValue](wxCommandEvent& e) {
-			const std::wstring key = m_config->HasValue(L"ColorizationColorBalanceOverride")
-				? L"ColorizationColorBalanceOverride"
-				: L"ColorizationColorBalance";
-			updateDword(key, e.GetInt(), ChangeType::Colorization);
+		m_slColorBalance->Bind(wxEVT_SLIDER, [this, updateOverridableDword, setSliderTooltipValue](wxCommandEvent& e) {
+			updateOverridableDword(L"ColorizationColorBalanceOverride", e.GetInt());
 			setSliderTooltipValue(m_slColorBalance, e.GetInt());
 		});
-		m_cpAfterglow->Bind(wxEVT_COLOURPICKER_CHANGED, [this, updateDword, colorToDwordIgnoreAlpha](wxColourPickerEvent& e) {
-			const std::wstring key = m_config->HasValue(L"ColorizationAfterglowOverride")
-				? L"ColorizationAfterglowOverride"
-				: L"ColorizationAfterglow";
-			updateDword(key, colorToDwordIgnoreAlpha(key, e.GetColour()), ChangeType::Colorization);
+		m_cpAfterglow->Bind(wxEVT_COLOURPICKER_CHANGED, [this, updateOverridableDword](wxColourPickerEvent& e) {
+			const DWORD currentValue = ResolveOverridableDword(
+				L"ColorizationAfterglow",
+				L"ColorizationAfterglowOverride",
+				0
+			).value;
+			const wxColour color = e.GetColour();
+			const DWORD value = (currentValue & 0xFF000000)
+				| (color.Red() << 16)
+				| (color.Green() << 8)
+				| color.Blue();
+			updateOverridableDword(L"ColorizationAfterglowOverride", value);
+		});
+		m_btnPersistCompositionParameters->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
+			RegistryConfig* config = GetConfigForKey(L"ColorizationColorBalance");
+			if (!config)
+			{
+				return;
+			}
+
+			const std::pair<PCWSTR, int> values[]
+			{
+				{ L"ColorizationBlurBalanceOverride", m_slBlurBalance->GetValue() },
+				{ L"ColorizationAfterglowBalanceOverride", m_slAfterglowBalance->GetValue() },
+				{ L"ColorizationColorBalanceOverride", m_slColorBalance->GetValue() }
+			};
+			for (const auto& [name, value] : values)
+			{
+				TrackSettingChange(name);
+				config->SetDword(name, static_cast<DWORD>(value));
+			}
+			SetDirty(true);
+			NotifySettingsChange(ChangeType::Colorization);
+			UpdateOptionStatusIcons();
 		});
 
 		m_chkGlassOverrideAccent->Bind(wxEVT_CHECKBOX, [this, updateDword, deleteValue](wxCommandEvent& e) {
@@ -1814,6 +2045,14 @@ namespace OpenGlass
 				L"Cancelling symbol download...",
 				L"Waiting for the current network operation to stop."
 			});
+		});
+
+		m_btnEnableDwmCrashDumps->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
+			SetDwmCrashDumpsEnabled(true);
+		});
+
+		m_btnDisableDwmCrashDumps->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
+			SetDwmCrashDumpsEnabled(false);
 		});
 
 		m_btnSave->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {

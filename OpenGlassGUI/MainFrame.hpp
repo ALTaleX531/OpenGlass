@@ -1,5 +1,7 @@
 #pragma once
 #include "pch.h"
+#include "Diagnostics.hpp"
+#include "RegistryValueResolver.hpp"
 #include "RegistryConfig.hpp"
 #include "Symbols.hpp"
 
@@ -23,7 +25,7 @@ namespace OpenGlass
 	private:
 		void CreateControls();
 		void CreateSystemTab();
-		void CreateSymbolsTab();
+		void CreateDiagnosticsTab();
 		void CreateThemeTab();
 		void CreateAppearanceTab(); // Text and Caption settings
 		void CreateGlassColorsTab();
@@ -46,6 +48,12 @@ namespace OpenGlass
 		void OnClose(wxCloseEvent& event);
 		[[nodiscard]] bool IsSystemSettingKey(const std::wstring& key) const;
 		[[nodiscard]] RegistryConfig* GetConfigForKey(const std::wstring& key) const;
+		[[nodiscard]] ResolvedRegistryValue<DWORD> ResolveOverridableDword(
+			const std::wstring& key,
+			const std::wstring& overrideKey,
+			DWORD defaultValue
+		) const;
+		void ResetOverridableDword(const std::wstring& key, const std::wstring& overrideKey);
 		void SetDirty(bool dirty);
 		void UpdateWindowTitle();
 		void UpdateStatusBar();
@@ -54,10 +62,12 @@ namespace OpenGlass
 		void ApplyChoiceSlider(wxChoice* ch, wxSlider* sl, DWORD value, DWORD themeSentinel, DWORD autoSentinel, int disabledValue) const;
 		void TrackSettingChange(const std::wstring& name);
 		void StartSymbolDownload();
-		void RefreshSymbolDownloadLayout();
+		void RefreshDiagnosticsLayout();
 		void UpdateSymbolDownloadProgress(const SymbolDownloadProgress& progress);
 		void UpdateSymbolDownloadResult(wxArtID iconId, const wxString& summary, const wxString& details = wxEmptyString);
 		void FinishSymbolDownload(const SymbolDownloadOutcome& outcome);
+		void RefreshDwmCrashDumpConfiguration();
+		void SetDwmCrashDumpsEnabled(bool enabled);
 		
 		// Map for Revert functionality
 		std::map<std::wstring, std::variant<std::monostate, DWORD, std::wstring>> m_backupSettings;
@@ -74,6 +84,8 @@ namespace OpenGlass
 		// System Tab
 		wxCheckBox* m_chkDisableGlassOnBattery{ nullptr };
 		wxCheckListBox* m_clDisabledHooks{ nullptr };
+
+		// Diagnostics Tab
 		wxGauge* m_gaugeSymbolDownload{ nullptr };
 		wxStaticText* m_lblSymbolDownloadPhase{ nullptr };
 		wxStaticText* m_lblSymbolDownloadDetail{ nullptr };
@@ -82,8 +94,14 @@ namespace OpenGlass
 		wxStaticBitmap* m_bmpSymbolDownloadResult{ nullptr };
 		wxStaticText* m_lblSymbolDownloadResult{ nullptr };
 		wxString m_symbolDownloadResultText;
+		wxDirPickerCtrl* m_dpSymbolCacheDirectory{ nullptr };
 		wxButton* m_btnDownloadSymbols{ nullptr };
 		wxButton* m_btnCancelSymbolDownload{ nullptr };
+		wxDirPickerCtrl* m_dpDwmCrashDumpFolder{ nullptr };
+		wxStaticText* m_lblDwmCrashDumpStatus{ nullptr };
+		wxString m_dwmCrashDumpStatusText;
+		wxButton* m_btnEnableDwmCrashDumps{ nullptr };
+		wxButton* m_btnDisableDwmCrashDumps{ nullptr };
 
 		// Theme Tab
 		wxCheckBox* m_chkCustomThemeAtlas{ nullptr };
@@ -196,6 +214,7 @@ namespace OpenGlass
 		wxSlider* m_slBlurBalance{ nullptr };
 		wxSlider* m_slAfterglowBalance{ nullptr };
 		wxSlider* m_slColorBalance{ nullptr };
+		wxButton* m_btnPersistCompositionParameters{ nullptr };
 		wxColourPickerCtrl* m_cpAfterglow{ nullptr };
 		
 		// Accent Tab
@@ -205,6 +224,7 @@ namespace OpenGlass
 		struct OptionStatus
 		{
 			wxStaticBitmap* overrideIcon{};
+			wxButton* resetOverrideButton{};
 			wxStaticBitmap* hkcuWarnIcon{};
 			std::wstring key;
 			std::wstring overrideKey;

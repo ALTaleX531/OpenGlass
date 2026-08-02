@@ -479,16 +479,16 @@ void GlassRenderer::Update(GlassEngine::UpdateType type)
 		Shared::g_glassOpacity = std::clamp(static_cast<float>(value) / 100.f, 0.f, 1.f);
 		Shared::g_glassOpacityInactive = std::clamp(static_cast<float>(GlassEngine::GetDwordFromRegistry(L"GlassOpacityInactive", value)) / 100.f, 0.f, 1.f);
 
-		value = GlassEngine::GetDwordFromRegistry(L"ColorizationAfterglowOverride", GlassEngine::GetDwordFromRegistry(L"ColorizationAfterglow"));
+		value = GlassEngine::GetOverridableDwordFromRegistry(L"ColorizationAfterglow", L"ColorizationAfterglowOverride");
 		Shared::g_afterglow = Color::FromArgb(value);
 
-		value = GlassEngine::GetDwordFromRegistry(L"ColorizationBlurBalanceOverride", GlassEngine::GetDwordFromRegistry(L"ColorizationBlurBalance"));
+		value = GlassEngine::GetOverridableDwordFromRegistry(L"ColorizationBlurBalance", L"ColorizationBlurBalanceOverride");
 		Shared::g_blurBalance = std::clamp(static_cast<float>(value) / 100.f, 0.f, 1.f);
 
-		value = GlassEngine::GetDwordFromRegistry(L"ColorizationColorBalanceOverride", GlassEngine::GetDwordFromRegistry(L"ColorizationColorBalance"));
+		value = GlassEngine::GetOverridableDwordFromRegistry(L"ColorizationColorBalance", L"ColorizationColorBalanceOverride");
 		Shared::g_colorBalance = std::clamp(static_cast<float>(value) / 100.f, 0.f, 1.f);
 
-		value = GlassEngine::GetDwordFromRegistry(L"ColorizationAfterglowBalanceOverride", GlassEngine::GetDwordFromRegistry(L"ColorizationAfterglowBalance"));
+		value = GlassEngine::GetOverridableDwordFromRegistry(L"ColorizationAfterglowBalance", L"ColorizationAfterglowBalanceOverride");
 		Shared::g_afterglowBalance = std::clamp(static_cast<float>(value) / 100.f, 0.f, 1.f);
 
 		value = GlassEngine::GetDwordFromRegistry(L"MaterialOpacity");

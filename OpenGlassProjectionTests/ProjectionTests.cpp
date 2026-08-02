@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "ProjectionFixture.hpp"
+#include "RegistryValueResolver.hpp"
 
 using namespace OpenGlass;
 using namespace OpenGlassProjectionTests;
@@ -272,6 +273,55 @@ namespace
 		Check(!storage.registry.Freeze({150, 0}));
 		Check(storage.registry.descriptor_error());
 	}
+
+	void TestOverridableRegistryValueResolution()
+	{
+		constexpr DWORD defaultValue = 55;
+		for (unsigned mask = 0; mask < 16; mask++)
+		{
+			const std::optional<DWORD> userOverride = (mask & 0x1) ? std::optional<DWORD>{ 11 } : std::nullopt;
+			const std::optional<DWORD> userBase = (mask & 0x2) ? std::optional<DWORD>{ 22 } : std::nullopt;
+			const std::optional<DWORD> machineOverride = (mask & 0x4) ? std::optional<DWORD>{ 33 } : std::nullopt;
+			const std::optional<DWORD> machineBase = (mask & 0x8) ? std::optional<DWORD>{ 44 } : std::nullopt;
+			const auto resolved = ResolveOverridableRegistryValue(
+				userOverride,
+				userBase,
+				machineOverride,
+				machineBase,
+				defaultValue
+			);
+
+			if (userOverride)
+			{
+				Check(resolved.value == 11);
+				Check(resolved.source == RegistryValueSource::UserOverride);
+			}
+			else if (userBase)
+			{
+				Check(resolved.value == 22);
+				Check(resolved.source == RegistryValueSource::UserBase);
+			}
+			else if (machineOverride)
+			{
+				Check(resolved.value == 33);
+				Check(resolved.source == RegistryValueSource::MachineOverride);
+			}
+			else if (machineBase)
+			{
+				Check(resolved.value == 44);
+				Check(resolved.source == RegistryValueSource::MachineBase);
+			}
+			else
+			{
+				Check(resolved.value == defaultValue);
+				Check(resolved.source == RegistryValueSource::Default);
+			}
+			Check(resolved.IsOverride() == (
+				resolved.source == RegistryValueSource::UserOverride
+				|| resolved.source == RegistryValueSource::MachineOverride
+			));
+		}
+	}
 }
 
 int OpenGlassProjectionTests::Target(int value)
@@ -291,5 +341,6 @@ int main()
 	TestAtomicCommitAndDetourStorage();
 	TestDisjointProjectedBindings();
 	TestInvalidMetadata();
+	TestOverridableRegistryValueResolution();
 	return g_failures;
 }

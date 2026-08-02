@@ -374,10 +374,10 @@ namespace OpenGlass
 		return (std::filesystem::path{ executableDirectory } / L"symbols").wstring();
 	}
 
-	SymbolDownloadOutcome DownloadSymbols(const std::stop_token& stopToken, const SymbolDownloadProgressCallback& progressCallback)
+	SymbolDownloadOutcome DownloadSymbols(std::wstring symbolDirectory, const std::stop_token& stopToken, const SymbolDownloadProgressCallback& progressCallback)
 	{
 		SymbolDownloadOutcome outcome{};
-		outcome.symbolDirectory = GetSymbolCacheDirectory();
+		outcome.symbolDirectory = symbolDirectory.empty() ? GetSymbolCacheDirectory() : std::move(symbolDirectory);
 
 		const HRESULT roInitResult = RoInitialize(RO_INIT_MULTITHREADED);
 		const auto roScope = wil::scope_exit([roInitResult]

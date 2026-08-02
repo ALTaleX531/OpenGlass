@@ -646,7 +646,7 @@ void GlassKernel::Update(GlassEngine::UpdateType type)
 		Shared::g_blurOptimization = static_cast<D2D1_GAUSSIANBLUR_OPTIMIZATION>(std::clamp(GlassEngine::GetDwordFromRegistry(L"BlurOptimization", 0), 0ul, 2ul));
 		Shared::g_roundRectRadius = static_cast<int>(GlassEngine::GetDwordFromRegistry(L"RoundRectRadius"));
 
-		value = GlassEngine::GetDwordFromRegistry(L"ColorizationColorOverride", GlassEngine::GetDwordFromRegistry(L"ColorizationColor", 0xFFFFFFFF));
+		value = GlassEngine::GetOverridableDwordFromRegistry(L"ColorizationColor", L"ColorizationColorOverride", 0xFFFFFFFF);
 		Shared::g_color = Color::FromArgb(value);
 		Shared::g_colorInactive = Color::FromArgb(GlassEngine::GetDwordFromRegistry(L"ColorizationColorInactive", value));
 

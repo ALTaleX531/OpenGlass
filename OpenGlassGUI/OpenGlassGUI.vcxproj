@@ -44,6 +44,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Diagnostics.hpp" />
     <ClInclude Include="OpenGlassGUI.hpp" />
     <ClInclude Include="MainFrame.hpp" />
     <ClInclude Include="RegistryConfig.hpp" />
@@ -53,6 +54,7 @@
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Diagnostics.cpp" />
     <ClCompile Include="OpenGlassGUI.cpp" />
     <ClCompile Include="MainFrame.Core.cpp" />
     <ClCompile Include="MainFrame.State.cpp" />

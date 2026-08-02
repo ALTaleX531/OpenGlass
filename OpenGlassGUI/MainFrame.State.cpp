@@ -224,10 +224,11 @@ namespace OpenGlass
 		m_rbGlassType->SetSelection(std::clamp<int>(m_config->GetDword(L"GlassType", 0), 0, 1));
 		m_chkOpaqueBlend->SetValue(m_config->GetDword(L"ColorizationOpaqueBlend", 0) != 0);
 
-		const bool hasColorOverride = m_config->HasValue(L"ColorizationColorOverride");
-		const DWORD activeColor = hasColorOverride
-			? m_config->GetDword(L"ColorizationColorOverride", 0xFF000000)
-			: m_config->GetDword(L"ColorizationColor", 0xFF000000);
+		const DWORD activeColor = ResolveOverridableDword(
+			L"ColorizationColor",
+			L"ColorizationColorOverride",
+			0xFF000000
+		).value;
 		m_cpColorizationColor->SetColour(dwordToColor(activeColor));
 		m_slGlassOpacity->SetValue(m_config->GetDword(L"GlassOpacity", 63));
 		syncSliderTooltip(m_slGlassOpacity);
@@ -328,20 +329,32 @@ namespace OpenGlass
 		syncSliderTooltip(m_slColorizationOpacityMaximized);
 		syncSliderTooltip(m_slColorizationOpacityInactiveMaximized);
 
-		const bool hasBlurBalanceOverride = m_config->HasValue(L"ColorizationBlurBalanceOverride");
-		m_slBlurBalance->SetValue(m_config->GetDword(hasBlurBalanceOverride ? L"ColorizationBlurBalanceOverride" : L"ColorizationBlurBalance", 50));
+		m_slBlurBalance->SetValue(ResolveOverridableDword(
+			L"ColorizationBlurBalance",
+			L"ColorizationBlurBalanceOverride",
+			50
+		).value);
 		syncSliderTooltip(m_slBlurBalance);
 
-		const bool hasAfterglowBalanceOverride = m_config->HasValue(L"ColorizationAfterglowBalanceOverride");
-		m_slAfterglowBalance->SetValue(m_config->GetDword(hasAfterglowBalanceOverride ? L"ColorizationAfterglowBalanceOverride" : L"ColorizationAfterglowBalance", 10));
+		m_slAfterglowBalance->SetValue(ResolveOverridableDword(
+			L"ColorizationAfterglowBalance",
+			L"ColorizationAfterglowBalanceOverride",
+			10
+		).value);
 		syncSliderTooltip(m_slAfterglowBalance);
 
-		const bool hasColorBalanceOverride = m_config->HasValue(L"ColorizationColorBalanceOverride");
-		m_slColorBalance->SetValue(m_config->GetDword(hasColorBalanceOverride ? L"ColorizationColorBalanceOverride" : L"ColorizationColorBalance", 10));
+		m_slColorBalance->SetValue(ResolveOverridableDword(
+			L"ColorizationColorBalance",
+			L"ColorizationColorBalanceOverride",
+			10
+		).value);
 		syncSliderTooltip(m_slColorBalance);
 		wxColour afterglowColor;
-		const bool hasAfterglowOverride = m_config->HasValue(L"ColorizationAfterglowOverride");
-		DWORD afterglowVal = m_config->GetDword(hasAfterglowOverride ? L"ColorizationAfterglowOverride" : L"ColorizationAfterglow", 0);
+		DWORD afterglowVal = ResolveOverridableDword(
+			L"ColorizationAfterglow",
+			L"ColorizationAfterglowOverride",
+			0
+		).value;
 		// Format is: AA RR GG BB
 		afterglowColor.Set(
 			(afterglowVal >> 16) & 0xFF,

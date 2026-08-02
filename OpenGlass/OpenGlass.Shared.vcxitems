@@ -62,6 +62,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)CustomThemeAtlasLoader.cpp"><Link>Source Files\CustomThemeAtlasLoader.cpp</Link></ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)D3DGlassRealizer.cpp"><Link>Source Files\D3DGlassRealizer.cpp</Link></ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)dllmain.cpp"><Link>Source Files\dllmain.cpp</Link></ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)GlassEngine.Registry.cpp"><Link>Source Files\GlassEngine.Registry.cpp</Link></ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)GlassRealizer.cpp"><Link>Source Files\GlassRealizer.cpp</Link></ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)GlassSafetyZoneLayer.cpp"><Link>Source Files\GlassSafetyZoneLayer.cpp</Link></ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)GlassService.cpp"><Link>Source Files\GlassService.cpp</Link></ClCompile>

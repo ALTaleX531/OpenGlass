@@ -847,7 +847,7 @@ void GlassKernel::Update(GlassEngine::UpdateType type)
 		Shared::g_roundRectRadius = static_cast<int>(GlassEngine::GetDwordFromRegistry(L"RoundRectRadius"));
 		ApplyCornerRadiusToWindowFrames(Shared::g_roundRectRadius);
 		
-		value = GlassEngine::GetDwordFromRegistry(L"ColorizationColorOverride", GlassEngine::GetDwordFromRegistry(L"ColorizationColor", 0xFFFFFFFF));
+		value = GlassEngine::GetOverridableDwordFromRegistry(L"ColorizationColor", L"ColorizationColorOverride", 0xFFFFFFFF);
 		Shared::g_color = Color::FromArgb(value);
 		Shared::g_colorInactive = Color::FromArgb(GlassEngine::GetDwordFromRegistry(L"ColorizationColorInactive", value));
 

@@ -33,5 +33,5 @@ namespace OpenGlass
 	using SymbolDownloadProgressCallback = std::function<void(const SymbolDownloadProgress&)>;
 
 	[[nodiscard]] std::wstring GetSymbolCacheDirectory();
-	[[nodiscard]] SymbolDownloadOutcome DownloadSymbols(const std::stop_token& stopToken, const SymbolDownloadProgressCallback& progressCallback = {});
+	[[nodiscard]] SymbolDownloadOutcome DownloadSymbols(std::wstring symbolDirectory, const std::stop_token& stopToken, const SymbolDownloadProgressCallback& progressCallback = {});
 }

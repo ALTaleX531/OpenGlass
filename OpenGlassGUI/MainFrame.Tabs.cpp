@@ -122,12 +122,13 @@ namespace OpenGlass
 		m_notebook->AddPage(panel, L"System");
 	}
 
-	void MainFrame::CreateSymbolsTab()
+	void MainFrame::CreateDiagnosticsTab()
 	{
-		wxPanel* panel = new wxPanel(m_notebook);
+		wxScrolledWindow* panel = new wxScrolledWindow(m_notebook);
+		panel->SetScrollRate(5, 5);
 		wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 
-		wxStaticBoxSizer* downloadGroup = new wxStaticBoxSizer(wxVERTICAL, panel, L"Settings");
+		wxStaticBoxSizer* downloadGroup = new wxStaticBoxSizer(wxVERTICAL, panel, L"Symbols");
 		const wxString descriptionText = L"Download the public PDB files required for the current Windows build. Files are saved to the local symbols cache used by OpenGlass.";
 		wxStaticText* description = new wxStaticText(
 			panel,
@@ -151,15 +152,18 @@ namespace OpenGlass
 		wxStaticText* modulesValue = new wxStaticText(panel, wxID_ANY, L"uDWM.dll, dwmcore.dll");
 		addInfoRow(L"Modules", modulesValue);
 
-		wxTextCtrl* cachePathValue = new wxTextCtrl(
+		m_dpSymbolCacheDirectory = new wxDirPickerCtrl(
 			panel,
 			wxID_ANY,
 			GetSymbolCacheDirectory(),
+			L"Select a symbol cache folder",
 			wxDefaultPosition,
 			wxDefaultSize,
-			wxTE_READONLY
+			wxDIRP_USE_TEXTCTRL
 		);
-		addInfoRow(L"Cache path", cachePathValue);
+		m_dpSymbolCacheDirectory->Enable(m_isAdmin);
+		m_dpSymbolCacheDirectory->SetToolTip(L"Choose where downloaded PDB files are stored. The folder is created when needed.");
+		addInfoRow(L"Cache path", m_dpSymbolCacheDirectory);
 
 		wxStaticText* timeoutValue = new wxStaticText(
 			panel,
@@ -183,7 +187,7 @@ namespace OpenGlass
 		buttonRow->Add(m_btnCancelSymbolDownload, 0);
 		downloadGroup->Add(buttonRow, 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 8);
 
-		wxStaticBoxSizer* statusGroup = new wxStaticBoxSizer(wxVERTICAL, panel, L"Status");
+		wxStaticBoxSizer* statusGroup = new wxStaticBoxSizer(wxVERTICAL, panel, L"Symbol download status");
 		m_gaugeSymbolDownload = new wxGauge(panel, wxID_ANY, 100);
 		statusGroup->Add(m_gaugeSymbolDownload, 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, 8);
 
@@ -214,32 +218,81 @@ namespace OpenGlass
 		m_pnlSymbolDownloadResult->Hide();
 		statusGroup->Add(m_pnlSymbolDownloadResult, 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 8);
 
+		wxStaticBoxSizer* dumpGroup = new wxStaticBoxSizer(wxVERTICAL, panel, L"WER crash dumps");
+		const wxString dumpDescriptionText = L"Collect full user-mode crash dumps for dwm.exe using its per-application Windows Error Reporting configuration. Full dumps can be large. The default folder is .\\dumps beside OpenGlassGUI.exe.";
+		wxStaticText* dumpDescription = new wxStaticText(panel, wxID_ANY, dumpDescriptionText);
+		dumpGroup->Add(dumpDescription, 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, 8);
+
+		wxFlexGridSizer* dumpGrid = new wxFlexGridSizer(2, 8, 12);
+		dumpGrid->AddGrowableCol(1, 1);
+		wxStaticText* dumpFolderLabel = new wxStaticText(panel, wxID_ANY, L"Dump folder");
+		wxFont dumpFolderFont = dumpFolderLabel->GetFont();
+		dumpFolderFont.SetWeight(wxFONTWEIGHT_BOLD);
+		dumpFolderLabel->SetFont(dumpFolderFont);
+		dumpGrid->Add(dumpFolderLabel, 0, wxALIGN_CENTER_VERTICAL);
+		m_dpDwmCrashDumpFolder = new wxDirPickerCtrl(
+			panel,
+			wxID_ANY,
+			GetDefaultDwmCrashDumpFolder(),
+			L"Select a folder for DWM crash dumps",
+			wxDefaultPosition,
+			wxDefaultSize,
+			wxDIRP_USE_TEXTCTRL
+		);
+		m_dpDwmCrashDumpFolder->Enable(m_isAdmin);
+		m_dpDwmCrashDumpFolder->SetToolTip(L"The folder ACL must allow WER to collect a dump for the crashing DWM process. Relative paths are resolved beside OpenGlassGUI.exe.");
+		dumpGrid->Add(m_dpDwmCrashDumpFolder, 1, wxEXPAND);
+		dumpGroup->Add(dumpGrid, 0, wxEXPAND | wxALL, 8);
+
+		m_dwmCrashDumpStatusText = L"Reading the current dwm.exe dump configuration...";
+		m_lblDwmCrashDumpStatus = new wxStaticText(panel, wxID_ANY, m_dwmCrashDumpStatusText);
+		dumpGroup->Add(m_lblDwmCrashDumpStatus, 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 8);
+
+		wxBoxSizer* dumpButtonRow = new wxBoxSizer(wxHORIZONTAL);
+		dumpButtonRow->AddStretchSpacer();
+		m_btnEnableDwmCrashDumps = new wxButton(panel, wxID_ANY, L"Enable full dumps");
+		m_btnEnableDwmCrashDumps->Enable(m_isAdmin);
+		dumpButtonRow->Add(m_btnEnableDwmCrashDumps, 0, wxRIGHT, 6);
+		m_btnDisableDwmCrashDumps = new wxButton(panel, wxID_ANY, L"Disable dumps");
+		m_btnDisableDwmCrashDumps->Enable(false);
+		m_btnDisableDwmCrashDumps->SetToolTip(L"Remove the per-application LocalDumps\\dwm.exe registry key. System-wide WER settings are not changed.");
+		dumpButtonRow->Add(m_btnDisableDwmCrashDumps, 0);
+		dumpGroup->Add(dumpButtonRow, 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 8);
+
 		sizer->Add(downloadGroup, 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, 8);
 		sizer->Add(statusGroup, 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 8);
+		sizer->Add(dumpGroup, 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 8);
 		sizer->AddStretchSpacer();
 		if (!m_isAdmin)
 		{
-			AddAdminRequiredTip(panel, sizer, L"Requires Administrator privileges to download symbols.");
+			AddAdminRequiredTip(panel, sizer, L"Requires Administrator privileges to download symbols or change WER crash dump settings.");
 		}
 
 		panel->SetSizer(sizer);
-		panel->Bind(wxEVT_SIZE, [this, panel, description, descriptionText](wxSizeEvent& event)
+		panel->Bind(wxEVT_SIZE, [this, panel, description, descriptionText, dumpDescription, dumpDescriptionText](wxSizeEvent& event)
 		{
 			WrapStaticTextToParentWidth(description, descriptionText);
 			WrapStaticTextToParentWidth(m_lblSymbolDownloadDetail, m_symbolDownloadDetailText);
 			WrapStaticTextToParentWidth(m_lblSymbolDownloadResult, m_symbolDownloadResultText);
+			WrapStaticTextToParentWidth(dumpDescription, dumpDescriptionText);
+			WrapStaticTextToParentWidth(m_lblDwmCrashDumpStatus, m_dwmCrashDumpStatusText);
+			panel->FitInside();
 			event.Skip();
 		});
-		panel->CallAfter([this, panel, description, descriptionText]
+		panel->CallAfter([this, panel, description, descriptionText, dumpDescription, dumpDescriptionText]
 		{
 			panel->Layout();
 			WrapStaticTextToParentWidth(description, descriptionText);
 			WrapStaticTextToParentWidth(m_lblSymbolDownloadDetail, m_symbolDownloadDetailText);
 			WrapStaticTextToParentWidth(m_lblSymbolDownloadResult, m_symbolDownloadResultText);
+			WrapStaticTextToParentWidth(dumpDescription, dumpDescriptionText);
+			WrapStaticTextToParentWidth(m_lblDwmCrashDumpStatus, m_dwmCrashDumpStatusText);
 			panel->Layout();
+			panel->FitInside();
 		});
+		RefreshDwmCrashDumpConfiguration();
 		panel->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
-		m_notebook->AddPage(panel, L"Symbols");
+		m_notebook->AddPage(panel, L"Diagnostics");
 	}
 
 	void MainFrame::CreateThemeTab()
@@ -682,6 +735,15 @@ namespace OpenGlass
 
 		m_slColorBalance = new NativeSlider(panel, wxID_ANY, 10, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL | wxSL_AUTOTICKS);
 		AddProperty(panel, win7Group, L"Color balance:", m_slColorBalance, L"ColorizationColorBalance", L"ColorizationColorBalanceOverride");
+
+		{
+			wxBoxSizer* row = new wxBoxSizer(wxHORIZONTAL);
+			row->AddStretchSpacer();
+			m_btnPersistCompositionParameters = new wxButton(panel, wxID_ANY, L"Keep current values");
+			m_btnPersistCompositionParameters->SetToolTip(L"Copy the three displayed composition parameters to persistent Override values in the current editing scope.");
+			row->Add(m_btnPersistCompositionParameters, 0);
+			win7Group->Add(row, 0, wxEXPAND | wxALL, 2);
+		}
 
 		sizer->Add(win7Group, 0, wxEXPAND | wxALL, 2);
 

@@ -6,12 +6,12 @@ OpenGlass restores Aero-style glass effects by loading `OpenGlass.dll` into `dwm
 
 - `OpenGlass/`: shared core DLL code, two explicit architecture projects, private DWM implementations under `Architecture/`, and independent schemas under `ProjectionSchemas/`.
 - `OpenGlassHost/`: service wrapper that loads the core DLL and starts `ServiceMain`.
-- `OpenGlassGUI/`: wxWidgets configuration UI and symbol-download experience.
+- `OpenGlassGUI/`: wxWidgets configuration UI, symbol-download experience, and administrator-only DWM/WER diagnostics.
 - `OpenGlassRenderTest/`: interactive GPU/effect benchmark, not a hermetic unit-test suite.
 - `OpenGlassProjectionTests/`: non-injecting typed registry, resolution, ABI, Layout, and Detour tests.
 - `Common/`: shared MSBuild configuration; `Scripts/`: generation, verification, and Inno Setup packaging.
 
-Runtime flow: the Service Control Manager starts `OpenGlassHost.exe`; the host loads `OpenGlass.dll`; service code validates and injects into `dwm.exe`; a named pipe supplies the target session's HKCU handle; injected hooks read configuration and render the effect. The GUI writes settings immediately and notifies DWM—its Save action confirms current state, while Revert/close may restore captured values.
+Runtime flow: the Service Control Manager starts `OpenGlassHost.exe`; the host loads `OpenGlass.dll`; service code validates and injects into `dwm.exe`; a named pipe supplies the target session's HKCU handle; injected hooks read configuration and render the effect. The GUI writes appearance settings immediately and notifies DWM—its Save action confirms current state, while Revert/close may restore captured values. Diagnostics actions are separate immediate HKLM operations and are not part of Save/Revert.
 
 ## Build architecture
 
@@ -50,6 +50,8 @@ Python generates projection metadata into `$(IntDir)\Generated\Projection`. Gene
 - Follow existing WIL error-handling patterns.
 - Preserve unrelated working-tree changes and avoid broad generated rewrites.
 - Treat GUI setting handlers as immediate mutations. Check HKCU/HKLM selection, notification behavior, rollback semantics, and error reporting together.
+- Resolve colorization Override pairs in this exact order: HKCU Override, HKCU base, HKLM Override, HKLM base, default. The GUI and injected DLL must share this ordering; never implement Override by nesting two independently layered registry reads, because that lets an HKLM Override incorrectly shadow an HKCU base value.
+- Keep WER diagnostics scoped to `LocalDumps\dwm.exe`; do not silently enable global crash collection. Enabling must write `DumpType=2`, `DumpCount=1`, and an explicit `REG_EXPAND_SZ` folder only after creating that folder. Disabling removes only the per-application key. These actions require an elevated administrator token and remain independent of GUI Save/Revert. The installer owns `{app}\dumps`: provision it without ordinary-user read access, grant the Window Manager identity the access required by WER's DWM crash-collection path, and remove it recursively on uninstall. Never delete a custom dump folder outside `{app}`.
 - Treat the host pipe and user-registry handle transfer as a security boundary. Preserve session and process validation.
 
 ## DWM projections and offsets

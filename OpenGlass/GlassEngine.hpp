@@ -1,6 +1,7 @@
 #pragma once
 #include "framework.hpp"
 #include "cpprt.hpp"
+#include "RegistryValueResolver.hpp"
 #include "uDWMProjection.hpp"
 
 namespace OpenGlass::GlassEngine
@@ -65,6 +66,13 @@ namespace OpenGlass::GlassEngine
 
 		return value;
 	}
+
+	DWORD GetOverridableDwordFromRegistry(
+		PCWSTR baseKeyName,
+		PCWSTR overrideKeyName,
+		DWORD defaultValue = 0
+	);
+
 	template <size_t Length>
 	FORCEINLINE void GetStringFromRegistry(PCWSTR keyName, WCHAR(&returnValue)[Length])
 	{
