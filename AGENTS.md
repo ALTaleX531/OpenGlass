@@ -29,13 +29,14 @@ Requirements are Visual Studio/MSBuild with the v145 C++ toolset, Windows SDK 10
 msbuild OpenGlass.slnx /m /restore /p:Configuration=Release /p:Platform=x64
 ```
 
-Use `Release` for normal local verification. `ReleaseSigned` requires the shared signing environment and is not a general developer build. A Release or ReleaseSigned solution build packages both installers when Inno Setup is available; it reports a skip without failing when `ISCC.exe` is absent. Set `OpenGlassInstallerEnabled=false` to suppress packaging explicitly.
+Use `Release` for normal local verification. `ReleaseSigned` requires the shared signing environment and is not a general developer build. A Release or ReleaseSigned solution build packages both installers when Inno Setup is available; each successful architecture package also creates `OpenGlassSymbols.<Architecture>.zip` containing the matching DLL, Host, and GUI PDBs. Packaging reports a skip without failing when `ISCC.exe` is absent. Set `OpenGlassInstallerEnabled=false` to suppress packaging explicitly.
 
 The solution builds Host and GUI once into `Build\x64\<Configuration>\common\`, the two DLLs into `legacy\` and `milcomp\`, and uses two explicit Utility projects to package them without coupling installer generation to the GUI. To package only one architecture directly, use:
 
 ```powershell
 msbuild Scripts/OpenGlass.Packaging.proj /m /p:Configuration=Release /p:Architecture=legacy
 msbuild Scripts/OpenGlass.Packaging.proj /m /p:Configuration=Release /p:Architecture=milcomp
+python Scripts/archive_pdbs.py . --architecture legacy --configuration Release
 ```
 
 Python generates projection metadata into `$(IntDir)\Generated\Projection`. Generated files are build artifacts: never edit, copy into the source tree, or commit them. PE size and projected-wrapper machine code may be inspected while developing the projection mechanism, but they are not fixed repository acceptance gates.
@@ -71,15 +72,16 @@ Every projected wrapper must be `inline` and contain only an `OPENGLASS_MUSTTAIL
 
 Use `$maintain-dwm-offsets` from `.agents/skills/maintain-dwm-offsets/` when asked to inspect DWM binaries, compare layouts, audit a projection, or update the schemas. The skill defaults to read-only IDA and repository analysis. A production schema change requires explicit authorization and independent semantic evidence from the exact binary; folder names and prior values are not evidence.
 
-Keep three verification layers distinct: static verification combines schema lint with a paired PE/PDB name audit; an IDA semantic audit establishes ABI and meaning; and real-OS validation exercises the injection/rendering path. Exact DbgHelp output and uniqueness do not substitute for semantic or runtime evidence.
+Keep three verification layers distinct: static verification combines schema validation with a paired PE/PDB resolution audit; an IDA semantic audit establishes ABI and meaning; and real-OS validation exercises the injection/rendering path. Exact DbgHelp output and uniqueness do not substitute for semantic or runtime evidence.
 
-Use `Scripts/dump_symbols.py --input IMAGE [--output SYMBOL_CACHE] [--grep TEXT]` for quick complete-name discovery directly from an image. The symbol cache defaults to `%TEMP%\symbols`. Its output is convenient schema input, not a production audit report; use `audit_symbol_names.py` to record PE/PDB identity and IDA to establish semantics.
+Use `Scripts/dump_symbols.py --input IMAGE [--output SYMBOL_CACHE] [--grep TEXT]` for quick complete-name discovery directly from an image. The symbol cache defaults to `%TEMP%\symbols`. Its output is convenient schema input, not a production audit report; use `.agents/skills/maintain-dwm-offsets/scripts/audit_symbol_resolution.py` to record PE/PDB identity and IDA to establish semantics.
 
 ```powershell
-python .agents/skills/maintain-dwm-offsets/scripts/lint_offset_tables.py . --architecture legacy --module udwm --id STABLE_ID --version BUILD.REVISION
-python .agents/skills/maintain-dwm-offsets/scripts/lint_symbol_descriptors.py . --architecture legacy
-python .agents/skills/maintain-dwm-offsets/scripts/audit_symbol_names.py . --architecture legacy --module udwm --version BUILD.REVISION --image PATH_TO_DLL --symbol-path PATH_TO_SYMBOLS --configuration release
+python .agents/skills/maintain-dwm-offsets/scripts/validate_projection_layouts.py . --architecture legacy --module udwm --id STABLE_ID --version BUILD.REVISION
+python .agents/skills/maintain-dwm-offsets/scripts/validate_projection_symbols.py . --architecture legacy
+python .agents/skills/maintain-dwm-offsets/scripts/audit_symbol_resolution.py . --architecture legacy --module udwm --version BUILD.REVISION --image PATH_TO_DLL --symbol-path PATH_TO_SYMBOLS --configuration release
 python -m unittest discover -s .agents/skills/maintain-dwm-offsets/tests -p "test_*.py"
+python Scripts/test_archive_pdbs.py
 python Scripts/test_dump_symbols.py
 python Scripts/test_projection_codegen.py
 msbuild OpenGlassProjectionTests/OpenGlassProjectionTests.vcxproj /m /p:Configuration=Release /p:Platform=x64

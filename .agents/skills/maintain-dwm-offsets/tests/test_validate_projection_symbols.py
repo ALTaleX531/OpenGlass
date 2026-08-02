@@ -8,10 +8,10 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).parents[4]
-SCRIPT = ROOT / ".agents" / "skills" / "maintain-dwm-offsets" / "scripts" / "lint_symbol_descriptors.py"
+SCRIPT = ROOT / ".agents" / "skills" / "maintain-dwm-offsets" / "scripts" / "validate_projection_symbols.py"
 
 
-class SymbolSchemaLinterTests(unittest.TestCase):
+class ProjectionSymbolValidationTests(unittest.TestCase):
 	def test_current_schema_and_json_contract(self) -> None:
 		for architecture in ("legacy", "milcomp"):
 			completed = subprocess.run([sys.executable, str(SCRIPT), str(ROOT), "--architecture", architecture, "--format", "json"], capture_output=True, text=True, check=False)

@@ -16,7 +16,7 @@ Enumerate consumers and inspect the MILComp schema before auditing. Do not copy 
 
 ## Selection rules
 
-Pass `--architecture legacy` or `--architecture milcomp` to both linters and to projection code generation. The JSON report repeats the selected architecture. The build projects are `OpenGlass.Legacy.vcxproj` and `OpenGlass.MILComp.vcxproj`; both retain the standard `Debug`, `Release`, and `ReleaseSigned` configurations.
+Pass `--architecture legacy` or `--architecture milcomp` to both schema validators and to projection code generation. The JSON report repeats the selected architecture. The build projects are `OpenGlass.Legacy.vcxproj` and `OpenGlass.MILComp.vcxproj`; both retain the standard `Debug`, `Release`, and `ReleaseSigned` configurations.
 
 - legacy markers include historical multi-generation Layout descriptors and legacy MIL projection names;
 - milcomp markers include its reduced visual/compositor projection set;

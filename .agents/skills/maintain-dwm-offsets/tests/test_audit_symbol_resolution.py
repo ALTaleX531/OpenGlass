@@ -10,15 +10,15 @@ import unittest
 import uuid
 
 
-SCRIPT = Path(__file__).parents[1] / "scripts" / "audit_symbol_names.py"
-SPEC = importlib.util.spec_from_file_location("audit_symbol_names", SCRIPT)
+SCRIPT = Path(__file__).parents[1] / "scripts" / "audit_symbol_resolution.py"
+SPEC = importlib.util.spec_from_file_location("audit_symbol_resolution", SCRIPT)
 assert SPEC and SPEC.loader
 AUDIT = importlib.util.module_from_spec(SPEC)
 sys.modules[SPEC.name] = AUDIT
 SPEC.loader.exec_module(AUDIT)
 
 
-class SymbolNameAuditTests(unittest.TestCase):
+class SymbolResolutionAuditTests(unittest.TestCase):
 	def test_version_and_activity(self) -> None:
 		self.assertEqual(AUDIT.Version.parse("10.0.26100.8972"), AUDIT.Version(26100, 8972))
 		descriptor = {"min_inclusive": {"build": 22000, "revision": 10}, "max_exclusive": {"build": 26100, "revision": 5}}

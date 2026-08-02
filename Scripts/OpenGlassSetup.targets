@@ -3,23 +3,25 @@
   <PropertyGroup>
     <OpenGlassInstallerEnabled Condition="'$(OpenGlassInstallerEnabled)'==''">true</OpenGlassInstallerEnabled>
     <OpenGlassIsccTool Condition="'$(OpenGlassIsccTool)'==''">ISCC.exe</OpenGlassIsccTool>
+    <OpenGlassPython Condition="'$(OpenGlassPython)'==''">python</OpenGlassPython>
   </PropertyGroup>
 
   <Target Name="OpenGlassPackageInstaller"
           AfterTargets="Build"
           Condition="'$(OpenGlassInstallerEnabled)'=='true' and ('$(Configuration)'=='Release' or '$(Configuration)'=='ReleaseSigned')">
-    <Exec Command="where &quot;$(OpenGlassIsccTool)&quot;"
+    <Exec Condition="!Exists('$(OpenGlassIsccTool)')"
+          Command="where &quot;$(OpenGlassIsccTool)&quot;"
           IgnoreExitCode="true"
           ConsoleToMSBuild="true">
       <Output TaskParameter="ExitCode" PropertyName="OpenGlassIsccExitCode" />
     </Exec>
-    <Message Condition="'$(OpenGlassIsccExitCode)'!='0'"
+    <Message Condition="!Exists('$(OpenGlassIsccTool)') and '$(OpenGlassIsccExitCode)'!='0'"
              Text="ISCC not found in PATH; $(OpenGlassPackagingArchitecture) installer packaging skipped."
              Importance="High" />
-    <MSBuild Condition="'$(OpenGlassIsccExitCode)'=='0'"
+    <MSBuild Condition="Exists('$(OpenGlassIsccTool)') or '$(OpenGlassIsccExitCode)'=='0'"
              Projects="$(MSBuildThisFileDirectory)OpenGlass.Packaging.proj"
              Targets="Package"
              BuildInParallel="false"
-             Properties="Configuration=$(Configuration);Platform=x64;Architecture=$(OpenGlassPackagingArchitecture);BuildDependencies=false;OpenGlassIsccTool=$(OpenGlassIsccTool)" />
+             Properties="Configuration=$(Configuration);Platform=x64;Architecture=$(OpenGlassPackagingArchitecture);BuildDependencies=false;OpenGlassIsccTool=$(OpenGlassIsccTool);OpenGlassPython=$(OpenGlassPython)" />
   </Target>
 </Project>

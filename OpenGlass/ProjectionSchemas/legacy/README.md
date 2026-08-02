@@ -16,11 +16,11 @@ Raw Symbols use their exact function-pointer type. Instruction-pattern anchors a
 
 After startup selects each Layout case, normal `read/ref/address` access is a direct offset load plus address calculation. Descriptor lookup, version selection, validation, allocation, locking, and exceptions remain outside the field-access hot path. The explicit `offset()` API is retained for checked startup diagnostics.
 
-Use the Layout and Symbol linters before and after edits. The Symbol linter requires every projected function to have a real wrapper call site or a direct typed Symbol consumer; the wrapper declaration alone does not satisfy completeness. A normal Release lets LTCG inline projected wrappers. Binary size and generated machine code can be inspected when changing the projection mechanism, but they are development diagnostics rather than fixed acceptance thresholds:
+Use the Layout and Symbol schema validators before and after edits. The Symbol validator requires every projected function to have a real wrapper call site or a direct typed Symbol consumer; the wrapper declaration alone does not satisfy completeness. A normal Release lets LTCG inline projected wrappers. Binary size and generated machine code can be inspected when changing the projection mechanism, but they are development diagnostics rather than fixed acceptance thresholds:
 
 ```powershell
-python .agents/skills/maintain-dwm-offsets/scripts/lint_offset_tables.py . --architecture legacy --version 26100.8972
-python .agents/skills/maintain-dwm-offsets/scripts/lint_symbol_descriptors.py . --architecture legacy
+python .agents/skills/maintain-dwm-offsets/scripts/validate_projection_layouts.py . --architecture legacy --version 26100.8972
+python .agents/skills/maintain-dwm-offsets/scripts/validate_projection_symbols.py . --architecture legacy
 msbuild OpenGlass\OpenGlass.Legacy.vcxproj /m /p:Configuration=Release /p:Platform=x64
 ```
 

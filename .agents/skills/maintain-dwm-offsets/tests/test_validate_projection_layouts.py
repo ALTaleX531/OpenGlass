@@ -10,15 +10,15 @@ from contextlib import redirect_stdout
 from pathlib import Path
 
 
-SCRIPT = Path(__file__).parents[1] / "scripts" / "lint_offset_tables.py"
-SPEC = importlib.util.spec_from_file_location("lint_offset_tables", SCRIPT)
+SCRIPT = Path(__file__).parents[1] / "scripts" / "validate_projection_layouts.py"
+SPEC = importlib.util.spec_from_file_location("validate_projection_layouts", SCRIPT)
 assert SPEC and SPEC.loader
-LINTER = importlib.util.module_from_spec(SPEC)
-sys.modules[SPEC.name] = LINTER
-SPEC.loader.exec_module(LINTER)
+VALIDATOR = importlib.util.module_from_spec(SPEC)
+sys.modules[SPEC.name] = VALIDATOR
+SPEC.loader.exec_module(VALIDATOR)
 
 
-class LayoutSchemaLinterTests(unittest.TestCase):
+class ProjectionLayoutValidationTests(unittest.TestCase):
 	def setUp(self) -> None:
 		self.temporary = tempfile.TemporaryDirectory()
 		self.repo = Path(self.temporary.name)
@@ -43,9 +43,9 @@ class LayoutSchemaLinterTests(unittest.TestCase):
 			{"offset": "-8", "until": {"build": "os::build_b", "revision": "0"}},
 		]}
 		self.write("udwm", [layout]); self.write("dwmcore", [])
-		before = LINTER.inspect(self.repo, self.architecture, LINTER.Version(100, 9), "all")["modules"][0]["tables"][0]["selection"]
-		equal = LINTER.inspect(self.repo, self.architecture, LINTER.Version(100, 10), "all")["modules"][0]["tables"][0]["selection"]
-		after = LINTER.inspect(self.repo, self.architecture, LINTER.Version(200, 0), "all")["modules"][0]["tables"][0]["selection"]
+		before = VALIDATOR.inspect(self.repo, self.architecture, VALIDATOR.Version(100, 9), "all")["modules"][0]["tables"][0]["selection"]
+		equal = VALIDATOR.inspect(self.repo, self.architecture, VALIDATOR.Version(100, 10), "all")["modules"][0]["tables"][0]["selection"]
+		after = VALIDATOR.inspect(self.repo, self.architecture, VALIDATOR.Version(200, 0), "all")["modules"][0]["tables"][0]["selection"]
 		self.assertEqual(before["entry"], 0)
 		self.assertEqual(before["offset_expression"], "dangerous()")
 		self.assertEqual(equal["entry"], 1)
@@ -58,7 +58,7 @@ class LayoutSchemaLinterTests(unittest.TestCase):
 			{"offset": "3", "otherwise": True},
 		]}
 		self.write("udwm", [layout]); self.write("dwmcore", [])
-		result = LINTER.inspect(self.repo, self.architecture, None, "all")
+		result = VALIDATOR.inspect(self.repo, self.architecture, None, "all")
 		self.assertEqual(result["summary"]["errors"], 1)
 
 	def test_rejects_invalid_notes(self) -> None:
@@ -66,7 +66,7 @@ class LayoutSchemaLinterTests(unittest.TestCase):
 			{"offset": "1", "otherwise": True},
 		]}
 		self.write("udwm", [layout]); self.write("dwmcore", [])
-		result = LINTER.inspect(self.repo, self.architecture, None, "all")
+		result = VALIDATOR.inspect(self.repo, self.architecture, None, "all")
 		self.assertEqual(result["summary"]["errors"], 1)
 		self.assertEqual(result["modules"][0]["tables"], [])
 		self.assertIn("notes must be a non-empty string", result["findings"][0]["message"])
@@ -77,19 +77,19 @@ class LayoutSchemaLinterTests(unittest.TestCase):
 			{"name": "Second", "id": "Class.Second", "kind": "field", "type": "int", "notes": "Accessor::GetSecond\nCross-check the constructor.", "cases": [{"offset": "8", "otherwise": True}]},
 		]
 		self.write("udwm", layouts); self.write("dwmcore", [])
-		version = LINTER.parse_requested("10.0.26100.8972")
-		self.assertEqual(version, LINTER.Version(26100, 8972))
-		result = LINTER.inspect(self.repo, self.architecture, version, "udwm", "Class.Second")
+		version = VALIDATOR.parse_requested("10.0.26100.8972")
+		self.assertEqual(version, VALIDATOR.Version(26100, 8972))
+		result = VALIDATOR.inspect(self.repo, self.architecture, version, "udwm", "Class.Second")
 		self.assertEqual(result["summary"]["tables"], 1)
 		self.assertEqual(result["modules"][0]["tables"][0]["id"], "Class.Second")
 		output = io.StringIO()
 		with redirect_stdout(output):
-			LINTER.print_text(result)
+			VALIDATOR.print_text(result)
 		self.assertIn("[-infinity, +infinity)", output.getvalue())
 		self.assertIn("Accessor::GetSecond", output.getvalue())
 		self.assertEqual(result["modules"][0]["tables"][0]["notes"], "Accessor::GetSecond\nCross-check the constructor.")
-		with self.assertRaises(LINTER.InputError):
-			LINTER.inspect(self.repo, self.architecture, version, "udwm", "Missing")
+		with self.assertRaises(VALIDATOR.InputError):
+			VALIDATOR.inspect(self.repo, self.architecture, version, "udwm", "Missing")
 
 
 if __name__ == "__main__":

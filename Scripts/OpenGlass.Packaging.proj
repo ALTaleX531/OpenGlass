@@ -8,6 +8,7 @@
     <Architecture Condition="'$(Architecture)'==''">legacy</Architecture>
     <BuildDependencies Condition="'$(BuildDependencies)'==''">true</BuildDependencies>
     <OpenGlassIsccTool Condition="'$(OpenGlassIsccTool)'==''">ISCC.exe</OpenGlassIsccTool>
+    <OpenGlassPython Condition="'$(OpenGlassPython)'==''">python</OpenGlassPython>
     <OpenGlassSignTool Condition="'$(OpenGlassSignTool)'==''">signtool.exe</OpenGlassSignTool>
     <OpenGlassRoot>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\'))</OpenGlassRoot>
     <CommonOutput>$(OpenGlassRoot)Build\x64\$(Configuration)\common\</CommonOutput>
@@ -27,6 +28,9 @@
     <ArchitectureCode>1</ArchitectureCode>
     <ArchitectureProject>$(OpenGlassRoot)OpenGlass\OpenGlass.MILComp.vcxproj</ArchitectureProject>
   </PropertyGroup>
+  <PropertyGroup>
+    <SymbolArchiveOutput>$(InstallerOutput)OpenGlassSymbols.$(ArchitectureLabel).zip</SymbolArchiveOutput>
+  </PropertyGroup>
   <ItemGroup>
     <OpenGlassBuildProject Include="$(ArchitectureProject)" />
     <OpenGlassBuildProject Include="$(OpenGlassRoot)OpenGlassHost\OpenGlassHost.vcxproj" />
@@ -42,10 +46,14 @@
   <Target Name="ValidatePackagingInputs">
     <Error Condition="'$(ArchitectureProject)'==''" Text="Architecture must be 'legacy' or 'milcomp'." />
     <Error Condition="'$(Configuration)'!='Release' and '$(Configuration)'!='ReleaseSigned'" Text="Packaging requires Configuration=Release or ReleaseSigned." />
-    <Exec Command="where &quot;$(OpenGlassIsccTool)&quot;" IgnoreExitCode="true" ConsoleToMSBuild="true">
+    <Exec Condition="!Exists('$(OpenGlassIsccTool)')" Command="where &quot;$(OpenGlassIsccTool)&quot;" IgnoreExitCode="true" ConsoleToMSBuild="true">
       <Output TaskParameter="ExitCode" PropertyName="OpenGlassIsccExitCode" />
     </Exec>
-    <Error Condition="'$(OpenGlassIsccExitCode)'!='0'" Text="Inno Setup Compiler was not found. Set OpenGlassIsccTool to ISCC.exe." />
+    <Error Condition="!Exists('$(OpenGlassIsccTool)') and '$(OpenGlassIsccExitCode)'!='0'" Text="Inno Setup Compiler was not found. Set OpenGlassIsccTool to ISCC.exe or its full path." />
+    <Exec Command="&quot;$(OpenGlassPython)&quot; --version" IgnoreExitCode="true" ConsoleToMSBuild="true">
+      <Output TaskParameter="ExitCode" PropertyName="OpenGlassPythonExitCode" />
+    </Exec>
+    <Error Condition="'$(OpenGlassPythonExitCode)'!='0'" Text="Python was not found. Set OpenGlassPython to a Python 3 executable." />
   </Target>
 
   <Target Name="RestoreDependencies" DependsOnTargets="ValidatePackagingInputs" Condition="'$(BuildDependencies)'=='true'">
@@ -75,5 +83,7 @@
           Command="&quot;$(OpenGlassIsccTool)&quot; /DMyAppVersion=$(OpenGlassProductVersion) /DDwmArchitecture=$(ArchitectureCode) /DBuildPath=&quot;$(SignedStage)&quot; /DOutputPath=&quot;$(InstallerOutput)&quot; /DSetupName=OpenGlassSetup.$(ArchitectureLabel).Signed &quot;$(OpenGlassRoot)Scripts\OpenGlass.iss&quot;" />
     <Exec Condition="'$(Configuration)'=='ReleaseSigned' and '$(OpenGlassSignArgs)'!=''"
           Command="&quot;$(OpenGlassSignTool)&quot; $(OpenGlassSignArgs) &quot;$(InstallerOutput)OpenGlassSetup.$(ArchitectureLabel).Signed.exe&quot;" />
+    <Exec WorkingDirectory="$(OpenGlassRoot)"
+          Command="&quot;$(OpenGlassPython)&quot; &quot;$(OpenGlassRoot)Scripts\archive_pdbs.py&quot; --architecture $(Architecture) --configuration $(Configuration) --output &quot;$(SymbolArchiveOutput)&quot;" />
   </Target>
 </Project>

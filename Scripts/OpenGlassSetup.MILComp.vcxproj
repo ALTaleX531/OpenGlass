@@ -18,6 +18,7 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <PropertyGroup>
     <OpenGlassPackagingArchitecture>milcomp</OpenGlassPackagingArchitecture>
+    <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
     <IntDir>$(MSBuildThisFileDirectory)..\Cache\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>$(IntDir)</OutDir>
   </PropertyGroup>

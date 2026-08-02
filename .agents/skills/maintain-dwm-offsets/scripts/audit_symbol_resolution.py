@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Audit exact UNDNAME_COMPLETE Symbol names against an image and PDB."""
+"""Audit projection Symbol resolution against an exact PE/PDB pair."""
 
 from __future__ import annotations
 

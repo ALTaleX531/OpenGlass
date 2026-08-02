@@ -12,10 +12,10 @@ Generated C++ belongs under `$(IntDir)` and must not be committed. Runtime metad
 
 Raw Symbols must retain their exact function-pointer type; a `BYTE*` Symbol is permitted only with explicit `usage: "code_address"` for instruction-pattern navigation. Model projected ABI changes as disjoint typed ranges. The narrowly supported `abi_compatibility` forms are compile-time-checked exceptions for intentionally discarded returns or one extra trailing Win64 argument, not a general ABI escape hatch.
 
-The Symbol linter treats a projected wrapper as a declaration, not a consumer. Every projected function must have a real runtime call site or a direct typed Symbol consumer such as a Detour; delete unused descriptors rather than letting them become Required startup gates.
+The Symbol validator treats a projected wrapper as a declaration, not a consumer. Every projected function must have a real runtime call site or a direct typed Symbol consumer such as a Detour; delete unused descriptors rather than letting them become Required startup gates.
 
 ```powershell
-python .agents/skills/maintain-dwm-offsets/scripts/lint_offset_tables.py . --architecture milcomp
-python .agents/skills/maintain-dwm-offsets/scripts/lint_symbol_descriptors.py . --architecture milcomp
+python .agents/skills/maintain-dwm-offsets/scripts/validate_projection_layouts.py . --architecture milcomp
+python .agents/skills/maintain-dwm-offsets/scripts/validate_projection_symbols.py . --architecture milcomp
 msbuild OpenGlass\OpenGlass.MILComp.vcxproj /m /p:Configuration=Release /p:Platform=x64
 ```

@@ -2,7 +2,7 @@
 
 Use this gate before claiming support for a new layout interval or publishing a release. Exact OS build/revision, module PE/PDB identities, and observed compositor capabilities are authoritative; marketing labels are not.
 
-Static schema lint, an x64 Release build, and an IDA semantic audit are prerequisites, not substitutes for a real-OS run. PE size and projected-wrapper machine code may be inspected while changing the projection mechanism, but they are diagnostics rather than fixed release gates. A virtual machine can pre-screen installation and failure paths but cannot satisfy GPU, DWM recovery, or multi-display coverage.
+Static schema validation, an x64 Release build, and an IDA semantic audit are prerequisites, not substitutes for a real-OS run. PE size and projected-wrapper machine code may be inspected while changing the projection mechanism, but they are diagnostics rather than fixed release gates. A virtual machine can pre-screen installation and failure paths but cannot satisfy GPU, DWM recovery, or multi-display coverage.
 
 ## Recovery prerequisites
 

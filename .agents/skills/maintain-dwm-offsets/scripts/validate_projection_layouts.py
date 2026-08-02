@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Lint generated-projection Layout schemas without evaluating offset expressions."""
+"""Validate and query projection Layout schemas without evaluating offset expressions."""
 
 from __future__ import annotations
 
@@ -43,7 +43,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 	parser.add_argument("--format", choices=("text", "json"), default="text")
 	parser.add_argument("--version")
 	parser.add_argument("--module", choices=("all", "udwm", "dwmcore"), default="all")
-	parser.add_argument("--id", dest="stable_id", help="show one exact Layout stable ID while still linting the selected schema")
+	parser.add_argument("--id", dest="stable_id", help="show one exact Layout stable ID while still validating the selected schema")
 	return parser.parse_args(argv)
 
 

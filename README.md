@@ -186,7 +186,7 @@ OpenGlass borrowed its C++ project structure.
 3. Select the `Release` configuration and build either `OpenGlass.Legacy` or `OpenGlass.MILComp`; Host and GUI are shared and build once.
 
 > [!TIP]
-> **Inno Setup is not required for normal builds.** A Release solution build automatically generates both installers when `ISCC.exe` is available and otherwise reports that packaging was skipped. The `Scripts/OpenGlass.Packaging.proj` target remains available for explicitly packaging only `/p:Architecture=legacy` or `/p:Architecture=milcomp`.
+> **Inno Setup is not required for normal builds.** A Release solution build automatically generates both installers when `ISCC.exe` is available and otherwise reports that packaging was skipped. Each successful package also creates `OpenGlassSymbols.Legacy.zip` or `OpenGlassSymbols.MILComp.zip` beside the installers, containing the matching `OpenGlass.pdb`, `OpenGlassHost.pdb`, and `OpenGlassGUI.pdb`. The `Scripts/OpenGlass.Packaging.proj` target remains available for explicitly packaging only `/p:Architecture=legacy` or `/p:Architecture=milcomp`.
 
 ### ReleaseSigned configuration
 
@@ -196,7 +196,7 @@ Official releases use the `ReleaseSigned` configuration. This configuration uses
 
 OpenGlass describes the private `dwmcore.dll` and `uDWM.dll` ABI with generated typed Symbol and Layout handles backed by startup-time module registries. Layout offsets and required symbols can change between Windows builds and must be audited against the exact binaries. Legacy and MILComp schemas remain independent.
 
-For quick signature discovery, `dump_symbols.py` asks DbgHelp to download the PDB matched to an input image and prints exact `UNDNAME_COMPLETE` names:
+For quick signature discovery, `Scripts/dump_symbols.py` asks DbgHelp to download the PDB matched to an input image and prints exact `UNDNAME_COMPLETE` names:
 
 ```powershell
 python Scripts/dump_symbols.py --input "$env:WINDIR\System32\dwmcore.dll" --grep "COcclusionContext::PreSubgraph"
@@ -212,20 +212,20 @@ The repository provides the explicit `$maintain-dwm-offsets` skill for general c
 
 1. Open the exact DLL in IDA Pro and wait for auto-analysis to finish.
 2. Invoke `$maintain-dwm-offsets` with the module, samples, and desired audit scope.
-3. Review the report's linter-selected interval, active Required/Optional state, sample identity, semantic evidence, findings, unverified items, runtime-validation status, and suggested descriptor changes.
+3. Review the report's schema-selected interval, active Required/Optional state, sample identity, semantic evidence, findings, unverified items, runtime-validation status, and suggested descriptor changes.
 4. Apply changes to the matching Layout or Symbol descriptor only after the value, complete PDB name, and typed ABI have the required independent evidence.
 
-Run both read-only linters before and after editing descriptors:
+Run both read-only schema validators before and after editing descriptors:
 
 ```powershell
-python .agents/skills/maintain-dwm-offsets/scripts/lint_offset_tables.py . --architecture legacy --version BUILD.REVISION
-python .agents/skills/maintain-dwm-offsets/scripts/lint_symbol_descriptors.py . --architecture legacy
-python .agents/skills/maintain-dwm-offsets/scripts/audit_symbol_names.py . --architecture legacy --module udwm --version BUILD.REVISION --image PATH_TO_DLL --symbol-path PATH_TO_SYMBOLS --configuration release
+python .agents/skills/maintain-dwm-offsets/scripts/validate_projection_layouts.py . --architecture legacy --version BUILD.REVISION
+python .agents/skills/maintain-dwm-offsets/scripts/validate_projection_symbols.py . --architecture legacy
+python .agents/skills/maintain-dwm-offsets/scripts/audit_symbol_resolution.py . --architecture legacy --module udwm --version BUILD.REVISION --image PATH_TO_DLL --symbol-path PATH_TO_SYMBOLS --configuration release
 ```
 
-The Layout linter preserves offset expressions as source text, resolves exact exclusive-right-boundary intervals, and reports an intentional `unsupported` result when no case applies. The Symbol linter checks stable IDs, module ownership, ranges, requirements, complete-name candidates, signature variants, and consumer references. The name auditor additionally verifies the image/PDB GUID and age before resolving exact DbgHelp `UNDNAME_COMPLETE` output, records the DbgHelp identity, and excludes Debug-only descriptors unless `--configuration debug` is requested.
+The Layout validator preserves offset expressions as source text, resolves exact exclusive-right-boundary intervals, and reports an intentional `unsupported` result when no case applies. The Symbol validator checks stable IDs, module ownership, ranges, requirements, complete-name candidates, signature variants, and consumer references. The resolution auditor additionally verifies the image/PDB GUID and age before resolving exact DbgHelp `UNDNAME_COMPLETE` output, records the DbgHelp identity, and excludes Debug-only descriptors unless `--configuration debug` is requested.
 
-Keep three verification layers separate: static verification combines descriptor lint with paired PE/PDB name auditing, an IDA semantic audit establishes ABI and meaning, and real-OS validation exercises service injection, recovery, and rendering. A successful static audit is not a release-readiness claim; use the skill's real-OS checklist before claiming support for a new layout interval.
+Keep three verification layers separate: static verification combines schema validation with paired PE/PDB resolution auditing, an IDA semantic audit establishes ABI and meaning, and real-OS validation exercises service injection, recovery, and rendering. A successful static audit is not a release-readiness claim; use the skill's real-OS checklist before claiming support for a new layout interval.
 
 ### Manual update
 

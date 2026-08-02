@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Lint OpenGlass Symbol schemas and source-consumer completeness."""
+"""Validate projection Symbol schemas and source-consumer completeness."""
 
 from __future__ import annotations
 
@@ -19,7 +19,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 	parser.add_argument("--architecture", choices=("legacy", "milcomp"), required=True)
 	parser.add_argument("--format", choices=("text", "json"), default="text")
 	parser.add_argument("--module", choices=("all", "udwm", "dwmcore"), default="all")
-	parser.add_argument("--id", dest="stable_id", help="show one exact Symbol stable ID while still linting both module schemas")
+	parser.add_argument("--id", dest="stable_id", help="show one exact Symbol stable ID while still validating both module schemas")
 	return parser.parse_args(argv)
 
 
