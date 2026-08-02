@@ -3,6 +3,7 @@
 #include "CaptionTextHandler.hpp"
 #include "Shared.hpp"
 #include "GlassKernel.hpp"
+#include "Util.hpp"
 #include "uDWMProjection.hpp"
 #include "dwmcoreProjection.hpp"
 #include "CustomThemeAtlasLoader.hpp"
@@ -64,14 +65,44 @@ namespace OpenGlass::CaptionTextHandler
 	COLORREF g_captionActiveColorMaximized{};
 	COLORREF g_captionInactiveColorMaximized{};
 	MARGINS g_contentMargins{}, g_sizingMargins{};
-	struct CWindowState
+
+	struct CWindowState : Util::ComRefCounted<CWindowState>
 	{
-		bool frozen{};
+		uDWM::CVisual* sourceVisual{};
 		bool active{};
 		bool maximized{};
 		LONG windowRectLeft{};
 	};
-	std::unordered_map<uDWM::CVisual*, CWindowState> g_textVisualStateMap{};
+	using CWindowStatePtr = winrt::com_ptr<CWindowState>;
+	std::unordered_map<uDWM::CVisual*, CWindowStatePtr> g_textVisualStateMap{};
+
+	CWindowStatePtr GetOrCreateWindowState(uDWM::CVisual* visual)
+	{
+		auto& state = g_textVisualStateMap[visual];
+		if (!state)
+		{
+			state = Util::make_com_ptr<CWindowState>();
+			state->sourceVisual = visual;
+		}
+
+		return state;
+	}
+
+	const CWindowState& GetWindowState(uDWM::CVisual* visual)
+	{
+		static const CWindowState defaultState{};
+		const auto it = g_textVisualStateMap.find(visual);
+		return it == g_textVisualStateMap.end() || !it->second ? defaultState : *it->second;
+	}
+
+	void ShareWindowState(uDWM::CVisual* source, uDWM::CVisual* clone)
+	{
+		if (source && clone)
+		{
+			// The source remains authoritative; preview containers must not replace its active state.
+			g_textVisualStateMap[clone] = GetOrCreateWindowState(source);
+		}
+	}
 	winrt::com_ptr<ID2D1DCRenderTarget> g_textGlowRT{};
 	winrt::com_ptr<ID2D1Bitmap1> g_textGlowD2DBitmap{};
 	winrt::com_ptr<ID2D1Effect> g_textGlowEffect{};
@@ -142,7 +173,7 @@ void CaptionTextHandler::MyID2D1DeviceContext_DrawTextLayout(
 		solidColorBrush->SetColor(color);
 	});
 
-	const auto& windowState = g_textVisualStateMap[g_dwriteTextVisual];
+	const auto& windowState = GetWindowState(g_dwriteTextVisual);
 	const auto textColorOverride = windowState.active ? (windowState.maximized ? g_captionActiveColorMaximized : g_captionActiveColor) : (windowState.maximized ? g_captionInactiveColorMaximized : g_captionInactiveColor);
 	if (textColorOverride != 0xFFFFFFFF)
 	{
@@ -515,16 +546,15 @@ HRESULT CaptionTextHandler::MyCDWriteText_ValidateVisual(uDWM::CDWriteText* This
 	}
 	if (g_window = uDWM::TryGetWindowFromVisual(This); g_window && g_window->GetData())
 	{
-		auto& windowState = g_textVisualStateMap[This];
-
-		if (!windowState.frozen)
+		const auto windowState = GetOrCreateWindowState(This);
+		if (windowState->sourceVisual == This)
 		{
-			windowState.active = g_window->TreatAsActiveWindow();
-			windowState.maximized = g_window->TreatAsMaximized();
+			windowState->active = g_window->TreatAsActiveWindow();
+			windowState->maximized = g_window->TreatAsMaximized();
 
 			RECT windowRect{};
 			g_window->GetActualWindowRect(&windowRect, true, false, true);
-			windowState.windowRectLeft = windowRect.left;
+			windowState->windowRectLeft = windowRect.left;
 		}
 	}
 	g_dwriteTextVisual = This;
@@ -590,10 +620,13 @@ HRESULT CaptionTextHandler::MyCDWriteText_SendSetSize(uDWM::CDWriteText* This, c
 
 HRESULT CaptionTextHandler::MyCDWriteText_InitializeVisualTreeClone(uDWM::CDWriteText* This, uDWM::CDWriteText* clonedVisual, UINT cloneOption)
 {
-	auto& clonedWindowState = g_textVisualStateMap[clonedVisual];
-	clonedWindowState = g_textVisualStateMap[This];
-	clonedWindowState.frozen = true;
-	return g_CDWriteText_InitializeVisualTreeClone_Org(This, clonedVisual, cloneOption);
+	ShareWindowState(This, clonedVisual);
+	const auto result = g_CDWriteText_InitializeVisualTreeClone_Org(This, clonedVisual, cloneOption);
+	if (FAILED(result))
+	{
+		g_textVisualStateMap.erase(clonedVisual);
+	}
+	return result;
 }
 
 HRESULT CaptionTextHandler::MyCDWriteText_scalar_deleting_destructor(uDWM::CDWriteText* This, BYTE flag)

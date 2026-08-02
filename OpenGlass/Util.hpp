@@ -12,6 +12,44 @@ namespace OpenGlass::Util
 
 	using unique_rouninitialize_call = wil::unique_call<decltype(&::RoUninitialize), ::RoUninitialize>;
 
+	template <typename T>
+	class ComRefCounted
+	{
+	public:
+		ComRefCounted() noexcept = default;
+
+		ULONG AddRef() noexcept
+		{
+			return static_cast<ULONG>(InterlockedIncrement(&m_referenceCount));
+		}
+
+		ULONG Release() noexcept
+		{
+			const auto referenceCount = InterlockedDecrement(&m_referenceCount);
+			if (!referenceCount)
+			{
+				delete static_cast<T*>(this);
+			}
+			return static_cast<ULONG>(referenceCount);
+		}
+
+	protected:
+		~ComRefCounted() = default;
+
+	private:
+		ComRefCounted(const ComRefCounted&) = delete;
+		ComRefCounted& operator=(const ComRefCounted&) = delete;
+
+		LONG m_referenceCount{ 1 };
+	};
+
+	template <typename T, typename... Args>
+	winrt::com_ptr<T> make_com_ptr(Args&&... args)
+	{
+		static_assert(std::is_base_of_v<ComRefCounted<T>, T>);
+		return { new T(std::forward<Args>(args)...), winrt::take_ownership_from_abi };
+	}
+
 	// ptr to complex
 	template <typename T>
 	FORCEINLINE constexpr auto force_cast_to(PVOID ptr)

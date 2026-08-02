@@ -3,6 +3,7 @@
 #include "CaptionTextHandler.hpp"
 #include "Shared.hpp"
 #include "GlassKernel.hpp"
+#include "Util.hpp"
 #include "uDWMProjection.hpp"
 #include "dwmcoreProjection.hpp"
 #include "dcompPrivates.hpp"
@@ -108,13 +109,44 @@ namespace OpenGlass::CaptionTextHandler
 	COLORREF g_captionActiveColorMaximized{};
 	COLORREF g_captionInactiveColorMaximized{};
 	MARGINS g_contentMargins{}, g_sizingMargins{};
-	struct CWindowState
+
+	struct CWindowState : Util::ComRefCounted<CWindowState>
 	{
+		uDWM::CVisual* sourceVisual{};
 		bool active{};
 		bool maximized{};
 		LONG windowRectLeft{};
 	};
-	std::unordered_map<uDWM::CVisual*, CWindowState> g_textVisualStateMap{};
+	using CWindowStatePtr = winrt::com_ptr<CWindowState>;
+	std::unordered_map<uDWM::CVisual*, CWindowStatePtr> g_textVisualStateMap{};
+
+	CWindowStatePtr GetOrCreateWindowState(uDWM::CVisual* visual)
+	{
+		auto& state = g_textVisualStateMap[visual];
+		if (!state)
+		{
+			state = Util::make_com_ptr<CWindowState>();
+			state->sourceVisual = visual;
+		}
+
+		return state;
+	}
+
+	const CWindowState& GetWindowState(uDWM::CVisual* visual)
+	{
+		static const CWindowState defaultState{};
+		const auto it = g_textVisualStateMap.find(visual);
+		return it == g_textVisualStateMap.end() || !it->second ? defaultState : *it->second;
+	}
+
+	void ShareWindowState(uDWM::CVisual* source, uDWM::CVisual* clone)
+	{
+		if (source && clone)
+		{
+			// The source remains authoritative; preview containers must not replace its active state.
+			g_textVisualStateMap[clone] = GetOrCreateWindowState(source);
+		}
+	}
 	winrt::com_ptr<ID2D1DCRenderTarget> g_textGlowRT{};
 	winrt::com_ptr<ID2D1Bitmap1> g_textGlowD2DBitmap{};
 	winrt::com_ptr<ID2D1Effect> g_textGlowEffect{};
@@ -187,7 +219,7 @@ int WINAPI CaptionTextHandler::MyDrawTextW(
 
 	OffsetRect(lprc, g_textGlowSize, g_textGlowSize);
 
-	const auto& windowState = g_textVisualStateMap[g_dwriteTextVisual];
+	const auto& windowState = GetWindowState(g_textVisual);
 	const auto textColor = GetTextColor(hdc);
 	const auto textColorOverride = windowState.active ? (windowState.maximized ? g_captionActiveColorMaximized : g_captionActiveColor) : (windowState.maximized ? g_captionInactiveColorMaximized : g_captionInactiveColor);
 	DTTOPTS options
@@ -432,14 +464,16 @@ HRESULT CaptionTextHandler::MyCText_ValidateResources(uDWM::CText* This)
 	}
 	if (g_window = uDWM::TryGetWindowFromVisual(This); g_window && g_window->GetData())
 	{
-		auto& windowState = g_textVisualStateMap[This];
+		const auto windowState = GetOrCreateWindowState(This);
+		if (windowState->sourceVisual == This)
+		{
+			windowState->active = g_window->TreatAsActiveWindow();
+			windowState->maximized = g_window->TreatAsMaximized();
 
-		windowState.active = g_window->TreatAsActiveWindow();
-		windowState.maximized = g_window->TreatAsMaximized();
-
-		RECT windowRect{};
-		g_window->GetActualWindowRect(&windowRect, true, false, true);
-		windowState.windowRectLeft = windowRect.left;
+			RECT windowRect{};
+			g_window->GetActualWindowRect(&windowRect, true, false, true);
+			windowState->windowRectLeft = windowRect.left;
+		}
 	}
 	g_textVisual = This;
 	const auto hr = g_CText_ValidateResources_Org(This);
@@ -450,15 +484,20 @@ HRESULT CaptionTextHandler::MyCText_ValidateResources(uDWM::CText* This)
 }
 HRESULT CaptionTextHandler::MyCText_InitializeVisualTreeClone(uDWM::CText* This, uDWM::CText* clonedVisual, UINT cloneOption)
 {
-	g_textVisualStateMap[clonedVisual] = g_textVisualStateMap[This];
-	return g_CText_InitializeVisualTreeClone_Org(This, clonedVisual, cloneOption);
+	ShareWindowState(This, clonedVisual);
+	const auto result = g_CText_InitializeVisualTreeClone_Org(This, clonedVisual, cloneOption);
+	if (FAILED(result))
+	{
+		g_textVisualStateMap.erase(clonedVisual);
+	}
+	return result;
 }
 HRESULT CaptionTextHandler::MyCText_CloneVisualTree(uDWM::CText* This, uDWM::CText** clonedVisual, bool unknown1, bool unknown2, bool unknown3)
 {
 	const auto result = g_CText_CloneVisualTree_Org(This, clonedVisual, unknown1, unknown2, unknown3);
-	if (clonedVisual && *clonedVisual)
+	if (SUCCEEDED(result) && clonedVisual && *clonedVisual)
 	{
-		g_textVisualStateMap[*clonedVisual] = g_textVisualStateMap[This];
+		ShareWindowState(This, *clonedVisual);
 	}
 	return result;
 }
@@ -527,7 +566,7 @@ void CaptionTextHandler::MyID2D1DeviceContext_DrawTextLayout(
 		solidColorBrush->SetColor(color);
 	});
 
-	const auto& windowState = g_textVisualStateMap[g_dwriteTextVisual];
+	const auto& windowState = GetWindowState(g_dwriteTextVisual);
 	const auto textColorOverride = windowState.active ? (windowState.maximized ? g_captionActiveColorMaximized : g_captionActiveColor) : (windowState.maximized ? g_captionInactiveColorMaximized : g_captionInactiveColor);
 	if (textColorOverride != 0xFFFFFFFF)
 	{
@@ -909,14 +948,16 @@ HRESULT CaptionTextHandler::MyCDWriteText_ValidateVisual(uDWM::CDWriteText* This
 	}
 	if (g_window = uDWM::TryGetWindowFromVisual(This); g_window && g_window->GetData())
 	{
-		auto& windowState = g_textVisualStateMap[This];
+		const auto windowState = GetOrCreateWindowState(This);
+		if (windowState->sourceVisual == This)
+		{
+			windowState->active = g_window->TreatAsActiveWindow();
+			windowState->maximized = g_window->TreatAsMaximized();
 
-		windowState.active = g_window->TreatAsActiveWindow();
-		windowState.maximized = g_window->TreatAsMaximized();
-
-		RECT windowRect{};
-		g_window->GetActualWindowRect(&windowRect, true, false, true);
-		windowState.windowRectLeft = windowRect.left;
+			RECT windowRect{};
+			g_window->GetActualWindowRect(&windowRect, true, false, true);
+			windowState->windowRectLeft = windowRect.left;
+		}
 	}
 	g_dwriteTextVisual = This;
 	const auto hr = g_CDWriteText_ValidateVisual_Org(This);
@@ -981,8 +1022,13 @@ HRESULT CaptionTextHandler::MyCDWriteText_SetSize(uDWM::CDWriteText* This, const
 
 HRESULT CaptionTextHandler::MyCDWriteText_InitializeVisualTreeClone(uDWM::CDWriteText* This, uDWM::CDWriteText* clonedVisual, UINT cloneOption)
 {
-	g_textVisualStateMap[clonedVisual] = g_textVisualStateMap[This];
-	return g_CDWriteText_InitializeVisualTreeClone_Org(This, clonedVisual, cloneOption);
+	ShareWindowState(This, clonedVisual);
+	const auto result = g_CDWriteText_InitializeVisualTreeClone_Org(This, clonedVisual, cloneOption);
+	if (FAILED(result))
+	{
+		g_textVisualStateMap.erase(clonedVisual);
+	}
+	return result;
 }
 
 HRESULT CaptionTextHandler::MyCDWriteText_scalar_deleting_destructor(uDWM::CDWriteText* This, BYTE flag)
