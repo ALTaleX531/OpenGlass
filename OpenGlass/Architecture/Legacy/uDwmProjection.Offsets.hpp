@@ -36,6 +36,7 @@ namespace OpenGlass::uDWM
 	struct CAccent;
 	struct CBaseGeometryProxy;
 	struct CBaseLegacyMilBrushProxy;
+	struct CAtlasButton;
 	struct CAtlasedImage;
 	struct CAtlasedRectsVisual;
 	struct CBitmapSource;

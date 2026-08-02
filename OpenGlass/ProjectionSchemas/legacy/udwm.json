@@ -424,8 +424,8 @@
       "requirement": "required",
       "min_inclusive": null,
       "max_exclusive": null,
-      "kind": "raw",
-      "type": "void (*)(CButton*)"
+      "target": "&CButton::UpdateCrossfade",
+      "kind": "projected_function"
     },
     {
       "name": "Symbol_CButton_DrawStateW",
@@ -439,8 +439,8 @@
         "revision": 0
       },
       "max_exclusive": null,
-      "kind": "raw",
-      "type": "void (*)(void*, void*, UINT)"
+      "target": "&CButton::DrawStateW",
+      "kind": "projected_function"
     },
     {
       "name": "Symbol_CAtlasButton_AppendAtlas",
@@ -454,8 +454,8 @@
         "revision": 0
       },
       "max_exclusive": null,
-      "kind": "raw",
-      "type": "HRESULT (*)(void*, void*)"
+      "target": "&CAtlasButton::AppendAtlas",
+      "kind": "projected_function"
     },
     {
       "name": "Symbol_CAtlasButton_AddApproximateAtlasSize",
@@ -469,8 +469,8 @@
         "revision": 0
       },
       "max_exclusive": null,
-      "kind": "raw",
-      "type": "void (*)(void*, UINT*)"
+      "target": "&CAtlasButton::AddApproximateAtlasSize",
+      "kind": "projected_function"
     },
     {
       "name": "Symbol_CAtlasedImage_AppendAtlasNineGrid",
@@ -484,8 +484,8 @@
         "revision": 0
       },
       "max_exclusive": null,
-      "kind": "raw",
-      "type": "HRESULT (*)(void*, void*, CBitmapSource*)"
+      "target": "&CAtlasedImage::AppendAtlasNineGrid",
+      "kind": "projected_function"
     },
     {
       "name": "Symbol_CAtlasedImage_AddNineGridAtlasSize",
@@ -499,8 +499,8 @@
         "revision": 0
       },
       "max_exclusive": null,
-      "kind": "raw",
-      "type": "void (*)(void*, const MARGINS&, UINT*)"
+      "target": "&CAtlasedImage::AddNineGridAtlasSize",
+      "kind": "projected_function"
     },
     {
       "name": "Symbol_CAtlasedImage_SetDirtyFlags",
@@ -514,8 +514,8 @@
         "revision": 0
       },
       "max_exclusive": null,
-      "kind": "raw",
-      "type": "void (*)(void*, UINT, UINT)"
+      "target": "&CAtlasedImage::SetDirtyFlags",
+      "kind": "projected_function"
     },
     {
       "name": "Symbol_CTopLevelWindow_UpdateButtonVisuals",
@@ -529,8 +529,8 @@
         "revision": 0
       },
       "max_exclusive": null,
-      "kind": "raw",
-      "type": "HRESULT (*)(void*, const void*)"
+      "target": "&CTopLevelWindow::UpdateButtonVisuals",
+      "kind": "projected_function"
     },
     {
       "name": "Symbol_CVisual_MoveToFront",
@@ -544,8 +544,8 @@
         "revision": 0
       },
       "max_exclusive": null,
-      "kind": "raw",
-      "type": "HRESULT (*)(void*, int)"
+      "target": "&CVisual::MoveToFront",
+      "kind": "projected_function"
     },
     {
       "name": "Symbol_CButton_RedrawVisual",
@@ -559,8 +559,8 @@
         "revision": 0
       },
       "max_exclusive": null,
-      "kind": "raw",
-      "type": "HRESULT (*)(void*)"
+      "target": "&CButton::RedrawVisual",
+      "kind": "projected_function"
     },
     {
       "name": "Symbol_CAtlasedRectsVisual_RemoveAtlasImage",
@@ -574,8 +574,8 @@
         "revision": 0
       },
       "max_exclusive": null,
-      "kind": "raw",
-      "type": "void (*)(void*, void*)"
+      "target": "&CAtlasedRectsVisual::RemoveAtlasImage",
+      "kind": "projected_function"
     },
     {
       "name": "Symbol_CAtlasedRectsVisual_AddAtlasImage",
@@ -589,8 +589,8 @@
         "revision": 0
       },
       "max_exclusive": null,
-      "kind": "raw",
-      "type": "HRESULT (*)(void*, void*)"
+      "target": "&CAtlasedRectsVisual::AddAtlasImage",
+      "kind": "projected_function"
     },
     {
       "name": "Symbol_CAtlasedRectsVisual_InsertAtlasImageAtIndex",
@@ -604,8 +604,8 @@
         "revision": 0
       },
       "max_exclusive": null,
-      "kind": "raw",
-      "type": "HRESULT (*)(void*, void*, UINT)"
+      "target": "&CAtlasedRectsVisual::InsertAtlasImageAtIndex",
+      "kind": "projected_function"
     },
     {
       "name": "Symbol_CDrawGeometryInstruction_Create",
@@ -957,8 +957,8 @@
       "requirement": "required",
       "min_inclusive": null,
       "max_exclusive": null,
-      "kind": "raw",
-      "type": "HRESULT (WINAPI*)(HTHEME, int, MARGINS*, void**)"
+      "target": "&CTopLevelWindow::CreateBitmapFromAtlas",
+      "kind": "projected_function"
     },
     {
       "name": "Symbol_CTopLevelWindow_CreateGlyphsFromAtlas",
@@ -969,8 +969,8 @@
       "requirement": "required",
       "min_inclusive": null,
       "max_exclusive": null,
-      "kind": "raw",
-      "type": "HRESULT (WINAPI*)(HTHEME)"
+      "target": "&CTopLevelWindow::CreateGlyphsFromAtlas",
+      "kind": "projected_function"
     },
     {
       "name": "Symbol_CTopLevelWindow_EnsureImages_Pre_18362",
@@ -1749,7 +1749,7 @@
           "otherwise": true
         }
       ],
-      "notes": "CBitmapSource returned by CTopLevelWindow::CreateBitmapFromAtlas. ButtonGlowHandler stores the returned nine-grid margins here and later passes them to CAtlasedImage::AddNineGridAtlasSize. Audit status: inherited from the existing consumer; independent semantic confirmation remains required."
+      "notes": "CBitmapSource::Create stores the caller-supplied MARGINS at +0x20, while CAtlasedImage::AppendAtlasNineGrid and CDrawNineGridInstruction::Initialize independently read a second MARGINS at +0x30. Verified on uDWM 17763.719, 19041.3758, 22000.194, and 22621.6630. ButtonGlowHandler writes the theme-atlas destination margins here for the native nine-grid path; its separate size calculation uses OpenGlass-owned storage."
     },
     {
       "name": "CAtlasedRectsVisual_GetAtlasImageCount",
@@ -1765,7 +1765,7 @@
           }
         }
       ],
-      "notes": "ButtonGlowHandler::MoveAtlasImageToEnd passes this count to CAtlasedRectsVisual::InsertAtlasImageAtIndex after removing an image. The consumer is restricted to pre-24H2 builds. Audit status: inherited from the existing consumer; independent semantic confirmation remains required."
+      "notes": "CAtlasedRectsVisual::InsertAtlasImageAtIndex increments the DWORD at +272 and RemoveAtlasImage decrements it; CButton::RedrawVisual also uses the same array count. Verified on uDWM 22000.194 and 22621.6630. On uDWM 26100.7705, AddAtlasImage instead reads the current count from +224 and forwards to InsertAtlasImageAtIndex. ButtonGlowHandler consumes the +272 Layout only before build 26100; build 26100+ follows the semantic AddAtlasImage path, so the old Layout correctly remains unsupported."
     },
     {
       "name": "CAtlasedImage_GetParent",
@@ -1778,7 +1778,7 @@
           "otherwise": true
         }
       ],
-      "notes": "ButtonGlowHandler::CButton_RedrawVisual_Hook uses the owning CAtlasedRectsVisual to restore atlas-image z-order. Audit status: inherited from the existing consumer; independent semantic confirmation remains required."
+      "notes": "CAtlasedRectsVisual::InsertAtlasImageAtIndex writes the owning CAtlasedRectsVisual pointer to CAtlasedImage +80 and RemoveAtlasImage clears it; CButton::RedrawVisual reads the same link while moving atlas images. Verified on uDWM 22000.194, 22621.6630, and 26100.7705. On 26100.7705, DisconnectFromParent reads +80, InsertAtlasImageAtIndex writes +80, and CButton::RedrawVisual routes movement through DisconnectFromParent and AddAtlasImage. ButtonGlowHandler follows the owner to restore the hot glow's atlas-array z-order. The open range remains runtime behavior rather than proof for unanalyzed future builds."
     },
     {
       "name": "CAtlasedImage_GetSize",
@@ -1933,7 +1933,7 @@
       "name": "CButton_GetFirstAtlasImage",
       "id": "CButton_GetFirstAtlasImage",
       "kind": "field",
-      "type": "void*",
+      "type": "CAtlasButton*",
       "cases": [
         {
           "offset": "296",
@@ -1953,7 +1953,7 @@
       "name": "CButton_GetSecondAtlasImage",
       "id": "CButton_GetSecondAtlasImage",
       "kind": "field",
-      "type": "void*",
+      "type": "CAtlasButton*",
       "cases": [
         {
           "offset": "304",
@@ -3473,19 +3473,6 @@
         }
       ],
       "notes": "CLivePreview::_UpdateResourcesForMonitor\n*((BYTE *)resource + 129) = !IsRectEmpty((const RECT *)((char *)resource +\n40))"
-    },
-    {
-      "name": "CDesktopManager_GetThemeHandle",
-      "id": "CDesktopManager_GetThemeHandle",
-      "kind": "field",
-      "type": "HTHEME",
-      "cases": [
-        {
-          "offset": "69 * sizeof(ULONG_PTR)",
-          "otherwise": true
-        }
-      ],
-      "notes": "CDesktopManager theme handle consumed by ButtonGlowHandler::EnsureGlowBitmapsLoaded and refreshed by CTopLevelWindow::CreateGlyphsFromAtlas. Audit status: inherited from the existing consumer; independent semantic confirmation remains required."
     },
     {
       "name": "CDesktopManager_GetLivePreview_Index",

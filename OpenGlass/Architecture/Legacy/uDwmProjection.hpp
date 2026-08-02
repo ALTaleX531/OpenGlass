@@ -265,6 +265,11 @@ namespace OpenGlass::uDWM
 			OPENGLASS_MUSTTAIL
 			return Projection::Invoke<&CVisual::SetDirtyFlags>(this, flags);
 		}
+		inline HRESULT MoveToFront(bool moveChildren)
+		{
+			OPENGLASS_MUSTTAIL
+			return Projection::Invoke<&CVisual::MoveToFront>(this, moveChildren);
+		}
 		inline HRESULT RenderRecursive()
 		{
 			OPENGLASS_MUSTTAIL
@@ -468,6 +473,8 @@ namespace OpenGlass::uDWM
 	{
 	};
 
+	struct AtlasedRects;
+	struct CAtlasedImage;
 	struct CAtlasedRectsVisual : CVisual
 	{
 		inline DWORD GetAtlasImageCount() const
@@ -479,12 +486,42 @@ namespace OpenGlass::uDWM
 			OPENGLASS_MUSTTAIL
 			return Projection::Invoke<&CAtlasedRectsVisual::InitializeVisualTreeClone>(this, clonedVisual, cloneOption);
 		}
+		inline void RemoveAtlasImage(CAtlasedImage* image)
+		{
+			OPENGLASS_MUSTTAIL
+			return Projection::Invoke<&CAtlasedRectsVisual::RemoveAtlasImage>(this, image);
+		}
+		inline HRESULT AddAtlasImage(CAtlasedImage* image)
+		{
+			OPENGLASS_MUSTTAIL
+			return Projection::Invoke<&CAtlasedRectsVisual::AddAtlasImage>(this, image);
+		}
+		inline HRESULT InsertAtlasImageAtIndex(CAtlasedImage* image, UINT index)
+		{
+			OPENGLASS_MUSTTAIL
+			return Projection::Invoke<&CAtlasedRectsVisual::InsertAtlasImageAtIndex>(this, image, index);
+		}
 	};
 	struct CTopLevelAtlasedRectsVisual : CAtlasedRectsVisual
 	{
 	};
 	struct CAtlasedImage : CBaseObject
 	{
+		inline HRESULT AppendAtlasNineGrid(AtlasedRects& rects, CBitmapSource* bitmapSource)
+		{
+			OPENGLASS_MUSTTAIL
+			return Projection::Invoke<&CAtlasedImage::AppendAtlasNineGrid>(this, rects, bitmapSource);
+		}
+		inline void AddNineGridAtlasSize(const MARGINS& margins, UINT* size)
+		{
+			OPENGLASS_MUSTTAIL
+			return Projection::Invoke<&CAtlasedImage::AddNineGridAtlasSize>(this, margins, size);
+		}
+		inline void SetDirtyFlags(ULONG flags, ULONG mask)
+		{
+			OPENGLASS_MUSTTAIL
+			return Projection::Invoke<&CAtlasedImage::SetDirtyFlags>(this, flags, mask);
+		}
 		inline CAtlasedRectsVisual* GetParent() const
 		{
 			return CAtlasedImage_GetParent.read(this);
@@ -498,12 +535,27 @@ namespace OpenGlass::uDWM
 			return *CAtlasedImage_GetPartId.address(this);
 		}
 	};
+	struct CAtlasButton : CAtlasedImage
+	{
+		inline HRESULT AppendAtlas(AtlasedRects& rects)
+		{
+			OPENGLASS_MUSTTAIL
+			return Projection::Invoke<&CAtlasButton::AppendAtlas>(this, rects);
+		}
+		inline void AddApproximateAtlasSize(UINT* size)
+		{
+			OPENGLASS_MUSTTAIL
+			return Projection::Invoke<&CAtlasButton::AddApproximateAtlasSize>(this, size);
+		}
+	};
 
 	struct CTimeline
 	{
 	};
 	struct CButton : CAtlasedRectsVisual
 	{
+		enum class ButtonStates : UINT;
+
 		inline static PVOID* vftable{nullptr};
 
 		inline static HRESULT Create(CButton** visual)
@@ -550,11 +602,11 @@ namespace OpenGlass::uDWM
 		{
 			return CButton_GetVisualState.address(this);
 		}
-		inline void** GetFirstAtlasImage()
+		inline CAtlasButton** GetFirstAtlasImage()
 		{
 			return CButton_GetFirstAtlasImage.address(this);
 		}
-		inline void** GetSecondAtlasImage()
+		inline CAtlasButton** GetSecondAtlasImage()
 		{
 			return CButton_GetSecondAtlasImage.address(this);
 		}
@@ -569,6 +621,21 @@ namespace OpenGlass::uDWM
 		inline CBitmapSourceArray* GetButtonBitmapArray()
 		{
 			return CButton_GetButtonBitmapArray.address(this);
+		}
+		inline void UpdateCrossfade()
+		{
+			OPENGLASS_MUSTTAIL
+			return Projection::Invoke<&CButton::UpdateCrossfade>(this);
+		}
+		inline void DrawStateW(CAtlasButton* atlasButton, ButtonStates state)
+		{
+			OPENGLASS_MUSTTAIL
+			return Projection::Invoke<&CButton::DrawStateW>(this, atlasButton, state);
+		}
+		inline HRESULT RedrawVisual()
+		{
+			OPENGLASS_MUSTTAIL
+			return Projection::Invoke<&CButton::RedrawVisual>(this);
 		}
 	};
 
@@ -763,6 +830,26 @@ namespace OpenGlass::uDWM
 		static auto GetWindowFrames()
 		{
 			return *s_rgpwfWindowFrames;
+		}
+		inline static HRESULT CreateBitmapFromAtlas(
+			HTHEME theme,
+			int partId,
+			MARGINS* margins,
+			CBitmapSource** bitmapSource
+		)
+		{
+			OPENGLASS_MUSTTAIL
+			return Projection::Invoke<&CTopLevelWindow::CreateBitmapFromAtlas>(theme, partId, margins, bitmapSource);
+		}
+		inline static HRESULT CreateGlyphsFromAtlas(HTHEME theme)
+		{
+			OPENGLASS_MUSTTAIL
+			return Projection::Invoke<&CTopLevelWindow::CreateGlyphsFromAtlas>(theme);
+		}
+		inline HRESULT UpdateButtonVisuals(const WindowFrame* windowFrame)
+		{
+			OPENGLASS_MUSTTAIL
+			return Projection::Invoke<&CTopLevelWindow::UpdateButtonVisuals>(this, windowFrame);
 		}
 		inline CAtlasedImage const*& GetNCAreaAtlasImage1()
 		{
@@ -1177,10 +1264,6 @@ namespace OpenGlass::uDWM
 		static CDesktopManager* GetInstance()
 		{
 			return *s_pDesktopManagerInstance;
-		}
-		inline HTHEME GetThemeHandle() const
-		{
-			return CDesktopManager_GetThemeHandle.read(this);
 		}
 		inline CLivePreview* GetLivePreview() const
 		{
