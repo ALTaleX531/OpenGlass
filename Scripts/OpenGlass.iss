@@ -1,3 +1,6 @@
+; Keep the product identity in one place. The outer doubled braces preserve
+; the literal GUID braces after the preprocessor expands MyAppId.
+#define MyAppId "{D3D1BC7D-5E24-4B33-9383-7934271A3B05}"
 #define MyAppName "OpenGlass"
 #ifndef MyAppVersion
 #error MyAppVersion must be supplied by the packaging target
@@ -23,7 +26,7 @@
 #define MyAppOutputPath OutputPath
 
 [Setup]
-AppId={{D3D1BC7D-5E24-4B33-9383-7934271A3B05}}
+AppId={{#MyAppId}}
 AppName={#MyAppName}
 VersionInfoVersion={#MyAppVersion}
 AppVersion={#MyAppVersion}
@@ -103,19 +106,34 @@ Name: "ukrainian"; MessagesFile: "compiler:Languages\Ukrainian.isl"
 
 [CustomMessages]
 LaunchOpenGlassGUI=Launch OpenGlass GUI
-DeleteUserConfig=Delete user configuration (registry settings)?
+UninstallOptionsTitle=OpenGlass uninstall options
+UninstallOptionsDescription=Choose the OpenGlass data to remove.
+UninstallDeleteCurrentAndMachineConfig=Delete current-user and machine configuration
+OtherUserConfigNotice=Settings in other Windows user profiles are preserved and must be removed manually while signed in as that user.
+UninstallDeletePresetPackages=Delete installed OpenGlass preset packages
+ContinueUninstall=Uninstall
 ServiceDescription=This service injects DLL into DWM for you and also maintains that user settings are correctly loaded.
 
 #if FileExists(CompilerPath + "Languages\\ChineseSimplified.isl")
 chinesesimplified.LaunchOpenGlassGUI=启动 OpenGlass GUI
-chinesesimplified.DeleteUserConfig=删除用户配置（注册表设置）？
+chinesesimplified.UninstallOptionsTitle=OpenGlass 卸载选项
+chinesesimplified.UninstallOptionsDescription=选择要删除的 OpenGlass 数据。
+chinesesimplified.UninstallDeleteCurrentAndMachineConfig=删除当前用户和本机的配置
+chinesesimplified.OtherUserConfigNotice=其他 Windows 用户配置文件中的设置将被保留，需登录相应用户后手动删除。
+chinesesimplified.UninstallDeletePresetPackages=删除已安装的 OpenGlass 预设包
+chinesesimplified.ContinueUninstall=卸载
 chinesesimplified.ServiceDescription=该服务会为您将 DLL 注入 DWM，并确保 OpenGlass 能正确加载用户配置。
 #endif
 
 #if FileExists(CompilerPath + "Languages\\ChineseTraditional.isl")
 chinesestraditional.LaunchOpenGlassGUI=啟動 OpenGlass GUI
-chinesestraditional.DeleteUserConfig=刪除使用者配置（登錄表設置）？
-chinesestraditional.ServiceDescription=該服務負責為閣下將 DLL 注入 DWM，并確保 OpenGlass 能正确加载用户配置。
+chinesestraditional.UninstallOptionsTitle=OpenGlass 卸載選項
+chinesestraditional.UninstallOptionsDescription=選擇要刪除的 OpenGlass 資料。
+chinesestraditional.UninstallDeleteCurrentAndMachineConfig=刪除目前使用者與本機的設定
+chinesestraditional.OtherUserConfigNotice=其他 Windows 使用者設定檔中的設定會予以保留；需登入該使用者後手動刪除。
+chinesestraditional.UninstallDeletePresetPackages=刪除已安裝的 OpenGlass 預設套件
+chinesestraditional.ContinueUninstall=卸載
+chinesestraditional.ServiceDescription=該服務負責為您將 DLL 注入 DWM，並確保 OpenGlass 能正確載入使用者設定。
 #endif
 
 [Files]
@@ -124,12 +142,17 @@ Source: "{#MyAppBuildPath}\OpenGlassHost.exe"; DestDir: "{app}"; Flags: ignoreve
 Source: "{#MyAppBuildPath}\OpenGlassGUI.exe"; DestDir: "{app}"; Flags: ignoreversion restartreplace
 
 [Dirs]
-; Writable symbols directory (kept separate from binaries in {app})
-Name: "{app}\symbols"
+; Mutable application data and immutable preset deployments live outside the installation directory.
+Name: "{commonappdata}\OpenGlass"
+Name: "{commonappdata}\OpenGlass\symbols"
 ; Full DWM dumps can contain sensitive process memory; do not grant ordinary users access.
-Name: "{app}\dumps"
+Name: "{commonappdata}\OpenGlass\dumps"
+Name: "{commonappdata}\OpenGlass\Presets"
 
 [UninstallDelete]
+Type: filesandordirs; Name: "{commonappdata}\OpenGlass\symbols"
+Type: filesandordirs; Name: "{commonappdata}\OpenGlass\dumps"
+; Clean the defaults used by older installers without touching any user-selected custom path.
 Type: filesandordirs; Name: "{app}\symbols"
 Type: filesandordirs; Name: "{app}\dumps"
 
@@ -155,10 +178,14 @@ Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
 Filename: "{sys}\icacls.exe"; Parameters: """{app}"" /inheritance:r /grant:r *S-1-5-18:(OI)(CI)F *S-1-5-32-544:(OI)(CI)F *S-1-5-32-545:(OI)(CI)RX *S-1-5-90-0:(OI)(CI)RX"; Flags: runhidden waituntilterminated
 ; Harden OpenGlassHost.exe (service binary): SYSTEM only for execution, but allow Administrators to delete (for uninstallation)
 Filename: "{sys}\icacls.exe"; Parameters: """{app}\OpenGlassHost.exe"" /inheritance:r /grant:r *S-1-5-18:F *S-1-5-32-544:D"; Flags: runhidden waituntilterminated
-; Harden {app}\symbols (writable cache): SYSTEM/Admins = Full, Users = R, Window Manager = RWD
-Filename: "{sys}\icacls.exe"; Parameters: """{app}\symbols"" /inheritance:r /grant:r *S-1-5-18:(OI)(CI)F *S-1-5-32-544:(OI)(CI)F *S-1-5-32-545:(OI)(CI)R *S-1-5-90-0:(OI)(CI)RWD"; Flags: runhidden waituntilterminated
-; Harden {app}\dumps: SYSTEM/Admins = Full, Window Manager = Modify; no ordinary-user access to dump contents
-Filename: "{sys}\icacls.exe"; Parameters: """{app}\dumps"" /inheritance:r /grant:r *S-1-5-18:(OI)(CI)F *S-1-5-32-544:(OI)(CI)F *S-1-5-90-0:(OI)(CI)M"; Flags: runhidden waituntilterminated
+; Harden the shared data root before applying narrower permissions to each child.
+Filename: "{sys}\icacls.exe"; Parameters: """{commonappdata}\OpenGlass"" /inheritance:r /grant:r *S-1-5-18:(OI)(CI)F *S-1-5-32-544:(OI)(CI)F *S-1-5-32-545:(OI)(CI)RX *S-1-5-90-0:(OI)(CI)RX"; Flags: runhidden waituntilterminated
+; Symbols: SYSTEM/Admins = Full, Users = Read, Window Manager = Read/Write/Delete.
+Filename: "{sys}\icacls.exe"; Parameters: """{commonappdata}\OpenGlass\symbols"" /inheritance:r /grant:r *S-1-5-18:(OI)(CI)F *S-1-5-32-544:(OI)(CI)F *S-1-5-32-545:(OI)(CI)R *S-1-5-90-0:(OI)(CI)RWD"; Flags: runhidden waituntilterminated
+; Dumps: SYSTEM/Admins = Full, Window Manager = Modify; no ordinary-user access to dump contents.
+Filename: "{sys}\icacls.exe"; Parameters: """{commonappdata}\OpenGlass\dumps"" /inheritance:r /grant:r *S-1-5-18:(OI)(CI)F *S-1-5-32-544:(OI)(CI)F *S-1-5-90-0:(OI)(CI)M"; Flags: runhidden waituntilterminated
+; Presets: SYSTEM/Admins = Full, Users/Window Manager = Read/Execute. Package directories retain the same protected ACL.
+Filename: "{sys}\icacls.exe"; Parameters: """{commonappdata}\OpenGlass\Presets"" /inheritance:r /grant:r *S-1-5-18:(OI)(CI)F *S-1-5-32-544:(OI)(CI)F *S-1-5-32-545:(OI)(CI)RX *S-1-5-90-0:(OI)(CI)RX"; Flags: runhidden waituntilterminated
 
 ; Create the service
 Filename: "{sys}\sc.exe"; Parameters: "delete OpenGlassHost"; Flags: runhidden waituntilterminated
@@ -202,10 +229,29 @@ type
 function GetUserColorPreference(var pcpPreference: IMMERSIVE_COLOR_PREFERENCE; fForceReload: Boolean): HRESULT;
 external 'GetUserColorPreference@uxtheme.dll stdcall';
 
+var
+  DeleteCurrentAndMachineConfigOnUninstall: Boolean;
+  DeletePresetsOnUninstall: Boolean;
+
+procedure DeleteConfigValues(const RootKey: Integer; const SubKey: String; const OpenGlassKeys: TArrayOfString);
+var
+  i: Integer;
+begin
+  for i := 0 to GetArrayLength(OpenGlassKeys) - 1 do
+  begin
+    if RegValueExists(RootKey, SubKey, OpenGlassKeys[i]) and
+       (not RegDeleteValue(RootKey, SubKey, OpenGlassKeys[i])) then
+      Log(Format('Unable to delete OpenGlass registry value %s\%s', [SubKey, OpenGlassKeys[i]]));
+  end;
+end;
+
+// "Current user" here means the account the elevated uninstaller runs as.
+// When uninstall is started from a non-admin account (UAC prompt / run-as),
+// HKEY_CURRENT_USER is that admin account, not the launching user; that
+// user's settings then remain and are only reachable by logging in as them.
 procedure DeleteConfig;
 var
   OpenGlassKeys: array of string;
-  i: Integer;
   pref: IMMERSIVE_COLOR_PREFERENCE;
 begin
   OpenGlassKeys := [
@@ -225,43 +271,154 @@ begin
     'BlurDeviation', 'BlurOptimization', 'RoundRectRadius',
     'CustomThemeMaterial', 'MaterialOpacity', 'UseDirect3DRendering',
     'CaptionButtons', 'CenterCaption', 'TextGlowMode', 'CustomThemeAtlas', 'DisableModernBorders',
-    'DisableGlassOnBattery', 'DisabledHooks', 'GlassSafetyZoneMode'
+    'DisableGlassOnBattery', 'DisabledHooks', 'GlassSafetyZoneMode',
+    'MINMAXBUTTONGLOWid', 'CLOSEBUTTONGLOWid', 'TOOLCLOSEBUTTONGLOWid'
   ];
 
-  for i := 0 to GetArrayLength(OpenGlassKeys) - 1 do
-  begin
-    RegDeleteValue(HKCU, 'SOFTWARE\Microsoft\Windows\DWM', OpenGlassKeys[i]);
-    RegDeleteValue(HKLM, 'SOFTWARE\Microsoft\Windows\DWM', OpenGlassKeys[i]);
-  end;
+  DeleteConfigValues(HKEY_CURRENT_USER, 'SOFTWARE\Microsoft\Windows\DWM', OpenGlassKeys);
+  DeleteConfigValues(HKEY_LOCAL_MACHINE, 'SOFTWARE\Microsoft\Windows\DWM', OpenGlassKeys);
 
   // Refresh DWM by calling GetUserColorPreference
   GetUserColorPreference(pref, True);
 end;
 
-procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
+procedure InitializeUninstallProgressForm;
 var
-  CmdTail: string;
-  NoDeleteConfigFlag: boolean;
+  OptionsPage: TNewNotebookPage;
+  DeleteCurrentAndMachineConfigCheck: TNewCheckBox;
+  OtherUserConfigNotice: TNewStaticText;
+  DeletePresetsCheck: TNewCheckBox;
+  ContinueButton: TNewButton;
+  OriginalPageName: String;
+  OriginalPageDescription: String;
+  OriginalCancelEnabled: Boolean;
+  OriginalCancelModalResult: Integer;
+  DialogResult: Integer;
+begin
+  // Interactive uninstalls present the options page inside the progress
+  // window; silent (/SILENT or /VERYSILENT) uninstalls stay fully silent.
+  if UninstallSilent then
+    Exit;
+
+  OptionsPage := TNewNotebookPage.Create(UninstallProgressForm);
+  OptionsPage.Notebook := UninstallProgressForm.InnerNotebook;
+  OptionsPage.Align := alClient;
+
+  DeleteCurrentAndMachineConfigCheck := TNewCheckBox.Create(UninstallProgressForm);
+  DeleteCurrentAndMachineConfigCheck.Parent := OptionsPage;
+  DeleteCurrentAndMachineConfigCheck.Left := UninstallProgressForm.StatusLabel.Left;
+  DeleteCurrentAndMachineConfigCheck.Top := UninstallProgressForm.StatusLabel.Top;
+  DeleteCurrentAndMachineConfigCheck.Width := UninstallProgressForm.StatusLabel.Width;
+  DeleteCurrentAndMachineConfigCheck.Height := ScaleY(20);
+  DeleteCurrentAndMachineConfigCheck.Caption :=
+    CustomMessage('UninstallDeleteCurrentAndMachineConfig');
+  DeleteCurrentAndMachineConfigCheck.Checked :=
+    DeleteCurrentAndMachineConfigOnUninstall;
+
+  OtherUserConfigNotice := TNewStaticText.Create(UninstallProgressForm);
+  OtherUserConfigNotice.Parent := OptionsPage;
+  OtherUserConfigNotice.Left :=
+    DeleteCurrentAndMachineConfigCheck.Left + ScaleX(22);
+  OtherUserConfigNotice.Top :=
+    DeleteCurrentAndMachineConfigCheck.Top + ScaleY(24);
+  OtherUserConfigNotice.Width :=
+    DeleteCurrentAndMachineConfigCheck.Width - ScaleX(22);
+  OtherUserConfigNotice.Height := ScaleY(34);
+  OtherUserConfigNotice.AutoSize := False;
+  OtherUserConfigNotice.WordWrap := True;
+  OtherUserConfigNotice.Caption := CustomMessage('OtherUserConfigNotice');
+
+  DeletePresetsCheck := TNewCheckBox.Create(UninstallProgressForm);
+  DeletePresetsCheck.Parent := OptionsPage;
+  DeletePresetsCheck.Left := DeleteCurrentAndMachineConfigCheck.Left;
+  DeletePresetsCheck.Top :=
+    DeleteCurrentAndMachineConfigCheck.Top + ScaleY(62);
+  DeletePresetsCheck.Width := DeleteCurrentAndMachineConfigCheck.Width;
+  DeletePresetsCheck.Height := ScaleY(20);
+  DeletePresetsCheck.Caption :=
+    CustomMessage('UninstallDeletePresetPackages');
+  DeletePresetsCheck.Checked := DeletePresetsOnUninstall;
+
+  ContinueButton := TNewButton.Create(UninstallProgressForm);
+  ContinueButton.Parent := UninstallProgressForm;
+  ContinueButton.Caption := CustomMessage('ContinueUninstall');
+  ContinueButton.Left :=
+    UninstallProgressForm.CancelButton.Left -
+    ScaleX(8) -
+    UninstallProgressForm.CancelButton.Width;
+  ContinueButton.Top := UninstallProgressForm.CancelButton.Top;
+  ContinueButton.Width := UninstallProgressForm.CancelButton.Width;
+  ContinueButton.Height := UninstallProgressForm.CancelButton.Height;
+  ContinueButton.Anchors := [akRight, akBottom];
+  ContinueButton.ModalResult := mrOk;
+  ContinueButton.Default := True;
+
+  OriginalPageName := UninstallProgressForm.PageNameLabel.Caption;
+  OriginalPageDescription :=
+    UninstallProgressForm.PageDescriptionLabel.Caption;
+  OriginalCancelEnabled := UninstallProgressForm.CancelButton.Enabled;
+  OriginalCancelModalResult :=
+    UninstallProgressForm.CancelButton.ModalResult;
+
+  UninstallProgressForm.PageNameLabel.Caption :=
+    CustomMessage('UninstallOptionsTitle');
+  UninstallProgressForm.PageDescriptionLabel.Caption :=
+    CustomMessage('UninstallOptionsDescription');
+  UninstallProgressForm.InnerNotebook.ActivePage := OptionsPage;
+  UninstallProgressForm.CancelButton.Enabled := True;
+  UninstallProgressForm.CancelButton.ModalResult := mrCancel;
+  UninstallProgressForm.ActiveControl := ContinueButton;
+
+  DialogResult := UninstallProgressForm.ShowModal;
+  if DialogResult = mrOk then
+  begin
+    DeleteCurrentAndMachineConfigOnUninstall :=
+      DeleteCurrentAndMachineConfigCheck.Checked;
+    DeletePresetsOnUninstall := DeletePresetsCheck.Checked;
+  end;
+
+  ContinueButton.Visible := False;
+  UninstallProgressForm.PageNameLabel.Caption := OriginalPageName;
+  UninstallProgressForm.PageDescriptionLabel.Caption :=
+    OriginalPageDescription;
+  UninstallProgressForm.CancelButton.Enabled := OriginalCancelEnabled;
+  UninstallProgressForm.CancelButton.ModalResult :=
+    OriginalCancelModalResult;
+  UninstallProgressForm.InnerNotebook.ActivePage :=
+    UninstallProgressForm.InstallingPage;
+
+  if DialogResult = mrCancel then
+    Abort;
+end;
+
+function InitializeUninstall(): Boolean;
+var
+  CmdTail: String;
+begin
+  CmdTail := LowerCase(GetCmdTail);
+  DeleteCurrentAndMachineConfigOnUninstall :=
+    Pos('/nodeleteconfig', CmdTail) = 0;
+  DeletePresetsOnUninstall := Pos('/deletepresets', CmdTail) > 0;
+  Result := True;
+end;
+
+procedure CurUninstallStepChanged(
+  CurUninstallStep: TUninstallStep);
 begin
   if CurUninstallStep = usPostUninstall then
   begin
-    CmdTail := GetCmdTail;
-    NoDeleteConfigFlag := Pos('/nodeleteconfig', LowerCase(CmdTail)) > 0;
+    if DeleteCurrentAndMachineConfigOnUninstall then
+      DeleteConfig;
 
-    // Handle user configuration deletion
-    if UninstallSilent then
-    begin
-      if not NoDeleteConfigFlag then
-      begin
-        DeleteConfig;
-      end;
-    end
-    else
-    begin
-      if MsgBox(CustomMessage('DeleteUserConfig'), mbConfirmation, MB_YESNO) = IDYES then
-      begin
-        DeleteConfig;
-      end;
-    end;
+    // Preset packages are user-created/downloaded content and are preserved by default.
+    if DeletePresetsOnUninstall then
+      DelTree(
+        ExpandConstant('{commonappdata}\OpenGlass\Presets'),
+        True,
+        True,
+        True);
+
+    // Remove the shared root only when no preserved package or undeleted runtime data remains.
+    RemoveDir(ExpandConstant('{commonappdata}\OpenGlass'));
   end;
 end;

@@ -56,7 +56,7 @@ OpenGlass is for advanced users who are comfortable editing the Windows registry
 ### Getting started
 
 1. **Installation**: Download the latest Inno Setup package from [Releases](https://github.com/ALTaleX531/OpenGlass/releases) and follow the installer.
-2. **Configuration**: Use the OpenGlass GUI or edit the [registry](#configuration) directly (manual registry edits require restarting OpenGlass or changing system color settings to apply).
+2. **Configuration**: Use the OpenGlass GUI or edit the [registry](#configuration) directly (manual registry edits require restarting OpenGlass or changing system color settings to apply). The GUI always requests administrator elevation at startup because one page can contain both per-user Windows colors and system-wide OpenGlass settings.
 3. **Reference**: Review the release notes and source code to stay informed about behavior changes and technical updates.
 
 The GUI's **Glass colors** page includes the original Windows Vista and Windows 7 color presets. The displayed family follows **Glass type**, but changing the type does not apply a preset. The compact controls mirror the classic control panel: select a swatch, enable or disable transparency, and adjust color intensity. **Detailed colorization settings** contains active/inactive colors and Windows 7 composition parameters, while **Advanced colorization settings** contains low-level blending controls. Reflection opacity variants on **Theme** and text color overrides on **Appearance** are also collapsed by default. Changes apply immediately, and **Revert** restores the values from before editing. Windows 7 composition values use the documented [`dwm_colorization_calculator`](https://github.com/ALTaleX531/dwm_colorization_calculator) conversion.
@@ -70,23 +70,72 @@ The **Preset packs** page imports, creates, applies, and removes immutable OpenG
 
 If you encounter crashes or technical bugs:
 
-1. **Collect Dumps**: Run OpenGlass GUI as Administrator, open the **Diagnostics** tab, choose a dump folder, and select **Enable full dumps**. The default is `.\dumps` beside `OpenGlassGUI.exe`. This creates the per-application `HKLM\SOFTWARE\Microsoft\Windows\Windows Error Reporting\LocalDumps\dwm.exe` configuration with `DumpType=2` and `DumpCount=1`; **Disable dumps** removes that per-application configuration. The installer protects the default folder for WER collection of DWM crashes and administrator access, and removes it with its contents during uninstall. System-wide WER settings may still apply independently. See Microsoft's [WER guidelines](https://learn.microsoft.com/en-us/windows/win32/wer/collecting-user-mode-dumps) for the underlying behavior and folder-permission requirements.
+1. **Collect Dumps**: Open the elevated OpenGlass GUI, select the **Diagnostics** tab, choose a dump folder, and select **Enable full dumps**. The default is `%ProgramData%\OpenGlass\dumps`. This creates the per-application `HKLM\SOFTWARE\Microsoft\Windows\Windows Error Reporting\LocalDumps\dwm.exe` configuration with `DumpType=2` and `DumpCount=1`; **Disable dumps** removes that per-application configuration. The installer protects the default folder for WER collection of DWM crashes and administrator access, and removes it with its contents during uninstall. System-wide WER settings may still apply independently. See Microsoft's [WER guidelines](https://learn.microsoft.com/en-us/windows/win32/wer/collecting-user-mode-dumps) for the underlying behavior and folder-permission requirements.
 2. **Submit a Report**: Open a GitHub issue with your **Windows build**, **registry settings**, **steps to reproduce**, and **visual evidence** (screenshots/recordings) if necessary.
 
 ## Configuration
 
-**Methods**: Use the OpenGlass GUI for convenience, or edit the registry directly for advanced control.
+**Methods**: Use the OpenGlass GUI for convenience, or edit the registry directly for advanced control. The executable manifest remains `asInvoker`; an unelevated bootstrap instance immediately relaunches itself with `runas`, and canceling UAC exits the GUI. The old editable HKCU/HKLM scope page no longer exists. The elevated instance retains the original interactive user's SID, even if different administrator credentials are supplied, so user colorization values do not accidentally enter the administrator's profile.
 
-**Registry locations**:
+When the GUI detects settings stored outside its canonical locations, it offers **Migrate and continue** or **Exit and migrate later**. Migration preserves the old effective values, explains that non-color settings become shared by all users, and backs up both hives. If no misplaced values exist, the check is silent; a failed or declined migration never enters the editor.
 
-- `HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\DWM` (per-user, checked first)
-- `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\DWM` (system-wide fallback)
+OpenGlass GUI configuration is system-wide by design, apart from Windows colorization. This intentionally favors one clear machine configuration over independent OpenGlass profiles for multiple Windows users.
 
-**Key inheritance**: Missing keys use predefined defaults. Variants (e.g., `XXXInactive`, `XXXMaximized`) inherit from their base key if not explicitly set. For the colorization keys that have an `Override` form, resolution is `HKCU Override → HKCU base → HKLM Override → HKLM base → default`. This preserves per-user precedence while allowing an Override in either scope to resist resets by `uxtheme.dll` on Windows 10+. Explicit edits to these values in the GUI create the Override form. Use the reset button beside an active Override to remove it from the current editing scope and return to the next inherited value.
+**Canonical registry locations**:
+
+| Canonical hive | Settings |
+| --- | --- |
+| Original interactive user's `HKEY_USERS\<SID>\SOFTWARE\Microsoft\Windows\DWM` | `ColorizationColor`, `ColorizationAfterglow`, `ColorizationColorBalance`, `ColorizationAfterglowBalance`, and `ColorizationBlurBalance`, including each `Override` form |
+| `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\DWM` | Every other public OpenGlass setting in this document |
+
+> [!IMPORTANT]
+> The canonical table above applies only to writes performed by the official OpenGlass GUI and preset packages. It does not deprecate or restrict the DLL's registry lookup behavior. For third-party transformation packs and plug-ins, `HKCU → HKLM` remains a long-term compatibility contract rather than a temporary migration fallback.
+
+**Key inheritance**: Missing keys use predefined defaults. Variants (for example, `XXXInactive` and `XXXMaximized`) inherit from their base key if not explicitly set. The injected DLL resolves ordinary values as `HKCU → HKLM → default`, while Override pairs resolve `HKCU Override → HKCU base → HKLM Override → HKLM base → default`. Explicit GUI edits create the per-user Override form. The reset button removes stored copies from both hives and returns to the inherited value or default.
 
 Built-in Vista presets write `ColorizationColorOverride` and derive `GlassOpacity` from the preset alpha. Built-in Windows 7 presets write color, afterglow, and the three composition-parameter Override values using the current opaque-blend state. Presets do not change opaque blend, reflection intensity, inactive colors, or advanced blending settings.
 
 **Enable transparency** is the inverse presentation of `ColorizationOpaqueBlend`. For Vista glass, **Color intensity** edits `GlassOpacity`; for Windows 7 glass it edits the color and afterglow alpha and recalculates the three composition balances. Both historical sliders use the classic 10–85% range.
+
+## Preset ZIP packages
+
+An OpenGlass preset is a standard ZIP recognized by a root `manifest.json`; no custom filename extension is used. The recommended filename is `<sanitized-name>-<uuid>.zip`. Schema version 2 contains:
+
+```text
+manifest.json
+[LICENSE]
+assets/
+  theme-atlas.png
+  theme-atlas.png.layout
+  reflection.png
+  material.png
+```
+
+```json
+{
+  "schema_version": 2,
+  "catalog_version": 1,
+  "uuid": "00112233-4455-6677-8899-aabbccddeeff",
+  "name": "Preset name",
+  "description": "Optional preset description",
+  "author": { "name": "Author", "homepage": "https://example.com" },
+  "license": { "file": "LICENSE" },
+  "settings": {},
+  "assets": {}
+}
+```
+
+The abbreviated empty objects above show the metadata shape only; a valid package must contain every preset-pack setting defined by its catalog version, using a typed value, an in-package asset reference, or `null` to delete that value during Replace. Settings unknown to the current OpenGlass build, including implementation-specific compatibility values, are never applied or exported. They do not invalidate an otherwise compatible package: the review dialog lists them explicitly as ignored, allowing older builds to inspect and apply the subset they understand from packages with a newer catalog version.
+
+The manifest contains a canonical lowercase UUID, package name, optional description, an author name and absolute HTTP(S) homepage, the complete typed preset-pack catalog for its declared catalog version, and SHA-256/size records for included assets. The `description` field remains present but may be an empty string. `license` may be `null`; otherwise a non-empty UTF-8 `LICENSE` is included and OpenGlass derives a short display name from an SPDX identifier, a recognized license text, or its title.
+
+Unless its text expressly limits the scope, the root `LICENSE` applies to the entire preset package—all copyrightable manifest content, package selection and arrangement, images, and layout files—but only to material the author is authorized to license. Authors who include third-party assets under different terms must identify those assets, copyright holders, and terms inside the same `LICENSE`; schema version 2 does not model separate per-asset licenses. If no LICENSE is provided, OpenGlass presents the entire package as **all rights reserved by default**: local application does not imply permission to modify or redistribute any package content. Author identity and licensing authority are displayed as **unverified**, and OpenGlass does not establish a signature or trust chain. When a future GUI reads an older catalog, Replace affects only settings introduced by that catalog version and leaves newer settings untouched.
+
+Package assets replace original absolute paths. Import deploys verified content read-only under `%ProgramData%\OpenGlass\Presets\<uuid>\` and rewrites canonical asset settings to that location. The deployed ACL grants Full access only to SYSTEM and Administrators and Read/Execute to Users and Window Manager. A UUID is an immutable content identity: identical content is reused, while different content with the same UUID is rejected. Editing metadata, LICENSE, settings, or an asset requires a new UUID.
+
+Import rejects path traversal, alternate data streams, case-insensitive duplicate names, links or non-regular entries, excessive paths, malformed/truncated archives, abnormal compression ratios, size/count limits, hash mismatches, and images that WIC cannot decode as bounded PNG files. Preset packages accept no script, shader, DLL, executable, or network asset. Applying a package requires confirmation of the complete set/delete diff, sensitive settings, graphics decoded by `dwm.exe`, and restart-required values; OpenGlass never restarts DWM automatically.
+
+Removing a deployed package is refused while a canonical asset setting references it. Interactive uninstall presents one options page with two independent choices. **Delete current-user and machine configuration** is selected by default, while **Delete installed OpenGlass preset packages** is not. Configuration cleanup removes only known OpenGlass values from the uninstalling user's HKCU and from HKLM; settings in other Windows user profiles are deliberately preserved, and the uninstall page warns that those values may be removed manually while signed in as the corresponding user. Cleanup remains independent of the GUI and preset package canonical-write policy. Silent uninstall keeps the same defaults: `/nodeleteconfig` preserves current-user and machine configuration, while `/deletepresets` removes `%ProgramData%\OpenGlass\Presets`.
 
 ## Registry reference
 
