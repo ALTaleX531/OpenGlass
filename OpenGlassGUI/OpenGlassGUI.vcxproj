@@ -36,6 +36,7 @@
   <ItemDefinitionGroup>
     <Link>
       <AdditionalDependencies>comctl32.lib;rpcrt4.lib;winmm.lib;advapi32.lib;wsock32.lib;uxtheme.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <UACExecutionLevel>AsInvoker</UACExecutionLevel>
     </Link>
     <ClCompile>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -46,9 +47,12 @@
   <ItemGroup>
 	<ClInclude Include="ColorizationPresets.hpp" />
 	<ClInclude Include="ColorSwatchButton.hpp" />
+    <ClInclude Include="ConfigurationMigration.hpp" />
+    <ClInclude Include="Elevation.hpp" />
     <ClInclude Include="Diagnostics.hpp" />
     <ClInclude Include="OpenGlassGUI.hpp" />
     <ClInclude Include="MainFrame.hpp" />
+    <ClInclude Include="PresetPackage.hpp" />
     <ClInclude Include="RegistryConfig.hpp" />
     <ClInclude Include="Symbols.hpp" />
     <ClInclude Include="UiControls.hpp" />
@@ -57,12 +61,16 @@
   </ItemGroup>
   <ItemGroup>
 	<ClCompile Include="ColorSwatchButton.cpp" />
+    <ClCompile Include="ConfigurationMigration.cpp" />
+    <ClCompile Include="Elevation.cpp" />
     <ClCompile Include="Diagnostics.cpp" />
     <ClCompile Include="OpenGlassGUI.cpp" />
 	<ClCompile Include="MainFrame.ColorPresets.cpp" />
+    <ClCompile Include="MainFrame.Presets.cpp" />
     <ClCompile Include="MainFrame.Core.cpp" />
     <ClCompile Include="MainFrame.State.cpp" />
     <ClCompile Include="MainFrame.Tabs.cpp" />
+    <ClCompile Include="PresetPackage.cpp" />
     <ClCompile Include="RegistryConfig.cpp" />
     <ClCompile Include="Symbols.cpp" />
     <ClCompile Include="pch.cpp">

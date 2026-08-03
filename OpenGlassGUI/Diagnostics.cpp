@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "ApplicationPaths.hpp"
 #include "Diagnostics.hpp"
 
 #include <filesystem>
@@ -134,12 +135,7 @@ namespace OpenGlass
 
 	std::wstring GetDefaultDwmCrashDumpFolder()
 	{
-		const auto executableDirectory = GetExecutableDirectory();
-		if (executableDirectory.empty())
-		{
-			return LR"(.\dumps)";
-		}
-		return (executableDirectory / L"dumps").wstring();
+		return ApplicationPaths::GetProgramDataSubdirectory(L"dumps").wstring();
 	}
 
 	HRESULT QueryDwmCrashDumpConfiguration(DwmCrashDumpConfiguration& configuration) noexcept

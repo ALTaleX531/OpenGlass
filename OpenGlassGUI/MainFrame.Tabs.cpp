@@ -117,7 +117,7 @@ namespace OpenGlass
 			wxBoxSizer* row = new wxBoxSizer(wxHORIZONTAL);
 			m_chkDisableGlassOnBattery = new wxCheckBox(panel, wxID_ANY, L"Disable transparency on battery");
 			row->Add(m_chkDisableGlassOnBattery, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
-			AddOptionStatus(panel, row, L"DisableGlassOnBattery");
+			AddOptionStatus(panel, row, Settings::Id::DisableGlassOnBattery);
 			globalGroup->Add(row, 0, wxEXPAND | wxALL, 2);
 		}
 		m_chkDisableGlassOnBattery->SetToolTip(L"If checked, glass effect will be opaque when energy/battery saver is on.");
@@ -125,7 +125,7 @@ namespace OpenGlass
 			wxBoxSizer* row = new wxBoxSizer(wxHORIZONTAL);
 			m_chkGlassSafetyZone = new wxCheckBox(panel, wxID_ANY, L"Disable glass safety zone");
 			row->Add(m_chkGlassSafetyZone, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
-			AddOptionStatus(panel, row, L"GlassSafetyZoneMode");
+			AddOptionStatus(panel, row, Settings::Id::GlassSafetyZoneMode);
 			globalGroup->Add(row, 0, wxEXPAND | wxALL, 2);
 		}
 		m_chkGlassSafetyZone->SetToolTip(L"Disabling this may cause visual artifacts. Default is Enabled (Unchecked).");
@@ -134,7 +134,7 @@ namespace OpenGlass
 		{
 			wxBoxSizer* row = new wxBoxSizer(wxHORIZONTAL);
 			row->Add(new wxStaticText(panel, wxID_ANY, L"Disabled hooks (advanced): *"), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
-			AddOptionStatus(panel, row, L"DisabledHooks");
+			AddOptionStatus(panel, row, Settings::Id::DisabledHooks);
 			globalGroup->Add(row, 0, wxLEFT | wxTOP, 2);
 		}
 		wxArrayString hooks;
@@ -165,7 +165,7 @@ namespace OpenGlass
 		wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 
 		wxStaticBoxSizer* downloadGroup = new wxStaticBoxSizer(wxVERTICAL, panel, L"Symbols");
-		const wxString descriptionText = L"Download the public PDB files required for the current Windows build. Files are saved to the local symbols cache used by OpenGlass.";
+		const wxString descriptionText = L"Download the public PDB files required for the current Windows build. The default runtime cache is %ProgramData%\\OpenGlass\\symbols; another folder may be selected for manual use.";
 		wxStaticText* description = new wxStaticText(
 			panel,
 			wxID_ANY,
@@ -255,7 +255,7 @@ namespace OpenGlass
 		statusGroup->Add(m_pnlSymbolDownloadResult, 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 8);
 
 		wxStaticBoxSizer* dumpGroup = new wxStaticBoxSizer(wxVERTICAL, panel, L"WER crash dumps");
-		const wxString dumpDescriptionText = L"Collect full user-mode crash dumps for dwm.exe using its per-application Windows Error Reporting configuration. Full dumps can be large. The default folder is .\\dumps beside OpenGlassGUI.exe.";
+		const wxString dumpDescriptionText = L"Collect full user-mode crash dumps for dwm.exe using its per-application Windows Error Reporting configuration. Full dumps can be large. The default folder is %ProgramData%\\OpenGlass\\dumps.";
 		wxStaticText* dumpDescription = new wxStaticText(panel, wxID_ANY, dumpDescriptionText);
 		dumpGroup->Add(dumpDescription, 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, 8);
 
@@ -349,7 +349,7 @@ namespace OpenGlass
 			
 			m_fpCustomThemeAtlas = new wxFilePickerCtrl(panel, wxID_ANY, wxEmptyString, L"Select Theme atlas", L"PNG files (*.png)|*.png", wxDefaultPosition, wxDefaultSize, wxFLP_USE_TEXTCTRL | wxFLP_OPEN | wxFLP_FILE_MUST_EXIST);
 			row->Add(m_fpCustomThemeAtlas, 1, wxALIGN_CENTER_VERTICAL);
-			AddOptionStatus(panel, row, L"CustomThemeAtlas");
+			AddOptionStatus(panel, row, Settings::Id::CustomThemeAtlas);
 			AddPathWarningIcon(panel, row, m_fpCustomThemeAtlas, m_chkCustomThemeAtlas, L"Theme atlas");
 			themeGroup->Add(row, 0, wxEXPAND | wxALL, 2);
 		}
@@ -372,18 +372,18 @@ namespace OpenGlass
 
 			m_fpCustomThemeReflection = new wxFilePickerCtrl(panel, wxID_ANY, wxEmptyString, L"Select reflection texture", L"Image files (*.png;*.jpg;*.bmp)|*.png;*.jpg;*.bmp", wxDefaultPosition, wxDefaultSize, wxFLP_USE_TEXTCTRL | wxFLP_OPEN | wxFLP_FILE_MUST_EXIST);
 			row->Add(m_fpCustomThemeReflection, 1, wxALIGN_CENTER_VERTICAL);
-			AddOptionStatus(panel, row, L"CustomThemeReflection");
+			AddOptionStatus(panel, row, Settings::Id::CustomThemeReflection);
 			AddPathWarningIcon(panel, row, m_fpCustomThemeReflection, m_chkCustomThemeReflection, L"Reflection texture");
 			reflectionGroup->Add(row, 0, wxEXPAND | wxALL, 2);
 		}
 
 		// Reflection Intensity
 		m_slReflectionIntensity = new NativeSlider(panel, wxID_ANY, 0, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL | wxSL_AUTOTICKS);
-		AddProperty(panel, reflectionGroup, L"Glass reflection intensity:", m_slReflectionIntensity, L"ColorizationGlassReflectionIntensity");
+		AddProperty(panel, reflectionGroup, L"Glass reflection intensity:", m_slReflectionIntensity, Settings::Id::ColorizationGlassReflectionIntensity);
 
 		// Reflection Parallax
 		m_slReflectionParallax = new NativeSlider(panel, wxID_ANY, 13, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL | wxSL_AUTOTICKS);
-		AddProperty(panel, reflectionGroup, L"Glass parallax intensity:", m_slReflectionParallax, L"ColorizationGlassReflectionParallaxIntensity");
+		AddProperty(panel, reflectionGroup, L"Glass parallax intensity:", m_slReflectionParallax, Settings::Id::ColorizationGlassReflectionParallaxIntensity);
 
 		// Reflection Policy
 		{
@@ -395,7 +395,7 @@ namespace OpenGlass
 			row->Add(m_chkReflectionPolicyPeek, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 10);
 			m_chkReflectionPolicySnap = new wxCheckBox(panel, wxID_ANY, L"Aero Snap");
 			row->Add(m_chkReflectionPolicySnap, 0, wxALIGN_CENTER_VERTICAL);
-			AddOptionStatus(panel, row, L"ColorizationGlassReflectionPolicy");
+			AddOptionStatus(panel, row, Settings::Id::ColorizationGlassReflectionPolicy);
 			reflectionGroup->Add(row, 0, wxEXPAND | wxALL, 2);
 		}
 		// Legacy (kept for reference):
@@ -436,13 +436,13 @@ namespace OpenGlass
 		};
 
 		addRefOpacity(L"Base opacity:", m_chModeReflectionOpacity, m_slReflectionOpacity);
-		AddOptionStatus(reflectionOpacityPanel, dynamic_cast<wxBoxSizer*>(reflectionOpacitySizer->GetItem(reflectionOpacitySizer->GetItemCount() - 1)->GetSizer()), L"ColorizationGlassReflectionOpacity");
+		AddOptionStatus(reflectionOpacityPanel, dynamic_cast<wxBoxSizer*>(reflectionOpacitySizer->GetItem(reflectionOpacitySizer->GetItemCount() - 1)->GetSizer()), Settings::Id::ColorizationGlassReflectionOpacity);
 		addRefOpacity(L"Base inactive opacity:", m_chModeReflectionOpacityInactive, m_slReflectionOpacityInactive);
-		AddOptionStatus(reflectionOpacityPanel, dynamic_cast<wxBoxSizer*>(reflectionOpacitySizer->GetItem(reflectionOpacitySizer->GetItemCount() - 1)->GetSizer()), L"ColorizationGlassReflectionOpacityInactive");
+		AddOptionStatus(reflectionOpacityPanel, dynamic_cast<wxBoxSizer*>(reflectionOpacitySizer->GetItem(reflectionOpacitySizer->GetItemCount() - 1)->GetSizer()), Settings::Id::ColorizationGlassReflectionOpacityInactive);
 		addRefOpacity(L"Base maximized opacity:", m_chModeReflectionOpacityMaximized, m_slReflectionOpacityMaximized);
-		AddOptionStatus(reflectionOpacityPanel, dynamic_cast<wxBoxSizer*>(reflectionOpacitySizer->GetItem(reflectionOpacitySizer->GetItemCount() - 1)->GetSizer()), L"ColorizationGlassReflectionOpacityMaximized");
+		AddOptionStatus(reflectionOpacityPanel, dynamic_cast<wxBoxSizer*>(reflectionOpacitySizer->GetItem(reflectionOpacitySizer->GetItemCount() - 1)->GetSizer()), Settings::Id::ColorizationGlassReflectionOpacityMaximized);
 		addRefOpacity(L"Base inactive maximized opacity:", m_chModeReflectionOpacityInactiveMaximized, m_slReflectionOpacityInactiveMaximized);
-		AddOptionStatus(reflectionOpacityPanel, dynamic_cast<wxBoxSizer*>(reflectionOpacitySizer->GetItem(reflectionOpacitySizer->GetItemCount() - 1)->GetSizer()), L"ColorizationGlassReflectionOpacityInactiveMaximized");
+		AddOptionStatus(reflectionOpacityPanel, dynamic_cast<wxBoxSizer*>(reflectionOpacitySizer->GetItem(reflectionOpacitySizer->GetItemCount() - 1)->GetSizer()), Settings::Id::ColorizationGlassReflectionOpacityInactiveMaximized);
 		reflectionOpacityPanel->SetSizer(reflectionOpacitySizer);
 
 		sizer->Add(reflectionGroup, 0, wxEXPAND | wxALL, 2);
@@ -459,14 +459,14 @@ namespace OpenGlass
 
 			m_fpCustomThemeMaterial = new wxFilePickerCtrl(panel, wxID_ANY, wxEmptyString, L"Select material texture", L"Image files (*.png;*.jpg;*.bmp)|*.png;*.jpg;*.bmp", wxDefaultPosition, wxDefaultSize, wxFLP_USE_TEXTCTRL | wxFLP_OPEN | wxFLP_FILE_MUST_EXIST);
 			row->Add(m_fpCustomThemeMaterial, 1, wxALIGN_CENTER_VERTICAL);
-			AddOptionStatus(panel, row, L"CustomThemeMaterial");
+			AddOptionStatus(panel, row, Settings::Id::CustomThemeMaterial);
 			AddPathWarningIcon(panel, row, m_fpCustomThemeMaterial, m_chkCustomThemeMaterial, L"Material texture");
 			materialGroup->Add(row, 0, wxEXPAND | wxALL, 2);
 		}
 
 		// Material Opacity
 		m_slMaterialOpacity = new NativeSlider(panel, wxID_ANY, 0, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL | wxSL_AUTOTICKS);
-		AddProperty(panel, materialGroup, L"Material opacity:", m_slMaterialOpacity, L"MaterialOpacity");
+		AddProperty(panel, materialGroup, L"Material opacity:", m_slMaterialOpacity, Settings::Id::MaterialOpacity);
 
 		sizer->Add(materialGroup, 0, wxEXPAND | wxALL, 2);
 
@@ -487,21 +487,21 @@ namespace OpenGlass
 		
 		// Blur Deviation
 		m_slBlurDeviation = new NativeSlider(panel, wxID_ANY, 9, 0, 30, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL | wxSL_AUTOTICKS);
-		AddProperty(panel, generalGroup, L"Blur radius:", m_slBlurDeviation, L"BlurDeviation");
+		AddProperty(panel, generalGroup, L"Blur radius:", m_slBlurDeviation, Settings::Id::BlurDeviation);
 		// Blur Optimization
 		wxArrayString blurOpts;
 		blurOpts.Add(L"Speed first");
 		blurOpts.Add(L"Balanced");
 		blurOpts.Add(L"Quality first");
 		m_chBlurOptimization = new wxChoice(panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, blurOpts);
-		AddProperty(panel, generalGroup, L"Blur optimization:", m_chBlurOptimization, L"BlurOptimization");
+		AddProperty(panel, generalGroup, L"Blur optimization:", m_chBlurOptimization, Settings::Id::BlurOptimization);
 
 		// Renderer Settings
 		{
 			wxBoxSizer* row = new wxBoxSizer(wxHORIZONTAL);
 			m_chkUseD3D = new wxCheckBox(panel, wxID_ANY, L"Use Direct3D renderer");
 			row->Add(m_chkUseD3D, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
-			AddOptionStatus(panel, row, L"UseDirect3DRendering");
+			AddOptionStatus(panel, row, Settings::Id::UseDirect3DRendering);
 			generalGroup->Add(row, 0, wxEXPAND | wxALL, 2);
 		}
 		m_chkUseD3D->SetToolTip(L"Use d3d11 backend. Blur radius will be locked to 3.");
@@ -526,7 +526,7 @@ namespace OpenGlass
 			m_scRoundRectRadius = new wxSpinCtrl(panel, wxID_ANY);
 			m_scRoundRectRadius->SetRange(0, 50);
 			row->Add(m_scRoundRectRadius, 1, wxALIGN_CENTER_VERTICAL);
-			AddOptionStatus(panel, row, L"RoundRectRadius");
+			AddOptionStatus(panel, row, Settings::Id::RoundRectRadius);
 			geometryGroup->Add(row, 0, wxEXPAND | wxALL, 2);
 		}
 
@@ -537,14 +537,14 @@ namespace OpenGlass
 		captionStyles.Add(L"Windows 7 style");
 		captionStyles.Add(L"Windows 8 style");
 		m_chCaptionButtons = new wxChoice(panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, captionStyles);
-		AddProperty(panel, geometryGroup, L"Caption buttons style:", m_chCaptionButtons, L"CaptionButtons");
+		AddProperty(panel, geometryGroup, L"Caption buttons style:", m_chCaptionButtons, Settings::Id::CaptionButtons);
 
 		// Disable Modern Borders
 		{
 			wxBoxSizer* row = new wxBoxSizer(wxHORIZONTAL);
 			m_chkDisableModernBorders = new wxCheckBox(panel, wxID_ANY, L"Disable modern borders");
 			row->Add(m_chkDisableModernBorders, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
-			AddOptionStatus(panel, row, L"DisableModernBorders");
+			AddOptionStatus(panel, row, Settings::Id::DisableModernBorders);
 			geometryGroup->Add(row, 0, wxEXPAND | wxALL, 2);
 		}
 
@@ -565,7 +565,7 @@ namespace OpenGlass
 			modes.Add(L"Windows 8 style");
 			m_chCenterCaption = new wxChoice(panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, modes);
 			row->Add(m_chCenterCaption, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
-			AddOptionStatus(panel, row, L"CenterCaption");
+			AddOptionStatus(panel, row, Settings::Id::CenterCaption);
 			textGroup->Add(row, 0, wxEXPAND | wxALL, 2);
 		}
 
@@ -587,7 +587,7 @@ namespace OpenGlass
 			m_scTextGlowSize = new wxSpinCtrl(panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(80, -1));
 			m_scTextGlowSize->SetRange(0, 100);
 			row->Add(m_scTextGlowSize, 0, wxALIGN_CENTER_VERTICAL);
-			AddOptionStatus(panel, row, L"TextGlowMode");
+			AddOptionStatus(panel, row, Settings::Id::TextGlowMode);
 
 			textGroup->Add(row, 0, wxEXPAND | wxALL, 2);
 		}
@@ -621,13 +621,13 @@ namespace OpenGlass
 		};
 
 		addColorOverride(m_chModeColorCaption, m_cpColorCaption, L"Active:");
-		AddOptionStatus(textColorOverridesPanel, dynamic_cast<wxBoxSizer*>(textColorOverridesSizer->GetItem(textColorOverridesSizer->GetItemCount() - 1)->GetSizer()), L"ColorizationColorCaption");
+		AddOptionStatus(textColorOverridesPanel, dynamic_cast<wxBoxSizer*>(textColorOverridesSizer->GetItem(textColorOverridesSizer->GetItemCount() - 1)->GetSizer()), Settings::Id::ColorizationColorCaption);
 		addColorOverride(m_chModeColorCaptionInactive, m_cpColorCaptionInactive, L"Inactive:");
-		AddOptionStatus(textColorOverridesPanel, dynamic_cast<wxBoxSizer*>(textColorOverridesSizer->GetItem(textColorOverridesSizer->GetItemCount() - 1)->GetSizer()), L"ColorizationColorCaptionInactive");
+		AddOptionStatus(textColorOverridesPanel, dynamic_cast<wxBoxSizer*>(textColorOverridesSizer->GetItem(textColorOverridesSizer->GetItemCount() - 1)->GetSizer()), Settings::Id::ColorizationColorCaptionInactive);
 		addColorOverride(m_chModeColorCaptionMaximized, m_cpColorCaptionMaximized, L"Active maximized:");
-		AddOptionStatus(textColorOverridesPanel, dynamic_cast<wxBoxSizer*>(textColorOverridesSizer->GetItem(textColorOverridesSizer->GetItemCount() - 1)->GetSizer()), L"ColorizationColorCaptionMaximized");
+		AddOptionStatus(textColorOverridesPanel, dynamic_cast<wxBoxSizer*>(textColorOverridesSizer->GetItem(textColorOverridesSizer->GetItemCount() - 1)->GetSizer()), Settings::Id::ColorizationColorCaptionMaximized);
 		addColorOverride(m_chModeColorCaptionInactiveMaximized, m_cpColorCaptionInactiveMaximized, L"Inactive maximized:");
-		AddOptionStatus(textColorOverridesPanel, dynamic_cast<wxBoxSizer*>(textColorOverridesSizer->GetItem(textColorOverridesSizer->GetItemCount() - 1)->GetSizer()), L"ColorizationColorCaptionInactiveMaximized");
+		AddOptionStatus(textColorOverridesPanel, dynamic_cast<wxBoxSizer*>(textColorOverridesSizer->GetItem(textColorOverridesSizer->GetItemCount() - 1)->GetSizer()), Settings::Id::ColorizationColorCaptionInactiveMaximized);
 		textColorOverridesPanel->SetSizer(textColorOverridesSizer);
 
 		sizer->Add(textGroup, 0, wxEXPAND | wxALL, 2);
@@ -637,7 +637,7 @@ namespace OpenGlass
 		m_chkGlassOverrideAccent = new wxCheckBox(panel, wxID_ANY, L"Override accent");
 		m_chkGlassOverrideAccent->SetToolTip(L"Overrides accent blur surfaces with OpenGlass effects.");
 		accentRow->Add(m_chkGlassOverrideAccent, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
-		AddOptionStatus(panel, accentRow, L"GlassOverrideAccent");
+		AddOptionStatus(panel, accentRow, Settings::Id::GlassOverrideAccent);
 		accentGroup->Add(accentRow, 0, wxEXPAND | wxALL, 2);
 		sizer->Add(accentGroup, 0, wxEXPAND | wxALL, 2);
 
@@ -662,7 +662,7 @@ namespace OpenGlass
 		{
 			wxBoxSizer* row = new wxBoxSizer(wxHORIZONTAL);
 			row->Add(m_rbGlassType, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
-			AddOptionStatus(panel, row, L"GlassType");
+			AddOptionStatus(panel, row, Settings::Id::GlassType);
 			sizer->Add(row, 0, wxALL, 5);
 		}
 
@@ -713,7 +713,7 @@ namespace OpenGlass
 			wxBoxSizer* row = new wxBoxSizer(wxHORIZONTAL);
 			m_chkEnableTransparency = new wxCheckBox(panel, wxID_ANY, L"Enable transparency");
 			row->Add(m_chkEnableTransparency, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
-			AddOptionStatus(panel, row, L"ColorizationOpaqueBlend");
+			AddOptionStatus(panel, row, Settings::Id::ColorizationOpaqueBlend);
 			sizer->Add(row, 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, 8);
 		}
 		{
@@ -761,7 +761,7 @@ namespace OpenGlass
 			wxBoxSizer* row = new wxBoxSizer(wxHORIZONTAL);
 			m_cpColorizationColor = new wxColourPickerCtrl(detailsPanel, wxID_ANY);
 			row->Add(m_cpColorizationColor, 1, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
-			AddOptionStatus(detailsPanel, row, L"ColorizationColor", L"ColorizationColorOverride");
+			AddOptionStatus(detailsPanel, row, Settings::Id::ColorizationColor, Settings::Id::ColorizationColorOverride);
 			activeCol->Add(row, 0, wxEXPAND);
 		}
 		colorRow->Add(activeCol, 1, wxEXPAND | wxRIGHT, 10);
@@ -773,7 +773,7 @@ namespace OpenGlass
 			m_chkEnableInactiveColor = new wxCheckBox(detailsPanel, wxID_ANY, L"Custom inactive color");
 			m_chkEnableInactiveColor->SetValue(false); // Default logic
 			row->Add(m_chkEnableInactiveColor, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
-			AddOptionStatus(detailsPanel, row, L"ColorizationColorInactive");
+			AddOptionStatus(detailsPanel, row, Settings::Id::ColorizationColorInactive);
 			m_inactiveColumnSizer->Add(row, 0, wxEXPAND | wxBOTTOM, 5);
 		}
 		
@@ -793,7 +793,7 @@ namespace OpenGlass
 			wxBoxSizer* row = new wxBoxSizer(wxHORIZONTAL);
 			m_cpAfterglow = new wxColourPickerCtrl(detailsPanel, wxID_ANY);
 			row->Add(m_cpAfterglow, 1, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
-			AddOptionStatus(detailsPanel, row, L"ColorizationAfterglow", L"ColorizationAfterglowOverride");
+			AddOptionStatus(detailsPanel, row, Settings::Id::ColorizationAfterglow, Settings::Id::ColorizationAfterglowOverride);
 			m_afterglowColumnSizer->Add(row, 0, wxEXPAND);
 		}
 		colorRow->Add(m_afterglowColumnSizer, 1, wxEXPAND | wxLEFT, 10);
@@ -821,7 +821,7 @@ namespace OpenGlass
 			m_slGlassOpacityInactive = new NativeSlider(detailsPanel, wxID_ANY, 63, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL | wxSL_AUTOTICKS);
 			m_slGlassOpacityInactive->Enable(false);
 			row->Add(m_slGlassOpacityInactive, 1, wxALIGN_CENTER_VERTICAL);
-			AddOptionStatus(detailsPanel, row, L"GlassOpacityInactive");
+			AddOptionStatus(detailsPanel, row, Settings::Id::GlassOpacityInactive);
 			
 			m_vistaOpacitySizer->Add(row, 0, wxEXPAND | wxTOP, 2);
 		}
@@ -834,19 +834,19 @@ namespace OpenGlass
 		m_win7GroupSizer = win7Group; // Assign to member
 		
 		m_slBlurBalance = new NativeSlider(detailsPanel, wxID_ANY, 50, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL | wxSL_AUTOTICKS);
-		AddProperty(detailsPanel, win7Group, L"Blur balance:", m_slBlurBalance, L"ColorizationBlurBalance", L"ColorizationBlurBalanceOverride");
+		AddProperty(detailsPanel, win7Group, L"Blur balance:", m_slBlurBalance, Settings::Id::ColorizationBlurBalance, Settings::Id::ColorizationBlurBalanceOverride);
 		
 		m_slAfterglowBalance = new NativeSlider(detailsPanel, wxID_ANY, 10, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL | wxSL_AUTOTICKS);
-		AddProperty(detailsPanel, win7Group, L"Afterglow balance:", m_slAfterglowBalance, L"ColorizationAfterglowBalance", L"ColorizationAfterglowBalanceOverride");
+		AddProperty(detailsPanel, win7Group, L"Afterglow balance:", m_slAfterglowBalance, Settings::Id::ColorizationAfterglowBalance, Settings::Id::ColorizationAfterglowBalanceOverride);
 
 		m_slColorBalance = new NativeSlider(detailsPanel, wxID_ANY, 10, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL | wxSL_AUTOTICKS);
-		AddProperty(detailsPanel, win7Group, L"Color balance:", m_slColorBalance, L"ColorizationColorBalance", L"ColorizationColorBalanceOverride");
+		AddProperty(detailsPanel, win7Group, L"Color balance:", m_slColorBalance, Settings::Id::ColorizationColorBalance, Settings::Id::ColorizationColorBalanceOverride);
 
 		{
 			wxBoxSizer* row = new wxBoxSizer(wxHORIZONTAL);
 			row->AddStretchSpacer();
 			m_btnPersistCompositionParameters = new wxButton(detailsPanel, wxID_ANY, L"Keep current values");
-			m_btnPersistCompositionParameters->SetToolTip(L"Copy the three displayed composition parameters to persistent Override values in the current editing scope.");
+			m_btnPersistCompositionParameters->SetToolTip(L"Copy the three displayed composition parameters to persistent per-user Override values.");
 			row->Add(m_btnPersistCompositionParameters, 0);
 			win7Group->Add(row, 0, wxEXPAND | wxALL, 2);
 		}
@@ -888,11 +888,11 @@ namespace OpenGlass
 		};
 
 		addBlurBase(m_chModeBaseTransparent, m_cpBaseTransparent, m_scBaseTransparentAlpha, L"Base color (transparent):");
-		AddOptionStatus(advancedPanel, dynamic_cast<wxBoxSizer*>(advancedSizer->GetItem(advancedSizer->GetItemCount() - 1)->GetSizer()), L"ColorizationBaseTransparent");
+		AddOptionStatus(advancedPanel, dynamic_cast<wxBoxSizer*>(advancedSizer->GetItem(advancedSizer->GetItemCount() - 1)->GetSizer()), Settings::Id::ColorizationBaseTransparent);
 		addBlurBase(m_chModeBaseMaximized, m_cpBaseMaximized, m_scBaseMaximizedAlpha, L"Base color (maximized):");
-		AddOptionStatus(advancedPanel, dynamic_cast<wxBoxSizer*>(advancedSizer->GetItem(advancedSizer->GetItemCount() - 1)->GetSizer()), L"ColorizationBaseMaximized");
+		AddOptionStatus(advancedPanel, dynamic_cast<wxBoxSizer*>(advancedSizer->GetItem(advancedSizer->GetItemCount() - 1)->GetSizer()), Settings::Id::ColorizationBaseMaximized);
 		addBlurBase(m_chModeBaseOpaque, m_cpBaseOpaque, m_scBaseOpaqueAlpha, L"Base color (opaque):");
-		AddOptionStatus(advancedPanel, dynamic_cast<wxBoxSizer*>(advancedSizer->GetItem(advancedSizer->GetItemCount() - 1)->GetSizer()), L"ColorizationBaseOpaque");
+		AddOptionStatus(advancedPanel, dynamic_cast<wxBoxSizer*>(advancedSizer->GetItem(advancedSizer->GetItemCount() - 1)->GetSizer()), Settings::Id::ColorizationBaseOpaque);
 
 		wxArrayString priorities;
 		priorities.Add(L"Windows Vista");
@@ -905,7 +905,7 @@ namespace OpenGlass
 			
 			m_chOpaqueBlendPriority = new wxChoice(advancedPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, priorities);
 			row->Add(m_chOpaqueBlendPriority, 1, wxALIGN_CENTER_VERTICAL);
-			AddOptionStatus(advancedPanel, row, L"ColorizationOpaqueBlendPriority");
+			AddOptionStatus(advancedPanel, row, Settings::Id::ColorizationOpaqueBlendPriority);
 			
 			advancedSizer->Add(row, 0, wxEXPAND | wxALL, 2);
 		}
@@ -930,13 +930,13 @@ namespace OpenGlass
 		};
 
 		addOpacityOverride(m_chModeColorizationOpacity, m_slColorizationOpacity, L"Base opacity:");
-		AddOptionStatus(advancedPanel, dynamic_cast<wxBoxSizer*>(advancedSizer->GetItem(advancedSizer->GetItemCount() - 1)->GetSizer()), L"ColorizationOpacity");
+		AddOptionStatus(advancedPanel, dynamic_cast<wxBoxSizer*>(advancedSizer->GetItem(advancedSizer->GetItemCount() - 1)->GetSizer()), Settings::Id::ColorizationOpacity);
 		addOpacityOverride(m_chModeColorizationOpacityInactive, m_slColorizationOpacityInactive, L"Base inactive opacity:");
-		AddOptionStatus(advancedPanel, dynamic_cast<wxBoxSizer*>(advancedSizer->GetItem(advancedSizer->GetItemCount() - 1)->GetSizer()), L"ColorizationOpacityInactive");
+		AddOptionStatus(advancedPanel, dynamic_cast<wxBoxSizer*>(advancedSizer->GetItem(advancedSizer->GetItemCount() - 1)->GetSizer()), Settings::Id::ColorizationOpacityInactive);
 		addOpacityOverride(m_chModeColorizationOpacityMaximized, m_slColorizationOpacityMaximized, L"Base maximized opacity:");
-		AddOptionStatus(advancedPanel, dynamic_cast<wxBoxSizer*>(advancedSizer->GetItem(advancedSizer->GetItemCount() - 1)->GetSizer()), L"ColorizationOpacityMaximized");
+		AddOptionStatus(advancedPanel, dynamic_cast<wxBoxSizer*>(advancedSizer->GetItem(advancedSizer->GetItemCount() - 1)->GetSizer()), Settings::Id::ColorizationOpacityMaximized);
 		addOpacityOverride(m_chModeColorizationOpacityInactiveMaximized, m_slColorizationOpacityInactiveMaximized, L"Base inactive maximized opacity:");
-		AddOptionStatus(advancedPanel, dynamic_cast<wxBoxSizer*>(advancedSizer->GetItem(advancedSizer->GetItemCount() - 1)->GetSizer()), L"ColorizationOpacityInactiveMaximized");
+		AddOptionStatus(advancedPanel, dynamic_cast<wxBoxSizer*>(advancedSizer->GetItem(advancedSizer->GetItemCount() - 1)->GetSizer()), Settings::Id::ColorizationOpacityInactiveMaximized);
 
 		advancedPanel->SetSizer(advancedSizer);
 

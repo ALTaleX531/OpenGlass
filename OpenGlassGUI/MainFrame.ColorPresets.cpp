@@ -6,7 +6,7 @@ namespace OpenGlass
 {
 	void MainFrame::ApplyColorizationPreset(const ColorizationPresets::Preset& preset)
 	{
-		RegistryConfig* config = GetConfigForKey(L"ColorizationColorOverride");
+		RegistryConfig* config = GetConfigForSetting(Settings::Id::ColorizationColorOverride);
 		if (!config)
 		{
 			return;
@@ -16,23 +16,24 @@ namespace OpenGlass
 			preset,
 			m_chkEnableTransparency && !m_chkEnableTransparency->IsChecked()
 		);
-		auto setDword = [this, config](PCWSTR name, DWORD value) {
-			TrackSettingChange(name);
-			config->SetDword(name, value);
+		auto setDword = [this, config](Settings::Id id, DWORD value) {
+			const std::wstring name(Settings::Get(id).name);
+			TrackSettingChange(id);
+			return CheckRegistryWrite(config->SetDword(name, value), name);
 		};
 
-		setDword(L"ColorizationColorOverride", application.color);
+		if (!setDword(Settings::Id::ColorizationColorOverride, application.color)) return;
 		if (application.vistaOpacity)
 		{
-			setDword(L"GlassOpacity", *application.vistaOpacity);
+			if (!setDword(Settings::Id::GlassOpacity, *application.vistaOpacity)) return;
 		}
 		if (application.windows7)
 		{
 			const auto& parameters = *application.windows7;
-			setDword(L"ColorizationAfterglowOverride", parameters.afterglow);
-			setDword(L"ColorizationColorBalanceOverride", parameters.colorBalance);
-			setDword(L"ColorizationAfterglowBalanceOverride", parameters.afterglowBalance);
-			setDword(L"ColorizationBlurBalanceOverride", parameters.blurBalance);
+			if (!setDword(Settings::Id::ColorizationAfterglowOverride, parameters.afterglow)) return;
+			if (!setDword(Settings::Id::ColorizationColorBalanceOverride, parameters.colorBalance)) return;
+			if (!setDword(Settings::Id::ColorizationAfterglowBalanceOverride, parameters.afterglowBalance)) return;
+			if (!setDword(Settings::Id::ColorizationBlurBalanceOverride, parameters.blurBalance)) return;
 		}
 
 		SetDirty(true);
@@ -48,28 +49,28 @@ namespace OpenGlass
 		}
 
 		const DWORD color = ResolveOverridableDword(
-			L"ColorizationColor",
-			L"ColorizationColorOverride",
+			Settings::Id::ColorizationColor,
+			Settings::Id::ColorizationColorOverride,
 			0xFF000000
 		).value;
 		const DWORD afterglow = ResolveOverridableDword(
-			L"ColorizationAfterglow",
-			L"ColorizationAfterglowOverride",
+			Settings::Id::ColorizationAfterglow,
+			Settings::Id::ColorizationAfterglowOverride,
 			0
 		).value;
 		const DWORD colorBalance = ResolveOverridableDword(
-			L"ColorizationColorBalance",
-			L"ColorizationColorBalanceOverride",
+			Settings::Id::ColorizationColorBalance,
+			Settings::Id::ColorizationColorBalanceOverride,
 			10
 		).value;
 		const DWORD afterglowBalance = ResolveOverridableDword(
-			L"ColorizationAfterglowBalance",
-			L"ColorizationAfterglowBalanceOverride",
+			Settings::Id::ColorizationAfterglowBalance,
+			Settings::Id::ColorizationAfterglowBalanceOverride,
 			10
 		).value;
 		const DWORD blurBalance = ResolveOverridableDword(
-			L"ColorizationBlurBalance",
-			L"ColorizationBlurBalanceOverride",
+			Settings::Id::ColorizationBlurBalance,
+			Settings::Id::ColorizationBlurBalanceOverride,
 			50
 		).value;
 
@@ -102,8 +103,8 @@ namespace OpenGlass
 		if (m_rbGlassType->GetSelection() == 0)
 		{
 			const DWORD color = ResolveOverridableDword(
-				L"ColorizationColor",
-				L"ColorizationColorOverride",
+				Settings::Id::ColorizationColor,
+				Settings::Id::ColorizationColorOverride,
 				0xFF000000
 			).value;
 			const DWORD opacity = m_config->GetDword(L"GlassOpacity", 63);

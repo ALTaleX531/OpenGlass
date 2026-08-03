@@ -1,31 +1,41 @@
 #pragma once
 #include "pch.h"
+#include "SettingsCatalog.hpp"
 
 namespace OpenGlass
 {
 	class RegistryConfig
 	{
 	public:
-		RegistryConfig(bool useHklm);
+		enum class Mode
+		{
+			Canonical,
+			User,
+			Machine
+		};
+
+		RegistryConfig(Mode mode, std::wstring userSid = {});
 
 		[[nodiscard]] DWORD GetDword(const std::wstring& valueName, DWORD defaultValue) const;
-		void SetDword(const std::wstring& valueName, DWORD value);
+		HRESULT SetDword(const std::wstring& valueName, DWORD value);
 		[[nodiscard]] bool TryGetDword(const std::wstring& valueName, DWORD& value) const;
 
 		[[nodiscard]] std::wstring GetString(const std::wstring& valueName, const std::wstring& defaultValue) const;
-		void SetString(const std::wstring& valueName, const std::wstring& value);
+		HRESULT SetString(const std::wstring& valueName, const std::wstring& value);
 		[[nodiscard]] bool TryGetString(const std::wstring& valueName, std::wstring& value) const;
 
-		void DeleteValue(const std::wstring& valueName);
+		HRESULT DeleteValue(const std::wstring& valueName);
 		[[nodiscard]] bool HasValue(const std::wstring& valueName) const;
 		[[nodiscard]] bool HasKey() const;
 
-		[[nodiscard]] bool IsHklm() const noexcept { return m_useHklm; }
+		[[nodiscard]] Mode GetMode() const noexcept { return m_mode; }
+		[[nodiscard]] Settings::Scope ScopeFor(const std::wstring& valueName) const noexcept;
 
 	private:
-		wil::unique_hkey OpenKey(bool readOnly) const;
+		wil::unique_hkey OpenKey(const std::wstring& valueName, bool readOnly) const;
+		[[nodiscard]] std::pair<HKEY, std::wstring> GetLocation(const std::wstring& valueName) const;
 		
-		bool m_useHklm;
-		std::wstring m_subKey;
+		Mode m_mode;
+		std::wstring m_userSid;
 	};
 }

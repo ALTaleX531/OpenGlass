@@ -35,7 +35,8 @@
   </ImportGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>..\OpenGlass;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\OpenGlass;..\OpenGlassGUI;..\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DebugInformationFormat Condition="'$(Configuration)' != 'Debug'">OldStyle</DebugInformationFormat>
     </ClCompile>
     <Link>
@@ -50,6 +51,9 @@
     <ClCompile Include="CrossTu.cpp" />
     <ClCompile Include="ProjectionTests.cpp" />
     <ClCompile Include="..\OpenGlass\ProjectionRuntime.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\OpenGlassGUI\PresetPackage.cpp">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="pch.cpp">

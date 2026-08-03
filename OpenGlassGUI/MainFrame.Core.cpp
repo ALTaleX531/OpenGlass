@@ -7,6 +7,23 @@ namespace OpenGlass
 {
 	namespace
 	{
+		std::wstring FormatTargetUser(const std::wstring& sidText)
+		{
+			PSID sid{};
+			if (!ConvertStringSidToSidW(sidText.c_str(), &sid)) return sidText;
+			wil::unique_hlocal sidStorage{ sid };
+			DWORD nameLength{}, domainLength{};
+			SID_NAME_USE use{};
+			LookupAccountSidW(nullptr, sid, nullptr, &nameLength, nullptr, &domainLength, &use);
+			if (GetLastError() != ERROR_INSUFFICIENT_BUFFER) return sidText;
+			std::wstring name(nameLength, L'\0');
+			std::wstring domain(domainLength, L'\0');
+			if (!LookupAccountSidW(nullptr, sid, name.data(), &nameLength, domain.data(), &domainLength, &use)) return sidText;
+			if (!name.empty() && name.back() == L'\0') name.pop_back();
+			if (!domain.empty() && domain.back() == L'\0') domain.pop_back();
+			return domain.empty() ? name : domain + L"\\" + name;
+		}
+
 		void WrapStaticTextToParentWidth(wxStaticText* label, const wxString& sourceText, int rightPadding = 8)
 		{
 			if (!label)
@@ -26,99 +43,17 @@ namespace OpenGlass
 		}
 	}
 
-	class SelectionDialog : public wxDialog
-	{
-	public:
-		SelectionDialog(wxWindow* parent, bool isAdmin)
-			: wxDialog(parent, wxID_ANY, L"Aero Glass for Win10+", wxDefaultPosition, wxDefaultSize)
-		{
-			if (isAdmin)
-			{
-				SetTitle(GetTitle() + L" (Administrator)");
-			}
-			SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_FRAMEBK));
-			wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
-
-			// Header area
-			wxBoxSizer* headerSizer = new wxBoxSizer(wxHORIZONTAL);
-			wxStaticBitmap* icon = new wxStaticBitmap(this, wxID_ANY, wxArtProvider::GetBitmap(wxART_INFORMATION, wxART_MESSAGE_BOX));
-			headerSizer->Add(icon, 0, wxALL | wxALIGN_TOP, 20);
-
-			wxBoxSizer* textSizer = new wxBoxSizer(wxVERTICAL);
-			wxStaticText* title = new wxStaticText(this, wxID_ANY, L"Select Configuration Scope");
-			wxFont font = title->GetFont();
-			font.SetWeight(wxFONTWEIGHT_BOLD);
-			font.SetPointSize(font.GetPointSize() + 2);
-			title->SetFont(font);
-
-			wxStaticText* subtitle = new wxStaticText(this, wxID_ANY, L"Whose settings would you like to modify?");
-
-			textSizer->Add(title, 0, wxBOTTOM, 5);
-			textSizer->Add(subtitle, 0, wxBOTTOM, 0);
-			headerSizer->Add(textSizer, 1, wxALL | wxALIGN_CENTER_VERTICAL, 20);
-
-			mainSizer->Add(headerSizer, 0, wxEXPAND | wxALL, 0);
-			mainSizer->Add(new wxStaticLine(this), 0, wxEXPAND | wxLEFT | wxRIGHT, 0);
-
-			// Buttons
-			wxBoxSizer* contentSizer = new wxBoxSizer(wxVERTICAL);
-
-			auto* btnUser = new wxCommandLinkButton(this, wxID_NO, L"Current User", L"Modify settings for the current user (HKCU)");
-			auto* btnSystem = new wxCommandLinkButton(this, wxID_YES, L"System-wide", L"Modify global settings (HKLM)");
-
-			if (!isAdmin)
-			{
-				btnSystem->SetNote(L"Requires Administrator privileges (Not detected)");
-				btnSystem->Disable();
-			}
-
-			contentSizer->Add(btnUser, 0, wxEXPAND | wxBOTTOM, 10);
-			contentSizer->Add(btnSystem, 0, wxEXPAND | wxBOTTOM, 0);
-
-			mainSizer->Add(contentSizer, 1, wxEXPAND | wxALL, 20);
-
-			// Bottom cancel
-			wxBoxSizer* dlgBtns = new wxBoxSizer(wxHORIZONTAL);
-			dlgBtns->AddStretchSpacer();
-			dlgBtns->Add(new wxButton(this, wxID_CANCEL, L"Cancel"), 0, wxALL, 0);
-
-			mainSizer->Add(dlgBtns, 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 10);
-
-			SetSizerAndFit(mainSizer);
-			Centre();
-
-			// Bindings
-			btnUser->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { EndModal(wxID_NO); });
-			btnSystem->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { EndModal(wxID_YES); });
-			Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { EndModal(wxID_CANCEL); }, wxID_CANCEL);
-		}
-	};
-
-	MainFrame::MainFrame(const wxString& title)
+	MainFrame::MainFrame(const wxString& title, std::wstring userSid)
 		: wxFrame(nullptr, wxID_ANY, title, wxDefaultPosition, wxSize(900, 750))
 	{
-		bool isAdmin = ::IsUserAnAdmin();
-		m_isAdmin = isAdmin;
-
-		if (isAdmin)
-		{
-			SetTitle(title + L" (Administrator)");
-		}
+		m_isAdmin = true;
+		SetTitle(title + L" (Administrator)");
 		m_baseTitle = GetTitle();
-
-		SelectionDialog dialog(nullptr, isAdmin);
-		int result = dialog.ShowModal();
-
-		if (result == wxID_CANCEL)
-		{
-			m_initCanceled = true;
-			return;
-		}
-
-		bool useHklm = (result == wxID_YES);
-		m_config = std::make_unique<RegistryConfig>(useHklm);
-		m_systemConfig = std::make_unique<RegistryConfig>(true);
-		m_scopeLabel = useHklm ? LR"(HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\DWM)" : LR"(HKEY_CURRENT_USER\Software\Microsoft\Windows\DWM)";
+		m_config = std::make_unique<RegistryConfig>(RegistryConfig::Mode::Canonical, userSid);
+		m_userConfig = std::make_unique<RegistryConfig>(RegistryConfig::Mode::User, userSid);
+		m_systemConfig = std::make_unique<RegistryConfig>(RegistryConfig::Mode::Machine, userSid);
+		m_targetUserLabel = FormatTargetUser(userSid);
+		m_targetUserSid = userSid;
 
 		SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_FRAMEBK));
 
@@ -143,12 +78,17 @@ namespace OpenGlass
 		CreateThemeTab();
 		CreateAppearanceTab();
 		CreateGlassColorsTab();
+		CreatePresetsTab();
 		CreateDiagnosticsTab();
 
 		m_notebook->SetSelection(2);
 
 		GetSizer()->Add(m_notebook, 1, wxEXPAND | wxALL, 5);
-		CreateStatusBar();
+		auto* statusBar = CreateStatusBar();
+		statusBar->SetToolTip(
+			L"Windows colorization is stored for this user (SID: " + m_targetUserSid
+			+ L"). All other OpenGlass GUI settings apply system-wide."
+		);
 	}
 
 	void MainFrame::CreateBottomControls(wxSizer* parentSizer)
@@ -169,21 +109,21 @@ namespace OpenGlass
 		parentSizer->Add(btnSizer, 0, wxEXPAND | wxALL, 5);
 	}
 
-	void MainFrame::NotifySettingsChange(ChangeType type)
+	bool MainFrame::NotifySettingsChange(ChangeType type)
 	{
 		if (!m_dwmWindow || !IsWindow(m_dwmWindow))
 		{
 			m_dwmWindow = FindWindowW(L"Dwm", nullptr);
 		}
 		HWND notificationWindow = m_dwmWindow;
-		if (notificationWindow)
-		{
-			if (type == ChangeType::Colorization || type == ChangeType::Both)
-				SendNotifyMessage(notificationWindow, WM_DWMCOLORIZATIONCOLORCHANGED, 0, 0);
+		if (!notificationWindow) return false;
+		bool succeeded = true;
+		if (type == ChangeType::Colorization || type == ChangeType::Both)
+			succeeded = SendNotifyMessage(notificationWindow, WM_DWMCOLORIZATIONCOLORCHANGED, 0, 0) != FALSE;
 
-			if (type == ChangeType::Theme || type == ChangeType::Both)
-				SendNotifyMessage(notificationWindow, WM_THEMECHANGED, 0, 0);
-		}
+		if (type == ChangeType::Theme || type == ChangeType::Both)
+			succeeded = SendNotifyMessage(notificationWindow, WM_THEMECHANGED, 0, 0) != FALSE && succeeded;
+		return succeeded;
 	}
 
 	void MainFrame::SetDirty(bool dirty)
@@ -228,7 +168,7 @@ namespace OpenGlass
 		{
 			return;
 		}
-		SetStatusText(m_scopeLabel);
+		SetStatusText(L"Colorization user: " + m_targetUserLabel + L"; other settings apply system-wide");
 	}
 
 	void MainFrame::StartSymbolDownload()
@@ -516,104 +456,113 @@ namespace OpenGlass
 		RefreshDwmCrashDumpConfiguration();
 	}
 
-	bool MainFrame::IsSystemSettingKey(const std::wstring& key) const
+	RegistryConfig* MainFrame::GetConfigForSetting([[maybe_unused]] Settings::Id id) const
 	{
-		return key == L"DisableGlassOnBattery"
-			|| key == L"DisabledHooks"
-			|| key == L"GlassSafetyZoneMode";
-	}
-
-	RegistryConfig* MainFrame::GetConfigForKey(const std::wstring& key) const
-	{
-		if (IsSystemSettingKey(key) && m_systemConfig)
-		{
-			return m_systemConfig.get();
-		}
 		return m_config.get();
 	}
 
+	RegistryConfig* MainFrame::GetConfigForScope(Settings::Scope scope) const
+	{
+		return scope == Settings::Scope::User ? m_userConfig.get() : m_systemConfig.get();
+	}
+
 	ResolvedRegistryValue<DWORD> MainFrame::ResolveOverridableDword(
-		const std::wstring& key,
-		const std::wstring& overrideKey,
+		Settings::Id setting,
+		Settings::Id overrideSetting,
 		DWORD defaultValue
 	) const
 	{
-		auto query = [](const RegistryConfig* config, const std::wstring& name) -> std::optional<DWORD>
+		auto makeReader = [](const RegistryConfig* config)
 		{
-			DWORD value{};
-			if (config && config->TryGetDword(name, value))
+			return [config](const std::wstring& name) -> std::optional<DWORD>
 			{
-				return value;
-			}
-			return std::nullopt;
+				DWORD value{};
+				if (config && config->TryGetDword(name, value))
+				{
+					return value;
+				}
+				return std::nullopt;
+			};
 		};
 
-		std::optional<DWORD> userOverride;
-		std::optional<DWORD> userBase;
-		const RegistryConfig* machineConfig = m_systemConfig.get();
-		if (m_config && !m_config->IsHklm())
-		{
-			userOverride = query(m_config.get(), overrideKey);
-			userBase = query(m_config.get(), key);
-		}
-		else if (m_config)
-		{
-			machineConfig = m_config.get();
-		}
-
-		return ResolveOverridableRegistryValue(
-			userOverride,
-			userBase,
-			query(machineConfig, overrideKey),
-			query(machineConfig, key),
-			defaultValue
+		const std::wstring settingName(Settings::Get(setting).name);
+		const std::wstring overrideName(Settings::Get(overrideSetting).name);
+		return ResolveOverridableRegistryValueFromReaders(
+			settingName,
+			overrideName,
+			defaultValue,
+			makeReader(m_userConfig.get()),
+			makeReader(m_systemConfig.get())
 		);
 	}
 
-	void MainFrame::ResetOverridableDword(const std::wstring& key, const std::wstring& overrideKey)
+	void MainFrame::ResetOverridableDword([[maybe_unused]] Settings::Id setting, Settings::Id overrideSetting)
 	{
-		RegistryConfig* config = GetConfigForKey(key);
-		if (!config || !config->HasValue(overrideKey))
+		const auto& overrideSpec = Settings::Get(overrideSetting);
+		const std::wstring overrideName(overrideSpec.name);
+		RegistryConfig* config = GetConfigForScope(overrideSpec.scope);
+		if (!config || !config->HasValue(overrideName))
 		{
 			return;
 		}
 
-		TrackSettingChange(overrideKey);
-		config->DeleteValue(overrideKey);
+		TrackSettingChange(overrideSetting);
+		if (!CheckRegistryWrite(config->DeleteValue(overrideName), overrideName)) return;
 		SetDirty(true);
 		NotifySettingsChange(ChangeType::Colorization);
 		LoadSettings(false);
 	}
 
-	void MainFrame::BackupCurrentSetting(const std::wstring& name)
+	void MainFrame::BackupCurrentSetting(TrackedSetting setting)
 	{
-		RegistryConfig* config = GetConfigForKey(name);
+		const auto& spec = Settings::Get(setting.id);
+		const std::wstring name(spec.name);
+		RegistryConfig* config = GetConfigForScope(setting.scope);
 		if (!config || !config->HasValue(name))
 		{
-			m_backupSettings[name] = std::monostate{};
+			m_backupSettings[setting] = std::monostate{};
 			return;
 		}
 
-		std::wstring strVal = config->GetString(name, L"__MISSING__");
-		if (strVal != L"__MISSING__")
+		if (spec.type == Settings::ValueType::String)
 		{
-			m_backupSettings[name] = strVal;
+			std::wstring value;
+			m_backupSettings[setting] = config->TryGetString(name, value)
+				? decltype(m_backupSettings)::mapped_type{ std::move(value) }
+				: decltype(m_backupSettings)::mapped_type{ std::monostate{} };
 			return;
 		}
 
-		m_backupSettings[name] = config->GetDword(name, 0);
+		m_backupSettings[setting] = config->GetDword(name, 0);
 	}
 
-	void MainFrame::TrackSettingChange(const std::wstring& name)
+	void MainFrame::TrackSettingChange(Settings::Id id)
 	{
-		if (name.empty())
+		TrackSettingChange(Settings::Get(id).scope, id);
+	}
+
+	void MainFrame::TrackSettingChange(Settings::Scope scope, Settings::Id id)
+	{
+		const TrackedSetting setting{ scope, id };
+		if (m_dirtyKeys.insert(setting).second)
 		{
-			return;
+			BackupCurrentSetting(setting);
 		}
-		if (m_dirtyKeys.insert(name).second)
-		{
-			BackupCurrentSetting(name);
-		}
+	}
+
+	bool MainFrame::CheckRegistryWrite(HRESULT result, const std::wstring& name)
+	{
+		if (SUCCEEDED(result)) return true;
+		SetDirty(!m_dirtyKeys.empty());
+		NotifySettingsChange(ChangeType::Both);
+		LoadSettings(false);
+		wxMessageBox(
+			wxString::Format(L"The registry value '%s' could not be updated (HRESULT 0x%08lX).", name.c_str(), static_cast<unsigned long>(result)),
+			L"OpenGlass configuration",
+			wxOK | wxICON_ERROR,
+			this
+		);
+		return false;
 	}
 
 	void MainFrame::SaveSettings()
@@ -622,9 +571,9 @@ namespace OpenGlass
 		{
 			return;
 		}
-		for (const auto& key : m_dirtyKeys)
+		for (const auto& setting : m_dirtyKeys)
 		{
-			BackupCurrentSetting(key);
+			BackupCurrentSetting(setting);
 		}
 		m_dirtyKeys.clear();
 		SetDirty(false);
@@ -632,54 +581,66 @@ namespace OpenGlass
 		UpdatePathWarningIcons();
 	}
 
-	void MainFrame::RevertSettings()
+	bool MainFrame::RevertSettings()
 	{
 		if (!m_config)
 		{
-			return;
+			return false;
 		}
 		if (m_dirtyKeys.empty())
 		{
 			SetDirty(false);
-			return;
+			return true;
 		}
-		for (const auto& key : m_dirtyKeys)
+		HRESULT failure{ S_OK };
+		for (const auto& setting : m_dirtyKeys)
 		{
-			if (!m_isAdmin && IsSystemSettingKey(key))
-			{
-				continue;
-			}
-			auto it = m_backupSettings.find(key);
+			const std::wstring key(Settings::Get(setting.id).name);
+			auto it = m_backupSettings.find(setting);
 			if (it == m_backupSettings.end())
 			{
 				continue;
 			}
 			const auto& val = it->second;
-			RegistryConfig* config = GetConfigForKey(key);
+			RegistryConfig* config = GetConfigForScope(setting.scope);
 			if (!config)
 			{
 				continue;
 			}
 			if (std::holds_alternative<std::monostate>(val))
 			{
-				config->DeleteValue(key);
+				failure = config->DeleteValue(key);
 			}
 			else if (std::holds_alternative<DWORD>(val))
 			{
-				config->SetDword(key, std::get<DWORD>(val));
+				failure = config->SetDword(key, std::get<DWORD>(val));
 			}
 			else if (std::holds_alternative<std::wstring>(val))
 			{
-				config->SetString(key, std::get<std::wstring>(val));
+				failure = config->SetString(key, std::get<std::wstring>(val));
 			}
+			if (FAILED(failure)) break;
+		}
+		if (FAILED(failure))
+		{
+			wxMessageBox(wxString::Format(L"The registry rollback could not be completed (HRESULT 0x%08lX). The configuration remains dirty.", static_cast<unsigned long>(failure)), L"OpenGlass configuration", wxOK | wxICON_ERROR, this);
+			return false;
 		}
 		NotifySettingsChange();
 		LoadSettings(false);
 		m_dirtyKeys.clear();
 		SetDirty(false);
+		return true;
 	}
 
-	void MainFrame::AddProperty(wxWindow* parent, wxSizer* sizer, const wxString& label, wxWindow* control, const std::wstring& key, const std::wstring& overrideKey)
+	void MainFrame::AddProperty(
+		wxWindow* parent,
+		wxSizer* sizer,
+		const wxString& label,
+		wxWindow* control,
+		std::optional<Settings::Id> setting,
+		std::optional<Settings::Id> overrideSetting
+	)
 	{
 		if (wxSlider* slider = dynamic_cast<wxSlider*>(control))
 		{
@@ -700,14 +661,19 @@ namespace OpenGlass
 		wxStaticText* text = new wxStaticText(parent, wxID_ANY, label, wxDefaultPosition, wxSize(300, -1));
 		row->Add(text, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 		row->Add(control, 1, wxALIGN_CENTER_VERTICAL);
-		if (!key.empty())
+		if (setting)
 		{
-			AddOptionStatus(parent, row, key, overrideKey);
+			AddOptionStatus(parent, row, *setting, overrideSetting);
 		}
 		sizer->Add(row, 0, wxEXPAND | wxALL, 2);
 	}
 
-	void MainFrame::AddOptionStatus(wxWindow* parent, wxBoxSizer* row, const std::wstring& key, const std::wstring& overrideKey)
+	void MainFrame::AddOptionStatus(
+		wxWindow* parent,
+		wxBoxSizer* row,
+		Settings::Id setting,
+		std::optional<Settings::Id> overrideSetting
+	)
 	{
 		if (!parent || !row)
 		{
@@ -716,41 +682,36 @@ namespace OpenGlass
 
 		const wxSize iconSize(16, 16);
 		const wxBitmap infoBmp = wxArtProvider::GetBitmap(wxART_INFORMATION, wxART_MESSAGE_BOX, iconSize);
-		const wxBitmap warnBmp = wxArtProvider::GetBitmap(wxART_WARNING, wxART_MESSAGE_BOX, iconSize);
 		auto* info = new wxStaticBitmap(parent, wxID_ANY, infoBmp);
 		wxButton* reset = nullptr;
-		if (!overrideKey.empty())
+		if (overrideSetting)
 		{
 			reset = new wxButton(parent, wxID_ANY, L"↶", wxDefaultPosition, wxSize(28, -1), wxBU_EXACTFIT);
 			reset->SetName(L"Reset Override");
-			reset->SetToolTip(L"Remove the Override value in the current scope and use the next inherited value.");
+			reset->SetToolTip(L"Remove the per-user Override value and use the per-user base value or default.");
 			reset->Hide();
-			reset->Bind(wxEVT_BUTTON, [this, key, overrideKey](wxCommandEvent&)
+			reset->Bind(wxEVT_BUTTON, [this, setting, overrideSetting](wxCommandEvent&)
 			{
-				ResetOverridableDword(key, overrideKey);
+				ResetOverridableDword(setting, *overrideSetting);
 			});
 		}
-		auto* warn = new wxStaticBitmap(parent, wxID_ANY, warnBmp);
 		info->SetMinSize(iconSize);
-		warn->SetMinSize(iconSize);
 		info->SetToolTip(L"Effective value is coming from an Override key.");
-		warn->SetToolTip(L"You are editing HKLM, but HKCU has a value. \nHKCU takes precedence.");
 		info->Hide();
-		warn->Hide();
 
 		row->Add(info, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT | wxLEFT, 2);
 		if (reset)
 		{
 			row->Add(reset, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT | wxLEFT, 2);
 		}
-		row->Add(warn, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT | wxLEFT, 2);
 
-		const bool vistaIrrelevant = key.find(L"Afterglow") != std::wstring::npos
-			|| key.find(L"Balance") != std::wstring::npos;
-		const bool win7Irrelevant = key == L"GlassOpacityInactive"
-			|| key == L"ColorizationColorInactive"
-			|| key == L"GlassOpacity";
-		m_optionStatus.push_back({ info, reset, warn, key, overrideKey, vistaIrrelevant, win7Irrelevant });
+		const std::wstring_view name = Settings::Get(setting).name;
+		const bool vistaIrrelevant = name.find(L"Afterglow") != std::wstring_view::npos
+			|| name.find(L"Balance") != std::wstring_view::npos;
+		const bool win7Irrelevant = setting == Settings::Id::GlassOpacityInactive
+			|| setting == Settings::Id::ColorizationColorInactive
+			|| setting == Settings::Id::GlassOpacity;
+		m_optionStatus.push_back({ info, reset, setting, overrideSetting, vistaIrrelevant, win7Irrelevant });
 	}
 
 	void MainFrame::UpdateOptionStatusIcons()
@@ -760,13 +721,10 @@ namespace OpenGlass
 			return;
 		}
 
-		RegistryConfig userConfig(false);
 		bool needLayout = false;
 
 		const bool isVista = (m_rbGlassType && m_rbGlassType->GetSelection() == 0);
-		const bool hasUserKey = userConfig.HasKey();
-		std::unordered_map<std::wstring, bool> hkcuHasValueCache;
-		std::unordered_map<std::wstring, bool> activeHasValueCache;
+		std::unordered_map<Settings::Id, bool> activeHasValueCache;
 
 		for (auto& item : m_optionStatus)
 		{
@@ -798,15 +756,10 @@ namespace OpenGlass
 					item.resetOverrideButton->Show(false);
 					needLayout = true;
 				}
-				if (item.hkcuWarnIcon && item.hkcuWarnIcon->IsShown())
-				{
-					item.hkcuWarnIcon->Show(false);
-					needLayout = true;
-				}
 				continue;
 			}
 
-			RegistryConfig* activeConfig = GetConfigForKey(item.key);
+			RegistryConfig* activeConfig = GetConfigForSetting(item.setting);
 			if (!activeConfig)
 			{
 				if (item.overrideIcon && item.overrideIcon->IsShown())
@@ -814,64 +767,38 @@ namespace OpenGlass
 					item.overrideIcon->Show(false);
 					needLayout = true;
 				}
-				if (item.hkcuWarnIcon && item.hkcuWarnIcon->IsShown())
-				{
-					item.hkcuWarnIcon->Show(false);
-					needLayout = true;
-				}
 				continue;
 			}
 
 			bool selectedOverrideExists = false;
-			if (!item.overrideKey.empty())
+			if (item.overrideSetting)
 			{
-				auto it = activeHasValueCache.find(item.overrideKey);
+				auto it = activeHasValueCache.find(*item.overrideSetting);
 				if (it == activeHasValueCache.end())
 				{
-					selectedOverrideExists = activeConfig->HasValue(item.overrideKey);
-					activeHasValueCache.emplace(item.overrideKey, selectedOverrideExists);
+					const std::wstring overrideName(Settings::Get(*item.overrideSetting).name);
+					selectedOverrideExists = activeConfig->HasValue(overrideName);
+					activeHasValueCache.emplace(*item.overrideSetting, selectedOverrideExists);
 				}
 				else
 				{
 					selectedOverrideExists = it->second;
 				}
 			}
-			const bool editingHklm = activeConfig->IsHklm();
-			bool hkcuHasValue = false;
-			if (editingHklm && hasUserKey)
-			{
-				auto hasCachedUserValue = [&](const std::wstring& name)
-				{
-					auto it = hkcuHasValueCache.find(name);
-					if (it != hkcuHasValueCache.end())
-					{
-						return it->second;
-					}
-					const bool exists = userConfig.HasValue(name);
-					hkcuHasValueCache.emplace(name, exists);
-					return exists;
-				};
-				hkcuHasValue = hasCachedUserValue(item.key)
-					|| (!item.overrideKey.empty() && hasCachedUserValue(item.overrideKey));
-			}
-
 			if (item.overrideIcon)
 			{
 				bool show = false;
-				if (!item.overrideKey.empty())
+				if (item.overrideSetting)
 				{
-					const auto resolved = ResolveOverridableDword(item.key, item.overrideKey, 0);
+					const auto resolved = ResolveOverridableDword(item.setting, *item.overrideSetting, 0);
 					show = isRelevant && resolved.IsOverride();
-					if (resolved.source == RegistryValueSource::MachineOverride && !editingHklm)
-					{
-						item.overrideIcon->SetToolTip(L"Effective value is inherited from an HKLM Override key.");
-					}
-					else
-					{
-						item.overrideIcon->SetToolTip(L"Effective value is coming from an Override key in the current scope.");
-					}
+					item.overrideIcon->SetToolTip(
+						resolved.source == RegistryValueSource::UserOverride
+							? L"Effective value is coming from the current user's Override value."
+							: L"Effective value is coming from the machine Override value."
+					);
 				}
-				if (item.key == L"ColorizationColorInactive")
+				if (item.setting == Settings::Id::ColorizationColorInactive)
 				{
 					show = false;
 				}
@@ -887,15 +814,6 @@ namespace OpenGlass
 				if (item.resetOverrideButton->IsShown() != show)
 				{
 					item.resetOverrideButton->Show(show);
-					needLayout = true;
-				}
-			}
-			if (item.hkcuWarnIcon)
-			{
-				bool show = isRelevant && hkcuHasValue;
-				if (item.hkcuWarnIcon->IsShown() != show)
-				{
-					item.hkcuWarnIcon->Show(show);
 					needLayout = true;
 				}
 			}
@@ -1019,19 +937,26 @@ namespace OpenGlass
 			e.Skip();
 		});
 
-		auto updateDword = [this](const std::wstring& name, DWORD val, ChangeType type = ChangeType::Both) {
-			RegistryConfig* config = GetConfigForKey(name);
+		auto updateDword = [this](Settings::Id id, DWORD val, ChangeType type = ChangeType::Both) {
+			const auto& spec = Settings::Get(id);
+			const std::wstring name(spec.name);
+			if (spec.type != Settings::ValueType::Dword)
+			{
+				CheckRegistryWrite(E_INVALIDARG, name);
+				return;
+			}
+			RegistryConfig* config = GetConfigForSetting(id);
 			if (!config)
 			{
 				return;
 			}
-			TrackSettingChange(name);
-			config->SetDword(name, val);
+			TrackSettingChange(id);
+			if (!CheckRegistryWrite(config->SetDword(name, val), name)) return;
 			SetDirty(true);
 			NotifySettingsChange(type);
 		};
-		auto updateOverridableDword = [this, updateDword](const std::wstring& overrideKey, DWORD value) {
-			updateDword(overrideKey, value, ChangeType::Colorization);
+		auto updateOverridableDword = [this, updateDword](Settings::Id overrideSetting, DWORD value) {
+			updateDword(overrideSetting, value, ChangeType::Colorization);
 			UpdateOptionStatusIcons();
 			UpdateColorizationPresetSelection();
 		};
@@ -1048,15 +973,13 @@ namespace OpenGlass
 			return val;
 		};
 
-		auto colorToDwordWithAlpha = [](const wxColour& c) -> DWORD {
-			return (c.Alpha() << 24) | (c.Red() << 16) | (c.Green() << 8) | c.Blue();
-		};
 		auto colorToDwordBgr = [](const wxColour& c) -> DWORD {
 			return (c.Red()) | (c.Green() << 8) | (c.Blue() << 16);
 		};
-		auto colorToDwordIgnoreAlpha = [this](const std::wstring& key, const wxColour& c) -> DWORD {
+		auto colorToDwordIgnoreAlpha = [this](Settings::Id id, const wxColour& c) -> DWORD {
+			const std::wstring key(Settings::Get(id).name);
 			DWORD alpha = 0;
-			RegistryConfig* config = GetConfigForKey(key);
+			RegistryConfig* config = GetConfigForSetting(id);
 			if (config && config->HasValue(key))
 			{
 				alpha = (config->GetDword(key, 0) >> 24) & 0xFF;
@@ -1064,8 +987,9 @@ namespace OpenGlass
 			return (alpha << 24) | (c.Red() << 16) | (c.Green() << 8) | c.Blue();
 		};
 
-		auto hasValue = [this](const std::wstring& key) {
-			RegistryConfig* config = GetConfigForKey(key);
+		auto hasValue = [this](Settings::Id id) {
+			const std::wstring key(Settings::Get(id).name);
+			RegistryConfig* config = GetConfigForSetting(id);
 			return config && config->HasValue(key);
 		};
 
@@ -1099,109 +1023,117 @@ namespace OpenGlass
 			}
 
 			DWORD captionActive = m_config->GetDword(L"ColorizationColorCaption", 0xFFFFFFFD);
-			DWORD captionInactive = hasValue(L"ColorizationColorCaptionInactive")
+			DWORD captionInactive = hasValue(Settings::Id::ColorizationColorCaptionInactive)
 				? m_config->GetDword(L"ColorizationColorCaptionInactive", captionActive)
 				: captionActive;
-			DWORD captionMaximized = hasValue(L"ColorizationColorCaptionMaximized")
+			DWORD captionMaximized = hasValue(Settings::Id::ColorizationColorCaptionMaximized)
 				? m_config->GetDword(L"ColorizationColorCaptionMaximized", captionActive)
 				: captionActive;
-			DWORD captionInactiveMaximized = hasValue(L"ColorizationColorCaptionInactiveMaximized")
+			DWORD captionInactiveMaximized = hasValue(Settings::Id::ColorizationColorCaptionInactiveMaximized)
 				? m_config->GetDword(L"ColorizationColorCaptionInactiveMaximized", captionInactive)
 				: captionInactive;
 
-			if (!hasValue(L"ColorizationColorCaptionInactive"))
+			if (!hasValue(Settings::Id::ColorizationColorCaptionInactive))
 			{
 				ApplyChoiceColorEx(m_chModeColorCaptionInactive, m_cpColorCaptionInactive, captionInactive, 0xFFFFFFFE, 0xFFFFFFFD, 0xFFFFFFFF);
 			}
-			if (!hasValue(L"ColorizationColorCaptionMaximized"))
+			if (!hasValue(Settings::Id::ColorizationColorCaptionMaximized))
 			{
 				ApplyChoiceColorEx(m_chModeColorCaptionMaximized, m_cpColorCaptionMaximized, captionMaximized, 0xFFFFFFFE, 0xFFFFFFFD, 0xFFFFFFFF);
 			}
-			if (!hasValue(L"ColorizationColorCaptionInactiveMaximized"))
+			if (!hasValue(Settings::Id::ColorizationColorCaptionInactiveMaximized))
 			{
 				ApplyChoiceColorEx(m_chModeColorCaptionInactiveMaximized, m_cpColorCaptionInactiveMaximized, captionInactiveMaximized, 0xFFFFFFFE, 0xFFFFFFFD, 0xFFFFFFFF);
 			}
 
 			DWORD refOpacityActive = m_config->GetDword(L"ColorizationGlassReflectionOpacity", 0xFFFFFFFE);
-			DWORD refOpacityInactive = hasValue(L"ColorizationGlassReflectionOpacityInactive")
+			DWORD refOpacityInactive = hasValue(Settings::Id::ColorizationGlassReflectionOpacityInactive)
 				? m_config->GetDword(L"ColorizationGlassReflectionOpacityInactive", refOpacityActive)
 				: refOpacityActive;
-			DWORD refOpacityMaximized = hasValue(L"ColorizationGlassReflectionOpacityMaximized")
+			DWORD refOpacityMaximized = hasValue(Settings::Id::ColorizationGlassReflectionOpacityMaximized)
 				? m_config->GetDword(L"ColorizationGlassReflectionOpacityMaximized", refOpacityActive)
 				: refOpacityActive;
-			DWORD refOpacityInactiveMaximized = hasValue(L"ColorizationGlassReflectionOpacityInactiveMaximized")
+			DWORD refOpacityInactiveMaximized = hasValue(Settings::Id::ColorizationGlassReflectionOpacityInactiveMaximized)
 				? m_config->GetDword(L"ColorizationGlassReflectionOpacityInactiveMaximized", refOpacityInactive)
 				: refOpacityInactive;
 
-			if (!hasValue(L"ColorizationGlassReflectionOpacityInactive"))
+			if (!hasValue(Settings::Id::ColorizationGlassReflectionOpacityInactive))
 			{
 				ApplyChoiceSlider(m_chModeReflectionOpacityInactive, m_slReflectionOpacityInactive, refOpacityInactive, 0xFFFFFFFF, 0xFFFFFFFE, 50);
 				syncSliderTooltip(m_slReflectionOpacityInactive);
 			}
-			if (!hasValue(L"ColorizationGlassReflectionOpacityMaximized"))
+			if (!hasValue(Settings::Id::ColorizationGlassReflectionOpacityMaximized))
 			{
 				ApplyChoiceSlider(m_chModeReflectionOpacityMaximized, m_slReflectionOpacityMaximized, refOpacityMaximized, 0xFFFFFFFF, 0xFFFFFFFE, 50);
 				syncSliderTooltip(m_slReflectionOpacityMaximized);
 			}
-			if (!hasValue(L"ColorizationGlassReflectionOpacityInactiveMaximized"))
+			if (!hasValue(Settings::Id::ColorizationGlassReflectionOpacityInactiveMaximized))
 			{
 				ApplyChoiceSlider(m_chModeReflectionOpacityInactiveMaximized, m_slReflectionOpacityInactiveMaximized, refOpacityInactiveMaximized, 0xFFFFFFFF, 0xFFFFFFFE, 50);
 				syncSliderTooltip(m_slReflectionOpacityInactiveMaximized);
 			}
 
 			DWORD colorOpacityActive = m_config->GetDword(L"ColorizationOpacity", 0xFFFFFFFE);
-			DWORD colorOpacityInactive = hasValue(L"ColorizationOpacityInactive")
+			DWORD colorOpacityInactive = hasValue(Settings::Id::ColorizationOpacityInactive)
 				? m_config->GetDword(L"ColorizationOpacityInactive", colorOpacityActive)
 				: colorOpacityActive;
-			DWORD colorOpacityMaximized = hasValue(L"ColorizationOpacityMaximized")
+			DWORD colorOpacityMaximized = hasValue(Settings::Id::ColorizationOpacityMaximized)
 				? m_config->GetDword(L"ColorizationOpacityMaximized", colorOpacityActive)
 				: colorOpacityActive;
-			DWORD colorOpacityInactiveMaximized = hasValue(L"ColorizationOpacityInactiveMaximized")
+			DWORD colorOpacityInactiveMaximized = hasValue(Settings::Id::ColorizationOpacityInactiveMaximized)
 				? m_config->GetDword(L"ColorizationOpacityInactiveMaximized", colorOpacityInactive)
 				: colorOpacityInactive;
 
-			if (!hasValue(L"ColorizationOpacityInactive"))
+			if (!hasValue(Settings::Id::ColorizationOpacityInactive))
 			{
 				ApplyChoiceSlider(m_chModeColorizationOpacityInactive, m_slColorizationOpacityInactive, colorOpacityInactive, 0xFFFFFFFF, 0xFFFFFFFE, 100);
 				syncSliderTooltip(m_slColorizationOpacityInactive);
 			}
-			if (!hasValue(L"ColorizationOpacityMaximized"))
+			if (!hasValue(Settings::Id::ColorizationOpacityMaximized))
 			{
 				ApplyChoiceSlider(m_chModeColorizationOpacityMaximized, m_slColorizationOpacityMaximized, colorOpacityMaximized, 0xFFFFFFFF, 0xFFFFFFFE, 100);
 				syncSliderTooltip(m_slColorizationOpacityMaximized);
 			}
-			if (!hasValue(L"ColorizationOpacityInactiveMaximized"))
+			if (!hasValue(Settings::Id::ColorizationOpacityInactiveMaximized))
 			{
 				ApplyChoiceSlider(m_chModeColorizationOpacityInactiveMaximized, m_slColorizationOpacityInactiveMaximized, colorOpacityInactiveMaximized, 0xFFFFFFFF, 0xFFFFFFFE, 100);
 				syncSliderTooltip(m_slColorizationOpacityInactiveMaximized);
 			}
 		};
 
-		auto updateString = [this](const std::wstring& name, const std::wstring& val, ChangeType type = ChangeType::Both) {
-			RegistryConfig* config = GetConfigForKey(name);
+		auto updateString = [this](Settings::Id id, const std::wstring& val, ChangeType type = ChangeType::Both) {
+			const auto& spec = Settings::Get(id);
+			const std::wstring name(spec.name);
+			if (spec.type != Settings::ValueType::String)
+			{
+				CheckRegistryWrite(E_INVALIDARG, name);
+				return;
+			}
+			RegistryConfig* config = GetConfigForSetting(id);
 			if (!config)
 			{
 				return;
 			}
-			TrackSettingChange(name);
-			config->SetString(name, val);
+			TrackSettingChange(id);
+			if (!CheckRegistryWrite(config->SetString(name, val), name)) return;
 			SetDirty(true);
 			NotifySettingsChange(type);
 		};
 
-		auto deleteValue = [this](const std::wstring& name) {
-			RegistryConfig* config = GetConfigForKey(name);
+		auto deleteValue = [this](Settings::Id id) {
+			const std::wstring name(Settings::Get(id).name);
+			RegistryConfig* config = GetConfigForSetting(id);
 			if (!config)
 			{
 				return;
 			}
-			TrackSettingChange(name);
-			config->DeleteValue(name);
+			TrackSettingChange(id);
+			if (!CheckRegistryWrite(config->DeleteValue(name), name)) return;
 			SetDirty(true);
 		};
 
-		auto restorePickerPath = [this](wxFilePickerCtrl* picker, const std::wstring& key) {
-			picker->SetPath(m_config->GetString(key, L""));
+		auto restorePickerPath = [this](wxFilePickerCtrl* picker, Settings::Id id) {
+			picker->SetPath(m_config->GetString(std::wstring(Settings::Get(id).name), L""));
 		};
 
 		auto ensureFilePath = []([[maybe_unused]] const wxString& path, [[maybe_unused]] const wxString& title) -> bool {
@@ -1211,12 +1143,12 @@ namespace OpenGlass
 		m_chkDisableGlassOnBattery->Bind(wxEVT_CHECKBOX, [this, updateDword, deleteValue]([[maybe_unused]] wxCommandEvent& e) {
 			if (e.IsChecked())
 			{
-				deleteValue(L"DisableGlassOnBattery");
+				deleteValue(Settings::Id::DisableGlassOnBattery);
 				NotifySettingsChange();
 			}
 			else
 			{
-				updateDword(L"DisableGlassOnBattery", 0);
+				updateDword(Settings::Id::DisableGlassOnBattery, 0);
 			}
 		});
 
@@ -1230,12 +1162,12 @@ namespace OpenGlass
 
 			if (mask == 0)
 			{
-				deleteValue(L"DisabledHooks");
+				deleteValue(Settings::Id::DisabledHooks);
 				NotifySettingsChange();
 			}
 			else
 			{
-				updateDword(L"DisabledHooks", mask);
+				updateDword(Settings::Id::DisabledHooks, mask);
 			}
 		});
 
@@ -1244,10 +1176,10 @@ namespace OpenGlass
 			{
 				if (!ensureFilePath(e.GetPath(), L"Theme atlas"))
 				{
-					restorePickerPath(m_fpCustomThemeAtlas, L"CustomThemeAtlas");
+					restorePickerPath(m_fpCustomThemeAtlas, Settings::Id::CustomThemeAtlas);
 					return;
 				}
-				updateString(L"CustomThemeAtlas", e.GetPath().ToStdWstring(), ChangeType::Theme);
+				updateString(Settings::Id::CustomThemeAtlas, e.GetPath().ToStdWstring(), ChangeType::Theme);
 			}
 			UpdatePathWarningIcons();
 		});
@@ -1257,14 +1189,14 @@ namespace OpenGlass
 			if (!checked)
 			{
 				m_fpCustomThemeAtlas->SetPath(wxEmptyString);
-				deleteValue(L"CustomThemeAtlas");
+				deleteValue(Settings::Id::CustomThemeAtlas);
 				NotifySettingsChange(ChangeType::Theme);
 			}
 			else
 			{
 				if (m_fpCustomThemeAtlas->GetPath().empty())
 				{
-					deleteValue(L"CustomThemeAtlas");
+					deleteValue(Settings::Id::CustomThemeAtlas);
 					NotifySettingsChange(ChangeType::Theme);
 					UpdatePathWarningIcons();
 					return;
@@ -1275,7 +1207,7 @@ namespace OpenGlass
 					m_fpCustomThemeAtlas->Enable(false);
 					return;
 				}
-				updateString(L"CustomThemeAtlas", m_fpCustomThemeAtlas->GetPath().ToStdWstring(), ChangeType::Theme);
+				updateString(Settings::Id::CustomThemeAtlas, m_fpCustomThemeAtlas->GetPath().ToStdWstring(), ChangeType::Theme);
 			}
 			UpdatePathWarningIcons();
 		});
@@ -1285,10 +1217,10 @@ namespace OpenGlass
 			{
 				if (!ensureFilePath(e.GetPath(), L"Reflection texture"))
 				{
-					restorePickerPath(m_fpCustomThemeReflection, L"CustomThemeReflection");
+					restorePickerPath(m_fpCustomThemeReflection, Settings::Id::CustomThemeReflection);
 					return;
 				}
-				updateString(L"CustomThemeReflection", e.GetPath().ToStdWstring(), ChangeType::Theme);
+				updateString(Settings::Id::CustomThemeReflection, e.GetPath().ToStdWstring(), ChangeType::Theme);
 			}
 			UpdatePathWarningIcons();
 		});
@@ -1298,14 +1230,14 @@ namespace OpenGlass
 			if (!checked)
 			{
 				m_fpCustomThemeReflection->SetPath(wxEmptyString);
-				deleteValue(L"CustomThemeReflection");
+				deleteValue(Settings::Id::CustomThemeReflection);
 				NotifySettingsChange(ChangeType::Theme);
 			}
 			else
 			{
 				if (m_fpCustomThemeReflection->GetPath().empty())
 				{
-					deleteValue(L"CustomThemeReflection");
+					deleteValue(Settings::Id::CustomThemeReflection);
 					NotifySettingsChange(ChangeType::Theme);
 					UpdatePathWarningIcons();
 					return;
@@ -1316,7 +1248,7 @@ namespace OpenGlass
 					m_fpCustomThemeReflection->Enable(false);
 					return;
 				}
-				updateString(L"CustomThemeReflection", m_fpCustomThemeReflection->GetPath().ToStdWstring(), ChangeType::Theme);
+				updateString(Settings::Id::CustomThemeReflection, m_fpCustomThemeReflection->GetPath().ToStdWstring(), ChangeType::Theme);
 			}
 			UpdatePathWarningIcons();
 		});
@@ -1325,23 +1257,23 @@ namespace OpenGlass
 			int val = e.GetInt();
 			if (val == 0)
 			{
-				deleteValue(L"ColorizationGlassReflectionIntensity");
+				deleteValue(Settings::Id::ColorizationGlassReflectionIntensity);
 				NotifySettingsChange(ChangeType::Colorization);
 			}
 			else
 			{
-				updateDword(L"ColorizationGlassReflectionIntensity", val, ChangeType::Colorization);
+				updateDword(Settings::Id::ColorizationGlassReflectionIntensity, val, ChangeType::Colorization);
 			}
 			setSliderTooltipValue(m_slReflectionIntensity, val);
 		});
 
-		auto bindRefOpacity = [&](wxChoice* ch, wxSlider* sl, const std::wstring& key, DWORD themeSentinel, DWORD autoSentinel, bool propagateInheritance) {
-			auto update = [this, ch, sl, key, themeSentinel, autoSentinel, updateDword, deleteValue, propagateInheritance, updateInheritance]() {
+		auto bindRefOpacity = [&](wxChoice* ch, wxSlider* sl, Settings::Id id, DWORD themeSentinel, DWORD autoSentinel, bool propagateInheritance) {
+			auto update = [this, ch, sl, id, themeSentinel, autoSentinel, updateDword, deleteValue, propagateInheritance, updateInheritance]() {
 				int sel = ch->GetSelection();
 				sl->Enable(sel == 2);
-				if (sel == 0) deleteValue(key);
-				else if (sel == 1) updateDword(key, themeSentinel, ChangeType::Colorization);
-				else updateDword(key, sl->GetValue(), ChangeType::Colorization);
+				if (sel == 0) deleteValue(id);
+				else if (sel == 1) updateDword(id, themeSentinel, ChangeType::Colorization);
+				else updateDword(id, sl->GetValue(), ChangeType::Colorization);
 				sl->SetToolTip(wxString::Format(L"%d", sl->GetValue()));
 				NotifySettingsChange(ChangeType::Colorization);
 				if (propagateInheritance)
@@ -1353,21 +1285,21 @@ namespace OpenGlass
 			sl->Bind(wxEVT_SLIDER, [update](wxCommandEvent&) { update(); });
 		};
 
-		bindRefOpacity(m_chModeReflectionOpacity, m_slReflectionOpacity, L"ColorizationGlassReflectionOpacity", 0xFFFFFFFF, 0xFFFFFFFE, true);
-		bindRefOpacity(m_chModeReflectionOpacityInactive, m_slReflectionOpacityInactive, L"ColorizationGlassReflectionOpacityInactive", 0xFFFFFFFF, 0xFFFFFFFE, true);
-		bindRefOpacity(m_chModeReflectionOpacityMaximized, m_slReflectionOpacityMaximized, L"ColorizationGlassReflectionOpacityMaximized", 0xFFFFFFFF, 0xFFFFFFFE, false);
-		bindRefOpacity(m_chModeReflectionOpacityInactiveMaximized, m_slReflectionOpacityInactiveMaximized, L"ColorizationGlassReflectionOpacityInactiveMaximized", 0xFFFFFFFF, 0xFFFFFFFE, false);
+		bindRefOpacity(m_chModeReflectionOpacity, m_slReflectionOpacity, Settings::Id::ColorizationGlassReflectionOpacity, 0xFFFFFFFF, 0xFFFFFFFE, true);
+		bindRefOpacity(m_chModeReflectionOpacityInactive, m_slReflectionOpacityInactive, Settings::Id::ColorizationGlassReflectionOpacityInactive, 0xFFFFFFFF, 0xFFFFFFFE, true);
+		bindRefOpacity(m_chModeReflectionOpacityMaximized, m_slReflectionOpacityMaximized, Settings::Id::ColorizationGlassReflectionOpacityMaximized, 0xFFFFFFFF, 0xFFFFFFFE, false);
+		bindRefOpacity(m_chModeReflectionOpacityInactiveMaximized, m_slReflectionOpacityInactiveMaximized, Settings::Id::ColorizationGlassReflectionOpacityInactiveMaximized, 0xFFFFFFFF, 0xFFFFFFFE, false);
 
 		m_slReflectionParallax->Bind(wxEVT_SLIDER, [this, updateDword, deleteValue, setSliderTooltipValue]([[maybe_unused]] wxCommandEvent& e) {
 			int val = e.GetInt();
 			if (val == 13)
 			{
-				deleteValue(L"ColorizationGlassReflectionParallaxIntensity");
+				deleteValue(Settings::Id::ColorizationGlassReflectionParallaxIntensity);
 				NotifySettingsChange(ChangeType::Colorization);
 			}
 			else
 			{
-				updateDword(L"ColorizationGlassReflectionParallaxIntensity", val, ChangeType::Colorization);
+				updateDword(Settings::Id::ColorizationGlassReflectionParallaxIntensity, val, ChangeType::Colorization);
 			}
 			setSliderTooltipValue(m_slReflectionParallax, val);
 		});
@@ -1379,12 +1311,12 @@ namespace OpenGlass
 			if (m_chkReflectionPolicySnap && m_chkReflectionPolicySnap->IsChecked()) mask |= (1 << 3);
 			if ((mask & 0xD) == 0xD)
 			{
-				deleteValue(L"ColorizationGlassReflectionPolicy");
+				deleteValue(Settings::Id::ColorizationGlassReflectionPolicy);
 				NotifySettingsChange(ChangeType::Colorization);
 			}
 			else
 			{
-				updateDword(L"ColorizationGlassReflectionPolicy", mask, ChangeType::Colorization);
+				updateDword(Settings::Id::ColorizationGlassReflectionPolicy, mask, ChangeType::Colorization);
 			}
 		};
 		if (m_chkReflectionPolicyTitlebar)
@@ -1407,12 +1339,12 @@ namespace OpenGlass
 		// 	if (m_clReflectionPolicy->IsChecked(2)) mask |= (1 << 3);
 		// 	if ((mask & 0xD) == 0xD)
 		// 	{
-		// 		deleteValue(L"ColorizationGlassReflectionPolicy");
+		// 		deleteValue(Settings::Id::ColorizationGlassReflectionPolicy);
 		// 		NotifySettingsChange(ChangeType::Colorization);
 		// 	}
 		// 	else
 		// 	{
-		// 		updateDword(L"ColorizationGlassReflectionPolicy", mask, ChangeType::Colorization);
+		// 		updateDword(Settings::Id::ColorizationGlassReflectionPolicy, mask, ChangeType::Colorization);
 		// 	}
 		// });
 
@@ -1421,10 +1353,10 @@ namespace OpenGlass
 			{
 				if (!ensureFilePath(e.GetPath(), L"Material texture"))
 				{
-					restorePickerPath(m_fpCustomThemeMaterial, L"CustomThemeMaterial");
+					restorePickerPath(m_fpCustomThemeMaterial, Settings::Id::CustomThemeMaterial);
 					return;
 				}
-				updateString(L"CustomThemeMaterial", e.GetPath().ToStdWstring(), ChangeType::Theme);
+				updateString(Settings::Id::CustomThemeMaterial, e.GetPath().ToStdWstring(), ChangeType::Theme);
 			}
 			UpdatePathWarningIcons();
 		});
@@ -1434,14 +1366,14 @@ namespace OpenGlass
 			if (!checked)
 			{
 				m_fpCustomThemeMaterial->SetPath(wxEmptyString);
-				deleteValue(L"CustomThemeMaterial");
+				deleteValue(Settings::Id::CustomThemeMaterial);
 				NotifySettingsChange(ChangeType::Theme);
 			}
 			else
 			{
 				if (m_fpCustomThemeMaterial->GetPath().empty())
 				{
-					deleteValue(L"CustomThemeMaterial");
+					deleteValue(Settings::Id::CustomThemeMaterial);
 					NotifySettingsChange(ChangeType::Theme);
 					UpdatePathWarningIcons();
 					return;
@@ -1452,7 +1384,7 @@ namespace OpenGlass
 					m_fpCustomThemeMaterial->Enable(false);
 					return;
 				}
-				updateString(L"CustomThemeMaterial", m_fpCustomThemeMaterial->GetPath().ToStdWstring(), ChangeType::Theme);
+				updateString(Settings::Id::CustomThemeMaterial, m_fpCustomThemeMaterial->GetPath().ToStdWstring(), ChangeType::Theme);
 			}
 			UpdatePathWarningIcons();
 		});
@@ -1461,12 +1393,12 @@ namespace OpenGlass
 			int val = e.GetInt();
 			if (val == 0)
 			{
-				deleteValue(L"MaterialOpacity");
+				deleteValue(Settings::Id::MaterialOpacity);
 				NotifySettingsChange(ChangeType::Colorization);
 			}
 			else
 			{
-				updateDword(L"MaterialOpacity", val, ChangeType::Colorization);
+				updateDword(Settings::Id::MaterialOpacity, val, ChangeType::Colorization);
 			}
 			setSliderTooltipValue(m_slMaterialOpacity, val);
 		});
@@ -1474,12 +1406,12 @@ namespace OpenGlass
 			DWORD val = blurRadiusToDeviation(e.GetInt());
 			if (val == 30)
 			{
-				deleteValue(L"BlurDeviation");
+				deleteValue(Settings::Id::BlurDeviation);
 				NotifySettingsChange(ChangeType::Colorization);
 			}
 			else
 			{
-				updateDword(L"BlurDeviation", val, ChangeType::Colorization);
+				updateDword(Settings::Id::BlurDeviation, val, ChangeType::Colorization);
 			}
 			setSliderTooltipValue(m_slBlurDeviation, e.GetInt());
 		});
@@ -1487,12 +1419,12 @@ namespace OpenGlass
 			int sel = e.GetSelection();
 			if (sel == 0)
 			{
-				deleteValue(L"BlurOptimization");
+				deleteValue(Settings::Id::BlurOptimization);
 				NotifySettingsChange(ChangeType::Colorization);
 			}
 			else
 			{
-				updateDword(L"BlurOptimization", sel, ChangeType::Colorization);
+				updateDword(Settings::Id::BlurOptimization, sel, ChangeType::Colorization);
 			}
 		});
 		auto updateD3DControls = [this, blurDeviationToRadius]() {
@@ -1524,12 +1456,12 @@ namespace OpenGlass
 			bool checked = e.IsChecked();
 			if (!checked)
 			{
-				deleteValue(L"UseDirect3DRendering");
+				deleteValue(Settings::Id::UseDirect3DRendering);
 				NotifySettingsChange(ChangeType::Colorization);
 			}
 			else
 			{
-				updateDword(L"UseDirect3DRendering", 1, ChangeType::Colorization);
+				updateDword(Settings::Id::UseDirect3DRendering, 1, ChangeType::Colorization);
 			}
 			updateD3DControls();
 		});
@@ -1537,11 +1469,11 @@ namespace OpenGlass
 			bool checked = e.IsChecked();
 			if (checked)
 			{
-				updateDword(L"GlassSafetyZoneMode", 0, ChangeType::Colorization);
+				updateDword(Settings::Id::GlassSafetyZoneMode, 0, ChangeType::Colorization);
 			}
 			else
 			{
-				deleteValue(L"GlassSafetyZoneMode");
+				deleteValue(Settings::Id::GlassSafetyZoneMode);
 				NotifySettingsChange(ChangeType::Colorization);
 			}
 		});
@@ -1552,14 +1484,14 @@ namespace OpenGlass
 			{
 				m_scRoundRectRadius->SetValue(0);
 				m_scRoundRectRadius->Disable();
-				deleteValue(L"RoundRectRadius");
+				deleteValue(Settings::Id::RoundRectRadius);
 				NotifySettingsChange(ChangeType::Colorization);
 			}
 			else if (sel == 1)
 			{
 				m_scRoundRectRadius->SetValue(6);
 				m_scRoundRectRadius->Disable();
-				updateDword(L"RoundRectRadius", 6, ChangeType::Colorization);
+				updateDword(Settings::Id::RoundRectRadius, 6, ChangeType::Colorization);
 			}
 			else
 			{
@@ -1567,12 +1499,12 @@ namespace OpenGlass
 				DWORD r = m_scRoundRectRadius->GetValue();
 				if (r == 0)
 				{
-					deleteValue(L"RoundRectRadius");
+					deleteValue(Settings::Id::RoundRectRadius);
 					NotifySettingsChange(ChangeType::Colorization);
 				}
 				else
 				{
-					updateDword(L"RoundRectRadius", r, ChangeType::Colorization);
+					updateDword(Settings::Id::RoundRectRadius, r, ChangeType::Colorization);
 				}
 			}
 		});
@@ -1580,12 +1512,12 @@ namespace OpenGlass
 			DWORD val = e.GetPosition();
 			if (val == 0)
 			{
-				deleteValue(L"RoundRectRadius");
+				deleteValue(Settings::Id::RoundRectRadius);
 				NotifySettingsChange(ChangeType::Colorization);
 			}
 			else
 			{
-				updateDword(L"RoundRectRadius", val, ChangeType::Colorization);
+				updateDword(Settings::Id::RoundRectRadius, val, ChangeType::Colorization);
 			}
 		});
 
@@ -1595,12 +1527,12 @@ namespace OpenGlass
 			DWORD val = (DWORD)mode | ((DWORD)size << 16);
 			if (val == 1)
 			{
-				deleteValue(L"TextGlowMode");
+				deleteValue(Settings::Id::TextGlowMode);
 				NotifySettingsChange(ChangeType::Theme);
 			}
 			else
 			{
-				updateDword(L"TextGlowMode", val, ChangeType::Theme);
+				updateDword(Settings::Id::TextGlowMode, val, ChangeType::Theme);
 			}
 		};
 
@@ -1616,35 +1548,35 @@ namespace OpenGlass
 			int sel = e.GetSelection();
 			if (sel == 0)
 			{
-				deleteValue(L"CaptionButtons");
+				deleteValue(Settings::Id::CaptionButtons);
 				NotifySettingsChange(ChangeType::Theme);
 			}
 			else
 			{
-				updateDword(L"CaptionButtons", sel);
+				updateDword(Settings::Id::CaptionButtons, sel);
 			}
 		});
 		m_chCenterCaption->Bind(wxEVT_CHOICE, [this, updateDword, deleteValue]([[maybe_unused]] wxCommandEvent& e) {
 			int sel = e.GetSelection();
 			if (sel == 0)
 			{
-				deleteValue(L"CenterCaption");
+				deleteValue(Settings::Id::CenterCaption);
 				NotifySettingsChange(ChangeType::Theme);
 			}
 			else
 			{
-				updateDword(L"CenterCaption", sel, ChangeType::Theme);
+				updateDword(Settings::Id::CenterCaption, sel, ChangeType::Theme);
 			}
 		});
 		m_chkDisableModernBorders->Bind(wxEVT_CHECKBOX, [this, updateDword, deleteValue]([[maybe_unused]] wxCommandEvent& e) {
 			if (!e.IsChecked())
 			{
-				deleteValue(L"DisableModernBorders");
+				deleteValue(Settings::Id::DisableModernBorders);
 				NotifySettingsChange(ChangeType::Theme);
 			}
 			else
 			{
-				updateDword(L"DisableModernBorders", 1, ChangeType::Theme);
+				updateDword(Settings::Id::DisableModernBorders, 1, ChangeType::Theme);
 			}
 		});
 
@@ -1652,12 +1584,12 @@ namespace OpenGlass
 			int sel = e.GetSelection();
 			if (sel == 0)
 			{
-				deleteValue(L"GlassType");
+				deleteValue(Settings::Id::GlassType);
 				NotifySettingsChange(ChangeType::Colorization);
 			}
 			else
 			{
-				updateDword(L"GlassType", sel, ChangeType::Colorization);
+				updateDword(Settings::Id::GlassType, sel, ChangeType::Colorization);
 			}
 			LoadSettings(false);
 		});
@@ -1671,7 +1603,7 @@ namespace OpenGlass
 		}
 
 		m_chkEnableTransparency->Bind(wxEVT_CHECKBOX, [this](wxCommandEvent& e) {
-			RegistryConfig* config = GetConfigForKey(L"ColorizationOpaqueBlend");
+			RegistryConfig* config = GetConfigForSetting(Settings::Id::ColorizationOpaqueBlend);
 			if (!config)
 			{
 				return;
@@ -1679,14 +1611,15 @@ namespace OpenGlass
 
 			const bool opaque = !e.IsChecked();
 			const ColorizationPresets::Preset* matchedPreset = FindMatchingWindows7Preset(!opaque);
-			TrackSettingChange(L"ColorizationOpaqueBlend");
+			const std::wstring opaqueBlendName(Settings::Get(Settings::Id::ColorizationOpaqueBlend).name);
+			TrackSettingChange(Settings::Id::ColorizationOpaqueBlend);
 			if (opaque)
 			{
-				config->SetDword(L"ColorizationOpaqueBlend", 1);
+				if (!CheckRegistryWrite(config->SetDword(opaqueBlendName, 1), opaqueBlendName)) return;
 			}
 			else
 			{
-				config->DeleteValue(L"ColorizationOpaqueBlend");
+				if (!CheckRegistryWrite(config->DeleteValue(opaqueBlendName), opaqueBlendName)) return;
 			}
 
 			if (matchedPreset)
@@ -1695,16 +1628,17 @@ namespace OpenGlass
 					matchedPreset->argb,
 					opaque
 				);
-				const std::pair<PCWSTR, DWORD> values[]
+				const std::pair<Settings::Id, DWORD> values[]
 				{
-					{ L"ColorizationColorBalanceOverride", parameters.colorBalance },
-					{ L"ColorizationAfterglowBalanceOverride", parameters.afterglowBalance },
-					{ L"ColorizationBlurBalanceOverride", parameters.blurBalance }
+					{ Settings::Id::ColorizationColorBalanceOverride, parameters.colorBalance },
+					{ Settings::Id::ColorizationAfterglowBalanceOverride, parameters.afterglowBalance },
+					{ Settings::Id::ColorizationBlurBalanceOverride, parameters.blurBalance }
 				};
-				for (const auto& [name, value] : values)
+				for (const auto& [id, value] : values)
 				{
-					TrackSettingChange(name);
-					config->SetDword(name, value);
+					const std::wstring name(Settings::Get(id).name);
+					TrackSettingChange(id);
+					if (!CheckRegistryWrite(config->SetDword(name, value), name)) return;
 				}
 			}
 
@@ -1715,8 +1649,8 @@ namespace OpenGlass
 
 		m_cpColorizationColor->Bind(wxEVT_COLOURPICKER_CHANGED, [this, updateOverridableDword, updateInheritance](wxColourPickerEvent& e) {
 			const DWORD currentValue = ResolveOverridableDword(
-				L"ColorizationColor",
-				L"ColorizationColorOverride",
+				Settings::Id::ColorizationColor,
+				Settings::Id::ColorizationColorOverride,
 				0xFF000000
 			).value;
 			const wxColour color = e.GetColour();
@@ -1724,7 +1658,7 @@ namespace OpenGlass
 				| (color.Red() << 16)
 				| (color.Green() << 8)
 				| color.Blue();
-			updateOverridableDword(L"ColorizationColorOverride", value);
+			updateOverridableDword(Settings::Id::ColorizationColorOverride, value);
 			updateInheritance();
 		});
 
@@ -1732,9 +1666,9 @@ namespace OpenGlass
 			bool enabled = e.IsChecked();
 			m_cpColorizationColorInactive->Enable(enabled);
 			if (enabled) {
-				updateDword(L"ColorizationColorInactive", colorToDwordIgnoreAlpha(L"ColorizationColorInactive", m_cpColorizationColorInactive->GetColour()), ChangeType::Colorization);
+				updateDword(Settings::Id::ColorizationColorInactive, colorToDwordIgnoreAlpha(Settings::Id::ColorizationColorInactive, m_cpColorizationColorInactive->GetColour()), ChangeType::Colorization);
 			} else {
-				deleteValue(L"ColorizationColorInactive");
+				deleteValue(Settings::Id::ColorizationColorInactive);
 				NotifySettingsChange(ChangeType::Colorization);
 				updateInheritance();
 			}
@@ -1742,7 +1676,7 @@ namespace OpenGlass
 
 		m_cpColorizationColorInactive->Bind(wxEVT_COLOURPICKER_CHANGED, [this, updateDword, colorToDwordIgnoreAlpha](wxColourPickerEvent& e) {
 			if (m_chkEnableInactiveColor->IsChecked())
-				updateDword(L"ColorizationColorInactive", colorToDwordIgnoreAlpha(L"ColorizationColorInactive", e.GetColour()), ChangeType::Colorization);
+				updateDword(Settings::Id::ColorizationColorInactive, colorToDwordIgnoreAlpha(Settings::Id::ColorizationColorInactive, e.GetColour()), ChangeType::Colorization);
 		});
 
 		m_slColorIntensity->Bind(wxEVT_SLIDER, [this, updateDword, updateInheritance, deleteValue, setSliderTooltipValue](wxCommandEvent& e) {
@@ -1751,12 +1685,12 @@ namespace OpenGlass
 			{
 				if (val == 63)
 				{
-					deleteValue(L"GlassOpacity");
+					deleteValue(Settings::Id::GlassOpacity);
 					NotifySettingsChange(ChangeType::Colorization);
 				}
 				else
 				{
-					updateDword(L"GlassOpacity", val, ChangeType::Colorization);
+					updateDword(Settings::Id::GlassOpacity, val, ChangeType::Colorization);
 				}
 				setSliderTooltipValue(m_slColorIntensity, val);
 				updateInheritance();
@@ -1764,7 +1698,7 @@ namespace OpenGlass
 				return;
 			}
 
-			RegistryConfig* config = GetConfigForKey(L"ColorizationColorOverride");
+			RegistryConfig* config = GetConfigForSetting(Settings::Id::ColorizationColorOverride);
 			if (!config)
 			{
 				return;
@@ -1772,31 +1706,32 @@ namespace OpenGlass
 
 			const DWORD alpha = ColorizationPresets::CalculateIntensityAlpha(val) << 24;
 			const DWORD color = alpha | (ResolveOverridableDword(
-				L"ColorizationColor",
-				L"ColorizationColorOverride",
+				Settings::Id::ColorizationColor,
+				Settings::Id::ColorizationColorOverride,
 				0xFF000000
 			).value & 0x00FFFFFF);
 			const DWORD afterglow = alpha | (ResolveOverridableDword(
-				L"ColorizationAfterglow",
-				L"ColorizationAfterglowOverride",
+				Settings::Id::ColorizationAfterglow,
+				Settings::Id::ColorizationAfterglowOverride,
 				0
 			).value & 0x00FFFFFF);
 			const auto parameters = ColorizationPresets::CalculateWindows7Parameters(
 				color,
 				!m_chkEnableTransparency->IsChecked()
 			);
-			const std::pair<PCWSTR, DWORD> values[]
+			const std::pair<Settings::Id, DWORD> values[]
 			{
-				{ L"ColorizationColorOverride", color },
-				{ L"ColorizationAfterglowOverride", afterglow },
-				{ L"ColorizationColorBalanceOverride", parameters.colorBalance },
-				{ L"ColorizationAfterglowBalanceOverride", parameters.afterglowBalance },
-				{ L"ColorizationBlurBalanceOverride", parameters.blurBalance }
+				{ Settings::Id::ColorizationColorOverride, color },
+				{ Settings::Id::ColorizationAfterglowOverride, afterglow },
+				{ Settings::Id::ColorizationColorBalanceOverride, parameters.colorBalance },
+				{ Settings::Id::ColorizationAfterglowBalanceOverride, parameters.afterglowBalance },
+				{ Settings::Id::ColorizationBlurBalanceOverride, parameters.blurBalance }
 			};
-			for (const auto& [name, value] : values)
+			for (const auto& [id, value] : values)
 			{
-				TrackSettingChange(name);
-				config->SetDword(name, value);
+				const std::wstring name(Settings::Get(id).name);
+				TrackSettingChange(id);
+				if (!CheckRegistryWrite(config->SetDword(name, value), name)) return;
 			}
 
 			SetDirty(true);
@@ -1817,11 +1752,11 @@ namespace OpenGlass
 			m_slGlassOpacityInactive->Enable(enabled);
 			if (enabled)
 			{
-				updateDword(L"GlassOpacityInactive", m_slGlassOpacityInactive->GetValue(), ChangeType::Colorization);
+				updateDword(Settings::Id::GlassOpacityInactive, m_slGlassOpacityInactive->GetValue(), ChangeType::Colorization);
 			}
 			else
 			{
-				deleteValue(L"GlassOpacityInactive");
+				deleteValue(Settings::Id::GlassOpacityInactive);
 				NotifySettingsChange(ChangeType::Colorization);
 				updateInheritance();
 			}
@@ -1834,33 +1769,17 @@ namespace OpenGlass
 			}
 			int val = e.GetInt();
 			setSliderTooltipValue(m_slGlassOpacityInactive, val);
-			updateDword(L"GlassOpacityInactive", val, ChangeType::Colorization);
+			updateDword(Settings::Id::GlassOpacityInactive, val, ChangeType::Colorization);
 		});
 
-		auto bindChoiceColor = [&](wxChoice* ch, wxColourPickerCtrl* cp, const std::wstring& key, DWORD themeSentinel, DWORD autoSentinel, bool propagateInheritance) {
-			auto update = [this, ch, cp, key, themeSentinel, autoSentinel, updateDword, deleteValue, colorToDwordWithAlpha, propagateInheritance, updateInheritance]() {
+		auto bindChoiceColorEx = [&](wxChoice* ch, wxColourPickerCtrl* cp, Settings::Id id, DWORD themeSentinel, DWORD autoSentinel, DWORD systemSentinel, bool propagateInheritance) {
+			auto update = [this, ch, cp, id, themeSentinel, autoSentinel, systemSentinel, updateDword, deleteValue, colorToDwordBgr, propagateInheritance, updateInheritance]() {
 				int sel = ch->GetSelection();
 				cp->Enable(sel == 2);
-				if (sel == 0) deleteValue(key);
-				else if (sel == 1) updateDword(key, themeSentinel, ChangeType::Colorization);
-				else updateDword(key, colorToDwordWithAlpha(cp->GetColour()), ChangeType::Colorization);
-				if (sel == 0) NotifySettingsChange(ChangeType::Colorization);
-				if (propagateInheritance)
-				{
-					updateInheritance();
-				}
-			};
-			ch->Bind(wxEVT_CHOICE, [update](wxCommandEvent&) { update(); });
-			cp->Bind(wxEVT_COLOURPICKER_CHANGED, [update](wxColourPickerEvent&) { update(); });
-		};
-		auto bindChoiceColorEx = [&](wxChoice* ch, wxColourPickerCtrl* cp, const std::wstring& key, DWORD themeSentinel, DWORD autoSentinel, DWORD systemSentinel, bool propagateInheritance) {
-			auto update = [this, ch, cp, key, themeSentinel, autoSentinel, systemSentinel, updateDword, deleteValue, colorToDwordBgr, propagateInheritance, updateInheritance]() {
-				int sel = ch->GetSelection();
-				cp->Enable(sel == 2);
-				if (sel == 0) deleteValue(key);
-				else if (sel == 1) updateDword(key, themeSentinel, ChangeType::Colorization);
-				else if (sel == 3) updateDword(key, systemSentinel, ChangeType::Colorization);
-				else updateDword(key, colorToDwordBgr(cp->GetColour()), ChangeType::Colorization);
+				if (sel == 0) deleteValue(id);
+				else if (sel == 1) updateDword(id, themeSentinel, ChangeType::Colorization);
+				else if (sel == 3) updateDword(id, systemSentinel, ChangeType::Colorization);
+				else updateDword(id, colorToDwordBgr(cp->GetColour()), ChangeType::Colorization);
 				if (sel == 0) NotifySettingsChange(ChangeType::Colorization);
 				if (propagateInheritance)
 				{
@@ -1871,26 +1790,26 @@ namespace OpenGlass
 			cp->Bind(wxEVT_COLOURPICKER_CHANGED, [update](wxColourPickerEvent&) { update(); });
 		};
 
-		bindChoiceColorEx(m_chModeColorCaption, m_cpColorCaption, L"ColorizationColorCaption", 0xFFFFFFFE, 0xFFFFFFFD, 0xFFFFFFFF, true);
-		bindChoiceColorEx(m_chModeColorCaptionInactive, m_cpColorCaptionInactive, L"ColorizationColorCaptionInactive", 0xFFFFFFFE, 0xFFFFFFFD, 0xFFFFFFFF, true);
-		bindChoiceColorEx(m_chModeColorCaptionMaximized, m_cpColorCaptionMaximized, L"ColorizationColorCaptionMaximized", 0xFFFFFFFE, 0xFFFFFFFD, 0xFFFFFFFF, false);
-		bindChoiceColorEx(m_chModeColorCaptionInactiveMaximized, m_cpColorCaptionInactiveMaximized, L"ColorizationColorCaptionInactiveMaximized", 0xFFFFFFFE, 0xFFFFFFFD, 0xFFFFFFFF, false);
+		bindChoiceColorEx(m_chModeColorCaption, m_cpColorCaption, Settings::Id::ColorizationColorCaption, 0xFFFFFFFE, 0xFFFFFFFD, 0xFFFFFFFF, true);
+		bindChoiceColorEx(m_chModeColorCaptionInactive, m_cpColorCaptionInactive, Settings::Id::ColorizationColorCaptionInactive, 0xFFFFFFFE, 0xFFFFFFFD, 0xFFFFFFFF, true);
+		bindChoiceColorEx(m_chModeColorCaptionMaximized, m_cpColorCaptionMaximized, Settings::Id::ColorizationColorCaptionMaximized, 0xFFFFFFFE, 0xFFFFFFFD, 0xFFFFFFFF, false);
+		bindChoiceColorEx(m_chModeColorCaptionInactiveMaximized, m_cpColorCaptionInactiveMaximized, Settings::Id::ColorizationColorCaptionInactiveMaximized, 0xFFFFFFFE, 0xFFFFFFFD, 0xFFFFFFFF, false);
 
-		auto bindBaseColor = [this, updateDword, deleteValue](wxChoice* choice, wxColourPickerCtrl* picker, wxSpinCtrl* alphaSpin, const std::wstring& keyName, DWORD themeVal, DWORD autoVal) {
-			auto update = [this, choice, picker, alphaSpin, keyName, autoVal, themeVal, updateDword, deleteValue]() {
+		auto bindBaseColor = [this, updateDword, deleteValue](wxChoice* choice, wxColourPickerCtrl* picker, wxSpinCtrl* alphaSpin, Settings::Id id, DWORD themeVal, DWORD autoVal) {
+			auto update = [this, choice, picker, alphaSpin, id, autoVal, themeVal, updateDword, deleteValue]() {
 				int sel = choice->GetSelection();
 				if (sel == 0)
 				{
 					picker->Disable();
 					alphaSpin->Disable();
-					deleteValue(keyName);
+					deleteValue(id);
 					NotifySettingsChange(ChangeType::Colorization);
 				}
 				else if (sel == 1)
 				{
 					picker->Disable();
 					alphaSpin->Disable();
-					updateDword(keyName, themeVal, ChangeType::Colorization);
+					updateDword(id, themeVal, ChangeType::Colorization);
 				}
 				else
 				{
@@ -1899,7 +1818,7 @@ namespace OpenGlass
 					wxColour c = picker->GetColour();
 					int a = alphaSpin->GetValue();
 					DWORD val = (a << 24) | (c.Red() << 16) | (c.Green() << 8) | c.Blue();
-					updateDword(keyName, val, ChangeType::Colorization);
+					updateDword(id, val, ChangeType::Colorization);
 				}
 			};
 
@@ -1909,33 +1828,33 @@ namespace OpenGlass
 			alphaSpin->Bind(wxEVT_TEXT, [update](wxCommandEvent&) { update(); });
 		};
 
-		bindBaseColor(m_chModeBaseTransparent, m_cpBaseTransparent, m_scBaseTransparentAlpha, L"ColorizationBaseTransparent", 0xFFFFFFFF, 0xFFFFFFFE);
-		bindBaseColor(m_chModeBaseMaximized, m_cpBaseMaximized, m_scBaseMaximizedAlpha, L"ColorizationBaseMaximized", 0xFFFFFFFF, 0xFFFFFFFE);
-		bindBaseColor(m_chModeBaseOpaque, m_cpBaseOpaque, m_scBaseOpaqueAlpha, L"ColorizationBaseOpaque", 0xFFFFFFFF, 0xFFFFFFFE);
+		bindBaseColor(m_chModeBaseTransparent, m_cpBaseTransparent, m_scBaseTransparentAlpha, Settings::Id::ColorizationBaseTransparent, 0xFFFFFFFF, 0xFFFFFFFE);
+		bindBaseColor(m_chModeBaseMaximized, m_cpBaseMaximized, m_scBaseMaximizedAlpha, Settings::Id::ColorizationBaseMaximized, 0xFFFFFFFF, 0xFFFFFFFE);
+		bindBaseColor(m_chModeBaseOpaque, m_cpBaseOpaque, m_scBaseOpaqueAlpha, Settings::Id::ColorizationBaseOpaque, 0xFFFFFFFF, 0xFFFFFFFE);
 
 		m_chOpaqueBlendPriority->Bind(wxEVT_CHOICE, [this, updateDword, deleteValue](wxCommandEvent& e) {
 			int sel = e.GetSelection();
 			if (sel == 2)
 			{
-				deleteValue(L"ColorizationOpaqueBlendPriority");
+				deleteValue(Settings::Id::ColorizationOpaqueBlendPriority);
 				NotifySettingsChange(ChangeType::Colorization);
 			}
 			else
 			{
-				updateDword(L"ColorizationOpaqueBlendPriority", sel, ChangeType::Colorization);
+				updateDword(Settings::Id::ColorizationOpaqueBlendPriority, sel, ChangeType::Colorization);
 			}
 		});
 
-		auto bindOpacity = [this, updateDword, deleteValue, updateInheritance](wxChoice* ch, wxSlider* sl, const std::wstring& key, DWORD themeSentinel, DWORD autoSentinel, bool propagateInheritance) {
-			auto update = [this, ch, sl, key, themeSentinel, autoSentinel, updateDword, deleteValue, propagateInheritance, updateInheritance]() {
+		auto bindOpacity = [this, updateDword, deleteValue, updateInheritance](wxChoice* ch, wxSlider* sl, Settings::Id id, DWORD themeSentinel, DWORD autoSentinel, bool propagateInheritance) {
+			auto update = [this, ch, sl, id, themeSentinel, autoSentinel, updateDword, deleteValue, propagateInheritance, updateInheritance]() {
 				int sel = ch->GetSelection();
 				sl->Enable(sel == 2);
 				if (sel == 0) {
-					deleteValue(key);
+					deleteValue(id);
 					NotifySettingsChange(ChangeType::Colorization);
 				}
-				else if (sel == 1) updateDword(key, themeSentinel, ChangeType::Colorization);
-				else updateDword(key, sl->GetValue(), ChangeType::Colorization);
+				else if (sel == 1) updateDword(id, themeSentinel, ChangeType::Colorization);
+				else updateDword(id, sl->GetValue(), ChangeType::Colorization);
 				sl->SetToolTip(wxString::Format(L"%d", sl->GetValue()));
 				if (propagateInheritance)
 				{
@@ -1946,27 +1865,27 @@ namespace OpenGlass
 			sl->Bind(wxEVT_SLIDER, [update](wxCommandEvent&) { update(); });
 		};
 
-		bindOpacity(m_chModeColorizationOpacity, m_slColorizationOpacity, L"ColorizationOpacity", 0xFFFFFFFF, 0xFFFFFFFE, true);
-		bindOpacity(m_chModeColorizationOpacityInactive, m_slColorizationOpacityInactive, L"ColorizationOpacityInactive", 0xFFFFFFFF, 0xFFFFFFFE, true);
-		bindOpacity(m_chModeColorizationOpacityMaximized, m_slColorizationOpacityMaximized, L"ColorizationOpacityMaximized", 0xFFFFFFFF, 0xFFFFFFFE, false);
-		bindOpacity(m_chModeColorizationOpacityInactiveMaximized, m_slColorizationOpacityInactiveMaximized, L"ColorizationOpacityInactiveMaximized", 0xFFFFFFFF, 0xFFFFFFFE, false);
+		bindOpacity(m_chModeColorizationOpacity, m_slColorizationOpacity, Settings::Id::ColorizationOpacity, 0xFFFFFFFF, 0xFFFFFFFE, true);
+		bindOpacity(m_chModeColorizationOpacityInactive, m_slColorizationOpacityInactive, Settings::Id::ColorizationOpacityInactive, 0xFFFFFFFF, 0xFFFFFFFE, true);
+		bindOpacity(m_chModeColorizationOpacityMaximized, m_slColorizationOpacityMaximized, Settings::Id::ColorizationOpacityMaximized, 0xFFFFFFFF, 0xFFFFFFFE, false);
+		bindOpacity(m_chModeColorizationOpacityInactiveMaximized, m_slColorizationOpacityInactiveMaximized, Settings::Id::ColorizationOpacityInactiveMaximized, 0xFFFFFFFF, 0xFFFFFFFE, false);
 
 		m_slBlurBalance->Bind(wxEVT_SLIDER, [this, updateOverridableDword, setSliderTooltipValue](wxCommandEvent& e) {
-			updateOverridableDword(L"ColorizationBlurBalanceOverride", e.GetInt());
+			updateOverridableDword(Settings::Id::ColorizationBlurBalanceOverride, e.GetInt());
 			setSliderTooltipValue(m_slBlurBalance, e.GetInt());
 		});
 		m_slAfterglowBalance->Bind(wxEVT_SLIDER, [this, updateOverridableDword, setSliderTooltipValue](wxCommandEvent& e) {
-			updateOverridableDword(L"ColorizationAfterglowBalanceOverride", e.GetInt());
+			updateOverridableDword(Settings::Id::ColorizationAfterglowBalanceOverride, e.GetInt());
 			setSliderTooltipValue(m_slAfterglowBalance, e.GetInt());
 		});
 		m_slColorBalance->Bind(wxEVT_SLIDER, [this, updateOverridableDword, setSliderTooltipValue](wxCommandEvent& e) {
-			updateOverridableDword(L"ColorizationColorBalanceOverride", e.GetInt());
+			updateOverridableDword(Settings::Id::ColorizationColorBalanceOverride, e.GetInt());
 			setSliderTooltipValue(m_slColorBalance, e.GetInt());
 		});
 		m_cpAfterglow->Bind(wxEVT_COLOURPICKER_CHANGED, [this, updateOverridableDword](wxColourPickerEvent& e) {
 			const DWORD currentValue = ResolveOverridableDword(
-				L"ColorizationAfterglow",
-				L"ColorizationAfterglowOverride",
+				Settings::Id::ColorizationAfterglow,
+				Settings::Id::ColorizationAfterglowOverride,
 				0
 			).value;
 			const wxColour color = e.GetColour();
@@ -1974,25 +1893,26 @@ namespace OpenGlass
 				| (color.Red() << 16)
 				| (color.Green() << 8)
 				| color.Blue();
-			updateOverridableDword(L"ColorizationAfterglowOverride", value);
+			updateOverridableDword(Settings::Id::ColorizationAfterglowOverride, value);
 		});
 		m_btnPersistCompositionParameters->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
-			RegistryConfig* config = GetConfigForKey(L"ColorizationColorBalance");
+			RegistryConfig* config = GetConfigForSetting(Settings::Id::ColorizationColorBalance);
 			if (!config)
 			{
 				return;
 			}
 
-			const std::pair<PCWSTR, int> values[]
+			const std::pair<Settings::Id, int> values[]
 			{
-				{ L"ColorizationBlurBalanceOverride", m_slBlurBalance->GetValue() },
-				{ L"ColorizationAfterglowBalanceOverride", m_slAfterglowBalance->GetValue() },
-				{ L"ColorizationColorBalanceOverride", m_slColorBalance->GetValue() }
+				{ Settings::Id::ColorizationBlurBalanceOverride, m_slBlurBalance->GetValue() },
+				{ Settings::Id::ColorizationAfterglowBalanceOverride, m_slAfterglowBalance->GetValue() },
+				{ Settings::Id::ColorizationColorBalanceOverride, m_slColorBalance->GetValue() }
 			};
-			for (const auto& [name, value] : values)
+			for (const auto& [id, value] : values)
 			{
-				TrackSettingChange(name);
-				config->SetDword(name, static_cast<DWORD>(value));
+				const std::wstring name(Settings::Get(id).name);
+				TrackSettingChange(id);
+				if (!CheckRegistryWrite(config->SetDword(name, static_cast<DWORD>(value)), name)) return;
 			}
 			SetDirty(true);
 			NotifySettingsChange(ChangeType::Colorization);
@@ -2002,12 +1922,12 @@ namespace OpenGlass
 		m_chkGlassOverrideAccent->Bind(wxEVT_CHECKBOX, [this, updateDword, deleteValue](wxCommandEvent& e) {
 			if (!e.IsChecked())
 			{
-				deleteValue(L"GlassOverrideAccent");
+				deleteValue(Settings::Id::GlassOverrideAccent);
 				NotifySettingsChange(ChangeType::Colorization);
 			}
 			else
 			{
-				updateDword(L"GlassOverrideAccent", 1, ChangeType::Colorization);
+				updateDword(Settings::Id::GlassOverrideAccent, 1, ChangeType::Colorization);
 			}
 		});
 
@@ -2181,7 +2101,11 @@ namespace OpenGlass
 			event.Veto();
 			return;
 		}
-		RevertSettings();
+		if (!RevertSettings())
+		{
+			event.Veto();
+			return;
+		}
 		event.Skip();
 	}
 }

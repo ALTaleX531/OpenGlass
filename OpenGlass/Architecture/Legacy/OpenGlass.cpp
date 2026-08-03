@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "ApplicationPaths.hpp"
 #include "resource.h"
 #include "Util.hpp"
 #include "Shared.hpp"
@@ -349,16 +350,15 @@ bool OpenGlass::InitializeProjectionBySymbols()
 		{
 			return false;
 		}
-		// Keep writable caches out of the installation root.
-		// The installer grants Window Manager (S-1-5-90-0) write permissions to this subdirectory.
-		const auto symbolPath = Util::make_current_folder_file(L"symbols");
-		if (!PathFileExistsW(symbolPath.get()))
+		// The installer grants Window Manager (S-1-5-90-0) write permissions to this shared cache.
+		const auto symbolPath = ApplicationPaths::GetProgramDataSubdirectory(L"symbols");
+		if (!PathFileExistsW(symbolPath.c_str()))
 		{
-			wil::CreateDirectoryDeep(symbolPath.get());
+			wil::CreateDirectoryDeep(symbolPath.c_str());
 		}
 		const auto symbolServerBase = L"https://msdl.microsoft.com/download/symbols/";
 		const auto downloader = std::make_unique<CSymbolDownloader>();
-		const auto parser = std::make_unique<CSymbolParser>(symbolPath.get());
+		const auto parser = std::make_unique<CSymbolParser>(symbolPath.c_str());
 		HRESULT hr{ S_OK };
 
 		const auto showSymbolDownloaderUI = []()
@@ -400,7 +400,7 @@ bool OpenGlass::InitializeProjectionBySymbols()
 					*downloader,
 					udwmModuleHandle,
 					symbolServerBase,
-					symbolPath.get(),
+					symbolPath.c_str(),
 					&g_downloaderContext,
 					SymbolDownloaderCallback
 				).get();
@@ -465,7 +465,7 @@ bool OpenGlass::InitializeProjectionBySymbols()
 					*downloader,
 					dwmcoreModuleHandle,
 					symbolServerBase,
-					symbolPath.get(),
+					symbolPath.c_str(),
 					&g_downloaderContext,
 					SymbolDownloaderCallback
 				).get();

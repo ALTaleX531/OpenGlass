@@ -19,6 +19,9 @@ namespace OpenGlass::GlassEngine
 	HKEY GetDwmKey();
 	HKEY GetPersonalizeKey();
 
+	// Long-term compatibility contract for transformation packs and plug-ins:
+	// runtime reads always prefer the current user's DWM value, then fall back
+	// to the machine value. The GUI's canonical write scope must not alter this.
 	FORCEINLINE std::optional<DWORD> TryGetDwordFromRegistry(PCWSTR keyName)
 	{
 		HRESULT hr{ S_OK };

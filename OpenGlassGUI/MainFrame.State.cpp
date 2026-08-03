@@ -73,12 +73,10 @@ namespace OpenGlass
 			m_dirtyKeys.clear();
 		}
 
-		RegistryConfig* systemConfig = m_systemConfig ? m_systemConfig.get() : m_config.get();
-
 		// System
-		m_chkDisableGlassOnBattery->SetValue(systemConfig->GetDword(L"DisableGlassOnBattery", 1) != 0);
+		m_chkDisableGlassOnBattery->SetValue(m_config->GetDword(L"DisableGlassOnBattery", 1) != 0);
 
-		DWORD hookMask = systemConfig->GetDword(L"DisabledHooks", 0);
+		DWORD hookMask = m_config->GetDword(L"DisabledHooks", 0);
 		m_clDisabledHooks->Check(0, (hookMask & 0x1) != 0);
 		m_clDisabledHooks->Check(1, (hookMask & 0x2) != 0);
 		m_clDisabledHooks->Check(2, (hookMask & 0x4) != 0);
@@ -190,7 +188,7 @@ namespace OpenGlass
 			m_chBlurOptimization->SetSelection(std::clamp<int>(m_config->GetDword(L"BlurOptimization", 0), 0, 2));
 			m_chBlurOptimization->Enable(true);
 		}
-		m_chkGlassSafetyZone->SetValue(systemConfig->GetDword(L"GlassSafetyZoneMode", 1) == 0);
+		m_chkGlassSafetyZone->SetValue(m_config->GetDword(L"GlassSafetyZoneMode", 1) == 0);
 
 		// RoundRect
 		DWORD radius = m_config->GetDword(L"RoundRectRadius", 0);
@@ -225,8 +223,8 @@ namespace OpenGlass
 		m_chkEnableTransparency->SetValue(m_config->GetDword(L"ColorizationOpaqueBlend", 0) == 0);
 
 		const DWORD activeColor = ResolveOverridableDword(
-			L"ColorizationColor",
-			L"ColorizationColorOverride",
+			Settings::Id::ColorizationColor,
+			Settings::Id::ColorizationColorOverride,
 			0xFF000000
 		).value;
 		m_cpColorizationColor->SetColour(dwordToColor(activeColor));
@@ -338,29 +336,29 @@ namespace OpenGlass
 		syncSliderTooltip(m_slColorizationOpacityInactiveMaximized);
 
 		m_slBlurBalance->SetValue(ResolveOverridableDword(
-			L"ColorizationBlurBalance",
-			L"ColorizationBlurBalanceOverride",
+			Settings::Id::ColorizationBlurBalance,
+			Settings::Id::ColorizationBlurBalanceOverride,
 			50
 		).value);
 		syncSliderTooltip(m_slBlurBalance);
 
 		m_slAfterglowBalance->SetValue(ResolveOverridableDword(
-			L"ColorizationAfterglowBalance",
-			L"ColorizationAfterglowBalanceOverride",
+			Settings::Id::ColorizationAfterglowBalance,
+			Settings::Id::ColorizationAfterglowBalanceOverride,
 			10
 		).value);
 		syncSliderTooltip(m_slAfterglowBalance);
 
 		m_slColorBalance->SetValue(ResolveOverridableDword(
-			L"ColorizationColorBalance",
-			L"ColorizationColorBalanceOverride",
+			Settings::Id::ColorizationColorBalance,
+			Settings::Id::ColorizationColorBalanceOverride,
 			10
 		).value);
 		syncSliderTooltip(m_slColorBalance);
 		wxColour afterglowColor;
 		DWORD afterglowVal = ResolveOverridableDword(
-			L"ColorizationAfterglow",
-			L"ColorizationAfterglowOverride",
+			Settings::Id::ColorizationAfterglow,
+			Settings::Id::ColorizationAfterglowOverride,
 			0
 		).value;
 		// Format is: AA RR GG BB

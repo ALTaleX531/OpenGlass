@@ -15,7 +15,10 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ApplicationPaths.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)RegistryValueResolver.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)SettingsCatalog.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)ConfigurationMigrationPolicy.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)ServiceHandler.h" />
   </ItemGroup>
 </Project>

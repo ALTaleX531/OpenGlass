@@ -6,7 +6,8 @@ namespace OpenGlass
 	class OpenGlassApp : public wxApp
 	{
 	public:
-		virtual bool OnInit();
+		bool OnInit() override;
+		void OnInitCmdLine(wxCmdLineParser& parser) override;
 	private:
 		wxSingleInstanceChecker m_singleInstanceChecker;
 	};

@@ -9,6 +9,8 @@ namespace OpenGlass::GlassEngine
 		DWORD defaultValue
 	)
 	{
+		// Preserve the public compatibility order independently of where the
+		// official GUI and preset packages choose to write new configuration.
 		auto queryUser = [](PCWSTR keyName) -> std::optional<DWORD>
 		{
 			DWORD value{};

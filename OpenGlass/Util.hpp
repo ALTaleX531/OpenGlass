@@ -89,24 +89,6 @@ namespace OpenGlass::Util
 			(runtimeBuild == build && runtimeRevision < revision);
 	}
 
-	inline auto make_current_folder_file(std::wstring_view baseFileName)
-	{
-		const auto bufferSize = g_thisModulePath.size() + baseFileName.size() + 1;
-		auto filePath = std::make_unique<WCHAR[]>(bufferSize);
-		wcscpy_s(
-			filePath.get(),
-			bufferSize,
-			g_thisModulePath.c_str()
-		);
-		PathCchRemoveFileSpec(filePath.get(), bufferSize);
-		if (!baseFileName.empty())
-		{
-			PathCchAppend(filePath.get(), bufferSize, baseFileName.data());
-		}
-
-		return filePath;
-	}
-	
 	template <UINT id>
 	FORCEINLINE const auto GetResourceStringView()
 	{

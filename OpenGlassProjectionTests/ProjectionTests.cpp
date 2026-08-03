@@ -2,6 +2,16 @@
 #include "ProjectionFixture.hpp"
 #include "RegistryValueResolver.hpp"
 #include "../OpenGlassGUI/ColorizationPresets.hpp"
+#include "../Common/SettingsCatalog.hpp"
+#include "../Common/ConfigurationMigrationPolicy.hpp"
+#include "../OpenGlassGUI/PresetPackage.hpp"
+
+#include <wx/init.h>
+#include <wx/wfstream.h>
+#include <wx/zipstrm.h>
+#include <wx/log.h>
+#include <nlohmann/json.hpp>
+#include <fstream>
 
 using namespace OpenGlass;
 using namespace OpenGlassProjectionTests;
@@ -322,6 +332,34 @@ namespace
 				|| resolved.source == RegistryValueSource::MachineOverride
 			));
 		}
+
+		const std::map<std::wstring_view, DWORD> userValues
+		{
+			{ L"Base", 22 },
+			{ L"Override", 11 }
+		};
+		const std::map<std::wstring_view, DWORD> machineValues
+		{
+			{ L"Base", 44 },
+			{ L"Override", 33 }
+		};
+		auto reader = [](const auto& values)
+		{
+			return [&values](std::wstring_view name) -> std::optional<DWORD>
+			{
+				const auto it = values.find(name);
+				return it == values.end() ? std::nullopt : std::optional<DWORD>{ it->second };
+			};
+		};
+		const auto fromReaders = ResolveOverridableRegistryValueFromReaders(
+			std::wstring_view{ L"Base" },
+			std::wstring_view{ L"Override" },
+			defaultValue,
+			reader(userValues),
+			reader(machineValues)
+		);
+		Check(fromReaders.value == 11);
+		Check(fromReaders.source == RegistryValueSource::UserOverride);
 	}
 
 	void TestColorizationPresets()
@@ -442,6 +480,305 @@ namespace
 		Check(!windows7Application.vistaOpacity);
 		Check(windows7Application.windows7 == sky);
 	}
+
+	void TestSettingsCatalog()
+	{
+		std::vector<std::wstring_view> names;
+		std::size_t userSettings{};
+		for (std::size_t index = 0; index < Settings::Catalog.size(); ++index)
+		{
+			const auto& spec = Settings::Catalog[index];
+			Check(static_cast<std::size_t>(spec.id) == index);
+			Check(!spec.name.empty());
+			Check(spec.introducedIn > 0 && spec.introducedIn <= Settings::CatalogVersion);
+			Check(std::find(names.begin(), names.end(), spec.name) == names.end());
+			names.push_back(spec.name);
+			Check(Settings::Find(spec.name) == &spec);
+			if (spec.scope == Settings::Scope::User)
+			{
+				++userSettings;
+				Check(spec.type == Settings::ValueType::Dword);
+				Check(spec.assetRole == Settings::AssetRole::None);
+				Check(spec.name == L"ColorizationColor"
+					|| spec.name == L"ColorizationColorOverride"
+					|| spec.name == L"ColorizationAfterglow"
+					|| spec.name == L"ColorizationAfterglowOverride"
+					|| spec.name == L"ColorizationColorBalance"
+					|| spec.name == L"ColorizationColorBalanceOverride"
+					|| spec.name == L"ColorizationAfterglowBalance"
+					|| spec.name == L"ColorizationAfterglowBalanceOverride"
+					|| spec.name == L"ColorizationBlurBalance"
+					|| spec.name == L"ColorizationBlurBalanceOverride");
+			}
+			if (spec.type == Settings::ValueType::String)
+			{
+				Check(spec.scope == Settings::Scope::Machine);
+				Check(spec.assetRole != Settings::AssetRole::None);
+				Check(spec.sensitive);
+			}
+		}
+		Check(userSettings == 10);
+		Check(!Settings::Get(Settings::Id::DisableGlassOnBattery).sensitive);
+		Check(Settings::Get(Settings::Id::GlassOverrideAccent).impact == Settings::UpdateImpact::Colorization);
+		Check(Settings::Get(Settings::Id::GlassSafetyZoneMode).impact == Settings::UpdateImpact::Colorization);
+		Check(Settings::Get(Settings::Id::GlassSafetyZoneMode).sensitive);
+		Check(Settings::Get(Settings::Id::UseDirect3DRendering).impact == Settings::UpdateImpact::Colorization);
+		Check(!Settings::Get(Settings::Id::UseDirect3DRendering).sensitive);
+		Check(!Settings::Get(Settings::Id::MinMaxButtonGlowId).includeInPresetPacks);
+		Check(!Settings::Get(Settings::Id::CloseButtonGlowId).includeInPresetPacks);
+		Check(!Settings::Get(Settings::Id::ToolCloseButtonGlowId).includeInPresetPacks);
+		Check(Settings::PresetPackSettingCount() + 3 == Settings::Catalog.size());
+		Check(Settings::Find(L"NotAnOpenGlassSetting") == nullptr);
+	}
+
+	void TestConfigurationMigrationPolicy()
+	{
+		using Raw = std::variant<std::monostate, DWORD, std::wstring>;
+		using ConfigurationMigrationPolicy::Canonicalize;
+		using ConfigurationMigrationPolicy::HiveValues;
+		const auto missing = [](const Raw& value) { return std::holds_alternative<std::monostate>(value); };
+
+		auto result = Canonicalize(Settings::Scope::User, HiveValues<Raw>{ std::monostate{}, DWORD{ 10 } });
+		Check(std::get<DWORD>(result.user) == 10 && missing(result.machine));
+		result = Canonicalize(Settings::Scope::User, HiveValues<Raw>{ DWORD{ 20 }, DWORD{ 10 } });
+		Check(std::get<DWORD>(result.user) == 20 && missing(result.machine));
+		result = Canonicalize(Settings::Scope::Machine, HiveValues<Raw>{ DWORD{ 20 }, DWORD{ 10 } });
+		Check(missing(result.user) && std::get<DWORD>(result.machine) == 20);
+		result = Canonicalize(Settings::Scope::Machine, HiveValues<Raw>{ std::monostate{}, DWORD{ 10 } });
+		Check(missing(result.user) && std::get<DWORD>(result.machine) == 10);
+		result = Canonicalize(Settings::Scope::Machine, HiveValues<Raw>{ std::wstring(L"user"), std::wstring(L"machine") });
+		Check(missing(result.user) && std::get<std::wstring>(result.machine) == L"user");
+	}
+
+	void TestPresetPackageRoundTrip()
+	{
+		Check(PresetPackages::IsValidHomepageUrl(L"https://example.com"));
+		Check(PresetPackages::IsValidHomepageUrl(L"http://example.com/author"));
+		Check(!PresetPackages::IsValidHomepageUrl(L"https://"));
+		Check(!PresetPackages::IsValidHomepageUrl(L"example.com"));
+		Check(!PresetPackages::IsValidHomepageUrl(L"file:///C:/preset"));
+
+		wxInitializer initializer;
+		Check(initializer.IsOk());
+		if (!initializer.IsOk()) return;
+		wxLogNull suppressExpectedArchiveErrors;
+
+		const auto generatedUuid = PresetPackages::GeneratePackageUuid();
+		const std::wstring generatedUuidWide(generatedUuid.begin(), generatedUuid.end());
+		const auto directory = std::filesystem::temp_directory_path() / (L"OpenGlassPresetTests-" + generatedUuidWide);
+		std::filesystem::create_directories(directory);
+		auto cleanup = wil::scope_exit([&]
+		{
+			for (const auto& path : std::filesystem::directory_iterator(directory)) SetFileAttributesW(path.path().c_str(), FILE_ATTRIBUTE_NORMAL);
+			std::error_code error;
+			std::filesystem::remove_all(directory, error);
+		});
+
+		PresetPackages::CreateRequest request;
+		request.metadata = {
+			"00112233-4455-6677-8899-aabbccddeeff",
+			L"Round trip",
+			L"Preset package test",
+			L"OpenGlass tests",
+			L"https://example.com/author",
+			L"MIT"
+		};
+		request.licenseText = "MIT License\n\nPermission is granted for this test package.\n";
+		for (const auto& spec : Settings::Catalog)
+		{
+			if (Settings::IsPresetPackSetting(spec)) request.settings.emplace(spec.id, std::monostate{});
+		}
+
+		const auto first = directory / L"first.zip";
+		const auto second = directory / L"second.zip";
+		PresetPackages::CreateArchive(first, request);
+		PresetPackages::CreateArchive(second, request);
+		auto readFile = [](const std::filesystem::path& path)
+		{
+			std::ifstream stream(path, std::ios::binary);
+			return std::vector<char>((std::istreambuf_iterator<char>(stream)), {});
+		};
+		Check(readFile(first) == readFile(second));
+		Check((GetFileAttributesW(first.c_str()) & FILE_ATTRIBUTE_READONLY) != 0);
+
+		const auto loaded = PresetPackages::LoadArchive(first);
+		Check(loaded.metadata.uuid == request.metadata.uuid);
+		Check(loaded.metadata.name == request.metadata.name);
+		Check(loaded.metadata.authorHomepage == request.metadata.authorHomepage);
+		Check(loaded.metadata.licenseName == request.metadata.licenseName);
+		Check(loaded.settings.size() == Settings::PresetPackSettingCount());
+		Check(loaded.catalogVersion == Settings::CatalogVersion);
+		Check(loaded.assets.empty());
+		Check(!loaded.digest.empty());
+		Check(PresetPackages::InferLicenseName("SPDX-License-Identifier: Apache-2.0\n") == L"Apache-2.0");
+		Check(PresetPackages::InferLicenseName("GNU GENERAL PUBLIC LICENSE\nVersion 3, 29 June 2007\n") == L"GPL-3.0");
+		Check(PresetPackages::InferLicenseName(
+			"GNU GENERAL PUBLIC LICENSE\nVersion 3, 29 June 2007\n"
+			+ std::string(5000, 'x')
+			+ "GNU Affero General Public License\n"
+		) == L"GPL-3.0");
+		Check(PresetPackages::InferLicenseName("GNU AFFERO GENERAL PUBLIC LICENSE\nVersion 3, 19 November 2007\n") == L"AGPL-3.0");
+		Check(PresetPackages::InferLicenseName("Terms for this package.\n") == L"Custom license");
+
+		auto unlicensedRequest = request;
+		unlicensedRequest.metadata.uuid = "10112233-4455-6677-8899-aabbccddeeff";
+		unlicensedRequest.metadata.licenseName.clear();
+		unlicensedRequest.licenseText.clear();
+		const auto unlicensedArchive = directory / L"unlicensed.zip";
+		PresetPackages::CreateArchive(unlicensedArchive, unlicensedRequest);
+		const auto unlicensed = PresetPackages::LoadArchive(unlicensedArchive);
+		Check(unlicensed.licenseText.empty());
+		Check(unlicensed.metadata.licenseName.empty());
+
+		auto undescribedRequest = request;
+		undescribedRequest.metadata.uuid = "20112233-4455-6677-8899-aabbccddeeff";
+		undescribedRequest.metadata.description.clear();
+		const auto undescribedArchive = directory / L"undescribed.zip";
+		PresetPackages::CreateArchive(undescribedArchive, undescribedRequest);
+		const auto undescribed = PresetPackages::LoadArchive(undescribedArchive);
+		Check(undescribed.metadata.description.empty());
+
+		const std::array<unsigned char, 120> png
+		{
+			0x89,0x50,0x4e,0x47,0x0d,0x0a,0x1a,0x0a,0x00,0x00,0x00,0x0d,0x49,0x48,0x44,0x52,
+			0x00,0x00,0x00,0x01,0x00,0x00,0x00,0x01,0x08,0x06,0x00,0x00,0x00,0x1f,0x15,0xc4,
+			0x89,0x00,0x00,0x00,0x01,0x73,0x52,0x47,0x42,0x00,0xae,0xce,0x1c,0xe9,0x00,0x00,
+			0x00,0x04,0x67,0x41,0x4d,0x41,0x00,0x00,0xb1,0x8f,0x0b,0xfc,0x61,0x05,0x00,0x00,
+			0x00,0x09,0x70,0x48,0x59,0x73,0x00,0x00,0x0e,0xc3,0x00,0x00,0x0e,0xc3,0x01,0xc7,
+			0x6f,0xa8,0x64,0x00,0x00,0x00,0x0d,0x49,0x44,0x41,0x54,0x18,0x57,0x63,0xf8,0xcf,
+			0xc0,0xf0,0x1f,0x00,0x05,0x00,0x01,0xff,0xa6,0x5c,0x9b,0x5d,0x00,0x00,0x00,0x00,
+			0x49,0x45,0x4e,0x44,0xae,0x42,0x60,0x82
+		};
+		const auto validPng = directory / L"reflection.png";
+		{
+			std::ofstream output(validPng, std::ios::binary);
+			output.write(reinterpret_cast<const char*>(png.data()), png.size());
+		}
+		auto assetRequest = request;
+		assetRequest.metadata.uuid = "11112233-4455-6677-8899-aabbccddeeff";
+		assetRequest.settings[Settings::Id::CustomThemeReflection] = PresetPackages::AssetReference{ "assets/reflection.png" };
+		assetRequest.assetSources.emplace("assets/reflection.png", validPng);
+		const auto assetArchive = directory / L"asset.zip";
+		PresetPackages::CreateArchive(assetArchive, assetRequest);
+		const auto loadedAsset = PresetPackages::LoadArchive(assetArchive);
+		Check(loadedAsset.assets.contains("assets/reflection.png"));
+		Check(std::get<PresetPackages::AssetReference>(loadedAsset.settings.at(Settings::Id::CustomThemeReflection)).path == "assets/reflection.png");
+		const auto deployed = directory / L"deployed";
+		std::filesystem::create_directories(deployed / L"assets");
+		auto writeBytes = [](const std::filesystem::path& path, std::span<const std::byte> bytes)
+		{
+			std::ofstream output(path, std::ios::binary);
+			output.write(reinterpret_cast<const char*>(bytes.data()), static_cast<std::streamsize>(bytes.size()));
+		};
+		writeBytes(deployed / L"manifest.json", { reinterpret_cast<const std::byte*>(loadedAsset.manifestText.data()), loadedAsset.manifestText.size() });
+		writeBytes(deployed / L"LICENSE", { reinterpret_cast<const std::byte*>(loadedAsset.licenseText.data()), loadedAsset.licenseText.size() });
+		for (const auto& [name, bytes] : loadedAsset.assets)
+		{
+			writeBytes(deployed / wxString::FromUTF8(name).ToStdWstring(), bytes);
+		}
+		const auto loadedDeployment = PresetPackages::LoadDeployed(deployed);
+		Check(loadedDeployment.digest == loadedAsset.digest);
+		Check(loadedDeployment.deployed);
+
+		bool rejectedOverwrite{};
+		try { PresetPackages::CreateArchive(first, request); }
+		catch (...) { rejectedOverwrite = true; }
+		Check(rejectedOverwrite);
+
+		auto invalid = request;
+		invalid.metadata.authorHomepage = L"file:///not-allowed";
+		bool rejectedUrl{};
+		try { PresetPackages::CreateArchive(directory / L"bad-url.zip", invalid); }
+		catch (...) { rejectedUrl = true; }
+		Check(rejectedUrl);
+
+		invalid = request;
+		invalid.settings.erase(Settings::Id::GlassType);
+		bool rejectedIncompleteCatalog{};
+		try { PresetPackages::CreateArchive(directory / L"bad-catalog.zip", invalid); }
+		catch (...) { rejectedIncompleteCatalog = true; }
+		Check(rejectedIncompleteCatalog);
+
+		auto writeRawZip = [](const std::filesystem::path& path, const std::vector<std::pair<wxString, std::string>>& entries)
+		{
+			wxFFileOutputStream output(path.wstring());
+			wxZipOutputStream zip(output, 9);
+			for (const auto& [name, content] : entries)
+			{
+				zip.PutNextEntry(name);
+				zip.Write(content.data(), content.size());
+			}
+			zip.Close();
+			output.Close();
+		};
+		auto rejectedArchive = [](const std::filesystem::path& path)
+		{
+			try { static_cast<void>(PresetPackages::LoadArchive(path)); }
+			catch (...) { return true; }
+			return false;
+		};
+
+		auto earlierManifest = nlohmann::ordered_json::parse(loaded.manifestText);
+		earlierManifest["catalog_version"] = Settings::CatalogVersion + 1;
+		earlierManifest["settings"]["MINMAXBUTTONGLOWid"] = 93;
+		earlierManifest["settings"]["CLOSEBUTTONGLOWid"] = 92;
+		earlierManifest["settings"]["TOOLCLOSEBUTTONGLOWid"] = 94;
+		earlierManifest["settings"]["FutureRenderingMode"] = { { "mode", "future" } };
+		const auto earlierArchive = directory / L"earlier-preset-catalog.zip";
+		writeRawZip(earlierArchive, {
+			{ L"manifest.json", earlierManifest.dump(2) + "\n" },
+			{ L"LICENSE", request.licenseText }
+		});
+		const auto earlierLoaded = PresetPackages::LoadArchive(earlierArchive);
+		Check(earlierLoaded.settings.size() == Settings::PresetPackSettingCount());
+		Check(!earlierLoaded.settings.contains(Settings::Id::MinMaxButtonGlowId));
+		Check(!earlierLoaded.settings.contains(Settings::Id::CloseButtonGlowId));
+		Check(!earlierLoaded.settings.contains(Settings::Id::ToolCloseButtonGlowId));
+		Check(earlierLoaded.catalogVersion == Settings::CatalogVersion + 1);
+		Check(earlierLoaded.ignoredSettingCount == 4);
+		Check(earlierLoaded.ignoredSettingNames.size() == 4);
+
+		const auto traversal = directory / L"traversal.zip";
+		writeRawZip(traversal, { { L"../manifest.json", "{}" }, { L"LICENSE", "license" } });
+		Check(rejectedArchive(traversal));
+
+		const auto duplicate = directory / L"duplicate.zip";
+		writeRawZip(duplicate, { { L"manifest.json", "{}" }, { L"LICENSE", "license" }, { L"license", "license" } });
+		Check(rejectedArchive(duplicate));
+
+		const auto excessiveRatio = directory / L"excessive-ratio.zip";
+		writeRawZip(excessiveRatio, { { L"manifest.json", std::string(1024 * 1024, '0') }, { L"LICENSE", "license" } });
+		Check(rejectedArchive(excessiveRatio));
+
+		const auto truncated = directory / L"truncated.zip";
+		auto truncatedBytes = readFile(first);
+		truncatedBytes.resize(truncatedBytes.size() - std::min<std::size_t>(32, truncatedBytes.size()));
+		{
+			std::ofstream output(truncated, std::ios::binary);
+			output.write(truncatedBytes.data(), truncatedBytes.size());
+		}
+		Check(rejectedArchive(truncated));
+
+		invalid = request;
+		invalid.licenseText = std::string("invalid-") + static_cast<char>(0xff);
+		bool rejectedLicense{};
+		try { PresetPackages::CreateArchive(directory / L"bad-license.zip", invalid); }
+		catch (...) { rejectedLicense = true; }
+		Check(rejectedLicense);
+
+		const auto fakePng = directory / L"fake.png";
+		{
+			std::ofstream output(fakePng, std::ios::binary);
+			output << "not a PNG";
+		}
+		invalid = request;
+		invalid.settings[Settings::Id::CustomThemeReflection] = PresetPackages::AssetReference{ "assets/reflection.png" };
+		invalid.assetSources.emplace("assets/reflection.png", fakePng);
+		bool rejectedImage{};
+		try { PresetPackages::CreateArchive(directory / L"bad-image.zip", invalid); }
+		catch (...) { rejectedImage = true; }
+		Check(rejectedImage);
+	}
 }
 
 int OpenGlassProjectionTests::Target(int value)
@@ -463,5 +800,8 @@ int main()
 	TestInvalidMetadata();
 	TestOverridableRegistryValueResolution();
 	TestColorizationPresets();
+	TestSettingsCatalog();
+	TestConfigurationMigrationPolicy();
+	TestPresetPackageRoundTrip();
 	return g_failures;
 }

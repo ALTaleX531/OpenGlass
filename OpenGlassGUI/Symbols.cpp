@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "ApplicationPaths.hpp"
 #include "Symbols.hpp"
 
 #include <winrt/Windows.Foundation.h>
@@ -179,18 +180,6 @@ namespace OpenGlass
 			}
 		};
 
-		std::wstring GetExecutableDirectory()
-		{
-			WCHAR modulePath[MAX_PATH]{};
-			const DWORD length = GetModuleFileNameW(nullptr, modulePath, ARRAYSIZE(modulePath));
-			if (length == 0 || length >= ARRAYSIZE(modulePath))
-			{
-				return {};
-			}
-
-			return std::filesystem::path{ modulePath }.parent_path().wstring();
-		}
-
 		std::wstring GetSystemModulePath(PCWSTR moduleName)
 		{
 			WCHAR systemPath[MAX_PATH]{};
@@ -365,13 +354,7 @@ namespace OpenGlass
 
 	std::wstring GetSymbolCacheDirectory()
 	{
-		const auto executableDirectory = GetExecutableDirectory();
-		if (executableDirectory.empty())
-		{
-			return L"symbols";
-		}
-
-		return (std::filesystem::path{ executableDirectory } / L"symbols").wstring();
+		return ApplicationPaths::GetProgramDataSubdirectory(L"symbols").wstring();
 	}
 
 	SymbolDownloadOutcome DownloadSymbols(std::wstring symbolDirectory, const std::stop_token& stopToken, const SymbolDownloadProgressCallback& progressCallback)
