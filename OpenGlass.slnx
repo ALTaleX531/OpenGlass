@@ -14,5 +14,5 @@
   <Project Path="Scripts/OpenGlassSetup.Legacy.vcxproj" Id="6b7a053c-755e-4f66-9690-122eea79ddd5" />
   <Project Path="Scripts/OpenGlassSetup.MILComp.vcxproj" Id="20b395a3-2242-4c07-94e5-e62a1b05903b" />
   <Project Path="OpenGlassRenderTest/OpenGlassRenderTest.vcxproj" Id="e7e2c6a4-36b2-4a61-9e2b-6b3d2b8b8c4f" />
-  <Project Path="OpenGlassProjectionTests/OpenGlassProjectionTests.vcxproj" Id="93c9a3f3-1d4f-4a51-ae95-7e98c0b1e6b4" />
+  <Project Path="OpenGlassTests/OpenGlassTests.vcxproj" Id="93c9a3f3-1d4f-4a51-ae95-7e98c0b1e6b4" />
 </Solution>

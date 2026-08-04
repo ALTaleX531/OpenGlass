@@ -17,10 +17,10 @@
 #include <wrl/client.h>
 
 using namespace OpenGlass;
-using namespace OpenGlassProjectionTests;
+using namespace OpenGlassTests;
 
-LONG OpenGlassProjectionTests::g_layoutOffsets[8]{};
-bool OpenGlassProjectionTests::g_layoutSupported[8]{};
+LONG OpenGlassTests::g_layoutOffsets[8]{};
+bool OpenGlassTests::g_layoutSupported[8]{};
 
 extern "C" __declspec(noinline) int ProjectionFieldReadHotPath(const std::byte* base) noexcept
 {
@@ -970,12 +970,12 @@ namespace
 	}
 }
 
-int OpenGlassProjectionTests::Target(int value)
+int OpenGlassTests::Target(int value)
 {
 	return value + 10;
 }
 
-int OpenGlassProjectionTests::Replacement(int value)
+int OpenGlassTests::Replacement(int value)
 {
 	return value + 20;
 }

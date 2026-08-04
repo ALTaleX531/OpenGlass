@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "ProjectionFixture.hpp"
 
-namespace OpenGlassProjectionTests
+namespace OpenGlassTests
 {
 	OpenGlass::Projection::ModuleRegistry* g_activeRegistry{};
 
@@ -13,7 +13,7 @@ namespace OpenGlassProjectionTests
 
 template <>
 OpenGlass::Projection::ModuleRegistry&
-OpenGlass::Projection::RegistryFor<OpenGlassProjectionTests::FixtureModuleTag>() noexcept
+OpenGlass::Projection::RegistryFor<OpenGlassTests::FixtureModuleTag>() noexcept
 {
-	return *OpenGlassProjectionTests::g_activeRegistry;
+	return *OpenGlassTests::g_activeRegistry;
 }

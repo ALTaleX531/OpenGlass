@@ -8,7 +8,7 @@ OpenGlass restores Aero-style glass effects by loading `OpenGlass.dll` into `dwm
 - `OpenGlassHost/`: service wrapper that loads the core DLL and starts `ServiceMain`.
 - `OpenGlassGUI/`: wxWidgets configuration UI, symbol-download experience, and administrator-only DWM/WER diagnostics.
 - `OpenGlassRenderTest/`: interactive GPU/effect benchmark, not a hermetic unit-test suite.
-- `OpenGlassProjectionTests/`: non-injecting typed registry, resolution, ABI, Layout, and Detour tests.
+- `OpenGlassTests/`: non-injecting unit tests for shared infrastructure, preset packages, registry behavior, projection resolution, ABI, Layout, and Detour logic.
 - `Common/`: shared MSBuild configuration; `Scripts/`: generation, verification, and Inno Setup packaging.
 
 Runtime flow: the Service Control Manager starts `OpenGlassHost.exe`; the host loads `OpenGlass.dll`; service code validates and injects into `dwm.exe`; a named pipe supplies the target session's HKCU handle; injected hooks read configuration and render the effect. The GUI elevates immediately while preserving the original interactive user SID, writes appearance settings immediately, and notifies DWM—its Save action confirms current registry state, while Revert/close may restore captured registry values. Diagnostics actions are separate immediate HKLM operations and are not part of Save/Revert.
@@ -90,7 +90,7 @@ python -m unittest discover -s .agents/skills/maintain-dwm-offsets/tests -p "tes
 python Scripts/test_archive_pdbs.py
 python Scripts/test_dump_symbols.py
 python Scripts/test_projection_codegen.py
-msbuild OpenGlassProjectionTests/OpenGlassProjectionTests.vcxproj /m /p:Configuration=Release /p:Platform=x64
+msbuild OpenGlassTests/OpenGlassTests.vcxproj /m /p:Configuration=Release /p:Platform=x64
 msbuild OpenGlass/OpenGlass.Legacy.vcxproj /m /p:Configuration=Release /p:Platform=x64
 msbuild OpenGlass/OpenGlass.MILComp.vcxproj /m /p:Configuration=Release /p:Platform=x64
 ```

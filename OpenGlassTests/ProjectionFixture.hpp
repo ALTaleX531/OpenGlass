@@ -2,7 +2,7 @@
 #include "pch.h"
 #include "../OpenGlass/ProjectionHelper.hpp"
 
-namespace OpenGlassProjectionTests
+namespace OpenGlassTests
 {
 	using TestFunction = int (*)(int);
 	struct FixtureModuleTag;
@@ -18,24 +18,24 @@ namespace OpenGlassProjectionTests
 namespace OpenGlass::Projection
 {
 	template <>
-	ModuleRegistry& RegistryFor<OpenGlassProjectionTests::FixtureModuleTag>() noexcept;
+	ModuleRegistry& RegistryFor<OpenGlassTests::FixtureModuleTag>() noexcept;
 
 	template <>
-	struct LayoutState<OpenGlassProjectionTests::FixtureModuleTag>
+	struct LayoutState<OpenGlassTests::FixtureModuleTag>
 	{
 		static __forceinline LONG Offset(size_t index) noexcept
 		{
-			return OpenGlassProjectionTests::g_layoutOffsets[index];
+			return OpenGlassTests::g_layoutOffsets[index];
 		}
 
 		static __forceinline bool IsSupported(size_t index) noexcept
 		{
-			return OpenGlassProjectionTests::g_layoutSupported[index];
+			return OpenGlassTests::g_layoutSupported[index];
 		}
 	};
 }
 
-namespace OpenGlassProjectionTests
+namespace OpenGlassTests
 {
 	inline constexpr OpenGlass::Projection::SymbolHandle<FixtureModuleTag, 0, TestFunction> g_symbol{};
 }
