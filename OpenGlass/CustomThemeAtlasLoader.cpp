@@ -4,6 +4,7 @@
 #include "HookHelper.hpp"
 #include "uDWMProjection.hpp"
 #include "CustomThemeAtlasLoader.hpp"
+#include "PngAssetValidation.hpp"
 
 using namespace OpenGlass;
 namespace OpenGlass::CustomThemeAtlasLoader
@@ -42,6 +43,7 @@ namespace OpenGlass::CustomThemeAtlasLoader
 	std::unordered_map<size_t, MARGINS> g_themeAtlasLayoutMap{};
 	std::unique_ptr<BYTE[]> g_themeAtlasStream{};
 	UINT g_themeAtlasStreamSize{};
+	std::optional<PngAssetValidation::ImageInfo> g_themeAtlasInfo;
 	wil::unique_htheme g_themeHandle{};
 	void UnloadTheme()
 	{
@@ -49,6 +51,7 @@ namespace OpenGlass::CustomThemeAtlasLoader
 
 		g_themeAtlasStream.reset();
 		g_themeAtlasStreamSize = 0;
+		g_themeAtlasInfo.reset();
 		g_themeAtlasLayoutMap.clear();
 		g_themeAtlasLayoutQuirk = CompatibilityQuirk::None;
 		Shared::g_dontDeflateInactiveFrameGeometry = true;
@@ -228,9 +231,33 @@ HRESULT CustomThemeAtlasLoader::LoadThemeAtlas(LPCWSTR themeAtlasPath)
 		LARGE_INTEGER fileSize{};
 		RETURN_IF_WIN32_BOOL_FALSE(GetFileSizeEx(file.get(), &fileSize));
 
-		g_themeAtlasStreamSize = static_cast<UINT>(fileSize.QuadPart);
-		g_themeAtlasStream = std::make_unique<BYTE[]>(g_themeAtlasStreamSize);
-		RETURN_IF_WIN32_BOOL_FALSE(ReadFile(file.get(), g_themeAtlasStream.get(), g_themeAtlasStreamSize, nullptr, nullptr));
+		RETURN_HR_IF(HRESULT_FROM_WIN32(ERROR_FILE_TOO_LARGE), fileSize.QuadPart <= 0 || fileSize.QuadPart > PngAssetValidation::MaximumFileSize);
+		const UINT candidateSize = static_cast<UINT>(fileSize.QuadPart);
+		auto candidate = std::make_unique<BYTE[]>(candidateSize);
+		DWORD bytesRead{};
+		RETURN_IF_WIN32_BOOL_FALSE(ReadFile(file.get(), candidate.get(), candidateSize, &bytesRead, nullptr));
+		RETURN_HR_IF(HRESULT_FROM_WIN32(ERROR_HANDLE_EOF), bytesRead != candidateSize);
+
+		PngAssetValidation::ImageInfo candidateInfo{};
+		RETURN_IF_FAILED(PngAssetValidation::ValidateStructure(
+			{ reinterpret_cast<const std::byte*>(candidate.get()), candidateSize },
+			candidateInfo
+		));
+		winrt::com_ptr<IStream> stream{ SHCreateMemStream(candidate.get(), candidateSize), winrt::take_ownership_from_abi };
+		RETURN_HR_IF_NULL(E_OUTOFMEMORY, stream);
+		winrt::com_ptr<IWICImagingFactory> factory{ nullptr };
+		factory.copy_from(uDWM::CDesktopManager::GetInstance()->GetWICFactory());
+		winrt::com_ptr<IWICFormatConverter> converter{ nullptr };
+		RETURN_IF_FAILED(PngAssetValidation::CreateValidatedWicSource(
+			factory.get(),
+			stream.get(),
+			&candidateInfo,
+			converter.put()
+		));
+
+		g_themeAtlasStreamSize = candidateSize;
+		g_themeAtlasStream = std::move(candidate);
+		g_themeAtlasInfo = candidateInfo;
 	}
 	else
 	{
@@ -265,6 +292,7 @@ HRESULT CustomThemeAtlasLoader::LoadThemeAtlas(LPCWSTR themeAtlasPath)
 
 		g_themeAtlasStreamSize = streamSize;
 		g_themeAtlasStream = std::make_unique<BYTE[]>(g_themeAtlasStreamSize);
+		g_themeAtlasInfo.reset();
 		memcpy_s(
 			g_themeAtlasStream.get(),
 			g_themeAtlasStreamSize,
@@ -375,29 +403,13 @@ HRESULT CustomThemeAtlasLoader::LoadTextGlowFromThemeAtlas()
 	RETURN_HR_IF_NULL(E_OUTOFMEMORY, stream);
 	winrt::com_ptr<IWICImagingFactory> wicFactory{ nullptr };
 	wicFactory.copy_from(uDWM::CDesktopManager::GetInstance()->GetWICFactory());
-	winrt::com_ptr<IWICBitmapDecoder> wicDecoder{ nullptr };
-	RETURN_IF_FAILED(
-		wicFactory->CreateDecoderFromStream(
-			stream.get(),
-			&GUID_VendorMicrosoft,
-			WICDecodeMetadataCacheOnDemand,
-			wicDecoder.put()
-		)
-	);
-	winrt::com_ptr<IWICBitmapFrameDecode> wicFrame{ nullptr };
-	RETURN_IF_FAILED(wicDecoder->GetFrame(0, wicFrame.put()));
 	winrt::com_ptr<IWICFormatConverter> wicConverter{ nullptr };
-	RETURN_IF_FAILED(wicFactory->CreateFormatConverter(wicConverter.put()));
-	RETURN_IF_FAILED(
-		wicConverter->Initialize(
-			wicFrame.get(),
-			GUID_WICPixelFormat32bppPBGRA,
-			WICBitmapDitherTypeNone,
-			nullptr,
-			0,
-			WICBitmapPaletteTypeCustom
-		)
-	);
+	RETURN_IF_FAILED(PngAssetValidation::CreateValidatedWicSource(
+		wicFactory.get(),
+		stream.get(),
+		g_themeAtlasInfo ? &*g_themeAtlasInfo : nullptr,
+		wicConverter.put()
+	));
 
 	Shared::g_textGlowBitmapInfo =
 	{

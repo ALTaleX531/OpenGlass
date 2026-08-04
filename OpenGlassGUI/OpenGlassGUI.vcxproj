@@ -40,6 +40,7 @@
     </Link>
     <ClCompile>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
+	  <AdditionalIncludeDirectories>..\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <!-- Define WXUSINGDLL if linking against DLL version of wxWidgets, but we used VcpkgUseStatic=true -->
       <!-- However, vcpkg might default to valid settings. -->
     </ClCompile>
@@ -60,6 +61,9 @@
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
+	<ClCompile Include="..\Common\PngAssetValidation.cpp">
+	  <PrecompiledHeader>NotUsing</PrecompiledHeader>
+	</ClCompile>
 	<ClCompile Include="ColorSwatchButton.cpp" />
     <ClCompile Include="ConfigurationMigration.cpp" />
     <ClCompile Include="Elevation.cpp" />

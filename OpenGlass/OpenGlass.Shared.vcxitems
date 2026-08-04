@@ -7,7 +7,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(MSBuildThisFileDirectory);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(MSBuildThisFileDirectory);$(MSBuildThisFileDirectory)..\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -55,6 +55,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)wil.hpp"><Link>Header Files\wil.hpp</Link></ClInclude>
   </ItemGroup>
   <ItemGroup>
+	<ClCompile Include="$(MSBuildThisFileDirectory)..\Common\PngAssetValidation.cpp"><Link>Source Files\Common\PngAssetValidation.cpp</Link><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)AeroColorizationEffect.cpp"><Link>Source Files\AeroColorizationEffect.cpp</Link></ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)AeroEffect.cpp"><Link>Source Files\AeroEffect.cpp</Link></ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)BlurEffect.cpp"><Link>Source Files\BlurEffect.cpp</Link></ClCompile>

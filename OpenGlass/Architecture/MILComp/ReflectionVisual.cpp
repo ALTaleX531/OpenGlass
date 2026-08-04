@@ -2,6 +2,7 @@
 #include "resource.h"
 #include "Shared.hpp"
 #include "ReflectionVisual.hpp"
+#include "PngAssetValidation.hpp"
 
 using namespace OpenGlass;
 
@@ -116,6 +117,7 @@ CATCH_RETURN()
 HRESULT CReflectionVisual::CreateSurface(abi::ICompositionSurface** surface) try
 {
 	winrt::com_ptr<IStream> stream{ nullptr };
+	std::optional<PngAssetValidation::ImageInfo> expectedInfo;
 	if (
 		Shared::g_reflectionTexturePath.empty() ||
 		PathIsRelativeW(Shared::g_reflectionTexturePath.data()) ||
@@ -136,31 +138,30 @@ HRESULT CReflectionVisual::CreateSurface(abi::ICompositionSurface** surface) try
 
 		LARGE_INTEGER fileSize{};
 		THROW_IF_WIN32_BOOL_FALSE(GetFileSizeEx(file.get(), &fileSize));
+		THROW_HR_IF(HRESULT_FROM_WIN32(ERROR_FILE_TOO_LARGE), fileSize.QuadPart <= 0 || fileSize.QuadPart > PngAssetValidation::MaximumFileSize);
 
 		auto buffer{ std::make_unique<BYTE[]>(static_cast<size_t>(fileSize.QuadPart)) };
-		THROW_IF_WIN32_BOOL_FALSE(ReadFile(file.get(), buffer.get(), static_cast<DWORD>(fileSize.QuadPart), nullptr, nullptr));
+		DWORD bytesRead{};
+		THROW_IF_WIN32_BOOL_FALSE(ReadFile(file.get(), buffer.get(), static_cast<DWORD>(fileSize.QuadPart), &bytesRead, nullptr));
+		THROW_HR_IF(HRESULT_FROM_WIN32(ERROR_HANDLE_EOF), bytesRead != static_cast<DWORD>(fileSize.QuadPart));
+		expectedInfo.emplace();
+		THROW_IF_FAILED(PngAssetValidation::ValidateStructure(
+			{ reinterpret_cast<const std::byte*>(buffer.get()), static_cast<std::size_t>(fileSize.QuadPart) },
+			*expectedInfo
+		));
 		stream = { SHCreateMemStream(buffer.get(), static_cast<UINT>(fileSize.QuadPart)), winrt::take_ownership_from_abi };
 	}
 	THROW_HR_IF_NULL(E_OUTOFMEMORY, stream);
 
 	winrt::com_ptr<IWICImagingFactory> wicFactory{ nullptr };
 	wicFactory.copy_from(uDWM::CDesktopManager::GetInstance()->GetWICFactory());
-	winrt::com_ptr<IWICBitmapDecoder> wicDecoder{ nullptr };
-	THROW_IF_FAILED(wicFactory->CreateDecoderFromStream(stream.get(), &GUID_VendorMicrosoft, WICDecodeMetadataCacheOnDemand, wicDecoder.put()));
-	winrt::com_ptr<IWICBitmapFrameDecode> wicFrame{ nullptr };
-	THROW_IF_FAILED(wicDecoder->GetFrame(0, wicFrame.put()));
 	winrt::com_ptr<IWICFormatConverter> wicConverter{ nullptr };
-	THROW_IF_FAILED(wicFactory->CreateFormatConverter(wicConverter.put()));
-	THROW_IF_FAILED(
-		wicConverter->Initialize(
-			wicFrame.get(),
-			GUID_WICPixelFormat32bppPBGRA,
-			WICBitmapDitherTypeNone,
-			nullptr,
-			0,
-			WICBitmapPaletteTypeCustom
-		)
-	);
+	THROW_IF_FAILED(PngAssetValidation::CreateValidatedWicSource(
+		wicFactory.get(),
+		stream.get(),
+		expectedInfo ? &*expectedInfo : nullptr,
+		wicConverter.put()
+	));
 	UINT width = 0, height = 0;
 	THROW_IF_FAILED(wicConverter->GetSize(&width, &height));
 

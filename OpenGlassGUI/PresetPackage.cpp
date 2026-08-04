@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "ApplicationPaths.hpp"
+#include "PngAssetValidation.hpp"
 #include "PresetPackage.hpp"
 
 #include <bcrypt.h>
@@ -155,7 +156,15 @@ namespace OpenGlass::PresetPackages
 
 		bool IsSafeEntryPath(std::string_view value)
 		{
-			if (value.empty() || value.size() > MaximumEntryPathLength || value.front() == '/' || value.front() == '\\' || value.find('\\') != std::string_view::npos || value.find(':') != std::string_view::npos)
+			if (
+				value.empty()
+				|| value.size() > MaximumEntryPathLength
+				|| value.find('\0') != std::string_view::npos
+				|| value.front() == '/'
+				|| value.front() == '\\'
+				|| value.find('\\') != std::string_view::npos
+				|| value.find(':') != std::string_view::npos
+			)
 			{
 				return false;
 			}
@@ -256,27 +265,6 @@ namespace OpenGlass::PresetPackages
 			}
 		}
 
-		void ValidateDecoder(IWICBitmapDecoder* decoder)
-		{
-			GUID container{};
-			THROW_IF_FAILED(decoder->GetContainerFormat(&container));
-			THROW_HR_IF(HRESULT_FROM_WIN32(ERROR_BAD_FORMAT), container != GUID_ContainerFormatPng);
-			UINT frameCount{};
-			THROW_IF_FAILED(decoder->GetFrameCount(&frameCount));
-			THROW_HR_IF(HRESULT_FROM_WIN32(ERROR_BAD_FORMAT), frameCount == 0);
-			wil::com_ptr<IWICBitmapFrameDecode> frame;
-			THROW_IF_FAILED(decoder->GetFrame(0, &frame));
-			UINT width{}, height{};
-			THROW_IF_FAILED(frame->GetSize(&width, &height));
-			THROW_HR_IF(HRESULT_FROM_WIN32(ERROR_BAD_FORMAT),
-				width == 0
-				|| height == 0
-				|| width > 16'384
-				|| height > 16'384
-				|| static_cast<std::uint64_t>(width) * height > 64ull * 1024 * 1024
-			);
-		}
-
 		wil::com_ptr<IWICImagingFactory> CreateWicFactory()
 		{
 			wil::com_ptr<IWICImagingFactory> factory;
@@ -284,19 +272,10 @@ namespace OpenGlass::PresetPackages
 			return factory;
 		}
 
-		void ValidateImageWithWic(const std::filesystem::path& path)
-		{
-			const auto initialization = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
-			THROW_HR_IF(initialization, FAILED(initialization) && initialization != RPC_E_CHANGED_MODE);
-			const auto uninitialize = wil::scope_exit([&] { if (SUCCEEDED(initialization)) CoUninitialize(); });
-			auto factory = CreateWicFactory();
-			wil::com_ptr<IWICBitmapDecoder> decoder;
-			THROW_IF_FAILED(factory->CreateDecoderFromFilename(path.c_str(), nullptr, GENERIC_READ, WICDecodeMetadataCacheOnLoad, &decoder));
-			ValidateDecoder(decoder.get());
-		}
-
 		void ValidateImageWithWic(std::span<const std::byte> bytes)
 		{
+			PngAssetValidation::ImageInfo expectedInfo{};
+			THROW_IF_FAILED(PngAssetValidation::ValidateStructure(bytes, expectedInfo));
 			THROW_HR_IF(HRESULT_FROM_WIN32(ERROR_BAD_FORMAT), bytes.empty() || bytes.size() > MAXDWORD);
 			const auto initialization = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 			THROW_HR_IF(initialization, FAILED(initialization) && initialization != RPC_E_CHANGED_MODE);
@@ -305,9 +284,22 @@ namespace OpenGlass::PresetPackages
 			wil::com_ptr<IWICStream> stream;
 			THROW_IF_FAILED(factory->CreateStream(&stream));
 			THROW_IF_FAILED(stream->InitializeFromMemory(reinterpret_cast<BYTE*>(const_cast<std::byte*>(bytes.data())), static_cast<DWORD>(bytes.size())));
-			wil::com_ptr<IWICBitmapDecoder> decoder;
-			THROW_IF_FAILED(factory->CreateDecoderFromStream(stream.get(), nullptr, WICDecodeMetadataCacheOnLoad, &decoder));
-			ValidateDecoder(decoder.get());
+			wil::com_ptr<IWICFormatConverter> converter;
+			THROW_IF_FAILED(PngAssetValidation::CreateValidatedWicSource(
+				factory.get(),
+				stream.get(),
+				&expectedInfo,
+				&converter
+			));
+		}
+
+		void ValidateImageWithWic(const std::filesystem::path& path)
+		{
+			std::ifstream stream(path, std::ios::binary);
+			THROW_HR_IF(HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND), !stream);
+			std::vector<char> chars((std::istreambuf_iterator<char>(stream)), {});
+			THROW_HR_IF(HRESULT_FROM_WIN32(ERROR_FILE_TOO_LARGE), chars.size() > PngAssetValidation::MaximumFileSize);
+			ValidateImageWithWic({ reinterpret_cast<const std::byte*>(chars.data()), chars.size() });
 		}
 
 		std::string CalculateContentDigest(const std::string& manifest, const std::string& license, const std::map<std::string, std::vector<std::byte>>& assets)
