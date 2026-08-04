@@ -9,6 +9,13 @@
 			<UniqueIdentifier>{E2D91D89-5F6B-4E1C-8E59-98F2E3A1F3B1}</UniqueIdentifier>
 			<Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
 		</Filter>
+		<Filter Include="Resource Files">
+			<UniqueIdentifier>{D2FA3F4D-704B-49E2-B4B9-A060E69428A2}</UniqueIdentifier>
+			<Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+		</Filter>
+		<Filter Include="Misc Files">
+			<UniqueIdentifier>{B8398054-B0E7-45B7-B6A1-A29A537352D0}</UniqueIdentifier>
+		</Filter>
 	</ItemGroup>
 	<ItemGroup>
 		<ClInclude Include="ColorizationPresets.hpp">
@@ -94,5 +101,19 @@
 		<ClCompile Include="pch.cpp">
 			<Filter>Source Files</Filter>
 		</ClCompile>
+		<ClCompile Include="..\Common\PngAssetValidation.cpp">
+			<Filter>Source Files</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Common\ThemeAtlasLayout.cpp">
+			<Filter>Source Files</Filter>
+		</ClCompile>
+	</ItemGroup>
+	<ItemGroup>
+		<ResourceCompile Include="OpenGlassGUI.rc">
+			<Filter>Resource Files</Filter>
+		</ResourceCompile>
+		<None Include="packages.config">
+			<Filter>Misc Files</Filter>
+		</None>
 	</ItemGroup>
 </Project>

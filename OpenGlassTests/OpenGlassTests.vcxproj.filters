@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<ItemGroup>
+		<Filter Include="Header Files">
+			<UniqueIdentifier>{8693D570-96B0-40AA-8637-E9C173337F6B}</UniqueIdentifier>
+			<Extensions>h;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+		</Filter>
+		<Filter Include="Source Files">
+			<UniqueIdentifier>{D59032CA-FB17-487F-92D6-AEBBD501C841}</UniqueIdentifier>
+			<Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+		</Filter>
+		<Filter Include="Shared Sources">
+			<UniqueIdentifier>{DCAC8384-734A-4A18-9F1D-E94B83D44E59}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Shared Sources\Common">
+			<UniqueIdentifier>{7ECF76CC-9B64-4846-90D2-A18412F0F1EA}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Shared Sources\OpenGlass">
+			<UniqueIdentifier>{F2C32655-9866-4BA1-8D74-D73C17A362A6}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="Shared Sources\OpenGlassGUI">
+			<UniqueIdentifier>{3854B816-4410-4ED0-933B-BA8E6EB8BC3A}</UniqueIdentifier>
+		</Filter>
+	</ItemGroup>
+	<ItemGroup>
+		<ClInclude Include="pch.h">
+			<Filter>Header Files</Filter>
+		</ClInclude>
+		<ClInclude Include="ProjectionFixture.hpp">
+			<Filter>Header Files</Filter>
+		</ClInclude>
+	</ItemGroup>
+	<ItemGroup>
+		<ClCompile Include="CrossTu.cpp">
+			<Filter>Source Files</Filter>
+		</ClCompile>
+		<ClCompile Include="Tests.cpp">
+			<Filter>Source Files</Filter>
+		</ClCompile>
+		<ClCompile Include="pch.cpp">
+			<Filter>Source Files</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Common\PngAssetValidation.cpp">
+			<Filter>Shared Sources\Common</Filter>
+		</ClCompile>
+		<ClCompile Include="..\Common\ThemeAtlasLayout.cpp">
+			<Filter>Shared Sources\Common</Filter>
+		</ClCompile>
+		<ClCompile Include="..\OpenGlass\HookHelper.cpp">
+			<Filter>Shared Sources\OpenGlass</Filter>
+		</ClCompile>
+		<ClCompile Include="..\OpenGlass\ProjectionRuntime.cpp">
+			<Filter>Shared Sources\OpenGlass</Filter>
+		</ClCompile>
+		<ClCompile Include="..\OpenGlassGUI\PresetPackage.cpp">
+			<Filter>Shared Sources\OpenGlassGUI</Filter>
+		</ClCompile>
+	</ItemGroup>
+</Project>

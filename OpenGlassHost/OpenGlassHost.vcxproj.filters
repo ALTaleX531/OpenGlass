@@ -9,6 +9,13 @@
 			<UniqueIdentifier>{0F5A7E6B-91F0-4DA2-9F63-6C67F2E2C9F8}</UniqueIdentifier>
 			<Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
 		</Filter>
+		<Filter Include="Resource Files">
+			<UniqueIdentifier>{A0BA9544-4B3B-4623-B346-0CB28E08F55B}</UniqueIdentifier>
+			<Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+		</Filter>
+		<Filter Include="Misc Files">
+			<UniqueIdentifier>{D10E7BF0-A4AD-414F-A4B5-904D18CAAC32}</UniqueIdentifier>
+		</Filter>
 	</ItemGroup>
 	<ItemGroup>
 		<ClInclude Include="resource.h">
@@ -19,5 +26,13 @@
 		<ClCompile Include="main.c">
 			<Filter>Source Files</Filter>
 		</ClCompile>
+	</ItemGroup>
+	<ItemGroup>
+		<ResourceCompile Include="OpenGlassHost.rc">
+			<Filter>Resource Files</Filter>
+		</ResourceCompile>
+		<None Include="packages.config">
+			<Filter>Misc Files</Filter>
+		</None>
 	</ItemGroup>
 </Project>
