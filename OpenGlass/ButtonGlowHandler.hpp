@@ -7,4 +7,5 @@ namespace OpenGlass::ButtonGlowHandler
 	void Update(GlassEngine::UpdateType type);
 	void Startup();
 	void Shutdown();
+	void Cleanup();
 }

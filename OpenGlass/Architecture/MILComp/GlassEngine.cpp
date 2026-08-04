@@ -92,30 +92,40 @@ void GlassEngine::Startup()
 	// to avoid racing with it and causing potential deadlock or other issues
 	LOG_IF_FAILED(DwmFlush());
 
-	GlassKernel::Startup();
-	GlassIntegrity::Startup();
-	GlassRenderer::Startup();
-
+	HookHelper::GetHookRundown().Open();
 	{
-		const auto lock = wil::EnterCriticalSection(uDWM::CDesktopManager::s_csDwmInstance);
-		CustomThemeAtlasLoader::Startup();
-		CaptionTextHandler::Startup();
-		CaptionMetricsTweaker::Startup();
-		ButtonGlowHandler::Startup();
-		AccentOverrider::Startup();
-		GlassFrameHandler::Startup();
-		GlassFrameEnhancer::Startup();
-		GlassFrameDemodernizer::Startup();
-		GlassReflectionHandler::Startup();
-		GlassKernel::RedrawAllTopLevelWindow(true);
+		HookHelper::HookTransaction transaction{ HookHelper::HookMode::Install };
+		GlassKernel::Startup();
+		GlassIntegrity::Startup();
+		GlassRenderer::Startup();
+		{
+			const auto lock = wil::EnterCriticalSection(uDWM::CDesktopManager::s_csDwmInstance);
+			CustomThemeAtlasLoader::Startup();
+			CaptionTextHandler::Startup();
+			CaptionMetricsTweaker::Startup();
+			ButtonGlowHandler::Startup();
+			AccentOverrider::Startup();
+			GlassFrameHandler::Startup();
+			GlassFrameEnhancer::Startup();
+			GlassFrameDemodernizer::Startup();
+			GlassReflectionHandler::Startup();
+			transaction.Commit();
+			GlassKernel::RedrawAllTopLevelWindow(true);
+		}
 	}
-
 	LOG_IF_FAILED(uDWM::CDesktopManager::GetInstance()->GetCompositor()->ForceRender());
+}
+void GlassEngine::Activate()
+{
+	CustomThemeAtlasLoader::Activate();
 }
 void GlassEngine::Shutdown()
 {
+	HookHelper::GetHookRundown().BeginShutdown();
+	LOG_IF_FAILED(DwmFlush());
+
 	{
-		const auto lock = wil::EnterCriticalSection(uDWM::CDesktopManager::s_csDwmInstance);
+		HookHelper::HookTransaction transaction{ HookHelper::HookMode::Remove };
 		GlassReflectionHandler::Shutdown();
 		GlassFrameDemodernizer::Shutdown();
 		GlassFrameEnhancer::Shutdown();
@@ -125,16 +135,38 @@ void GlassEngine::Shutdown()
 		CaptionMetricsTweaker::Shutdown();
 		CaptionTextHandler::Shutdown();
 		CustomThemeAtlasLoader::Shutdown();
-		GlassKernel::RedrawAllTopLevelWindow(true);
+		GlassRenderer::Shutdown();
+		GlassIntegrity::Shutdown();
+		GlassKernel::Shutdown();
+		{
+			const auto lock = wil::EnterCriticalSection(uDWM::CDesktopManager::s_csDwmInstance);
+			transaction.Commit();
+		}
 	}
 
-	// wait for compositor thread to be idle before shutting down,
-	// to avoid racing with it and causing potential deadlock or other issues
-	LOG_IF_FAILED(DwmFlush());
+	HookHelper::GetHookRundown().WaitForDrain(std::chrono::seconds{ 1 });
 
-	GlassRenderer::Shutdown();
-	GlassIntegrity::Shutdown();
-	GlassKernel::Shutdown();
+	{
+		const auto lock = wil::EnterCriticalSection(uDWM::CDesktopManager::s_csDwmInstance);
+		GlassReflectionHandler::Cleanup();
+		GlassFrameDemodernizer::Cleanup();
+		GlassFrameEnhancer::Cleanup();
+		GlassFrameHandler::Cleanup();
+		AccentOverrider::Cleanup();
+		ButtonGlowHandler::Cleanup();
+		CaptionMetricsTweaker::Cleanup();
+		CaptionTextHandler::Cleanup();
+	}
+
+	CustomThemeAtlasLoader::Deactivate();
+
+	{
+		const auto lock = wil::EnterCriticalSection(uDWM::CDesktopManager::s_csDwmInstance);
+		GlassKernel::RedrawAllTopLevelWindow(true);
+		GlassRenderer::Cleanup();
+		GlassIntegrity::Cleanup();
+		GlassKernel::Cleanup();
+	}
 
 	LOG_IF_FAILED(uDWM::CDesktopManager::GetInstance()->GetCompositor()->ForceRender());
 }

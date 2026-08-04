@@ -7,6 +7,7 @@
 #include "../Common/SettingsCatalog.hpp"
 #include "../Common/ConfigurationMigrationPolicy.hpp"
 #include "../OpenGlassGUI/PresetPackage.hpp"
+#include "HookHelper.hpp"
 
 #include <wx/init.h>
 #include <wx/wfstream.h>
@@ -31,6 +32,53 @@ extern "C" __declspec(noinline) int ProjectionFieldReadHotPath(const std::byte* 
 namespace
 {
 	int g_failures{};
+	using PointerTestFunction = int (*)(int);
+	int PointerTestOriginal(int value)
+	{
+		return value + 1;
+	}
+	PointerTestFunction g_pointerTestTarget{ &PointerTestOriginal };
+	PointerTestFunction g_pointerTestOriginal{};
+	int PointerTestReplacement(int value)
+	{
+		return g_pointerTestOriginal(value) + 10;
+	}
+	HookHelper::PointerHook<&PointerTestReplacement> g_pointerTestHook;
+	PointerTestFunction g_importTestOriginal{ &PointerTestOriginal };
+	int ImportTestReplacement(int value)
+	{
+		return g_importTestOriginal(value) + 100;
+	}
+	__declspec(noinline) int InlineTarget1(int value)
+	{
+		return value + 2;
+	}
+	__declspec(noinline) int InlineTarget2(int value)
+	{
+		return value + 3;
+	}
+	PointerTestFunction g_inlineOriginal1{ &InlineTarget1 };
+	PointerTestFunction g_inlineOriginal2{ &InlineTarget2 };
+	int InlineReplacement1(int value)
+	{
+		return g_inlineOriginal1(value) + 20;
+	}
+	int InlineReplacement2(int value)
+	{
+		return g_inlineOriginal2(value) + 30;
+	}
+	int ProjectionChainReplacement1(int value);
+	int ProjectionChainReplacement2(int value);
+	Projection::Detour<g_symbol, TestFunction> g_projectionChain1;
+	Projection::Detour<g_symbol, TestFunction> g_projectionChain2;
+	int ProjectionChainReplacement1(int value)
+	{
+		return g_projectionChain1(value) + 100;
+	}
+	int ProjectionChainReplacement2(int value)
+	{
+		return g_projectionChain2(value) + 1000;
+	}
 
 	void Check(bool condition)
 	{
@@ -38,6 +86,108 @@ namespace
 		{
 			g_failures++;
 		}
+	}
+
+	void TestHookRundown()
+	{
+		HookHelper::HookRundown rundown;
+		rundown.Open();
+		Check(!rundown.IsClosing());
+		Check(rundown.TryAcquire());
+
+		std::atomic<bool> drained{};
+		std::thread waiter([&]
+		{
+			rundown.WaitForDrain(std::chrono::seconds{ 1 });
+			drained.store(true, std::memory_order_release);
+		});
+
+		rundown.BeginShutdown();
+		Check(rundown.IsClosing());
+		Check(!rundown.TryAcquire());
+		Check(!drained.load(std::memory_order_acquire));
+		rundown.Release();
+		waiter.join();
+		Check(drained.load(std::memory_order_acquire));
+
+		wil::unique_virtualalloc_ptr<uint8_t> instructions{
+			static_cast<uint8_t*>(VirtualAlloc(nullptr, 2, MEM_RESERVE | MEM_COMMIT, PAGE_EXECUTE_READWRITE))
+		};
+		Check(!!instructions);
+		instructions.get()[0] = 0x74;
+		instructions.get()[1] = 0x23;
+		const std::array<uint8_t, 1> firstOriginal{ 0x74 };
+		const std::array<uint8_t, 1> secondOriginal{ 0x23 };
+		const std::array<uint8_t, 1> replacement{ 0x90 };
+		HookHelper::InstructionPatch firstPatch;
+		HookHelper::InstructionPatch secondPatch;
+		firstPatch.Prepare(instructions.get(), firstOriginal, replacement);
+		secondPatch.Prepare(instructions.get() + 1, secondOriginal, replacement);
+		{
+			HookHelper::HookTransaction transaction{ HookHelper::HookMode::Install };
+			transaction.Apply(firstPatch);
+			transaction.Apply(secondPatch);
+			transaction.Commit();
+		}
+		Check(instructions.get()[0] == 0x90 && instructions.get()[1] == 0x90);
+		{
+			HookHelper::HookTransaction transaction{ HookHelper::HookMode::Remove };
+			transaction.Apply(secondPatch);
+			transaction.Apply(firstPatch);
+			transaction.Commit();
+		}
+		Check(instructions.get()[0] == 0x74 && instructions.get()[1] == 0x23);
+
+		HookHelper::GetHookRundown().Open();
+		g_pointerTestHook.Prepare(&g_pointerTestTarget, &g_pointerTestOriginal);
+		{
+			HookHelper::HookTransaction transaction{ HookHelper::HookMode::Install };
+			transaction.Apply(g_pointerTestHook);
+			transaction.Commit();
+		}
+		Check(g_pointerTestTarget(1) == 12);
+		HookHelper::GetHookRundown().BeginShutdown();
+		Check(g_pointerTestTarget(1) == 2);
+		{
+			HookHelper::HookTransaction transaction{ HookHelper::HookMode::Remove };
+			transaction.Apply(g_pointerTestHook);
+			transaction.Commit();
+		}
+		HookHelper::GetHookRundown().WaitForDrain(std::chrono::seconds{ 1 });
+		Check(g_pointerTestTarget == &PointerTestOriginal);
+		g_pointerTestHook.AttachOnce(&g_pointerTestTarget, &g_pointerTestOriginal);
+		Check(!g_pointerTestHook.IsInstalled());
+		Check(g_pointerTestTarget == &PointerTestOriginal);
+
+		HookHelper::GetHookRundown().Open();
+		const auto importDetour = HookHelper::MakeImportDetour<&ImportTestReplacement>("ImportTest", &g_importTestOriginal);
+		const auto importThunk = reinterpret_cast<PointerTestFunction>(importDetour.detour);
+		Check(importThunk(1) == 102);
+		HookHelper::GetHookRundown().BeginShutdown();
+		Check(importThunk(1) == 2);
+		HookHelper::GetHookRundown().WaitForDrain(std::chrono::seconds{ 1 });
+
+		const std::array inlineHooks
+		{
+			HookHelper::DetourInfo{ &g_inlineOriginal1, &InlineReplacement1 },
+			HookHelper::DetourInfo{ &g_inlineOriginal2, &InlineReplacement2 }
+		};
+		{
+			HookHelper::HookTransaction transaction{ HookHelper::HookMode::Install };
+			transaction.ApplyInline("OpenGlassTests", inlineHooks);
+			transaction.Commit();
+		}
+		volatile PointerTestFunction callFirst{ &InlineTarget1 };
+		volatile PointerTestFunction callSecond{ &InlineTarget2 };
+		Check(callFirst(1) == 23);
+		Check(callSecond(1) == 34);
+		{
+			HookHelper::HookTransaction transaction{ HookHelper::HookMode::Remove };
+			transaction.ApplyInline("OpenGlassTests", inlineHooks);
+			transaction.Commit();
+		}
+		Check(callFirst(1) == 3);
+		Check(callSecond(1) == 4);
 	}
 
 	template <size_t SymbolCount, size_t BindingCount, size_t LayoutCount, size_t CaseCount>
@@ -243,11 +393,33 @@ namespace
 		Check(first.registry.SymbolAddress(0, false) == Util::force_cast_from(&Target));
 
 		g_activeRegistry = &first.registry;
-		Projection::Detour<g_symbol, TestFunction> detour;
-		*detour.detour_storage() = &Replacement;
-		Check(detour.original() == &Replacement);
 		Check(g_symbol.get() == &Target);
 		Check(g_symbol(1) == 11);
+
+		HookHelper::GetHookRundown().Open();
+		const std::array chainedHooks
+		{
+			HookHelper::DetourInfo{ &g_projectionChain1, &ProjectionChainReplacement1 },
+			HookHelper::DetourInfo{ &g_projectionChain2, &ProjectionChainReplacement2 }
+		};
+		Check(chainedHooks[0].original == chainedHooks[1].original);
+		Check(chainedHooks[0].detour == chainedHooks[1].detour);
+		{
+			HookHelper::HookTransaction transaction{ HookHelper::HookMode::Install };
+			transaction.ApplyInline("ProjectionChain", chainedHooks);
+			transaction.Commit();
+		}
+		volatile TestFunction invokeTarget{ &Target };
+		Check(invokeTarget(1) == 1111);
+		HookHelper::GetHookRundown().BeginShutdown();
+		Check(invokeTarget(1) == 11);
+		{
+			HookHelper::HookTransaction transaction{ HookHelper::HookMode::Remove };
+			transaction.ApplyInline("ProjectionChain", chainedHooks);
+			transaction.Commit();
+		}
+		HookHelper::GetHookRundown().WaitForDrain(std::chrono::seconds{ 1 });
+		Check(invokeTarget(1) == 11);
 	}
 
 	void TestDisjointProjectedBindings()
@@ -980,8 +1152,14 @@ int OpenGlassTests::Replacement(int value)
 	return value + 20;
 }
 
+int OpenGlassTests::Replacement2(int value)
+{
+	return value + 30;
+}
+
 int main()
 {
+	TestHookRundown();
 	TestVersionsAndFields();
 	TestCompleteNameResolutionAndFallback();
 	TestAtomicCommitAndDetourStorage();

@@ -104,8 +104,10 @@ namespace OpenGlass::GlassRenderer
 	Projection::Detour<dwmcore::Symbol_CRenderData_DrawImageResource_FillMode_26100_2454, decltype(&MyCRenderData_DrawImageResource_FillMode_Win11_24H2)> g_CRenderData_DrawImageResource_FillMode_Win11_24H2_Org{};
 	decltype(&MyCDrawingContext_DrawGeometry) g_CDrawingContext_DrawGeometry_Org{ nullptr };
 	decltype(&MyCDrawingContext_DrawGeometry)* g_CDrawingContext_DrawGeometry_Org_Address{ nullptr };
+	HookHelper::PointerHook<&MyCDrawingContext_DrawGeometry> g_CDrawingContext_DrawGeometry_Hook;
 	decltype(&MyID2D1DeviceContext_FillGeometry) g_ID2D1DeviceContext_FillGeometry_Org{ nullptr };
 	decltype(&MyID2D1DeviceContext_FillGeometry)* g_ID2D1DeviceContext_FillGeometry_Org_Address{ nullptr };
+	HookHelper::PointerHook<&MyID2D1DeviceContext_FillGeometry> g_ID2D1DeviceContext_FillGeometry_Hook;
 
 	enum RenderFlag
 	{
@@ -263,11 +265,7 @@ HRESULT GlassRenderer::MyCRenderData_TryDrawCommandAsDrawList(
 			g_CDrawingContext_DrawGeometry_Org_Address = dwmcore::IDrawingContext_DrawGeometry_VtableSlot.address(
 				HookHelper::get_vftable_from(drawingContext->GetInterface())
 			);
-			HookHelper::PatchPointerT(
-				g_CDrawingContext_DrawGeometry_Org_Address, 
-				MyCDrawingContext_DrawGeometry,
-				&g_CDrawingContext_DrawGeometry_Org
-			);
+			g_CDrawingContext_DrawGeometry_Hook.AttachOnce(g_CDrawingContext_DrawGeometry_Org_Address, &g_CDrawingContext_DrawGeometry_Org);
 		}
 
 		*succeeded = false;
@@ -705,11 +703,7 @@ HRESULT GlassRenderer::MyCDrawingContext_DrawGeometry(
 		if (!g_ID2D1DeviceContext_FillGeometry_Org)
 		{
 			g_ID2D1DeviceContext_FillGeometry_Org_Address = reinterpret_cast<decltype(g_ID2D1DeviceContext_FillGeometry_Org_Address)>(&HookHelper::get_vftable_from(context)[0x17]);
-			HookHelper::PatchPointerT(
-				g_ID2D1DeviceContext_FillGeometry_Org_Address,
-				MyID2D1DeviceContext_FillGeometry,
-				&g_ID2D1DeviceContext_FillGeometry_Org
-			);
+			g_ID2D1DeviceContext_FillGeometry_Hook.AttachOnce(g_ID2D1DeviceContext_FillGeometry_Org_Address, &g_ID2D1DeviceContext_FillGeometry_Org);
 		}
 
 		return drawingContext->FillShapeWithBrush(renderingShape.get(), g_currentDeviceResources->m_brush.get());
@@ -1016,7 +1010,7 @@ void GlassRenderer::Startup()
 	const auto build_before_w11_24h2 = Util::VersionBefore<os::build_w11_24h2, os::revision_24h2_rtm_1>(dwmcore::g_versionInfo.build, dwmcore::g_versionInfo.revision);
 	const auto build_before_w11_21h2 = dwmcore::g_versionInfo.build < os::build_w11_21h2;
 	const auto build_before_w10_2004 = dwmcore::g_versionInfo.build < os::build_w10_2004;
-	HookHelper::PatchFunctions(
+	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
 			{ &g_CRenderData_TryDrawCommandAsDrawList_Win10_Org, &MyCRenderData_TryDrawCommandAsDrawList_Win10, build_before_w11_21h2 },
@@ -1036,7 +1030,7 @@ void GlassRenderer::Shutdown()
 	const auto build_before_w11_24h2 = Util::VersionBefore<os::build_w11_24h2, os::revision_24h2_rtm_1>(dwmcore::g_versionInfo.build, dwmcore::g_versionInfo.revision);
 	const auto build_before_w11_21h2 = dwmcore::g_versionInfo.build < os::build_w11_21h2;
 	const auto build_before_w10_2004 = dwmcore::g_versionInfo.build < os::build_w10_2004;
-	HookHelper::PatchFunctions(
+	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
 			{ &g_CRenderData_TryDrawCommandAsDrawList_Win10_Org, &MyCRenderData_TryDrawCommandAsDrawList_Win10, build_before_w11_21h2 },
@@ -1050,22 +1044,18 @@ void GlassRenderer::Shutdown()
 		false
 	);
 
-	SwitchToThread();
-
 	if (g_ID2D1DeviceContext_FillGeometry_Org)
 	{
-		HookHelper::PatchPointerT(
-			g_ID2D1DeviceContext_FillGeometry_Org_Address, 
-			g_ID2D1DeviceContext_FillGeometry_Org
-		);
+		HookHelper::GetCurrentHookTransaction().Apply(g_ID2D1DeviceContext_FillGeometry_Hook);
 	}
 	if (g_CDrawingContext_DrawGeometry_Org)
 	{
-		HookHelper::PatchPointerT(
-			g_CDrawingContext_DrawGeometry_Org_Address, 
-			g_CDrawingContext_DrawGeometry_Org
-		);
+		HookHelper::GetCurrentHookTransaction().Apply(g_CDrawingContext_DrawGeometry_Hook);
 	}
 
+}
+
+void GlassRenderer::Cleanup()
+{
 	g_deviceResources.clear();
 }

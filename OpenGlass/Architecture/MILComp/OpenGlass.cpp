@@ -16,7 +16,15 @@ namespace OpenGlass
 {
 	void Startup();
 	void Shutdown();
-	bool g_startup{ false };
+	enum class LifecycleState
+	{
+		Inert,
+		Preparing,
+		HooksActive,
+		Active,
+		Stopping
+	};
+	std::atomic<LifecycleState> g_lifecycleState{ LifecycleState::Inert };
 
 	_Function_class_(EFFECTIVE_POWER_MODE_CALLBACK)
 	VOID CALLBACK EffectivePowerModeCallback(
@@ -61,6 +69,10 @@ VOID CALLBACK OpenGlass::EffectivePowerModeCallback(
 	[[maybe_unused]] PVOID context
 )
 {
+	if (g_lifecycleState.load(std::memory_order_acquire) != LifecycleState::Active)
+	{
+		return;
+	}
 	if (mode < (os::buildNumber < os::build_w11_24h2 ? EffectivePowerModeBetterBattery : EffectivePowerModeBalanced))
 	{
 		Shared::g_xxSaver = true;
@@ -74,6 +86,10 @@ VOID CALLBACK OpenGlass::EffectivePowerModeCallback(
 
 LRESULT CALLBACK OpenGlass::DwmNotificationWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	if (g_lifecycleState.load(std::memory_order_acquire) != LifecycleState::Active)
+	{
+		return g_oldWndProc(hWnd, uMsg, wParam, lParam);
+	}
 	switch (uMsg)
 	{
 		case WM_CLOSE:
@@ -633,12 +649,15 @@ void OpenGlass::Startup()
 	}
 
 	GlassEngine::LoadRegistry(false);
+	g_lifecycleState.store(LifecycleState::Preparing, std::memory_order_release);
+	GlassEngine::Startup();
+	g_lifecycleState.store(LifecycleState::HooksActive, std::memory_order_release);
 
 	// make sure guis can send message to dwm
-	THROW_IF_WIN32_BOOL_FALSE(ChangeWindowMessageFilterEx(g_notificationWindow, WM_DWMCOLORIZATIONCOLORCHANGED, MSGFLT_ALLOW, nullptr));
+	FAIL_FAST_IF_WIN32_BOOL_FALSE_MSG(ChangeWindowMessageFilterEx(g_notificationWindow, WM_DWMCOLORIZATIONCOLORCHANGED, MSGFLT_ALLOW, nullptr), "Unable to allow the DWM colorization notification");
 
-	THROW_IF_WIN32_BOOL_FALSE(WTSRegisterSessionNotification(g_notificationWindow, NOTIFY_FOR_THIS_SESSION));
-	THROW_IF_WIN32_BOOL_FALSE(ChangeWindowMessageFilterEx(g_notificationWindow, WM_WTSSESSION_CHANGE, MSGFLT_ALLOW, nullptr));
+	FAIL_FAST_IF_WIN32_BOOL_FALSE_MSG(WTSRegisterSessionNotification(g_notificationWindow, NOTIFY_FOR_THIS_SESSION), "Unable to register DWM session notifications");
+	FAIL_FAST_IF_WIN32_BOOL_FALSE_MSG(ChangeWindowMessageFilterEx(g_notificationWindow, WM_WTSSESSION_CHANGE, MSGFLT_ALLOW, nullptr), "Unable to allow the DWM session notification");
 
 	g_oldWndProc = reinterpret_cast<WNDPROC>(
 		SetWindowLongPtrW(
@@ -647,18 +666,20 @@ void OpenGlass::Startup()
 			reinterpret_cast<LONG_PTR>(DwmNotificationWndProc)
 		)
 	);
-	THROW_LAST_ERROR_IF(g_oldWndProc == 0);
+	FAIL_FAST_LAST_ERROR_IF_MSG(g_oldWndProc == 0, "Unable to subclass the DWM notification window");
 
-	THROW_IF_FAILED(
+	FAIL_FAST_IF_FAILED_MSG(
 		PowerRegisterForEffectivePowerModeNotifications(
 			EFFECTIVE_POWER_MODE_V1,
 			EffectivePowerModeCallback,
 			nullptr,
 			&g_powerNotify
-		)
+		),
+		"Unable to register effective power mode notifications"
 	);
 
-	GlassEngine::Startup();
+	g_lifecycleState.store(LifecycleState::Active, std::memory_order_release);
+	GlassEngine::Activate();
 
 #if defined(_DEBUG)
 	winrt::com_ptr<IDCompositionDeviceDebug> debugDevice{ nullptr };
@@ -672,7 +693,6 @@ void OpenGlass::Startup()
 	BroadcastSystemMessageW(BSF_IGNORECURRENTTASK | BSF_FORCEIFHUNG | BSF_ALLOWSFW, &broadcastInfo, WM_THEMECHANGED, 0, 0);
 	RedrawWindow(GetShellWindow(), nullptr, nullptr, RDW_INVALIDATE | RDW_ERASE);*/
 
-	g_startup = true;
 	return;
 }
 
@@ -683,18 +703,20 @@ void OpenGlass::Shutdown()
 		return;
 	}
 
-	if (g_startup)
+	const auto previousState = g_lifecycleState.exchange(LifecycleState::Stopping, std::memory_order_acq_rel);
+	if (previousState == LifecycleState::Active)
 	{
-		THROW_LAST_ERROR_IF(SetWindowLongPtrW(g_notificationWindow, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(g_oldWndProc)) == 0);
+		FAIL_FAST_LAST_ERROR_IF_MSG(SetWindowLongPtrW(g_notificationWindow, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(g_oldWndProc)) == 0, "Unable to restore the DWM notification window procedure");
 		g_oldWndProc = nullptr;
 
-		THROW_IF_WIN32_BOOL_FALSE(ChangeWindowMessageFilterEx(g_notificationWindow, WM_WTSSESSION_CHANGE, MSGFLT_DISALLOW, nullptr));
-		THROW_IF_WIN32_BOOL_FALSE(WTSUnRegisterSessionNotification(g_notificationWindow));
+		FAIL_FAST_IF_WIN32_BOOL_FALSE_MSG(ChangeWindowMessageFilterEx(g_notificationWindow, WM_WTSSESSION_CHANGE, MSGFLT_DISALLOW, nullptr), "Unable to remove the DWM session message filter");
+		FAIL_FAST_IF_WIN32_BOOL_FALSE_MSG(WTSUnRegisterSessionNotification(g_notificationWindow), "Unable to unregister DWM session notifications");
 
-		THROW_IF_WIN32_BOOL_FALSE(ChangeWindowMessageFilterEx(g_notificationWindow, WM_DWMCOLORIZATIONCOLORCHANGED, MSGFLT_DISALLOW, nullptr));
+		FAIL_FAST_IF_WIN32_BOOL_FALSE_MSG(ChangeWindowMessageFilterEx(g_notificationWindow, WM_DWMCOLORIZATIONCOLORCHANGED, MSGFLT_DISALLOW, nullptr), "Unable to remove the DWM colorization message filter");
 
-		THROW_IF_FAILED(
-			PowerUnregisterFromEffectivePowerModeNotifications(g_powerNotify)
+		FAIL_FAST_IF_FAILED_MSG(
+			PowerUnregisterFromEffectivePowerModeNotifications(g_powerNotify),
+			"Unable to unregister effective power mode notifications"
 		);
 		g_powerNotify = nullptr;
 
@@ -713,8 +735,12 @@ void OpenGlass::Shutdown()
 		BroadcastSystemMessageW(BSF_IGNORECURRENTTASK | BSF_FORCEIFHUNG | BSF_ALLOWSFW, &broadcastInfo, WM_THEMECHANGED, 0, 0);
 		RedrawWindow(GetShellWindow(), nullptr, nullptr, RDW_INVALIDATE | RDW_ERASE);*/
 
-		g_startup = false;
 	}
+	else
+	{
+		FAIL_FAST_IF_FAILED_MSG(previousState == LifecycleState::Inert ? S_OK : E_UNEXPECTED, "Shutdown entered from an invalid lifecycle state");
+	}
+	g_lifecycleState.store(LifecycleState::Inert, std::memory_order_release);
 
 	g_notificationWindow = nullptr;
 }

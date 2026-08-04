@@ -34,7 +34,7 @@ void GlassFrameEnhancer::Update([[maybe_unused]] GlassEngine::UpdateType type)
 void GlassFrameEnhancer::Startup()
 {
 
-	HookHelper::PatchFunctions(
+	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
 			{ &g_CThemePartPrimitive_ShouldClone_Org, &MyCThemePartPrimitive_ShouldClone }
@@ -45,11 +45,15 @@ void GlassFrameEnhancer::Startup()
 
 void GlassFrameEnhancer::Shutdown()
 {
-	HookHelper::PatchFunctions(
+	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
 			{ &g_CThemePartPrimitive_ShouldClone_Org, &MyCThemePartPrimitive_ShouldClone }
 		},
 		false
 	);
+}
+
+void GlassFrameEnhancer::Cleanup()
+{
 }

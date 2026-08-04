@@ -31,9 +31,11 @@ namespace OpenGlass::GlassRenderer
 
 	decltype(&MyCColorBrush_Draw) g_CColorBrush_Draw_Org{ nullptr };
 	decltype(&MyCColorBrush_Draw)* g_CColorBrush_Draw_Org_Address{ nullptr };
+	HookHelper::PointerHook<&MyCColorBrush_Draw> g_CColorBrush_Draw_Hook;
 
 	decltype(&MyID2D1DeviceContext_FillGeometry) g_ID2D1DeviceContext_FillGeometry_Org{ nullptr };
 	decltype(&MyID2D1DeviceContext_FillGeometry)* g_ID2D1DeviceContext_FillGeometry_Org_Address{ nullptr };
+	HookHelper::PointerHook<&MyID2D1DeviceContext_FillGeometry> g_ID2D1DeviceContext_FillGeometry_Hook;
 
 	enum RenderFlag
 	{
@@ -331,11 +333,7 @@ HRESULT GlassRenderer::MyCColorBrush_Draw(
 			if (!g_ID2D1DeviceContext_FillGeometry_Org)
 			{
 				g_ID2D1DeviceContext_FillGeometry_Org_Address = reinterpret_cast<decltype(g_ID2D1DeviceContext_FillGeometry_Org_Address)>(&HookHelper::get_vftable_from(context)[0x17]);
-				HookHelper::PatchPointerT(
-					g_ID2D1DeviceContext_FillGeometry_Org_Address,
-					MyID2D1DeviceContext_FillGeometry,
-					&g_ID2D1DeviceContext_FillGeometry_Org
-				);
+				g_ID2D1DeviceContext_FillGeometry_Hook.AttachOnce(g_ID2D1DeviceContext_FillGeometry_Org_Address, &g_ID2D1DeviceContext_FillGeometry_Org);
 			}
 
 			return drawingContext->FillShapeWithBrush(renderingShape.get(), g_currentDeviceResources->m_brush.get());
@@ -501,32 +499,25 @@ DECLSPEC_NOINLINE void GlassRenderer::Startup()
 	if (!g_CColorBrush_Draw_Org)
 	{
 		g_CColorBrush_Draw_Org_Address = dwmcore::CColorBrush_Draw_VtableSlot.address(dwmcore::CColorBrush::vftable);
-		HookHelper::PatchPointerT(
-			g_CColorBrush_Draw_Org_Address,
-			MyCColorBrush_Draw,
-			&g_CColorBrush_Draw_Org
-		);
+		g_CColorBrush_Draw_Hook.Prepare(g_CColorBrush_Draw_Org_Address, &g_CColorBrush_Draw_Org);
+		HookHelper::GetCurrentHookTransaction().Apply(g_CColorBrush_Draw_Hook);
 	}
 }
 
 void GlassRenderer::Shutdown()
 {
-	SwitchToThread();
-
 	if (g_ID2D1DeviceContext_FillGeometry_Org)
 	{
-		HookHelper::PatchPointerT(
-			g_ID2D1DeviceContext_FillGeometry_Org_Address,
-			g_ID2D1DeviceContext_FillGeometry_Org
-		);
+		HookHelper::GetCurrentHookTransaction().Apply(g_ID2D1DeviceContext_FillGeometry_Hook);
 	}
 	if (g_CColorBrush_Draw_Org)
 	{
-		HookHelper::PatchPointerT(
-			g_CColorBrush_Draw_Org_Address,
-			g_CColorBrush_Draw_Org
-		);
+		HookHelper::GetCurrentHookTransaction().Apply(g_CColorBrush_Draw_Hook);
 	}
 
+}
+
+void GlassRenderer::Cleanup()
+{
 	g_deviceResources.clear();
 }

@@ -79,6 +79,7 @@ namespace OpenGlass::GlassFrameDemodernizer
 	};
 	std::unordered_map<UCHAR*, std::vector<UCHAR>> g_instructionsToReplace{};
 	std::unordered_map<UCHAR*, std::vector<UCHAR>> g_instructionsBackup{};
+	std::vector<HookHelper::InstructionPatch> g_instructionPatches{};
 	std::vector<std::byte> g_atlasedImageNullSentinel{};
 	bool g_systemBackdrop{ false };
 }
@@ -250,8 +251,8 @@ void GlassFrameDemodernizer::Startup()
 	)
 	{
 		const auto sizeOffset = uDWM::CAtlasedImage_GetSize.offset();
-		THROW_HR_IF(E_UNEXPECTED, sizeOffset < 0);
-		THROW_HR_IF(E_UNEXPECTED, static_cast<ULONGLONG>(sizeOffset) > SIZE_MAX - sizeof(DWORD));
+		FAIL_FAST_HR_IF_MSG(E_UNEXPECTED, sizeOffset < 0, "CAtlasedImage size offset is negative");
+		FAIL_FAST_HR_IF_MSG(E_UNEXPECTED, static_cast<ULONGLONG>(sizeOffset) > SIZE_MAX - sizeof(DWORD), "CAtlasedImage size offset overflows");
 
 		g_atlasedImageNullSentinel.assign(static_cast<size_t>(sizeOffset) + sizeof(DWORD), std::byte{});
 		auto atlasedImageNullSentinel =
@@ -381,15 +382,26 @@ void GlassFrameDemodernizer::Startup()
 			i--;
 		} while (i);
 	}
+	FAIL_FAST_IF_FAILED_MSG(g_instructionsToReplace.size() == 2 ? S_OK : E_NOINTERFACE, "Unable to locate the complete frame-demodernizer instruction patch set");
+	g_instructionPatches.clear();
+	g_instructionPatches.reserve(g_instructionsToReplace.size());
 	for (const auto& [address, instructions] : g_instructionsToReplace)
 	{
-		HookHelper::PatchInstructions(
+		const auto backup = g_instructionsBackup.find(address);
+		FAIL_FAST_IF_FAILED_MSG(backup != g_instructionsBackup.end() ? S_OK : E_UNEXPECTED, "Missing captured instruction bytes at %p", address);
+		auto& patch = g_instructionPatches.emplace_back();
+		patch.Prepare(
 			address,
+			backup->second,
 			instructions
 		);
 	}
+	for (auto& patch : g_instructionPatches)
+	{
+		HookHelper::GetCurrentHookTransaction().Apply(patch);
+	}
 
-	HookHelper::PatchFunctions(
+	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
 			{ &g_CTopLevelWindow_ValidateVisual_Org, &MyCTopLevelWindow_ValidateVisual },
@@ -407,7 +419,7 @@ void GlassFrameDemodernizer::Shutdown()
 		return;
 	}
 
-	HookHelper::PatchFunctions(
+	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
 			{ &g_CTopLevelWindow_ValidateVisual_Org, &MyCTopLevelWindow_ValidateVisual },
@@ -417,15 +429,16 @@ void GlassFrameDemodernizer::Shutdown()
 		false
 	);
 
-	SwitchToThread();
-
-	for (const auto& [address, instructions] : g_instructionsBackup)
+	for (auto& patch : g_instructionPatches)
 	{
-		HookHelper::PatchInstructions(
-			address,
-			instructions
-		);
+		HookHelper::GetCurrentHookTransaction().Apply(patch);
 	}
+}
+
+void GlassFrameDemodernizer::Cleanup()
+{
 	g_instructionsBackup.clear();
+	g_instructionsToReplace.clear();
+	g_instructionPatches.clear();
 	g_atlasedImageNullSentinel.clear();
 }

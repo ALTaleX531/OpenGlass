@@ -672,7 +672,7 @@ void GlassKernel::Update(GlassEngine::UpdateType type)
 void GlassKernel::Startup()
 {
 
-	HookHelper::PatchFunctions(
+	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
 			{ &g_CCachedVisualImage_CCachedTarget_Update_Org, &MyCCachedVisualImage_CCachedTarget_Update },
@@ -686,7 +686,7 @@ void GlassKernel::Startup()
 
 void GlassKernel::Shutdown()
 {
-	HookHelper::PatchFunctions(
+	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
 			{ &g_CCachedVisualImage_CCachedTarget_Update_Org, &MyCCachedVisualImage_CCachedTarget_Update },
@@ -697,8 +697,10 @@ void GlassKernel::Shutdown()
 		false
 	);
 
-	SwitchToThread();
+}
 
+void GlassKernel::Cleanup()
+{
 	CReflectionVisual::RemoveAll();
 	g_reflectionSurface = nullptr;
 }

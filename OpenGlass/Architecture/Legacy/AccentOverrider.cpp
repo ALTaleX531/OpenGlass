@@ -346,7 +346,7 @@ void AccentOverrider::Startup()
 		return;
 	}
 
-	HookHelper::PatchFunctions(
+	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
 			{ &g_CAccent_UpdateAccentPolicy_Org, &MyCAccent_UpdateAccentPolicy },
@@ -365,7 +365,7 @@ void AccentOverrider::Shutdown()
 		return;
 	}
 
-	HookHelper::PatchFunctions(
+	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
 			{ &g_CAccent_UpdateAccentPolicy_Org, &MyCAccent_UpdateAccentPolicy },
@@ -376,7 +376,9 @@ void AccentOverrider::Shutdown()
 		false
 	);
 
-	SwitchToThread();
+}
 
+void AccentOverrider::Cleanup()
+{
 	g_accentClipRegions.clear();
 }

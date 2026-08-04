@@ -46,6 +46,7 @@ namespace OpenGlass::CustomThemeAtlasLoader
 	UINT g_themeAtlasStreamSize{};
 	std::optional<PngAssetValidation::ImageInfo> g_themeAtlasInfo;
 	wil::unique_htheme g_themeHandle{};
+	HookHelper::ImportHook g_themeImportHook;
 	void UnloadTheme()
 	{
 		Shared::g_textGlowBitmap.reset();
@@ -211,7 +212,6 @@ HRESULT CustomThemeAtlasLoader::MyGetThemeColor(
 	*pColor = RGB(it->second.cxLeftWidth, it->second.cxRightWidth, it->second.cyTopHeight);
 	return S_OK;
 }
-
 HTHEME CustomThemeAtlasLoader::GetThemeHandle()
 {
 	return g_themeHandle.get();
@@ -718,7 +718,7 @@ void CustomThemeAtlasLoader::Update(GlassEngine::UpdateType type)
 void CustomThemeAtlasLoader::Startup()
 {
 	const auto build_before_w10_2004 = uDWM::g_versionInfo.build < os::build_w10_2004;
-	HookHelper::PatchDelayloadIAT(
+	g_themeImportHook.Prepare(
 		uDWM::g_moduleHandle,
 		std::initializer_list<HookHelper::ImportDllDetourInfo>
 		{
@@ -726,52 +726,34 @@ void CustomThemeAtlasLoader::Startup()
 				"ext-ms-win-uxtheme-themes-l1-1-0.dll",
 				std::initializer_list<HookHelper::ImportFunctionDetourInfo>
 				{
-					{ "GetThemeMargins", &g_GetThemeMargins_Org, &MyGetThemeMargins },
-					{ "GetThemeInt", &g_GetThemeInt_Org, &MyGetThemeInt },
-					{ "GetThemeColor", &g_GetThemeColor_Org, &MyGetThemeColor }
+					HookHelper::MakeImportDetour<&MyGetThemeMargins>("GetThemeMargins", &g_GetThemeMargins_Org),
+					HookHelper::MakeImportDetour<&MyGetThemeInt>("GetThemeInt", &g_GetThemeInt_Org),
+					HookHelper::MakeImportDetour<&MyGetThemeColor>("GetThemeColor", &g_GetThemeColor_Org)
 				}
 			},
 			{
 				build_before_w10_2004 ? "UxTheme.dll" : "ext-ms-win-uxtheme-themes-l1-1-2.dll",
 				std::initializer_list<HookHelper::ImportFunctionDetourInfo>
 				{
-					{ "GetThemeStream", &g_GetThemeStream_Org, &MyGetThemeStream },
-					{ "GetThemeRect", &g_GetThemeRect_Org, &MyGetThemeRect }
+					HookHelper::MakeImportDetour<&MyGetThemeStream>("GetThemeStream", &g_GetThemeStream_Org),
+					HookHelper::MakeImportDetour<&MyGetThemeRect>("GetThemeRect", &g_GetThemeRect_Org)
 				}
 			}
-		}
+		},
+		true
 	);
-
+	HookHelper::GetCurrentHookTransaction().Apply(g_themeImportHook);
+}
+void CustomThemeAtlasLoader::Activate()
+{
 	PostMessageW(FindWindowW(L"DWM", nullptr), WM_THEMECHANGED, 0, 0);
 }
 void CustomThemeAtlasLoader::Shutdown()
 {
-	const auto build_before_w10_2004 = uDWM::g_versionInfo.build < os::build_w10_2004;
-	HookHelper::PatchDelayloadIAT(
-		uDWM::g_moduleHandle,
-		std::initializer_list<HookHelper::ImportDllDetourInfo>
-		{
-			{
-				"ext-ms-win-uxtheme-themes-l1-1-0.dll",
-				std::initializer_list<HookHelper::ImportFunctionDetourInfo>
-				{
-					{ "GetThemeMargins", &g_GetThemeMargins_Org, g_GetThemeMargins_Org },
-					{ "GetThemeInt", &g_GetThemeInt_Org, g_GetThemeInt_Org },
-					{ "GetThemeColor", &g_GetThemeColor_Org, g_GetThemeColor_Org }
-				}
-			},
-			{
-				build_before_w10_2004 ? "UxTheme.dll" : "ext-ms-win-uxtheme-themes-l1-1-2.dll",
-				std::initializer_list<HookHelper::ImportFunctionDetourInfo>
-				{
-					{ "GetThemeStream", &g_GetThemeStream_Org, g_GetThemeStream_Org },
-					{ "GetThemeRect", &g_GetThemeRect_Org, g_GetThemeRect_Org }
-				}
-			}
-		}
-	);
-
+	HookHelper::GetCurrentHookTransaction().Apply(g_themeImportHook);
+}
+void CustomThemeAtlasLoader::Deactivate()
+{
 	SendMessageW(FindWindowW(L"DWM", nullptr), WM_THEMECHANGED, 0, 0);
-
 	UnloadTheme();
 }

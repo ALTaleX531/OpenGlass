@@ -65,29 +65,38 @@ namespace OpenGlass::CaptionTextHandler
 
 	decltype(&MyDrawTextW) g_DrawTextW_Org{ nullptr };
 	decltype(&MyCreateBitmap) g_CreateBitmap_Org{ nullptr };
+	HookHelper::ImportHook g_textImportHooks;
 	decltype(&MyIWICImagingFactory2_CreateBitmapFromHBITMAP) g_IWICImagingFactory2_CreateBitmapFromHBITMAP_Org{ nullptr };
 	Projection::Detour<uDWM::Symbol_CText_ValidateResources, decltype(&MyCText_ValidateResources)> g_CText_ValidateResources_Org{};
 	Projection::Detour<uDWM::Symbol_CText_InitializeVisualTreeClone, decltype(&MyCText_InitializeVisualTreeClone)> g_CText_InitializeVisualTreeClone_Org{};
 	Projection::Detour<uDWM::Symbol_CText_CloneVisualTree, decltype(&MyCText_CloneVisualTree)> g_CText_CloneVisualTree_Org{};
 	decltype(&MyCText_scalar_deleting_destructor) g_CText_scalar_deleting_destructor_Org{ nullptr };
 	decltype(&MyCText_scalar_deleting_destructor)* g_CText_scalar_deleting_destructor_Org_Address{ nullptr };
+	HookHelper::PointerHook<&MyCText_scalar_deleting_destructor> g_CText_scalar_deleting_destructor_Hook;
 	Projection::Detour<dwmcore::Symbol_CChannel_MatrixTransformUpdate, decltype(&MyCChannel_MatrixTransformUpdate)> g_CChannel_MatrixTransformUpdate_Org{};
 	decltype(&MyIWICImagingFactory2_CreateBitmapFromHBITMAP)* g_IWICImagingFactory2_CreateBitmapFromHBITMAP_Org_Address{ nullptr };
+	HookHelper::PointerHook<&MyIWICImagingFactory2_CreateBitmapFromHBITMAP> g_IWICImagingFactory2_CreateBitmapFromHBITMAP_Hook;
 
 	decltype(&MyID2D1DeviceContext_DrawTextLayout) g_ID2D1DeviceContext_DrawTextLayout_Org{ nullptr };
 	decltype(&MyID2D1DeviceContext_DrawTextLayout)* g_ID2D1DeviceContext_DrawTextLayout_Org_Address{ nullptr };
+	HookHelper::PointerHook<&MyID2D1DeviceContext_DrawTextLayout> g_ID2D1DeviceContext_DrawTextLayout_Hook;
 	decltype(&MyICompositionGraphicsDevice_CreateDrawingSurface) g_ICompositionGraphicsDevice_CreateDrawingSurface_Org{ nullptr };
 	decltype(&MyICompositionGraphicsDevice_CreateDrawingSurface)* g_ICompositionGraphicsDevice_CreateDrawingSurface_Org_Address{ nullptr };
+	HookHelper::PointerHook<&MyICompositionGraphicsDevice_CreateDrawingSurface> g_ICompositionGraphicsDevice_CreateDrawingSurface_Hook;
 	decltype(&MyICompositionSurfaceBrush2_put_Offset) g_ICompositionSurfaceBrush2_put_Offset_Org{ nullptr };
 	decltype(&MyICompositionSurfaceBrush2_put_Offset)* g_ICompositionSurfaceBrush2_put_Offset_Org_Address{ nullptr };
+	HookHelper::PointerHook<&MyICompositionSurfaceBrush2_put_Offset> g_ICompositionSurfaceBrush2_put_Offset_Hook;
 	Projection::Detour<uDWM::Symbol_CDWriteText_ValidateVisual, decltype(&MyCDWriteText_ValidateVisual)> g_CDWriteText_ValidateVisual_Org{};
 	decltype(&MyCDWriteText_UpdateOffset) g_CDWriteText_UpdateOffset_Org{ nullptr };
 	decltype(&MyCDWriteText_UpdateOffset)* g_CDWriteText_UpdateOffset_Org_Address{ nullptr };
+	HookHelper::PointerHook<&MyCDWriteText_UpdateOffset> g_CDWriteText_UpdateOffset_Hook;
 	decltype(&MyCDWriteText_SetSize) g_CDWriteText_SetSize_Org{ nullptr };
 	decltype(&MyCDWriteText_SetSize)* g_CDWriteText_SetSize_Org_Address{ nullptr };
+	HookHelper::PointerHook<&MyCDWriteText_SetSize> g_CDWriteText_SetSize_Hook;
 	Projection::Detour<uDWM::Symbol_CDWriteText_InitializeVisualTreeClone, decltype(&MyCDWriteText_InitializeVisualTreeClone)> g_CDWriteText_InitializeVisualTreeClone_Org{};
 	decltype(&MyCDWriteText_scalar_deleting_destructor) g_CDWriteText_scalar_deleting_destructor_Org{ nullptr };
 	decltype(&MyCDWriteText_scalar_deleting_destructor)* g_CDWriteText_scalar_deleting_destructor_Org_Address{ nullptr };
+	HookHelper::PointerHook<&MyCDWriteText_scalar_deleting_destructor> g_CDWriteText_scalar_deleting_destructor_Hook;
 
 
 	static union
@@ -456,11 +465,7 @@ HRESULT CaptionTextHandler::MyCText_ValidateResources(uDWM::CText* This)
 	if (!g_CText_scalar_deleting_destructor_Org)
 	{
 		g_CText_scalar_deleting_destructor_Org_Address = HookHelper::get_vftable_from<decltype(g_CText_scalar_deleting_destructor_Org)>(This);
-		HookHelper::PatchPointerT(
-			g_CText_scalar_deleting_destructor_Org_Address,
-			MyCText_scalar_deleting_destructor,
-			&g_CText_scalar_deleting_destructor_Org
-		);
+		g_CText_scalar_deleting_destructor_Hook.AttachOnce(g_CText_scalar_deleting_destructor_Org_Address, &g_CText_scalar_deleting_destructor_Org);
 	}
 	if (g_window = uDWM::TryGetWindowFromVisual(This); g_window && g_window->GetData())
 	{
@@ -913,11 +918,7 @@ HRESULT CaptionTextHandler::MyCDWriteText_ValidateVisual(uDWM::CDWriteText* This
 	if (!g_CDWriteText_scalar_deleting_destructor_Org)
 	{
 		g_CDWriteText_scalar_deleting_destructor_Org_Address = HookHelper::get_vftable_from<decltype(g_CDWriteText_scalar_deleting_destructor_Org)>(This);
-		HookHelper::PatchPointerT(
-			g_CDWriteText_scalar_deleting_destructor_Org_Address,
-			MyCDWriteText_scalar_deleting_destructor,
-			&g_CDWriteText_scalar_deleting_destructor_Org
-		);
+		g_CDWriteText_scalar_deleting_destructor_Hook.AttachOnce(g_CDWriteText_scalar_deleting_destructor_Org_Address, &g_CDWriteText_scalar_deleting_destructor_Org);
 	}
 	if (!g_CDWriteText_UpdateOffset_Org)
 	{
@@ -929,20 +930,12 @@ HRESULT CaptionTextHandler::MyCDWriteText_ValidateVisual(uDWM::CDWriteText* This
 			if (vf == CVisual_UpdateOffset_Org)
 			{
 				g_CDWriteText_UpdateOffset_Org_Address = reinterpret_cast<decltype(g_CDWriteText_UpdateOffset_Org_Address)>(&vf);
-				HookHelper::PatchPointerT(
-					g_CDWriteText_UpdateOffset_Org_Address,
-					MyCDWriteText_UpdateOffset,
-					&g_CDWriteText_UpdateOffset_Org
-				);
+				g_CDWriteText_UpdateOffset_Hook.AttachOnce(g_CDWriteText_UpdateOffset_Org_Address, &g_CDWriteText_UpdateOffset_Org);
 			}
 			if (vf == CSpriteVisual_SetSize_Org)
 			{
 				g_CDWriteText_SetSize_Org_Address = reinterpret_cast<decltype(g_CDWriteText_SetSize_Org_Address)>(&vf);
-				HookHelper::PatchPointerT(
-					g_CDWriteText_SetSize_Org_Address,
-					MyCDWriteText_SetSize,
-					&g_CDWriteText_SetSize_Org
-				);
+				g_CDWriteText_SetSize_Hook.AttachOnce(g_CDWriteText_SetSize_Org_Address, &g_CDWriteText_SetSize_Org);
 			}
 		}
 	}
@@ -1200,20 +1193,17 @@ void CaptionTextHandler::Startup()
 	if (uDWM::g_versionInfo.build < os::build_w11_22h2)
 	{
 		wil::unique_hmodule wincodecsMoudle{ LoadLibraryExW(L"WindowsCodecs.dll", nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32 | LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR) };
-		THROW_LAST_ERROR_IF_NULL(wincodecsMoudle);
+		FAIL_FAST_LAST_ERROR_IF_NULL_MSG(wincodecsMoudle, "Unable to load WindowsCodecs.dll");
 		const auto WICCreateImagingFactory_Proxy_fn = reinterpret_cast<HRESULT(WINAPI*)(UINT, IWICImagingFactory2**)>(
 			GetProcAddress(wincodecsMoudle.get(), "WICCreateImagingFactory_Proxy")
 		);
-		THROW_LAST_ERROR_IF_NULL(WICCreateImagingFactory_Proxy_fn);
+		FAIL_FAST_LAST_ERROR_IF_NULL_MSG(WICCreateImagingFactory_Proxy_fn, "WICCreateImagingFactory_Proxy is unavailable");
 		winrt::com_ptr<IWICImagingFactory2> wicFactory{ nullptr };
-		THROW_IF_FAILED(WICCreateImagingFactory_Proxy_fn(WINCODEC_SDK_VERSION2, wicFactory.put()));
+		FAIL_FAST_IF_FAILED_MSG(WICCreateImagingFactory_Proxy_fn(WINCODEC_SDK_VERSION2, wicFactory.put()), "Unable to create the WIC factory for caption hooks");
 		g_IWICImagingFactory2_CreateBitmapFromHBITMAP_Org_Address = reinterpret_cast<decltype(g_IWICImagingFactory2_CreateBitmapFromHBITMAP_Org_Address)>(&HookHelper::get_vftable_from(wicFactory.get())[21]);
-		HookHelper::PatchPointerT(
-			g_IWICImagingFactory2_CreateBitmapFromHBITMAP_Org_Address,
-			MyIWICImagingFactory2_CreateBitmapFromHBITMAP,
-			&g_IWICImagingFactory2_CreateBitmapFromHBITMAP_Org
-		);
-		HookHelper::PatchIAT(
+		g_IWICImagingFactory2_CreateBitmapFromHBITMAP_Hook.Prepare(g_IWICImagingFactory2_CreateBitmapFromHBITMAP_Org_Address, &g_IWICImagingFactory2_CreateBitmapFromHBITMAP_Org);
+		HookHelper::GetCurrentHookTransaction().Apply(g_IWICImagingFactory2_CreateBitmapFromHBITMAP_Hook);
+		g_textImportHooks.Prepare(
 			uDWM::g_moduleHandle,
 			std::initializer_list<HookHelper::ImportDllDetourInfo>
 			{
@@ -1221,21 +1211,22 @@ void CaptionTextHandler::Startup()
 					"user32.dll",
 					std::initializer_list<HookHelper::ImportFunctionDetourInfo>
 					{
-						{ "DrawTextW", & g_DrawTextW_Org, &MyDrawTextW }
+						HookHelper::MakeImportDetour<&MyDrawTextW>("DrawTextW", &g_DrawTextW_Org)
 					}
 				},
 				{
 					"gdi32.dll",
 					std::initializer_list<HookHelper::ImportFunctionDetourInfo>
 					{
-						{ "CreateBitmap", &g_CreateBitmap_Org, &MyCreateBitmap }
+						HookHelper::MakeImportDetour<&MyCreateBitmap>("CreateBitmap", &g_CreateBitmap_Org)
 					}
 				}
 			}
 		);
+		HookHelper::GetCurrentHookTransaction().Apply(g_textImportHooks);
 
 		const auto build_before_w10_2004 = dwmcore::g_versionInfo.build < os::build_w10_2004;
-		HookHelper::PatchFunctions(
+	HookHelper::ApplyInlineHooks(
 			std::initializer_list<HookHelper::DetourInfo>
 			{
 				{ &g_CChannel_MatrixTransformUpdate_Org, &MyCChannel_MatrixTransformUpdate },
@@ -1249,56 +1240,49 @@ void CaptionTextHandler::Startup()
 	else
 	{
 		winrt::com_ptr<ID2D1DeviceContext> context{};
-		THROW_IF_FAILED(
+		FAIL_FAST_IF_FAILED_MSG(
 			uDWM::CDesktopManager::GetInstance()->GetD2DDevice()->CreateDeviceContext(
 				D2D1_DEVICE_CONTEXT_OPTIONS_NONE,
 				context.put()
-			)
+			),
+			"Unable to create the caption D2D device context"
 		);
 
 		g_ID2D1DeviceContext_DrawTextLayout_Org_Address = &HookHelper::get_vftable_from<decltype(g_ID2D1DeviceContext_DrawTextLayout_Org)>(context.get())[28];
-		HookHelper::PatchPointerT(
-			g_ID2D1DeviceContext_DrawTextLayout_Org_Address,
-			MyID2D1DeviceContext_DrawTextLayout,
-			&g_ID2D1DeviceContext_DrawTextLayout_Org
-		);
+		g_ID2D1DeviceContext_DrawTextLayout_Hook.Prepare(g_ID2D1DeviceContext_DrawTextLayout_Org_Address, &g_ID2D1DeviceContext_DrawTextLayout_Org);
+		HookHelper::GetCurrentHookTransaction().Apply(g_ID2D1DeviceContext_DrawTextLayout_Hook);
 
 		winrt::com_ptr<IDCompositionDesktopDevicePartner> dcompDevicePartner{ nullptr };
-		THROW_IF_FAILED(uDWM::CDesktopManager::GetInstance()->GetInteropCompositorDCompDevicePartner()->QueryInterface(dcompDevicePartner.put()));
+		FAIL_FAST_IF_FAILED_MSG(uDWM::CDesktopManager::GetInstance()->GetInteropCompositorDCompDevicePartner()->QueryInterface(dcompDevicePartner.put()), "Unable to obtain IDCompositionDesktopDevicePartner");
 		winrt::com_ptr<abi::ICompositionGraphicsDevice> graphicsDevice{ nullptr };
 
 		winrt::com_ptr<abi::ICompositor> compositor{};
-		THROW_IF_FAILED(dcompDevicePartner->QueryInterface(compositor.put()));
+		FAIL_FAST_IF_FAILED_MSG(dcompDevicePartner->QueryInterface(compositor.put()), "Unable to obtain ICompositor");
 
 		winrt::com_ptr<abi::ICompositorInterop> compositorInterop{};
-		THROW_IF_FAILED(compositor->QueryInterface(compositorInterop.put()));
-		THROW_IF_FAILED(
+		FAIL_FAST_IF_FAILED_MSG(compositor->QueryInterface(compositorInterop.put()), "Unable to obtain ICompositorInterop");
+		FAIL_FAST_IF_FAILED_MSG(
 			compositorInterop->CreateGraphicsDevice(
 				uDWM::CDesktopManager::GetInstance()->GetD2DDevice(),
 				graphicsDevice.put()
-			)
+			),
+			"Unable to create the caption composition graphics device"
 		);
 
 		g_ICompositionGraphicsDevice_CreateDrawingSurface_Org_Address = &HookHelper::get_vftable_from<decltype(g_ICompositionGraphicsDevice_CreateDrawingSurface_Org)>(graphicsDevice.get())[6];
-		HookHelper::PatchPointerT(
-			g_ICompositionGraphicsDevice_CreateDrawingSurface_Org_Address,
-			MyICompositionGraphicsDevice_CreateDrawingSurface,
-			&g_ICompositionGraphicsDevice_CreateDrawingSurface_Org
-		);
+		g_ICompositionGraphicsDevice_CreateDrawingSurface_Hook.Prepare(g_ICompositionGraphicsDevice_CreateDrawingSurface_Org_Address, &g_ICompositionGraphicsDevice_CreateDrawingSurface_Org);
+		HookHelper::GetCurrentHookTransaction().Apply(g_ICompositionGraphicsDevice_CreateDrawingSurface_Hook);
 
 		winrt::com_ptr<abi::ICompositionSurfaceBrush> surfaceBrush{ nullptr };
-		THROW_IF_FAILED(compositor->CreateSurfaceBrush(surfaceBrush.put()));
+		FAIL_FAST_IF_FAILED_MSG(compositor->CreateSurfaceBrush(surfaceBrush.put()), "Unable to create the caption surface brush");
 
 		winrt::com_ptr<abi::ICompositionSurfaceBrush2> surfaceBrush2{ nullptr };
-		THROW_IF_FAILED(surfaceBrush->QueryInterface(surfaceBrush2.put()));
+		FAIL_FAST_IF_FAILED_MSG(surfaceBrush->QueryInterface(surfaceBrush2.put()), "Unable to obtain ICompositionSurfaceBrush2");
 		g_ICompositionSurfaceBrush2_put_Offset_Org_Address = &HookHelper::get_vftable_from<decltype(g_ICompositionSurfaceBrush2_put_Offset_Org)>(surfaceBrush2.get())[11];
-		HookHelper::PatchPointerT(
-			g_ICompositionSurfaceBrush2_put_Offset_Org_Address,
-			MyICompositionSurfaceBrush2_put_Offset,
-			&g_ICompositionSurfaceBrush2_put_Offset_Org
-		);
+		g_ICompositionSurfaceBrush2_put_Offset_Hook.Prepare(g_ICompositionSurfaceBrush2_put_Offset_Org_Address, &g_ICompositionSurfaceBrush2_put_Offset_Org);
+		HookHelper::GetCurrentHookTransaction().Apply(g_ICompositionSurfaceBrush2_put_Offset_Hook);
 
-		HookHelper::PatchFunctions(
+	HookHelper::ApplyInlineHooks(
 			std::initializer_list<HookHelper::DetourInfo>
 			{
 				{ &g_CDWriteText_ValidateVisual_Org, &MyCDWriteText_ValidateVisual },
@@ -1319,14 +1303,11 @@ void CaptionTextHandler::Shutdown()
 	{
 		if (g_CText_scalar_deleting_destructor_Org)
 		{
-			HookHelper::PatchPointerT(
-				g_CText_scalar_deleting_destructor_Org_Address,
-				g_CText_scalar_deleting_destructor_Org
-			);
+			HookHelper::GetCurrentHookTransaction().Apply(g_CText_scalar_deleting_destructor_Hook);
 		}
 
 		const auto build_before_w10_2004 = dwmcore::g_versionInfo.build < os::build_w10_2004;
-		HookHelper::PatchFunctions(
+		HookHelper::ApplyInlineHooks(
 			std::initializer_list<HookHelper::DetourInfo>
 			{
 				{ &g_CChannel_MatrixTransformUpdate_Org, &MyCChannel_MatrixTransformUpdate },
@@ -1337,60 +1318,26 @@ void CaptionTextHandler::Shutdown()
 			false
 		);
 
-		SwitchToThread();
+		HookHelper::GetCurrentHookTransaction().Apply(g_IWICImagingFactory2_CreateBitmapFromHBITMAP_Hook);
+		HookHelper::GetCurrentHookTransaction().Apply(g_textImportHooks);
 
-		HookHelper::PatchPointerT(
-			g_IWICImagingFactory2_CreateBitmapFromHBITMAP_Org_Address,
-			g_IWICImagingFactory2_CreateBitmapFromHBITMAP_Org
-		);
-		HookHelper::PatchIAT(
-			uDWM::g_moduleHandle,
-			std::initializer_list<HookHelper::ImportDllDetourInfo>
-			{
-				{
-					"user32.dll",
-					std::initializer_list<HookHelper::ImportFunctionDetourInfo>
-					{
-						{ "DrawTextW", & g_DrawTextW_Org, g_DrawTextW_Org }
-					}
-				},
-				{
-					"gdi32.dll",
-					std::initializer_list<HookHelper::ImportFunctionDetourInfo>
-					{
-						{ "CreateBitmap", &g_CreateBitmap_Org, g_CreateBitmap_Org }
-					}
-				}
-			}
-		);
-
-		g_textVisual = nullptr;
 	}
 	else
 	{
 		if (g_CDWriteText_scalar_deleting_destructor_Org)
 		{
-			HookHelper::PatchPointerT(
-				g_CDWriteText_scalar_deleting_destructor_Org_Address,
-				g_CDWriteText_scalar_deleting_destructor_Org
-			);
+			HookHelper::GetCurrentHookTransaction().Apply(g_CDWriteText_scalar_deleting_destructor_Hook);
 		}
 		if (g_CDWriteText_UpdateOffset_Org)
 		{
-			HookHelper::PatchPointerT(
-				g_CDWriteText_UpdateOffset_Org_Address,
-				g_CDWriteText_UpdateOffset_Org
-			);
+			HookHelper::GetCurrentHookTransaction().Apply(g_CDWriteText_UpdateOffset_Hook);
 		}
 		if (g_CDWriteText_SetSize_Org)
 		{
-			HookHelper::PatchPointerT(
-				g_CDWriteText_SetSize_Org_Address,
-				g_CDWriteText_SetSize_Org
-			);
+			HookHelper::GetCurrentHookTransaction().Apply(g_CDWriteText_SetSize_Hook);
 		}
 
-		HookHelper::PatchFunctions(
+		HookHelper::ApplyInlineHooks(
 			std::initializer_list<HookHelper::DetourInfo>
 			{
 				{ &g_CDWriteText_ValidateVisual_Org, &MyCDWriteText_ValidateVisual },
@@ -1399,24 +1346,17 @@ void CaptionTextHandler::Shutdown()
 			false
 		);
 
-		SwitchToThread();
+		HookHelper::GetCurrentHookTransaction().Apply(g_ID2D1DeviceContext_DrawTextLayout_Hook);
+		HookHelper::GetCurrentHookTransaction().Apply(g_ICompositionGraphicsDevice_CreateDrawingSurface_Hook);
+		HookHelper::GetCurrentHookTransaction().Apply(g_ICompositionSurfaceBrush2_put_Offset_Hook);
 
-		HookHelper::PatchPointerT(
-			g_ID2D1DeviceContext_DrawTextLayout_Org_Address,
-			g_ID2D1DeviceContext_DrawTextLayout_Org
-		);
-		HookHelper::PatchPointerT(
-			g_ICompositionGraphicsDevice_CreateDrawingSurface_Org_Address,
-			g_ICompositionGraphicsDevice_CreateDrawingSurface_Org
-		);
-		HookHelper::PatchPointerT(
-			g_ICompositionSurfaceBrush2_put_Offset_Org_Address,
-			g_ICompositionSurfaceBrush2_put_Offset_Org
-		);
-
-		g_dwriteTextVisual = nullptr;
 	}
+}
 
+void CaptionTextHandler::Cleanup()
+{
+	g_textVisual = nullptr;
+	g_dwriteTextVisual = nullptr;
 	DestroyDeviceResources();
 	g_textSize = {};
 	g_textVisualStateMap.clear();

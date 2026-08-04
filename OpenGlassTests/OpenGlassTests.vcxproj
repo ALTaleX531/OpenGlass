@@ -41,6 +41,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
+	  <AdditionalDependencies>ntdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -56,6 +57,9 @@
 	</ClCompile>
 	<ClCompile Include="CrossTu.cpp" />
     <ClCompile Include="Tests.cpp" />
+	<ClCompile Include="..\OpenGlass\HookHelper.cpp">
+	  <PrecompiledHeader>NotUsing</PrecompiledHeader>
+	</ClCompile>
     <ClCompile Include="..\OpenGlass\ProjectionRuntime.cpp">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>

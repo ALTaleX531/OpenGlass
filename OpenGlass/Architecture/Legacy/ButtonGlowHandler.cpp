@@ -439,7 +439,7 @@ void ButtonGlowHandler::Startup()
 {
 	if (uDWM::g_versionInfo.build < os::build_w11_21h2)
 	{
-		HookHelper::PatchFunctions(
+	HookHelper::ApplyInlineHooks(
 			std::initializer_list<HookHelper::DetourInfo>
 			{
 				{ &g_CTopLevelWindow_CreateGlyphsFromAtlas_Org, & MyCTopLevelWindow_CreateGlyphsFromAtlas },
@@ -453,7 +453,7 @@ void ButtonGlowHandler::Startup()
 	else
 	{
 		// The crossfade workaround is also required on Windows 11.
-		HookHelper::PatchFunctions(
+	HookHelper::ApplyInlineHooks(
 			std::initializer_list<HookHelper::DetourInfo>
 			{
 				{ &g_CAtlasButton_AppendAtlas_Org, &MyCAtlasButton_AppendAtlas },
@@ -475,7 +475,7 @@ void ButtonGlowHandler::Shutdown()
 {
 	if (uDWM::g_versionInfo.build < os::build_w11_21h2)
 	{
-		HookHelper::PatchFunctions(
+		HookHelper::ApplyInlineHooks(
 			std::initializer_list<HookHelper::DetourInfo>
 			{
 				{ &g_CTopLevelWindow_CreateGlyphsFromAtlas_Org, & MyCTopLevelWindow_CreateGlyphsFromAtlas },
@@ -486,11 +486,10 @@ void ButtonGlowHandler::Shutdown()
 			false
 		);
 
-		SwitchToThread();
 	}
 	else
 	{
-		HookHelper::PatchFunctions(
+		HookHelper::ApplyInlineHooks(
 			std::initializer_list<HookHelper::DetourInfo>
 			{
 				{ &g_CAtlasButton_AppendAtlas_Org, &MyCAtlasButton_AppendAtlas },
@@ -506,7 +505,10 @@ void ButtonGlowHandler::Shutdown()
 			false
 		);
 
-		SwitchToThread();
-		ClearWin11State();
 	}
+}
+
+void ButtonGlowHandler::Cleanup()
+{
+	ClearWin11State();
 }

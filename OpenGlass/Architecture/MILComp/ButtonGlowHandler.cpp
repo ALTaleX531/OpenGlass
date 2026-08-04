@@ -20,3 +20,7 @@ void ButtonGlowHandler::Shutdown()
 {
 
 }
+
+void ButtonGlowHandler::Cleanup()
+{
+}

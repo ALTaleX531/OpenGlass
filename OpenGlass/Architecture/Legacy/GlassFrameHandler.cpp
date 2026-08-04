@@ -491,7 +491,7 @@ void GlassFrameHandler::Startup()
 		return;
 	}
 
-	HookHelper::PatchFunctions(
+	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
 			{ &g_CGlassColorizationParameters_AdjustWindowColorization_Org, &MyCGlassColorizationParameters_AdjustWindowColorization },
@@ -513,7 +513,7 @@ void GlassFrameHandler::Shutdown()
 		return;
 	}
 
-	HookHelper::PatchFunctions(
+	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
 			{ &g_CGlassColorizationParameters_AdjustWindowColorization_Org, &MyCGlassColorizationParameters_AdjustWindowColorization },
@@ -527,7 +527,9 @@ void GlassFrameHandler::Shutdown()
 		false
 	);
 
-	SwitchToThread();
+}
 
+void GlassFrameHandler::Cleanup()
+{
 	g_combinedRgn.reset();
 }

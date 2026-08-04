@@ -94,7 +94,7 @@ void CReflectionVisual::RemoveAll()
 
 		if (const auto parent = visual->GetTransformParent(); parent)
 		{
-			THROW_IF_FAILED(parent->GetVisualCollection()->Remove(visual));
+			FAIL_FAST_IF_FAILED_MSG(parent->GetVisualCollection()->Remove(visual), "Unable to remove a reflection visual during shutdown");
 		}
 	}
 	s_activeList.clear();

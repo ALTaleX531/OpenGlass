@@ -506,6 +506,27 @@ namespace OpenGlass::Projection
 	OPENGLASS_DEFINE_DETOUR_MEMBER_ABI(const noexcept)
 #undef OPENGLASS_DEFINE_DETOUR_MEMBER_ABI
 
+	template <typename Owner, typename T> struct DetourDispatchThunk;
+
+	template <typename Owner, typename R, typename... Args>
+	struct DetourDispatchThunk<Owner, R (*)(Args...)>
+	{
+		static R Invoke(Args... args)
+		{
+			auto& rundown = HookHelper::GetHookRundown();
+			if (!rundown.TryAcquire())
+			{
+				return std::invoke(Owner::EntryOriginal(), std::forward<Args>(args)...);
+			}
+
+			const auto release = wil::scope_exit([&rundown]
+			{
+				rundown.Release();
+			});
+			return Owner::InvokeChain(std::forward<Args>(args)...);
+		}
+	};
+
 	template <auto Symbol, function_pointer T> class Detour final
 	{
 		using SymbolHandleType = std::remove_cvref_t<decltype(Symbol)>;
@@ -516,18 +537,52 @@ namespace OpenGlass::Projection
 			"detour replacement must match the typed symbol ABI"
 		);
 
-		T m_original{};
+		T m_replacement{};
+		T* m_next{};
+		inline static T s_entryOriginal{};
+		inline static Detour* s_head{};
+		inline static constexpr T s_dispatch{ &DetourDispatchThunk<Detour, T>::Invoke };
+
+		[[nodiscard]] T Next() const noexcept
+		{
+			return *m_next;
+		}
 
 	public:
+		static T EntryOriginal() noexcept
+		{
+			return s_entryOriginal;
+		}
+
+		static decltype(auto) InvokeChain(auto&&... args)
+		{
+			return std::invoke(s_head->m_replacement, std::forward<decltype(args)>(args)...);
+		}
+
+		T prepare_detour(T replacement) noexcept
+		{
+			FAIL_FAST_IF_FAILED_MSG(replacement ? S_OK : E_INVALIDARG, "Cannot register an empty detour replacement");
+			if (m_replacement)
+			{
+				FAIL_FAST_IF_FAILED_MSG(m_replacement == replacement ? S_OK : E_UNEXPECTED, "A projection detour was rebound to a different replacement");
+				return s_dispatch;
+			}
+
+			m_replacement = replacement;
+			m_next = s_head ? &s_head->m_replacement : &s_entryOriginal;
+			s_head = this;
+			return s_dispatch;
+		}
+
 		__forceinline T original() const noexcept
 		{
-			return m_original;
+			return Next();
 		}
 
 		__forceinline T* detour_storage()
 		{
 			return reinterpret_cast<T*>(PrepareDetourStorage(
-				reinterpret_cast<PVOID*>(&m_original),
+				reinterpret_cast<PVOID*>(&s_entryOriginal),
 				RegistryFor<typename SymbolHandleType::module_tag>(),
 				SymbolHandleType::index
 			));
@@ -535,12 +590,12 @@ namespace OpenGlass::Projection
 
 		explicit operator bool() const noexcept
 		{
-			return m_original || static_cast<bool>(Symbol);
+			return s_entryOriginal || static_cast<bool>(Symbol);
 		}
 
 		__forceinline decltype(auto) operator()(auto&&... args) const
 		{
-			return std::invoke(m_original, std::forward<decltype(args)>(args)...);
+			return std::invoke(Next(), std::forward<decltype(args)>(args)...);
 		}
 	};
 } // namespace OpenGlass::Projection

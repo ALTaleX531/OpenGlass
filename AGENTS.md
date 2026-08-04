@@ -98,6 +98,11 @@ msbuild OpenGlass/OpenGlass.MILComp.vcxproj /m /p:Configuration=Release /p:Platf
 ## Safety
 
 - Do not modify or save an IDB during an audit-only request.
+- Treat hook publication as one lifecycle transaction. Component preparation may resolve symbols, patterns, IAT slots, vtable slots, and original instruction bytes, but must not mutate a target. Queue eager inline, pointer, import, and instruction hooks in the engine-owned `HookTransaction`; do not create component-level transactions or restore hooks by hand.
+- Multiple components may detour the same typed projection Symbol. They must share the generated physical dispatcher and form one logical replacement chain; never enqueue independent SlimDetours attachments for the same Symbol address. The transaction deduplicates identical physical dispatcher entries and rejects conflicting entries that reuse one storage location.
+- Every replacement must participate in `HookRundown`. Shutdown closes admission before its single lock-free `DwmFlush()`, removes hooks under the DWM lock, releases the lock, and waits for active calls to drain before freeing resources. Never use `SwitchToThread()` as an unload barrier, wait for rundown while holding `s_csDwmInstance`, or call `DwmFlush()` while holding that lock.
+- Legacy must not call `ForceRender()`. MILComp may retain its compositor-specific `ForceRender()` calls. Custom-theme shutdown must preserve the lock-free synchronous `SendMessageW(WM_THEMECHANGED)` before `UnloadTheme()` after its delay-IAT hooks and the OpenGlass window procedure have been removed.
+- Lifecycle ownership conflicts, unexpected instruction bytes, rundown timeout, and hook transaction failures are FailFast conditions. Unsupported builds and unresolved Required projections remain pre-hook inert conditions.
 - Do not infer that a class is removed because one decorated name is absent; check semantic anchors and callers.
 - Symbol matching uses exact, unmodified DbgHelp `UNDNAME_COMPLETE` output. Do not restore name-only, substring, decorated-name, or first-match fallbacks.
 - Do not assume nearby flags remain adjacent across builds.

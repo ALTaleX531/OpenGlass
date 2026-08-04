@@ -12,6 +12,7 @@ namespace OpenGlassTests
 
 	int Target(int value);
 	int Replacement(int value);
+	int Replacement2(int value);
 	int InvokeCrossTu(int value);
 }
 

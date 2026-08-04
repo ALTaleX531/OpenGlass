@@ -19,6 +19,7 @@ namespace OpenGlass::GlassFrameEnhancer
 	Projection::Detour<uDWM::Symbol_CTopLevelWindow_CloneVisualTreeForLivePreview_Win11, decltype(&MyCTopLevelWindow_CloneVisualTreeForLivePreview_Win11)> g_CTopLevelWindow_CloneVisualTreeForLivePreview_Win11_Org{};
 	decltype(&MyCButton_CloneVisualTree) g_CButton_CloneVisualTree_Org{ nullptr };
 	decltype(&MyCButton_CloneVisualTree)* g_CButton_CloneVisualTree_Org_Address{ nullptr };
+	HookHelper::PointerHook<&MyCButton_CloneVisualTree> g_CButton_CloneVisualTree_Hook;
 	
 	bool g_windowFramesOnly{ false };
 }
@@ -175,15 +176,15 @@ void GlassFrameEnhancer::Startup()
 			{
 				g_CButton_CloneVisualTree_Org_Address =
 					reinterpret_cast<decltype(g_CButton_CloneVisualTree_Org_Address)>(&vf);
-				HookHelper::PatchPointerT(g_CButton_CloneVisualTree_Org_Address, MyCButton_CloneVisualTree,
-										  &g_CButton_CloneVisualTree_Org);
+				g_CButton_CloneVisualTree_Hook.Prepare(g_CButton_CloneVisualTree_Org_Address, &g_CButton_CloneVisualTree_Org);
+				HookHelper::GetCurrentHookTransaction().Apply(g_CButton_CloneVisualTree_Hook);
 			}
 		}
 	}
 
 	const auto build_before_or_at_w11_21h2 = uDWM::g_versionInfo.build <= os::build_w11_21h2;
 	const auto build_before_w10_2004 = uDWM::g_versionInfo.build < os::build_w10_2004;
-	HookHelper::PatchFunctions(
+	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>{
 			{&g_CTopLevelAtlasedRectsVisual_ShouldCloneAtlasImage_Before_W10_2004_Org,
 			 &MyCTopLevelAtlasedRectsVisual_ShouldCloneAtlasImage_Before_W10_2004, build_before_w10_2004},
@@ -201,7 +202,7 @@ void GlassFrameEnhancer::Shutdown()
 {
 	const auto build_before_or_at_w11_21h2 = uDWM::g_versionInfo.build <= os::build_w11_21h2;
 	const auto build_before_w10_2004 = uDWM::g_versionInfo.build < os::build_w10_2004;
-	HookHelper::PatchFunctions(
+	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>{
 			{&g_CTopLevelAtlasedRectsVisual_ShouldCloneAtlasImage_Before_W10_2004_Org,
 			 &MyCTopLevelAtlasedRectsVisual_ShouldCloneAtlasImage_Before_W10_2004, build_before_w10_2004},
@@ -214,10 +215,12 @@ void GlassFrameEnhancer::Shutdown()
 			 &MyCTopLevelWindow_CloneVisualTreeForLivePreview_Win11, !build_before_or_at_w11_21h2}},
 		false);
 
-	SwitchToThread();
-
 	if (g_CButton_CloneVisualTree_Org)
 	{
-		HookHelper::PatchPointerT(g_CButton_CloneVisualTree_Org_Address, g_CButton_CloneVisualTree_Org);
+		HookHelper::GetCurrentHookTransaction().Apply(g_CButton_CloneVisualTree_Hook);
 	}
+}
+
+void GlassFrameEnhancer::Cleanup()
+{
 }

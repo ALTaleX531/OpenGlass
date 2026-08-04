@@ -383,7 +383,7 @@ void GlassReflectionHandler::Startup()
 	}
 
 	const auto build_before_w11_21h2 = uDWM::g_versionInfo.build < os::build_w11_21h2;
-	HookHelper::PatchFunctions(
+	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
 			{ &g_CAnimatedGlassSheet_OnRectUpdated_Org, &MyCAnimatedGlassSheet_OnRectUpdated, build_before_w11_21h2 },
@@ -405,7 +405,7 @@ void GlassReflectionHandler::Shutdown()
 	}
 
 	const auto build_before_w11_21h2 = uDWM::g_versionInfo.build < os::build_w11_21h2;
-	HookHelper::PatchFunctions(
+	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
 			{ &g_CAnimatedGlassSheet_OnRectUpdated_Org, &MyCAnimatedGlassSheet_OnRectUpdated, build_before_w11_21h2 },
@@ -418,7 +418,9 @@ void GlassReflectionHandler::Shutdown()
 		false
 	);
 
-	SwitchToThread();
+}
 
+void GlassReflectionHandler::Cleanup()
+{
 	g_sheetMap.clear();
 }

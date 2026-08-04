@@ -8,4 +8,5 @@ namespace OpenGlass::GlassReflectionHandler
 	void Update(GlassEngine::UpdateType type);
 	void Startup();
 	void Shutdown();
+	void Cleanup();
 }

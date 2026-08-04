@@ -11,6 +11,7 @@ namespace OpenGlass::CaptionMetricsTweaker
 
 	decltype(&MyCButton_SetSize) g_CButton_SetSize_Org{ nullptr };
 	decltype(&MyCButton_SetSize)* g_CButton_SetSize_Org_Address{ nullptr };
+	HookHelper::PointerHook<&MyCButton_SetSize> g_CButton_SetSize_Hook;
 	Projection::Detour<uDWM::Symbol_CTopLevelWindow_UpdateNCAreaPositionsAndSizes, decltype(&MyCTopLevelWindow_UpdateNCAreaPositionsAndSizes)> g_CTopLevelWindow_UpdateNCAreaPositionsAndSizes_Org{};
 
 	enum CaptionButtons : UINT
@@ -204,11 +205,12 @@ void CaptionMetricsTweaker::Startup()
 		if (vf == CVisual_SetSize_Org)
 		{
 			g_CButton_SetSize_Org_Address = reinterpret_cast<decltype(g_CButton_SetSize_Org_Address)>(&vf);
-			HookHelper::PatchPointerT(g_CButton_SetSize_Org_Address, MyCButton_SetSize, &g_CButton_SetSize_Org);
+			g_CButton_SetSize_Hook.Prepare(g_CButton_SetSize_Org_Address, &g_CButton_SetSize_Org);
+			HookHelper::GetCurrentHookTransaction().Apply(g_CButton_SetSize_Hook);
 		}
 	}
 
-	HookHelper::PatchFunctions(
+	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
 			{ &g_CTopLevelWindow_UpdateNCAreaPositionsAndSizes_Org, &MyCTopLevelWindow_UpdateNCAreaPositionsAndSizes },
@@ -224,7 +226,7 @@ void CaptionMetricsTweaker::Shutdown()
 		return;
 	}
 
-	HookHelper::PatchFunctions(
+	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
 			{ &g_CTopLevelWindow_UpdateNCAreaPositionsAndSizes_Org, &MyCTopLevelWindow_UpdateNCAreaPositionsAndSizes },
@@ -232,10 +234,12 @@ void CaptionMetricsTweaker::Shutdown()
 		false
 	);
 
-	SwitchToThread();
-
 	if (g_CButton_SetSize_Org)
 	{
-		HookHelper::PatchPointerT(g_CButton_SetSize_Org_Address, g_CButton_SetSize_Org);
+		HookHelper::GetCurrentHookTransaction().Apply(g_CButton_SetSize_Hook);
 	}
+}
+
+void CaptionMetricsTweaker::Cleanup()
+{
 }

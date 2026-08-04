@@ -48,9 +48,11 @@ namespace OpenGlass::GlassKernel
 	decltype(&MyCreateRoundRectRgn) g_CreateRoundRectRgn_Org{ nullptr };
 	decltype(&MyCreateRectRgn) g_CreateRectRgn_Org{ nullptr };
 	decltype(&MyExtCreateRegion) g_ExtCreateRegion_Org{ nullptr };
+	HookHelper::ImportHook g_gdiImportHooks;
 
 	decltype(&MyIDCompositionDesktopDevice_WaitForCommitCompletion) g_IDCompositionDesktopDevice_WaitForCommitCompletion_Org{ nullptr };
 	decltype(&MyIDCompositionDesktopDevice_WaitForCommitCompletion)* g_IDCompositionDesktopDevice_WaitForCommitCompletion_Org_Address{ nullptr };
+	HookHelper::PointerHook<&MyIDCompositionDesktopDevice_WaitForCommitCompletion> g_IDCompositionDesktopDevice_WaitForCommitCompletion_Hook;
 	Projection::Detour<dwmcore::Symbol_CCachedVisualImage_RenderTargetBitmapInfo_Update, decltype(&MyCCachedVisualImage_RenderTargetBitmapInfo_Update)> g_CCachedVisualImage_RenderTargetBitmapInfo_Update_Org{};
 	Projection::Detour<dwmcore::Symbol_CCachedVisualImage_CCachedTarget_Update, decltype(&MyCCachedVisualImage_CCachedTarget_Update)> g_CCachedVisualImage_CCachedTarget_Update_Org{};
 	Projection::Detour<dwmcore::Symbol_CDrawingContext_PreSubgraph, decltype(&MyCDrawingContext_PreSubgraph)> g_CDrawingContext_PreSubgraph_Org{};
@@ -873,14 +875,18 @@ void GlassKernel::Update(GlassEngine::UpdateType type)
 void GlassKernel::Startup()
 {
 	winrt::com_ptr<IDCompositionDesktopDevice> dcompDevice{ nullptr };
-	THROW_IF_FAILED(uDWM::CDesktopManager::GetInstance()->GetInteropCompositorDCompDevicePartner()->QueryInterface(dcompDevice.put()));
+	FAIL_FAST_IF_FAILED_MSG(uDWM::CDesktopManager::GetInstance()->GetInteropCompositorDCompDevicePartner()->QueryInterface(dcompDevice.put()), "Unable to obtain IDCompositionDesktopDevice");
 	g_IDCompositionDesktopDevice_WaitForCommitCompletion_Org_Address = reinterpret_cast<decltype(g_IDCompositionDesktopDevice_WaitForCommitCompletion_Org_Address)>(&(HookHelper::get_vftable_from(dcompDevice.get())[4]));
-	HookHelper::PatchPointerT(g_IDCompositionDesktopDevice_WaitForCommitCompletion_Org_Address, MyIDCompositionDesktopDevice_WaitForCommitCompletion, &g_IDCompositionDesktopDevice_WaitForCommitCompletion_Org);
+	g_IDCompositionDesktopDevice_WaitForCommitCompletion_Hook.Prepare(
+		g_IDCompositionDesktopDevice_WaitForCommitCompletion_Org_Address,
+		&g_IDCompositionDesktopDevice_WaitForCommitCompletion_Org
+	);
+	HookHelper::GetCurrentHookTransaction().Apply(g_IDCompositionDesktopDevice_WaitForCommitCompletion_Hook);
 
 	const auto build_before_w11_24h2 = uDWM::g_versionInfo.build < os::build_w11_24h2;
 	const auto build_before_server_2022 = uDWM::g_versionInfo.build < os::build_server_2022;
 	g_CreateRoundRectRgn_Org = CreateRoundRectRgn;
-	HookHelper::PatchIAT(
+	g_gdiImportHooks.Prepare(
 		uDWM::g_moduleHandle,
 		std::initializer_list<HookHelper::ImportDllDetourInfo>
 		{
@@ -888,17 +894,18 @@ void GlassKernel::Startup()
 				"gdi32.dll",
 				std::initializer_list<HookHelper::ImportFunctionDetourInfo>
 				{
-					{ "CreateRoundRectRgn", &g_CreateRoundRectRgn_Org, &MyCreateRoundRectRgn, build_before_w11_24h2 },
-					{ "CreateRectRgn", &g_CreateRectRgn_Org, &MyCreateRectRgn, !build_before_w11_24h2 },
-					{ "ExtCreateRegion", &g_ExtCreateRegion_Org, &MyExtCreateRegion }
+					HookHelper::MakeImportDetour<&MyCreateRoundRectRgn>("CreateRoundRectRgn", &g_CreateRoundRectRgn_Org, build_before_w11_24h2),
+					HookHelper::MakeImportDetour<&MyCreateRectRgn>("CreateRectRgn", &g_CreateRectRgn_Org, !build_before_w11_24h2),
+					HookHelper::MakeImportDetour<&MyExtCreateRegion>("ExtCreateRegion", &g_ExtCreateRegion_Org)
 				}
 			}
 		}
 	);
+	HookHelper::GetCurrentHookTransaction().Apply(g_gdiImportHooks);
 
 	const auto build_before_w10_2004 = dwmcore::g_versionInfo.build < os::build_w10_2004;
 	const auto build_before_w10_1903 = uDWM::g_versionInfo.build < os::build_w10_1903;
-	HookHelper::PatchFunctions(
+	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
 			{ &g_CCachedVisualImage_RenderTargetBitmapInfo_Update_Org, &MyCCachedVisualImage_RenderTargetBitmapInfo_Update, build_before_w10_2004 },
@@ -920,7 +927,7 @@ void GlassKernel::Shutdown()
 	const auto build_before_w10_1903 = uDWM::g_versionInfo.build < os::build_w10_1903;
 	const auto build_before_w11_24h2 = uDWM::g_versionInfo.build < os::build_w11_24h2;
 	const auto build_before_server_2022 = uDWM::g_versionInfo.build < os::build_server_2022;
-	HookHelper::PatchFunctions(
+	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
 			{ &g_CCachedVisualImage_RenderTargetBitmapInfo_Update_Org, &MyCCachedVisualImage_RenderTargetBitmapInfo_Update, build_before_w10_2004 },
@@ -935,26 +942,14 @@ void GlassKernel::Shutdown()
 		false
 	);
 
-	SwitchToThread();
+	HookHelper::GetCurrentHookTransaction().Apply(g_gdiImportHooks);
 
-	HookHelper::PatchIAT(
-		uDWM::g_moduleHandle,
-		std::initializer_list<HookHelper::ImportDllDetourInfo>
-		{
-			{
-				"gdi32.dll",
-				std::initializer_list<HookHelper::ImportFunctionDetourInfo>
-				{
-					{ "CreateRoundRectRgn", &g_CreateRoundRectRgn_Org, g_CreateRoundRectRgn_Org, build_before_w11_24h2 },
-					{ "CreateRectRgn", &g_CreateRectRgn_Org, g_CreateRectRgn_Org, !build_before_w11_24h2 },
-					{ "ExtCreateRegion", &g_ExtCreateRegion_Org, g_ExtCreateRegion_Org }
-				}
-			}
-		}
-	);
-
-	HookHelper::PatchPointerT(g_IDCompositionDesktopDevice_WaitForCommitCompletion_Org_Address, g_IDCompositionDesktopDevice_WaitForCommitCompletion_Org);
+	HookHelper::GetCurrentHookTransaction().Apply(g_IDCompositionDesktopDevice_WaitForCommitCompletion_Hook);
 	
+}
+
+void GlassKernel::Cleanup()
+{
 	ApplyCornerRadiusToWindowFrames(0);
 	GlassReflectionBrush::RemoveAll();
 	GlassEffectBrush::RemoveAll();

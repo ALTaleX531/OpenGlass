@@ -33,3 +33,7 @@ void AccentOverrider::Shutdown()
 		return;
 	}
 }
+
+void AccentOverrider::Cleanup()
+{
+}

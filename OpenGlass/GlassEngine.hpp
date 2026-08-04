@@ -101,5 +101,6 @@ namespace OpenGlass::GlassEngine
 
 	void Update(UpdateType type, bool redrawNow = true);
 	void Startup();
+	void Activate();
 	void Shutdown();
 }

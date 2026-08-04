@@ -37,18 +37,24 @@ namespace OpenGlass::CaptionTextHandler
 
 	decltype(&MyID2D1DeviceContext_DrawTextLayout) g_ID2D1DeviceContext_DrawTextLayout_Org{ nullptr };
 	decltype(&MyID2D1DeviceContext_DrawTextLayout)* g_ID2D1DeviceContext_DrawTextLayout_Org_Address{ nullptr };
+	HookHelper::PointerHook<&MyID2D1DeviceContext_DrawTextLayout> g_ID2D1DeviceContext_DrawTextLayout_Hook;
 	decltype(&MyICompositionGraphicsDevice_CreateDrawingSurface) g_ICompositionGraphicsDevice_CreateDrawingSurface_Org{ nullptr };
 	decltype(&MyICompositionGraphicsDevice_CreateDrawingSurface)* g_ICompositionGraphicsDevice_CreateDrawingSurface_Org_Address{ nullptr };
+	HookHelper::PointerHook<&MyICompositionGraphicsDevice_CreateDrawingSurface> g_ICompositionGraphicsDevice_CreateDrawingSurface_Hook;
 	decltype(&MyICompositionSurfaceBrush2_put_Offset) g_ICompositionSurfaceBrush2_put_Offset_Org{ nullptr };
 	decltype(&MyICompositionSurfaceBrush2_put_Offset)* g_ICompositionSurfaceBrush2_put_Offset_Org_Address{ nullptr };
+	HookHelper::PointerHook<&MyICompositionSurfaceBrush2_put_Offset> g_ICompositionSurfaceBrush2_put_Offset_Hook;
 	Projection::Detour<uDWM::Symbol_CDWriteText_ValidateVisual, decltype(&MyCDWriteText_ValidateVisual)> g_CDWriteText_ValidateVisual_Org{};
 	decltype(&MyCDWriteText_UpdateOffset) g_CDWriteText_UpdateOffset_Org{ nullptr };
 	decltype(&MyCDWriteText_UpdateOffset)* g_CDWriteText_UpdateOffset_Org_Address{ nullptr };
+	HookHelper::PointerHook<&MyCDWriteText_UpdateOffset> g_CDWriteText_UpdateOffset_Hook;
 	decltype(&MyCDWriteText_SendSetSize) g_CDWriteText_SendSetSize_Org{ nullptr };
 	decltype(&MyCDWriteText_SendSetSize)* g_CDWriteText_SendSetSize_Org_Address{ nullptr };
+	HookHelper::PointerHook<&MyCDWriteText_SendSetSize> g_CDWriteText_SendSetSize_Hook;
 	Projection::Detour<uDWM::Symbol_CDWriteText_InitializeVisualTreeClone, decltype(&MyCDWriteText_InitializeVisualTreeClone)> g_CDWriteText_InitializeVisualTreeClone_Org{};
 	decltype(&MyCDWriteText_scalar_deleting_destructor) g_CDWriteText_scalar_deleting_destructor_Org{ nullptr };
 	decltype(&MyCDWriteText_scalar_deleting_destructor)* g_CDWriteText_scalar_deleting_destructor_Org_Address{ nullptr };
+	HookHelper::PointerHook<&MyCDWriteText_scalar_deleting_destructor> g_CDWriteText_scalar_deleting_destructor_Hook;
 
 	uDWM::CDWriteText* g_dwriteTextVisual;
 	uDWM::CTopLevelWindow* g_window{ nullptr };
@@ -511,11 +517,7 @@ HRESULT CaptionTextHandler::MyCDWriteText_ValidateVisual(uDWM::CDWriteText* This
 	if (!g_CDWriteText_scalar_deleting_destructor_Org)
 	{
 		g_CDWriteText_scalar_deleting_destructor_Org_Address = HookHelper::get_vftable_from<decltype(g_CDWriteText_scalar_deleting_destructor_Org)>(This);
-		HookHelper::PatchPointerT(
-			g_CDWriteText_scalar_deleting_destructor_Org_Address,
-			MyCDWriteText_scalar_deleting_destructor,
-			&g_CDWriteText_scalar_deleting_destructor_Org
-		);
+		g_CDWriteText_scalar_deleting_destructor_Hook.AttachOnce(g_CDWriteText_scalar_deleting_destructor_Org_Address, &g_CDWriteText_scalar_deleting_destructor_Org);
 	}
 	if (!g_CDWriteText_UpdateOffset_Org)
 	{
@@ -527,20 +529,12 @@ HRESULT CaptionTextHandler::MyCDWriteText_ValidateVisual(uDWM::CDWriteText* This
 			if (vf == CVisual_UpdateOffset_Org)
 			{
 				g_CDWriteText_UpdateOffset_Org_Address = reinterpret_cast<decltype(g_CDWriteText_UpdateOffset_Org_Address)>(&vf);
-				HookHelper::PatchPointerT(
-					g_CDWriteText_UpdateOffset_Org_Address,
-					MyCDWriteText_UpdateOffset,
-					&g_CDWriteText_UpdateOffset_Org
-				);
+				g_CDWriteText_UpdateOffset_Hook.AttachOnce(g_CDWriteText_UpdateOffset_Org_Address, &g_CDWriteText_UpdateOffset_Org);
 			}
 			if (vf == CSpriteVisual_SendSetSize_Org)
 			{
 				g_CDWriteText_SendSetSize_Org_Address = reinterpret_cast<decltype(g_CDWriteText_SendSetSize_Org_Address)>(&vf);
-				HookHelper::PatchPointerT(
-					g_CDWriteText_SendSetSize_Org_Address,
-					MyCDWriteText_SendSetSize,
-					&g_CDWriteText_SendSetSize_Org
-				);
+				g_CDWriteText_SendSetSize_Hook.AttachOnce(g_CDWriteText_SendSetSize_Org_Address, &g_CDWriteText_SendSetSize_Org);
 			}
 		}
 	}
@@ -796,56 +790,49 @@ void CaptionTextHandler::Startup()
 	}
 
 	winrt::com_ptr<ID2D1DeviceContext> context{};
-	THROW_IF_FAILED(
+	FAIL_FAST_IF_FAILED_MSG(
 		uDWM::CDesktopManager::GetInstance()->GetD2DDevice()->CreateDeviceContext(
 			D2D1_DEVICE_CONTEXT_OPTIONS_NONE,
 			context.put()
-		)
+		),
+		"Unable to create the caption D2D device context"
 	);
 
 	g_ID2D1DeviceContext_DrawTextLayout_Org_Address = &HookHelper::get_vftable_from<decltype(g_ID2D1DeviceContext_DrawTextLayout_Org)>(context.get())[28];
-	HookHelper::PatchPointerT(
-		g_ID2D1DeviceContext_DrawTextLayout_Org_Address,
-		MyID2D1DeviceContext_DrawTextLayout,
-		&g_ID2D1DeviceContext_DrawTextLayout_Org
-	);
+	g_ID2D1DeviceContext_DrawTextLayout_Hook.Prepare(g_ID2D1DeviceContext_DrawTextLayout_Org_Address, &g_ID2D1DeviceContext_DrawTextLayout_Org);
+	HookHelper::GetCurrentHookTransaction().Apply(g_ID2D1DeviceContext_DrawTextLayout_Hook);
 
 	winrt::com_ptr<IDCompositionDesktopDevicePartner6> dcompDevicePartner{ nullptr };
-	THROW_IF_FAILED(uDWM::CDesktopManager::GetInstance()->GetInteropCompositorDCompDevicePartner()->QueryInterface(dcompDevicePartner.put()));
+	FAIL_FAST_IF_FAILED_MSG(uDWM::CDesktopManager::GetInstance()->GetInteropCompositorDCompDevicePartner()->QueryInterface(dcompDevicePartner.put()), "Unable to obtain IDCompositionDesktopDevicePartner");
 	winrt::com_ptr<abi::ICompositionGraphicsDevice> graphicsDevice{ nullptr };
 
 	winrt::com_ptr<abi::ICompositor> compositor{};
-	THROW_IF_FAILED(dcompDevicePartner->QueryInterface(compositor.put()));
+	FAIL_FAST_IF_FAILED_MSG(dcompDevicePartner->QueryInterface(compositor.put()), "Unable to obtain ICompositor");
 
 	winrt::com_ptr<abi::ICompositorInterop> compositorInterop{};
-	THROW_IF_FAILED(compositor->QueryInterface(compositorInterop.put()));
-	THROW_IF_FAILED(
+	FAIL_FAST_IF_FAILED_MSG(compositor->QueryInterface(compositorInterop.put()), "Unable to obtain ICompositorInterop");
+	FAIL_FAST_IF_FAILED_MSG(
 		compositorInterop->CreateGraphicsDevice(
 			uDWM::CDesktopManager::GetInstance()->GetD2DDevice(),
 			graphicsDevice.put()
-		)
+		),
+		"Unable to create the caption composition graphics device"
 	);
 
 	g_ICompositionGraphicsDevice_CreateDrawingSurface_Org_Address = &HookHelper::get_vftable_from<decltype(g_ICompositionGraphicsDevice_CreateDrawingSurface_Org)>(graphicsDevice.get())[6];
-	HookHelper::PatchPointerT(
-		g_ICompositionGraphicsDevice_CreateDrawingSurface_Org_Address,
-		MyICompositionGraphicsDevice_CreateDrawingSurface,
-		&g_ICompositionGraphicsDevice_CreateDrawingSurface_Org
-	);
+	g_ICompositionGraphicsDevice_CreateDrawingSurface_Hook.Prepare(g_ICompositionGraphicsDevice_CreateDrawingSurface_Org_Address, &g_ICompositionGraphicsDevice_CreateDrawingSurface_Org);
+	HookHelper::GetCurrentHookTransaction().Apply(g_ICompositionGraphicsDevice_CreateDrawingSurface_Hook);
 
 	winrt::com_ptr<abi::ICompositionSurfaceBrush> surfaceBrush{ nullptr };
-	THROW_IF_FAILED(compositor->CreateSurfaceBrush(surfaceBrush.put()));
+	FAIL_FAST_IF_FAILED_MSG(compositor->CreateSurfaceBrush(surfaceBrush.put()), "Unable to create the caption surface brush");
 
 	winrt::com_ptr<abi::ICompositionSurfaceBrush2> surfaceBrush2{ nullptr };
-	THROW_IF_FAILED(surfaceBrush->QueryInterface(surfaceBrush2.put()));
+	FAIL_FAST_IF_FAILED_MSG(surfaceBrush->QueryInterface(surfaceBrush2.put()), "Unable to obtain ICompositionSurfaceBrush2");
 	g_ICompositionSurfaceBrush2_put_Offset_Org_Address = &HookHelper::get_vftable_from<decltype(g_ICompositionSurfaceBrush2_put_Offset_Org)>(surfaceBrush2.get())[11];
-	HookHelper::PatchPointerT(
-		g_ICompositionSurfaceBrush2_put_Offset_Org_Address,
-		MyICompositionSurfaceBrush2_put_Offset,
-		&g_ICompositionSurfaceBrush2_put_Offset_Org
-	);
+	g_ICompositionSurfaceBrush2_put_Offset_Hook.Prepare(g_ICompositionSurfaceBrush2_put_Offset_Org_Address, &g_ICompositionSurfaceBrush2_put_Offset_Org);
+	HookHelper::GetCurrentHookTransaction().Apply(g_ICompositionSurfaceBrush2_put_Offset_Hook);
 
-	HookHelper::PatchFunctions(
+	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
 			{ &g_CDWriteText_ValidateVisual_Org, &MyCDWriteText_ValidateVisual },
@@ -863,27 +850,18 @@ void CaptionTextHandler::Shutdown()
 
 	if (g_CDWriteText_scalar_deleting_destructor_Org)
 	{
-		HookHelper::PatchPointerT(
-			g_CDWriteText_scalar_deleting_destructor_Org_Address,
-			g_CDWriteText_scalar_deleting_destructor_Org
-		);
+		HookHelper::GetCurrentHookTransaction().Apply(g_CDWriteText_scalar_deleting_destructor_Hook);
 	}
 	if (g_CDWriteText_UpdateOffset_Org)
 	{
-		HookHelper::PatchPointerT(
-			g_CDWriteText_UpdateOffset_Org_Address,
-			g_CDWriteText_UpdateOffset_Org
-		);
+		HookHelper::GetCurrentHookTransaction().Apply(g_CDWriteText_UpdateOffset_Hook);
 	}
 	if (g_CDWriteText_SendSetSize_Org)
 	{
-		HookHelper::PatchPointerT(
-			g_CDWriteText_SendSetSize_Org_Address,
-			g_CDWriteText_SendSetSize_Org
-		);
+		HookHelper::GetCurrentHookTransaction().Apply(g_CDWriteText_SendSetSize_Hook);
 	}
 
-	HookHelper::PatchFunctions(
+	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
 			{ &g_CDWriteText_ValidateVisual_Org, &MyCDWriteText_ValidateVisual },
@@ -892,23 +870,15 @@ void CaptionTextHandler::Shutdown()
 		false
 	);
 
-	SwitchToThread();
+	HookHelper::GetCurrentHookTransaction().Apply(g_ID2D1DeviceContext_DrawTextLayout_Hook);
+	HookHelper::GetCurrentHookTransaction().Apply(g_ICompositionGraphicsDevice_CreateDrawingSurface_Hook);
+	HookHelper::GetCurrentHookTransaction().Apply(g_ICompositionSurfaceBrush2_put_Offset_Hook);
 
-	HookHelper::PatchPointerT(
-		g_ID2D1DeviceContext_DrawTextLayout_Org_Address,
-		g_ID2D1DeviceContext_DrawTextLayout_Org
-	);
-	HookHelper::PatchPointerT(
-		g_ICompositionGraphicsDevice_CreateDrawingSurface_Org_Address,
-		g_ICompositionGraphicsDevice_CreateDrawingSurface_Org
-	);
-	HookHelper::PatchPointerT(
-		g_ICompositionSurfaceBrush2_put_Offset_Org_Address,
-		g_ICompositionSurfaceBrush2_put_Offset_Org
-	);
+}
 
+void CaptionTextHandler::Cleanup()
+{
 	g_dwriteTextVisual = nullptr;
-
 	DestroyDeviceResources();
 	g_textSize = {};
 	g_textVisualStateMap.clear();

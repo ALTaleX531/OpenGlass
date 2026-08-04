@@ -103,6 +103,7 @@ namespace OpenGlass::GlassIntegrity
 	Projection::Detour<dwmcore::Symbol_CVisual_CollectOcclusion, decltype(&MyCVisual_CollectOcclusion)> g_CVisual_CollectOcclusion_Org{};
 	decltype(&MyCColorBrush_AddOcclusionInformation) g_CColorBrush_AddOcclusionInformation_Org{ nullptr };
 	decltype(&MyCColorBrush_AddOcclusionInformation)* g_CColorBrush_AddOcclusionInformation_Org_Address{ nullptr };
+	HookHelper::PointerHook<&MyCColorBrush_AddOcclusionInformation> g_CColorBrush_AddOcclusionInformation_Hook;
 	Projection::Detour<dwmcore::Symbol_COcclusionContext_COcclusionContext, decltype(&MyCOcclusionContext_Destructor)> g_COcclusionContext_Destructor_Org{};
 
 	Projection::Detour<dwmcore::Symbol_COcclusionContext_IsOccluded, decltype(&MyCOcclusionContext_IsOccluded)> g_COcclusionContext_IsOccluded_Org{};
@@ -801,14 +802,14 @@ void GlassIntegrity::Startup()
 	{
 		g_CColorBrush_AddOcclusionInformation_Org_Address =
 			dwmcore::CColorBrush_AddOcclusionInformation_VtableSlot.address(dwmcore::CColorBrush::vftable);
-		HookHelper::PatchPointerT(
+		g_CColorBrush_AddOcclusionInformation_Hook.Prepare(
 			g_CColorBrush_AddOcclusionInformation_Org_Address,
-			MyCColorBrush_AddOcclusionInformation,
 			&g_CColorBrush_AddOcclusionInformation_Org
 		);
+		HookHelper::GetCurrentHookTransaction().Apply(g_CColorBrush_AddOcclusionInformation_Hook);
 	}
 
-	HookHelper::PatchFunctions(
+	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
 			{ &g_COcclusionContext_CheckAndRecordOverlayCandidate_Org, &MyCOcclusionContext_CheckAndRecordOverlayCandidate },
@@ -835,7 +836,7 @@ void GlassIntegrity::Startup()
 
 void GlassIntegrity::Shutdown()
 {
-	HookHelper::PatchFunctions(
+	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
 			{ &g_COcclusionContext_CheckAndRecordOverlayCandidate_Org, &MyCOcclusionContext_CheckAndRecordOverlayCandidate },
@@ -861,14 +862,14 @@ void GlassIntegrity::Shutdown()
 
 	if (g_CColorBrush_AddOcclusionInformation_Org)
 	{
-		HookHelper::PatchPointerT(
-			g_CColorBrush_AddOcclusionInformation_Org_Address,
-			g_CColorBrush_AddOcclusionInformation_Org
-		);
+		HookHelper::GetCurrentHookTransaction().Apply(g_CColorBrush_AddOcclusionInformation_Hook);
 	}
 
-	CArrayBasedGlassCoverageSet::RemoveAll();
+}
 
+void GlassIntegrity::Cleanup()
+{
+	CArrayBasedGlassCoverageSet::RemoveAll();
 	g_glassVisualSet.clear();
 	g_glassStatusByGeometry.clear();
 	g_shrunkCoverageSetMap.clear();

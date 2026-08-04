@@ -21,4 +21,5 @@ namespace OpenGlass::GlassIntegrity
 	void Update(GlassEngine::UpdateType type);
 	void Startup();
 	void Shutdown();
+	void Cleanup();
 }

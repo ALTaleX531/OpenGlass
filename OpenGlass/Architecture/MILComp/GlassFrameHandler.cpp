@@ -107,7 +107,7 @@ namespace OpenGlass::GlassFrameHandler
 			const auto parent = effectVisual->GetTransformParent();
 			if (parent)
 			{
-				THROW_IF_FAILED(parent->GetVisualCollection()->Remove(effectVisual.get()));
+				FAIL_FAST_IF_FAILED_MSG(parent->GetVisualCollection()->Remove(effectVisual.get()), "Unable to remove an effect visual during shutdown");
 			}
 		}
 		g_effectVisualMap.clear();
@@ -188,7 +188,7 @@ namespace OpenGlass::GlassFrameHandler
 					const auto parent = reflectionVisual->GetTransformParent();
 					if (parent)
 					{
-						THROW_IF_FAILED(parent->GetVisualCollection()->Remove(reflectionVisual.get()));
+						FAIL_FAST_IF_FAILED_MSG(parent->GetVisualCollection()->Remove(reflectionVisual.get()), "Unable to remove a reflection visual during shutdown");
 					}
 				}
 			}
@@ -617,7 +617,7 @@ void GlassFrameHandler::Startup()
 		return;
 	}
 
-	HookHelper::PatchFunctions(
+	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
 			{ &g_CGlassColorizationParameters_AdjustWindowColorization_Org, &MyCGlassColorizationParameters_AdjustWindowColorization },
@@ -649,7 +649,7 @@ void GlassFrameHandler::Shutdown()
 		return;
 	}
 
-	HookHelper::PatchFunctions(
+	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
 			{ &g_CGlassColorizationParameters_AdjustWindowColorization_Org, &MyCGlassColorizationParameters_AdjustWindowColorization },
@@ -673,8 +673,10 @@ void GlassFrameHandler::Shutdown()
 		false
 	);
 
+}
+
+void GlassFrameHandler::Cleanup()
+{
 	RemoveAllReflectionVisuals();
 	RemoveAllEffectVisuals();
-
-	SwitchToThread();
 }

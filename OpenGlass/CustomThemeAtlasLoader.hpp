@@ -48,5 +48,7 @@ namespace OpenGlass::CustomThemeAtlasLoader
 
 	void Update(GlassEngine::UpdateType type);
 	void Startup();
+	void Activate();
 	void Shutdown();
+	void Deactivate();
 }

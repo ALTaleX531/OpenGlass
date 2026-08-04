@@ -31,3 +31,7 @@ void GlassReflectionHandler::Shutdown()
 		return;
 	}
 }
+
+void GlassReflectionHandler::Cleanup()
+{
+}

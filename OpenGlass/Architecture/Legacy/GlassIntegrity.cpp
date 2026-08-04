@@ -235,6 +235,7 @@ namespace OpenGlass::GlassIntegrity
 	Projection::Detour<dwmcore::Symbol_COcclusionContext_Compute_19041, decltype(&MyCOcclusionContext_Compute)> g_COcclusionContext_Compute_Org{};
 	decltype(&MyCOcclusionContext_DrawGeometry) g_COcclusionContext_DrawGeometry_Org{ nullptr };
 	decltype(&MyCOcclusionContext_DrawGeometry)* g_COcclusionContext_DrawGeometry_Org_Address{ nullptr };
+	HookHelper::PointerHook<&MyCOcclusionContext_DrawGeometry> g_COcclusionContext_DrawGeometry_Hook;
 	Projection::Detour<dwmcore::Symbol_COcclusionContext_SetDeviceTransform, decltype(&MyCOcclusionContext_SetDeviceTransform)> g_COcclusionContext_SetDeviceTransform_Org{};
 	Projection::Detour<dwmcore::Symbol_COcclusionContext__COcclusionContext, decltype(&MyCOcclusionContext_Destructor)> g_COcclusionContext_Destructor_Org{};
 
@@ -337,6 +338,7 @@ namespace OpenGlass::GlassIntegrity
 		0x74, 0x23,														// jz      short xx
 	};
 	uint8_t* g_COcclusionContext_IsDeviceTransformAssigned_PatchLocation = nullptr;
+	HookHelper::InstructionPatch g_COcclusionContext_IsDeviceTransformAssigned_Patch;
 
 	bool g_disqualifyingOccludedCandidates{};
 
@@ -564,7 +566,7 @@ HRESULT GlassIntegrity::MyCOcclusionContext_Compute_Pre_W10_2004(
 		g_COcclusionContext_DrawGeometry_Org_Address = dwmcore::IDrawingContext_DrawGeometry_VtableSlot.address(
 			HookHelper::get_vftable_from(This)
 		);
-		HookHelper::PatchPointerT(g_COcclusionContext_DrawGeometry_Org_Address, MyCOcclusionContext_DrawGeometry, &g_COcclusionContext_DrawGeometry_Org);
+		g_COcclusionContext_DrawGeometry_Hook.AttachOnce(g_COcclusionContext_DrawGeometry_Org_Address, &g_COcclusionContext_DrawGeometry_Org);
 	}
 	if (const auto glassCoverageSet = CArrayBasedGlassCoverageSet::GetOrCreate(This->GetArrayBasedCoverageSet()); glassCoverageSet)
 	{
@@ -632,7 +634,7 @@ HRESULT GlassIntegrity::MyCOcclusionContext_Compute(
 		g_COcclusionContext_DrawGeometry_Org_Address = dwmcore::IDrawingContext_DrawGeometry_VtableSlot.address(
 			HookHelper::get_vftable_from(This)
 		);
-		HookHelper::PatchPointerT(g_COcclusionContext_DrawGeometry_Org_Address, MyCOcclusionContext_DrawGeometry, &g_COcclusionContext_DrawGeometry_Org);
+		g_COcclusionContext_DrawGeometry_Hook.AttachOnce(g_COcclusionContext_DrawGeometry_Org_Address, &g_COcclusionContext_DrawGeometry_Org);
 	}
 	if (const auto glassCoverageSet = CArrayBasedGlassCoverageSet::GetOrCreate(This->GetArrayBasedCoverageSet()); glassCoverageSet)
 	{
@@ -1584,26 +1586,28 @@ void GlassIntegrity::Startup()
 		const auto renderDirtyRegion = reinterpret_cast<const uint8_t*>(
 			dwmcore::Symbol_CHwndRenderTarget_RenderDirtyRegion.get()
 		);
-		g_COcclusionContext_IsDeviceTransformAssigned_PatchLocation = const_cast<uint8_t*>(
-			HookHelper::FindPattern(
-				std::span{ renderDirtyRegion + 1500, 3000 },
-				g_COcclusionContext_IsDeviceTransformAssigned_Instructions
-			)
+		const std::span searchRange{ renderDirtyRegion + 1500, 3000 };
+		const auto match = HookHelper::FindPattern(
+			searchRange,
+			g_COcclusionContext_IsDeviceTransformAssigned_Instructions
 		);
-		if (g_COcclusionContext_IsDeviceTransformAssigned_PatchLocation)
-		{
-			g_COcclusionContext_IsDeviceTransformAssigned_PatchLocation = &g_COcclusionContext_IsDeviceTransformAssigned_PatchLocation[8];
-			HookHelper::PatchInstructions(
-				g_COcclusionContext_IsDeviceTransformAssigned_PatchLocation,
-				std::array<uint8_t, 2>
-				{
-					0x74, 0x23
-				}
-			);
-		}
+		FAIL_FAST_IF_FAILED_MSG(match ? S_OK : E_NOINTERFACE, "The 18362 device-transform branch was not found");
+		const auto matchOffset = static_cast<size_t>(match - searchRange.data());
+		const auto remaining = searchRange.subspan(matchOffset + 1);
+		FAIL_FAST_IF_FAILED_MSG(
+			!HookHelper::FindPattern(remaining, g_COcclusionContext_IsDeviceTransformAssigned_Instructions) ? S_OK : E_UNEXPECTED,
+			"The 18362 device-transform branch is ambiguous"
+		);
+		g_COcclusionContext_IsDeviceTransformAssigned_PatchLocation = const_cast<uint8_t*>(match + 8);
+		g_COcclusionContext_IsDeviceTransformAssigned_Patch.Prepare(
+			g_COcclusionContext_IsDeviceTransformAssigned_PatchLocation,
+			std::array<uint8_t, 2>{ 0x74, 0x23 },
+			std::array<uint8_t, 2>{ 0x90, 0x90 }
+		);
+		HookHelper::GetCurrentHookTransaction().Apply(g_COcclusionContext_IsDeviceTransformAssigned_Patch);
 	}
 
-	HookHelper::PatchFunctions(
+	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
 			{ &g_COverlayContext_EndOverlayCandidateCollection_Pre_W10_2004_Org, &MyCOverlayContext_EndOverlayCandidateCollection_Pre_W10_2004, build_before_w10_2004 },
@@ -1642,13 +1646,7 @@ void GlassIntegrity::Shutdown()
 {
 	if (g_COcclusionContext_IsDeviceTransformAssigned_PatchLocation)
 	{
-		HookHelper::PatchInstructions(
-			g_COcclusionContext_IsDeviceTransformAssigned_PatchLocation,
-			std::array<uint8_t, 2>
-			{
-				0x90, 0x90
-			}
-		);
+		HookHelper::GetCurrentHookTransaction().Apply(g_COcclusionContext_IsDeviceTransformAssigned_Patch);
 	}
 
 	const auto build_before_w11_24h2 = dwmcore::g_versionInfo.build < os::build_w11_24h2;
@@ -1657,7 +1655,7 @@ void GlassIntegrity::Shutdown()
 	const auto build_before_w10_2004 = dwmcore::g_versionInfo.build < os::build_w10_2004;
 	const auto build_before_w10_1903 = dwmcore::g_versionInfo.build < os::build_w10_1903;
 	const auto hasArrayBasedCoverageSetIsCovered = HasCArrayBasedCoverageSetIsCovered();
-	HookHelper::PatchFunctions(
+	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
 			{ &g_COverlayContext_EndOverlayCandidateCollection_Pre_W10_2004_Org, &MyCOverlayContext_EndOverlayCandidateCollection_Pre_W10_2004, build_before_w10_2004 },
@@ -1691,16 +1689,15 @@ void GlassIntegrity::Shutdown()
 		false
 	);
 
-	SwitchToThread();
-
 	if (g_COcclusionContext_DrawGeometry_Org)
 	{
-		HookHelper::PatchPointerT(
-			g_COcclusionContext_DrawGeometry_Org_Address,
-			g_COcclusionContext_DrawGeometry_Org
-		);
+		HookHelper::GetCurrentHookTransaction().Apply(g_COcclusionContext_DrawGeometry_Hook);
 	}
 
+}
+
+void GlassIntegrity::Cleanup()
+{
 	CArrayBasedGlassCoverageSet::RemoveAll();
 	g_shrunkCoverageSetMap.clear();
 	g_safetyZonePool.Cleanup(std::chrono::seconds{ 0 });
