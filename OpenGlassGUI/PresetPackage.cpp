@@ -2,6 +2,7 @@
 #include "ApplicationPaths.hpp"
 #include "PngAssetValidation.hpp"
 #include "PresetPackage.hpp"
+#include "ThemeAtlasLayout.hpp"
 
 #include <bcrypt.h>
 #include <sddl.h>
@@ -302,6 +303,21 @@ namespace OpenGlass::PresetPackages
 			ValidateImageWithWic({ reinterpret_cast<const std::byte*>(chars.data()), chars.size() });
 		}
 
+		void ValidateThemeAtlasLayout(std::span<const std::byte> bytes)
+		{
+			ThemeAtlasLayout::Document document;
+			THROW_IF_FAILED(ThemeAtlasLayout::Parse(bytes, document));
+		}
+
+		void ValidateThemeAtlasLayout(const std::filesystem::path& path)
+		{
+			std::ifstream stream(path, std::ios::binary);
+			THROW_HR_IF(HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND), !stream);
+			std::vector<char> chars((std::istreambuf_iterator<char>(stream)), {});
+			THROW_HR_IF(HRESULT_FROM_WIN32(ERROR_FILE_TOO_LARGE), chars.size() > ThemeAtlasLayout::MaximumFileSize);
+			ValidateThemeAtlasLayout({ reinterpret_cast<const std::byte*>(chars.data()), chars.size() });
+		}
+
 		std::string CalculateContentDigest(const std::string& manifest, const std::string& license, const std::map<std::string, std::vector<std::byte>>& assets)
 		{
 			std::vector<std::byte> content;
@@ -454,7 +470,7 @@ namespace OpenGlass::PresetPackages
 			{
 				if (path.ends_with(".layout"))
 				{
-					THROW_HR_IF(HRESULT_FROM_WIN32(ERROR_FILE_TOO_LARGE), bytes.size() > MaximumMetadataSize);
+					ValidateThemeAtlasLayout(bytes);
 				}
 				else ValidateImageWithWic(bytes);
 				package.assetSummary.emplace_back(path, bytes.size());
@@ -728,10 +744,8 @@ namespace OpenGlass::PresetPackages
 		{
 			const auto path = staging / PathFromUtf8(name);
 			WriteFileBytes(path, bytes);
-			if (!path.wstring().ends_with(L".layout"))
-			{
-				ValidateImageWithWic(path);
-			}
+			if (path.wstring().ends_with(L".layout")) ValidateThemeAtlasLayout(path);
+			else ValidateImageWithWic(path);
 		}
 		HardenDirectory(staging);
 		THROW_IF_WIN32_BOOL_FALSE(MoveFileExW(staging.c_str(), destination.c_str(), MOVEFILE_WRITE_THROUGH));
@@ -762,9 +776,10 @@ namespace OpenGlass::PresetPackages
 			std::ifstream stream(source, std::ios::binary);
 			THROW_HR_IF(HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND), !stream);
 			std::vector<char> chars((std::istreambuf_iterator<char>(stream)), {});
-			THROW_HR_IF(HRESULT_FROM_WIN32(ERROR_FILE_TOO_LARGE), chars.size() > (name.ends_with(".layout") ? MaximumMetadataSize : MaximumEntrySize));
+			THROW_HR_IF(HRESULT_FROM_WIN32(ERROR_FILE_TOO_LARGE), chars.size() > (name.ends_with(".layout") ? ThemeAtlasLayout::MaximumFileSize : MaximumEntrySize));
 			std::vector<std::byte> bytes(chars.size());
 			if (!chars.empty()) std::memcpy(bytes.data(), chars.data(), chars.size());
+			if (name.ends_with(".layout")) ValidateThemeAtlasLayout(bytes);
 			assets.emplace(name, std::move(bytes));
 		}
 		const auto manifest = BuildManifest(request, assets);

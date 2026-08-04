@@ -5,6 +5,7 @@
 #include "uDWMProjection.hpp"
 #include "CustomThemeAtlasLoader.hpp"
 #include "PngAssetValidation.hpp"
+#include "ThemeAtlasLayout.hpp"
 
 using namespace OpenGlass;
 namespace OpenGlass::CustomThemeAtlasLoader
@@ -27,7 +28,7 @@ namespace OpenGlass::CustomThemeAtlasLoader
 		return (u1 << 48) | (u2 << 32) | ui;
 	}
 	HRESULT LoadThemeAtlas(LPCWSTR themeAtlasPath);
-	void LoadThemeAtlasLayout(LPCWSTR themeAtlasLayoutPath);
+	HRESULT LoadThemeAtlasLayout(LPCWSTR themeAtlasLayoutPath);
 	HRESULT LoadTextGlowFromThemeAtlas();
 	void LoadTheme(
 		LPCWSTR themeAtlasPath,
@@ -304,87 +305,75 @@ HRESULT CustomThemeAtlasLoader::LoadThemeAtlas(LPCWSTR themeAtlasPath)
 	return S_OK;
 }
 
-void CustomThemeAtlasLoader::LoadThemeAtlasLayout(LPCWSTR themeAtlasLayoutPath)
+HRESULT CustomThemeAtlasLoader::LoadThemeAtlasLayout(LPCWSTR themeAtlasLayoutPath) try
 {
-	FILE* file{};
-	_wfopen_s(&file, themeAtlasLayoutPath, L"r");
-	if (!file)
+	if (!PathFileExistsW(themeAtlasLayoutPath)) return S_FALSE;
+
+	wil::unique_hfile file{ CreateFileW(themeAtlasLayoutPath, GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, 0, nullptr) };
+	RETURN_LAST_ERROR_IF(!file.is_valid());
+	LARGE_INTEGER fileSize{};
+	RETURN_IF_WIN32_BOOL_FALSE(GetFileSizeEx(file.get(), &fileSize));
+	RETURN_HR_IF(
+		HRESULT_FROM_WIN32(ERROR_FILE_TOO_LARGE),
+		fileSize.QuadPart < 0 || fileSize.QuadPart > ThemeAtlasLayout::MaximumFileSize
+	);
+
+	std::vector<std::byte> bytes(static_cast<std::size_t>(fileSize.QuadPart));
+	if (!bytes.empty())
 	{
-		return;
+		DWORD bytesRead{};
+		RETURN_IF_WIN32_BOOL_FALSE(ReadFile(file.get(), bytes.data(), static_cast<DWORD>(bytes.size()), &bytesRead, nullptr));
+		RETURN_HR_IF(HRESULT_FROM_WIN32(ERROR_HANDLE_EOF), bytesRead != static_cast<DWORD>(bytes.size()));
 	}
 
-	WCHAR strideBuffer[255]{};
-	while (!feof(file))
+	ThemeAtlasLayout::Document document;
+	RETURN_IF_FAILED(ThemeAtlasLayout::Parse(bytes, document));
+
+	auto layoutMap = g_themeAtlasLayoutMap;
+	auto quirk = g_themeAtlasLayoutQuirk;
+	auto dontDeflateInactiveFrameGeometry = Shared::g_dontDeflateInactiveFrameGeometry;
+	auto captionHeight = Shared::g_captionHeight;
+	for (const auto& record : document.records)
 	{
-		fgetws(strideBuffer, std::size(strideBuffer), file);
-
-		if (strideBuffer[0] != L'#')
+		if (const auto mapping = std::get_if<ThemeAtlasLayout::Mapping>(&record))
 		{
-			MARGINS part{};
-			MARGINS data{};
-			WCHAR keyBuffer[64]{};
-			if (
-				swscanf_s(
-					strideBuffer,
-					L"%[^=]=%d,%d,%d,%d",
-					keyBuffer,
-					static_cast<unsigned int>(std::size(keyBuffer)),
-					&data.cxLeftWidth,
-					&data.cxRightWidth,
-					&data.cyTopHeight,
-					&data.cyBottomHeight
-				) == 5
-			)
-			{
-				swscanf_s(
-					keyBuffer,
-					L"%d;%d;%d",
-					&part.cxLeftWidth,
-					&part.cxRightWidth,
-					&part.cyTopHeight
-				);
+			auto part = mapping->part;
+			if (quirk == CompatibilityQuirk::RS1 && part > 10) --part;
+			layoutMap.try_emplace(
+				make_theme_atlas_layout_key(part, mapping->state, mapping->property),
+				MARGINS
+				{
+					mapping->value[0],
+					mapping->value[1],
+					mapping->value[2],
+					mapping->value[3]
+				}
+			);
+			continue;
+		}
 
-				if (g_themeAtlasLayoutQuirk == CompatibilityQuirk::RS1)
-				{
-					part.cxLeftWidth = part.cxLeftWidth > 10 ? part.cxLeftWidth - 1 : part.cxLeftWidth;
-				}
-				g_themeAtlasLayoutMap.try_emplace(
-					make_theme_atlas_layout_key(
-						part.cxLeftWidth,
-						part.cxRightWidth,
-						part.cyTopHeight
-					),
-					data
-				);
-			}
-			else if (
-				DWORD value{};
-				swscanf_s(
-					strideBuffer,
-					L"%[^=]=%d",
-					keyBuffer,
-					static_cast<unsigned int>(std::size(keyBuffer)),
-					&value
-				) == 2
-			)
-			{
-				if (!wcscmp(keyBuffer, L"DontDeflateInactiveFrameGeometry"))
-				{
-					Shared::g_dontDeflateInactiveFrameGeometry = static_cast<bool>(value);
-				}
-				else if (!wcscmp(keyBuffer, L"RS1Compatibility"))
-				{
-					g_themeAtlasLayoutQuirk = value ? CompatibilityQuirk::RS1 : g_themeAtlasLayoutQuirk;
-				}
-				else if (!wcscmp(keyBuffer, L"CaptionHeight"))
-				{
-					Shared::g_captionHeight = value;
-				}
-			}
+		const auto& property = std::get<ThemeAtlasLayout::Property>(record);
+		if (property.name == "DontDeflateInactiveFrameGeometry")
+		{
+			dontDeflateInactiveFrameGeometry = property.value != 0;
+		}
+		else if (property.name == "RS1Compatibility")
+		{
+			if (property.value) quirk = CompatibilityQuirk::RS1;
+		}
+		else if (property.name == "CaptionHeight")
+		{
+			captionHeight = static_cast<DWORD>(property.value);
 		}
 	}
-	fclose(file);
+
+	g_themeAtlasLayoutMap = std::move(layoutMap);
+	g_themeAtlasLayoutQuirk = quirk;
+	Shared::g_dontDeflateInactiveFrameGeometry = dontDeflateInactiveFrameGeometry;
+	Shared::g_captionHeight = captionHeight;
+	return S_OK;
 }
+CATCH_RETURN()
 
 HRESULT CustomThemeAtlasLoader::LoadTextGlowFromThemeAtlas()
 {
@@ -453,8 +442,8 @@ void CustomThemeAtlasLoader::LoadTheme(LPCWSTR themeAtlasPath, LPCWSTR themeAtla
 
 	if (SUCCEEDED(LoadThemeAtlas(themeAtlasPath)))
 	{
-		LoadThemeAtlasLayout(themeAtlasLayoutPath);
-		LoadTextGlowFromThemeAtlas();
+		LOG_IF_FAILED(LoadThemeAtlasLayout(themeAtlasLayoutPath));
+		LOG_IF_FAILED(LoadTextGlowFromThemeAtlas());
 	}
 }
 

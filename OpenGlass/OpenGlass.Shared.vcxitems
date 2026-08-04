@@ -56,6 +56,7 @@
   </ItemGroup>
   <ItemGroup>
 	<ClCompile Include="$(MSBuildThisFileDirectory)..\Common\PngAssetValidation.cpp"><Link>Source Files\Common\PngAssetValidation.cpp</Link><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
+	<ClCompile Include="$(MSBuildThisFileDirectory)..\Common\ThemeAtlasLayout.cpp"><Link>Source Files\Common\ThemeAtlasLayout.cpp</Link><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)AeroColorizationEffect.cpp"><Link>Source Files\AeroColorizationEffect.cpp</Link></ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)AeroEffect.cpp"><Link>Source Files\AeroEffect.cpp</Link></ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)BlurEffect.cpp"><Link>Source Files\BlurEffect.cpp</Link></ClCompile>

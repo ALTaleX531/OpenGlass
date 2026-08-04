@@ -51,6 +51,9 @@
 	<ClCompile Include="..\Common\PngAssetValidation.cpp">
 	  <PrecompiledHeader>NotUsing</PrecompiledHeader>
 	</ClCompile>
+	<ClCompile Include="..\Common\ThemeAtlasLayout.cpp">
+	  <PrecompiledHeader>NotUsing</PrecompiledHeader>
+	</ClCompile>
 	<ClCompile Include="CrossTu.cpp" />
     <ClCompile Include="ProjectionTests.cpp" />
     <ClCompile Include="..\OpenGlass\ProjectionRuntime.cpp">

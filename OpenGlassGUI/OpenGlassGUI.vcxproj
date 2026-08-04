@@ -64,6 +64,9 @@
 	<ClCompile Include="..\Common\PngAssetValidation.cpp">
 	  <PrecompiledHeader>NotUsing</PrecompiledHeader>
 	</ClCompile>
+	<ClCompile Include="..\Common\ThemeAtlasLayout.cpp">
+	  <PrecompiledHeader>NotUsing</PrecompiledHeader>
+	</ClCompile>
 	<ClCompile Include="ColorSwatchButton.cpp" />
     <ClCompile Include="ConfigurationMigration.cpp" />
     <ClCompile Include="Elevation.cpp" />
