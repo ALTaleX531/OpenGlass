@@ -603,70 +603,90 @@
       "type": "HRESULT (*)(CDrawingContext*, const CVisualTree*, bool*)"
     },
     {
-      "name": "Symbol_COverlayContext_EndOverlayCandidateCollection_Pre_19041",
-      "id": "COverlayContext::EndOverlayCandidateCollection.pre19041",
+      "name": "Symbol_COcclusionContext_CheckAndRecordOverlayCandidate_Pre_19041",
+      "id": "COcclusionContext::CheckAndRecordOverlayCandidate.pre19041",
       "symbol_names": [
-        "public: long __cdecl COverlayContext::EndOverlayCandidateCollection(class CVisualTree const * __ptr64,class CDirtyRegion const * __ptr64,class COcclusionContext * __ptr64,bool * __ptr64) __ptr64"
+        "public: long __cdecl COcclusionContext::CheckAndRecordOverlayCandidate(class CVisual * __ptr64,class ISwapChainContent * __ptr64,class CMILMatrix const * __ptr64,class CShape const * __ptr64,struct TMILFlagsEnum<enum MilSourceModification::FlagsEnum>) __ptr64"
       ],
       "requirement": "required",
       "min_inclusive": null,
-      "max_exclusive": {
-        "build": 19041,
-        "revision": 0
-      },
+      "max_exclusive": { "build": 19041, "revision": 0 },
       "kind": "raw",
-      "type": "HRESULT (*)(COverlayContext*, const CVisualTree*, const CDirtyRegion*, COcclusionContext*, bool*)"
+      "type": "COcclusionContext_CheckAndRecordOverlayCandidate_Pre_19041_t"
     },
     {
-      "name": "Symbol_COverlayContext_EndOverlayCandidateCollection_19041",
-      "id": "COverlayContext::EndOverlayCandidateCollection.19041",
+      "name": "Symbol_COcclusionContext_CheckAndRecordOverlayCandidate_19041",
+      "id": "COcclusionContext::CheckAndRecordOverlayCandidate.19041",
       "symbol_names": [
-        "public: long __cdecl COverlayContext::EndOverlayCandidateCollection(class CVisualTree const * __ptr64,class CDirtyRegion const * __ptr64) __ptr64"
+        "public: long __cdecl COcclusionContext::CheckAndRecordOverlayCandidate(class CVisual * __ptr64,class CCompositionSurfaceInfo * __ptr64,class CMILMatrix const * __ptr64,class CShape const * __ptr64,struct TMILFlagsEnum<enum MilSourceModification::FlagsEnum>) __ptr64"
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 19041,
-        "revision": 0
-      },
-      "max_exclusive": {
-        "build": 22000,
-        "revision": 0
-      },
+      "min_inclusive": { "build": 19041, "revision": 0 },
+      "max_exclusive": { "build": 26100, "revision": 0 },
       "kind": "raw",
-      "type": "HRESULT (*)(COverlayContext*, const CVisualTree*, const CDirtyRegion*)"
+      "type": "COcclusionContext_CheckAndRecordOverlayCandidate_19041_t"
     },
     {
-      "name": "Symbol_COverlayContext_EndOverlayCandidateCollection_22000",
-      "id": "COverlayContext::EndOverlayCandidateCollection.22000",
+      "name": "Symbol_COcclusionContext_CheckAndRecordOverlayCandidate_26100",
+      "id": "COcclusionContext::CheckAndRecordOverlayCandidate.26100",
       "symbol_names": [
-        "public: long __cdecl COverlayContext::EndOverlayCandidateCollection(class CVisualTree const * __ptr64,class CDirtyRegion const & __ptr64) __ptr64"
+        "public: long __cdecl COcclusionContext::CheckAndRecordOverlayCandidate(class CVisual * __ptr64,class CCompositionSurfaceInfo * __ptr64,class CMILMatrix const & __ptr64,class CShape const * __ptr64,struct TMILFlagsEnum<enum MilSourceModification::FlagsEnum>) __ptr64"
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 22000,
-        "revision": 0
-      },
-      "max_exclusive": {
-        "build": 26100,
-        "revision": 0
-      },
+      "min_inclusive": { "build": 26100, "revision": 0 },
+      "max_exclusive": { "build": 28000, "revision": 0 },
       "kind": "raw",
-      "type": "HRESULT (*)(COverlayContext*, const CVisualTree*, const CDirtyRegion&)"
+      "type": "COcclusionContext_CheckAndRecordOverlayCandidate_26100_t"
     },
     {
-      "name": "Symbol_COverlayContext_IsCandidateOverlayCompatible",
-      "id": "COverlayContext::IsCandidateOverlayCompatible",
+      "name": "Symbol_COcclusionContext_CollectRectangleForOcclusion_Pre_22000",
+      "id": "COcclusionContext::CollectRectangleForOcclusion.pre22000",
       "symbol_names": [
-        "private: bool __cdecl COverlayContext::IsCandidateOverlayCompatible(class CVisual * __ptr64,class CCompositionSurfaceInfo const * __ptr64,class ISwapChainRealization * __ptr64,struct DXGI_MULTIPLANE_OVERLAY_ATTRIBUTES & __ptr64,enum OverlaySize,bool,unsigned int,bool)const __ptr64"
+        "private: long __cdecl COcclusionContext::CollectRectangleForOcclusion(class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const * __ptr64,bool,class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64) __ptr64",
+        "private: long __cdecl COcclusionContext::CollectRectangleForOcclusion(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const * __ptr64,bool,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64) __ptr64"
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 26100,
-        "revision": 0
-      },
-      "max_exclusive": null,
+      "min_inclusive": null,
+      "max_exclusive": { "build": 22000, "revision": 0 },
       "kind": "raw",
-      "type": "bool (*)(const COverlayContext*, CVisual*, const CCompositionSurfaceInfo*, ISwapChainRealization*, MultiplaneOverlayAttributes&, OverlaySize, bool, UINT, bool)"
+      "type": "COcclusionContext_CollectRectangleForOcclusion_Pre_22000_t"
+    },
+    {
+      "name": "Symbol_COcclusionContext_CollectRectangleForOcclusion_22000",
+      "id": "COcclusionContext::CollectRectangleForOcclusion.22000",
+      "symbol_names": [
+        "private: void __cdecl COcclusionContext::CollectRectangleForOcclusion(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const * __ptr64,bool,bool,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": { "build": 22000, "revision": 0 },
+      "max_exclusive": { "build": 26100, "revision": 0 },
+      "kind": "raw",
+      "type": "COcclusionContext_CollectRectangleForOcclusion_22000_t"
+    },
+    {
+      "name": "Symbol_COcclusionContext_CollectRectangleForOcclusion_26100_Pre_7840",
+      "id": "COcclusionContext::CollectRectangleForOcclusion.26100.pre7840",
+      "symbol_names": [
+        "private: void __cdecl COcclusionContext::CollectRectangleForOcclusion(class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const & __ptr64,class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> * __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": { "build": 26100, "revision": 0 },
+      "max_exclusive": { "build": 26100, "revision": 7840 },
+      "kind": "raw",
+      "type": "COcclusionContext_CollectRectangleForOcclusion_26100_Pre_7840_t"
+    },
+    {
+      "name": "Symbol_COcclusionContext_CollectRectangleForOcclusion_26100_7840",
+      "id": "COcclusionContext::CollectRectangleForOcclusion.26100.7840",
+      "symbol_names": [
+        "private: void __cdecl COcclusionContext::CollectRectangleForOcclusion(class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const & __ptr64,bool,class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> * __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": { "build": 26100, "revision": 7840 },
+      "max_exclusive": { "build": 28000, "revision": 0 },
+      "kind": "raw",
+      "type": "COcclusionContext_CollectRectangleForOcclusion_26100_7840_t",
+      "notes": "The intervening bool is an ABI break, not a trailing compatibility argument. The two-argument form was last verified on 26100.4202 and this form was first verified on 26100.7840."
     },
     {
       "name": "Symbol_COcclusionContext_SetDeviceTransform",

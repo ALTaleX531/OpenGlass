@@ -399,7 +399,7 @@ namespace OpenGlass::dwmcore
 		{
 			OPENGLASS_MUSTTAIL return Projection::Invoke<&COcclusionContext::IsOccluded>(this, rect, depth, ignoreDeviceTransform);
 		}
-		inline void CollectRectangleForOcclusion(const D2D1_RECT_F& rect, bool recordVisual) const
+		inline void CollectRectangleForOcclusion(const D2D1_RECT_F& rect, bool recordVisual)
 		{
 			OPENGLASS_MUSTTAIL return Projection::Invoke<&COcclusionContext::CollectRectangleForOcclusion>(this, rect, recordVisual);
 		}
@@ -446,8 +446,8 @@ namespace OpenGlass::dwmcore
 		COcclusionContext*,
 		CVisual*,
 		CCompositionSurfaceInfo*,
-		const CMILMatrix*,
-		CShape*,
+		const CMILMatrix&,
+		const CShape*,
 		int
 	);
 	using COcclusionContext_Compute_t = HRESULT(*)(

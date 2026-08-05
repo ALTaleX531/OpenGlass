@@ -52,6 +52,7 @@ namespace OpenGlass::dwmcore
 	struct CRegion;
 	struct CVisual;
 	struct CDirtyRegion;
+	struct ISwapChainContent;
 	struct CVisualTree : CResource
 	{
 	};
@@ -613,7 +614,6 @@ namespace OpenGlass::dwmcore
 	};
 	struct CCompositionSurfaceInfo;
 	struct ISwapChainRealization;
-	struct MultiplaneOverlayAttributes;
 	struct CDrawingContext
 	{
 		// since windows 10 2004
@@ -755,9 +755,6 @@ namespace OpenGlass::dwmcore
 	{
 		This->CalcWorldSpaceClippedBounds({-INFINITY, -INFINITY, INFINITY, INFINITY}, &rect);
 	}
-	enum OverlaySize : int
-	{
-	};
 	struct COcclusionContext : IDrawingContext
 	{
 		// not needed before windows 10 2004
@@ -849,6 +846,14 @@ namespace OpenGlass::dwmcore
 		OPENGLASS_MUSTTAIL
 		return Projection::Invoke<&GetCurrentFrameId>();
 	}
+
+	using COcclusionContext_CheckAndRecordOverlayCandidate_Pre_19041_t = HRESULT(*)(COcclusionContext*, CVisual*, ISwapChainContent*, const CMILMatrix*, const CShape*, int);
+	using COcclusionContext_CheckAndRecordOverlayCandidate_19041_t = HRESULT(*)(COcclusionContext*, CVisual*, CCompositionSurfaceInfo*, const CMILMatrix*, const CShape*, int);
+	using COcclusionContext_CheckAndRecordOverlayCandidate_26100_t = HRESULT(*)(COcclusionContext*, CVisual*, CCompositionSurfaceInfo*, const CMILMatrix&, const CShape*, int);
+	using COcclusionContext_CollectRectangleForOcclusion_Pre_22000_t = HRESULT(*)(COcclusionContext*, const D2D1_RECT_F*, bool, D2D1_RECT_F*);
+	using COcclusionContext_CollectRectangleForOcclusion_22000_t = void(*)(COcclusionContext*, const D2D1_RECT_F*, bool, bool, D2D1_RECT_F*);
+	using COcclusionContext_CollectRectangleForOcclusion_26100_Pre_7840_t = void(*)(COcclusionContext*, const D2D1_RECT_F&, D2D1_RECT_F*);
+	using COcclusionContext_CollectRectangleForOcclusion_26100_7840_t = void(*)(COcclusionContext*, const D2D1_RECT_F&, bool, D2D1_RECT_F*);
 
 } // namespace OpenGlass::dwmcore
 

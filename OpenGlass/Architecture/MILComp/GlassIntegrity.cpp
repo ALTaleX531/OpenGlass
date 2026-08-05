@@ -17,9 +17,14 @@ namespace OpenGlass::GlassIntegrity
 		dwmcore::COcclusionContext* This,
 		dwmcore::CVisual* visual,
 		dwmcore::CCompositionSurfaceInfo* surface,
-		const dwmcore::CMILMatrix* matrix,
-		dwmcore::CShape* shape,
+		const dwmcore::CMILMatrix& matrix,
+		const dwmcore::CShape* shape,
 		int flags
+	);
+	void MyCOcclusionContext_CollectRectangleForOcclusion(
+		dwmcore::COcclusionContext* This,
+		const D2D1_RECT_F& rectangle,
+		bool recordVisual
 	);
 
 	HRESULT MyCCombinedGeometry_ProcessUpdate(
@@ -90,6 +95,7 @@ namespace OpenGlass::GlassIntegrity
 	);
 
 	Projection::Detour<dwmcore::Symbol_COcclusionContext_CheckAndRecordOverlayCandidate, decltype(&MyCOcclusionContext_CheckAndRecordOverlayCandidate)> g_COcclusionContext_CheckAndRecordOverlayCandidate_Org{};
+	Projection::Detour<dwmcore::Symbol_COcclusionContext_CollectRectangleForOcclusion, decltype(&MyCOcclusionContext_CollectRectangleForOcclusion)> g_COcclusionContext_CollectRectangleForOcclusion_Org{};
 
 	Projection::Detour<dwmcore::Symbol_CCombinedGeometry_ProcessUpdate, decltype(&MyCCombinedGeometry_ProcessUpdate)> g_CCombinedGeometry_ProcessUpdate_Org{};
 	Projection::Detour<dwmcore::Symbol_CVisual_SetClip, decltype(&MyCVisual_SetClip)> g_CVisual_SetClip_Org{};
@@ -157,6 +163,14 @@ namespace OpenGlass::GlassIntegrity
 	dwmcore::CShape* g_shape{ nullptr };
 	dwmcore::CGeometry* g_geometry{ nullptr };
 	dwmcore::CVisual* g_glassVisualForCollectingOcclusion{ nullptr };
+
+	struct CCollectedOcclusionRectangle
+	{
+		dwmcore::COcclusionContext* context{};
+		D2D1_RECT_F rectangle{};
+		int depth{ -1 };
+	};
+	CCollectedOcclusionRectangle g_lastCollectedOcclusionRectangle{};
 }
 
 void GlassIntegrity::ShrinkOccludersAboveGlass(const dwmcore::COcclusionContext* occlusionContext)
@@ -283,33 +297,60 @@ void GlassIntegrity::ShrinkOccludersAboveGlass(const dwmcore::COcclusionContext*
 	collectAndTryShrinkOccluders(coverageSet->GetOccluderArray()->views());
 }
 
+void GlassIntegrity::MyCOcclusionContext_CollectRectangleForOcclusion(
+	dwmcore::COcclusionContext* This,
+	const D2D1_RECT_F& rectangle,
+	bool recordVisual
+)
+{
+	g_lastCollectedOcclusionRectangle = {
+		This,
+		rectangle,
+		static_cast<int>(This->GetCurrentZ())
+	};
+	g_COcclusionContext_CollectRectangleForOcclusion_Org(This, rectangle, recordVisual);
+}
+
 HRESULT GlassIntegrity::MyCOcclusionContext_CheckAndRecordOverlayCandidate(
 	dwmcore::COcclusionContext* This,
 	dwmcore::CVisual* visual,
 	dwmcore::CCompositionSurfaceInfo* surface,
-	const dwmcore::CMILMatrix* matrix,
-	dwmcore::CShape* shape,
+	const dwmcore::CMILMatrix& matrix,
+	const dwmcore::CShape* shape,
 	int flags
 )
 {
-	/*if (shape)
+	const auto collected = std::exchange(g_lastCollectedOcclusionRectangle, {});
+	const auto depth = static_cast<int>(This->GetCurrentZ());
+	D2D1_RECT_F deviceBounds{};
+	if (shape)
 	{
 		D2D1_RECT_F bounds{};
-		shape->GetTightBounds(&bounds, nullptr);
-		OutputDebugStringW(
-			wil::str_printf<std::wstring>(
-				L"MyCOcclusionContext_CheckAndRecordOverlayCandidate called for shape with bounds: left=%f, top=%f, right=%f, bottom=%f\n",
-				bounds.left,
-				bounds.top,
-				bounds.right,
-				bounds.bottom
-			).c_str()
-		);
+		if (SUCCEEDED(shape->GetTightBounds(&bounds, This->GetWorldTransform())))
+		{
+			deviceBounds = This->PageInPixelsRectToDeviceRect(bounds);
+		}
 	}
-	else
+	else if (
+		collected.context == This &&
+		collected.depth == depth
+	)
 	{
-		OutputDebugStringW(L"MyCOcclusionContext_CheckAndRecordOverlayCandidate called for shape: null\n");
-	}*/
+		const auto worldBounds = RectF::TransformRect(
+			collected.rectangle,
+			This->GetWorldTransform()->GetD2DMatrix()
+		);
+		deviceBounds = This->PageInPixelsRectToDeviceRect(worldBounds);
+	}
+
+	if (!wil::rect_is_empty(deviceBounds) && GlassKernel::GetBlurRadius())
+	{
+		const auto glassCoverageSet = CArrayBasedGlassCoverageSet::GetOrCreate(This);
+		if (glassCoverageSet && glassCoverageSet->IsPartiallyCovered(deviceBounds, depth))
+		{
+			return S_OK;
+		}
+	}
 	return g_COcclusionContext_CheckAndRecordOverlayCandidate_Org(
 		This,
 		visual,
@@ -577,6 +618,10 @@ HRESULT GlassIntegrity::MyCColorBrush_AddOcclusionInformation(
 
 void GlassIntegrity::MyCOcclusionContext_Destructor(dwmcore::COcclusionContext* This)
 {
+	if (g_lastCollectedOcclusionRectangle.context == This)
+	{
+		g_lastCollectedOcclusionRectangle = {};
+	}
 	CArrayBasedGlassCoverageSet::Remove(This);
 	g_shrunkCoverageSetMap.erase(This);
 	return g_COcclusionContext_Destructor_Org(This);
@@ -813,6 +858,7 @@ void GlassIntegrity::Startup()
 		std::initializer_list<HookHelper::DetourInfo>
 		{
 			{ &g_COcclusionContext_CheckAndRecordOverlayCandidate_Org, &MyCOcclusionContext_CheckAndRecordOverlayCandidate },
+			{ &g_COcclusionContext_CollectRectangleForOcclusion_Org, &MyCOcclusionContext_CollectRectangleForOcclusion },
 
 			{ &g_CCombinedGeometry_ProcessUpdate_Org, &MyCCombinedGeometry_ProcessUpdate },
 			{ &g_CVisual_SetClip_Org, &MyCVisual_SetClip },
@@ -840,6 +886,7 @@ void GlassIntegrity::Shutdown()
 		std::initializer_list<HookHelper::DetourInfo>
 		{
 			{ &g_COcclusionContext_CheckAndRecordOverlayCandidate_Org, &MyCOcclusionContext_CheckAndRecordOverlayCandidate },
+			{ &g_COcclusionContext_CollectRectangleForOcclusion_Org, &MyCOcclusionContext_CollectRectangleForOcclusion },
 
 			{ &g_CCombinedGeometry_ProcessUpdate_Org, &MyCCombinedGeometry_ProcessUpdate },
 			{ &g_CVisual_SetClip_Org, &MyCVisual_SetClip },
@@ -869,6 +916,7 @@ void GlassIntegrity::Shutdown()
 
 void GlassIntegrity::Cleanup()
 {
+	g_lastCollectedOcclusionRectangle = {};
 	CArrayBasedGlassCoverageSet::RemoveAll();
 	g_glassVisualSet.clear();
 	g_glassStatusByGeometry.clear();
