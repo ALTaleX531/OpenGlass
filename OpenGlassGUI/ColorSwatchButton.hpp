@@ -8,6 +8,8 @@ namespace OpenGlass
 	{
 	public:
 		ColorSwatchButton(wxWindow* parent, wxWindowID id, const wxString& label, DWORD argb);
+		[[nodiscard]] DWORD GetColor() const noexcept { return m_argb; }
+		void SetColor(DWORD argb);
 		void SetValue(bool value) override;
 		bool MSWOnDraw(WXDRAWITEMSTRUCT* item) override;
 

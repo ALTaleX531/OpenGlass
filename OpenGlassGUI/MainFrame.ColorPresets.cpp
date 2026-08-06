@@ -4,7 +4,7 @@
 
 namespace OpenGlass
 {
-	void MainFrame::ApplyColorizationPreset(const ColorizationPresets::Preset& preset)
+	void MainFrame::ApplyColorizationColor(DWORD argb, ColorizationPresets::Family family)
 	{
 		RegistryConfig* config = GetConfigForSetting(Settings::Id::ColorizationColorOverride);
 		if (!config)
@@ -13,7 +13,8 @@ namespace OpenGlass
 		}
 
 		const auto application = ColorizationPresets::BuildApplication(
-			preset,
+			argb,
+			family,
 			m_chkEnableTransparency && !m_chkEnableTransparency->IsChecked()
 		);
 		auto setDword = [this, config](Settings::Id id, DWORD value) {
@@ -39,6 +40,11 @@ namespace OpenGlass
 		SetDirty(true);
 		NotifySettingsChange(ChangeType::Colorization);
 		LoadSettings(false);
+	}
+
+	void MainFrame::ApplyColorizationPreset(const ColorizationPresets::Preset& preset)
+	{
+		ApplyColorizationColor(preset.argb, preset.family);
 	}
 
 	const ColorizationPresets::Preset* MainFrame::FindMatchingWindows7Preset(bool opaque) const
@@ -134,5 +140,23 @@ namespace OpenGlass
 				button->SetValue(preset == selectedPreset);
 			}
 		}
+
+		const DWORD color = ResolveOverridableDword(
+			Settings::Id::ColorizationColor,
+			Settings::Id::ColorizationColorOverride,
+			0xFF000000
+		).value;
+		for (auto* button : m_customColorButtons)
+		{
+			if (button)
+			{
+				if (!m_customColorsInitialized || selectedPreset == nullptr)
+				{
+					button->SetColor(color);
+				}
+				button->SetValue(selectedPreset == nullptr);
+			}
+		}
+		m_customColorsInitialized = true;
 	}
 }

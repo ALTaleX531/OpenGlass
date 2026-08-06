@@ -703,6 +703,25 @@ namespace OpenGlass
 
 		addPresetButtons(m_vistaPresetSizer, ColorizationPresets::Get(ColorizationPresets::Family::Vista));
 		addPresetButtons(m_windows7PresetSizer, ColorizationPresets::Get(ColorizationPresets::Family::Windows7));
+		auto addCustomColorButton = [this, panel](wxWrapSizer* presetSizer) {
+			constexpr DWORD InitialColor = 0xFF000000;
+			auto* button = new ColorSwatchButton(panel, wxID_ANY, L"Custom", InitialColor);
+			auto* caption = new wxStaticText(
+				panel,
+				wxID_ANY,
+				L"Custom",
+				wxDefaultPosition,
+				FromDIP(wxSize(64, -1)),
+				wxALIGN_CENTER_HORIZONTAL
+			);
+			auto* cell = new wxBoxSizer(wxVERTICAL);
+			cell->Add(button, 0, wxALIGN_CENTER_HORIZONTAL);
+			cell->Add(caption, 0, wxEXPAND | wxTOP, 2);
+			presetSizer->Add(cell, 0, wxALL, 1);
+			m_customColorButtons.push_back(button);
+		};
+		addCustomColorButton(m_vistaPresetSizer);
+		addCustomColorButton(m_windows7PresetSizer);
 		m_colorPresetsGroupSizer->Add(m_vistaPresetSizer, 0, wxEXPAND | wxALL, 2);
 		m_colorPresetsGroupSizer->Add(m_windows7PresetSizer, 0, wxEXPAND | wxALL, 2);
 		sizer->Add(m_colorPresetsGroupSizer, 0, wxEXPAND | wxALL, 2);

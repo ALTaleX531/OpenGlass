@@ -44,6 +44,18 @@ namespace OpenGlass
 		Bind(wxEVT_SYS_COLOUR_CHANGED, &ColorSwatchButton::OnSystemColorChanged, this);
 	}
 
+	void ColorSwatchButton::SetColor(DWORD argb)
+	{
+		if (m_argb == argb)
+		{
+			return;
+		}
+
+		m_argb = argb;
+		RebuildBitmap();
+		Refresh(false);
+	}
+
 	void ColorSwatchButton::SetValue(bool value)
 	{
 		if (GetValue() == value)

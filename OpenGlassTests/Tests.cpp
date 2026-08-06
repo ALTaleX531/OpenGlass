@@ -823,6 +823,11 @@ namespace
 		Check(windows7Application.color == Windows7.front().argb);
 		Check(!windows7Application.vistaOpacity);
 		Check(windows7Application.windows7 == sky);
+
+		const auto customApplication = BuildApplication(0x804080C0, Family::Windows7, false);
+		Check(customApplication.color == 0x804080C0);
+		Check(!customApplication.vistaOpacity);
+		Check(customApplication.windows7 == CalculateWindows7Parameters(0x804080C0, false));
 	}
 
 	void TestSettingsCatalog()

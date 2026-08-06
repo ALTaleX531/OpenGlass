@@ -60,6 +60,7 @@ namespace OpenGlass
 		void UpdateOptionStatusIcons();
 		void AddPathWarningIcon(wxWindow* parent, wxBoxSizer* row, wxFilePickerCtrl* picker, wxCheckBox* checkbox, const wxString& title);
 		void UpdatePathWarningIcons();
+		void ApplyColorizationColor(DWORD argb, ColorizationPresets::Family family);
 		void ApplyColorizationPreset(const ColorizationPresets::Preset& preset);
 		[[nodiscard]] const ColorizationPresets::Preset* FindMatchingWindows7Preset(bool opaque) const;
 		void UpdateColorizationPresetSelection();
@@ -214,6 +215,8 @@ namespace OpenGlass
 		wxWrapSizer* m_vistaPresetSizer{ nullptr };
 		wxWrapSizer* m_windows7PresetSizer{ nullptr };
 		std::vector<std::pair<const ColorizationPresets::Preset*, ColorSwatchButton*>> m_presetButtons;
+		std::vector<ColorSwatchButton*> m_customColorButtons;
+		bool m_customColorsInitialized{ false };
 		wxCheckBox* m_chkEnableTransparency{ nullptr };
 		wxSlider* m_slColorIntensity{ nullptr };
 		wxSizer* m_detailedColorizationSizer{ nullptr };

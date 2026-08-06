@@ -142,12 +142,21 @@ namespace OpenGlass::ColorizationPresets
 		return parameters;
 	}
 
+	[[nodiscard]] constexpr Application BuildApplication(
+		std::uint32_t argb,
+		Family family,
+		bool opaque
+	) noexcept
+	{
+		if (family == Family::Vista)
+		{
+			return { argb, CalculateVistaOpacity(argb), std::nullopt };
+		}
+		return { argb, std::nullopt, CalculateWindows7Parameters(argb, opaque) };
+	}
+
 	[[nodiscard]] constexpr Application BuildApplication(const Preset& preset, bool opaque) noexcept
 	{
-		if (preset.family == Family::Vista)
-		{
-			return { preset.argb, CalculateVistaOpacity(preset.argb), std::nullopt };
-		}
-		return { preset.argb, std::nullopt, CalculateWindows7Parameters(preset.argb, opaque) };
+		return BuildApplication(preset.argb, preset.family, opaque);
 	}
 }

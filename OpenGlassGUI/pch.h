@@ -5,6 +5,7 @@
 #include <wx/statline.h>
 #include <wx/valnum.h>
 #include <wx/clrpicker.h>
+#include <wx/colordlg.h>
 #include <wx/filepicker.h>
 #include <wx/spinctrl.h>
 #include <wx/slider.h>

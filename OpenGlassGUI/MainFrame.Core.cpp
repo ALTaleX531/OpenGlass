@@ -1602,6 +1602,48 @@ namespace OpenGlass
 			});
 		}
 
+		for (auto* button : m_customColorButtons)
+		{
+			button->Bind(wxEVT_TOGGLEBUTTON, [this, button](wxCommandEvent&) {
+				const auto family = m_rbGlassType->GetSelection() == 0
+					? ColorizationPresets::Family::Vista
+					: ColorizationPresets::Family::Windows7;
+				ApplyColorizationColor(button->GetColor(), family);
+			});
+			button->Bind(wxEVT_LEFT_DCLICK, [this, button](wxMouseEvent&) {
+				wxColourData colorData;
+				colorData.SetChooseFull(true);
+				colorData.SetChooseAlpha(false);
+				const DWORD currentValue = button->GetColor();
+				colorData.SetColour(wxColour(
+					(currentValue >> 16) & 0xFF,
+					(currentValue >> 8) & 0xFF,
+					currentValue & 0xFF
+				));
+
+				wxColourDialog dialog(this, &colorData);
+				if (dialog.ShowModal() != wxID_OK)
+				{
+					UpdateColorizationPresetSelection();
+					return;
+				}
+
+				const wxColour selected = dialog.GetColourData().GetColour();
+				const DWORD alpha = ColorizationPresets::CalculateIntensityAlpha(
+					m_slColorIntensity->GetValue()
+				) << 24;
+				const DWORD argb = alpha
+					| (static_cast<DWORD>(selected.Red()) << 16)
+					| (static_cast<DWORD>(selected.Green()) << 8)
+					| static_cast<DWORD>(selected.Blue());
+				const auto family = m_rbGlassType->GetSelection() == 0
+					? ColorizationPresets::Family::Vista
+					: ColorizationPresets::Family::Windows7;
+				button->SetColor(argb);
+				ApplyColorizationColor(argb, family);
+			});
+		}
+
 		m_chkEnableTransparency->Bind(wxEVT_CHECKBOX, [this](wxCommandEvent& e) {
 			RegistryConfig* config = GetConfigForSetting(Settings::Id::ColorizationOpaqueBlend);
 			if (!config)
