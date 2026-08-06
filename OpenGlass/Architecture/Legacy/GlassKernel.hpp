@@ -83,8 +83,6 @@ namespace OpenGlass::GlassKernel
 	);
 	float GetAdjustedReflectionIntensity(bool active, bool maximized);
 
-	bool IsCurrentCVIFullyTransparent();
-
 	void Update(GlassEngine::UpdateType type);
 	void Startup();
 	void Shutdown();

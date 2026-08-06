@@ -21,24 +21,6 @@ namespace OpenGlass::GlassKernel
 	HRGN WINAPI MyExtCreateRegion(const XFORM* lpx, DWORD nCount, const RGNDATA* lpData);
 
 	HRESULT MyIDCompositionDesktopDevice_WaitForCommitCompletion(IDCompositionDesktopDevice* This);
-	HRESULT MyCCachedVisualImage_RenderTargetBitmapInfo_Update(
-		dwmcore::CCachedVisualImage::RenderTargetBitmapInfo* This,
-		const D2D1_RECT_F& rect,
-		dwmcore::DisplayId id,
-		bool unknown,
-		DWM::MilStretch mode
-	);
-	HRESULT MyCCachedVisualImage_CCachedTarget_Update(
-		dwmcore::CCachedVisualImage::CCachedTarget* This,
-		const D2D1_RECT_F& rect,
-		DWM::MilStretch mode,
-		const dwmcore::RenderTargetInfo& info
-	);
-	HRESULT MyCDrawingContext_PreSubgraph(
-		dwmcore::CDrawingContext* This,
-		const dwmcore::CVisualTree* visualTree,
-		bool* conditionalBreak
-	);
 	HRESULT MyCD2DContext_DestroyDeviceResources(dwmcore::CD2DContext* This);
 	HRESULT MyCDesktopManager_ReleaseDXGIAdapter(uDWM::CDesktopManager* This);
 	HRESULT MyCGraphicsDeviceManager_ReleaseGraphicsDevice(PVOID This);
@@ -53,17 +35,11 @@ namespace OpenGlass::GlassKernel
 	decltype(&MyIDCompositionDesktopDevice_WaitForCommitCompletion) g_IDCompositionDesktopDevice_WaitForCommitCompletion_Org{ nullptr };
 	decltype(&MyIDCompositionDesktopDevice_WaitForCommitCompletion)* g_IDCompositionDesktopDevice_WaitForCommitCompletion_Org_Address{ nullptr };
 	HookHelper::PointerHook<&MyIDCompositionDesktopDevice_WaitForCommitCompletion> g_IDCompositionDesktopDevice_WaitForCommitCompletion_Hook;
-	Projection::Detour<dwmcore::Symbol_CCachedVisualImage_RenderTargetBitmapInfo_Update, decltype(&MyCCachedVisualImage_RenderTargetBitmapInfo_Update)> g_CCachedVisualImage_RenderTargetBitmapInfo_Update_Org{};
-	Projection::Detour<dwmcore::Symbol_CCachedVisualImage_CCachedTarget_Update, decltype(&MyCCachedVisualImage_CCachedTarget_Update)> g_CCachedVisualImage_CCachedTarget_Update_Org{};
-	Projection::Detour<dwmcore::Symbol_CDrawingContext_PreSubgraph, decltype(&MyCDrawingContext_PreSubgraph)> g_CDrawingContext_PreSubgraph_Org{};
 	Projection::Detour<dwmcore::Symbol_CD2DContext_DestroyDeviceResources, decltype(&MyCD2DContext_DestroyDeviceResources)> g_CD2DContext_DestroyDeviceResources_Org{};
 	Projection::Detour<uDWM::Symbol_CDesktopManager_ReleaseDXGIAdapter, decltype(&MyCDesktopManager_ReleaseDXGIAdapter)> g_CDesktopManager_ReleaseDXGIAdapter_Org{};
 	Projection::Detour<uDWM::Symbol_CGraphicsDeviceManager_ReleaseGraphicsDevice, decltype(&MyCGraphicsDeviceManager_ReleaseGraphicsDevice)> g_CGraphicsDeviceManager_ReleaseGraphicsDevice_Org{};
 	Projection::Detour<uDWM::Symbol_CTopLevelWindow_EnsureImages_Pre_18362, decltype(&MyCTopLevelWindow_EnsureImages_Pre_W10_1903)> g_CTopLevelWindow_EnsureImages_Pre_W10_1903_Org{};
 	Projection::Detour<uDWM::Symbol_CTopLevelWindow_EnsureImages_18362, decltype(&MyCTopLevelWindow_EnsureImages_At_Least_W10_1903)> g_CTopLevelWindow_EnsureImages_At_Least_W10_1903_Org{};
-
-	size_t g_CVIHierarchy{};
-	HWND g_hwnd{};
 
 	void RedrawTopLevelWindow(uDWM::CTopLevelWindow* window, bool deepRedraw)
 	{
@@ -238,295 +214,6 @@ HRGN WINAPI GlassKernel::MyExtCreateRegion(const XFORM* lpx, DWORD nCount, const
 HRESULT GlassKernel::MyIDCompositionDesktopDevice_WaitForCommitCompletion([[maybe_unused]] IDCompositionDesktopDevice* This)
 {
 	return S_OK;
-}
-
-HRESULT GlassKernel::MyCCachedVisualImage_RenderTargetBitmapInfo_Update(
-	dwmcore::CCachedVisualImage::RenderTargetBitmapInfo* This,
-	const D2D1_RECT_F& rect,
-	dwmcore::DisplayId id,
-	bool unknown,
-	DWM::MilStretch mode
-)
-{
-	g_hwnd = nullptr;
-	g_CVIHierarchy += 1;
-	const auto hr = g_CCachedVisualImage_RenderTargetBitmapInfo_Update_Org(
-		This,
-		rect,
-		id,
-		unknown,
-		mode
-	);
-	g_CVIHierarchy -= 1;
-	g_hwnd = nullptr;
-	return hr;
-}
-
-HRESULT GlassKernel::MyCCachedVisualImage_CCachedTarget_Update(
-	dwmcore::CCachedVisualImage::CCachedTarget* This,
-	const D2D1_RECT_F& rect,
-	DWM::MilStretch mode,
-	const dwmcore::RenderTargetInfo& info
-)
-{
-	g_hwnd = nullptr;
-	g_CVIHierarchy += 1;
-	const auto hr = g_CCachedVisualImage_CCachedTarget_Update_Org(
-		This,
-		rect,
-		mode,
-		info
-	);
-	g_CVIHierarchy -= 1;
-	g_hwnd = nullptr;
-	return hr;
-}
-
-HRESULT GlassKernel::MyCDrawingContext_PreSubgraph(
-	dwmcore::CDrawingContext* This,
-	const dwmcore::CVisualTree* visualTree,
-	bool* conditionalBreak
-)
-{
-	const auto isKeyPressed = [](int key)
-	{
-		return (GetAsyncKeyState(key) & 0x8000);
-	};
-	if (
-		isKeyPressed(VK_CONTROL) &&
-		isKeyPressed(VK_SHIFT) &&
-		(isKeyPressed(VK_LWIN) || isKeyPressed(VK_RWIN)) &&
-		(isKeyPressed('X') || isKeyPressed('Q'))
-	)
-	{
-		__fastfail(HRESULT_FROM_WIN32(ERROR_POSSIBLE_DEADLOCK));
-	}
-
-	if (g_CVIHierarchy && !g_hwnd)
-	{
-		const auto visual = This->GetCurrentVisualHelper();
-		if (visual)
-		{
-			const auto hwnd = visual->GetTopLevelWindow();
-			if (hwnd)
-			{
-				if (false)
-				{
-					if (
-						(
-							(
-								RegisterWindowMessageW(L"WorkerW") == GetClassWord(g_hwnd, GCW_ATOM) ||
-								RegisterWindowMessageW(L"Progman") == GetClassWord(g_hwnd, GCW_ATOM)
-							) &&
-							FindWindowExW(g_hwnd, nullptr, L"SHELLDLL_DefView", nullptr)
-						) ||
-						(
-							RegisterWindowMessageW(L"SHELLDLL_DefView") == GetClassWord(g_hwnd, GCW_ATOM) &&
-							(
-								RegisterWindowMessageW(L"WorkerW") == GetClassWord(GetParent(g_hwnd), GCW_ATOM) ||
-								RegisterWindowMessageW(L"Progman") == GetClassWord(GetParent(g_hwnd), GCW_ATOM)
-							)
-						)
-					)
-					{
-						const auto d2dContext = This->GetD3DDevice()->GetD2DContext();
-						const auto context = d2dContext->GetDeviceContext();
-						LOG_IF_FAILED(This->ApplyRenderStateInternal(false));
-						LOG_IF_FAILED(This->FlushD2D());
-						d2dContext->EnsureBeginDraw();
-
-						if (!context)
-						{
-							return g_CDrawingContext_PreSubgraph_Org(This, visualTree, conditionalBreak);
-						}
-
-						static winrt::com_ptr<ID2D1Bitmap> s_textBitmap{};
-						static winrt::com_ptr<ID2D1Image> s_textGlowImage{};
-
-						static dwmcore::CD2DContext* s_d2dContext{ nullptr };
-						if (s_d2dContext != d2dContext)
-						{
-							s_textBitmap = nullptr;
-							s_textGlowImage = nullptr;
-							s_d2dContext = d2dContext;
-						}
-
-						static D2D1_RECT_F s_textLayoutBox{};
-						static winrt::com_ptr<IDWriteFactory> s_dwriteFactory{ nullptr };
-						static winrt::com_ptr<IDWriteTextFormat> s_dwriteTextFormat{ nullptr };
-						static winrt::com_ptr<IDWriteTextLayout> s_dwriteTextLayout{ nullptr };
-
-						if (!s_dwriteFactory)
-						{
-							THROW_IF_FAILED(
-								DWriteCreateFactory(
-									DWRITE_FACTORY_TYPE_SHARED,
-									__uuidof(IDWriteFactory),
-									reinterpret_cast<IUnknown**>(s_dwriteFactory.put())
-								)
-							);
-							THROW_IF_FAILED(
-								s_dwriteFactory->CreateTextFormat(
-									L"Segoe UI",
-									nullptr,
-									DWRITE_FONT_WEIGHT_REGULAR,
-									DWRITE_FONT_STYLE_NORMAL,
-									DWRITE_FONT_STRETCH_NORMAL,
-									16.f,
-									L"en-us",
-									s_dwriteTextFormat.put()
-								)
-							);
-							THROW_IF_FAILED(s_dwriteTextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_TRAILING));
-							THROW_IF_FAILED(s_dwriteTextFormat->SetWordWrapping(DWRITE_WORD_WRAPPING_NO_WRAP));
-							std::wstring watermarkText
-							{
-								L"Aero Glass For Windows 10+ (Release Preview) \n"
-								L"https://github.com/ALTaleX531/OpenGlass "
-							};
-							THROW_IF_FAILED(
-								s_dwriteFactory->CreateTextLayout(
-									watermarkText.c_str(),
-									static_cast<UINT32>(watermarkText.size()),
-									s_dwriteTextFormat.get(),
-									0.f,
-									0.f,
-									s_dwriteTextLayout.put()
-								)
-							);
-							DWRITE_TEXT_METRICS metrics{};
-							THROW_IF_FAILED(s_dwriteTextLayout->GetMetrics(&metrics));
-							s_textLayoutBox =
-							{
-								0.f,
-								0.f,
-								metrics.widthIncludingTrailingWhitespace,
-								metrics.height
-							};
-							THROW_IF_FAILED(s_dwriteTextLayout->SetMaxWidth(wil::rect_width(s_textLayoutBox)));
-						}
-
-						winrt::com_ptr<ID2D1Effect> textGlowEffect{};
-						winrt::com_ptr<ID2D1Effect> textMorphologyEffect{};
-						if (!s_textBitmap || !s_textGlowImage)
-						{
-							THROW_IF_FAILED(
-								context->CreateEffect(
-									CLSID_D2D1Morphology,
-									textMorphologyEffect.put()
-								)
-							);
-							THROW_IF_FAILED(
-								textMorphologyEffect->SetValue(
-									D2D1_MORPHOLOGY_PROP_MODE,
-									D2D1_MORPHOLOGY_MODE_DILATE
-								)
-							);
-							THROW_IF_FAILED(
-								textMorphologyEffect->SetValue(
-									D2D1_MORPHOLOGY_PROP_WIDTH,
-									3
-								)
-							);
-							THROW_IF_FAILED(
-								textMorphologyEffect->SetValue(
-									D2D1_MORPHOLOGY_PROP_HEIGHT,
-									3
-								)
-							);
-
-							THROW_IF_FAILED(
-								context->CreateEffect(
-									CLSID_D2D1Shadow,
-									textGlowEffect.put()
-								)
-							);
-							THROW_IF_FAILED(
-								textGlowEffect->SetValue(
-									D2D1_PROPERTY_CACHED,
-									TRUE
-								)
-							);
-							THROW_IF_FAILED(
-								textGlowEffect->SetValue(
-									D2D1_SHADOW_PROP_OPTIMIZATION,
-									D2D1_GAUSSIANBLUR_OPTIMIZATION_SPEED
-								)
-							);
-							THROW_IF_FAILED(
-								textGlowEffect->SetValue(
-									D2D1_SHADOW_PROP_COLOR,
-									D2D1::ColorF(D2D1::ColorF::Black)
-								)
-							);
-							THROW_IF_FAILED(
-								textGlowEffect->SetValue(
-									D2D1_SHADOW_PROP_BLUR_STANDARD_DEVIATION,
-									4.f
-								)
-							);
-							textGlowEffect->SetInputEffect(0, textMorphologyEffect.get());
-
-							winrt::com_ptr<ID2D1BitmapRenderTarget> bitmapRT{};
-							THROW_IF_FAILED(
-								context->CreateCompatibleRenderTarget(
-									D2D1::SizeF(
-										wil::rect_width(s_textLayoutBox) + 24.f,
-										wil::rect_height(s_textLayoutBox) + 24.f
-									),
-									bitmapRT.put()
-								)
-							);
-							winrt::com_ptr<ID2D1SolidColorBrush> watermarkBrush{};
-							THROW_IF_FAILED(bitmapRT->CreateSolidColorBrush(D2D1::ColorF(0xFFFFFF), watermarkBrush.put()));
-
-							bitmapRT->SetTextAntialiasMode(D2D1_TEXT_ANTIALIAS_MODE_GRAYSCALE);
-							bitmapRT->BeginDraw();
-							bitmapRT->Clear();
-							bitmapRT->DrawTextLayout(
-								D2D1::Point2F(12.f, 12.f),
-								s_dwriteTextLayout.get(),
-								watermarkBrush.get(),
-								D2D1_DRAW_TEXT_OPTIONS_NONE
-							);
-
-							THROW_IF_FAILED(bitmapRT->EndDraw());
-							THROW_IF_FAILED(bitmapRT->GetBitmap(s_textBitmap.put()));
-							textMorphologyEffect->SetInput(0, s_textBitmap.get());
-							textGlowEffect->GetOutput(s_textGlowImage.put());
-						}
-
-						MONITORINFO monitorInfo{ sizeof(monitorInfo) };
-						THROW_IF_WIN32_BOOL_FALSE(GetMonitorInfoW(MonitorFromWindow(g_hwnd, MONITOR_DEFAULTTOPRIMARY), &monitorInfo));
-						D2D1_POINT_2F origin
-						{
-							static_cast<float>(monitorInfo.rcWork.right) - 9.f - wil::rect_width(s_textLayoutBox) - 24.f,
-							static_cast<float>(monitorInfo.rcWork.bottom) - 9.f - wil::rect_height(s_textLayoutBox) - 24.f,
-						};
-						const auto deviceTransform = This->GetDeviceTransform()->GetD2DMatrix();
-						origin = D2D1::Matrix3x2F::ReinterpretBaseType(&deviceTransform)->TransformPoint(origin);
-						context->DrawImage(
-							s_textGlowImage.get(),
-							&origin,
-							nullptr,
-							D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR
-						);
-						context->DrawImage(
-							s_textBitmap.get(),
-							&origin,
-							nullptr,
-							D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR
-						);
-						context->Flush();
-					}
-				}
-
-				g_hwnd = hwnd;
-			}
-		}
-	}
-
-	return g_CDrawingContext_PreSubgraph_Org(This, visualTree, conditionalBreak);
 }
 
 HRESULT GlassKernel::MyCD2DContext_DestroyDeviceResources(dwmcore::CD2DContext* This)
@@ -809,11 +496,6 @@ float GlassKernel::GetAdjustedReflectionIntensity(bool active, bool maximized)
 	return std::clamp(baseOpacity * Shared::g_reflectionIntensity / 0.5f, 0.f, 1.f);
 }
 
-bool GlassKernel::IsCurrentCVIFullyTransparent()
-{
-	return g_CVIHierarchy && !g_hwnd;
-}
-
 void GlassKernel::Update(GlassEngine::UpdateType type)
 {
 	if (type & GlassEngine::UpdateType::Theme)
@@ -903,14 +585,10 @@ void GlassKernel::Startup()
 	);
 	HookHelper::GetCurrentHookTransaction().Apply(g_gdiImportHooks);
 
-	const auto build_before_w10_2004 = dwmcore::g_versionInfo.build < os::build_w10_2004;
 	const auto build_before_w10_1903 = uDWM::g_versionInfo.build < os::build_w10_1903;
 	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
-			{ &g_CCachedVisualImage_RenderTargetBitmapInfo_Update_Org, &MyCCachedVisualImage_RenderTargetBitmapInfo_Update, build_before_w10_2004 },
-			{ &g_CCachedVisualImage_CCachedTarget_Update_Org, &MyCCachedVisualImage_CCachedTarget_Update, !build_before_w10_2004 },
-			{ &g_CDrawingContext_PreSubgraph_Org, &MyCDrawingContext_PreSubgraph },
 			{ &g_CD2DContext_DestroyDeviceResources_Org, &MyCD2DContext_DestroyDeviceResources },
 			{ &g_CDesktopManager_ReleaseDXGIAdapter_Org, &MyCDesktopManager_ReleaseDXGIAdapter, build_before_server_2022 },
 			{ &g_CGraphicsDeviceManager_ReleaseGraphicsDevice_Org, &MyCGraphicsDeviceManager_ReleaseGraphicsDevice, !build_before_server_2022 },
@@ -923,16 +601,12 @@ void GlassKernel::Startup()
 
 void GlassKernel::Shutdown()
 {
-	const auto build_before_w10_2004 = dwmcore::g_versionInfo.build < os::build_w10_2004;
 	const auto build_before_w10_1903 = uDWM::g_versionInfo.build < os::build_w10_1903;
 	const auto build_before_w11_24h2 = uDWM::g_versionInfo.build < os::build_w11_24h2;
 	const auto build_before_server_2022 = uDWM::g_versionInfo.build < os::build_server_2022;
 	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
-			{ &g_CCachedVisualImage_RenderTargetBitmapInfo_Update_Org, &MyCCachedVisualImage_RenderTargetBitmapInfo_Update, build_before_w10_2004 },
-			{ &g_CCachedVisualImage_CCachedTarget_Update_Org, &MyCCachedVisualImage_CCachedTarget_Update, !build_before_w10_2004 },
-			{ &g_CDrawingContext_PreSubgraph_Org, &MyCDrawingContext_PreSubgraph },
 			{ &g_CD2DContext_DestroyDeviceResources_Org, &MyCD2DContext_DestroyDeviceResources },
 			{ &g_CDesktopManager_ReleaseDXGIAdapter_Org, &MyCDesktopManager_ReleaseDXGIAdapter, build_before_server_2022 },
 			{ &g_CGraphicsDeviceManager_ReleaseGraphicsDevice_Org, &MyCGraphicsDeviceManager_ReleaseGraphicsDevice, !build_before_server_2022 },

@@ -51,18 +51,6 @@
       "notes": "This handle-based channel method remains the CImageLegacyMilBrushProxy::Update fallback through build 18362. The pointer-form uDWM proxy method is not ABI-compatible and becomes active at build 19041."
     },
     {
-      "name": "Symbol_CVisual_GetTopLevelWindow",
-      "id": "CVisual::GetTopLevelWindow",
-      "symbol_names": [
-        "public: unsigned __int64 __cdecl CVisual::GetTopLevelWindow(void)const __ptr64"
-      ],
-      "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
-      "target": "&CVisual::GetTopLevelWindow",
-      "kind": "projected_function"
-    },
-    {
       "name": "Symbol_CMILMatrix_Identity",
       "id": "CMILMatrix::Identity",
       "symbol_names": [
@@ -591,18 +579,6 @@
       "type": "HRESULT (*)(CDrawingContext*, const CVisualTree*, const D2D1_RECT_F&, const COcclusionContext*, int, bool, CVisual*)"
     },
     {
-      "name": "Symbol_CDrawingContext_PreSubgraph",
-      "id": "CDrawingContext::PreSubgraph",
-      "symbol_names": [
-        "public: long __cdecl CDrawingContext::PreSubgraph(class CVisualTree const * __ptr64,bool * __ptr64) __ptr64"
-      ],
-      "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
-      "kind": "raw",
-      "type": "HRESULT (*)(CDrawingContext*, const CVisualTree*, bool*)"
-    },
-    {
       "name": "Symbol_COcclusionContext_CheckAndRecordOverlayCandidate_Pre_19041",
       "id": "COcclusionContext::CheckAndRecordOverlayCandidate.pre19041",
       "symbol_names": [
@@ -897,38 +873,6 @@
       "max_exclusive": null,
       "kind": "raw",
       "type": "D2D1_RECT_F* (*)(CTreeDirty*, D2D1_RECT_F*, UINT, const D2D1_RECT_F&, const COcclusionContext&, CRegion*, const CMILMatrix*, bool, const DWM::span<const CVisual*>&)"
-    },
-    {
-      "name": "Symbol_CCachedVisualImage_RenderTargetBitmapInfo_Update",
-      "id": "CCachedVisualImage::RenderTargetBitmapInfo::Update",
-      "symbol_names": [
-        "public: long __cdecl CCachedVisualImage::RenderTargetBitmapInfo::Update(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,struct DisplayId,bool,enum MilStretch::Enum) __ptr64",
-        "public: long __cdecl CCachedVisualImage::RenderTargetBitmapInfo::Update(struct MilRectF const & __ptr64,class DisplayId,bool,enum MilStretch::Enum) __ptr64"
-      ],
-      "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": {
-        "build": 19041,
-        "revision": 0
-      },
-      "kind": "raw",
-      "type": "HRESULT (*)(CCachedVisualImage::RenderTargetBitmapInfo*, const D2D1_RECT_F&, DisplayId, bool, DWM::MilStretch)"
-    },
-    {
-      "name": "Symbol_CCachedVisualImage_CCachedTarget_Update",
-      "id": "CCachedVisualImage::CCachedTarget::Update",
-      "symbol_names": [
-        "public: long __cdecl CCachedVisualImage::CCachedTarget::Update(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,enum MilStretch::Enum,class RenderTargetInfo const & __ptr64) __ptr64",
-        "public: long __cdecl CCachedVisualImage::CCachedTarget::Update(class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const & __ptr64,enum MilStretch::Enum,class RenderTargetInfo const & __ptr64) __ptr64"
-      ],
-      "requirement": "required",
-      "min_inclusive": {
-        "build": 19041,
-        "revision": 0
-      },
-      "max_exclusive": null,
-      "kind": "raw",
-      "type": "HRESULT (*)(CCachedVisualImage::CCachedTarget*, const D2D1_RECT_F&, DWM::MilStretch, const RenderTargetInfo&)"
     },
     {
       "name": "Symbol_GetCurrentFrameId",

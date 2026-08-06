@@ -62,11 +62,6 @@ namespace OpenGlass::dwmcore
 	};
 	struct CVisual : CResource
 	{
-		inline HWND GetTopLevelWindow() const
-		{
-			OPENGLASS_MUSTTAIL
-			return Projection::Invoke<&CVisual::GetTopLevelWindow>(this);
-		}
 	};
 	struct CFloatResource : CResource
 	{
@@ -525,7 +520,6 @@ namespace OpenGlass::dwmcore
 		}
 	};
 
-	enum class DisplayId : DWORD;
 	struct CD2DContext : CResource
 	{
 		inline void EnsureBeginDraw()
@@ -824,15 +818,6 @@ namespace OpenGlass::dwmcore
 	};
 	struct CWindowOcclusionInfo : CResource
 	{
-	};
-	struct CCachedVisualImage : CResource
-	{
-		struct RenderTargetBitmapInfo : CResource
-		{
-		};
-		struct CCachedTarget : CResource
-		{
-		};
 	};
 	struct CDrawListCache : CResource
 	{

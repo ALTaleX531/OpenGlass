@@ -129,6 +129,23 @@ namespace OpenGlass::GlassIntegrity
 	};
 	GlassSafetyZoneMode g_glassSafetyZoneMode{ GlassSafetyZoneMode::Visible };
 
+	void CheckEmergencyRecoveryHotkey()
+	{
+		const auto isKeyPressed = [](int key)
+		{
+			return (GetAsyncKeyState(key) & 0x8000);
+		};
+		if (
+			isKeyPressed(VK_CONTROL) &&
+			isKeyPressed(VK_SHIFT) &&
+			(isKeyPressed(VK_LWIN) || isKeyPressed(VK_RWIN)) &&
+			(isKeyPressed('X') || isKeyPressed('Q'))
+		)
+		{
+			__fastfail(HRESULT_FROM_WIN32(ERROR_POSSIBLE_DEADLOCK));
+		}
+	}
+
 	struct UnoccludedDirtyRegionCalculationContext
 	{
 		const dwmcore::COcclusionContext* occlusionContext;
@@ -447,6 +464,8 @@ HRESULT GlassIntegrity::MyCOcclusionContext_Compute(
 	const DWM::span<dwmcore::COverlayContext*>& overlays
 )
 {
+	CheckEmergencyRecoveryHotkey();
+
 	HRESULT hr{ S_OK };
 	if (const auto glassCoverageSet = CArrayBasedGlassCoverageSet::GetOrCreate(This); glassCoverageSet)
 	{
@@ -763,10 +782,6 @@ HRESULT GlassIntegrity::MyCDrawingContext_DrawVisualTree(
 		}
 
 		ShrinkOccludersAboveGlass(occlusionContext);
-		if (GlassKernel::IsCurrentCVIFullyTransparent())
-		{
-			break;
-		}
 
 		const auto d2dContext = This->GetD3DDevice()->GetD2DContext();
 		const auto context = d2dContext->GetDeviceContext();

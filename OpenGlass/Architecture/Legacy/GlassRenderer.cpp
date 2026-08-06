@@ -113,6 +113,7 @@ namespace OpenGlass::GlassRenderer
 	{
 		RenderFlag_SolidColor,
 		RenderFlag_Backdrop,
+		RenderFlag_Material,
 		RenderFlag_Reflection
 	};
 
@@ -140,6 +141,7 @@ namespace OpenGlass::GlassRenderer
 	std::bitset<4> g_renderFlag{};
 	bool g_colorIsOpaque{};
 	bool g_shapeIsRectangles{};
+	bool g_renderTargetIgnoresAlpha{};
 
 	bool g_fixLivePreviewRendering{ false };
 	UINT g_drawGeometryCommandType{};
@@ -534,8 +536,10 @@ HRESULT GlassRenderer::MyCDrawingContext_DrawGeometry(
 
 	g_drawingContextNoRef = drawingContext;
 	g_currentDeviceResources = &g_deviceResources.try_emplace(d2dContext).first->second;
+	g_renderTargetIgnoresAlpha = false;
 	const auto transformScope = wil::scope_exit([drawingContext]
 	{
+		g_renderTargetIgnoresAlpha = false;
 		g_currentDeviceResources = nullptr;
 		g_drawingContextNoRef = nullptr;
 	});
@@ -576,17 +580,19 @@ HRESULT GlassRenderer::MyCDrawingContext_DrawGeometry(
 			SUCCEEDED(Util::GetTargetBitmapFromD2DContext(context, renderTargetBitmap))
 		)
 		{
+			const auto pixelFormat = renderTargetBitmap->GetPixelFormat();
 			if (
-				const auto format = renderTargetBitmap->GetPixelFormat().format;
+				const auto format = pixelFormat.format;
 				format == DXGI_FORMAT_R16G16B16A16_FLOAT ||
 				format == DXGI_FORMAT_R32G32B32A32_FLOAT
 			)
 			{
 				colorSpaceIsScRGB = true;
 			}
+			g_renderTargetIgnoresAlpha = pixelFormat.alphaMode == D2D1_ALPHA_MODE_IGNORE;
 		}
 		
-		const auto expansion = GlassKernel::IsCurrentCVIFullyTransparent() ? 0.f : GlassKernel::GetBlurRadius();
+		const auto expansion = GlassKernel::GetBlurRadius();
 		const auto glassCoverageSet = CArrayBasedGlassCoverageSet::GetOrCreate(occlusionContext->GetArrayBasedCoverageSet());
 		const auto reinterpreter = GlassKernel::AlphaChannelReinterpreter(color.a);
 
@@ -595,6 +601,8 @@ HRESULT GlassRenderer::MyCDrawingContext_DrawGeometry(
 		{
 			const auto active = reinterpreter.GetIsActive();
 			const auto maximized = reinterpreter.GetIsMaximized();
+			g_renderFlag.set(RenderFlag_Material, true);
+			g_materialContext.opacity = Shared::g_materialIntensity;
 
 			const auto realizedGlassColorizationParameters = GlassKernel::RealizeWindowColorization(
 				GlassKernel::GetBaseColor(Shared::IsTransparencyDisabled(), maximized),
@@ -603,6 +611,11 @@ HRESULT GlassRenderer::MyCDrawingContext_DrawGeometry(
 				Shared::IsTransparencyDisabled(),
 				false
 			);
+			color = realizedGlassColorizationParameters.GetEffectivescRGBBlendColor(sdrBoost);
+			if (!colorSpaceIsScRGB)
+			{
+				color = Color::scRGBTosRGB(color, sdrBoost);
+			}
 
 			if (
 				!(
@@ -652,6 +665,7 @@ HRESULT GlassRenderer::MyCDrawingContext_DrawGeometry(
 					g_params.afterglow.b *= realizedGlassColorizationParameters.afterglowBalance;
 					g_params.afterglow.a = 1.f;
 
+					g_params.fallback = color;
 					g_params.blurBalance = realizedGlassColorizationParameters.blurBalance;
 				}
 
@@ -670,16 +684,14 @@ HRESULT GlassRenderer::MyCDrawingContext_DrawGeometry(
 					}
 				}
 				g_renderFlag.set(RenderFlag_Backdrop, true);
-
-				g_materialContext.opacity = Shared::g_materialIntensity;
 			}
-
-			color = realizedGlassColorizationParameters.GetEffectivescRGBBlendColor(sdrBoost);
 		}
-
-		if (!colorSpaceIsScRGB)
+		else
 		{
-			color = Color::scRGBTosRGB(color, sdrBoost);
+			if (!colorSpaceIsScRGB)
+			{
+				color = Color::scRGBTosRGB(color, sdrBoost);
+			}
 		}
 
 		if (!g_renderFlag.test(RenderFlag_Backdrop))
@@ -739,6 +751,13 @@ void GlassRenderer::MyID2D1DeviceContext_FillGeometry(
 	bool ignoreLayer{ g_shapeIsRectangles };
 	if (!ignoreLayer)
 	{
+		auto layerOptions = D2D1_LAYER_OPTIONS1_INITIALIZE_FROM_BACKGROUND;
+		if (g_renderTargetIgnoresAlpha)
+		{
+			layerOptions = static_cast<D2D1_LAYER_OPTIONS1>(
+				layerOptions | D2D1_LAYER_OPTIONS1_IGNORE_ALPHA
+			);
+		}
 		This->PushLayer(
 			D2D1::LayerParameters1(
 				g_drawingWorldBounds,
@@ -747,12 +766,7 @@ void GlassRenderer::MyID2D1DeviceContext_FillGeometry(
 				D2D1::IdentityMatrix(),
 				1.f,
 				nullptr,
-				D2D1_LAYER_OPTIONS1_INITIALIZE_FROM_BACKGROUND |
-				(
-					g_renderFlag.test(RenderFlag_Backdrop) ?
-					D2D1_LAYER_OPTIONS1_IGNORE_ALPHA :
-					D2D1_LAYER_OPTIONS1_NONE
-				)
+				layerOptions
 			),
 			nullptr
 		);
@@ -856,6 +870,9 @@ void GlassRenderer::MyID2D1DeviceContext_FillGeometry(
 			}
 		}
 
+	}
+	if (g_renderFlag.test(RenderFlag_Material))
+	{
 		LOG_IF_FAILED(
 			g_currentDeviceResources->m_materialRealizer.Render(
 				This,

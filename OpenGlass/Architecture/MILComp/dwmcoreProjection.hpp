@@ -405,12 +405,6 @@ namespace OpenGlass::dwmcore
 		}
 	};
 	struct CTreeDirty {};
-	struct CCachedVisualImage : CResource
-	{
-		struct CCachedTarget : CResource
-		{
-		};
-	};
 	struct CDrawListCache : CResource {};
 	struct CDrawListEntryBuilder : CResource {};
 
@@ -434,13 +428,6 @@ namespace OpenGlass::dwmcore
 		int,
 		float,
 		CVisual*
-	);
-	using CDrawingContext_PreSubgraph_t = HRESULT(*)(CDrawingContext*, CVisualTree*, bool*);
-	using CCachedVisualImage_CCachedTarget_Update_t = HRESULT(*)(
-		CCachedVisualImage::CCachedTarget*,
-		const D2D1_RECT_F&,
-		DWM::MilStretch,
-		const RenderTargetInfo&
 	);
 	using COcclusionContext_CheckAndRecordOverlayCandidate_t = HRESULT(*)(
 		COcclusionContext*,

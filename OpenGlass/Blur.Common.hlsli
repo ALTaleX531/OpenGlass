@@ -15,6 +15,7 @@ cbuffer BlurPSConstants : register(b0)
 	float4 afterglow;
 	float4 blurBalance;
 	float4 color;
+	float4 fallback;
 };
 
 Texture2D<float4> texture0 : register(t0);

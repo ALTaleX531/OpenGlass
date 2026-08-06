@@ -311,30 +311,6 @@
       "type": "CDrawingContext_DrawVisualTree_t"
     },
     {
-      "name": "Symbol_CDrawingContext_PreSubgraph",
-      "id": "CDrawingContext::PreSubgraph",
-      "symbol_names": [
-        "public: long __cdecl CDrawingContext::PreSubgraph(class CVisualTree const * __ptr64,bool * __ptr64) __ptr64"
-      ],
-      "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
-      "kind": "raw",
-      "type": "CDrawingContext_PreSubgraph_t"
-    },
-    {
-      "name": "Symbol_CCachedVisualImage_CCachedTarget_Update",
-      "id": "CCachedVisualImage::CCachedTarget::Update",
-      "symbol_names": [
-        "public: long __cdecl CCachedVisualImage::CCachedTarget::Update(class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const & __ptr64,enum MilStretch::Enum,class RenderTargetInfo const & __ptr64) __ptr64"
-      ],
-      "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
-      "kind": "raw",
-      "type": "CCachedVisualImage_CCachedTarget_Update_t"
-    },
-    {
       "name": "Symbol_COcclusionContext_CheckAndRecordOverlayCandidate",
       "id": "COcclusionContext::CheckAndRecordOverlayCandidate",
       "symbol_names": [

@@ -20,6 +20,7 @@ namespace OpenGlass
 		D2D1_VECTOR_4F afterglow;
 		D2D1_VECTOR_4F blurBalance;
 		D2D1_VECTOR_4F color;
+		D2D1_VECTOR_4F fallback;
 	};
 
 	// 80 bytes/vertex：pos(2) + baseUV(2) + 8 samples packed into 4 float4

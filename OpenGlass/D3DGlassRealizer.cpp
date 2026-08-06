@@ -615,10 +615,13 @@ HRESULT CD3DGlassRealizer::Render(
 		cbPS.conv[i].x = w;
 		cbPS.conv[i].y = w;
 		cbPS.conv[i].z = w;
-		cbPS.conv[i].w = 0.f;
 	}
 	if (type == Shared::GlassType::Aero)
 	{
+		cbPS.fallback.x = params.fallback.r;
+		cbPS.fallback.y = params.fallback.g;
+		cbPS.fallback.z = params.fallback.b;
+		cbPS.fallback.w = params.fallback.a;
 		cbPS.color.x = params.color.r;
 		cbPS.color.y = params.color.g;
 		cbPS.color.z = params.color.b;

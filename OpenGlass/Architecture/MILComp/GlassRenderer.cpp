@@ -41,6 +41,7 @@ namespace OpenGlass::GlassRenderer
 	{
 		RenderFlag_SolidColor,
 		RenderFlag_Backdrop,
+		RenderFlag_Material,
 		RenderFlag_Reflection
 	};
 
@@ -210,8 +211,9 @@ HRESULT GlassRenderer::MyCColorBrush_Draw(
 			SUCCEEDED(Util::GetTargetBitmapFromD2DContext(context, renderTargetBitmap))
 		)
 		{
+			const auto pixelFormat = renderTargetBitmap->GetPixelFormat();
 			if (
-				const auto format = renderTargetBitmap->GetPixelFormat().format;
+				const auto format = pixelFormat.format;
 				format == DXGI_FORMAT_R16G16B16A16_FLOAT ||
 				format == DXGI_FORMAT_R32G32B32A32_FLOAT
 			)
@@ -220,12 +222,14 @@ HRESULT GlassRenderer::MyCColorBrush_Draw(
 			}
 		}
 
-		const auto expansion = GlassKernel::IsCurrentCVIFullyTransparent() ? 0.f : GlassKernel::GetBlurRadius();
+		const auto expansion = GlassKernel::GetBlurRadius();
 		//const auto glassCoverageSet = CArrayBasedGlassCoverageSet::GetOrCreate(occlusionContext->GetArrayBasedCoverageSet());
 
 		{
 			const auto active = GlassIntegrity::g_glassStatusByGeometry[geometry].test(0);
 			const auto maximized = GlassIntegrity::g_glassStatusByGeometry[geometry].test(1);
+			g_renderFlag.set(RenderFlag_Material, true);
+			g_materialContext.opacity = Shared::g_materialIntensity;
 
 			const auto realizedGlassColorizationParameters = GlassKernel::RealizeWindowColorization(
 				GlassKernel::GetBaseColor(Shared::IsTransparencyDisabled(), maximized),
@@ -234,6 +238,11 @@ HRESULT GlassRenderer::MyCColorBrush_Draw(
 				Shared::IsTransparencyDisabled(),
 				false
 			);
+			color = realizedGlassColorizationParameters.GetEffectivescRGBBlendColor(sdrBoost);
+			if (!colorSpaceIsScRGB)
+			{
+				color = Color::scRGBTosRGB(color, sdrBoost);
+			}
 
 			if (
 				!(
@@ -283,6 +292,7 @@ HRESULT GlassRenderer::MyCColorBrush_Draw(
 					g_params.afterglow.b *= realizedGlassColorizationParameters.afterglowBalance;
 					g_params.afterglow.a = 1.f;
 
+					g_params.fallback = color;
 					g_params.blurBalance = realizedGlassColorizationParameters.blurBalance;
 				}
 
@@ -301,16 +311,7 @@ HRESULT GlassRenderer::MyCColorBrush_Draw(
 					}
 				}
 				g_renderFlag.set(RenderFlag_Backdrop, true);
-
-				g_materialContext.opacity = Shared::g_materialIntensity;
 			}
-
-			color = realizedGlassColorizationParameters.GetEffectivescRGBBlendColor(sdrBoost);
-		}
-
-		if (!colorSpaceIsScRGB)
-		{
-			color = Color::scRGBTosRGB(color, sdrBoost);
 		}
 
 		if (!g_renderFlag.test(RenderFlag_Backdrop))
@@ -438,6 +439,9 @@ void GlassRenderer::MyID2D1DeviceContext_FillGeometry(
 			);
 		}
 
+	}
+	if (g_renderFlag.test(RenderFlag_Material))
+	{
 		LOG_IF_FAILED(
 			g_currentDeviceResources->m_materialRealizer.Render(
 				This,

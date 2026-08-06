@@ -47,52 +47,52 @@ HRESULT CAeroEffect::Build(
 			additionalParams
 		)
 	);
-	const auto fullyTransparent =
-		(params->afterglow.r == 0.f && params->afterglow.g == 0.f && params->afterglow.b == 0.f) &&
-		(params->color.r == 0.f && params->color.g == 0.f && params->color.b == 0.f) &&
-		params->blurBalance == 1.f;
-	if (!fullyTransparent)
-	{
-		RETURN_IF_FAILED(
-			m_colorizationEffect->SetValue(
-				AEROCOLORIZATION_PROP_AFTERGLOW,
-				D2D1::Vector4F(
-					params->afterglow.r,
-					params->afterglow.g,
-					params->afterglow.b,
-					params->afterglow.a
-				)
+	RETURN_IF_FAILED(
+		m_colorizationEffect->SetValue(
+			AEROCOLORIZATION_PROP_AFTERGLOW,
+			D2D1::Vector4F(
+				params->afterglow.r,
+				params->afterglow.g,
+				params->afterglow.b,
+				params->afterglow.a
 			)
-		);
-		RETURN_IF_FAILED(
-			m_colorizationEffect->SetValue(
-				AEROCOLORIZATION_PROP_BLURBALANCE,
-				D2D1::Vector4F(
-					params->blurBalance
-				)
+		)
+	);
+	RETURN_IF_FAILED(
+		m_colorizationEffect->SetValue(
+			AEROCOLORIZATION_PROP_BLURBALANCE,
+			D2D1::Vector4F(
+				params->blurBalance
 			)
-		);
-		RETURN_IF_FAILED(
-			m_colorizationEffect->SetValue(
-				AEROCOLORIZATION_PROP_COLOR,
-				D2D1::Vector4F(
-					params->color.r,
-					params->color.g,
-					params->color.b,
-					params->color.a
-				)
+		)
+	);
+	RETURN_IF_FAILED(
+		m_colorizationEffect->SetValue(
+			AEROCOLORIZATION_PROP_COLOR,
+			D2D1::Vector4F(
+				params->color.r,
+				params->color.g,
+				params->color.b,
+				params->color.a
 			)
-		);
+		)
+	);
+	RETURN_IF_FAILED(
+		m_colorizationEffect->SetValue(
+			AEROCOLORIZATION_PROP_FALLBACK,
+			D2D1::Vector4F(
+				params->fallback.r,
+				params->fallback.g,
+				params->fallback.b,
+				params->fallback.a
+			)
+		)
+	);
 
-		winrt::com_ptr<ID2D1Image> image{};
-		m_customBlurEffect->GetOutput(image.put());
-		m_colorizationEffect->SetInput(0, image.get());
-		m_outputEffect = m_colorizationEffect;
-	}
-	else
-	{
-		m_outputEffect = nullptr;
-	}
+	winrt::com_ptr<ID2D1Image> image{};
+	m_customBlurEffect->GetOutput(image.put());
+	m_colorizationEffect->SetInput(0, image.get());
+	m_outputEffect = m_colorizationEffect;
 
 	return S_OK;
 }

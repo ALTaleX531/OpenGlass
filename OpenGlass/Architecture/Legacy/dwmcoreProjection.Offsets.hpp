@@ -44,7 +44,6 @@ namespace OpenGlass::dwmcore
 	using namespace DWM;
 
 	struct CArrayBasedCoverageSet;
-	struct CCachedVisualImage;
 	struct CComposeTop;
 	struct CD2DContext;
 	struct CD3DSurface;

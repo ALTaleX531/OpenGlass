@@ -14,6 +14,7 @@ namespace OpenGlass
 		AEROCOLORIZATION_PROP_AFTERGLOW,
 		AEROCOLORIZATION_PROP_BLURBALANCE,
 		AEROCOLORIZATION_PROP_COLOR,
+		AEROCOLORIZATION_PROP_FALLBACK,
 	};
 
 	class CAeroColorizationEffect final : public ID2D1EffectImpl, public ID2D1DrawTransform
@@ -29,6 +30,8 @@ namespace OpenGlass
 		D2D1_VECTOR_4F GetBlurBalance() const;
 		HRESULT SetColor(D2D1_VECTOR_4F color);
 		D2D1_VECTOR_4F GetColor() const;
+		HRESULT SetFallback(D2D1_VECTOR_4F fallback);
+		D2D1_VECTOR_4F GetFallback() const;
 
 		IFACEMETHODIMP Initialize(
 			ID2D1EffectContext* effectContext,
@@ -68,6 +71,7 @@ namespace OpenGlass
 			D2D1_VECTOR_4F afterglow;
 			D2D1_VECTOR_4F blurBalance;
 			D2D1_VECTOR_4F color;
+			D2D1_VECTOR_4F fallback;
 		}; 
 
 		ULONG m_refCount{ 1ul };
