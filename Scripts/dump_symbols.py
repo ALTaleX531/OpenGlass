@@ -10,7 +10,7 @@ import sys
 from ctypes import wintypes
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Callable, Iterable
+from typing import Iterable
 
 
 COMPLETE_NAME_CAPACITY = 64 * 1024
@@ -213,10 +213,7 @@ def enumerate_symbols(
 			dll_directory.close()
 
 
-Enumerator = Callable[[Path, Path, Path | None, str], tuple[list[Symbol], int]]
-
-
-def main(argv: list[str] | None = None, enumerator: Enumerator = enumerate_symbols) -> int:
+def main(argv: list[str] | None = None) -> int:
 	args = parse_args(argv)
 	try:
 		image = expanded_path(args.input)
@@ -229,7 +226,7 @@ def main(argv: list[str] | None = None, enumerator: Enumerator = enumerate_symbo
 		if cache.exists() and not cache.is_dir():
 			raise DumpError(f"symbol cache is not a directory: {cache}")
 		cache.mkdir(parents=True, exist_ok=True)
-		symbols, undecoration_failures = enumerator(image, cache, dbghelp, args.symbol_server)
+		symbols, undecoration_failures = enumerate_symbols(image, cache, dbghelp, args.symbol_server)
 		selected = select_symbols(symbols, args.pattern, args.ignore_case)
 		for symbol in selected:
 			print(f"0x{symbol.rva:08X} {symbol.name}" if args.rva else symbol.name)

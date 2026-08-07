@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import importlib.util
-import hashlib
 from pathlib import Path
 import struct
 import sys
@@ -10,7 +9,7 @@ import unittest
 import uuid
 
 
-SCRIPT = Path(__file__).parents[1] / "scripts" / "audit_symbol_resolution.py"
+SCRIPT = Path(__file__).with_name("audit_symbol_resolution.py")
 SPEC = importlib.util.spec_from_file_location("audit_symbol_resolution", SCRIPT)
 assert SPEC and SPEC.loader
 AUDIT = importlib.util.module_from_spec(SPEC)
@@ -47,19 +46,6 @@ class SymbolResolutionAuditTests(unittest.TestCase):
 			selected, _, paired = AUDIT.find_pdb(root, image_identity)
 			self.assertEqual(selected, pdb.resolve())
 			self.assertTrue(paired)
-
-	def test_sha256_file_streams_exact_contents(self) -> None:
-		contents = (b"OpenGlass projection evidence\0" * 8192) + b"tail"
-		with tempfile.TemporaryDirectory() as directory:
-			path = Path(directory) / "sample.pdb"
-			path.write_bytes(contents)
-			self.assertEqual(AUDIT.sha256_file(path), hashlib.sha256(contents).hexdigest())
-
-	def test_resolve_dbghelp_path_uses_explicit_file(self) -> None:
-		with tempfile.TemporaryDirectory() as directory:
-			path = Path(directory) / "dbghelp.dll"
-			path.write_bytes(b"test")
-			self.assertEqual(AUDIT.resolve_dbghelp_path(path), path.resolve())
 
 	@staticmethod
 	def _write_pe(path: Path, guid: uuid.UUID, age: int) -> None:

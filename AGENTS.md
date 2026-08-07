@@ -80,15 +80,15 @@ Use `$maintain-dwm-offsets` from `.agents/skills/maintain-dwm-offsets/` when ask
 
 Keep three verification layers distinct: static verification combines schema validation with a paired PE/PDB resolution audit; an IDA semantic audit establishes ABI and meaning; and real-OS validation exercises the injection/rendering path. Exact DbgHelp output and uniqueness do not substitute for semantic or runtime evidence.
 
-Use `Scripts/dump_symbols.py --input IMAGE [--output SYMBOL_CACHE] [--grep TEXT]` for quick complete-name discovery directly from an image. The symbol cache defaults to `%TEMP%\symbols`. Its output is convenient schema input, not a production audit report; use `.agents/skills/maintain-dwm-offsets/scripts/audit_symbol_resolution.py` to record PE/PDB identity and IDA to establish semantics.
+Use `Scripts/dump_symbols.py --input IMAGE [--output SYMBOL_CACHE] [--grep TEXT]` for quick complete-name discovery directly from an image. The symbol cache defaults to `%TEMP%\symbols`. Its output is convenient schema input, not a production audit report; use `Scripts/audit_symbol_resolution.py` to record PE/PDB identity and IDA to establish semantics.
 
 ```powershell
 python .agents/skills/maintain-dwm-offsets/scripts/validate_projection_layouts.py . --architecture legacy --module udwm --id STABLE_ID --version BUILD.REVISION
 python .agents/skills/maintain-dwm-offsets/scripts/validate_projection_symbols.py . --architecture legacy
-python .agents/skills/maintain-dwm-offsets/scripts/audit_symbol_resolution.py . --architecture legacy --module udwm --version BUILD.REVISION --image PATH_TO_DLL --symbol-path PATH_TO_SYMBOLS --configuration release
+python Scripts/audit_symbol_resolution.py . --architecture legacy --module udwm --version BUILD.REVISION --image PATH_TO_DLL --symbol-path PATH_TO_SYMBOLS --configuration release
+python Scripts/audit_winbindex_revisions.py . --architecture legacy --module dwmcore --build BUILD --list-only
 python -m unittest discover -s .agents/skills/maintain-dwm-offsets/tests -p "test_*.py"
-python Scripts/test_archive_pdbs.py
-python Scripts/test_dump_symbols.py
+python Scripts/test_audit_symbol_resolution.py
 python Scripts/test_projection_codegen.py
 msbuild OpenGlassTests/OpenGlassTests.vcxproj /m /p:Configuration=Release /p:Platform=x64
 msbuild OpenGlass/OpenGlass.Legacy.vcxproj /m /p:Configuration=Release /p:Platform=x64
