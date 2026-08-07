@@ -128,6 +128,7 @@ jobs:
           msbuild OpenGlass.slnx /m /restore `
             /p:Configuration=$env:BUILD_CONFIGURATION `
             /p:Platform=$env:BUILD_PLATFORM `
+            /p:RestorePackagesConfig=true `
             /p:OpenGlassInstallerEnabled=false `
             /bl:MSBuild_Logs/ci.binlog
 
