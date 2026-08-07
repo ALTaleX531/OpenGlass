@@ -30,7 +30,7 @@ jobs:
   verify:
     name: verify
     runs-on: windows-2025-vs2026
-    timeout-minutes: 45
+    timeout-minutes: 60
     env:
       BUILD_CONFIGURATION: Release
       BUILD_PLATFORM: x64
@@ -42,7 +42,7 @@ jobs:
 
     steps:
       - name: Checkout source
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
 
@@ -70,10 +70,10 @@ jobs:
           "@ >> $env:GITHUB_STEP_SUMMARY
 
       - name: Set up MSBuild
-        uses: microsoft/setup-msbuild@6fb02220983dee41ce7ae257b6f4d8f9bf5ed4ce # v2
+        uses: microsoft/setup-msbuild@30375c66a4eea26614e0d39710365f22f8b0af57 # v3.0.0
 
       - name: Cache NuGet packages
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: |
             ~\.nuget\packages
@@ -83,7 +83,7 @@ jobs:
             ${{ runner.os }}-${{ runner.arch }}-nuget-
 
       - name: Cache vcpkg binary packages
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ${{ github.workspace }}\.ci-cache\vcpkg-binary-cache
           key: ${{ runner.os }}-${{ runner.arch }}-v145-x64-windows-static-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json', 'ports/**') }}
@@ -268,7 +268,7 @@ jobs:
 
       - name: Upload unsigned packages
         if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.package_artifacts == true)
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: ${{ steps.version.outputs.artifact_name }}
           path: |
@@ -281,7 +281,7 @@ jobs:
 
       - name: Upload MSBuild binary log on failure
         if: failure() && hashFiles('MSBuild_Logs/ci.binlog') != ''
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: msbuild-binlog-${{ github.run_id }}
           path: MSBuild_Logs/ci.binlog
