@@ -36,6 +36,7 @@ jobs:
       BUILD_PLATFORM: x64
       VCPKG_ROOT: C:\vcpkg
       VCPKG_DEFAULT_TRIPLET: x64-windows-static
+      VCPKG_INSTALLED_DIR: ${{ github.workspace }}\vcpkg_installed
       VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}\.ci-cache\vcpkg-binary-cache
       VCPKG_BINARY_SOURCES: clear;files,${{ github.workspace }}\.ci-cache\vcpkg-binary-cache,readwrite
 
@@ -121,6 +122,14 @@ jobs:
           - vcpkg: ``$vcpkgVersion``
           "@ >> $env:GITHUB_STEP_SUMMARY
 
+      - name: Install vcpkg dependencies
+        run: |
+          $PSNativeCommandUseErrorActionPreference = $true
+          & "$env:VCPKG_ROOT\vcpkg.exe" install `
+            "--triplet=$env:VCPKG_DEFAULT_TRIPLET" `
+            "--x-manifest-root=$env:GITHUB_WORKSPACE" `
+            "--x-install-root=$env:VCPKG_INSTALLED_DIR"
+
       - name: Build solution
         run: |
           $PSNativeCommandUseErrorActionPreference = $true
@@ -129,6 +138,13 @@ jobs:
             /p:Configuration=$env:BUILD_CONFIGURATION `
             /p:Platform=$env:BUILD_PLATFORM `
             /p:RestorePackagesConfig=true `
+            /p:VcpkgEnableManifest=true `
+            /p:VcpkgManifestInstall=false `
+            /p:VcpkgRoot=$env:VCPKG_ROOT `
+            /p:VcpkgInstalledDir=$env:VCPKG_INSTALLED_DIR `
+            /p:VcpkgTriplet=$env:VCPKG_DEFAULT_TRIPLET `
+            /p:ForceImportBeforeCppProps=$env:VCPKG_ROOT\scripts\buildsystems\msbuild\vcpkg.props `
+            /p:ForceImportAfterCppTargets=$env:VCPKG_ROOT\scripts\buildsystems\msbuild\vcpkg.targets `
             /p:OpenGlassInstallerEnabled=false `
             /bl:MSBuild_Logs/ci.binlog
 
