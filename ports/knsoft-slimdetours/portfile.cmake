@@ -1,15 +1,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KNSoft/KNSoft.SlimDetours
-    REF 439853a220c217799428944f197309d5cb3e8d17
-    SHA512 ebc2f266bb509562fe72df749aeab4375a726594cfba6500e4bcf7b4be1db22745c7baac423cc2aeec60d7a45d61d5dd694c8225ce056317a7d8815bd942afa7
+    REF 5c80016d6759f51091f17c125e3a76148e8af7ad
+    SHA512 d257489375268aaca2091da35f404947a6e27cef07943af15cd9047aa88ded3a2433409b472efaacb2b27ec90d2a5f0d75e4c1316d2fca8733ff61d07637a3f1
 )
 
 set(SLIMDETOURS_VCXPROJ "${SOURCE_PATH}/Source/KNSoft.SlimDetours/KNSoft.SlimDetours.vcxproj")
 file(READ "${SLIMDETOURS_VCXPROJ}" SLIMDETOURS_VCXPROJ_CONTENTS)
 string(REPLACE "\r\n" "\n" SLIMDETOURS_VCXPROJ_CONTENTS "${SLIMDETOURS_VCXPROJ_CONTENTS}")
-string(REPLACE "  <ImportGroup Label=\"ExtensionTargets\">\n    <Import Project=\"..\\packages\\KNSoft.NDK.1.2.48-beta\\build\\KNSoft.NDK.targets\" Condition=\"Exists('..\\packages\\KNSoft.NDK.1.2.48-beta\\build\\KNSoft.NDK.targets')\" />\n  </ImportGroup>\n" "" SLIMDETOURS_VCXPROJ_CONTENTS "${SLIMDETOURS_VCXPROJ_CONTENTS}")
-string(REPLACE "  <Target Name=\"EnsureNuGetPackageBuildImports\" BeforeTargets=\"PrepareForBuild\">\n    <PropertyGroup>\n      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>\n    </PropertyGroup>\n    <Error Condition=\"!Exists('..\\packages\\KNSoft.NDK.1.2.48-beta\\build\\KNSoft.NDK.targets')\" Text=\"$([System.String]::Format('$(ErrorText)', '..\\packages\\KNSoft.NDK.1.2.48-beta\\build\\KNSoft.NDK.targets'))\" />\n  </Target>\n" "" SLIMDETOURS_VCXPROJ_CONTENTS "${SLIMDETOURS_VCXPROJ_CONTENTS}")
+string(REPLACE "  <ImportGroup Label=\"ExtensionTargets\">\n    <Import Project=\"..\\packages\\KNSoft.NDK.1.2.65-beta\\build\\KNSoft.NDK.targets\" Condition=\"Exists('..\\packages\\KNSoft.NDK.1.2.65-beta\\build\\KNSoft.NDK.targets')\" />\n  </ImportGroup>\n" "" SLIMDETOURS_VCXPROJ_CONTENTS "${SLIMDETOURS_VCXPROJ_CONTENTS}")
+string(REPLACE "  <Target Name=\"EnsureNuGetPackageBuildImports\" BeforeTargets=\"PrepareForBuild\">\n    <PropertyGroup>\n      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>\n    </PropertyGroup>\n    <Error Condition=\"!Exists('..\\packages\\KNSoft.NDK.1.2.65-beta\\build\\KNSoft.NDK.targets')\" Text=\"$([System.String]::Format('$(ErrorText)', '..\\packages\\KNSoft.NDK.1.2.65-beta\\build\\KNSoft.NDK.targets'))\" />\n  </Target>\n" "" SLIMDETOURS_VCXPROJ_CONTENTS "${SLIMDETOURS_VCXPROJ_CONTENTS}")
 string(REPLACE "</Project>" "  <ItemDefinitionGroup Condition=\"'$(Configuration)'=='Release'\">\n    <ClCompile>\n      <DebugInformationFormat>OldStyle</DebugInformationFormat>\n    </ClCompile>\n  </ItemDefinitionGroup>\n</Project>" SLIMDETOURS_VCXPROJ_CONTENTS "${SLIMDETOURS_VCXPROJ_CONTENTS}")
 string(REPLACE "</Project>" "  <ItemDefinitionGroup>\n    <ClCompile>\n      <AdditionalIncludeDirectories>$(VcpkgIncludePath);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>\n    </ClCompile>\n  </ItemDefinitionGroup>\n</Project>" SLIMDETOURS_VCXPROJ_CONTENTS "${SLIMDETOURS_VCXPROJ_CONTENTS}")
 file(WRITE "${SLIMDETOURS_VCXPROJ}" "${SLIMDETOURS_VCXPROJ_CONTENTS}")

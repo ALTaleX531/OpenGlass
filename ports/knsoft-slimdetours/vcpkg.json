@@ -1,6 +1,6 @@
 {
   "name": "knsoft-slimdetours",
-  "version-string": "1.2.0-beta",
+  "version-string": "1.2.2-beta",
   "description": "SlimDetours is an improved Windows API hooking library based on Microsoft Detours.",
   "homepage": "https://github.com/KNSoft/KNSoft.SlimDetours",
   "license": "MIT",

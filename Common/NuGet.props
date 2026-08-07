@@ -14,10 +14,10 @@
   <Import Project="..\packages\YY.NuGet.Import.Helper.1.0.2\build\native\YY.NuGet.Import.Helper.props"
           Condition="Exists('..\packages\YY.NuGet.Import.Helper.1.0.2\build\native\YY.NuGet.Import.Helper.props')" />
 
-  <Import Project="..\packages\Microsoft.SourceLink.GitHub.10.0.102\build\Microsoft.SourceLink.GitHub.props"
-          Condition="Exists('..\packages\Microsoft.SourceLink.GitHub.10.0.102\build\Microsoft.SourceLink.GitHub.props')" />
-  <Import Project="..\packages\Microsoft.SourceLink.Common.10.0.102\build\Microsoft.SourceLink.Common.props"
-          Condition="Exists('..\packages\Microsoft.SourceLink.Common.10.0.102\build\Microsoft.SourceLink.Common.props')" />
-  <Import Project="..\packages\Microsoft.Build.Tasks.Git.10.0.102\build\Microsoft.Build.Tasks.Git.props"
-          Condition="Exists('..\packages\Microsoft.Build.Tasks.Git.10.0.102\build\Microsoft.Build.Tasks.Git.props')" />
+  <Import Project="..\packages\Microsoft.SourceLink.GitHub.10.0.301\build\Microsoft.SourceLink.GitHub.props"
+          Condition="Exists('..\packages\Microsoft.SourceLink.GitHub.10.0.301\build\Microsoft.SourceLink.GitHub.props')" />
+  <Import Project="..\packages\Microsoft.SourceLink.Common.10.0.301\build\Microsoft.SourceLink.Common.props"
+          Condition="Exists('..\packages\Microsoft.SourceLink.Common.10.0.301\build\Microsoft.SourceLink.Common.props')" />
+  <Import Project="..\packages\Microsoft.Build.Tasks.Git.10.0.301\build\Microsoft.Build.Tasks.Git.props"
+          Condition="Exists('..\packages\Microsoft.Build.Tasks.Git.10.0.301\build\Microsoft.Build.Tasks.Git.props')" />
 </Project>
