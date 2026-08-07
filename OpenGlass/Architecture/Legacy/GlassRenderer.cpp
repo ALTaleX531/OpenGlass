@@ -4,7 +4,6 @@
 #include "dwmcoreProjection.hpp"
 #include "Shared.hpp"
 #include "GlassKernel.hpp"
-#include "GlassIntegrity.hpp"
 #include "GlassRenderer.hpp"
 #include "GlassRealizer.hpp"
 #include "D3DGlassRealizer.hpp"
@@ -160,8 +159,6 @@ namespace OpenGlass::GlassRenderer
 		bool& shapeIsRectangles
 	)
 	{
-		GlassIntegrity::FlipOccludersCheckpointScoped(drawingContext->GetOcclusionContext()->GetArrayBasedCoverageSet());
-
 		drawingWorldBounds = {};
 		rectangles.reset();
 		rectanglesCount = 0;

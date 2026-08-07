@@ -116,6 +116,31 @@ namespace OpenGlass::GlassIntegrity
 	Projection::Detour<dwmcore::Symbol_CTreeDirty_GetOptimizedRect, decltype(&MyCTreeDirty_GetOptimizedRect)> g_CTreeDirty_GetOptimizedRect_Org{};
 	Projection::Detour<dwmcore::Symbol_CDrawingContext_DrawVisualTree, decltype(&MyCDrawingContext_DrawVisualTree)> g_CDrawingContext_DrawVisualTree_Org{};
 
+	uint16_t g_COcclusionContext_MinimumOcclusionAreaBranch_Instructions[] =
+	{
+		// comiss xmmN, dword ptr [rip + minimum_occlusion_area]
+		0x0F, 0x2F, HookHelper::c_patwc, HookHelper::c_patwc, HookHelper::c_patwc, HookHelper::c_patwc, HookHelper::c_patwc,
+		// jb near skip_occlusion_collection
+		0x0F, 0x82, HookHelper::c_patwc, HookHelper::c_patwc, HookHelper::c_patwc, HookHelper::c_patwc
+	};
+	constexpr std::array<uint8_t, 6> g_COcclusionContext_MinimumOcclusionAreaBranch_PatchedInstructions
+	{
+		// nop
+		0x90,
+		// nop
+		0x90,
+		// nop
+		0x90,
+		// nop
+		0x90,
+		// nop
+		0x90,
+		// nop
+		0x90
+	};
+	uint8_t* g_COcclusionContext_MinimumOcclusionAreaBranch_PatchLocation = nullptr;
+	HookHelper::InstructionPatch g_COcclusionContext_MinimumOcclusionAreaBranch_Patch;
+
 	Util::ObjectPool<dwmcore::CD2DContext*, CGlassSafetyZoneLayer> g_safetyZonePool{};
 
 	std::unordered_map<const dwmcore::COcclusionContext*, ULONGLONG> g_shrunkCoverageSetMap{};
@@ -857,6 +882,44 @@ void GlassIntegrity::Update([[maybe_unused]] GlassEngine::UpdateType type)
 
 void GlassIntegrity::Startup()
 {
+	const auto preSubgraph = reinterpret_cast<const uint8_t*>(
+		dwmcore::Symbol_COcclusionContext_PreSubgraph.get()
+	);
+	const std::span searchRange{ preSubgraph, 0x2000 };
+	const auto match = HookHelper::FindPattern(
+		searchRange,
+		g_COcclusionContext_MinimumOcclusionAreaBranch_Instructions
+	);
+	FAIL_FAST_IF_FAILED_MSG(match ? S_OK : E_NOINTERFACE, "The inlined minimum occlusion-area branch was not found");
+	const auto matchOffset = static_cast<size_t>(match - searchRange.data());
+	const auto remaining = searchRange.subspan(matchOffset + 1);
+	FAIL_FAST_IF_FAILED_MSG(
+		!HookHelper::FindPattern(remaining, g_COcclusionContext_MinimumOcclusionAreaBranch_Instructions) ? S_OK : E_UNEXPECTED,
+		"The inlined minimum occlusion-area branch is ambiguous"
+	);
+	FAIL_FAST_IF_FAILED_MSG(
+		(match[2] & 0xC7) == 0x05 ? S_OK : E_UNEXPECTED,
+		"The minimum occlusion-area comparison does not use RIP-relative memory"
+	);
+	int32_t cutoffDisplacement{};
+	memcpy(&cutoffDisplacement, match + 3, sizeof(cutoffDisplacement));
+	float cutoff{};
+	memcpy(&cutoff, match + 7 + cutoffDisplacement, sizeof(cutoff));
+	FAIL_FAST_IF_FAILED_MSG(cutoff == 75000.f ? S_OK : E_UNEXPECTED, "The minimum occlusion-area cutoff is unexpected");
+
+	g_COcclusionContext_MinimumOcclusionAreaBranch_PatchLocation = const_cast<uint8_t*>(match + 7);
+	std::array<uint8_t, 6> originalBranchInstructions{};
+	memcpy(
+		originalBranchInstructions.data(),
+		g_COcclusionContext_MinimumOcclusionAreaBranch_PatchLocation,
+		originalBranchInstructions.size()
+	);
+	g_COcclusionContext_MinimumOcclusionAreaBranch_Patch.Prepare(
+		g_COcclusionContext_MinimumOcclusionAreaBranch_PatchLocation,
+		originalBranchInstructions,
+		g_COcclusionContext_MinimumOcclusionAreaBranch_PatchedInstructions
+	);
+	HookHelper::GetCurrentHookTransaction().Apply(g_COcclusionContext_MinimumOcclusionAreaBranch_Patch);
 
 	if (!g_CColorBrush_AddOcclusionInformation_Org)
 	{
@@ -897,6 +960,11 @@ void GlassIntegrity::Startup()
 
 void GlassIntegrity::Shutdown()
 {
+	if (g_COcclusionContext_MinimumOcclusionAreaBranch_PatchLocation)
+	{
+		HookHelper::GetCurrentHookTransaction().Apply(g_COcclusionContext_MinimumOcclusionAreaBranch_Patch);
+	}
+
 	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
@@ -931,6 +999,7 @@ void GlassIntegrity::Shutdown()
 
 void GlassIntegrity::Cleanup()
 {
+	g_COcclusionContext_MinimumOcclusionAreaBranch_PatchLocation = nullptr;
 	g_lastCollectedOcclusionRectangle = {};
 	CArrayBasedGlassCoverageSet::RemoveAll();
 	g_glassVisualSet.clear();

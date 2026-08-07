@@ -329,15 +329,37 @@
       "symbol_names": [
         "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool,bool)const __ptr64"
       ],
-      "requirement": "optional",
+      "requirement": "required",
       "min_inclusive": {
         "build": 26100,
+        "revision": 4484
+      },
+      "max_exclusive": {
+        "build": 28000,
         "revision": 0
       },
-      "max_exclusive": null,
       "kind": "raw",
       "type": "bool (*)(CArrayBasedCoverageSet*, const D2D1_RECT_F&, int, bool, bool)",
-      "notes": "The 26100 ABI adds a second trailing bool. Both values are opaque to OpenGlass and are forwarded unchanged by the detour."
+      "notes": "The DWM_MPO_Enhancement implementation uses 48-byte coverage entries and delegates overlap handling to CheckOccludedAndOptimize. GetOptimizedRect calls this emitted function, so its detour participates directly in dirty-region expansion. Both trailing values remain opaque to OpenGlass and must be forwarded unchanged."
+    },
+    {
+      "name": "Symbol_CArrayBasedCoverageSet_IsCovered_26100_Pre_4484",
+      "id": "CArrayBasedCoverageSet::IsCovered.26100.pre4484",
+      "symbol_names": [
+        "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 26100,
+        "revision": 3912
+      },
+      "max_exclusive": {
+        "build": 26100,
+        "revision": 4484
+      },
+      "kind": "raw",
+      "type": "bool (*)(CArrayBasedCoverageSet*, const D2D1_RECT_F&, int, bool)",
+      "notes": "This implementation scans 36-byte coverage entries. DrawVisualTree calls it, but GetOptimizedRect still uses GetLargestOccluder directly; keep the direct GetOptimizedRect detour active throughout this interval."
     },
     {
       "name": "Symbol_CD2DContext_DestroyDeviceResources",
@@ -591,6 +613,33 @@
       "type": "COcclusionContext_CheckAndRecordOverlayCandidate_Pre_19041_t"
     },
     {
+      "name": "Symbol_COcclusionContext_PreSubgraph_26100_Pre_3624",
+      "id": "COcclusionContext::PreSubgraph.26100.pre3624",
+      "symbol_names": [
+        "public: long __cdecl COcclusionContext::PreSubgraph(class CVisualTree const * __ptr64,bool * __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": { "build": 26100, "revision": 0 },
+      "max_exclusive": { "build": 26100, "revision": 3624 },
+      "kind": "raw",
+      "type": "BYTE*",
+      "usage": "code_address",
+      "notes": "Before revision 3624, the node-area comparison against COcclusionContext+0x47C is inlined here. GlassIntegrity locates the unique compare-and-branch sequence and suppresses only its below-threshold branch."
+    },
+    {
+      "name": "Symbol_COcclusionContext_NodeIntersectsOcclusionRegion_26100_3624",
+      "id": "COcclusionContext::NodeIntersectsOcclusionRegion.26100.3624",
+      "symbol_names": [
+        "private: bool __cdecl COcclusionContext::NodeIntersectsOcclusionRegion(class CVisual const * __ptr64,class COcclusionInfo * __ptr64,float * __ptr64) __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": { "build": 26100, "revision": 3624 },
+      "max_exclusive": { "build": 28000, "revision": 0 },
+      "kind": "raw",
+      "type": "COcclusionContext_NodeIntersectsOcclusionRegion_t",
+      "notes": "The function preserves the transformed-and-clipped bounds stack, records whether the node intersects the active occlusion region, and writes the finite intersection area used by PreSubgraph's small-node cutoff. It first appears as a separately emitted function on 26100.3624."
+    },
+    {
       "name": "Symbol_COcclusionContext_CheckAndRecordOverlayCandidate_19041",
       "id": "COcclusionContext::CheckAndRecordOverlayCandidate.19041",
       "symbol_names": [
@@ -647,7 +696,7 @@
       ],
       "requirement": "required",
       "min_inclusive": { "build": 26100, "revision": 0 },
-      "max_exclusive": { "build": 26100, "revision": 7840 },
+      "max_exclusive": { "build": 26100, "revision": 4484 },
       "kind": "raw",
       "type": "COcclusionContext_CollectRectangleForOcclusion_26100_Pre_7840_t"
     },
@@ -658,11 +707,11 @@
         "private: void __cdecl COcclusionContext::CollectRectangleForOcclusion(class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const & __ptr64,bool,class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> * __ptr64) __ptr64"
       ],
       "requirement": "required",
-      "min_inclusive": { "build": 26100, "revision": 7840 },
+      "min_inclusive": { "build": 26100, "revision": 4484 },
       "max_exclusive": { "build": 28000, "revision": 0 },
       "kind": "raw",
       "type": "COcclusionContext_CollectRectangleForOcclusion_26100_7840_t",
-      "notes": "The intervening bool is an ABI break, not a trailing compatibility argument. The two-argument form was last verified on 26100.4202 and this form was first verified on 26100.7840."
+      "notes": "The intervening bool is an ABI break, not a trailing compatibility argument. Under DWM_MPO_Enhancement it bypasses the minimum-area test and is stored in CTempOcclusionRect; callers must preserve it exactly."
     },
     {
       "name": "Symbol_COcclusionContext_SetDeviceTransform",
@@ -752,9 +801,32 @@
       ],
       "requirement": "required",
       "min_inclusive": null,
-      "max_exclusive": null,
+      "max_exclusive": {
+        "build": 26100,
+        "revision": 2161
+      },
       "kind": "raw",
-      "type": "bool (*)(COcclusionContext*, const D2D1_RECT_F&, D2D1_RECT_F*)"
+      "type": "bool (*)(COcclusionContext*, const D2D1_RECT_F&, D2D1_RECT_F*)",
+      "notes": "The transform is emitted as a helper in this interval. At the right boundary both EndOverlayCandidateCollection and the NCEDR2 dirty-region implementations inline the same Transform2DBoundsHelper path."
+    },
+    {
+      "name": "Symbol_COcclusionContext_PageInPixelsRectToDeviceRect_26100_3912",
+      "id": "COcclusionContext::PageInPixelsRectToDeviceRect.26100.3912",
+      "symbol_names": [
+        "private: bool __cdecl COcclusionContext::PageInPixelsRectToDeviceRect(class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const & __ptr64,class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 26100,
+        "revision": 3912
+      },
+      "max_exclusive": {
+        "build": 28000,
+        "revision": 0
+      },
+      "kind": "raw",
+      "type": "bool (*)(COcclusionContext*, const D2D1_RECT_F&, D2D1_RECT_F*)",
+      "notes": "The helper is emitted again after the 26100.2161-3775 inlining interval. In the 26100.3912-4483 CTreeDirty implementation it is the only stable call before the inlined 36-byte coverage scan, so the direct GetOptimizedRect detour uses it to expand the dirty rectangle."
     },
     {
       "name": "Symbol_COcclusionContext__COcclusionContext",
@@ -860,6 +932,25 @@
       "type": "D2D1_RECT_F* (*)(CDirtyRegion*, D2D1_RECT_F*, UINT, const D2D1_RECT_F&, CRegion*, const CMILMatrix*, bool, const DWM::span<const CVisual*>&, const COcclusionContext*)"
     },
     {
+      "name": "Symbol_CDirtyRegion_GetOptimizedRect_26100_Pre_1000",
+      "id": "CDirtyRegion::GetOptimizedRect.26100.pre1000",
+      "symbol_names": [
+        "public: class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> __cdecl CDirtyRegion::GetOptimizedRect(unsigned int,class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const & __ptr64,class COcclusionContext const & __ptr64,class CRegion * __ptr64,class CMILMatrix const * __ptr64,bool,class gsl::span<class CVisual const * __ptr64,-1> const & __ptr64)const __ptr64"
+      ],
+      "requirement": "required",
+      "min_inclusive": {
+        "build": 26100,
+        "revision": 0
+      },
+      "max_exclusive": {
+        "build": 26100,
+        "revision": 1000
+      },
+      "kind": "raw",
+      "type": "D2D1_RECT_F* (*)(CDirtyRegion*, D2D1_RECT_F*, UINT, const D2D1_RECT_F&, const COcclusionContext&, CRegion*, const CMILMatrix*, bool, const DWM::span<const CVisual*>&)",
+      "notes": "This monolithic implementation already has the later context-reference ABI. At the right boundary CTreeDirty becomes the public feature dispatcher for NCEDR2_On::CTreeDirty and NCEDR2_Off::CDirtyRegion."
+    },
+    {
       "name": "Symbol_CTreeDirty_GetOptimizedRect",
       "id": "CTreeDirty::GetOptimizedRect",
       "symbol_names": [
@@ -868,11 +959,15 @@
       "requirement": "required",
       "min_inclusive": {
         "build": 26100,
+        "revision": 1000
+      },
+      "max_exclusive": {
+        "build": 28000,
         "revision": 0
       },
-      "max_exclusive": null,
       "kind": "raw",
-      "type": "D2D1_RECT_F* (*)(CTreeDirty*, D2D1_RECT_F*, UINT, const D2D1_RECT_F&, const COcclusionContext&, CRegion*, const CMILMatrix*, bool, const DWM::span<const CVisual*>&)"
+      "type": "D2D1_RECT_F* (*)(CTreeDirty*, D2D1_RECT_F*, UINT, const D2D1_RECT_F&, const COcclusionContext&, CRegion*, const CMILMatrix*, bool, const DWM::span<const CVisual*>&)",
+      "notes": "The first emitted implementation is a feature dispatcher selecting NCEDR2_On::CTreeDirty or NCEDR2_Off::CDirtyRegion while preserving this public ABI."
     },
     {
       "name": "Symbol_GetCurrentFrameId",
@@ -1407,7 +1502,7 @@
           "otherwise": true
         }
       ],
-      "notes": "ID2DContextOwner vtable from CDrawingContext::Create (at this + 24).\nRead the vtable — function names in each slot are self-explanatory.\nGetCurrentZ: slot 4 (current) / slot 3 (24H2) / slot 2 (pre-21H2)\nslot_index × sizeof(ULONG_PTR)"
+      "notes": "Route the ID2DContextOwner vtable from CDrawingContext::Create at this + 24; confirm the selected slot by its GetCurrentZ implementation."
     },
     {
       "name": "ID2DContextOwner_GetCurrentRenderTargetInfo",
@@ -1434,7 +1529,7 @@
           "otherwise": true
         }
       ],
-      "notes": "ID2DContextOwner vtable from CDrawingContext::Create (at this + 24).\nGetCurrentRenderTargetInfo: slot 10 (current) / slot 5 (24H2) / slot 7\n(pre-21H2) slot_index × sizeof(ULONG_PTR)"
+      "notes": "Route the ID2DContextOwner vtable from CDrawingContext::Create at this + 24; confirm the selected slot by its GetCurrentRenderTargetInfo implementation."
     },
     {
       "name": "CD2DContext_GetDeviceContext",
@@ -1639,7 +1734,7 @@
           "otherwise": true
         }
       ],
-      "notes": "CDeviceTextureTarget has complex inheritance (possible diamond):\n  CD2DBitmap → CDeviceResourceT → CMILCOMBaseT → ...\n  9+ vtable pointers: ID2DBitmapCacheSource, IPixelFormat, IBitmapUnlock,\n  IDeviceResource (standalone + embedded in combined vtables for\n  IDeviceTexture and IDeviceTarget).\nFocus on extracting the specific offset, not full inheritance graph.\nCDeviceTextureTarget::GetTexture2D at vtable slot 0 (24H2) / slot 15\n(earlier) slot_index × sizeof(ULONG_PTR)"
+      "notes": "CDeviceTextureTarget has complex inheritance (possible diamond):\n  CD2DBitmap → CDeviceResourceT → CMILCOMBaseT → ...\n  9+ vtable pointers: ID2DBitmapCacheSource, IPixelFormat, IBitmapUnlock,\n  IDeviceResource (standalone + embedded in combined vtables for\n  IDeviceTexture and IDeviceTarget).\nFocus on extracting the specific slot from the IDeviceTexture subobject, not the full inheritance graph."
     },
     {
       "name": "IDeviceTexture_GetShaderResourceView",
@@ -1659,7 +1754,7 @@
           "otherwise": true
         }
       ],
-      "notes": "CDeviceTextureTarget::GetShaderResourceView at vtable slot 1 (24H2) / slot 16\n(earlier) slot_index × sizeof(ULONG_PTR)"
+      "notes": "Confirm this slot from the IDeviceTexture subobject of CDeviceTextureTarget; do not infer it from the adjacent GetTexture2D slot alone."
     },
     {
       "name": "CD3DDevice_GetD2DContext",

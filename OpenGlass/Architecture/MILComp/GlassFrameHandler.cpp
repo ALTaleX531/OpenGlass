@@ -572,9 +572,9 @@ int GlassFrameHandler::MyCTopLevelWindow_EdgeBorderMustBeOpaque(uDWM::CTopLevelW
 	// the border rect computed in CTopLevelWindow::UpdateNCAreaGeometry shrinks to zero (border visual removed, only caption remains).
 	// This shrinks the visual's SetRect to caption size, which causes the occlusion pass to pass because
 	// COcclusionContext::PreSubgraph contains a size threshold optimization at 0x180069838:
-	//   comiss xmm10, 74752.0   ; visual area vs threshold
-	//   jb    skip_check         ; area < 74752 -> bypass the stricter occlusion checks
-	// When SetRect is set to the full window rect, the visual area exceeds 74752 px^2,
+	//   comiss xmm10, 75000.0   ; visual area vs threshold
+	//   jb    skip_check         ; area < 75000 -> bypass the stricter occlusion checks
+	// When SetRect is set to the full window rect, the visual area exceeds 75000 px^2,
 	// triggering additional validation that disables occlusion for the subtree.
 
 	if (Shared::g_dontDeflateInactiveFrameGeometry)

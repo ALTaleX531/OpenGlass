@@ -606,6 +606,7 @@ namespace OpenGlass::dwmcore
 	{
 		struct OverlayPlaneInfo;
 	};
+	struct COcclusionInfo;
 	struct CCompositionSurfaceInfo;
 	struct ISwapChainRealization;
 	struct CDrawingContext
@@ -835,6 +836,7 @@ namespace OpenGlass::dwmcore
 	using COcclusionContext_CheckAndRecordOverlayCandidate_Pre_19041_t = HRESULT(*)(COcclusionContext*, CVisual*, ISwapChainContent*, const CMILMatrix*, const CShape*, int);
 	using COcclusionContext_CheckAndRecordOverlayCandidate_19041_t = HRESULT(*)(COcclusionContext*, CVisual*, CCompositionSurfaceInfo*, const CMILMatrix*, const CShape*, int);
 	using COcclusionContext_CheckAndRecordOverlayCandidate_26100_t = HRESULT(*)(COcclusionContext*, CVisual*, CCompositionSurfaceInfo*, const CMILMatrix&, const CShape*, int);
+	using COcclusionContext_NodeIntersectsOcclusionRegion_t = bool(*)(COcclusionContext*, const CVisual*, COcclusionInfo*, float*);
 	using COcclusionContext_CollectRectangleForOcclusion_Pre_22000_t = HRESULT(*)(COcclusionContext*, const D2D1_RECT_F*, bool, D2D1_RECT_F*);
 	using COcclusionContext_CollectRectangleForOcclusion_22000_t = void(*)(COcclusionContext*, const D2D1_RECT_F*, bool, bool, D2D1_RECT_F*);
 	using COcclusionContext_CollectRectangleForOcclusion_26100_Pre_7840_t = void(*)(COcclusionContext*, const D2D1_RECT_F&, D2D1_RECT_F*);
