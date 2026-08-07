@@ -1,0 +1,272 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      package_artifacts:
+        description: Build installers and symbol archives
+        required: true
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: pwsh
+
+jobs:
+  verify:
+    name: verify
+    runs-on: windows-2025-vs2026
+    timeout-minutes: 45
+    env:
+      BUILD_CONFIGURATION: Release
+      BUILD_PLATFORM: x64
+      VCPKG_ROOT: C:\vcpkg
+      VCPKG_DEFAULT_TRIPLET: x64-windows-static
+      VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}\.ci-cache\vcpkg-binary-cache
+      VCPKG_BINARY_SOURCES: clear;files,${{ github.workspace }}\.ci-cache\vcpkg-binary-cache,readwrite
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+
+      - name: Read product version
+        id: version
+        run: |
+          [xml]$props = Get-Content -LiteralPath "Common\Version.props" -Raw
+          $nodes = @($props.SelectNodes("/*[local-name()='Project']/*[local-name()='PropertyGroup']/*[local-name()='OpenGlassProductVersion']"))
+          if ($nodes.Count -ne 1) {
+              throw "Expected exactly one OpenGlassProductVersion, found $($nodes.Count)."
+          }
+          $version = $nodes[0].InnerText.Trim()
+          if ($version -notmatch '^\d+\.\d+\.\d+\.\d+$') {
+              throw "OpenGlassProductVersion has an invalid format: $version"
+          }
+          $artifactName = "v$version-unsigned"
+          "version=$version" >> $env:GITHUB_OUTPUT
+          "artifact_name=$artifactName" >> $env:GITHUB_OUTPUT
+          @"
+          ## OpenGlass CI
+
+          - Version: ``$version``
+          - Artifact: ``$artifactName``
+          - Signing: unsigned validation build
+          "@ >> $env:GITHUB_STEP_SUMMARY
+
+      - name: Set up MSBuild
+        uses: microsoft/setup-msbuild@6fb02220983dee41ce7ae257b6f4d8f9bf5ed4ce # v2
+
+      - name: Cache NuGet packages
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: |
+            ~\.nuget\packages
+            ${{ github.workspace }}\packages
+          key: ${{ runner.os }}-${{ runner.arch }}-nuget-${{ hashFiles('**/packages.config', '**/NuGet.config', 'Common/NuGet.props', 'Common/NuGet.targets') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-nuget-
+
+      - name: Cache vcpkg binary packages
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: ${{ github.workspace }}\.ci-cache\vcpkg-binary-cache
+          key: ${{ runner.os }}-${{ runner.arch }}-v145-x64-windows-static-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json', 'ports/**') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-v145-x64-windows-static-
+
+      - name: Initialize cache directories
+        run: |
+          New-Item -ItemType Directory -Force -Path $env:VCPKG_DEFAULT_BINARY_CACHE | Out-Null
+
+      - name: Run Python unit tests
+        run: |
+          $PSNativeCommandUseErrorActionPreference = $true
+          python -m unittest discover -s Scripts -p "test_*.py"
+          python -m unittest discover -s .agents/skills/maintain-dwm-offsets/tests -p "test_*.py"
+
+      - name: Validate projection symbols
+        run: |
+          $PSNativeCommandUseErrorActionPreference = $true
+          python .agents/skills/maintain-dwm-offsets/scripts/validate_projection_symbols.py . --architecture legacy
+          python .agents/skills/maintain-dwm-offsets/scripts/validate_projection_symbols.py . --architecture milcomp
+
+      - name: Record toolchain versions
+        run: |
+          $PSNativeCommandUseErrorActionPreference = $true
+          $msbuildVersion = (msbuild -version -nologo | Select-Object -Last 1).Trim()
+          $pythonVersion = (python --version 2>&1 | Out-String).Trim()
+          $vcpkgVersion = (& "$env:VCPKG_ROOT\vcpkg.exe" version | Select-Object -First 1).Trim()
+          @"
+
+          ### Toolchain
+
+          - Runner image: ``$env:ImageOS $env:ImageVersion``
+          - MSBuild: ``$msbuildVersion``
+          - Python: ``$pythonVersion``
+          - vcpkg: ``$vcpkgVersion``
+          "@ >> $env:GITHUB_STEP_SUMMARY
+
+      - name: Build solution
+        run: |
+          $PSNativeCommandUseErrorActionPreference = $true
+          New-Item -ItemType Directory -Force -Path "MSBuild_Logs" | Out-Null
+          msbuild OpenGlass.slnx /m /restore `
+            /p:Configuration=$env:BUILD_CONFIGURATION `
+            /p:Platform=$env:BUILD_PLATFORM `
+            /p:OpenGlassInstallerEnabled=false `
+            /bl:MSBuild_Logs/ci.binlog
+
+      - name: Run OpenGlass unit tests
+        run: |
+          $testExecutable = "Build\x64\Release\common\OpenGlassTests.exe"
+          if (-not (Test-Path -LiteralPath $testExecutable -PathType Leaf)) {
+              throw "Test executable was not built: $testExecutable"
+          }
+          & $testExecutable
+          if ($LASTEXITCODE -ne 0) {
+              throw "OpenGlassTests failed with exit code $LASTEXITCODE."
+          }
+
+      - name: Verify build outputs
+        run: |
+          $expected = @(
+              "Build\x64\Release\legacy\OpenGlass.dll",
+              "Build\x64\Release\milcomp\OpenGlass.dll",
+              "Build\x64\Release\common\OpenGlassHost.exe",
+              "Build\x64\Release\common\OpenGlassGUI.exe",
+              "Build\x64\Release\common\OpenGlassTests.exe",
+              "Build\x64\Release\common\OpenGlassRenderTest.exe"
+          )
+          foreach ($path in $expected) {
+              $item = Get-Item -LiteralPath $path -ErrorAction Stop
+              if ($item.Length -eq 0) {
+                  throw "Build output is empty: $path"
+              }
+          }
+
+      - name: Locate packaging tools
+        id: packaging_tools
+        if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.package_artifacts == true)
+        run: |
+          $PSNativeCommandUseErrorActionPreference = $true
+          $iscc = Get-Command ISCC.exe -ErrorAction Stop
+          python --version
+          "iscc=$($iscc.Source)" >> $env:GITHUB_OUTPUT
+
+      - name: Package unsigned installers and symbols
+        if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.package_artifacts == true)
+        env:
+          OPENGLASS_ISCC: ${{ steps.packaging_tools.outputs.iscc }}
+        run: |
+          $PSNativeCommandUseErrorActionPreference = $true
+          foreach ($architecture in @("legacy", "milcomp")) {
+              $arguments = @(
+                  "Scripts\OpenGlass.Packaging.proj",
+                  "/m",
+                  "/p:Configuration=Release",
+                  "/p:Platform=x64",
+                  "/p:Architecture=$architecture",
+                  "/p:BuildDependencies=false",
+                  "/p:OpenGlassIsccTool=$env:OPENGLASS_ISCC"
+              )
+              & msbuild @arguments
+              if ($LASTEXITCODE -ne 0) {
+                  throw "Packaging $architecture failed with exit code $LASTEXITCODE."
+              }
+          }
+
+      - name: Verify unsigned packages
+        if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.package_artifacts == true)
+        run: |
+          Add-Type -AssemblyName System.IO.Compression.FileSystem
+          $buildRoot = "Build\x64\Release"
+          $artifacts = @(
+              "$buildRoot\OpenGlassSetup.Legacy.exe",
+              "$buildRoot\OpenGlassSetup.MILComp.exe",
+              "$buildRoot\OpenGlassSymbols.Legacy.zip",
+              "$buildRoot\OpenGlassSymbols.MILComp.zip"
+          )
+          foreach ($path in $artifacts) {
+              $item = Get-Item -LiteralPath $path -ErrorAction Stop
+              if ($item.Length -eq 0) {
+                  throw "Package output is empty: $path"
+              }
+          }
+
+          $expectedPdbs = @("OpenGlass.pdb", "OpenGlassGUI.pdb", "OpenGlassHost.pdb")
+          foreach ($zipPath in $artifacts | Where-Object { $_.EndsWith(".zip", [StringComparison]::OrdinalIgnoreCase) }) {
+              $archive = [IO.Compression.ZipFile]::OpenRead((Resolve-Path -LiteralPath $zipPath))
+              try {
+                  $entries = @($archive.Entries)
+                  $actualNames = @($entries.FullName | Sort-Object)
+                  $differences = @(Compare-Object -ReferenceObject $expectedPdbs -DifferenceObject $actualNames)
+                  if ($differences.Count -ne 0 -or $entries.Count -ne $expectedPdbs.Count) {
+                      throw "Unexpected contents in $zipPath`: $($actualNames -join ', ')"
+                  }
+                  foreach ($entry in $entries) {
+                      if ($entry.Length -eq 0) {
+                          throw "Symbol archive entry is empty: $zipPath/$($entry.FullName)"
+                      }
+                  }
+              }
+              finally {
+                  $archive.Dispose()
+              }
+          }
+
+          $unsignedExecutables = @(
+              "$buildRoot\legacy\OpenGlass.dll",
+              "$buildRoot\milcomp\OpenGlass.dll",
+              "$buildRoot\common\OpenGlassHost.exe",
+              "$buildRoot\common\OpenGlassGUI.exe",
+              "$buildRoot\OpenGlassSetup.Legacy.exe",
+              "$buildRoot\OpenGlassSetup.MILComp.exe"
+          )
+          foreach ($path in $unsignedExecutables) {
+              $signature = Get-AuthenticodeSignature -LiteralPath $path
+              if ($signature.Status -ne [System.Management.Automation.SignatureStatus]::NotSigned) {
+                  throw "Expected an unsigned file, but $path has signature status $($signature.Status)."
+              }
+          }
+
+      - name: Verify source tree remains unchanged
+        run: |
+          $PSNativeCommandUseErrorActionPreference = $true
+          git diff --exit-code
+
+      - name: Upload unsigned packages
+        if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.package_artifacts == true)
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: ${{ steps.version.outputs.artifact_name }}
+          path: |
+            Build/x64/Release/OpenGlassSetup.Legacy.exe
+            Build/x64/Release/OpenGlassSetup.MILComp.exe
+            Build/x64/Release/OpenGlassSymbols.Legacy.zip
+            Build/x64/Release/OpenGlassSymbols.MILComp.zip
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Upload MSBuild binary log on failure
+        if: failure() && hashFiles('MSBuild_Logs/ci.binlog') != ''
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: msbuild-binlog-${{ github.run_id }}
+          path: MSBuild_Logs/ci.binlog
+          if-no-files-found: ignore
+          retention-days: 7
