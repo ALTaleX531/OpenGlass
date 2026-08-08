@@ -371,7 +371,14 @@ HRESULT GlassService::RunInjectionThread()
 					DWORD exitCode{ 0 };
 					LOG_IF_WIN32_BOOL_FALSE(GetExitCodeProcess(processHandle.get(), &exitCode));
 					// DWM constantly crashes or manual fast fail triggered by user
-					if (currentTimeStamp - injectionTimeStamp <= std::chrono::seconds{ 15 } || exitCode == 0xC0000409)
+					if (
+						(
+							currentTimeStamp - injectionTimeStamp <= std::chrono::seconds{ 15 } &&
+							// DWM shutdown by session manager
+							exitCode != 0xD00002FE
+						) ||
+						exitCode == 0xC0000409
+					)
 					{
 						auto title = Util::GetResourceStringView<IDS_STRING101>();
 						auto content = Util::GetResourceStringView<IDS_STRING109>();
