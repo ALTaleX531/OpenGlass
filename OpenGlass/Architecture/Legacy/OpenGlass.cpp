@@ -36,7 +36,6 @@ namespace OpenGlass
 		PVOID context
 	);
 	LRESULT CALLBACK DwmNotificationWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	HWND g_notificationWindow{ nullptr };
 	PVOID g_powerNotify{ nullptr };
 	WNDPROC g_oldWndProc{ nullptr };
 
@@ -98,7 +97,7 @@ LRESULT CALLBACK OpenGlass::DwmNotificationWndProc(HWND hWnd, UINT uMsg, WPARAM 
 	{
 		case WM_CLOSE:
 		{
-			g_notificationWindow = nullptr;
+			GlassEngine::SetDwmNotificationWindow(nullptr);
 			break;
 		}
 		case WM_WININICHANGE:
@@ -596,8 +595,12 @@ void OpenGlass::Startup()
 		return;
 	}
 
-	// just wait patiently, in case the dwm notification window is not ready...
-	while (!(g_notificationWindow = FindWindowW(L"DWM", nullptr))) { Sleep(50); }
+	{
+		HWND hWnd{ nullptr };
+		// just wait patiently, in case the dwm notification window is not ready...
+		while (!(hWnd = FindWindowW(L"DWM", nullptr))) { Sleep(50); }
+		GlassEngine::SetDwmNotificationWindow(hWnd);
+	}
 
 	wil::SetResultLoggingCallback([](const wil::FailureInfo& failure) static noexcept
 	{
@@ -664,14 +667,14 @@ void OpenGlass::Startup()
 	g_lifecycleState.store(LifecycleState::HooksActive, std::memory_order_release);
 
 	// make sure guis can send message to dwm
-	FAIL_FAST_IF_WIN32_BOOL_FALSE_MSG(ChangeWindowMessageFilterEx(g_notificationWindow, WM_DWMCOLORIZATIONCOLORCHANGED, MSGFLT_ALLOW, nullptr), "Unable to allow the DWM colorization notification");
+	FAIL_FAST_IF_WIN32_BOOL_FALSE_MSG(ChangeWindowMessageFilterEx(GlassEngine::GetDwmNotificationWindow(), WM_DWMCOLORIZATIONCOLORCHANGED, MSGFLT_ALLOW, nullptr), "Unable to allow the DWM colorization notification");
 
-	FAIL_FAST_IF_WIN32_BOOL_FALSE_MSG(WTSRegisterSessionNotification(g_notificationWindow, NOTIFY_FOR_THIS_SESSION), "Unable to register DWM session notifications");
-	FAIL_FAST_IF_WIN32_BOOL_FALSE_MSG(ChangeWindowMessageFilterEx(g_notificationWindow, WM_WTSSESSION_CHANGE, MSGFLT_ALLOW, nullptr), "Unable to allow the DWM session notification");
+	FAIL_FAST_IF_WIN32_BOOL_FALSE_MSG(WTSRegisterSessionNotification(GlassEngine::GetDwmNotificationWindow(), NOTIFY_FOR_THIS_SESSION), "Unable to register DWM session notifications");
+	FAIL_FAST_IF_WIN32_BOOL_FALSE_MSG(ChangeWindowMessageFilterEx(GlassEngine::GetDwmNotificationWindow(), WM_WTSSESSION_CHANGE, MSGFLT_ALLOW, nullptr), "Unable to allow the DWM session notification");
 
 	g_oldWndProc = reinterpret_cast<WNDPROC>(
 		SetWindowLongPtrW(
-			g_notificationWindow,
+			GlassEngine::GetDwmNotificationWindow(),
 			GWLP_WNDPROC,
 			reinterpret_cast<LONG_PTR>(DwmNotificationWndProc)
 		)
@@ -708,7 +711,7 @@ void OpenGlass::Startup()
 
 void OpenGlass::Shutdown()
 {
-	if (!g_notificationWindow)
+	if (!GlassEngine::GetDwmNotificationWindow())
 	{
 		return;
 	}
@@ -716,13 +719,13 @@ void OpenGlass::Shutdown()
 	const auto previousState = g_lifecycleState.exchange(LifecycleState::Stopping, std::memory_order_acq_rel);
 	if (previousState == LifecycleState::Active)
 	{
-		FAIL_FAST_LAST_ERROR_IF_MSG(SetWindowLongPtrW(g_notificationWindow, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(g_oldWndProc)) == 0, "Unable to restore the DWM notification window procedure");
+		FAIL_FAST_LAST_ERROR_IF_MSG(SetWindowLongPtrW(GlassEngine::GetDwmNotificationWindow(), GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(g_oldWndProc)) == 0, "Unable to restore the DWM notification window procedure");
 		g_oldWndProc = nullptr;
 
-		FAIL_FAST_IF_WIN32_BOOL_FALSE_MSG(ChangeWindowMessageFilterEx(g_notificationWindow, WM_WTSSESSION_CHANGE, MSGFLT_DISALLOW, nullptr), "Unable to remove the DWM session message filter");
-		FAIL_FAST_IF_WIN32_BOOL_FALSE_MSG(WTSUnRegisterSessionNotification(g_notificationWindow), "Unable to unregister DWM session notifications");
+		FAIL_FAST_IF_WIN32_BOOL_FALSE_MSG(ChangeWindowMessageFilterEx(GlassEngine::GetDwmNotificationWindow(), WM_WTSSESSION_CHANGE, MSGFLT_DISALLOW, nullptr), "Unable to remove the DWM session message filter");
+		FAIL_FAST_IF_WIN32_BOOL_FALSE_MSG(WTSUnRegisterSessionNotification(GlassEngine::GetDwmNotificationWindow()), "Unable to unregister DWM session notifications");
 
-		FAIL_FAST_IF_WIN32_BOOL_FALSE_MSG(ChangeWindowMessageFilterEx(g_notificationWindow, WM_DWMCOLORIZATIONCOLORCHANGED, MSGFLT_DISALLOW, nullptr), "Unable to remove the DWM colorization message filter");
+		FAIL_FAST_IF_WIN32_BOOL_FALSE_MSG(ChangeWindowMessageFilterEx(GlassEngine::GetDwmNotificationWindow(), WM_DWMCOLORIZATIONCOLORCHANGED, MSGFLT_DISALLOW, nullptr), "Unable to remove the DWM colorization message filter");
 
 		FAIL_FAST_IF_FAILED_MSG(
 			PowerUnregisterFromEffectivePowerModeNotifications(g_powerNotify),
@@ -752,5 +755,5 @@ void OpenGlass::Shutdown()
 	}
 	g_lifecycleState.store(LifecycleState::Inert, std::memory_order_release);
 
-	g_notificationWindow = nullptr;
+	GlassEngine::SetDwmNotificationWindow(nullptr);
 }

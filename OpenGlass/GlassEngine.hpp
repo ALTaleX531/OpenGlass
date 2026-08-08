@@ -99,6 +99,9 @@ namespace OpenGlass::GlassEngine
 	void LoadRegistry(bool redrawNow = true);
 	void UnloadRegistry();
 
+	void SetDwmNotificationWindow(HWND hWnd);
+	HWND GetDwmNotificationWindow();
+
 	void Update(UpdateType type, bool redrawNow = true);
 	void Startup();
 	void Activate();

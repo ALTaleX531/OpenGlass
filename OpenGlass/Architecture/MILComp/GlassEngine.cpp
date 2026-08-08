@@ -20,6 +20,7 @@ namespace OpenGlass::GlassEngine
 {
 	wil::unique_hkey g_dwmKey{ nullptr };
 	wil::unique_hkey g_personalizeKey{ nullptr };
+	HWND g_notificationWindow{ nullptr };
 }
 
 HKEY GlassEngine::GetDwmKey()
@@ -55,6 +56,16 @@ void GlassEngine::UnloadRegistry()
 {
 	wil::reg::open_unique_key_nothrow(HKEY_LOCAL_MACHINE, L"Software\\Microsoft\\Windows\\DWM", g_dwmKey);
 	wil::reg::open_unique_key_nothrow(HKEY_LOCAL_MACHINE, L"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", g_personalizeKey);
+}
+
+void GlassEngine::SetDwmNotificationWindow(HWND hWnd)
+{
+	g_notificationWindow = hWnd;
+}
+
+HWND GlassEngine::GetDwmNotificationWindow()
+{
+	return g_notificationWindow;
 }
 
 void GlassEngine::Update(UpdateType type, bool redrawNow)

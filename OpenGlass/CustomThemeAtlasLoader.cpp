@@ -746,7 +746,7 @@ void CustomThemeAtlasLoader::Startup()
 }
 void CustomThemeAtlasLoader::Activate()
 {
-	PostMessageW(FindWindowW(L"DWM", nullptr), WM_THEMECHANGED, 0, 0);
+	PostMessageW(GlassEngine::GetDwmNotificationWindow(), WM_THEMECHANGED, 0, 0);
 }
 void CustomThemeAtlasLoader::Shutdown()
 {
@@ -754,6 +754,6 @@ void CustomThemeAtlasLoader::Shutdown()
 }
 void CustomThemeAtlasLoader::Deactivate()
 {
-	SendMessageW(FindWindowW(L"DWM", nullptr), WM_THEMECHANGED, 0, 0);
+	SendMessageW(GlassEngine::GetDwmNotificationWindow(), WM_THEMECHANGED, 0, 0);
 	UnloadTheme();
 }
