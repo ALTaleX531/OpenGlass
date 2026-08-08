@@ -6,8 +6,9 @@ PUBLIC MyCLegacyNonClientBackground_HasSomethingToRender
 .code
 
 ; CloneVisualTreeForLivePreview is privately optimized across the original
-; HasSomethingToRender call and reuses RCX and DL afterward. Preserve both
-; volatile registers while the C++ implementation performs the map lookup.
+; HasSomethingToRender call and reuses RCX and DL afterward. This must be the
+; physical dispatcher so the map lookup and HookRundown release both complete
+; before the volatile registers are restored.
 MyCLegacyNonClientBackground_HasSomethingToRender PROC FRAME
 	sub rsp, 38h
 	.allocstack 38h

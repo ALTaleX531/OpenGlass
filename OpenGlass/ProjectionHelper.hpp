@@ -598,4 +598,75 @@ namespace OpenGlass::Projection
 			return std::invoke(Next(), std::forward<decltype(args)>(args)...);
 		}
 	};
+
+	// Some private optimized functions preserve otherwise volatile caller state and
+	// therefore cannot pass through the normal C++ dispatcher. Such hooks have one
+	// owner and one physical entry; that entry must bracket this class's Dispatch
+	// call with any private register preservation it requires.
+	template <auto Symbol, function_pointer T> class ExclusiveDetour final
+	{
+		using SymbolHandleType = std::remove_cvref_t<decltype(Symbol)>;
+		using SymbolPointerType = typename SymbolHandleType::value_type;
+		using ExpectedDetourType = typename DetourSymbolAbi<SymbolPointerType>::type;
+		static_assert(
+			std::same_as<ExpectedDetourType, T>,
+			"exclusive detour replacement must match the typed symbol ABI"
+		);
+
+		T m_dispatch{};
+		inline static T s_entryOriginal{};
+		inline static ExclusiveDetour* s_owner{};
+
+	public:
+		ExclusiveDetour() = default;
+		ExclusiveDetour(const ExclusiveDetour&) = delete;
+		ExclusiveDetour& operator=(const ExclusiveDetour&) = delete;
+
+		T prepare_detour(T dispatch) noexcept
+		{
+			FAIL_FAST_IF_FAILED_MSG(dispatch ? S_OK : E_INVALIDARG, "Cannot register an empty exclusive detour entry");
+			FAIL_FAST_IF_FAILED_MSG(!s_owner || s_owner == this ? S_OK : E_UNEXPECTED, "An exclusive projection detour cannot be chained or shared");
+			FAIL_FAST_IF_FAILED_MSG(!m_dispatch || m_dispatch == dispatch ? S_OK : E_UNEXPECTED, "An exclusive projection detour was rebound to a different entry");
+
+			s_owner = this;
+			m_dispatch = dispatch;
+			return m_dispatch;
+		}
+
+		__forceinline T* detour_storage()
+		{
+			return reinterpret_cast<T*>(PrepareDetourStorage(
+				reinterpret_cast<PVOID*>(&s_entryOriginal),
+				RegistryFor<typename SymbolHandleType::module_tag>(),
+				SymbolHandleType::index
+			));
+		}
+
+		template <typename Replacement, typename... Args>
+		requires std::invocable<Replacement, Args...>
+		__forceinline decltype(auto) Dispatch(Replacement&& replacement, Args&&... args)
+		{
+			auto& rundown = HookHelper::GetHookRundown();
+			if (!rundown.TryAcquire())
+			{
+				return std::invoke(s_entryOriginal, std::forward<decltype(args)>(args)...);
+			}
+
+			const auto release = wil::scope_exit([&rundown]
+			{
+				rundown.Release();
+			});
+			return std::invoke(std::forward<Replacement>(replacement), std::forward<Args>(args)...);
+		}
+
+		__forceinline decltype(auto) operator()(auto&&... args) const
+		{
+			return std::invoke(s_entryOriginal, std::forward<decltype(args)>(args)...);
+		}
+
+		explicit operator bool() const noexcept
+		{
+			return s_entryOriginal || static_cast<bool>(Symbol);
+		}
+	};
 } // namespace OpenGlass::Projection

@@ -71,6 +71,12 @@ namespace
 	int ProjectionChainReplacement2(int value);
 	Projection::Detour<g_symbol, TestFunction> g_projectionChain1;
 	Projection::Detour<g_symbol, TestFunction> g_projectionChain2;
+	inline constexpr Projection::SymbolHandle<FixtureModuleTag, 1, TestFunction> g_customDispatchSymbol{};
+	int CustomPhysicalDispatch(int value)
+	{
+		return value;
+	}
+	Projection::ExclusiveDetour<g_customDispatchSymbol, TestFunction> g_customDispatchDetour{};
 	int ProjectionChainReplacement1(int value)
 	{
 		return g_projectionChain1(value) + 100;
@@ -404,6 +410,8 @@ namespace
 		};
 		Check(chainedHooks[0].original == chainedHooks[1].original);
 		Check(chainedHooks[0].detour == chainedHooks[1].detour);
+		Check(g_customDispatchDetour.prepare_detour(&CustomPhysicalDispatch) == &CustomPhysicalDispatch);
+		Check(g_customDispatchDetour.prepare_detour(&CustomPhysicalDispatch) == &CustomPhysicalDispatch);
 		{
 			HookHelper::HookTransaction transaction{ HookHelper::HookMode::Install };
 			transaction.ApplyInline("ProjectionChain", chainedHooks);

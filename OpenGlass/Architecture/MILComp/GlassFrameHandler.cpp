@@ -44,7 +44,11 @@ namespace OpenGlass::GlassFrameHandler
 
 	Projection::Detour<dwmcore::Symbol_CChannel_CombinedGeometryUpdate, decltype(&MyCChannel_CombinedGeometryUpdate)> g_CChannel_CombinedGeometryUpdate_Org{};
 	Projection::Detour<uDWM::Symbol_CLegacyNonClientBackground_ClearAll, decltype(&MyCLegacyNonClientBackground_ClearAll)> g_CLegacyNonClientBackground_ClearAll_Org{};
-	Projection::Detour<uDWM::Symbol_CLegacyNonClientBackground_HasSomethingToRender, decltype(&MyCLegacyNonClientBackground_HasSomethingToRender)> g_CLegacyNonClientBackground_HasSomethingToRender_Org{};
+	using CLegacyNonClientBackground_HasSomethingToRender_Detour = Projection::ExclusiveDetour<
+		uDWM::Symbol_CLegacyNonClientBackground_HasSomethingToRender,
+		decltype(&MyCLegacyNonClientBackground_HasSomethingToRender)
+	>;
+	CLegacyNonClientBackground_HasSomethingToRender_Detour g_CLegacyNonClientBackground_HasSomethingToRender_Org{};
 	Projection::Detour<uDWM::Symbol_CLegacyNonClientBackground_SetCaptionRect, decltype(&MyCLegacyNonClientBackground_SetCaptionRect)> g_CLegacyNonClientBackground_SetCaptionRect_Org{};
 	Projection::Detour<uDWM::Symbol_CLegacyNonClientBackground_SetBorderRects, decltype(&MyCLegacyNonClientBackground_SetBorderRects)> g_CLegacyNonClientBackground_SetBorderRects_Org{};
 	Projection::Detour<uDWM::Symbol_CLegacyNonClientBackground_SetCaptionColor, decltype(&MyCLegacyNonClientBackground_SetCaptionColor)> g_CLegacyNonClientBackground_SetCaptionColor_Org{};
@@ -336,9 +340,15 @@ void GlassFrameHandler::MyCLegacyNonClientBackground_ClearAll(uDWM::CLegacyNonCl
 	RemoveEffectVisual(This);
 	return g_CLegacyNonClientBackground_ClearAll_Org(This);
 }
-extern "C" bool GlassFrameHandler::MyCLegacyNonClientBackground_HasSomethingToRender_Impl(uDWM::CLegacyNonClientBackground* This)
+bool GlassFrameHandler::MyCLegacyNonClientBackground_HasSomethingToRender_Impl(uDWM::CLegacyNonClientBackground* This)
 {
-	return g_effectVisualMap.find(This) != g_effectVisualMap.end();
+	return g_CLegacyNonClientBackground_HasSomethingToRender_Org.Dispatch(
+		[](uDWM::CLegacyNonClientBackground* background)
+		{
+			return g_effectVisualMap.find(background) != g_effectVisualMap.end();
+		},
+		This
+	);
 }
 HRESULT GlassFrameHandler::MyCLegacyNonClientBackground_SetCaptionRect(uDWM::CLegacyNonClientBackground* This, LPCRECT rc)
 {
