@@ -244,6 +244,91 @@ namespace OpenGlass
 		Update();
 	}
 
+	void MainFrame::RefreshTransparencyDiagnostics()
+	{
+		if (!m_lblWindowsTransparencyStatus || !m_lblOpaqueBlendStatus || !m_lblPowerModeStatus || !m_lblDisableOnBatteryStatus || !m_bmpEffectiveTransparencyWarning || !m_lblEffectiveTransparencyStatus)
+		{
+			return;
+		}
+
+		TransparencyDiagnostics diagnostics;
+		const HRESULT result = QueryTransparencyDiagnostics(m_targetUserSid.ToStdWstring(), diagnostics);
+		if (FAILED(result))
+		{
+			const wxString error = wxString::Format(L"Unavailable (HRESULT 0x%08lX)", static_cast<unsigned long>(result));
+			m_lblWindowsTransparencyStatus->SetLabel(error);
+			m_lblOpaqueBlendStatus->SetLabel(error);
+			m_lblPowerModeStatus->SetLabel(error);
+			m_lblDisableOnBatteryStatus->SetLabel(error);
+			m_bmpEffectiveTransparencyWarning->Hide();
+			m_lblEffectiveTransparencyStatus->SetLabel(error);
+			RefreshDiagnosticsLayout();
+			return;
+		}
+
+		auto sourceName = [](DiagnosticRegistrySource source)
+		{
+			switch (source)
+			{
+			case DiagnosticRegistrySource::User: return L"HKCU";
+			case DiagnosticRegistrySource::Machine: return L"HKLM";
+			default: return L"default";
+			}
+		};
+		auto powerModeName = [](EFFECTIVE_POWER_MODE mode)
+		{
+			switch (mode)
+			{
+			case EffectivePowerModeBatterySaver: return L"Battery saver / high savings";
+			case EffectivePowerModeBetterBattery: return L"Better battery / standard savings";
+			case EffectivePowerModeBalanced: return L"Balanced";
+			case EffectivePowerModeHighPerformance: return L"High performance";
+			case EffectivePowerModeMaxPerformance: return L"Maximum performance";
+			case EffectivePowerModeGameMode: return L"Game mode";
+			case EffectivePowerModeMixedReality: return L"Mixed reality";
+			default: return L"Unknown";
+			}
+		};
+
+		m_lblWindowsTransparencyStatus->SetLabel(diagnostics.windowsTransparencyEnabled ? L"On" : L"Off (opaque)");
+		m_lblOpaqueBlendStatus->SetLabel(wxString::Format(
+			L"%lu (%ls, %ls)",
+			static_cast<unsigned long>(diagnostics.colorizationOpaqueBlend),
+			sourceName(diagnostics.colorizationOpaqueBlendSource),
+			diagnostics.colorizationOpaqueBlend ? L"opaque" : L"transparent"
+		));
+		m_lblPowerModeStatus->SetLabel(wxString::Format(
+			L"%ls (%ls)",
+			powerModeName(diagnostics.effectivePowerMode),
+			diagnostics.powerSaverActive ? L"saver" : L"normal"
+		));
+		m_lblDisableOnBatteryStatus->SetLabel(wxString::Format(
+			L"%ls (%ls)",
+			diagnostics.disableGlassOnBattery ? L"On" : L"Off",
+			sourceName(diagnostics.disableGlassOnBatterySource)
+		));
+
+		const bool isOpaque = diagnostics.colorizationOpaqueBlend
+			|| (diagnostics.powerSaverActive && diagnostics.disableGlassOnBattery)
+			|| !diagnostics.windowsTransparencyEnabled;
+		wxString resultText = L"Transparent";
+		if (diagnostics.colorizationOpaqueBlend)
+		{
+			resultText = L"Opaque: Opaque blend";
+		}
+		else if (diagnostics.powerSaverActive && diagnostics.disableGlassOnBattery)
+		{
+			resultText = L"Opaque: Power saver";
+		}
+		else if (!diagnostics.windowsTransparencyEnabled)
+		{
+			resultText = L"Opaque: Windows setting";
+		}
+		m_bmpEffectiveTransparencyWarning->Show(isOpaque);
+		m_lblEffectiveTransparencyStatus->SetLabel(resultText);
+		RefreshDiagnosticsLayout();
+	}
+
 	void MainFrame::UpdateSymbolDownloadProgress(const SymbolDownloadProgress& progress)
 	{
 		if (m_gaugeSymbolDownload)
@@ -2084,6 +2169,10 @@ namespace OpenGlass
 
 		m_btnDownloadSymbols->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
 			StartSymbolDownload();
+		});
+
+		m_btnRefreshTransparencyDiagnostics->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
+			RefreshTransparencyDiagnostics();
 		});
 
 		m_btnCancelSymbolDownload->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {

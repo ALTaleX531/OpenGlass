@@ -86,6 +86,7 @@ namespace OpenGlass
 		bool CheckRegistryWrite(HRESULT result, const std::wstring& name);
 		void StartSymbolDownload();
 		void RefreshDiagnosticsLayout();
+		void RefreshTransparencyDiagnostics();
 		void UpdateSymbolDownloadProgress(const SymbolDownloadProgress& progress);
 		void UpdateSymbolDownloadResult(wxArtID iconId, const wxString& summary, const wxString& details = wxEmptyString);
 		void FinishSymbolDownload(const SymbolDownloadOutcome& outcome);
@@ -129,6 +130,13 @@ namespace OpenGlass
 		wxCheckListBox* m_clDisabledHooks{ nullptr };
 
 		// Diagnostics Tab
+		wxStaticText* m_lblWindowsTransparencyStatus{ nullptr };
+		wxStaticText* m_lblOpaqueBlendStatus{ nullptr };
+		wxStaticText* m_lblPowerModeStatus{ nullptr };
+		wxStaticText* m_lblDisableOnBatteryStatus{ nullptr };
+		wxStaticBitmap* m_bmpEffectiveTransparencyWarning{ nullptr };
+		wxStaticText* m_lblEffectiveTransparencyStatus{ nullptr };
+		wxButton* m_btnRefreshTransparencyDiagnostics{ nullptr };
 		wxGauge* m_gaugeSymbolDownload{ nullptr };
 		wxStaticText* m_lblSymbolDownloadPhase{ nullptr };
 		wxStaticText* m_lblSymbolDownloadDetail{ nullptr };

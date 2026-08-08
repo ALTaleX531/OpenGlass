@@ -164,6 +164,55 @@ namespace OpenGlass
 		panel->SetScrollRate(5, 5);
 		wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 
+		wxStaticBoxSizer* transparencyGroup = new wxStaticBoxSizer(wxVERTICAL, panel, L"Transparency status");
+		const wxString transparencyDescriptionText = L"Current conditions that can make glass opaque.";
+		wxStaticText* transparencyDescription = new wxStaticText(
+			panel,
+			wxID_ANY,
+			transparencyDescriptionText
+		);
+		transparencyGroup->Add(transparencyDescription, 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, 8);
+
+		wxFlexGridSizer* transparencyGrid = new wxFlexGridSizer(2, 8, 12);
+		transparencyGrid->AddGrowableCol(1, 1);
+		auto addTransparencyRow = [&](const wxString& label, wxStaticText*& value)
+		{
+			wxStaticText* key = new wxStaticText(panel, wxID_ANY, label);
+			wxFont keyFont = key->GetFont();
+			keyFont.SetWeight(wxFONTWEIGHT_BOLD);
+			key->SetFont(keyFont);
+			transparencyGrid->Add(key, 0, wxALIGN_TOP);
+			value = new wxStaticText(panel, wxID_ANY, L"Reading...");
+			transparencyGrid->Add(value, 1, wxEXPAND);
+		};
+		addTransparencyRow(L"Windows transparency", m_lblWindowsTransparencyStatus);
+		addTransparencyRow(L"Opaque blend", m_lblOpaqueBlendStatus);
+		addTransparencyRow(L"Power mode", m_lblPowerModeStatus);
+		addTransparencyRow(L"Opaque on saver", m_lblDisableOnBatteryStatus);
+		wxStaticText* resultKey = new wxStaticText(panel, wxID_ANY, L"Result");
+		wxFont resultKeyFont = resultKey->GetFont();
+		resultKeyFont.SetWeight(wxFONTWEIGHT_BOLD);
+		resultKey->SetFont(resultKeyFont);
+		transparencyGrid->Add(resultKey, 0, wxALIGN_TOP);
+		wxBoxSizer* transparencyResultRow = new wxBoxSizer(wxHORIZONTAL);
+		m_bmpEffectiveTransparencyWarning = new wxStaticBitmap(
+			panel,
+			wxID_ANY,
+			wxArtProvider::GetBitmap(wxART_WARNING, wxART_MESSAGE_BOX, wxSize(16, 16))
+		);
+		m_bmpEffectiveTransparencyWarning->Hide();
+		transparencyResultRow->Add(m_bmpEffectiveTransparencyWarning, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
+		m_lblEffectiveTransparencyStatus = new wxStaticText(panel, wxID_ANY, L"Reading...");
+		transparencyResultRow->Add(m_lblEffectiveTransparencyStatus, 1, wxEXPAND);
+		transparencyGrid->Add(transparencyResultRow, 1, wxEXPAND);
+		transparencyGroup->Add(transparencyGrid, 0, wxEXPAND | wxALL, 8);
+
+		wxBoxSizer* transparencyButtonRow = new wxBoxSizer(wxHORIZONTAL);
+		transparencyButtonRow->AddStretchSpacer();
+		m_btnRefreshTransparencyDiagnostics = new wxButton(panel, wxID_ANY, L"Refresh");
+		transparencyButtonRow->Add(m_btnRefreshTransparencyDiagnostics, 0);
+		transparencyGroup->Add(transparencyButtonRow, 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 8);
+
 		wxStaticBoxSizer* downloadGroup = new wxStaticBoxSizer(wxVERTICAL, panel, L"Symbols");
 		const wxString descriptionText = L"Download the public PDB files required for the current Windows build. The default runtime cache is %ProgramData%\\OpenGlass\\symbols; another folder may be selected for manual use.";
 		wxStaticText* description = new wxStaticText(
@@ -295,6 +344,7 @@ namespace OpenGlass
 		dumpButtonRow->Add(m_btnDisableDwmCrashDumps, 0);
 		dumpGroup->Add(dumpButtonRow, 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 8);
 
+		sizer->Add(transparencyGroup, 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, 8);
 		sizer->Add(downloadGroup, 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, 8);
 		sizer->Add(statusGroup, 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 8);
 		sizer->Add(dumpGroup, 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 8);
@@ -305,8 +355,9 @@ namespace OpenGlass
 		}
 
 		panel->SetSizer(sizer);
-		panel->Bind(wxEVT_SIZE, [this, panel, description, descriptionText, dumpDescription, dumpDescriptionText](wxSizeEvent& event)
+		panel->Bind(wxEVT_SIZE, [this, panel, transparencyDescription, transparencyDescriptionText, description, descriptionText, dumpDescription, dumpDescriptionText](wxSizeEvent& event)
 		{
+			WrapStaticTextToParentWidth(transparencyDescription, transparencyDescriptionText);
 			WrapStaticTextToParentWidth(description, descriptionText);
 			WrapStaticTextToParentWidth(m_lblSymbolDownloadDetail, m_symbolDownloadDetailText);
 			WrapStaticTextToParentWidth(m_lblSymbolDownloadResult, m_symbolDownloadResultText);
@@ -315,9 +366,10 @@ namespace OpenGlass
 			panel->FitInside();
 			event.Skip();
 		});
-		panel->CallAfter([this, panel, description, descriptionText, dumpDescription, dumpDescriptionText]
+		panel->CallAfter([this, panel, transparencyDescription, transparencyDescriptionText, description, descriptionText, dumpDescription, dumpDescriptionText]
 		{
 			panel->Layout();
+			WrapStaticTextToParentWidth(transparencyDescription, transparencyDescriptionText);
 			WrapStaticTextToParentWidth(description, descriptionText);
 			WrapStaticTextToParentWidth(m_lblSymbolDownloadDetail, m_symbolDownloadDetailText);
 			WrapStaticTextToParentWidth(m_lblSymbolDownloadResult, m_symbolDownloadResultText);
@@ -326,6 +378,7 @@ namespace OpenGlass
 			panel->Layout();
 			panel->FitInside();
 		});
+		RefreshTransparencyDiagnostics();
 		RefreshDwmCrashDumpConfiguration();
 		panel->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
 		m_notebook->AddPage(panel, L"Diagnostics");
