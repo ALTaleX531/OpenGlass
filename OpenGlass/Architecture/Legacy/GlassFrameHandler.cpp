@@ -25,9 +25,9 @@ namespace OpenGlass::GlassFrameHandler
 
 	Projection::Detour<uDWM::Symbol_ResourceHelper_CreateGeometryFromHRGN, decltype(&MyResourceHelper_CreateGeometryFromHRGN)> g_ResourceHelper_CreateGeometryFromHRGN_Org{};
 	Projection::Detour<uDWM::Symbol_CGlassColorizationParameters_AdjustWindowColorization, decltype(&MyCGlassColorizationParameters_AdjustWindowColorization)> g_CGlassColorizationParameters_AdjustWindowColorization_Org{};
-	Projection::Detour<uDWM::Symbol_CTopLevelWindow_UpdateNCAreaBackground, decltype(&MyCTopLevelWindow_UpdateNCAreaBackground)> g_CTopLevelWindow_UpdateNCAreaBackground_Org{};
+	Projection::ChainDetour<uDWM::Symbol_CTopLevelWindow_UpdateNCAreaBackground, decltype(&MyCTopLevelWindow_UpdateNCAreaBackground)> g_CTopLevelWindow_UpdateNCAreaBackground_Org{};
 	Projection::Detour<uDWM::Symbol_CTopLevelWindow_UpdateClientBlur, decltype(&MyCTopLevelWindow_UpdateClientBlur)> g_CTopLevelWindow_UpdateClientBlur_Org{};
-	Projection::Detour<uDWM::Symbol_CTopLevelWindow_ValidateVisual, decltype(&MyCTopLevelWindow_ValidateVisual)> g_CTopLevelWindow_ValidateVisual_Org{};
+	Projection::ChainDetour<uDWM::Symbol_CTopLevelWindow_ValidateVisual, decltype(&MyCTopLevelWindow_ValidateVisual)> g_CTopLevelWindow_ValidateVisual_Org{};
 	Projection::Detour<uDWM::Symbol_CTopLevelWindow__CTopLevelWindow, decltype(&MyCTopLevelWindow_Destructor)> g_CTopLevelWindow_Destructor_Org{};
 	
 	wil::unique_hrgn g_combinedRgn{ nullptr };

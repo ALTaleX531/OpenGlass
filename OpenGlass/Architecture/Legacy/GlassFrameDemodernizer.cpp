@@ -17,8 +17,8 @@ namespace OpenGlass::GlassFrameDemodernizer
 		const MARGINS* srcMargins
 	);
 
-	Projection::Detour<uDWM::Symbol_CTopLevelWindow_ValidateVisual, decltype(&MyCTopLevelWindow_ValidateVisual)> g_CTopLevelWindow_ValidateVisual_Org{};
-	Projection::Detour<uDWM::Symbol_CTopLevelWindow_UpdateNCAreaBackground, decltype(&MyCTopLevelWindow_UpdateNCAreaBackground)> g_CTopLevelWindow_UpdateNCAreaBackground_Org{};
+	Projection::ChainDetour<uDWM::Symbol_CTopLevelWindow_ValidateVisual, decltype(&MyCTopLevelWindow_ValidateVisual)> g_CTopLevelWindow_ValidateVisual_Org{};
+	Projection::ChainDetour<uDWM::Symbol_CTopLevelWindow_UpdateNCAreaBackground, decltype(&MyCTopLevelWindow_UpdateNCAreaBackground)> g_CTopLevelWindow_UpdateNCAreaBackground_Org{};
 	Projection::Detour<uDWM::Symbol_SetMargin, decltype(&MySetMargin)> g_SetMargin_Org{};
 
 	UCHAR g_callCDesktopManager_IsHighContrastMode_Instructions[]

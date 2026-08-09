@@ -523,10 +523,12 @@ namespace OpenGlass::Projection
 			{
 				rundown.Release();
 			});
-			return Owner::InvokeChain(std::forward<Args>(args)...);
+			return Owner::InvokeReplacement(std::forward<Args>(args)...);
 		}
 	};
 
+	// Projection hooks are exclusive by default. Opt in to ChainDetour only when
+	// multiple independent components intentionally replace the same symbol.
 	template <auto Symbol, function_pointer T> class Detour final
 	{
 		using SymbolHandleType = std::remove_cvref_t<decltype(Symbol)>;
@@ -538,10 +540,71 @@ namespace OpenGlass::Projection
 		);
 
 		T m_replacement{};
+		inline static T s_entryOriginal{};
+		inline static Detour* s_owner{};
+
+	public:
+		Detour() = default;
+		Detour(const Detour&) = delete;
+		Detour& operator=(const Detour&) = delete;
+
+		static T EntryOriginal() noexcept
+		{
+			return s_entryOriginal;
+		}
+
+		static decltype(auto) InvokeReplacement(auto&&... args)
+		{
+			return std::invoke(s_owner->m_replacement, std::forward<decltype(args)>(args)...);
+		}
+
+		T prepare_detour(T replacement) noexcept
+		{
+			FAIL_FAST_IF_FAILED_MSG(replacement ? S_OK : E_INVALIDARG, "Cannot register an empty detour replacement");
+			FAIL_FAST_IF_FAILED_MSG(!s_owner || s_owner == this ? S_OK : E_UNEXPECTED, "A projection detour cannot be chained or shared");
+			FAIL_FAST_IF_FAILED_MSG(!m_replacement || m_replacement == replacement ? S_OK : E_UNEXPECTED, "A projection detour was rebound to a different replacement");
+
+			s_owner = this;
+			m_replacement = replacement;
+			return &DetourDispatchThunk<Detour, T>::Invoke;
+		}
+
+		__forceinline T* detour_storage()
+		{
+			return reinterpret_cast<T*>(PrepareDetourStorage(
+				reinterpret_cast<PVOID*>(&s_entryOriginal),
+				RegistryFor<typename SymbolHandleType::module_tag>(),
+				SymbolHandleType::index
+			));
+		}
+
+		explicit operator bool() const noexcept
+		{
+			return s_entryOriginal || static_cast<bool>(Symbol);
+		}
+
+		__forceinline decltype(auto) operator()(auto&&... args) const
+		{
+			return std::invoke(s_entryOriginal, std::forward<decltype(args)>(args)...);
+		}
+	};
+
+	// ChainDetour gives each replacement the next replacement as its "original" and
+	// shares one physical dispatcher among all owners of the same typed symbol.
+	template <auto Symbol, function_pointer T> class ChainDetour final
+	{
+		using SymbolHandleType = std::remove_cvref_t<decltype(Symbol)>;
+		using SymbolPointerType = typename SymbolHandleType::value_type;
+		using ExpectedDetourType = typename DetourSymbolAbi<SymbolPointerType>::type;
+		static_assert(
+			std::same_as<ExpectedDetourType, T>,
+			"chain detour replacement must match the typed symbol ABI"
+		);
+
+		T m_replacement{};
 		T* m_next{};
 		inline static T s_entryOriginal{};
-		inline static Detour* s_head{};
-		inline static constexpr T s_dispatch{ &DetourDispatchThunk<Detour, T>::Invoke };
+		inline static ChainDetour* s_head{};
 
 		[[nodiscard]] T Next() const noexcept
 		{
@@ -554,29 +617,24 @@ namespace OpenGlass::Projection
 			return s_entryOriginal;
 		}
 
-		static decltype(auto) InvokeChain(auto&&... args)
+		static decltype(auto) InvokeReplacement(auto&&... args)
 		{
 			return std::invoke(s_head->m_replacement, std::forward<decltype(args)>(args)...);
 		}
 
 		T prepare_detour(T replacement) noexcept
 		{
-			FAIL_FAST_IF_FAILED_MSG(replacement ? S_OK : E_INVALIDARG, "Cannot register an empty detour replacement");
+			FAIL_FAST_IF_FAILED_MSG(replacement ? S_OK : E_INVALIDARG, "Cannot register an empty chain detour replacement");
 			if (m_replacement)
 			{
-				FAIL_FAST_IF_FAILED_MSG(m_replacement == replacement ? S_OK : E_UNEXPECTED, "A projection detour was rebound to a different replacement");
-				return s_dispatch;
+				FAIL_FAST_IF_FAILED_MSG(m_replacement == replacement ? S_OK : E_UNEXPECTED, "A projection chain detour was rebound to a different replacement");
+				return &DetourDispatchThunk<ChainDetour, T>::Invoke;
 			}
 
 			m_replacement = replacement;
 			m_next = s_head ? &s_head->m_replacement : &s_entryOriginal;
 			s_head = this;
-			return s_dispatch;
-		}
-
-		__forceinline T original() const noexcept
-		{
-			return Next();
+			return &DetourDispatchThunk<ChainDetour, T>::Invoke;
 		}
 
 		__forceinline T* detour_storage()
@@ -600,33 +658,32 @@ namespace OpenGlass::Projection
 	};
 
 	// Some private optimized functions preserve otherwise volatile caller state and
-	// therefore cannot pass through the normal C++ dispatcher. Such hooks have one
-	// owner and one physical entry; that entry must bracket this class's Dispatch
-	// call with any private register preservation it requires.
-	template <auto Symbol, function_pointer T> class ExclusiveDetour final
+	// therefore cannot pass through the normal C++ dispatcher. The supplied physical
+	// entry must bracket Dispatch with any private register preservation it requires.
+	template <auto Symbol, function_pointer T> class CustomDispatchDetour final
 	{
 		using SymbolHandleType = std::remove_cvref_t<decltype(Symbol)>;
 		using SymbolPointerType = typename SymbolHandleType::value_type;
 		using ExpectedDetourType = typename DetourSymbolAbi<SymbolPointerType>::type;
 		static_assert(
 			std::same_as<ExpectedDetourType, T>,
-			"exclusive detour replacement must match the typed symbol ABI"
+			"custom dispatch detour must match the typed symbol ABI"
 		);
 
 		T m_dispatch{};
 		inline static T s_entryOriginal{};
-		inline static ExclusiveDetour* s_owner{};
+		inline static CustomDispatchDetour* s_owner{};
 
 	public:
-		ExclusiveDetour() = default;
-		ExclusiveDetour(const ExclusiveDetour&) = delete;
-		ExclusiveDetour& operator=(const ExclusiveDetour&) = delete;
+		CustomDispatchDetour() = default;
+		CustomDispatchDetour(const CustomDispatchDetour&) = delete;
+		CustomDispatchDetour& operator=(const CustomDispatchDetour&) = delete;
 
 		T prepare_detour(T dispatch) noexcept
 		{
-			FAIL_FAST_IF_FAILED_MSG(dispatch ? S_OK : E_INVALIDARG, "Cannot register an empty exclusive detour entry");
-			FAIL_FAST_IF_FAILED_MSG(!s_owner || s_owner == this ? S_OK : E_UNEXPECTED, "An exclusive projection detour cannot be chained or shared");
-			FAIL_FAST_IF_FAILED_MSG(!m_dispatch || m_dispatch == dispatch ? S_OK : E_UNEXPECTED, "An exclusive projection detour was rebound to a different entry");
+			FAIL_FAST_IF_FAILED_MSG(dispatch ? S_OK : E_INVALIDARG, "Cannot register an empty custom detour entry");
+			FAIL_FAST_IF_FAILED_MSG(!s_owner || s_owner == this ? S_OK : E_UNEXPECTED, "A custom projection detour cannot be chained or shared");
+			FAIL_FAST_IF_FAILED_MSG(!m_dispatch || m_dispatch == dispatch ? S_OK : E_UNEXPECTED, "A custom projection detour was rebound to a different entry");
 
 			s_owner = this;
 			m_dispatch = dispatch;

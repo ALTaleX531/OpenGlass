@@ -69,14 +69,19 @@ namespace
 	}
 	int ProjectionChainReplacement1(int value);
 	int ProjectionChainReplacement2(int value);
-	Projection::Detour<g_symbol, TestFunction> g_projectionChain1;
-	Projection::Detour<g_symbol, TestFunction> g_projectionChain2;
+	Projection::ChainDetour<g_symbol, TestFunction> g_projectionChain1;
+	Projection::ChainDetour<g_symbol, TestFunction> g_projectionChain2;
 	inline constexpr Projection::SymbolHandle<FixtureModuleTag, 1, TestFunction> g_customDispatchSymbol{};
+	int ProjectionReplacement(int value)
+	{
+		return value;
+	}
+	Projection::Detour<g_customDispatchSymbol, TestFunction> g_projectionDetour{};
 	int CustomPhysicalDispatch(int value)
 	{
 		return value;
 	}
-	Projection::ExclusiveDetour<g_customDispatchSymbol, TestFunction> g_customDispatchDetour{};
+	Projection::CustomDispatchDetour<g_customDispatchSymbol, TestFunction> g_customDispatchDetour{};
 	int ProjectionChainReplacement1(int value)
 	{
 		return g_projectionChain1(value) + 100;
@@ -410,6 +415,9 @@ namespace
 		};
 		Check(chainedHooks[0].original == chainedHooks[1].original);
 		Check(chainedHooks[0].detour == chainedHooks[1].detour);
+		const auto projectionDispatch = g_projectionDetour.prepare_detour(&ProjectionReplacement);
+		Check(projectionDispatch != &ProjectionReplacement);
+		Check(g_projectionDetour.prepare_detour(&ProjectionReplacement) == projectionDispatch);
 		Check(g_customDispatchDetour.prepare_detour(&CustomPhysicalDispatch) == &CustomPhysicalDispatch);
 		Check(g_customDispatchDetour.prepare_detour(&CustomPhysicalDispatch) == &CustomPhysicalDispatch);
 		{

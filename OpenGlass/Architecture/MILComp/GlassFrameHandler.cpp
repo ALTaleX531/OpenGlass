@@ -44,7 +44,7 @@ namespace OpenGlass::GlassFrameHandler
 
 	Projection::Detour<dwmcore::Symbol_CChannel_CombinedGeometryUpdate, decltype(&MyCChannel_CombinedGeometryUpdate)> g_CChannel_CombinedGeometryUpdate_Org{};
 	Projection::Detour<uDWM::Symbol_CLegacyNonClientBackground_ClearAll, decltype(&MyCLegacyNonClientBackground_ClearAll)> g_CLegacyNonClientBackground_ClearAll_Org{};
-	using CLegacyNonClientBackground_HasSomethingToRender_Detour = Projection::ExclusiveDetour<
+	using CLegacyNonClientBackground_HasSomethingToRender_Detour = Projection::CustomDispatchDetour<
 		uDWM::Symbol_CLegacyNonClientBackground_HasSomethingToRender,
 		decltype(&MyCLegacyNonClientBackground_HasSomethingToRender)
 	>;
@@ -56,10 +56,10 @@ namespace OpenGlass::GlassFrameHandler
 
 	Projection::Detour<uDWM::Symbol_CRectangleVisual_SetRect, decltype(&MyCRectangleVisual_SetRect)> g_CRectangleVisual_SetRect_Org{};
 	Projection::Detour<uDWM::Symbol_CTopLevelWindow_UpdateClientBlur, decltype(&MyCTopLevelWindow_UpdateClientBlur)> g_CTopLevelWindow_UpdateClientBlur_Org{};
-	Projection::Detour<uDWM::Symbol_CTopLevelWindow_UpdateNCAreaBackground, decltype(&MyCTopLevelWindow_UpdateNCAreaBackground)> g_CTopLevelWindow_UpdateNCAreaBackground_Org{};
+	Projection::ChainDetour<uDWM::Symbol_CTopLevelWindow_UpdateNCAreaBackground, decltype(&MyCTopLevelWindow_UpdateNCAreaBackground)> g_CTopLevelWindow_UpdateNCAreaBackground_Org{};
 	Projection::Detour<uDWM::Symbol_CTopLevelWindow_EdgeBorderMustBeOpaque, decltype(&MyCTopLevelWindow_EdgeBorderMustBeOpaque)> g_CTopLevelWindow_EdgeBorderMustBeOpaque_Org{};
 
-	Projection::Detour<uDWM::Symbol_CTopLevelWindow_ValidateVisual, decltype(&MyCTopLevelWindow_ValidateVisual)> g_CTopLevelWindow_ValidateVisual_Org{};
+	Projection::ChainDetour<uDWM::Symbol_CTopLevelWindow_ValidateVisual, decltype(&MyCTopLevelWindow_ValidateVisual)> g_CTopLevelWindow_ValidateVisual_Org{};
 	Projection::Detour<uDWM::Symbol_CTopLevelWindow_CTopLevelWindow, decltype(&MyCTopLevelWindow_Destructor)> g_CTopLevelWindow_Destructor_Org{};
 
 	std::unordered_map<uDWM::CLegacyNonClientBackground*, winrt::com_ptr<uDWM::CSolidRectangleVisual>> g_effectVisualMap{};
