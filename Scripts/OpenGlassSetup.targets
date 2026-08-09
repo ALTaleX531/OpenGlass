@@ -4,6 +4,9 @@
     <OpenGlassInstallerEnabled Condition="'$(OpenGlassInstallerEnabled)'==''">true</OpenGlassInstallerEnabled>
     <OpenGlassIsccTool Condition="'$(OpenGlassIsccTool)'==''">ISCC.exe</OpenGlassIsccTool>
     <OpenGlassPython Condition="'$(OpenGlassPython)'==''">python</OpenGlassPython>
+    <OpenGlassWindowsSdkVersion Condition="'$(OpenGlassWindowsSdkVersion)'==''">$([Microsoft.Build.Utilities.ToolLocationHelper]::GetLatestSDKTargetPlatformVersion('Windows', '10.0'))</OpenGlassWindowsSdkVersion>
+    <OpenGlassSignTool Condition="'$(OpenGlassSignTool)'=='' and '$(WindowsSdkDir)'!='' and '$(OpenGlassWindowsSdkVersion)'!='' and Exists('$(WindowsSdkDir)bin\$(OpenGlassWindowsSdkVersion)\x64\signtool.exe')">$(WindowsSdkDir)bin\$(OpenGlassWindowsSdkVersion)\x64\signtool.exe</OpenGlassSignTool>
+    <OpenGlassSignTool Condition="'$(OpenGlassSignTool)'==''">signtool.exe</OpenGlassSignTool>
   </PropertyGroup>
 
   <Target Name="OpenGlassPackageInstaller"
@@ -22,6 +25,6 @@
              Projects="$(MSBuildThisFileDirectory)OpenGlass.Packaging.proj"
              Targets="Package"
              BuildInParallel="false"
-             Properties="Configuration=$(Configuration);Platform=x64;Architecture=$(OpenGlassPackagingArchitecture);BuildDependencies=false;OpenGlassIsccTool=$(OpenGlassIsccTool);OpenGlassPython=$(OpenGlassPython)" />
+             Properties="Configuration=$(Configuration);Platform=x64;Architecture=$(OpenGlassPackagingArchitecture);BuildDependencies=false;OpenGlassIsccTool=$(OpenGlassIsccTool);OpenGlassPython=$(OpenGlassPython);OpenGlassSignTool=$(OpenGlassSignTool)" />
   </Target>
 </Project>
