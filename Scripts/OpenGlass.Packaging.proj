@@ -38,9 +38,9 @@
     <SignedInput Include="$(ArchitectureOutput)OpenGlass.dll"><Destination>$(SignedStage)OpenGlass.dll</Destination></SignedInput>
     <SignedInput Include="$(CommonOutput)OpenGlassHost.exe"><Destination>$(SignedStage)OpenGlassHost.exe</Destination></SignedInput>
     <SignedInput Include="$(CommonOutput)OpenGlassGUI.exe"><Destination>$(SignedStage)OpenGlassGUI.exe</Destination></SignedInput>
-    <UnsignedInput Include="$(ArchitectureOutput)Unsigned\OpenGlass.dll"><Destination>$(UnsignedStage)OpenGlass.dll</Destination></UnsignedInput>
-    <UnsignedInput Include="$(CommonOutput)Unsigned\OpenGlassHost.exe"><Destination>$(UnsignedStage)OpenGlassHost.exe</Destination></UnsignedInput>
-    <UnsignedInput Include="$(CommonOutput)Unsigned\OpenGlassGUI.exe"><Destination>$(UnsignedStage)OpenGlassGUI.exe</Destination></UnsignedInput>
+    <UnsignedInput Include="$(ArchitectureOutput)unsigned\OpenGlass.dll"><Destination>$(UnsignedStage)OpenGlass.dll</Destination></UnsignedInput>
+    <UnsignedInput Include="$(CommonOutput)unsigned\OpenGlassHost.exe"><Destination>$(UnsignedStage)OpenGlassHost.exe</Destination></UnsignedInput>
+    <UnsignedInput Include="$(CommonOutput)unsigned\OpenGlassGUI.exe"><Destination>$(UnsignedStage)OpenGlassGUI.exe</Destination></UnsignedInput>
   </ItemGroup>
 
   <Target Name="ValidatePackagingInputs">

@@ -8,8 +8,7 @@
     <OpenGlassSignArgs Condition="'$(OpenGlassSignArgs)'==''"></OpenGlassSignArgs>
     <!-- Preserve unsigned output when signing is enabled. -->
     <OpenGlassPreserveUnsigned Condition="'$(OpenGlassPreserveUnsigned)'==''">true</OpenGlassPreserveUnsigned>
-    <OpenGlassUnsignedDir Condition="'$(OpenGlassUnsignedDir)'==''">$(OutDir)Unsigned\</OpenGlassUnsignedDir>
-      <OpenGlassIsccTool Condition="'$(OpenGlassIsccTool)'==''">ISCC.exe</OpenGlassIsccTool>
+    <OpenGlassIsccTool Condition="'$(OpenGlassIsccTool)'==''">ISCC.exe</OpenGlassIsccTool>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='ReleaseSigned'">
@@ -20,6 +19,11 @@
   <Target Name="OpenGlassPresignCopy"
           BeforeTargets="OpenGlassSignOutputs"
           Condition="'$(OpenGlassSignEnabled)'=='true' and '$(OpenGlassPreserveUnsigned)'=='true' and ( '$(TargetFileName)'=='OpenGlass.dll' or '$(TargetFileName)'=='OpenGlassGUI.exe' or '$(TargetFileName)'=='OpenGlassHost.exe' )">
+    <!-- Projects may override OutDir after importing the shared properties. Resolve
+         the default here so it follows the final architecture-specific output. -->
+    <PropertyGroup>
+      <OpenGlassUnsignedDir Condition="'$(OpenGlassUnsignedDir)'==''">$(OutDir)unsigned\</OpenGlassUnsignedDir>
+    </PropertyGroup>
     <MakeDir Directories="$(OpenGlassUnsignedDir)" Condition="!Exists('$(OpenGlassUnsignedDir)')" />
     <Copy SourceFiles="$(TargetPath)"
           DestinationFiles="$(OpenGlassUnsignedDir)$(TargetFileName)"
