@@ -38,6 +38,20 @@ Avoid rename, comment, type application, patch, undefine, or IDB save operations
 5. Follow xrefs to one independent confirmation path.
 6. Compare the same semantic functions across samples; never compare raw addresses.
 
+## Audit optimized hook contracts
+
+When the selected item is an inline hook, extend the normal query sequence beyond the callee prototype:
+
+1. List all code xrefs to the hooked address. Follow direct call wrappers and tail-jump thunks outward until reaching semantic callers.
+2. At each call site, inspect disassembly on each feasible successor path. Look for volatile GPR, XMM, or EFLAGS values that remain live after the call, including reuse as arguments to another function.
+3. Inspect the hooked callee and every wrapper to confirm the candidate value is preserved on the relevant path. Do not assume the public ABI's volatile classification describes the optimizer's private clobber model.
+4. Inspect the eventual consumer. A call-site register assignment is not evidence when the next callee ignores or overwrites that argument.
+5. Compare an exact older or newer binary when available to determine whether the dependency is revision-specific. Re-run PE/PDB pairing for every comparison sample.
+
+Automated data-flow scans are discovery aids. Manually reject infeasible CFG merges, algebraically value-independent read/write idioms such as `sbb reg,reg`, unused call arguments, and unconsumed upper XMM lanes. Also inspect condition-code readers (`jcc`, `cmovcc`, `setcc`, `adc`, and `sbb`) before the next flag-defining instruction. Report unresolved indirect-call boundaries as unverified rather than assuming preservation.
+
+If the dependency is verified, capture the complete call chain, decisive instructions, preserved state, exact PE/PDB identity, affected version interval, and why ordinary dispatcher code can clobber it. Keep this evidence separate from the declared Symbol signature; the implementation remedy is normally a narrowly scoped custom physical dispatcher, not a fabricated ABI variant.
+
 If a batch request is rejected or too large, split it into smaller read-only requests. A missing exact symbol is a cue to search semantic anchors, callers, strings, or constructor patterns—not proof of removal.
 
 ## Sample-label caveat

@@ -46,6 +46,22 @@ Prefer independent semantic evidence:
 
 Do not count two wrappers around the same implementation as independent evidence. Do not derive one flag merely because another flag is currently adjacent.
 
+## Hook calling-contract evidence
+
+A correct PDB prototype establishes the declared function ABI, not the complete contract of an optimized internal call site. MSVC whole-program optimization can know the actual clobber set of a callee and reuse a register or condition code that the public Windows x64 ABI otherwise classifies as volatile. A detour inserts replacement, dispatch, and rundown code that the original compiler never analyzed, so an ordinary C++ dispatcher may violate that private contract even when every declared argument and return type is correct.
+
+For each inline projected hook on the selected exact binary:
+
+1. Enumerate every direct caller and any short call or tail-jump wrapper between the semantic caller and the hooked body.
+2. Track `RCX`, `RDX`, `R8`, `R9`, `R10`, `R11`, `XMM0` through `XMM5`, and EFLAGS from before the hooked call until they are overwritten or semantically consumed. Include values forwarded as arguments to the next call.
+3. Prove that a candidate affects a real downstream value or control decision on a feasible path. Syntactic register reads alone are insufficient.
+4. Cross-check the callee and every intervening wrapper actually preserve the value on the relevant path in the same PE. A prior revision or a matching complete symbol name is not proof.
+5. Classify a verified dependency separately from the projected function-pointer ABI. Recommend a custom physical dispatcher only for the exact version interval supported by the evidence.
+
+Common false positives include path-insensitive CFG merges; `sbb reg,reg`, whose result is independent of the old destination value; an argument register cleared or overwritten immediately in the next callee; and scalar `movss`/`movsd` writes whose preserved lanes are never consumed. Record how each plausible candidate was eliminated.
+
+The uDWM 26100.8972 `SetMargin` case is the reference example: `UpdateMarginsDependentOnStyle` calls a three-argument `SetMargin` wrapper; that wrapper calls the hooked six-argument helper and propagates the helper's preservation of `RCX`; the outer caller then reuses the original `RCX`. The declared six-argument prototype remains correct, but a normal C++ dispatcher can clobber the private live-through value. This evidence justifies the version-specific `CustomDispatchDetour` assembly shim and does not imply that other `SetMargin` revisions or DWM hooks share the contract.
+
 ## Audit record
 
 For every item, record:
