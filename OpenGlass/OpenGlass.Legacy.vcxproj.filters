@@ -41,6 +41,9 @@
     <ClCompile Include="Architecture\Legacy\ReflectionRealizer.cpp"><Filter>Architecture\Legacy\Source Files</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <MASM Include="Architecture\Legacy\GlassFrameDemodernizer.Shims.asm"><Filter>Architecture\Legacy\Source Files</Filter></MASM>
+  </ItemGroup>
+  <ItemGroup>
     <None Include="ProjectionSchemas\legacy\dwmcore.json"><Filter>Projection Schemas</Filter></None>
     <None Include="ProjectionSchemas\legacy\README.md"><Filter>Projection Schemas</Filter></None>
     <None Include="ProjectionSchemas\legacy\udwm.json"><Filter>Projection Schemas</Filter></None>
