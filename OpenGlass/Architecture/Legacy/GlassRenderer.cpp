@@ -44,45 +44,6 @@ namespace OpenGlass::GlassRenderer
 		DWM::span<const BYTE>* resources,
 		bool* succeeded
 	);
-	HRESULT MyCRenderData_DrawImageResource_FillMode_Win10(
-		dwmcore::CRenderData* This,
-		dwmcore::CDrawingContext* drawingContext,
-		dwmcore::CDrawListEntryBuilder* drawListEntryBuilder,
-		bool unknown,
-		dwmcore::CImageSource* imageSource,
-		const D2D1_RECT_F* srcRect,
-		const D2D1_RECT_F* dstRect,
-		float opacity
-	);
-	HRESULT MyCRenderData_DrawImageResource_FillMode_Pre_W10_2004(
-		dwmcore::CRenderData* This,
-		dwmcore::CDrawingContext* drawingContext,
-		dwmcore::CDrawListEntryBuilder* drawListEntryBuilder,
-		bool unknown,
-		dwmcore::CImageSource* imageSource,
-		const D2D1_RECT_F* srcRect,
-		const D2D1_RECT_F* dstRect,
-		float opacity,
-		const D2D1_RECT_F* unknownRect
-	);
-	HRESULT MyCRenderData_DrawImageResource_FillMode_Win11_Pre_24H2(
-		dwmcore::CRenderData* This,
-		dwmcore::CDrawingContext* drawingContext,
-		dwmcore::CDrawListEntryBuilder* drawListEntryBuilder,
-		dwmcore::CImageSource* imageSource,
-		const D2D1_RECT_F* srcRect,
-		const D2D1_RECT_F* dstRect,
-		float opacity
-	);
-	HRESULT MyCRenderData_DrawImageResource_FillMode_Win11_24H2(
-		dwmcore::CDrawingContext* drawingContext,
-		dwmcore::CDrawListEntryBuilder* drawListEntryBuilder,
-		dwmcore::CImageSource* imageSource,
-		const D2D1_RECT_F* srcRect,
-		const D2D1_RECT_F* dstRect,
-		float opacity
-	);
-	const D2D1_RECT_F* AdjustLivePreviewSourceRect(const D2D1_RECT_F* srcRect) noexcept;
 	HRESULT MyCDrawingContext_DrawGeometry(
 		dwmcore::IDrawingContext* This,
 		dwmcore::CLegacyMilBrush* brush,
@@ -95,12 +56,8 @@ namespace OpenGlass::GlassRenderer
 		ID2D1Brush* opacityBrush
 	);
 
-	Projection::Detour<dwmcore::Symbol_CRenderData_TryDrawCommandAsDrawList_Pre_22000, decltype(&MyCRenderData_TryDrawCommandAsDrawList_Win10)> g_CRenderData_TryDrawCommandAsDrawList_Win10_Org{};
-	Projection::Detour<dwmcore::Symbol_CRenderData_TryDrawCommandAsDrawList_22000, decltype(&MyCRenderData_TryDrawCommandAsDrawList_Win11)> g_CRenderData_TryDrawCommandAsDrawList_Win11_Org{};
-	Projection::Detour<dwmcore::Symbol_CRenderData_DrawImageResource_FillMode_Pre_19041, decltype(&MyCRenderData_DrawImageResource_FillMode_Pre_W10_2004)> g_CRenderData_DrawImageResource_FillMode_Pre_W10_2004_Org{};
-	Projection::Detour<dwmcore::Symbol_CRenderData_DrawImageResource_FillMode_19041, decltype(&MyCRenderData_DrawImageResource_FillMode_Win10)> g_CRenderData_DrawImageResource_FillMode_Win10_Org{};
-	Projection::Detour<dwmcore::Symbol_CRenderData_DrawImageResource_FillMode_22000, decltype(&MyCRenderData_DrawImageResource_FillMode_Win11_Pre_24H2)> g_CRenderData_DrawImageResource_FillMode_Win11_Pre_24H2_Org{};
-	Projection::Detour<dwmcore::Symbol_CRenderData_DrawImageResource_FillMode_26100_2454, decltype(&MyCRenderData_DrawImageResource_FillMode_Win11_24H2)> g_CRenderData_DrawImageResource_FillMode_Win11_24H2_Org{};
+	Projection::ChainDetour<dwmcore::Symbol_CRenderData_TryDrawCommandAsDrawList_Pre_22000, decltype(&MyCRenderData_TryDrawCommandAsDrawList_Win10)> g_CRenderData_TryDrawCommandAsDrawList_Win10_Org{};
+	Projection::ChainDetour<dwmcore::Symbol_CRenderData_TryDrawCommandAsDrawList_22000, decltype(&MyCRenderData_TryDrawCommandAsDrawList_Win11)> g_CRenderData_TryDrawCommandAsDrawList_Win11_Org{};
 	decltype(&MyCDrawingContext_DrawGeometry) g_CDrawingContext_DrawGeometry_Org{ nullptr };
 	decltype(&MyCDrawingContext_DrawGeometry)* g_CDrawingContext_DrawGeometry_Org_Address{ nullptr };
 	HookHelper::PointerHook<&MyCDrawingContext_DrawGeometry> g_CDrawingContext_DrawGeometry_Hook;
@@ -141,9 +98,6 @@ namespace OpenGlass::GlassRenderer
 	bool g_colorIsOpaque{};
 	bool g_shapeIsRectangles{};
 	bool g_renderTargetIgnoresAlpha{};
-
-	bool g_fixLivePreviewRendering{ false };
-	UINT g_drawGeometryCommandType{};
 
 	constexpr size_t MAX_RECTANGLES_ON_STACK{ 16 };
 	dwmcore::CShapePtr GetShapeRenderingData(
@@ -229,24 +183,7 @@ HRESULT GlassRenderer::MyCRenderData_TryDrawCommandAsDrawList(
 {
 	const auto command = reinterpret_cast<const dwmcore::CDrawGeometryCommand*>(resources->data);
 	if (
-		commandType == g_drawGeometryCommandType &&
-		resources->length == sizeof(dwmcore::CDrawGeometryCommand) &&
-		HookHelper::get_vftable_from(This->GetResources()->data[command->brushIndex]) == dwmcore::CImageLegacyMilBrush::vftable &&
-		static_cast<dwmcore::CImageLegacyMilBrush*>(This->GetResources()->data[command->brushIndex])->GetImageSource() &&
-		HookHelper::get_vftable_from(This->GetResources()->data[command->geometryIndex]) == dwmcore::CRectangleGeometry::vftable &&
-		static_cast<dwmcore::CImageLegacyMilBrush*>(This->GetResources()->data[command->brushIndex])->GetFloatResource()
-	)
-	{
-		g_fixLivePreviewRendering = true;
-	}
-	const auto cleanup = wil::scope_exit([]
-	{
-		g_fixLivePreviewRendering = false;
-	});
-
-	if (
-		commandType == g_drawGeometryCommandType &&
-		resources->length == sizeof(dwmcore::CDrawGeometryCommand) &&
+		GlassKernel::IsDrawGeometryCommand(commandType, resources) &&
 		(
 			(
 				HookHelper::get_vftable_from(This->GetResources()->data[command->brushIndex]) == dwmcore::CSolidColorLegacyMilBrush::vftable
@@ -273,6 +210,7 @@ HRESULT GlassRenderer::MyCRenderData_TryDrawCommandAsDrawList(
 
 	return callback();
 }
+
 HRESULT GlassRenderer::MyCRenderData_TryDrawCommandAsDrawList_Win10(
 	dwmcore::CRenderData* This,
 	dwmcore::CDrawingContext* drawingContext,
@@ -305,6 +243,7 @@ HRESULT GlassRenderer::MyCRenderData_TryDrawCommandAsDrawList_Win10(
 		}
 	);
 }
+
 HRESULT GlassRenderer::MyCRenderData_TryDrawCommandAsDrawList_Win11(
 	dwmcore::CRenderData* This,
 	dwmcore::CDrawingContext* drawingContext,
@@ -333,114 +272,6 @@ HRESULT GlassRenderer::MyCRenderData_TryDrawCommandAsDrawList_Win11(
 				succeeded
 			);
 		}
-	);
-}
-
-const D2D1_RECT_F* GlassRenderer::AdjustLivePreviewSourceRect(const D2D1_RECT_F* srcRect) noexcept
-{
-	// The DWM team changed the implementation of dwmcore!CRenderData::TryDrawCommandAsDrawList, 
-	// which is why Aero Peek is glitching since Windows 10 1803. 
-	// 
-	// https://github.com/microsoft/Windows-Dev-Performance/issues/12
-	// 
-	// I still can't really figure out 
-	// why they're passing the geometry's bounding rectangle to srcRect parameter.
-	// 
-	// But since Windows 11 24H2, 
-	// they stop this buggy behavior when MilStretch is set to Uniform or UniformToFill.
-	if (g_fixLivePreviewRendering)
-	{
-		return nullptr;
-	}
-
-	return srcRect;
-}
-
-HRESULT GlassRenderer::MyCRenderData_DrawImageResource_FillMode_Win10(
-	dwmcore::CRenderData* This,
-	dwmcore::CDrawingContext* drawingContext,
-	dwmcore::CDrawListEntryBuilder* drawListEntryBuilder,
-	bool unknown,
-	dwmcore::CImageSource* imageSource,
-	const D2D1_RECT_F* srcRect,
-	const D2D1_RECT_F* dstRect,
-	float opacity
-)
-{
-	return g_CRenderData_DrawImageResource_FillMode_Win10_Org(
-		This,
-		drawingContext,
-		drawListEntryBuilder,
-		unknown,
-		imageSource,
-		AdjustLivePreviewSourceRect(srcRect),
-		dstRect,
-		opacity
-	);
-}
-
-HRESULT GlassRenderer::MyCRenderData_DrawImageResource_FillMode_Pre_W10_2004(
-	dwmcore::CRenderData* This,
-	dwmcore::CDrawingContext* drawingContext,
-	dwmcore::CDrawListEntryBuilder* drawListEntryBuilder,
-	bool unknown,
-	dwmcore::CImageSource* imageSource,
-	const D2D1_RECT_F* srcRect,
-	const D2D1_RECT_F* dstRect,
-	float opacity,
-	const D2D1_RECT_F* unknownRect
-)
-{
-	return g_CRenderData_DrawImageResource_FillMode_Pre_W10_2004_Org(
-		This,
-		drawingContext,
-		drawListEntryBuilder,
-		unknown,
-		imageSource,
-		AdjustLivePreviewSourceRect(srcRect),
-		dstRect,
-		opacity,
-		unknownRect
-	);
-}
-
-HRESULT GlassRenderer::MyCRenderData_DrawImageResource_FillMode_Win11_Pre_24H2(
-	dwmcore::CRenderData* This,
-	dwmcore::CDrawingContext* drawingContext,
-	dwmcore::CDrawListEntryBuilder* drawListEntryBuilder,
-	dwmcore::CImageSource* imageSource,
-	const D2D1_RECT_F* srcRect,
-	const D2D1_RECT_F* dstRect,
-	float opacity
-)
-{
-	return g_CRenderData_DrawImageResource_FillMode_Win11_Pre_24H2_Org(
-		This,
-		drawingContext,
-		drawListEntryBuilder,
-		imageSource,
-		AdjustLivePreviewSourceRect(srcRect),
-		dstRect,
-		opacity
-	);
-}
-
-HRESULT GlassRenderer::MyCRenderData_DrawImageResource_FillMode_Win11_24H2(
-	dwmcore::CDrawingContext* drawingContext,
-	dwmcore::CDrawListEntryBuilder* drawListEntryBuilder,
-	dwmcore::CImageSource* imageSource,
-	const D2D1_RECT_F* srcRect,
-	const D2D1_RECT_F* dstRect,
-	float opacity
-)
-{
-	return g_CRenderData_DrawImageResource_FillMode_Win11_24H2_Org(
-		drawingContext,
-		drawListEntryBuilder,
-		imageSource,
-		AdjustLivePreviewSourceRect(srcRect),
-		dstRect,
-		opacity
 	);
 }
 
@@ -949,91 +780,12 @@ void GlassRenderer::Startup()
 #ifdef _DEBUG
 #endif
 
-	if (!g_drawGeometryCommandType)
-	{
-		switch (dwmcore::g_versionInfo.build)
-		{
-		case os::build_w10_1809:
-		{
-			g_drawGeometryCommandType = 460;
-			break;
-		}
-		case os::build_w10_1903:
-		{
-			g_drawGeometryCommandType = 535;
-			break;
-		}
-		case os::build_w10_2004:
-		{
-			g_drawGeometryCommandType = 461;
-			break;
-		}
-		case os::build_w11_21h2:
-		{
-			g_drawGeometryCommandType = 456;
-			break;
-		}
-		case os::build_w11_22h2:
-		{
-			g_drawGeometryCommandType = 444;
-			break;
-		}
-		// Microsoft has been changing things so frequently since 24H2 that
-		// the command types can be completely different under the same build number, 
-		// they are absolutely insane
-		case os::build_w11_24h2:
-		{
-			break;
-		}
-		default:
-			break;
-		}
-	}
-	if (!g_drawGeometryCommandType)
-	{
-		auto CRenderDataBuilder_DrawGeometry_Instructions = static_cast<UCHAR*>(
-			dwmcore::Symbol_CRenderDataBuilder_DrawGeometry.get()
-		);
-
-		UCHAR g_movDrawGeometryCommandType_Instructions[]
-		{
-			// mov dword ptr [rdx+rcx+4], ???
-			0xC7, 0x44, 0x0A, 0x04, // 0x00, 0x00, 0x00, 0x00
-		};
-		auto i = 128;
-		do
-		{
-			
-			if (
-				memcmp(
-					CRenderDataBuilder_DrawGeometry_Instructions,
-					g_movDrawGeometryCommandType_Instructions,
-					sizeof(g_movDrawGeometryCommandType_Instructions)
-				) == 0
-			)
-			{
-				g_drawGeometryCommandType = *reinterpret_cast<UINT*>(CRenderDataBuilder_DrawGeometry_Instructions + sizeof(g_movDrawGeometryCommandType_Instructions));
-				break;
-			}
-
-			CRenderDataBuilder_DrawGeometry_Instructions += 1;
-			i--;
-		} while (i);
-	}
-
-	const auto build_before_w11_24h2 = Util::VersionBefore<os::build_w11_24h2, os::revision_24h2_rtm_1>(dwmcore::g_versionInfo.build, dwmcore::g_versionInfo.revision);
 	const auto build_before_w11_21h2 = dwmcore::g_versionInfo.build < os::build_w11_21h2;
-	const auto build_before_w10_2004 = dwmcore::g_versionInfo.build < os::build_w10_2004;
 	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
 			{ &g_CRenderData_TryDrawCommandAsDrawList_Win10_Org, &MyCRenderData_TryDrawCommandAsDrawList_Win10, build_before_w11_21h2 },
 			{ &g_CRenderData_TryDrawCommandAsDrawList_Win11_Org, &MyCRenderData_TryDrawCommandAsDrawList_Win11, !build_before_w11_21h2 },
-
-			{ &g_CRenderData_DrawImageResource_FillMode_Pre_W10_2004_Org, &MyCRenderData_DrawImageResource_FillMode_Pre_W10_2004, build_before_w10_2004 },
-			{ &g_CRenderData_DrawImageResource_FillMode_Win10_Org, &MyCRenderData_DrawImageResource_FillMode_Win10, !build_before_w10_2004 && build_before_w11_21h2 },
-			{ &g_CRenderData_DrawImageResource_FillMode_Win11_Pre_24H2_Org, &MyCRenderData_DrawImageResource_FillMode_Win11_Pre_24H2, !build_before_w11_21h2 && build_before_w11_24h2 },
-			{ &g_CRenderData_DrawImageResource_FillMode_Win11_24H2_Org, &MyCRenderData_DrawImageResource_FillMode_Win11_24H2, !build_before_w11_24h2 },
 		},
 		true
 	);
@@ -1041,19 +793,12 @@ void GlassRenderer::Startup()
 
 void GlassRenderer::Shutdown()
 {
-	const auto build_before_w11_24h2 = Util::VersionBefore<os::build_w11_24h2, os::revision_24h2_rtm_1>(dwmcore::g_versionInfo.build, dwmcore::g_versionInfo.revision);
 	const auto build_before_w11_21h2 = dwmcore::g_versionInfo.build < os::build_w11_21h2;
-	const auto build_before_w10_2004 = dwmcore::g_versionInfo.build < os::build_w10_2004;
 	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
 			{ &g_CRenderData_TryDrawCommandAsDrawList_Win10_Org, &MyCRenderData_TryDrawCommandAsDrawList_Win10, build_before_w11_21h2 },
 			{ &g_CRenderData_TryDrawCommandAsDrawList_Win11_Org, &MyCRenderData_TryDrawCommandAsDrawList_Win11, !build_before_w11_21h2 },
-
-			{ &g_CRenderData_DrawImageResource_FillMode_Pre_W10_2004_Org, &MyCRenderData_DrawImageResource_FillMode_Pre_W10_2004, build_before_w10_2004 },
-			{ &g_CRenderData_DrawImageResource_FillMode_Win10_Org, &MyCRenderData_DrawImageResource_FillMode_Win10, !build_before_w10_2004 && build_before_w11_21h2 },
-			{ &g_CRenderData_DrawImageResource_FillMode_Win11_Pre_24H2_Org, &MyCRenderData_DrawImageResource_FillMode_Win11_Pre_24H2, !build_before_w11_21h2 && build_before_w11_24h2 },
-			{ &g_CRenderData_DrawImageResource_FillMode_Win11_24H2_Org, &MyCRenderData_DrawImageResource_FillMode_Win11_24H2, !build_before_w11_24h2 },
 		},
 		false
 	);

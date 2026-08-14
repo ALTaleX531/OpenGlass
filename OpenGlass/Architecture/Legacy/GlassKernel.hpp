@@ -5,6 +5,8 @@
 
 namespace OpenGlass::GlassKernel
 {
+	bool IsDrawGeometryCommand(UINT commandType, const DWM::span<const BYTE>* resources) noexcept;
+
 	inline const uDWM::CTopLevelWindow* g_window{ nullptr };
 	inline RECT g_roundedBounds{};
 	inline int g_diameter{ 0 };

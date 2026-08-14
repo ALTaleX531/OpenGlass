@@ -41,6 +41,8 @@ namespace OpenGlass::GlassKernel
 	Projection::Detour<uDWM::Symbol_CTopLevelWindow_EnsureImages_Pre_18362, decltype(&MyCTopLevelWindow_EnsureImages_Pre_W10_1903)> g_CTopLevelWindow_EnsureImages_Pre_W10_1903_Org{};
 	Projection::Detour<uDWM::Symbol_CTopLevelWindow_EnsureImages_18362, decltype(&MyCTopLevelWindow_EnsureImages_At_Least_W10_1903)> g_CTopLevelWindow_EnsureImages_At_Least_W10_1903_Org{};
 
+	UINT g_drawGeometryCommandType{};
+
 	void RedrawTopLevelWindow(uDWM::CTopLevelWindow* window, bool deepRedraw)
 	{
 		if (window)
@@ -108,6 +110,13 @@ namespace OpenGlass::GlassKernel
 			}
 		}
 	}
+}
+
+bool GlassKernel::IsDrawGeometryCommand(UINT commandType, const DWM::span<const BYTE>* resources) noexcept
+{
+	return
+		commandType == g_drawGeometryCommandType &&
+		resources->length == sizeof(dwmcore::CDrawGeometryCommand);
 }
 
 HRGN WINAPI GlassKernel::MyCreateRoundRectRgn(int x1, int y1, int x2, int y2, int w, int h)
@@ -556,6 +565,77 @@ void GlassKernel::Update(GlassEngine::UpdateType type)
 
 void GlassKernel::Startup()
 {
+	if (!g_drawGeometryCommandType)
+	{
+		switch (dwmcore::g_versionInfo.build)
+		{
+		case os::build_w10_1809:
+		{
+			g_drawGeometryCommandType = 460;
+			break;
+		}
+		case os::build_w10_1903:
+		{
+			g_drawGeometryCommandType = 535;
+			break;
+		}
+		case os::build_w10_2004:
+		{
+			g_drawGeometryCommandType = 461;
+			break;
+		}
+		case os::build_w11_21h2:
+		{
+			g_drawGeometryCommandType = 456;
+			break;
+		}
+		case os::build_w11_22h2:
+		{
+			g_drawGeometryCommandType = 444;
+			break;
+		}
+		// Microsoft has been changing things so frequently since 24H2 that
+		// the command types can be completely different under the same build number,
+		// they are absolutely insane
+		case os::build_w11_24h2:
+		{
+			break;
+		}
+		default:
+			break;
+		}
+	}
+	if (!g_drawGeometryCommandType)
+	{
+		auto CRenderDataBuilder_DrawGeometry_Instructions = static_cast<UCHAR*>(
+			dwmcore::Symbol_CRenderDataBuilder_DrawGeometry.get()
+		);
+
+		UCHAR g_movDrawGeometryCommandType_Instructions[]
+		{
+			// mov dword ptr [rdx+rcx+4], ???
+			0xC7, 0x44, 0x0A, 0x04, // 0x00, 0x00, 0x00, 0x00
+		};
+		auto i = 128;
+		do
+		{
+			if (
+				memcmp(
+					CRenderDataBuilder_DrawGeometry_Instructions,
+					g_movDrawGeometryCommandType_Instructions,
+					sizeof(g_movDrawGeometryCommandType_Instructions)
+				) == 0
+			)
+			{
+				g_drawGeometryCommandType = *reinterpret_cast<UINT*>(CRenderDataBuilder_DrawGeometry_Instructions + sizeof(g_movDrawGeometryCommandType_Instructions));
+				break;
+			}
+
+			CRenderDataBuilder_DrawGeometry_Instructions += 1;
+			i--;
+		} while (i);
+	}
+
 	winrt::com_ptr<IDCompositionDesktopDevice> dcompDevice{ nullptr };
 	FAIL_FAST_IF_FAILED_MSG(uDWM::CDesktopManager::GetInstance()->GetInteropCompositorDCompDevicePartner()->QueryInterface(dcompDevice.put()), "Unable to obtain IDCompositionDesktopDevice");
 	g_IDCompositionDesktopDevice_WaitForCommitCompletion_Org_Address = reinterpret_cast<decltype(g_IDCompositionDesktopDevice_WaitForCommitCompletion_Org_Address)>(&(HookHelper::get_vftable_from(dcompDevice.get())[4]));
