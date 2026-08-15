@@ -5,46 +5,37 @@
   <PropertyGroup>
     <Configuration Condition="'$(Configuration)'==''">Release</Configuration>
     <Platform>x64</Platform>
-    <Architecture Condition="'$(Architecture)'==''">legacy</Architecture>
     <BuildDependencies Condition="'$(BuildDependencies)'==''">true</BuildDependencies>
     <OpenGlassIsccTool Condition="'$(OpenGlassIsccTool)'==''">ISCC.exe</OpenGlassIsccTool>
     <OpenGlassPython Condition="'$(OpenGlassPython)'==''">python</OpenGlassPython>
     <OpenGlassSignTool Condition="'$(OpenGlassSignTool)'==''">signtool.exe</OpenGlassSignTool>
     <OpenGlassRoot>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\'))</OpenGlassRoot>
     <CommonOutput>$(OpenGlassRoot)Build\x64\$(Configuration)\common\</CommonOutput>
-    <ArchitectureOutput>$(OpenGlassRoot)Build\x64\$(Configuration)\$(Architecture)\</ArchitectureOutput>
+    <LegacyOutput>$(OpenGlassRoot)Build\x64\$(Configuration)\legacy\</LegacyOutput>
+    <MILCompOutput>$(OpenGlassRoot)Build\x64\$(Configuration)\milcomp\</MILCompOutput>
     <InstallerOutput>$(OpenGlassRoot)Build\x64\$(Configuration)\</InstallerOutput>
-    <PackagingRoot>$(OpenGlassRoot)Cache\Packaging\$(Configuration)\$(Architecture)\</PackagingRoot>
+    <PackagingRoot>$(OpenGlassRoot)Cache\Packaging\$(Configuration)\</PackagingRoot>
     <SignedStage>$(PackagingRoot)signed\</SignedStage>
     <UnsignedStage>$(PackagingRoot)unsigned\</UnsignedStage>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Architecture)'=='legacy'">
-    <ArchitectureLabel>Legacy</ArchitectureLabel>
-    <ArchitectureCode>0</ArchitectureCode>
-    <ArchitectureProject>$(OpenGlassRoot)OpenGlass\OpenGlass.Legacy.vcxproj</ArchitectureProject>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Architecture)'=='milcomp'">
-    <ArchitectureLabel>MILComp</ArchitectureLabel>
-    <ArchitectureCode>1</ArchitectureCode>
-    <ArchitectureProject>$(OpenGlassRoot)OpenGlass\OpenGlass.MILComp.vcxproj</ArchitectureProject>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SymbolArchiveOutput>$(InstallerOutput)OpenGlassSymbols.$(ArchitectureLabel).zip</SymbolArchiveOutput>
+    <LegacySymbolArchive>$(InstallerOutput)OpenGlassSymbols.Legacy.zip</LegacySymbolArchive>
+    <MILCompSymbolArchive>$(InstallerOutput)OpenGlassSymbols.MILComp.zip</MILCompSymbolArchive>
   </PropertyGroup>
   <ItemGroup>
-    <OpenGlassBuildProject Include="$(ArchitectureProject)" />
+    <OpenGlassBuildProject Include="$(OpenGlassRoot)OpenGlass\OpenGlass.Legacy.vcxproj" />
+    <OpenGlassBuildProject Include="$(OpenGlassRoot)OpenGlass\OpenGlass.MILComp.vcxproj" />
     <OpenGlassBuildProject Include="$(OpenGlassRoot)OpenGlassHost\OpenGlassHost.vcxproj" />
     <OpenGlassBuildProject Include="$(OpenGlassRoot)OpenGlassGUI\OpenGlassGUI.vcxproj" />
-    <SignedInput Include="$(ArchitectureOutput)OpenGlass.dll"><Destination>$(SignedStage)OpenGlass.dll</Destination></SignedInput>
+    <SignedInput Include="$(LegacyOutput)OpenGlass.dll"><Destination>$(SignedStage)legacy\OpenGlass.dll</Destination></SignedInput>
+    <SignedInput Include="$(MILCompOutput)OpenGlass.dll"><Destination>$(SignedStage)milcomp\OpenGlass.dll</Destination></SignedInput>
     <SignedInput Include="$(CommonOutput)OpenGlassHost.exe"><Destination>$(SignedStage)OpenGlassHost.exe</Destination></SignedInput>
     <SignedInput Include="$(CommonOutput)OpenGlassGUI.exe"><Destination>$(SignedStage)OpenGlassGUI.exe</Destination></SignedInput>
-    <UnsignedInput Include="$(ArchitectureOutput)unsigned\OpenGlass.dll"><Destination>$(UnsignedStage)OpenGlass.dll</Destination></UnsignedInput>
+    <UnsignedInput Include="$(LegacyOutput)unsigned\OpenGlass.dll"><Destination>$(UnsignedStage)legacy\OpenGlass.dll</Destination></UnsignedInput>
+    <UnsignedInput Include="$(MILCompOutput)unsigned\OpenGlass.dll"><Destination>$(UnsignedStage)milcomp\OpenGlass.dll</Destination></UnsignedInput>
     <UnsignedInput Include="$(CommonOutput)unsigned\OpenGlassHost.exe"><Destination>$(UnsignedStage)OpenGlassHost.exe</Destination></UnsignedInput>
     <UnsignedInput Include="$(CommonOutput)unsigned\OpenGlassGUI.exe"><Destination>$(UnsignedStage)OpenGlassGUI.exe</Destination></UnsignedInput>
   </ItemGroup>
 
   <Target Name="ValidatePackagingInputs">
-    <Error Condition="'$(ArchitectureProject)'==''" Text="Architecture must be 'legacy' or 'milcomp'." />
     <Error Condition="'$(Configuration)'!='Release' and '$(Configuration)'!='ReleaseSigned'" Text="Packaging requires Configuration=Release or ReleaseSigned." />
     <Exec Condition="!Exists('$(OpenGlassIsccTool)')" Command="where &quot;$(OpenGlassIsccTool)&quot;" IgnoreExitCode="true" ConsoleToMSBuild="true">
       <Output TaskParameter="ExitCode" PropertyName="OpenGlassIsccExitCode" />
@@ -60,30 +51,36 @@
     <MSBuild Projects="@(OpenGlassBuildProject)" Targets="Restore" BuildInParallel="false" Properties="Configuration=$(Configuration);Platform=x64" />
   </Target>
 
-  <Target Name="BuildSelectedArchitecture" DependsOnTargets="RestoreDependencies" Condition="'$(BuildDependencies)'=='true'">
+  <Target Name="BuildDependencies" DependsOnTargets="RestoreDependencies" Condition="'$(BuildDependencies)'=='true'">
     <MSBuild Projects="@(OpenGlassBuildProject)" Targets="Build" BuildInParallel="false" Properties="Configuration=$(Configuration);Platform=x64" />
   </Target>
 
-  <Target Name="StageSignedFiles" DependsOnTargets="ValidatePackagingInputs;BuildSelectedArchitecture">
-    <MakeDir Directories="$(SignedStage);$(InstallerOutput)" />
+  <Target Name="StageSignedFiles" DependsOnTargets="ValidatePackagingInputs;BuildDependencies">
+    <MakeDir Directories="$(SignedStage);$(SignedStage)legacy\;$(SignedStage)milcomp\;$(InstallerOutput)" />
     <Copy SourceFiles="@(SignedInput)" DestinationFiles="@(SignedInput->'%(Destination)')" SkipUnchangedFiles="true" />
   </Target>
 
   <Target Name="StageUnsignedFiles" DependsOnTargets="StageSignedFiles" Condition="'$(Configuration)'=='ReleaseSigned'">
-    <MakeDir Directories="$(UnsignedStage)" />
+    <MakeDir Directories="$(UnsignedStage);$(UnsignedStage)legacy\;$(UnsignedStage)milcomp\" />
     <Copy SourceFiles="@(UnsignedInput)" DestinationFiles="@(UnsignedInput->'%(Destination)')" SkipUnchangedFiles="true" />
   </Target>
 
-  <Target Name="Package" DependsOnTargets="StageSignedFiles;StageUnsignedFiles">
+  <Target Name="RemoveObsoleteInstallerOutputs">
+    <Delete Files="$(InstallerOutput)OpenGlassSetup.Legacy.exe;$(InstallerOutput)OpenGlassSetup.MILComp.exe;$(InstallerOutput)OpenGlassSetup.Legacy.Signed.exe;$(InstallerOutput)OpenGlassSetup.MILComp.Signed.exe" />
+  </Target>
+
+  <Target Name="Package" DependsOnTargets="StageSignedFiles;StageUnsignedFiles;RemoveObsoleteInstallerOutputs">
     <Exec Condition="'$(Configuration)'=='Release'"
-          Command="&quot;$(OpenGlassIsccTool)&quot; /DMyAppVersion=$(OpenGlassProductVersion) /DDwmArchitecture=$(ArchitectureCode) /DBuildPath=&quot;$(SignedStage)&quot; /DOutputPath=&quot;$(InstallerOutput)&quot; /DSetupName=OpenGlassSetup.$(ArchitectureLabel) &quot;$(OpenGlassRoot)Scripts\OpenGlass.iss&quot;" />
+          Command="&quot;$(OpenGlassIsccTool)&quot; /DMyAppVersion=$(OpenGlassProductVersion) /DBuildPath=&quot;$(SignedStage)&quot; /DOutputPath=&quot;$(InstallerOutput)&quot; /DSetupName=OpenGlassSetup &quot;$(OpenGlassRoot)Scripts\OpenGlass.iss&quot;" />
     <Exec Condition="'$(Configuration)'=='ReleaseSigned'"
-          Command="&quot;$(OpenGlassIsccTool)&quot; /DMyAppVersion=$(OpenGlassProductVersion) /DDwmArchitecture=$(ArchitectureCode) /DBuildPath=&quot;$(UnsignedStage)&quot; /DOutputPath=&quot;$(InstallerOutput)&quot; /DSetupName=OpenGlassSetup.$(ArchitectureLabel) &quot;$(OpenGlassRoot)Scripts\OpenGlass.iss&quot;" />
+          Command="&quot;$(OpenGlassIsccTool)&quot; /DMyAppVersion=$(OpenGlassProductVersion) /DBuildPath=&quot;$(UnsignedStage)&quot; /DOutputPath=&quot;$(InstallerOutput)&quot; /DSetupName=OpenGlassSetup &quot;$(OpenGlassRoot)Scripts\OpenGlass.iss&quot;" />
     <Exec Condition="'$(Configuration)'=='ReleaseSigned'"
-          Command="&quot;$(OpenGlassIsccTool)&quot; /DMyAppVersion=$(OpenGlassProductVersion) /DDwmArchitecture=$(ArchitectureCode) /DBuildPath=&quot;$(SignedStage)&quot; /DOutputPath=&quot;$(InstallerOutput)&quot; /DSetupName=OpenGlassSetup.$(ArchitectureLabel).Signed &quot;$(OpenGlassRoot)Scripts\OpenGlass.iss&quot;" />
+          Command="&quot;$(OpenGlassIsccTool)&quot; /DMyAppVersion=$(OpenGlassProductVersion) /DBuildPath=&quot;$(SignedStage)&quot; /DOutputPath=&quot;$(InstallerOutput)&quot; /DSetupName=OpenGlassSetup.Signed &quot;$(OpenGlassRoot)Scripts\OpenGlass.iss&quot;" />
     <Exec Condition="'$(Configuration)'=='ReleaseSigned' and '$(OpenGlassSignArgs)'!=''"
-          Command="&quot;$(OpenGlassSignTool)&quot; $(OpenGlassSignArgs) &quot;$(InstallerOutput)OpenGlassSetup.$(ArchitectureLabel).Signed.exe&quot;" />
+          Command="&quot;$(OpenGlassSignTool)&quot; $(OpenGlassSignArgs) &quot;$(InstallerOutput)OpenGlassSetup.Signed.exe&quot;" />
     <Exec WorkingDirectory="$(OpenGlassRoot)"
-          Command="&quot;$(OpenGlassPython)&quot; &quot;$(OpenGlassRoot)Scripts\archive_pdbs.py&quot; --architecture $(Architecture) --configuration $(Configuration) --output &quot;$(SymbolArchiveOutput)&quot;" />
+          Command="&quot;$(OpenGlassPython)&quot; &quot;$(OpenGlassRoot)Scripts\archive_pdbs.py&quot; --architecture legacy --configuration $(Configuration) --output &quot;$(LegacySymbolArchive)&quot;" />
+    <Exec WorkingDirectory="$(OpenGlassRoot)"
+          Command="&quot;$(OpenGlassPython)&quot; &quot;$(OpenGlassRoot)Scripts\archive_pdbs.py&quot; --architecture milcomp --configuration $(Configuration) --output &quot;$(MILCompSymbolArchive)&quot;" />
   </Target>
 </Project>

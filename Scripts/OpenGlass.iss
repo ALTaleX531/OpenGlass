@@ -5,9 +5,6 @@
 #ifndef MyAppVersion
 #error MyAppVersion must be supplied by the packaging target
 #endif
-#ifndef DwmArchitecture
-#error DwmArchitecture must be supplied by the packaging target
-#endif
 #define MyAppPublisher "ALTaleX"
 #define MyAppURL "https://github.com/ALTaleX531/OpenGlass"
 #define MyAppExeName "OpenGlassGUI.exe"
@@ -137,7 +134,8 @@ chinesestraditional.ServiceDescription=該服務負責為您將 DLL 注入 DWM�
 #endif
 
 [Files]
-Source: "{#MyAppBuildPath}\OpenGlass.dll"; DestDir: "{app}"; Flags: ignoreversion restartreplace
+Source: "{#MyAppBuildPath}\legacy\OpenGlass.dll"; DestDir: "{app}"; DestName: "OpenGlass.dll"; Flags: ignoreversion restartreplace; Check: ShouldInstallLegacyDll
+Source: "{#MyAppBuildPath}\milcomp\OpenGlass.dll"; DestDir: "{app}"; DestName: "OpenGlass.dll"; Flags: ignoreversion restartreplace; Check: ShouldInstallMILCompDll
 Source: "{#MyAppBuildPath}\OpenGlassHost.exe"; DestDir: "{app}"; Flags: ignoreversion restartreplace
 Source: "{#MyAppBuildPath}\OpenGlassGUI.exe"; DestDir: "{app}"; Flags: ignoreversion restartreplace
 
@@ -204,20 +202,30 @@ Filename: "{sys}\sc.exe"; Parameters: "delete OpenGlassHost"; Flags: runhidden; 
 
 [Code]
 
+var
+  InstallMILCompDll: Boolean;
+
 function InitializeSetup(): Boolean;
 var
   Version: TWindowsVersion;
 begin
   GetWindowsVersionEx(Version);
-#if DwmArchitecture == "0"
-  Result := Version.Build < 28000;
-  if not Result then
-    MsgBox('This Legacy package supports only Windows builds below 28000. Use the MILComp package for this system.', mbCriticalError, MB_OK);
-#else
-  Result := Version.Build >= 28000;
-  if not Result then
-    MsgBox('This MILComp package supports only Windows builds 28000 and later. Use the Legacy package for this system.', mbCriticalError, MB_OK);
-#endif
+  InstallMILCompDll := Version.Build >= 28000;
+  if InstallMILCompDll then
+    Log(Format('Detected Windows build %d; selected the MILComp DWM architecture.', [Version.Build]))
+  else
+    Log(Format('Detected Windows build %d; selected the Legacy DWM architecture.', [Version.Build]));
+  Result := True;
+end;
+
+function ShouldInstallLegacyDll(): Boolean;
+begin
+  Result := not InstallMILCompDll;
+end;
+
+function ShouldInstallMILCompDll(): Boolean;
+begin
+  Result := InstallMILCompDll;
 end;
 
 type

@@ -29,14 +29,12 @@ Requirements are Visual Studio/MSBuild with the v145 C++ toolset, Windows SDK 10
 msbuild OpenGlass.slnx /m /restore /p:Configuration=Release /p:Platform=x64
 ```
 
-Use `Release` for normal local verification. `ReleaseSigned` requires the shared signing environment and is not a general developer build. A Release or ReleaseSigned solution build packages both installers when Inno Setup is available; each successful architecture package also creates `OpenGlassSymbols.<Architecture>.zip` containing the matching DLL, Host, and GUI PDBs. Packaging reports a skip without failing when `ISCC.exe` is absent. Set `OpenGlassInstallerEnabled=false` to suppress packaging explicitly.
+Use `Release` for normal local verification. `ReleaseSigned` requires the shared signing environment and is not a general developer build. A Release or ReleaseSigned solution build packages one installer containing both architecture DLLs when Inno Setup is available, and creates `OpenGlassSymbols.<Architecture>.zip` for each architecture containing the matching OpenGlass DLL PDB plus the Host and GUI PDBs. The installer selects and writes only the DLL matching the detected OS build. Packaging reports a skip without failing when `ISCC.exe` is absent. Set `OpenGlassInstallerEnabled=false` to suppress packaging explicitly.
 
-The solution builds Host and GUI once into `Build\x64\<Configuration>\common\`, the two DLLs into `legacy\` and `milcomp\`, and uses two explicit Utility projects to package them without coupling installer generation to the GUI. To package only one architecture directly, use:
+The solution builds Host and GUI once into `Build\x64\<Configuration>\common\`, the two DLLs into `legacy\` and `milcomp\`, and uses one explicit Utility project to package them without coupling installer generation to the GUI. To package the unified installer directly, use:
 
 ```powershell
-msbuild Scripts/OpenGlass.Packaging.proj /m /p:Configuration=Release /p:Architecture=legacy
-msbuild Scripts/OpenGlass.Packaging.proj /m /p:Configuration=Release /p:Architecture=milcomp
-python Scripts/archive_pdbs.py . --architecture legacy --configuration Release
+msbuild Scripts/OpenGlass.Packaging.proj /m /p:Configuration=Release
 ```
 
 Python generates projection metadata into `$(IntDir)\Generated\Projection`. Generated files are build artifacts: never edit, copy into the source tree, or commit them. PE size and projected-wrapper machine code may be inspected while developing the projection mechanism, but they are not fixed repository acceptance gates.

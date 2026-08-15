@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
     inputs:
       package_artifacts:
-        description: Build installers and symbol archives
+        description: Build installer and symbol archives
         required: true
         type: boolean
         default: true
@@ -185,26 +185,23 @@ jobs:
           python --version
           "iscc=$($iscc.Source)" >> $env:GITHUB_OUTPUT
 
-      - name: Package unsigned installers and symbols
+      - name: Package unsigned installer and symbols
         if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.package_artifacts == true)
         env:
           OPENGLASS_ISCC: ${{ steps.packaging_tools.outputs.iscc }}
         run: |
           $PSNativeCommandUseErrorActionPreference = $true
-          foreach ($architecture in @("legacy", "milcomp")) {
-              $arguments = @(
-                  "Scripts\OpenGlass.Packaging.proj",
-                  "/m",
-                  "/p:Configuration=Release",
-                  "/p:Platform=x64",
-                  "/p:Architecture=$architecture",
-                  "/p:BuildDependencies=false",
-                  "/p:OpenGlassIsccTool=$env:OPENGLASS_ISCC"
-              )
-              & msbuild @arguments
-              if ($LASTEXITCODE -ne 0) {
-                  throw "Packaging $architecture failed with exit code $LASTEXITCODE."
-              }
+          $arguments = @(
+              "Scripts\OpenGlass.Packaging.proj",
+              "/m",
+              "/p:Configuration=Release",
+              "/p:Platform=x64",
+              "/p:BuildDependencies=false",
+              "/p:OpenGlassIsccTool=$env:OPENGLASS_ISCC"
+          )
+          & msbuild @arguments
+          if ($LASTEXITCODE -ne 0) {
+              throw "Packaging failed with exit code $LASTEXITCODE."
           }
 
       - name: Verify unsigned packages
@@ -213,8 +210,7 @@ jobs:
           Add-Type -AssemblyName System.IO.Compression.FileSystem
           $buildRoot = "Build\x64\Release"
           $artifacts = @(
-              "$buildRoot\OpenGlassSetup.Legacy.exe",
-              "$buildRoot\OpenGlassSetup.MILComp.exe",
+              "$buildRoot\OpenGlassSetup.exe",
               "$buildRoot\OpenGlassSymbols.Legacy.zip",
               "$buildRoot\OpenGlassSymbols.MILComp.zip"
           )
@@ -222,6 +218,27 @@ jobs:
               $item = Get-Item -LiteralPath $path -ErrorAction Stop
               if ($item.Length -eq 0) {
                   throw "Package output is empty: $path"
+              }
+          }
+
+          $obsoleteInstallers = @(
+              "$buildRoot\OpenGlassSetup.Legacy.exe",
+              "$buildRoot\OpenGlassSetup.MILComp.exe"
+          )
+          foreach ($path in $obsoleteInstallers) {
+              if (Test-Path -LiteralPath $path) {
+                  throw "Obsolete architecture-specific installer was produced: $path"
+              }
+          }
+
+          $stagedDlls = @(
+              @{ Path = "Cache\Packaging\Release\signed\legacy\OpenGlass.dll"; Architecture = "Legacy" },
+              @{ Path = "Cache\Packaging\Release\signed\milcomp\OpenGlass.dll"; Architecture = "MILComp" }
+          )
+          foreach ($stagedDll in $stagedDlls) {
+              $description = (Get-Item -LiteralPath $stagedDll.Path -ErrorAction Stop).VersionInfo.FileDescription
+              if ($description -notlike "*($($stagedDll.Architecture))") {
+                  throw "Unexpected architecture in $($stagedDll.Path): $description"
               }
           }
 
@@ -251,8 +268,7 @@ jobs:
               "$buildRoot\milcomp\OpenGlass.dll",
               "$buildRoot\common\OpenGlassHost.exe",
               "$buildRoot\common\OpenGlassGUI.exe",
-              "$buildRoot\OpenGlassSetup.Legacy.exe",
-              "$buildRoot\OpenGlassSetup.MILComp.exe"
+              "$buildRoot\OpenGlassSetup.exe"
           )
           foreach ($path in $unsignedExecutables) {
               $signature = Get-AuthenticodeSignature -LiteralPath $path
@@ -272,8 +288,7 @@ jobs:
         with:
           name: ${{ steps.version.outputs.artifact_name }}
           path: |
-            Build/x64/Release/OpenGlassSetup.Legacy.exe
-            Build/x64/Release/OpenGlassSetup.MILComp.exe
+            Build/x64/Release/OpenGlassSetup.exe
             Build/x64/Release/OpenGlassSymbols.Legacy.zip
             Build/x64/Release/OpenGlassSymbols.MILComp.zip
           if-no-files-found: error

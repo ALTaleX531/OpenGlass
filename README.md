@@ -9,23 +9,23 @@ OpenGlass restores the full glass effect to window frames, with control over blu
 
 ## Supported Windows versions
 
-| Windows build | Package | Status |
-| --- | --- | --- |
-| Windows 10 build 17763 through 19045 | Legacy | Stable |
-| Windows 11 builds below 28000, including build 26200 | Legacy | Stable |
-| Windows 11 build 28000 and later | MILComp | Experimental |
-| Windows Server 2022 | Legacy | Supported |
+| Windows build | Status |
+| --- | --- |
+| Windows 10 build 17763 through 19045 | Stable |
+| Windows 11 builds below 28000, including build 26200 | Stable |
+| Windows 11 build 28000 and later | Experimental |
+| Windows Server 2022 | Supported |
 
 > [!IMPORTANT]
-> The Legacy DLL cannot support build 28000 or later because its legacy MIL compositor path is no longer available. Use `OpenGlassSetup.MILComp.exe` on those builds.
+> `OpenGlassSetup.exe` automatically installs the correct DWM implementation for the detected Windows build. There is no architecture choice to make.
 
-Only General Availability Windows builds are supported. Insider and preview builds, and Windows Server versions other than 2022, are unsupported and may crash DWM. Windows marketing names are not reliable architecture selectors; use the exact build and verified compositor capabilities.
+Only General Availability Windows builds are supported. Insider and preview builds, and Windows Server versions other than 2022, are unsupported and may crash DWM. Compatibility depends on the exact build, revision, and verified compositor capabilities.
 
 See [Compatibility and DWM architectures](https://github.com/ALTaleX531/OpenGlass/wiki/Compatibility-and-DWM-architectures) for the complete support policy and explanation of parallel Windows build trains.
 
 ## Quick start
 
-1. Download the correct Inno Setup package from [Releases](https://github.com/ALTaleX531/OpenGlass/releases).
+1. Download `OpenGlassSetup.exe` from [Releases](https://github.com/ALTaleX531/OpenGlass/releases).
 2. Install OpenGlass and open its GUI. The GUI requests administrator elevation because it manages both per-user Windows colorization and system-wide OpenGlass settings. The [configuration reference](https://github.com/ALTaleX531/OpenGlass/wiki/Configuration-and-registry-reference) documents the corresponding registry values.
 3. Adjust the appearance. Changes apply immediately; **Save** accepts the current state and **Revert** restores the state captured before editing.
 
@@ -38,7 +38,7 @@ OpenGlass is intended for advanced users who are comfortable troubleshooting DWM
 
 ## Reporting issues
 
-For unexpectedly opaque glass, first check the GUI's **Diagnostics** tab, which reports the Windows transparency setting, opaque-blend setting, effective power mode, and battery-saver policy. For a DWM crash or hang, enable full DWM dumps there and reproduce the problem once. Include the exact Windows build and revision, selected package, registry settings, reproduction steps, screenshots or recordings, and a dump when a crash occurred. See [Troubleshooting and crash dumps](https://github.com/ALTaleX531/OpenGlass/wiki/Troubleshooting-and-crash-dumps).
+For unexpectedly opaque glass, first check the GUI's **Diagnostics** tab, which reports the Windows transparency setting, opaque-blend setting, effective power mode, and battery-saver policy. For a DWM crash or hang, enable full DWM dumps there and reproduce the problem once. Include the exact Windows build and revision, OpenGlass version, registry settings, reproduction steps, screenshots or recordings, and a dump when a crash occurred. See [Troubleshooting and crash dumps](https://github.com/ALTaleX531/OpenGlass/wiki/Troubleshooting-and-crash-dumps).
 
 ## Building
 
