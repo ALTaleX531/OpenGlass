@@ -29,7 +29,7 @@ Requirements are Visual Studio/MSBuild with the v145 C++ toolset, Windows SDK 10
 msbuild OpenGlass.slnx /m /restore /p:Configuration=Release /p:Platform=x64
 ```
 
-Use `Release` for normal local verification. `ReleaseSigned` requires the shared signing environment and is not a general developer build. A Release or ReleaseSigned solution build packages one installer containing both architecture DLLs when Inno Setup is available, and creates `OpenGlassSymbols.<Architecture>.zip` for each architecture containing the matching OpenGlass DLL PDB plus the Host and GUI PDBs. The installer selects and writes only the DLL matching the detected OS build. Packaging reports a skip without failing when `ISCC.exe` is absent. Set `OpenGlassInstallerEnabled=false` to suppress packaging explicitly.
+Use `Release` for normal local verification. `ReleaseSigned` requires the shared signing environment and is not a general developer build. A Release or ReleaseSigned solution build packages one installer containing both architecture DLLs when Inno Setup is available, and creates one `OpenGlassSymbols.zip` containing the two architecture-specific OpenGlass DLL PDBs plus the common Host and GUI PDBs. The installer selects and writes only the DLL matching the detected OS build. Packaging reports a skip without failing when `ISCC.exe` is absent. Set `OpenGlassInstallerEnabled=false` to suppress packaging explicitly.
 
 The solution builds Host and GUI once into `Build\x64\<Configuration>\common\`, the two DLLs into `legacy\` and `milcomp\`, and uses one explicit Utility project to package them without coupling installer generation to the GUI. To package the unified installer directly, use:
 

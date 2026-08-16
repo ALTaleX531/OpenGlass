@@ -211,8 +211,7 @@ jobs:
           $buildRoot = "Build\x64\Release"
           $artifacts = @(
               "$buildRoot\OpenGlassSetup.exe",
-              "$buildRoot\OpenGlassSymbols.Legacy.zip",
-              "$buildRoot\OpenGlassSymbols.MILComp.zip"
+              "$buildRoot\OpenGlassSymbols.zip"
           )
           foreach ($path in $artifacts) {
               $item = Get-Item -LiteralPath $path -ErrorAction Stop
@@ -221,13 +220,15 @@ jobs:
               }
           }
 
-          $obsoleteInstallers = @(
+          $obsoletePackages = @(
               "$buildRoot\OpenGlassSetup.Legacy.exe",
-              "$buildRoot\OpenGlassSetup.MILComp.exe"
+              "$buildRoot\OpenGlassSetup.MILComp.exe",
+              "$buildRoot\OpenGlassSymbols.Legacy.zip",
+              "$buildRoot\OpenGlassSymbols.MILComp.zip"
           )
-          foreach ($path in $obsoleteInstallers) {
+          foreach ($path in $obsoletePackages) {
               if (Test-Path -LiteralPath $path) {
-                  throw "Obsolete architecture-specific installer was produced: $path"
+                  throw "Obsolete architecture-specific package was produced: $path"
               }
           }
 
@@ -242,25 +243,29 @@ jobs:
               }
           }
 
-          $expectedPdbs = @("OpenGlass.pdb", "OpenGlassGUI.pdb", "OpenGlassHost.pdb")
-          foreach ($zipPath in $artifacts | Where-Object { $_.EndsWith(".zip", [StringComparison]::OrdinalIgnoreCase) }) {
-              $archive = [IO.Compression.ZipFile]::OpenRead((Resolve-Path -LiteralPath $zipPath))
-              try {
-                  $entries = @($archive.Entries)
-                  $actualNames = @($entries.FullName | Sort-Object)
-                  $differences = @(Compare-Object -ReferenceObject $expectedPdbs -DifferenceObject $actualNames)
-                  if ($differences.Count -ne 0 -or $entries.Count -ne $expectedPdbs.Count) {
-                      throw "Unexpected contents in $zipPath`: $($actualNames -join ', ')"
-                  }
-                  foreach ($entry in $entries) {
-                      if ($entry.Length -eq 0) {
-                          throw "Symbol archive entry is empty: $zipPath/$($entry.FullName)"
-                      }
+          $zipPath = "$buildRoot\OpenGlassSymbols.zip"
+          $expectedPdbs = @(
+              "legacy/OpenGlass.pdb",
+              "milcomp/OpenGlass.pdb",
+              "OpenGlassGUI.pdb",
+              "OpenGlassHost.pdb"
+          ) | Sort-Object
+          $archive = [IO.Compression.ZipFile]::OpenRead((Resolve-Path -LiteralPath $zipPath))
+          try {
+              $entries = @($archive.Entries)
+              $actualNames = @($entries.FullName | Sort-Object)
+              $differences = @(Compare-Object -ReferenceObject $expectedPdbs -DifferenceObject $actualNames)
+              if ($differences.Count -ne 0 -or $entries.Count -ne $expectedPdbs.Count) {
+                  throw "Unexpected contents in $zipPath`: $($actualNames -join ', ')"
+              }
+              foreach ($entry in $entries) {
+                  if ($entry.Length -eq 0) {
+                      throw "Symbol archive entry is empty: $zipPath/$($entry.FullName)"
                   }
               }
-              finally {
-                  $archive.Dispose()
-              }
+          }
+          finally {
+              $archive.Dispose()
           }
 
           $unsignedExecutables = @(
@@ -289,8 +294,7 @@ jobs:
           name: ${{ steps.version.outputs.artifact_name }}
           path: |
             Build/x64/Release/OpenGlassSetup.exe
-            Build/x64/Release/OpenGlassSymbols.Legacy.zip
-            Build/x64/Release/OpenGlassSymbols.MILComp.zip
+            Build/x64/Release/OpenGlassSymbols.zip
           if-no-files-found: error
           retention-days: 7
 

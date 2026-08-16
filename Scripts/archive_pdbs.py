@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Create a deterministic ZIP containing one OpenGlass package's PDB files."""
+"""Create a deterministic ZIP containing all OpenGlass PDB files."""
 
 from __future__ import annotations
 
@@ -12,15 +12,12 @@ import tempfile
 import zipfile
 
 
-ARCHITECTURE_LABELS = {
-	"legacy": "Legacy",
-	"milcomp": "MILComp",
-}
 CONFIGURATIONS = ("Release", "ReleaseSigned")
 PDB_INPUTS = (
-	("architecture", "OpenGlass.pdb"),
-	("common", "OpenGlassHost.pdb"),
-	("common", "OpenGlassGUI.pdb"),
+	("legacy", "OpenGlass.pdb", "legacy/OpenGlass.pdb"),
+	("milcomp", "OpenGlass.pdb", "milcomp/OpenGlass.pdb"),
+	("common", "OpenGlassHost.pdb", "OpenGlassHost.pdb"),
+	("common", "OpenGlassGUI.pdb", "OpenGlassGUI.pdb"),
 )
 ZIP_TIMESTAMP = (1980, 1, 1, 0, 0, 0)
 
@@ -32,32 +29,31 @@ class InputError(Exception):
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 	parser = argparse.ArgumentParser(description=__doc__)
 	parser.add_argument("repo", nargs="?", default=".", type=Path)
-	parser.add_argument("--architecture", choices=tuple(ARCHITECTURE_LABELS), required=True)
 	parser.add_argument("--configuration", choices=CONFIGURATIONS, default="Release")
 	parser.add_argument("--output", type=Path)
 	return parser.parse_args(argv)
 
 
-def collect_inputs(repo: Path, architecture: str, configuration: str) -> list[tuple[Path, str]]:
+def collect_inputs(repo: Path, configuration: str) -> list[tuple[Path, str]]:
 	build_root = repo / "Build" / "x64" / configuration
 	locations = {
-		"architecture": build_root / architecture,
+		"legacy": build_root / "legacy",
+		"milcomp": build_root / "milcomp",
 		"common": build_root / "common",
 	}
 	inputs: list[tuple[Path, str]] = []
-	for location, name in PDB_INPUTS:
+	for location, name, archive_name in PDB_INPUTS:
 		path = locations[location] / name
 		if not path.is_file():
 			raise InputError(f"required PDB does not exist: {path}")
 		if path.stat().st_size == 0:
 			raise InputError(f"required PDB is empty: {path}")
-		inputs.append((path, name))
+		inputs.append((path, archive_name))
 	return inputs
 
 
-def default_output(repo: Path, architecture: str, configuration: str) -> Path:
-	label = ARCHITECTURE_LABELS[architecture]
-	return repo / "Build" / "x64" / configuration / f"OpenGlassSymbols.{label}.zip"
+def default_output(repo: Path, configuration: str) -> Path:
+	return repo / "Build" / "x64" / configuration / "OpenGlassSymbols.zip"
 
 
 def write_archive(inputs: list[tuple[Path, str]], output: Path) -> None:
@@ -86,8 +82,8 @@ def main(argv: list[str] | None = None) -> int:
 		repo = args.repo.resolve()
 		if not repo.is_dir():
 			raise InputError(f"repository path is not a directory: {repo}")
-		inputs = collect_inputs(repo, args.architecture, args.configuration)
-		output = args.output.resolve() if args.output else default_output(repo, args.architecture, args.configuration)
+		inputs = collect_inputs(repo, args.configuration)
+		output = args.output.resolve() if args.output else default_output(repo, args.configuration)
 		if any(output == source.resolve() for source, _ in inputs):
 			raise InputError("output archive must not overwrite an input PDB")
 		write_archive(inputs, output)
