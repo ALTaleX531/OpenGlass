@@ -590,11 +590,6 @@ DWORD WINAPI OpenGlass::UnInitializationThreadEntryPoint(PVOID)
 
 void OpenGlass::Startup()
 {
-	if (GetAsyncKeyState(VK_CONTROL) & 0x8000)
-	{
-		return;
-	}
-
 	{
 		HWND hWnd{ nullptr };
 		// just wait patiently, in case the dwm notification window is not ready...
