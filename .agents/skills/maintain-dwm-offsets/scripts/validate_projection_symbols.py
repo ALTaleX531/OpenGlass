@@ -28,18 +28,26 @@ def inspect(repo: Path, architecture: str, module_filter: str, stable_id_filter:
 		raise ValueError(f"repository path is not a directory: {repo}")
 	sys.path.insert(0, str(repo / "Scripts"))
 	try:
-		import projection_codegen as codegen
+		import projection_schema
+		import projection_source_check
 	finally:
 		sys.path.pop(0)
-	constants = codegen.load_os_constants(repo)
-	projection_root = repo / "OpenGlass" / "Architecture" / codegen.ARCHITECTURES[architecture]
-	all_schemas = [codegen.validate_schema(repo, repo / "OpenGlass" / "ProjectionSchemas" / architecture / f"{module}.json", module, constants) for module in ("udwm", "dwmcore")]
-	codegen.validate_source_completeness(projection_root, all_schemas)
+	constants = projection_source_check.load_os_constants(repo)
+	projection_root = repo / "OpenGlass" / "Architecture" / projection_schema.ARCHITECTURES[architecture]
+	all_schemas = [
+		projection_schema.validate_schema(
+			repo / "OpenGlass" / "ProjectionSchemas" / architecture / f"{module}.json",
+			module,
+			constants,
+		)
+		for module in projection_schema.MODULES
+	]
+	projection_source_check.validate_source_completeness(projection_root, all_schemas)
 	texts: list[str] = []
 	paths = list((repo / "OpenGlass").glob("*")) + list(projection_root.rglob("*"))
 	for path in paths:
 		if path.is_file() and path.suffix.lower() in {".cpp", ".hpp", ".h"}:
-			texts.append(codegen.strip_non_code(path.read_text(encoding="utf-8-sig")))
+			texts.append(projection_source_check.strip_non_code(path.read_text(encoding="utf-8-sig")))
 	source = "\n".join(texts)
 	findings: list[dict[str, Any]] = []
 	modules: list[dict[str, Any]] = []
@@ -52,7 +60,7 @@ def inspect(repo: Path, architecture: str, module_filter: str, stable_id_filter:
 			consumer_count = source.count(symbol["name"])
 			callsite_count = None
 			if symbol["kind"] == "projected_function":
-				callsite_count, consumer_count = codegen.projected_function_consumer_counts(source, symbol)
+				callsite_count, consumer_count = projection_source_check.projected_function_consumer_counts(source, symbol)
 			if symbol["kind"] == "raw" and not symbol.get("diagnostic_only") and not consumer_count:
 				findings.append({"severity": "error", "module": schema["module"], "id": symbol["id"], "message": "raw Symbol has no source consumer"})
 			descriptor = {

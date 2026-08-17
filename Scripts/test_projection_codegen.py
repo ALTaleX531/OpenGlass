@@ -4,9 +4,13 @@ import copy
 import json
 import tempfile
 import unittest
+from unittest import mock
 from pathlib import Path
 
 import projection_codegen as codegen
+import projection_emit
+import projection_schema
+import projection_source_check
 
 
 def schema(module: str, *, projected: bool) -> dict:
@@ -73,12 +77,56 @@ class ProjectionCodegenTests(unittest.TestCase):
 		layout_header = before["udwm.Layouts.generated.hpp"][0]
 		self.assertIn(b"// Accessor::GetField", layout_header)
 		self.assertIn(b"// WARNING: validate the adjusted this pointer.", layout_header)
+
+	def test_generate_is_pure_and_owns_the_fixed_output_contract(self) -> None:
+		before = {
+			module: json.loads(
+				(self.repo / "OpenGlass" / "ProjectionSchemas" / self.architecture / f"{module}.json").read_text(encoding="utf-8")
+			)
+			for module in projection_schema.MODULES
+		}
+		generated = codegen.generate(self.repo, self.architecture)
+		after = {
+			module: json.loads(
+				(self.repo / "OpenGlass" / "ProjectionSchemas" / self.architecture / f"{module}.json").read_text(encoding="utf-8")
+			)
+			for module in projection_schema.MODULES
+		}
+		self.assertEqual(before, after)
+		self.assertEqual(
+			{
+				"udwm.Layouts.generated.hpp",
+				"udwm.Symbols.generated.hpp",
+				"dwmcore.Layouts.generated.hpp",
+				"dwmcore.Symbols.generated.hpp",
+				"ProjectionRegistry.generated.inc",
+			},
+			set(generated),
+		)
+		self.assertFalse(self.output.exists())
+
+	def test_check_mode_validates_without_publishing(self) -> None:
+		codegen.run(self.repo, self.architecture, self.output, True)
+		self.assertFalse(self.output.exists())
+
+	def test_source_read_failure_is_an_expected_schema_error(self) -> None:
+		(self.repo / "OpenGlass" / "OSHelper.hpp").unlink()
+		with self.assertRaisesRegex(projection_schema.SchemaError, r"cannot read projection source"):
+			codegen.generate(self.repo, self.architecture)
+
+	def test_atomic_write_removes_temporary_file_after_replace_failure(self) -> None:
+		target = self.output / "ProjectionRegistry.generated.inc"
+		with mock.patch.object(codegen.os, "replace", side_effect=OSError("replace failed")):
+			with self.assertRaisesRegex(projection_schema.SchemaError, r"cannot atomically write"):
+				codegen.atomic_write(target, "generated")
+		self.assertEqual([], list(self.output.glob("*.tmp")))
+
 	def test_rejects_duplicate_id_and_orphan_invoke(self) -> None:
 		bad = schema("udwm", projected=True)
 		bad["symbols"].append(copy.deepcopy(bad["symbols"][0]))
 		bad["symbols"][1]["name"] = "Symbol_Test_Run2"
 		self.write("udwm", bad)
-		with self.assertRaises(codegen.SchemaError):
+		with self.assertRaises(projection_schema.SchemaError):
 			codegen.run(self.repo, self.architecture, self.output, False)
 
 	def test_rejects_old_matcher_fields(self) -> None:
@@ -86,20 +134,20 @@ class ProjectionCodegenTests(unittest.TestCase):
 		bad["symbols"][0]["pdb_name"] = "Test::Run"
 		bad["symbols"][0]["matcher"] = "undecorated"
 		self.write("udwm", bad)
-		with self.assertRaises(codegen.SchemaError):
+		with self.assertRaises(projection_schema.SchemaError):
 			codegen.run(self.repo, self.architecture, self.output, False)
 
 	def test_rejects_invalid_and_duplicate_complete_names(self) -> None:
 		bad = schema("udwm", projected=True)
 		bad["symbols"][0]["symbol_names"] = ["public: void Test::Run(void)", "public: void Test::Run(void)"]
 		self.write("udwm", bad)
-		with self.assertRaises(codegen.SchemaError):
+		with self.assertRaises(projection_schema.SchemaError):
 			codegen.run(self.repo, self.architecture, self.output, False)
 
 		bad = schema("udwm", projected=True)
 		bad["symbols"][0]["symbol_names"] = ["public:\0 void Test::Run(void)"]
 		self.write("udwm", bad)
-		with self.assertRaises(codegen.SchemaError):
+		with self.assertRaises(projection_schema.SchemaError):
 			codegen.run(self.repo, self.architecture, self.output, False)
 
 	def test_rejects_overlapping_complete_name_candidates(self) -> None:
@@ -109,21 +157,21 @@ class ProjectionCodegenTests(unittest.TestCase):
 		second["id"] = "Test::RunAlias"
 		bad["symbols"].append(second)
 		self.write("udwm", bad)
-		with self.assertRaises(codegen.SchemaError):
+		with self.assertRaises(projection_schema.SchemaError):
 			codegen.run(self.repo, self.architecture, self.output, False)
 
 	def test_rejects_optional_projected_function_without_fallback(self) -> None:
 		bad = schema("udwm", projected=True)
 		bad["symbols"][0]["requirement"] = "optional"
 		self.write("udwm", bad)
-		with self.assertRaises(codegen.SchemaError):
+		with self.assertRaises(projection_schema.SchemaError):
 			codegen.run(self.repo, self.architecture, self.output, False)
 
 	def test_rejects_migration_provenance_as_notes(self) -> None:
 		bad = schema("udwm", projected=True)
 		bad["symbols"][0]["notes"] = "Migrated " + "mechanically from old.hpp:42."
 		self.write("udwm", bad)
-		with self.assertRaises(codegen.SchemaError):
+		with self.assertRaises(projection_schema.SchemaError):
 			codegen.run(self.repo, self.architecture, self.output, False)
 
 	def test_rejects_projected_wrapper_without_musttail_macro(self) -> None:
@@ -131,7 +179,7 @@ class ProjectionCodegenTests(unittest.TestCase):
 			"__forceinline void Test::Run() { return Projection::Invoke<&Test::Run>(); }",
 			encoding="utf-8",
 		)
-		with self.assertRaises(codegen.SchemaError):
+		with self.assertRaises(projection_schema.SchemaError):
 			codegen.run(self.repo, self.architecture, self.output, False)
 
 	def test_rejects_projected_wrapper_without_inline(self) -> None:
@@ -139,7 +187,7 @@ class ProjectionCodegenTests(unittest.TestCase):
 			"void Test::Run() { OPENGLASS_MUSTTAIL return Projection::Invoke<&Test::Run>(); }",
 			encoding="utf-8",
 		)
-		with self.assertRaises(codegen.SchemaError):
+		with self.assertRaises(projection_schema.SchemaError):
 			codegen.run(self.repo, self.architecture, self.output, False)
 
 	def test_rejects_projected_wrapper_with_extra_statement(self) -> None:
@@ -147,17 +195,17 @@ class ProjectionCodegenTests(unittest.TestCase):
 			"inline void Test::Run() { TouchState(); OPENGLASS_MUSTTAIL return Projection::Invoke<&Test::Run>(); }",
 			encoding="utf-8",
 		)
-		with self.assertRaisesRegex(codegen.SchemaError, r"body must contain only"):
+		with self.assertRaisesRegex(projection_schema.SchemaError, r"body must contain only"):
 			codegen.run(self.repo, self.architecture, self.output, False)
 
 	def test_rejects_layout_without_typed_source_consumer(self) -> None:
 		(self.repo / "OpenGlass" / "ProjectionLayoutConsumer.cpp").unlink()
-		with self.assertRaisesRegex(codegen.SchemaError, r"Layout schema has no typed source consumer"):
+		with self.assertRaisesRegex(projection_schema.SchemaError, r"Layout schema has no typed source consumer"):
 			codegen.run(self.repo, self.architecture, self.output, False)
 
 	def test_rejects_projected_wrapper_without_runtime_consumer(self) -> None:
 		(self.repo / "OpenGlass" / "ProjectionConsumer.cpp").unlink()
-		with self.assertRaisesRegex(codegen.SchemaError, r"no runtime call site or direct Symbol consumer"):
+		with self.assertRaisesRegex(projection_schema.SchemaError, r"no runtime call site or direct Symbol consumer"):
 			codegen.run(self.repo, self.architecture, self.output, False)
 
 	def test_accepts_direct_projected_symbol_consumer(self) -> None:
@@ -176,7 +224,7 @@ class ProjectionCodegenTests(unittest.TestCase):
 			"min_inclusive": None, "max_exclusive": None,
 		}]
 		self.write("dwmcore", bad)
-		with self.assertRaisesRegex(codegen.SchemaError, r"typed ABI"):
+		with self.assertRaisesRegex(projection_schema.SchemaError, r"typed ABI"):
 			codegen.run(self.repo, self.architecture, self.output, False)
 
 	def test_code_address_requires_explicit_usage(self) -> None:
@@ -188,7 +236,7 @@ class ProjectionCodegenTests(unittest.TestCase):
 			"min_inclusive": None, "max_exclusive": None,
 		}]
 		self.write("dwmcore", bad)
-		with self.assertRaisesRegex(codegen.SchemaError, r"code_address"):
+		with self.assertRaisesRegex(projection_schema.SchemaError, r"code_address"):
 			codegen.run(self.repo, self.architecture, self.output, False)
 
 		bad["symbols"][0]["usage"] = "code_address"
@@ -222,14 +270,14 @@ class ProjectionCodegenTests(unittest.TestCase):
 
 		value["symbols"][1]["min_inclusive"] = None
 		self.write("udwm", value)
-		with self.assertRaisesRegex(codegen.SchemaError, r"range overlaps"):
+		with self.assertRaisesRegex(projection_schema.SchemaError, r"range overlaps"):
 			codegen.run(self.repo, self.architecture, self.output, False)
 
 	def test_projected_abi_compatibility_requires_explicit_type(self) -> None:
 		bad = schema("udwm", projected=True)
 		bad["symbols"][0]["abi_compatibility"] = "extra_trailing_argument"
 		self.write("udwm", bad)
-		with self.assertRaisesRegex(codegen.SchemaError, r"\.type must be a non-empty string"):
+		with self.assertRaisesRegex(projection_schema.SchemaError, r"\.type must be a non-empty string"):
 			codegen.run(self.repo, self.architecture, self.output, False)
 
 	def test_rejects_overlapping_projected_variable_targets(self) -> None:
@@ -249,7 +297,7 @@ class ProjectionCodegenTests(unittest.TestCase):
 			},
 		]
 		self.write("dwmcore", bad)
-		with self.assertRaisesRegex(codegen.SchemaError, r"projected variable target range overlaps"):
+		with self.assertRaisesRegex(projection_schema.SchemaError, r"projected variable target range overlaps"):
 			codegen.run(self.repo, self.architecture, self.output, False)
 
 	def test_rejects_projected_variable_without_runtime_consumer(self) -> None:
@@ -266,7 +314,7 @@ class ProjectionCodegenTests(unittest.TestCase):
 			"void UseOther() { (void)Other::s_value; }",
 			encoding="utf-8",
 		)
-		with self.assertRaisesRegex(codegen.SchemaError, r"projected_variable schema has no runtime consumer"):
+		with self.assertRaisesRegex(projection_schema.SchemaError, r"projected_variable schema has no runtime consumer"):
 			codegen.run(self.repo, self.architecture, self.output, False)
 
 	def test_accepts_projected_variable_with_qualified_runtime_consumer(self) -> None:
@@ -293,7 +341,7 @@ class ProjectionCodegenTests(unittest.TestCase):
 			"min_inclusive": None, "max_exclusive": None,
 		}]
 		self.write("dwmcore", bad)
-		with self.assertRaisesRegex(codegen.SchemaError, r"raw symbol schema has no direct consumer"):
+		with self.assertRaisesRegex(projection_schema.SchemaError, r"raw symbol schema has no direct consumer"):
 			codegen.run(self.repo, self.architecture, self.output, False)
 
 	def test_metadata_counts_are_not_byte_sized(self) -> None:
@@ -312,14 +360,13 @@ class ProjectionCodegenTests(unittest.TestCase):
 			for index in range(300)
 		] + [{"offset": "1200", "otherwise": True}]
 		self.write("udwm", large)
-		validated = codegen.validate_schema(
-			self.repo,
+		validated = projection_schema.validate_schema(
 			self.repo / "OpenGlass" / "ProjectionSchemas" / self.architecture / "udwm.json",
 			"udwm",
-			codegen.load_os_constants(self.repo),
+			projection_source_check.load_os_constants(self.repo),
 		)
-		generated = codegen.generate_registry_inc([validated])
-		self.assertIn("Symbol_Test_299", codegen.generate_symbol_header(validated))
+		generated = projection_emit.generate_registry_inc([validated])
+		self.assertIn("Symbol_Test_299", projection_emit.generate_symbol_header(validated))
 		self.assertIn("static_cast<LONG>(1200)", generated)
 		self.assertNotIn("static_cast<SHORT>", generated)
 
@@ -328,7 +375,7 @@ class ProjectionCodegenTests(unittest.TestCase):
 			'// test->Run();\nconst char* text = "Symbol_Test_Run Test::Run()";',
 			encoding="utf-8",
 		)
-		with self.assertRaisesRegex(codegen.SchemaError, r"no runtime call site or direct Symbol consumer"):
+		with self.assertRaisesRegex(projection_schema.SchemaError, r"no runtime call site or direct Symbol consumer"):
 			codegen.run(self.repo, self.architecture, self.output, False)
 
 if __name__ == "__main__":

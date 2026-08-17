@@ -17,10 +17,11 @@ import uuid
 from typing import Any
 
 
-TOOL_ROOT = Path(__file__).parents[4]
+TOOL_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(TOOL_ROOT / "Scripts"))
 try:
-	import projection_codegen as codegen
+	import projection_schema
+	import projection_source_check
 finally:
 	sys.path.pop(0)
 
@@ -314,10 +315,10 @@ def resolve_dbghelp_path(requested: Path | None) -> Path:
 
 
 def in_range(version: Version, symbol: dict[str, Any]) -> bool:
-	current = codegen.Version(version.build, version.revision)
-	minimum = codegen.parse_version(symbol.get("min_inclusive"), "symbol.min_inclusive")
-	maximum = codegen.parse_version(symbol.get("max_exclusive"), "symbol.max_exclusive")
-	return current >= minimum and codegen.before(current, maximum)
+	current = projection_schema.Version(version.build, version.revision)
+	minimum = projection_schema.parse_version(symbol.get("min_inclusive"), "symbol.min_inclusive")
+	maximum = projection_schema.parse_version(symbol.get("max_exclusive"), "symbol.max_exclusive")
+	return current >= minimum and projection_schema.before(current, maximum)
 
 
 def is_active(version: Version, symbol: dict[str, Any], configuration: str) -> bool:
@@ -340,9 +341,9 @@ def inspect(args: argparse.Namespace) -> dict[str, Any]:
 	dbghelp_version = image_version(dbghelp_path)
 	schema_path = repo / "OpenGlass" / "ProjectionSchemas" / args.architecture / f"{args.module}.json"
 	try:
-		constants = codegen.load_os_constants(repo)
-		schema = codegen.validate_schema(repo, schema_path, args.module, constants)
-	except codegen.SchemaError as error:
+		constants = projection_source_check.load_os_constants(repo)
+		schema = projection_schema.validate_schema(schema_path, args.module, constants)
+	except projection_schema.SchemaError as error:
 		raise AuditError(str(error)) from error
 	descriptors = []
 	for symbol in schema.get("symbols", []):

@@ -92,7 +92,7 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <Target Name="GenerateProjectionMetadata"
           BeforeTargets="ClCompile"
-          Inputs="$(ProjectionSchemaDir)\udwm.json;$(ProjectionSchemaDir)\dwmcore.json;$(ProjectDir)..\Scripts\projection_codegen.py;$(ProjectDir)OSHelper.hpp;@(ClCompile);@(ClInclude)"
+          Inputs="$(ProjectionSchemaDir)\udwm.json;$(ProjectionSchemaDir)\dwmcore.json;$(ProjectDir)..\Scripts\projection_codegen.py;$(ProjectDir)..\Scripts\projection_schema.py;$(ProjectDir)..\Scripts\projection_emit.py;$(ProjectDir)..\Scripts\projection_source_check.py;$(ProjectDir)OSHelper.hpp;@(ClCompile);@(ClInclude)"
           Outputs="$(ProjectionGeneratedDir)\udwm.Layouts.generated.hpp;$(ProjectionGeneratedDir)\udwm.Symbols.generated.hpp;$(ProjectionGeneratedDir)\dwmcore.Layouts.generated.hpp;$(ProjectionGeneratedDir)\dwmcore.Symbols.generated.hpp;$(ProjectionGeneratedDir)\ProjectionRegistry.generated.inc">
     <MakeDir Directories="$(ProjectionGeneratedDir)" />
     <Exec Command="&quot;$(ProjectionPython)&quot; --version" IgnoreExitCode="true" ConsoleToMSBuild="true"><Output TaskParameter="ExitCode" PropertyName="ProjectionPythonExitCode" /></Exec>

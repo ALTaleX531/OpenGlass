@@ -18,7 +18,8 @@ VERSION_RE = re.compile(r"(?:10\.0\.)?([0-9]+)\.([0-9]+)\Z")
 TOOL_ROOT = Path(__file__).parents[4]
 sys.path.insert(0, str(TOOL_ROOT / "Scripts"))
 try:
-	import projection_codegen as codegen
+	import projection_schema
+	import projection_source_check
 finally:
 	sys.path.pop(0)
 
@@ -72,7 +73,7 @@ def location(text: str, stable_id: str) -> tuple[int, int]:
 def inspect(repo: Path, architecture: str, requested: Version | None, module_filter: str, stable_id_filter: str | None = None) -> dict[str, Any]:
 	if not repo.is_dir():
 		raise InputError(f"repository path is not a directory: {repo}")
-	constants = codegen.load_os_constants(repo)
+	constants = projection_source_check.load_os_constants(repo)
 	modules: list[dict[str, Any]] = []
 	findings: list[dict[str, Any]] = []
 	module_names = ("udwm", "dwmcore") if module_filter == "all" else (module_filter,)
@@ -82,8 +83,8 @@ def inspect(repo: Path, architecture: str, requested: Version | None, module_fil
 		path = repo / relative
 		try:
 			text = path.read_text(encoding="utf-8")
-			schema = codegen.validate_schema(repo, path, module, constants)
-		except codegen.SchemaError as error:
+			schema = projection_schema.validate_schema(path, module, constants)
+		except projection_schema.SchemaError as error:
 			findings.append({"severity": "error", "file": relative, "line": 1, "column": 1, "table": None, "entry": None, "message": str(error)})
 			modules.append({"module": module, "schema": relative, "tables": []})
 			continue
@@ -110,8 +111,8 @@ def inspect(repo: Path, architecture: str, requested: Version | None, module_fil
 				else:
 					until = case["until"]
 					boundary = Version(
-						codegen.resolve_boundary_expression(until.get("build"), constants, f"{stable_id}[{index}].build", build=True),
-						codegen.resolve_boundary_expression(until.get("revision", "0"), constants, f"{stable_id}[{index}].revision", build=False),
+						projection_schema.resolve_boundary_expression(until.get("build"), constants, f"{stable_id}[{index}].build", build=True),
+						projection_schema.resolve_boundary_expression(until.get("revision", "0"), constants, f"{stable_id}[{index}].revision", build=False),
 					)
 				entries.append({"entry": index, "offset_expression": case.get("offset"), "left_inclusive": left.json() if left else None, "right_exclusive": boundary.json() if boundary else None})
 				left = boundary
