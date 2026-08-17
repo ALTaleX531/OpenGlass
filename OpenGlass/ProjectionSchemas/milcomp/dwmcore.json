@@ -334,7 +334,7 @@
       "kind": "raw",
       "type": "BYTE*",
       "usage": "code_address",
-      "notes": "The node-area comparison against the 75,000 px\u00b2 cutoff is inlined here. GlassIntegrity locates the unique compare-and-branch sequence and suppresses only its below-threshold branch."
+      "notes": "The node-area comparison against the 75,000 px\u00b2 cutoff is inlined here. Newer builds load the shared cutoff into an XMM register on two mutually exclusive feature paths and reuse it for the final occlusion-state write; GlassIntegrity must zero only these local loads so all three decisions remain consistent without changing the shared constant's other consumers."
     },
     {
       "name": "Symbol_COcclusionContext_Compute",
@@ -704,10 +704,17 @@
       "cases": [
         {
           "offset": "1268",
+          "until": {
+            "build": "28000",
+            "revision": "2704"
+          }
+        },
+        {
+          "offset": "1272",
           "otherwise": true
         }
       ],
-      "notes": "COcclusionContext::FlushOcclusionRects\n*(DWORD *)(this + N) read, then value += 2 written back — unique \"+2\" pattern\nAdjacent DWORD (+4) is the push-skip counter — do NOT confuse\nNOTE: GetCurrentZ, GetDeviceTransform, GetDeviceTransformFlag, and\nGetArrayBasedCoverageSet tend to shift by the SAME byte delta across CUs.\nIf all four differ by the same amount, trust the data."
+      "notes": "COcclusionContext::FlushOcclusionRects\n*(DWORD *)(this + N) read, then value += 2 written back — unique \"+2\" pattern\nAdjacent DWORD (+4) is the push-skip counter — do NOT confuse. Audit neighboring fields independently: build 28000.2704 shifts CurrentZ and the device-transform matrix by four bytes, while the device-transform flags and array-based coverage set remain at their previous offsets."
     },
     {
       "name": "COcclusionContext_GetWorldTransform",
@@ -730,6 +737,13 @@
       "cases": [
         {
           "offset": "1132",
+          "until": {
+            "build": "28000",
+            "revision": "2704"
+          }
+        },
+        {
+          "offset": "1136",
           "otherwise": true
         }
       ],
@@ -746,7 +760,7 @@
           "otherwise": true
         }
       ],
-      "notes": "COcclusionContext::FlushOcclusionRects / UpdateDeviceTransform\nif (*((BYTE *)this + N)) → use device transform, else use nullptr\nInvariant: DeviceTransformFlag = DeviceTransform_Offset - 4 or -8"
+      "notes": "COcclusionContext::FlushOcclusionRects / UpdateDeviceTransform\nif (*((BYTE *)this + N)) → use device transform, else use nullptr. Confirm this packed flag independently from the matrix offset; it remains at 1124 when the matrix moves from 1132 to 1136 in build 28000.2704."
     },
     {
       "name": "COcclusionContext_GetArrayBasedCoverageSet",

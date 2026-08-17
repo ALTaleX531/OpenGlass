@@ -116,14 +116,32 @@ namespace OpenGlass::GlassIntegrity
 	Projection::Detour<dwmcore::Symbol_CTreeDirty_GetOptimizedRect, decltype(&MyCTreeDirty_GetOptimizedRect)> g_CTreeDirty_GetOptimizedRect_Org{};
 	Projection::Detour<dwmcore::Symbol_CDrawingContext_DrawVisualTree, decltype(&MyCDrawingContext_DrawVisualTree)> g_CDrawingContext_DrawVisualTree_Org{};
 
-	uint16_t g_COcclusionContext_MinimumOcclusionAreaBranch_Instructions[] =
+	uint16_t g_COcclusionContext_MinimumOcclusionAreaBranch_DirectCutoff_Instructions[] =
 	{
 		// comiss xmmN, dword ptr [rip + minimum_occlusion_area]
 		0x0F, 0x2F, HookHelper::c_patwc, HookHelper::c_patwc, HookHelper::c_patwc, HookHelper::c_patwc, HookHelper::c_patwc,
 		// jb near skip_occlusion_collection
 		0x0F, 0x82, HookHelper::c_patwc, HookHelper::c_patwc, HookHelper::c_patwc, HookHelper::c_patwc
 	};
-	constexpr std::array<uint8_t, 6> g_COcclusionContext_MinimumOcclusionAreaBranch_PatchedInstructions
+	uint16_t g_COcclusionContext_MinimumOcclusionAreaBranch_LoadedCutoff_Instructions[] =
+	{
+		// movss xmmN, dword ptr [rip + minimum_occlusion_area]
+		0xF3, 0x0F, 0x10, HookHelper::c_patwc, HookHelper::c_patwc, HookHelper::c_patwc, HookHelper::c_patwc, HookHelper::c_patwc,
+		// comiss xmmM, xmmN
+		0x0F, 0x2F, HookHelper::c_patwc,
+		// jb short below_minimum_occlusion_area
+		0x72, 0x07,
+		// mov byte ptr [r13 + 1Ch], 1
+		0x41, 0xC6, 0x45, 0x1C, 0x01,
+		// jmp short minimum_occlusion_area_checked
+		0xEB, HookHelper::c_patwc
+	};
+	uint16_t g_COcclusionContext_MinimumOcclusionAreaCutoffLoad_Instructions[] =
+	{
+		// movss xmmN, dword ptr [rip + minimum_occlusion_area]
+		0xF3, 0x0F, 0x10, HookHelper::c_patwc, HookHelper::c_patwc, HookHelper::c_patwc, HookHelper::c_patwc, HookHelper::c_patwc
+	};
+	constexpr std::array<uint8_t, 6> g_COcclusionContext_MinimumOcclusionAreaBranch_NearPatchedInstructions
 	{
 		// nop
 		0x90,
@@ -138,8 +156,8 @@ namespace OpenGlass::GlassIntegrity
 		// nop
 		0x90
 	};
-	uint8_t* g_COcclusionContext_MinimumOcclusionAreaBranch_PatchLocation = nullptr;
-	HookHelper::InstructionPatch g_COcclusionContext_MinimumOcclusionAreaBranch_Patch;
+	std::array<HookHelper::InstructionPatch, 2> g_COcclusionContext_MinimumOcclusionArea_Patches{};
+	size_t g_COcclusionContext_MinimumOcclusionArea_PatchCount{};
 
 	Util::ObjectPool<dwmcore::CD2DContext*, CGlassSafetyZoneLayer> g_safetyZonePool{};
 
@@ -886,40 +904,147 @@ void GlassIntegrity::Startup()
 		dwmcore::Symbol_COcclusionContext_PreSubgraph.get()
 	);
 	const std::span searchRange{ preSubgraph, 0x2000 };
-	const auto match = HookHelper::FindPattern(
+	const auto directCutoffMatch = HookHelper::FindPattern(
 		searchRange,
-		g_COcclusionContext_MinimumOcclusionAreaBranch_Instructions
+		g_COcclusionContext_MinimumOcclusionAreaBranch_DirectCutoff_Instructions
 	);
-	FAIL_FAST_IF_FAILED_MSG(match ? S_OK : E_NOINTERFACE, "The inlined minimum occlusion-area branch was not found");
-	const auto matchOffset = static_cast<size_t>(match - searchRange.data());
-	const auto remaining = searchRange.subspan(matchOffset + 1);
+	const auto loadedCutoffMatch = HookHelper::FindPattern(
+		searchRange,
+		g_COcclusionContext_MinimumOcclusionAreaBranch_LoadedCutoff_Instructions
+	);
 	FAIL_FAST_IF_FAILED_MSG(
-		!HookHelper::FindPattern(remaining, g_COcclusionContext_MinimumOcclusionAreaBranch_Instructions) ? S_OK : E_UNEXPECTED,
+		(directCutoffMatch || loadedCutoffMatch) ? S_OK : E_NOINTERFACE,
+		"The inlined minimum occlusion-area branch was not found"
+	);
+	FAIL_FAST_IF_FAILED_MSG(
+		!(directCutoffMatch && loadedCutoffMatch) ? S_OK : E_UNEXPECTED,
 		"The inlined minimum occlusion-area branch is ambiguous"
 	);
-	FAIL_FAST_IF_FAILED_MSG(
-		(match[2] & 0xC7) == 0x05 ? S_OK : E_UNEXPECTED,
-		"The minimum occlusion-area comparison does not use RIP-relative memory"
-	);
-	int32_t cutoffDisplacement{};
-	memcpy(&cutoffDisplacement, match + 3, sizeof(cutoffDisplacement));
-	float cutoff{};
-	memcpy(&cutoff, match + 7 + cutoffDisplacement, sizeof(cutoff));
-	FAIL_FAST_IF_FAILED_MSG(cutoff == 75000.f ? S_OK : E_UNEXPECTED, "The minimum occlusion-area cutoff is unexpected");
+	const auto ensureUniqueMatch = [&searchRange](const uint8_t* match, std::span<const uint16_t> pattern)
+	{
+		if (!match)
+		{
+			return;
+		}
+		const auto matchOffset = static_cast<size_t>(match - searchRange.data());
+		const auto remaining = searchRange.subspan(matchOffset + 1);
+		FAIL_FAST_IF_FAILED_MSG(
+			!HookHelper::FindPattern(remaining, pattern) ? S_OK : E_UNEXPECTED,
+			"The inlined minimum occlusion-area branch is ambiguous"
+		);
+	};
+	ensureUniqueMatch(directCutoffMatch, g_COcclusionContext_MinimumOcclusionAreaBranch_DirectCutoff_Instructions);
+	ensureUniqueMatch(loadedCutoffMatch, g_COcclusionContext_MinimumOcclusionAreaBranch_LoadedCutoff_Instructions);
 
-	g_COcclusionContext_MinimumOcclusionAreaBranch_PatchLocation = const_cast<uint8_t*>(match + 7);
-	std::array<uint8_t, 6> originalBranchInstructions{};
-	memcpy(
-		originalBranchInstructions.data(),
-		g_COcclusionContext_MinimumOcclusionAreaBranch_PatchLocation,
-		originalBranchInstructions.size()
+	int32_t cutoffDisplacement{};
+	const uint8_t* cutoffAddress{};
+	FAIL_FAST_IF_FAILED_MSG(
+		g_COcclusionContext_MinimumOcclusionArea_PatchCount == 0 ? S_OK : E_UNEXPECTED,
+		"Minimum occlusion-area patches were already prepared"
 	);
-	g_COcclusionContext_MinimumOcclusionAreaBranch_Patch.Prepare(
-		g_COcclusionContext_MinimumOcclusionAreaBranch_PatchLocation,
-		originalBranchInstructions,
-		g_COcclusionContext_MinimumOcclusionAreaBranch_PatchedInstructions
-	);
-	HookHelper::GetCurrentHookTransaction().Apply(g_COcclusionContext_MinimumOcclusionAreaBranch_Patch);
+	const auto preparePatch = [](uint8_t* location, std::span<const uint8_t> patchedInstructions)
+	{
+		FAIL_FAST_IF_FAILED_MSG(
+			g_COcclusionContext_MinimumOcclusionArea_PatchCount < g_COcclusionContext_MinimumOcclusionArea_Patches.size() ? S_OK : E_UNEXPECTED,
+			"Too many minimum occlusion-area patches"
+		);
+		const auto patchIndex = g_COcclusionContext_MinimumOcclusionArea_PatchCount++;
+		auto& patch = g_COcclusionContext_MinimumOcclusionArea_Patches[patchIndex];
+		std::array<uint8_t, 8> originalInstructions{};
+		FAIL_FAST_IF_FAILED_MSG(
+			patchedInstructions.size() <= originalInstructions.size() ? S_OK : E_INVALIDARG,
+			"Minimum occlusion-area patch is too large"
+		);
+		const auto original = std::span{ originalInstructions }.first(patchedInstructions.size());
+		memcpy(original.data(), location, original.size());
+		patch.Prepare(location, original, patchedInstructions);
+		HookHelper::GetCurrentHookTransaction().Apply(patch);
+	};
+	if (directCutoffMatch)
+	{
+		FAIL_FAST_IF_FAILED_MSG(
+			(directCutoffMatch[2] & 0xC7) == 0x05 ? S_OK : E_UNEXPECTED,
+			"The minimum occlusion-area comparison does not use RIP-relative memory"
+		);
+		memcpy(&cutoffDisplacement, directCutoffMatch + 3, sizeof(cutoffDisplacement));
+		cutoffAddress = directCutoffMatch + 7 + cutoffDisplacement;
+		preparePatch(
+			const_cast<uint8_t*>(directCutoffMatch + 7),
+			g_COcclusionContext_MinimumOcclusionAreaBranch_NearPatchedInstructions
+		);
+	}
+	else
+	{
+		FAIL_FAST_IF_FAILED_MSG(
+			(loadedCutoffMatch[3] & 0xC7) == 0x05 ? S_OK : E_UNEXPECTED,
+			"The minimum occlusion-area load does not use RIP-relative memory"
+		);
+		FAIL_FAST_IF_FAILED_MSG(
+			(loadedCutoffMatch[10] & 0xC0) == 0xC0 &&
+			((loadedCutoffMatch[3] >> 3) & 7) == (loadedCutoffMatch[10] & 7) ? S_OK : E_UNEXPECTED,
+			"The minimum occlusion-area comparison does not use the loaded cutoff"
+		);
+		memcpy(&cutoffDisplacement, loadedCutoffMatch + 4, sizeof(cutoffDisplacement));
+		cutoffAddress = loadedCutoffMatch + 8 + cutoffDisplacement;
+
+		std::array<const uint8_t*, 2> cutoffLoads{};
+		size_t cutoffLoadCount{};
+		for (size_t searchOffset = 0; searchOffset < searchRange.size();)
+		{
+			const auto remaining = searchRange.subspan(searchOffset);
+			const auto cutoffLoad = HookHelper::FindPattern(
+				remaining,
+				g_COcclusionContext_MinimumOcclusionAreaCutoffLoad_Instructions
+			);
+			if (!cutoffLoad)
+			{
+				break;
+			}
+
+			searchOffset = static_cast<size_t>(cutoffLoad - searchRange.data()) + 1;
+			if ((cutoffLoad[3] & 0xC7) != 0x05)
+			{
+				continue;
+			}
+
+			int32_t displacement{};
+			memcpy(&displacement, cutoffLoad + 4, sizeof(displacement));
+			if (cutoffLoad + 8 + displacement != cutoffAddress)
+			{
+				continue;
+			}
+
+			FAIL_FAST_IF_FAILED_MSG(
+				cutoffLoadCount < cutoffLoads.size() ? S_OK : E_UNEXPECTED,
+				"Too many minimum occlusion-area cutoff loads were found"
+			);
+			cutoffLoads[cutoffLoadCount++] = cutoffLoad;
+		}
+		FAIL_FAST_IF_FAILED_MSG(
+			cutoffLoadCount == cutoffLoads.size() ? S_OK : E_NOINTERFACE,
+			"The minimum occlusion-area cutoff loads were not found"
+		);
+
+		const auto cutoffRegister = static_cast<uint8_t>((loadedCutoffMatch[3] >> 3) & 7);
+		std::array<uint8_t, 8> zeroCutoffInstructions
+		{
+			// xorps xmmN, xmmN
+			0x0F, 0x57, static_cast<uint8_t>(0xC0 | (cutoffRegister << 3) | cutoffRegister),
+			// nop
+			0x90, 0x90, 0x90, 0x90, 0x90
+		};
+		for (const auto cutoffLoad : cutoffLoads)
+		{
+			FAIL_FAST_IF_FAILED_MSG(
+				((cutoffLoad[3] >> 3) & 7) == cutoffRegister ? S_OK : E_UNEXPECTED,
+				"The minimum occlusion-area cutoff loads use different registers"
+			);
+			preparePatch(const_cast<uint8_t*>(cutoffLoad), zeroCutoffInstructions);
+		}
+	}
+	float cutoff{};
+	memcpy(&cutoff, cutoffAddress, sizeof(cutoff));
+	FAIL_FAST_IF_FAILED_MSG(cutoff == 75000.f ? S_OK : E_UNEXPECTED, "The minimum occlusion-area cutoff is unexpected");
 
 	if (!g_CColorBrush_AddOcclusionInformation_Org)
 	{
@@ -960,9 +1085,9 @@ void GlassIntegrity::Startup()
 
 void GlassIntegrity::Shutdown()
 {
-	if (g_COcclusionContext_MinimumOcclusionAreaBranch_PatchLocation)
+	for (size_t i = 0; i < g_COcclusionContext_MinimumOcclusionArea_PatchCount; ++i)
 	{
-		HookHelper::GetCurrentHookTransaction().Apply(g_COcclusionContext_MinimumOcclusionAreaBranch_Patch);
+		HookHelper::GetCurrentHookTransaction().Apply(g_COcclusionContext_MinimumOcclusionArea_Patches[i]);
 	}
 
 	HookHelper::ApplyInlineHooks(
@@ -999,7 +1124,7 @@ void GlassIntegrity::Shutdown()
 
 void GlassIntegrity::Cleanup()
 {
-	g_COcclusionContext_MinimumOcclusionAreaBranch_PatchLocation = nullptr;
+	g_COcclusionContext_MinimumOcclusionArea_PatchCount = 0;
 	g_lastCollectedOcclusionRectangle = {};
 	CArrayBasedGlassCoverageSet::RemoveAll();
 	g_glassVisualSet.clear();

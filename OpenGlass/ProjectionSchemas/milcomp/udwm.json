@@ -1078,6 +1078,13 @@
       "cases": [
         {
           "offset": "672",
+          "until": {
+            "build": "28000",
+            "revision": "1575"
+          }
+        },
+        {
+          "offset": "736",
           "otherwise": true
         }
       ],
@@ -1091,6 +1098,13 @@
       "cases": [
         {
           "offset": "673",
+          "until": {
+            "build": "28000",
+            "revision": "1575"
+          }
+        },
+        {
+          "offset": "737",
           "otherwise": true
         }
       ],
