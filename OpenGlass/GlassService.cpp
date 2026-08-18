@@ -154,6 +154,19 @@ HRESULT GlassService::InjectOpenGlassDLL(DWORD processId, bool inject)
 
 		return threadHandle;
 	};
+	const auto WaitForRemoteThread = [](HANDLE threadHandle, DWORD* exitCode = nullptr) -> HRESULT
+	{
+		const auto waitResult = WaitForSingleObject(threadHandle, INFINITE);
+		RETURN_LAST_ERROR_IF(waitResult == WAIT_FAILED);
+		RETURN_HR_IF(E_UNEXPECTED, waitResult != WAIT_OBJECT_0);
+
+		if (exitCode)
+		{
+			RETURN_IF_WIN32_BOOL_FALSE(GetExitCodeThread(threadHandle, exitCode));
+		}
+
+		return S_OK;
+	};
 
 	if (inject)
 	{
@@ -182,12 +195,9 @@ HRESULT GlassService::InjectOpenGlassDLL(DWORD processId, bool inject)
 
 			const auto loadThread = CreateRemoteThreadWithNTAPI(reinterpret_cast<LPTHREAD_START_ROUTINE>(remoteLoadLibraryW), remotePath);
 			RETURN_LAST_ERROR_IF_NULL(loadThread);
-
-			if (WaitForSingleObject(loadThread.get(), 3'000) != WAIT_OBJECT_0)
-			{
-				LOG_IF_WIN32_BOOL_FALSE(TerminateThread(loadThread.get(), HRESULT_FROM_WIN32(ERROR_POSSIBLE_DEADLOCK)));
-				return HRESULT_FROM_WIN32(ERROR_POSSIBLE_DEADLOCK);
-			}
+			// Keep the parameter alive until LoadLibraryW returns. Terminating a loader
+			// thread can strand the target process under the loader lock.
+			RETURN_IF_FAILED(WaitForRemoteThread(loadThread.get()));
 		}
 
 		HMODULE remoteDllBase = HookHelper::GetRemoteModuleBase(processId, Util::g_thisModulePath.c_str());
@@ -196,6 +206,11 @@ HRESULT GlassService::InjectOpenGlassDLL(DWORD processId, bool inject)
 		const auto remoteInit = reinterpret_cast<LPTHREAD_START_ROUTINE>(reinterpret_cast<uint8_t*>(remoteDllBase) + initOffset);
 		const auto initThread = CreateRemoteThreadWithNTAPI(remoteInit, nullptr);
 		RETURN_LAST_ERROR_IF_NULL(initThread);
+
+		// Injection is not complete until Startup has finished publishing its hooks.
+		DWORD exitCode{};
+		RETURN_IF_FAILED(WaitForRemoteThread(initThread.get(), &exitCode));
+		RETURN_IF_FAILED(static_cast<HRESULT>(exitCode));
 	}
 	else
 	{
@@ -208,6 +223,11 @@ HRESULT GlassService::InjectOpenGlassDLL(DWORD processId, bool inject)
 		const auto remoteUninit = reinterpret_cast<LPTHREAD_START_ROUTINE>(reinterpret_cast<uint8_t*>(remoteDllBase) + uninitOffset);
 		const auto uninitThread = CreateRemoteThreadWithNTAPI(remoteUninit, nullptr);
 		RETURN_LAST_ERROR_IF_NULL(uninitThread);
+
+		// FreeLibraryAndExitThread marks the end of the DLL's owned lifetime.
+		DWORD exitCode{};
+		RETURN_IF_FAILED(WaitForRemoteThread(uninitThread.get(), &exitCode));
+		RETURN_IF_FAILED(static_cast<HRESULT>(exitCode));
 	}
 
 	return S_OK;
