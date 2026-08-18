@@ -57,7 +57,6 @@ HRESULT AccentOverrider::MyCAccent_UpdateAccentPolicy(
 	}
 
 	if (
-		policy->AccentState != 1 &&
 		policy->AccentState != 3 &&
 		policy->AccentState != 4
 	)
@@ -106,14 +105,17 @@ HRESULT AccentOverrider::MyCAccent__UpdateSolidFill(
 	const auto window = uDWM::TryGetWindowFromVisual(This);
 	if (!window)
 	{
-		visual->ClearInstructions();
 		return result;
 	}
 
 	auto data = window->GetData();
 	if (!data)
 	{
-		visual->ClearInstructions();
+		return result;
+	}
+
+	if (data->GetAccentPolicy()->AccentState == 1)
+	{
 		return result;
 	}
 
@@ -276,6 +278,11 @@ void AccentOverrider::MyCAccent_SetClipRegion(
 
 	auto data = window->GetData();
 	if (!data)
+	{
+		return g_CAccent_SetClipRegion_Org(This, geometry);
+	}
+
+	if (data->GetAccentPolicy()->AccentState == 1)
 	{
 		return g_CAccent_SetClipRegion_Org(This, geometry);
 	}
