@@ -33,8 +33,25 @@ class ProjectionLayoutValidationTests(unittest.TestCase):
 	def tearDown(self) -> None:
 		self.temporary.cleanup()
 
-	def write(self, module: str, layouts: list[dict]) -> None:
-		payload = {"schema_version": 2, "module": module, "namespace": module, "tag": "Tag", "symbols": [], "layouts": layouts}
+	def write(
+		self,
+		module: str,
+		layouts: list[dict],
+		min_inclusive: dict[str, int] | None = None,
+		max_exclusive: dict[str, int] | None = None,
+	) -> None:
+		payload = {
+			"schema_version": 2,
+			"module": module,
+			"namespace": module,
+			"tag": "Tag",
+			"symbols": [],
+			"layouts": layouts,
+		}
+		if min_inclusive is not None:
+			payload["min_inclusive"] = min_inclusive
+		if max_exclusive is not None:
+			payload["max_exclusive"] = max_exclusive
 		(self.repo / "OpenGlass" / "ProjectionSchemas" / self.architecture / f"{module}.json").write_text(json.dumps(payload), encoding="utf-8")
 
 	def test_precise_boundaries_and_unsupported(self) -> None:
@@ -70,6 +87,34 @@ class ProjectionLayoutValidationTests(unittest.TestCase):
 		self.assertEqual(result["summary"]["errors"], 1)
 		self.assertEqual(result["modules"][0]["tables"], [])
 		self.assertIn("notes must be a non-empty string", result["findings"][0]["message"])
+
+	def test_module_range_bounds_otherwise_case(self) -> None:
+		layout = {
+			"name": "Field",
+			"id": "Class.Field",
+			"kind": "field",
+			"type": "int",
+			"cases": [{"offset": "4", "otherwise": True}],
+		}
+		self.write(
+			"udwm",
+			[layout],
+			{"build": 100, "revision": 10},
+			{"build": 200, "revision": 0},
+		)
+		self.write("dwmcore", [])
+		inside = VALIDATOR.inspect(
+			self.repo, self.architecture, VALIDATOR.Version(100, 10), "udwm"
+		)["modules"][0]
+		outside = VALIDATOR.inspect(
+			self.repo, self.architecture, VALIDATOR.Version(200, 0), "udwm"
+		)["modules"][0]
+		self.assertEqual(inside["tables"][0]["selection"]["left_inclusive"], {"build": 100, "revision": 10})
+		self.assertEqual(inside["tables"][0]["selection"]["right_exclusive"], {"build": 200, "revision": 0})
+		self.assertTrue(inside["version_supported"])
+		self.assertEqual(inside["tables"][0]["selection"]["status"], "matched")
+		self.assertFalse(outside["version_supported"])
+		self.assertEqual(outside["tables"][0]["selection"]["status"], "module_unsupported")
 
 	def test_full_windows_version_id_filter_and_open_endpoint(self) -> None:
 		layouts = [

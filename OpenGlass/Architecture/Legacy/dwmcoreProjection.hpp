@@ -690,19 +690,6 @@ namespace OpenGlass::dwmcore
 			OPENGLASS_MUSTTAIL
 			return Projection::Invoke<&CDrawingContext::ApplyRenderStateInternal>(this, skipFlushingDeferredClipping);
 		}
-		inline CVisual* GetCurrentVisual() const
-		{
-			OPENGLASS_MUSTTAIL
-			return Projection::Invoke<&CDrawingContext::GetCurrentVisual>(this);
-		}
-
-		CVisual* GetCurrentVisualHelper() const
-		{
-			return (g_versionInfo.build >= os::build_w11_24h2
-						? this
-						: reinterpret_cast<dwmcore::CDrawingContext*>(GetD2DContextOwner()))
-				->GetCurrentVisual();
-		}
 		float GetSDRBoost() const
 		{
 			if (g_versionInfo.build < os::build_w10_2004)
@@ -768,6 +755,10 @@ namespace OpenGlass::dwmcore
 		inline const CMILMatrix* GetDeviceTransform() const
 		{
 			return COcclusionContext_GetDeviceTransform.address(this);
+		}
+		inline CMILMatrix& GetMutableDeviceTransform()
+		{
+			return COcclusionContext_GetDeviceTransform.ref(this);
 		}
 		inline UINT* GetDeviceTransformFlag()
 		{

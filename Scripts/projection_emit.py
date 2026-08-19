@@ -165,6 +165,9 @@ def generate_registry_inc(schemas: Sequence[ProjectionSchema]) -> str:
                 return 0
             return add_version(f"{value['build']}u", f"{value.get('revision', 0)}u")
 
+        supported_minimum_index = add_json_version(schema.get("min_inclusive"))
+        supported_maximum_index = add_json_version(schema.get("max_exclusive"))
+
         symbol_rows: list[str] = []
         binding_rows: list[str] = []
         binding_assertions: list[str] = []
@@ -231,6 +234,10 @@ def generate_registry_inc(schemas: Sequence[ProjectionSchema]) -> str:
             f"namespace {generated_namespace}",
             "{",
             f"\tconstexpr char g_{module}StringPool[] = {pool.cpp_literal()};",
+            f"\tconstexpr ULONG g_{module}KnownBuilds[] =",
+            "\t{",
+            *[f"\t\t{build}u," for build in schema["known_builds"]],
+            "\t};",
             f"\tconstexpr size_t g_{module}SymbolNameOffsets[] =",
             "\t{",
             *[f"\t\t{offset}," for offset in symbol_name_offsets],
@@ -269,11 +276,13 @@ def generate_registry_inc(schemas: Sequence[ProjectionSchema]) -> str:
             f"\tconstinit Projection::ModuleRegistry g_registry{{",
             f"\t\t\"{'uDWM.dll' if module == 'udwm' else 'dwmcore.dll'}\",",
             f"\t\tGenerated::g_{module}StringPool, std::span{{Generated::g_{module}SymbolNameOffsets}}, std::span{{Generated::g_{module}Versions}},",
+            f"\t\tstd::span{{Generated::g_{module}KnownBuilds}},",
             f"\t\tstd::span{{Generated::g_{module}SymbolSpecs}},",
             f"\t\tstd::span{{Generated::g_{module}Candidates}}, std::span{{Generated::g_{module}Resolved}},",
             f"\t\tstd::span{{Generated::g_{module}ResolutionStates}}, std::span{{Generated::g_{module}Bindings}},",
             f"\t\tstd::span{{Generated::g_{module}LayoutSpecs}}, std::span{{Generated::g_{module}LayoutCases}},",
-            f"\t\tstd::span{{Generated::g_{module}SelectedOffsets}}, std::span{{Generated::g_{module}LayoutSupported}}}};",
+            f"\t\tstd::span{{Generated::g_{module}SelectedOffsets}}, std::span{{Generated::g_{module}LayoutSupported}},",
+            f"\t\tProjection::VersionRange{{Generated::g_{module}Versions[{supported_minimum_index}], Generated::g_{module}Versions[{supported_maximum_index}]}}}};",
             "}",
             "",
         ])

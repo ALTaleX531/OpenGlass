@@ -612,18 +612,8 @@ void OpenGlass::Startup()
 	wil::unique_rouninitialize_call wrtScope{};
 
 	if (
-		constexpr std::array supportList
-		{
-			os::build_w10_1809,
-			os::build_w10_1903,
-			os::build_w10_2004,
-			os::build_server_2022,
-			os::build_w11_21h2,
-			os::build_w11_22h2,
-			os::build_w11_24h2,
-		};
-		std::find(supportList.begin(), supportList.end(), uDWM::g_versionInfo.build) == supportList.end() ||
-		std::find(supportList.begin(), supportList.end(), dwmcore::g_versionInfo.build) == supportList.end()
+		!uDWM::g_registry.RecognizesBuild(uDWM::g_versionInfo.build) ||
+		!dwmcore::g_registry.RecognizesBuild(dwmcore::g_versionInfo.build)
 	)
 	{
 		auto result = 0;

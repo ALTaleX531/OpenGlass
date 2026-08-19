@@ -207,6 +207,7 @@ namespace
 		std::array<char, 512> strings{};
 		std::array<size_t, 8> symbolNameOffsets{};
 		std::array<Projection::Version, 4> versions{};
+		std::array<ULONG, 2> knownBuilds{200, 250};
 		std::array<Projection::SymbolSpec, SymbolCount> symbols{};
 		std::array<PVOID, SymbolCount> candidates{};
 		std::array<PVOID, SymbolCount> resolved{};
@@ -216,12 +217,12 @@ namespace
 		std::array<Projection::LayoutCase, CaseCount> cases{};
 		Projection::ModuleRegistry registry;
 
-		RegistryStorage()
+		RegistryStorage(Projection::VersionRange supportedRange = Projection::all_versions)
 			: registry{
-				"test", strings.data(), std::span{symbolNameOffsets}, std::span{versions}, std::span{symbols},
-				std::span{candidates}, std::span{resolved}, std::span{resolutionStates}, std::span{bindings},
-				std::span{layouts}, std::span{cases}, std::span{g_layoutOffsets}.first(LayoutCount),
-				std::span{g_layoutSupported}.first(LayoutCount)
+				"test", strings.data(), std::span{symbolNameOffsets}, std::span{versions}, std::span{knownBuilds},
+				std::span{symbols}, std::span{candidates}, std::span{resolved}, std::span{resolutionStates},
+				std::span{bindings}, std::span{layouts}, std::span{cases}, std::span{g_layoutOffsets}.first(LayoutCount),
+				std::span{g_layoutSupported}.first(LayoutCount), supportedRange
 			}
 		{
 		}
@@ -270,6 +271,17 @@ namespace
 		Check(!Projection::VersionBefore({200, 0}, {200, 0}));
 		Check(Projection::VersionBefore({200, 9}, {200, 10}));
 		Check(!Projection::VersionBefore({200, 10}, {200, 10}));
+
+		const Projection::VersionRange supportedRange{{200, 10}, {300, 0}};
+		RegistryStorage<0, 0, 0, 0> bounded{supportedRange};
+		Check(!bounded.registry.SupportsVersion({200, 9}));
+		Check(bounded.registry.RecognizesBuild(200));
+		Check(!bounded.registry.RecognizesBuild(201));
+		Check(bounded.registry.RecognizesBuild(250));
+		Check(!bounded.registry.Freeze({200, 9}));
+		Check(!bounded.registry.descriptor_error());
+		Check(bounded.registry.Freeze({200, 10}));
+		Check(!bounded.registry.Freeze({300, 0}));
 
 		RegistryStorage<0, 0, 5, 7> storage;
 		storage.versions[1] = {200, 0};

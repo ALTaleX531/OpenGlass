@@ -1,8 +1,25 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "module": "dwmcore",
   "namespace": "OpenGlass::dwmcore",
   "tag": "ProjectionModuleTag",
+  "min_inclusive": {
+    "build": 17763,
+    "revision": 0
+  },
+  "max_exclusive": {
+    "build": 28000,
+    "revision": 0
+  },
+  "known_builds": [
+    17763,
+    18362,
+    19041,
+    20348,
+    22000,
+    22621,
+    26100
+  ],
   "symbols": [
     {
       "name": "Symbol_CChannel_MatrixTransformUpdate",
@@ -359,7 +376,7 @@
       },
       "kind": "raw",
       "type": "bool (*)(CArrayBasedCoverageSet*, const D2D1_RECT_F&, int, bool)",
-      "notes": "This implementation scans 36-byte coverage entries. DrawVisualTree calls it, but GetOptimizedRect still uses GetLargestOccluder directly; keep the direct GetOptimizedRect detour active throughout this interval."
+      "notes": "Paired PDBs for 26100.1, 26100.3624, and 26100.3775 expose no complete name for CArrayBasedCoverageSet::IsCovered; do not infer class removal because the implementation may be inlined. The emitted symbol first resolves at 26100.3912. This implementation scans 36-byte coverage entries. DrawVisualTree calls it, but GetOptimizedRect still uses GetLargestOccluder directly; keep the direct GetOptimizedRect detour active throughout this interval."
     },
     {
       "name": "Symbol_CD2DContext_DestroyDeviceResources",
@@ -518,19 +535,6 @@
       "min_inclusive": null,
       "max_exclusive": null,
       "target": "&CDrawingContext::ApplyRenderStateInternal",
-      "kind": "projected_function"
-    },
-    {
-      "name": "Symbol_CDrawingContext_GetCurrentVisual",
-      "id": "CDrawingContext::GetCurrentVisual",
-      "symbol_names": [
-        "public: virtual class CVisual * __ptr64 __cdecl CDrawingContext::GetCurrentVisual(void)const __ptr64",
-        "public: class CVisual * __ptr64 __cdecl CDrawingContext::GetCurrentVisual(void)const __ptr64"
-      ],
-      "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
-      "target": "&CDrawingContext::GetCurrentVisual",
       "kind": "projected_function"
     },
     {
@@ -2342,7 +2346,7 @@
   ],
   "notes": [
     "Reverse-engineering guidance migrated verbatim from the pre-codegen offset table:",
-    "============================================================================\ndwmcore Offset Stability Rules\n============================================================================\ndwmcore.dll is recompiled at major build boundaries. Offsets only change at\nthese recompile points:\n\n  17763 — Windows 10 1809 (minimum supported)\n  18362 — Windows 10 1903, 1909\n  19041 — Windows 10 2004, 20H2, 21H1, 21H2, 22H2\n  20348 — Windows Server 2022\n  22621 — Windows 11 22H2, 23H2\n  26100 — Windows 11 24H2, 25H2\n  28100 — Windows 11 26H1+ (MIL brush infrastructure partially removed)\n\n26H1+ Gate: MIL brushes (CImageLegacyMilBrush, CSolidColorLegacyMilBrush,\n  CLegacyMilBrush) are REMOVED. IDrawingContext interface absorbed/removed.\n  COcclusionContext, CDrawingContext core, CD3DDevice still exist.\n  Always gate each class — do NOT assume existence.\n\nTier 1 — COcclusionContext is the CANARY class: all 6 offsets are the most\nvolatile across CUs. If they change, they tend to shift together by the same\nbyte delta. Check COcclusionContext FIRST before auditing any other class.\n\nTier 2 — CDrawingContext WorldTransform shifts between major builds.\n  CRenderData_GetResources grows ~8 bytes per major version.\n\nTier 3 — Brush family stable within a recompile boundary (but removed 26H1+).\n  CShape vtable slots: consistent across derived classes, stable across\n  builds.\n\nTier 4 — CD3DDevice/CD2DContext: historically frozen across all Win11 builds.\n\nInterval semantics: until<BUILD, REVISION>() supplies an exclusive RIGHT\nboundary. otherwise() is the explicit open-ended fallback. If otherwise()\nis absent, later versions are unsupported; that does not by itself prove\nthe member or owning class was removed.\n============================================================================",
+    "============================================================================\ndwmcore Offset Stability Rules\n============================================================================\ndwmcore.dll is recompiled at major build boundaries. Offsets only change at\nthese recompile points:\n\n  17763 — Windows 10 1809 (minimum supported)\n  18362 — Windows 10 1903, 1909\n  19041 — Windows 10 2004, 20H2, 21H1, 21H2, 22H2\n  20348 — Windows Server 2022\n  22621 — Windows 11 22H2, 23H2\n  26100 — Windows 11 24H2, 25H2\n  28000 — Windows 11 26H1+ (MIL brush infrastructure partially removed)\n\n26H1+ Gate: MIL brushes (CImageLegacyMilBrush, CSolidColorLegacyMilBrush,\n  CLegacyMilBrush) are REMOVED. IDrawingContext interface absorbed/removed.\n  COcclusionContext, CDrawingContext core, CD3DDevice still exist.\n  Always gate each class — do NOT assume existence.\n\nTier 1 — COcclusionContext is the CANARY class: all 6 offsets are the most\nvolatile across CUs. If they change, they tend to shift together by the same\nbyte delta. Check COcclusionContext FIRST before auditing any other class.\n\nTier 2 — CDrawingContext WorldTransform shifts between major builds.\n  CRenderData_GetResources grows ~8 bytes per major version.\n\nTier 3 — Brush family stable within a recompile boundary (but removed 26H1+).\n  CShape vtable slots: consistent across derived classes, stable across\n  builds.\n\nTier 4 — CD3DDevice/CD2DContext: historically frozen across all Win11 builds.\n\nInterval semantics: until<BUILD, REVISION>() supplies an exclusive RIGHT\nboundary. otherwise() is the explicit open-ended fallback. If otherwise()\nis absent, later versions are unsupported; that does not by itself prove\nthe member or owning class was removed.\n============================================================================",
     "This schema is the editable source of truth; generated headers must preserve these notes."
   ]
 }

@@ -8,7 +8,15 @@ namespace OpenGlass::GlassFrameDemodernizer
 {
 	HRESULT MyCTopLevelWindow_ValidateVisual(uDWM::CTopLevelWindow* This);
 	HRESULT MyCTopLevelWindow_UpdateNCAreaBackground(uDWM::CTopLevelWindow* This);
-	bool WINAPI MySetMargin(
+	extern "C" bool WINAPI MySetMargin(
+		MARGINS* dstMargins,
+		int cxLeftWidth,
+		int cxRightWidth,
+		int cyTopHeight,
+		int cyBottomHeight,
+		const MARGINS* srcMargins
+	);
+	extern "C" bool WINAPI MySetMargin_Impl(
 		MARGINS* dstMargins,
 		int cxLeftWidth,
 		int cxRightWidth,
@@ -19,7 +27,7 @@ namespace OpenGlass::GlassFrameDemodernizer
 
 	Projection::ChainDetour<uDWM::Symbol_CTopLevelWindow_ValidateVisual, decltype(&MyCTopLevelWindow_ValidateVisual)> g_CTopLevelWindow_ValidateVisual_Org{};
 	Projection::ChainDetour<uDWM::Symbol_CTopLevelWindow_UpdateNCAreaBackground, decltype(&MyCTopLevelWindow_UpdateNCAreaBackground)> g_CTopLevelWindow_UpdateNCAreaBackground_Org{};
-	Projection::Detour<uDWM::Symbol_SetMargin, decltype(&MySetMargin)> g_SetMargin_Org{};
+	Projection::CustomDispatchDetour<uDWM::Symbol_SetMargin, decltype(&MySetMargin)> g_SetMargin_Org{};
 
 	UCHAR g_callCDesktopManager_IsHighContrastMode_Instructions[]
 	{
@@ -142,7 +150,7 @@ HRESULT GlassFrameDemodernizer::MyCTopLevelWindow_UpdateNCAreaBackground(uDWM::C
 	return g_CTopLevelWindow_UpdateNCAreaBackground_Org(This);
 }
 
-bool WINAPI GlassFrameDemodernizer::MySetMargin(
+bool WINAPI GlassFrameDemodernizer::MySetMargin_Impl(
 	MARGINS* dstMargins,
 	int cxLeftWidth,
 	int cxRightWidth,
@@ -151,11 +159,22 @@ bool WINAPI GlassFrameDemodernizer::MySetMargin(
 	const MARGINS* srcMargins
 )
 {
-	return g_SetMargin_Org(
+	return g_SetMargin_Org.Dispatch(
+		[](MARGINS* destination, int left, int right, int top, int bottom, const MARGINS* source)
+		{
+			return g_SetMargin_Org(
+				destination,
+				left,
+				right,
+				Shared::g_disableModernBorders ? std::max(0, top) : top,
+				bottom,
+				source
+			);
+		},
 		dstMargins,
 		cxLeftWidth,
 		cxRightWidth,
-		Shared::g_disableModernBorders ? std::max(0, cyTopHeight) : cyTopHeight,
+		cyTopHeight,
 		cyBottomHeight,
 		srcMargins
 	);

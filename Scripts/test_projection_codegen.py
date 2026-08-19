@@ -25,7 +25,8 @@ def schema(module: str, *, projected: bool) -> dict:
 		})
 		invoke = "Projection::Invoke<&Test::Run>();"
 	return {
-		"schema_version": 2, "module": module, "namespace": f"OpenGlass::{module}", "tag": "ModuleTag",
+		"schema_version": projection_schema.SCHEMA_VERSION, "module": module, "namespace": f"OpenGlass::{module}", "tag": "ModuleTag",
+		"known_builds": [100],
 		"symbols": symbols,
 		"layouts": [{"name": "Test_Field", "id": "Test.Field", "kind": "field", "type": "int", "cases": [
 			{"offset": "2 * sizeof(void*)", "until": {"build": "os::build_test", "revision": "0"}},
@@ -343,6 +344,56 @@ class ProjectionCodegenTests(unittest.TestCase):
 		self.write("dwmcore", bad)
 		with self.assertRaisesRegex(projection_schema.SchemaError, r"raw symbol schema has no direct consumer"):
 			codegen.run(self.repo, self.architecture, self.output, False)
+
+	def test_emits_module_supported_version_range(self) -> None:
+		value = schema("dwmcore", projected=False)
+		value["min_inclusive"] = {"build": 100, "revision": 1}
+		value["max_exclusive"] = {"build": 100, "revision": 3}
+		self.write("dwmcore", value)
+		validated = projection_schema.validate_schema(
+			self.repo / "OpenGlass" / "ProjectionSchemas" / self.architecture / "dwmcore.json",
+			"dwmcore",
+			projection_source_check.load_os_constants(self.repo),
+		)
+		generated = projection_emit.generate_registry_inc([validated])
+		self.assertIn("Projection::VersionRange{Generated::g_dwmcoreVersions[1], Generated::g_dwmcoreVersions[2]}", generated)
+		self.assertIn("constexpr ULONG g_dwmcoreKnownBuilds[]", generated)
+		self.assertIn("100u,", generated)
+		self.assertIn("std::span{Generated::g_dwmcoreKnownBuilds}", generated)
+
+	def test_rejects_inverted_module_supported_version_range(self) -> None:
+		value = schema("dwmcore", projected=False)
+		value["min_inclusive"] = {"build": 100, "revision": 3}
+		value["max_exclusive"] = {"build": 100, "revision": 3}
+		self.write("dwmcore", value)
+		with self.assertRaisesRegex(projection_schema.SchemaError, r"max_exclusive must follow min_inclusive"):
+			projection_schema.validate_schema(
+				self.repo / "OpenGlass" / "ProjectionSchemas" / self.architecture / "dwmcore.json",
+				"dwmcore",
+				projection_source_check.load_os_constants(self.repo),
+			)
+
+	def test_rejects_invalid_known_builds(self) -> None:
+		for known_builds, message in (
+			([], "must not be empty"),
+			([0], "must contain nonzero builds"),
+			([100, 100], "must be strictly increasing"),
+			([101, 100], "must be strictly increasing"),
+			([99], "outside the module version range"),
+			([101], "outside the module version range"),
+		):
+			with self.subTest(known_builds=known_builds):
+				value = schema("dwmcore", projected=False)
+				value["min_inclusive"] = {"build": 100, "revision": 1}
+				value["max_exclusive"] = {"build": 101, "revision": 0}
+				value["known_builds"] = known_builds
+				self.write("dwmcore", value)
+				with self.assertRaisesRegex(projection_schema.SchemaError, message):
+					projection_schema.validate_schema(
+						self.repo / "OpenGlass" / "ProjectionSchemas" / self.architecture / "dwmcore.json",
+						"dwmcore",
+						projection_source_check.load_os_constants(self.repo),
+					)
 
 	def test_metadata_counts_are_not_byte_sized(self) -> None:
 		large = schema("udwm", projected=False)

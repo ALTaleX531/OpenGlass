@@ -32,10 +32,6 @@ namespace OpenGlass::dwmcore
 	struct CDesktopTree : CVisualTree {};
 	struct CVisual : CResource
 	{
-		inline HWND GetHwnd() const
-		{
-			OPENGLASS_MUSTTAIL return Projection::Invoke<&CVisual::GetHwnd>(this);
-		}
 		inline CGeometry* GetClipNoRef() const
 		{
 			OPENGLASS_MUSTTAIL return Projection::Invoke<&CVisual::GetClipNoRef>(this);
@@ -429,18 +425,30 @@ namespace OpenGlass::dwmcore
 		float,
 		CVisual*
 	);
+	namespace MilSourceModification
+	{
+		enum class FlagsEnum : int;
+	}
+	template <typename T>
+	struct TMILFlagsEnum
+	{
+		T value;
+	};
+	using MilSourceModificationFlags = TMILFlagsEnum<MilSourceModification::FlagsEnum>;
+	static_assert(sizeof(MilSourceModificationFlags) == sizeof(int));
+
 	using COcclusionContext_CheckAndRecordOverlayCandidate_t = HRESULT(*)(
 		COcclusionContext*,
 		CVisual*,
 		CCompositionSurfaceInfo*,
 		const CMILMatrix&,
 		const CShape*,
-		int
+		MilSourceModificationFlags
 	);
 	using COcclusionContext_Compute_t = HRESULT(*)(
 		COcclusionContext*,
 		const CVisualTree*,
-		const DWM::span<D2D1_RECT_F>&,
+		const DWM::span<const D2D1_RECT_F>&,
 		float,
 		const DWM::span<COverlayContext*>&
 	);

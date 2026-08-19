@@ -345,6 +345,7 @@ def inspect(args: argparse.Namespace) -> dict[str, Any]:
 		schema = projection_schema.validate_schema(schema_path, args.module, constants)
 	except projection_schema.SchemaError as error:
 		raise AuditError(str(error)) from error
+	module_supported = in_range(requested, schema)
 	descriptors = []
 	for symbol in schema.get("symbols", []):
 		if args.stable_id and symbol.get("id") != args.stable_id:
@@ -384,6 +385,11 @@ def inspect(args: argparse.Namespace) -> dict[str, Any]:
 		"schema_version": SCHEMA_VERSION, "architecture": args.architecture, "module": args.module,
 		"configuration": args.configuration,
 		"requested_version": requested.json(), "image_version": actual_version.json() if actual_version else None,
+		"module_range": {
+			"min_inclusive": schema.get("min_inclusive"),
+			"max_exclusive": schema.get("max_exclusive"),
+		},
+		"module_supported": module_supported,
 		"image": {"path": str(image), "sha256": sha256_file(image), "codeview": image_identity.json()},
 		"pdb": {"path": str(pdb), "sha256": sha256_file(pdb), "identity": pdb_identity.json(), "paired": paired},
 		"dbghelp": {
@@ -402,6 +408,7 @@ def print_text(result: dict[str, Any]) -> None:
 		f"{result['requested_version']['build']}.{result['requested_version']['revision']} "
 		f"({result['configuration']})"
 	)
+	print(f"Module support range contains version: {result['module_supported']}")
 	print(f"Evidence: {result['evidence']} (PDB paired: {result['pdb']['paired']})")
 	for issue in result["evidence_issues"]:
 		print(f"  Discovery limitation: {issue}")

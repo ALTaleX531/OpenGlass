@@ -425,7 +425,10 @@ void GlassFrameDemodernizer::Startup()
 		{
 			{ &g_CTopLevelWindow_ValidateVisual_Org, &MyCTopLevelWindow_ValidateVisual },
 			{ &g_CTopLevelWindow_UpdateNCAreaBackground_Org, &MyCTopLevelWindow_UpdateNCAreaBackground },
-			{ &g_SetMargin_Org, &MySetMargin },
+			{
+				&g_SetMargin_Org,
+				uDWM::g_versionInfo.build >= os::build_w11_24h2 ? &MySetMargin : &MySetMargin_Impl
+			},
 		},
 		true
 	);
@@ -443,7 +446,10 @@ void GlassFrameDemodernizer::Shutdown()
 		{
 			{ &g_CTopLevelWindow_ValidateVisual_Org, &MyCTopLevelWindow_ValidateVisual },
 			{ &g_CTopLevelWindow_UpdateNCAreaBackground_Org, &MyCTopLevelWindow_UpdateNCAreaBackground },
-			{ &g_SetMargin_Org, &MySetMargin },
+			{
+				&g_SetMargin_Org,
+				uDWM::g_versionInfo.build >= os::build_w11_24h2 ? &MySetMargin : &MySetMargin_Impl
+			},
 		},
 		false
 	);

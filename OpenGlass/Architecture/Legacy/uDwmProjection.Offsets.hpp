@@ -14,7 +14,7 @@
 //   22000 — Windows 11 21H2 RTM (Build 22000)
 //   22621 — Windows 11 22H2, 23H2
 //   26100 — Windows 11 24H2, 25H2
-//   28100 — Windows 11 26H1+ (MIL infrastructure removed)
+//   28000 — Windows 11 26H1+ (MIL infrastructure removed)
 //
 // Feature gates:
 //   GetSystemBackdropType → 21H2+

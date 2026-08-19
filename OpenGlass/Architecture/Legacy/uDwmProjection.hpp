@@ -204,6 +204,10 @@ namespace OpenGlass::uDWM
 		{
 			return *CVisual_GetOffset.address(this);
 		}
+		inline POINT& GetMutableOffset()
+		{
+			return CVisual_GetOffset.ref(this);
+		}
 		LONG GetX() const
 		{
 			return GetOffset().x;

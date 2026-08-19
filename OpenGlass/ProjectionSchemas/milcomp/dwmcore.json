@@ -1,8 +1,16 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "module": "dwmcore",
   "namespace": "OpenGlass::dwmcore",
   "tag": "ProjectionModuleTag",
+  "min_inclusive": {
+    "build": 28000,
+    "revision": 0
+  },
+  "max_exclusive": null,
+  "known_builds": [
+    28000
+  ],
   "symbols": [
     {
       "name": "Symbol_CChannel_CombinedGeometryUpdate",
@@ -14,18 +22,6 @@
       "min_inclusive": null,
       "max_exclusive": null,
       "target": "&CChannel::CombinedGeometryUpdate",
-      "kind": "projected_function"
-    },
-    {
-      "name": "Symbol_CVisual_GetHwnd",
-      "id": "CVisual::GetHwnd",
-      "symbol_names": [
-        "protected: virtual struct HWND__ * __ptr64 __cdecl CVisual::GetHwnd(void)const __ptr64"
-      ],
-      "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
-      "target": "&CVisual::GetHwnd",
       "kind": "projected_function"
     },
     {
@@ -320,7 +316,8 @@
       "min_inclusive": null,
       "max_exclusive": null,
       "kind": "raw",
-      "type": "COcclusionContext_CheckAndRecordOverlayCandidate_t"
+      "type": "COcclusionContext_CheckAndRecordOverlayCandidate_t",
+      "notes": "On paired 28000.2525 dwmcore.dll, all three direct callers pass the TMILFlagsEnum value in one 32-bit argument slot and the callee consumes and forwards that slot as a 32-bit value. Model the one-enum aggregate explicitly instead of substituting int."
     },
     {
       "name": "Symbol_COcclusionContext_PreSubgraph",
@@ -346,7 +343,8 @@
       "min_inclusive": null,
       "max_exclusive": null,
       "kind": "raw",
-      "type": "COcclusionContext_Compute_t"
+      "type": "COcclusionContext_Compute_t",
+      "notes": "On paired 28000.2525 dwmcore.dll, Compute reads both span references as length at +0 followed by data at +8. Rectangle elements are read-only; overlay elements are COverlayContext pointers. DWM::span preserves this two-word gsl::span layout while retaining the rectangle element constness."
     },
     {
       "name": "Symbol_COcclusionContext_COcclusionContext",
@@ -473,7 +471,7 @@
           "otherwise": true
         }
       ],
-      "notes": "CColorBrush"
+      "notes": "CColorBrush::GetColor reads the inline D2D1_COLOR_F stored by the color-brush update path."
     },
     {
       "name": "CArrayBasedCoverageSet_GetOccluderArray",
@@ -499,7 +497,7 @@
           "otherwise": true
         }
       ],
-      "notes": "Render target info"
+      "notes": "Resolve from the render-target-info value returned by ID2DContextOwner::GetCurrentRenderTargetInfo and cross-check the SDR boost consumer."
     },
     {
       "name": "ID2DContextOwner_GetCurrentZ",
@@ -508,11 +506,11 @@
       "type": "ID2DContextOwner_GetCurrentZ_t",
       "cases": [
         {
-          "offset": "8",
+          "offset": "1 * sizeof(ULONG_PTR)",
           "otherwise": true
         }
       ],
-      "notes": "ID2DContextOwner vtable from CDrawingContext::Create (at this + 24).\nRead the vtable — function names in each slot are self-explanatory.\nGetCurrentZ: slot ?\nslot_index × sizeof(ULONG_PTR)"
+      "notes": "Locate the ID2DContextOwner subobject through CDrawingContext::Create and confirm the adjusted-this vtable dispatch in an independent caller before accepting this slot."
     },
     {
       "name": "ID2DContextOwner_GetCurrentRenderTargetInfo",
@@ -521,11 +519,11 @@
       "type": "ID2DContextOwner_GetCurrentRenderTargetInfo_t",
       "cases": [
         {
-          "offset": "16",
+          "offset": "2 * sizeof(ULONG_PTR)",
           "otherwise": true
         }
       ],
-      "notes": "ID2DContextOwner vtable from CDrawingContext::Create (at this + 24).\nGetCurrentRenderTargetInfo: slot ?\nslot_index × sizeof(ULONG_PTR)"
+      "notes": "Locate the ID2DContextOwner subobject through CDrawingContext::Create and confirm the returned RenderTargetInfo in an independent SDR-boost consumer before accepting this slot."
     },
     {
       "name": "CD2DContext_GetDeviceContext",
@@ -590,7 +588,7 @@
           "otherwise": true
         }
       ],
-      "notes": "IDeviceTarget vtable — known systemic ICF, unresolvable\nThis function slot has been merged with CPassthroughEffect/CKernelTransport symbols across builds\nslot_index × sizeof(ULONG_PTR)"
+      "notes": "IDeviceTarget vtable — known systemic ICF, unresolvable\nThis function slot has been merged with CPassthroughEffect/CKernelTransport symbols across builds."
     },
     {
       "name": "IDeviceTarget_GetDeviceTexture",
@@ -616,7 +614,7 @@
           "otherwise": true
         }
       ],
-      "notes": "CDeviceTextureTarget has complex inheritance (possible diamond):\nCD2DBitmap → CDeviceResourceT → CMILCOMBaseT → ...\n9+ vtable pointers: ID2DBitmapCacheSource, IPixelFormat, IBitmapUnlock,\nIDeviceResource (standalone + embedded in combined vtables for\nIDeviceTexture and IDeviceTarget).\nFocus on extracting the specific offset, not full inheritance graph.\nCDeviceTextureTarget::GetTexture2D at vtable slot ?\nslot_index × sizeof(ULONG_PTR)"
+      "notes": "CDeviceTextureTarget has complex inheritance (possible diamond):\nCD2DBitmap → CDeviceResourceT → CMILCOMBaseT → ...\n9+ vtable pointers: ID2DBitmapCacheSource, IPixelFormat, IBitmapUnlock,\nIDeviceResource (standalone + embedded in combined vtables for\nIDeviceTexture and IDeviceTarget).\nConfirm GetTexture2D from the IDeviceTexture subobject and an independent texture consumer rather than reconstructing the full inheritance graph."
     },
     {
       "name": "IDeviceTexture_GetShaderResourceView",
@@ -629,7 +627,7 @@
           "otherwise": true
         }
       ],
-      "notes": "CDeviceTextureTarget::GetShaderResourceView at vtable slot ?\nslot_index × sizeof(ULONG_PTR)"
+      "notes": "Confirm GetShaderResourceView from the IDeviceTexture subobject and cross-check the returned view at its binding consumer."
     },
     {
       "name": "CDrawingContext_GetD3DDevice",
@@ -777,6 +775,7 @@
     }
   ],
   "notes": [
-    "MILComp compositor projection inventory; ABI evidence remains independent from Legacy."
+    "MILComp compositor projection inventory; ABI evidence remains independent from Legacy.",
+    "The build 28000 lower bound selects the MILComp architecture. Final otherwise cases intentionally carry the last known Layout forward to later revisions as a compatibility policy, not as proof that an unaudited binary is unchanged."
   ]
 }

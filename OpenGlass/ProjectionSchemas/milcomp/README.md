@@ -2,6 +2,10 @@
 
 `udwm.json` and `dwmcore.json` are the only editable projection inventories for the build 28000+ compositor architecture. Preserve their exact DbgHelp `UNDNAME_COMPLETE` names, ranges, offset expressions, and useful reverse-engineering guidance independently from Legacy. Use `notes` only for non-obvious semantic anchors, constructor/xref routes, adjusted-`this`, ABI traps, ICF/inlining ambiguity, or cross-checks; do not restate exact PDB names, ranges, visibility, ordinary consumers, or migration provenance. Stable IDs are diagnostic labels; exact `symbol_names` are the sole matching truth, without name-only, substring, decorated-name, or first-match fallbacks.
 
+Optional top-level `min_inclusive` and `max_exclusive` values bound the whole module inventory. `ModuleRegistry::Freeze` rejects a module version outside an explicitly declared range before symbol collection or hook preparation. MILComp deliberately has no upper bound: a final Layout `otherwise` case carries the last known offset into later revisions so ordinary version-only servicing updates remain usable. This is a compatibility policy, not evidence that an unaudited binary retained the layout; exact Required symbol resolution and the normal all-or-nothing projection validation still apply.
+
+Required top-level `known_builds` records the build families explicitly recognized for that module. Codegen emits this list into `ModuleRegistry`; startup suppresses the new-Windows-version warning only when both `uDWM.dll` and `dwmcore.dll` recognize their current builds. This warning policy is independent of the open-ended module compatibility range and Required projection validation: a known build is not by itself a runtime support claim.
+
 Generate or validate this architecture explicitly:
 
 ```powershell

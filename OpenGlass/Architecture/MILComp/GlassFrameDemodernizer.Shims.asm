@@ -5,10 +5,10 @@ PUBLIC MySetMargin
 
 .code
 
-; On build 26100+, UpdateMarginsDependentOnStyle privately reuses RCX after
-; its three-argument SetMargin wrapper returns. The wrapper and the original
-; six-argument helper both preserve RCX, so this must be the physical dispatcher
-; and restore RCX only after replacement, original call, and rundown release.
+; UpdateMarginsDependentOnStyle privately reuses RCX after its three-argument
+; SetMargin wrapper returns. The wrapper and the original six-argument helper
+; both preserve RCX, so this must be the physical dispatcher and restore RCX
+; only after replacement, original call, and rundown release.
 MySetMargin PROC FRAME
 	sub rsp, 38h
 	.allocstack 38h

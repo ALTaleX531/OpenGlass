@@ -91,6 +91,15 @@ def inspect(repo: Path, architecture: str, requested: Version | None, module_fil
 		except (OSError, UnicodeError) as error:
 			raise InputError(f"cannot read {relative}: {error}") from error
 		tables: list[dict[str, Any]] = []
+		module_minimum_raw = projection_schema.parse_version(schema.get("min_inclusive"), f"{relative}: min_inclusive")
+		module_maximum_raw = projection_schema.parse_version(schema.get("max_exclusive"), f"{relative}: max_exclusive")
+		module_minimum = Version(module_minimum_raw.build, module_minimum_raw.revision) if module_minimum_raw.build else None
+		module_maximum = Version(module_maximum_raw.build, module_maximum_raw.revision) if module_maximum_raw.build else None
+		module_supported = (
+			requested is None or
+			(module_minimum is None or requested >= module_minimum) and
+			(module_maximum is None or requested < module_maximum)
+		)
 		for table in schema.get("layouts", []):
 			stable_id = table.get("id")
 			line, column = location(text, str(stable_id))
@@ -118,14 +127,36 @@ def inspect(repo: Path, architecture: str, requested: Version | None, module_fil
 				left = boundary
 			selection: dict[str, Any] | None = None
 			if requested is not None:
-				if not valid:
+				if not module_supported:
+					selection = {"status": "module_unsupported"}
+				elif not valid:
 					selection = {"status": "invalid_table"}
 				else:
 					matched = next((entry for entry in entries if entry["right_exclusive"] is None or requested < Version(**entry["right_exclusive"])), None)
-					selection = ({"status": "matched", **matched} if matched else {"status": "unsupported", "left_inclusive": entries[-1]["right_exclusive"] if entries else None, "right_exclusive": None})
+					if matched:
+						selection = {"status": "matched", **matched}
+						left_boundary = Version(**matched["left_inclusive"]) if matched["left_inclusive"] else None
+						right_boundary = Version(**matched["right_exclusive"]) if matched["right_exclusive"] else None
+						if module_minimum is not None and (left_boundary is None or left_boundary < module_minimum):
+							selection["left_inclusive"] = module_minimum.json()
+						if module_maximum is not None and (right_boundary is None or module_maximum < right_boundary):
+							selection["right_exclusive"] = module_maximum.json()
+					else:
+						selection = {
+							"status": "unsupported",
+							"left_inclusive": entries[-1]["right_exclusive"] if entries else None,
+							"right_exclusive": module_maximum.json() if module_maximum else None,
+						}
 			if stable_id_filter is None or stable_id == stable_id_filter:
 				tables.append({"id": stable_id, "name": table.get("name"), "kind": table.get("kind"), "type": table.get("type"), "notes": notes if isinstance(notes, str) else None, "file": relative, "line": line, "column": column, "valid": valid, "terminal": terminal, "entries": entries, "selection": selection})
-		modules.append({"module": module, "schema": relative, "tables": tables})
+		modules.append({
+			"module": module,
+			"schema": relative,
+			"min_inclusive": module_minimum.json() if module_minimum else None,
+			"max_exclusive": module_maximum.json() if module_maximum else None,
+			"version_supported": module_supported,
+			"tables": tables,
+		})
 	if stable_id_filter is not None and not any(module["tables"] for module in modules):
 		raise InputError(f"Layout stable ID not found in selected module schema: {stable_id_filter}")
 	return {"schema_version": SCHEMA_VERSION, "architecture": architecture, "source_shape": "generated-projection-schema", "requested_version": requested.json() if requested else None, "requested_id": stable_id_filter, "modules": modules, "findings": findings, "summary": {"tables": sum(len(item["tables"]) for item in modules), "errors": sum(item["severity"] == "error" for item in findings)}}

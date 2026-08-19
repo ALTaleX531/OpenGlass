@@ -372,7 +372,7 @@ namespace OpenGlass::GlassIntegrity
 					{
 						deviceTransform = *occlusionContext->GetDeviceTransform();
 						*occlusionContext->GetDeviceTransformFlag() |= 0x1;
-						*const_cast<dwmcore::CMILMatrix*>(occlusionContext->GetDeviceTransform()) = *dwmcore::CMILMatrix::Identity;
+						occlusionContext->GetMutableDeviceTransform() = *dwmcore::CMILMatrix::Identity;
 					}
 				}
 			}
@@ -386,7 +386,7 @@ namespace OpenGlass::GlassIntegrity
 					if (!(deviceTransformFlag & 0x1))
 					{
 						*occlusionContext->GetDeviceTransformFlag() = deviceTransformFlag;
-						*const_cast<dwmcore::CMILMatrix*>(occlusionContext->GetDeviceTransform()) = deviceTransform;
+						occlusionContext->GetMutableDeviceTransform() = deviceTransform;
 					}
 					dirtyRect = nullptr;
 					deviceTransformFlag = 0;

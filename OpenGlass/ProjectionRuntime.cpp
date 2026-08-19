@@ -53,6 +53,13 @@ bool Projection::ModuleRegistry::Freeze(Version version) noexcept
 	m_version = version;
 	m_descriptorError = false;
 
+	if (!SupportsVersion(version))
+	{
+		std::fill_n(m_layoutSupported, m_layoutCount, false);
+		ResetSymbols();
+		return false;
+	}
+
 	for (const auto& spec : std::span{m_symbolSpecs, m_symbolCount})
 	{
 		if (!spec.nameCount || static_cast<size_t>(spec.firstNameIndex) + spec.nameCount > m_symbolNameCount ||

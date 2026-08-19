@@ -2,6 +2,10 @@
 
 `udwm.json` and `dwmcore.json` are the single editable sources for OpenGlass DWM Symbols, projected bindings, exact DbgHelp `UNDNAME_COMPLETE` names, version ranges, Layouts, ABI fallbacks, and reverse-engineering guidance. Use `notes` only for durable, non-obvious guidance: semantic anchors, constructor and xref routes, adjusted-`this` calculations, ABI traps, ICF/inlining ambiguity, and independent cross-checks. Exact PDB names, ranges, visibility, ordinary consumers, and migration provenance belong in their structured fields or source references rather than notes. Do not edit files under `$(IntDir)\Generated\Projection` or duplicate this inventory in C++.
 
+Optional top-level `min_inclusive` and `max_exclusive` values bound the whole module inventory. Legacy explicitly covers `[17763.0, 28000.0)`: `ModuleRegistry::Freeze` rejects versions outside that architecture range before symbol collection or hook preparation. A final Layout `otherwise` case carries the last known offset through later servicing revisions within the range, but never across the build 28000 MILComp architecture boundary.
+
+Required top-level `known_builds` records the build families explicitly recognized for that module. Codegen emits this list into `ModuleRegistry`; startup suppresses the new-Windows-version warning only when both `uDWM.dll` and `dwmcore.dll` recognize their current builds. This warning policy is independent of the module compatibility range and Required projection validation: a known build is not by itself a runtime support claim.
+
 The standard-library-only generator runs as an incremental MSBuild step and can also be invoked directly:
 
 ```powershell

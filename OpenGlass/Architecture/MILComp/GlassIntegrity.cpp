@@ -19,7 +19,7 @@ namespace OpenGlass::GlassIntegrity
 		dwmcore::CCompositionSurfaceInfo* surface,
 		const dwmcore::CMILMatrix& matrix,
 		const dwmcore::CShape* shape,
-		int flags
+		dwmcore::MilSourceModificationFlags flags
 	);
 	void MyCOcclusionContext_CollectRectangleForOcclusion(
 		dwmcore::COcclusionContext* This,
@@ -48,7 +48,7 @@ namespace OpenGlass::GlassIntegrity
 	HRESULT MyCOcclusionContext_Compute(
 		dwmcore::COcclusionContext* This,
 		const dwmcore::CVisualTree* visualTree,
-		const DWM::span<D2D1_RECT_F>& rectangles,
+		const DWM::span<const D2D1_RECT_F>& rectangles,
 		float unknown,
 		const DWM::span<dwmcore::COverlayContext*>& overlays
 	);
@@ -377,7 +377,7 @@ HRESULT GlassIntegrity::MyCOcclusionContext_CheckAndRecordOverlayCandidate(
 	dwmcore::CCompositionSurfaceInfo* surface,
 	const dwmcore::CMILMatrix& matrix,
 	const dwmcore::CShape* shape,
-	int flags
+	dwmcore::MilSourceModificationFlags flags
 )
 {
 	const auto collected = std::exchange(g_lastCollectedOcclusionRectangle, {});
@@ -502,7 +502,7 @@ void GlassIntegrity::MyCGeometry_Destructor(dwmcore::CGeometry* This)
 HRESULT GlassIntegrity::MyCOcclusionContext_Compute(
 	dwmcore::COcclusionContext* This,
 	const dwmcore::CVisualTree* visualTree,
-	const DWM::span<D2D1_RECT_F>& rectangles,
+	const DWM::span<const D2D1_RECT_F>& rectangles,
 	float unknown,
 	const DWM::span<dwmcore::COverlayContext*>& overlays
 )
@@ -538,7 +538,7 @@ HRESULT GlassIntegrity::MyCOcclusionContext_Compute(
 		hr = g_COcclusionContext_Compute_Org(
 			This,
 			visualTree,
-			DWM::span{ rectangles.length, extendedRectangles.get() },
+			DWM::span<const D2D1_RECT_F>{ rectangles.length, extendedRectangles.get() },
 			unknown,
 			overlays
 		);

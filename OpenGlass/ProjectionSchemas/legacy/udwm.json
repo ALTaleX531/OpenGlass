@@ -1,8 +1,25 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "module": "udwm",
   "namespace": "OpenGlass::uDWM",
   "tag": "ProjectionModuleTag",
+  "min_inclusive": {
+    "build": 17763,
+    "revision": 0
+  },
+  "max_exclusive": {
+    "build": 28000,
+    "revision": 0
+  },
+  "known_builds": [
+    17763,
+    18362,
+    19041,
+    20348,
+    22000,
+    22621,
+    26100
+  ],
   "symbols": [
     {
       "name": "Symbol_CResource_Create",
@@ -1018,7 +1035,8 @@
       },
       "max_exclusive": null,
       "kind": "raw",
-      "type": "bool (WINAPI*)(MARGINS*, int, int, int, int, const MARGINS*)"
+      "type": "bool (WINAPI*)(MARGINS*, int, int, int, int, const MARGINS*)",
+      "notes": "Paired IDA audits show no private RCX dependency after either direct SetMargin call on 22000.194 or 22621.1, so those builds use the ordinary C++ dispatcher. On 26100.1, 26100.7705, and 26100.8972, UpdateMarginsDependentOnStyle calls a three-argument wrapper whose third path consumes the preserved destination pointer from RCX through a later cmovz after the wrapper returns. Use the RCX-preserving physical dispatcher for build 26100 and later; keep replacement dispatch, the original call, and HookRundown release inside the preserved region."
     },
     {
       "name": "Symbol_CLivePreview__UpdateResources",
@@ -1397,7 +1415,7 @@
           }
         }
       ],
-      "notes": "CVisual::SetScale"
+      "notes": "CVisual::SetScale stores an inline MilSizeD on pre-26100 layouts; cross-check the 26100 representation change against CVisual_GetScale_D2D1_SIZE_F."
     },
     {
       "name": "CVisual_GetScale_D2D1_SIZE_F",
@@ -1410,7 +1428,7 @@
           "otherwise": true
         }
       ],
-      "notes": "CVisual::SetScale"
+      "notes": "CVisual::SetScale stores an inline D2D1_SIZE_F on 26100+ layouts; cross-check the representation change against CVisual_GetScale_MilSizeD."
     },
     {
       "name": "CVisual_GetSize",
@@ -3888,7 +3906,7 @@
   ],
   "notes": [
     "Reverse-engineering guidance migrated verbatim from the pre-codegen offset table:",
-    "============================================================================\nuDWM Offset Stability Rules\n============================================================================\nuDWM.dll is NOT recompiled for every Windows build. Offsets only change at\nrecompile boundaries (codebase generations):\n\n  17763 — Windows 10 1809 (minimum supported)\n  18362 — Windows 10 1903, 1909\n  19041 — Windows 10 2004, 20H2, 21H1, 21H2, 22H2\n  20348 — Windows Server 2022\n  22000 — Windows 11 21H2 RTM (Build 22000)\n  22621 — Windows 11 22H2, 23H2\n  26100 — Windows 11 24H2, 25H2\n  28100 — Windows 11 26H1+ (MIL infrastructure removed)\n\nFeature gates:\n  GetSystemBackdropType → 21H2+\n  GetDWriteTextVisual_Index → 22H2+ (appears with CDWriteText)\n  _OnLegacy variants → 22H2+ (CLegacyNonClientBackground introduced)\n  CWindowBorder / GetWindowBorder_Index → 21H2+ (NOT 22H2+)\n  CAnimatedGlassSheet → pre-21H2; replaced by CAcrylicSheet in 21H2+\n\nInterval semantics: until<BUILD, REVISION>() supplies an exclusive RIGHT\nboundary. otherwise() is the explicit open-ended fallback. If otherwise()\nis absent, later versions are unsupported.\n============================================================================",
+    "============================================================================\nuDWM Offset Stability Rules\n============================================================================\nuDWM.dll is NOT recompiled for every Windows build. Offsets only change at\nrecompile boundaries (codebase generations):\n\n  17763 — Windows 10 1809 (minimum supported)\n  18362 — Windows 10 1903, 1909\n  19041 — Windows 10 2004, 20H2, 21H1, 21H2, 22H2\n  20348 — Windows Server 2022\n  22000 — Windows 11 21H2 RTM (Build 22000)\n  22621 — Windows 11 22H2, 23H2\n  26100 — Windows 11 24H2, 25H2\n  28000 — Windows 11 26H1+ (MIL infrastructure removed)\n\nFeature gates:\n  GetSystemBackdropType → 21H2+\n  GetDWriteTextVisual_Index → 22H2+ (appears with CDWriteText)\n  _OnLegacy variants → 22H2+ (CLegacyNonClientBackground introduced)\n  CWindowBorder / GetWindowBorder_Index → 21H2+ (NOT 22H2+)\n  CAnimatedGlassSheet → pre-21H2; replaced by CAcrylicSheet in 21H2+\n\nInterval semantics: until<BUILD, REVISION>() supplies an exclusive RIGHT\nboundary. otherwise() is the explicit open-ended fallback. If otherwise()\nis absent, later versions are unsupported.\n============================================================================",
     "This schema is the editable source of truth; generated headers must preserve these notes."
   ]
 }

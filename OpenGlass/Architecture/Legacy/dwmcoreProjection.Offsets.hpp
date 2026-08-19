@@ -13,7 +13,7 @@
 //   20348 — Windows Server 2022
 //   22621 — Windows 11 22H2, 23H2
 //   26100 — Windows 11 24H2, 25H2
-//   28100 — Windows 11 26H1+ (MIL brush infrastructure partially removed)
+//   28000 — Windows 11 26H1+ (MIL brush infrastructure partially removed)
 //
 // 26H1+ Gate: MIL brushes (CImageLegacyMilBrush, CSolidColorLegacyMilBrush,
 //   CLegacyMilBrush) are REMOVED. IDrawingContext interface absorbed/removed.

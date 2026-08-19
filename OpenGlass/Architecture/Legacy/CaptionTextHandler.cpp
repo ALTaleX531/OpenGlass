@@ -867,7 +867,7 @@ HRESULT CaptionTextHandler::MyICompositionSurfaceBrush2_put_Offset(
 		// 40, 17
 		// 11, 17
 		// CDWriteVisual is rtl mirrored, but CSpriteVisual is not rtl mirrored
-		if (auto& offset = const_cast<POINT&>(g_dwriteTextVisual->GetOffset()); g_dwriteTextVisual->IsRTLMirrored())
+		if (const auto& offset = g_dwriteTextVisual->GetOffset(); g_dwriteTextVisual->IsRTLMirrored())
 		{
 			if (offset.x > g_textGlowSize)
 			{
@@ -972,7 +972,7 @@ HRESULT CaptionTextHandler::MyCDWriteText_UpdateOffset(uDWM::CDWriteText* This)
 	// and add it back later in the ICompositionSurfaceBrush2::put_Offset method
 	//
 	// This gives us enough space to render the glow.
-	auto& offset = const_cast<POINT&>(This->GetOffset());
+	auto& offset = This->GetMutableOffset();
 	const auto actualOffsetX = offset.x;
 	if (!This->IsRTLMirrored())
 	{
@@ -994,7 +994,7 @@ HRESULT CaptionTextHandler::MyCDWriteText_SetSize(uDWM::CDWriteText* This, const
 	const auto hr = g_CDWriteText_SetSize_Org(This, size);
 	// SpriteVisual will crop what exceeds its bounding rectangle,
 	// expand it to ensure enough space to render the glow.
-	auto& offset = const_cast<POINT&>(This->GetOffset());
+	auto& offset = This->GetMutableOffset();
 	if (This->IsRTLMirrored())
 	{
 		This->GetVisualProxy()->SetSize(

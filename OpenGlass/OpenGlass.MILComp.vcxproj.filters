@@ -38,6 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <MASM Include="Architecture\MILComp\GlassFrameHandler.Shims.asm"><Filter>Architecture\MILComp\Source Files</Filter></MASM>
+    <MASM Include="Architecture\MILComp\GlassFrameDemodernizer.Shims.asm"><Filter>Architecture\MILComp\Source Files</Filter></MASM>
   </ItemGroup>
   <ItemGroup>
     <None Include="ProjectionSchemas\milcomp\dwmcore.json"><Filter>Projection Schemas</Filter></None>

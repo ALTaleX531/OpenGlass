@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Any, Literal, NotRequired, TypedDict, cast
 
 
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 3
 UINT32_MAX = 0xFFFFFFFF
 COMPLETE_NAME_CAPACITY = 64 * 1024
 MODULES = ("udwm", "dwmcore")
@@ -80,6 +80,9 @@ class ProjectionSchema(TypedDict):
     module: Literal["udwm", "dwmcore"]
     namespace: str
     tag: str
+    min_inclusive: NotRequired[SymbolVersion | None]
+    max_exclusive: NotRequired[SymbolVersion | None]
+    known_builds: list[int]
     symbols: list[Symbol]
     layouts: list[Layout]
     notes: NotRequired[str | list[str]]
@@ -417,7 +420,10 @@ def _validate_layouts(path: Path, raw_layouts: Any, constants: dict[str, int]) -
 def validate_schema(path: Path, expected_module: str, constants: dict[str, int]) -> ProjectionSchema:
     """Load, validate, and deterministically order one module schema."""
     schema = read_json(path)
-    allowed_root = {"schema_version", "module", "namespace", "tag", "symbols", "layouts", "notes"}
+    allowed_root = {
+        "schema_version", "module", "namespace", "tag", "min_inclusive", "max_exclusive",
+        "known_builds", "symbols", "layouts", "notes",
+    }
     unknown = set(schema) - allowed_root
     if unknown:
         raise SchemaError(f"{path}: unknown root fields: {', '.join(sorted(unknown))}")
@@ -428,6 +434,26 @@ def validate_schema(path: Path, expected_module: str, constants: dict[str, int])
     require_string(schema.get("namespace"), f"{path}: namespace")
     require_string(schema.get("tag"), f"{path}: tag", identifier=True)
     require_notes(schema.get("notes"), f"{path}: notes")
+    minimum = parse_version(schema.get("min_inclusive"), f"{path}: min_inclusive")
+    maximum = parse_version(schema.get("max_exclusive"), f"{path}: max_exclusive")
+    if maximum.build and not minimum < maximum:
+        raise SchemaError(f"{path}: max_exclusive must follow min_inclusive")
+    raw_known_builds = require_list(schema.get("known_builds"), f"{path}: known_builds")
+    if not raw_known_builds:
+        raise SchemaError(f"{path}: known_builds must not be empty")
+    known_builds = [
+        parse_uint(value, f"{path}: known_builds[{index}]")
+        for index, value in enumerate(raw_known_builds)
+    ]
+    if any(not build for build in known_builds):
+        raise SchemaError(f"{path}: known_builds must contain nonzero builds")
+    if any(current <= prior for prior, current in zip(known_builds, known_builds[1:])):
+        raise SchemaError(f"{path}: known_builds must be strictly increasing")
+    for build in known_builds:
+        build_maximum = Version(build + 1, 0) if build < UINT32_MAX else Version()
+        if not ranges_overlap((Version(build, 0), build_maximum), (minimum, maximum)):
+            raise SchemaError(f"{path}: known build {build} is outside the module version range")
+    schema["known_builds"] = known_builds
 
     schema["symbols"] = _validate_symbols(path, schema.get("symbols"))
     schema["layouts"] = _validate_layouts(path, schema.get("layouts"), constants)

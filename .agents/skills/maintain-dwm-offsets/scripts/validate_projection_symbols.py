@@ -82,7 +82,13 @@ def inspect(repo: Path, architecture: str, module_filter: str, stable_id_filter:
 			}
 			if stable_id_filter is None or symbol["id"] == stable_id_filter:
 				descriptors.append(descriptor)
-		modules.append({"module": schema["module"], "schema": f"OpenGlass/ProjectionSchemas/{architecture}/{schema['module']}.json", "descriptors": descriptors})
+		modules.append({
+			"module": schema["module"],
+			"schema": f"OpenGlass/ProjectionSchemas/{architecture}/{schema['module']}.json",
+			"min_inclusive": schema.get("min_inclusive"),
+			"max_exclusive": schema.get("max_exclusive"),
+			"descriptors": descriptors,
+		})
 	if stable_id_filter is not None and not any(module["descriptors"] for module in modules):
 		raise ValueError(f"Symbol stable ID not found in selected module schema: {stable_id_filter}")
 	return {"schema_version": SCHEMA_VERSION, "architecture": architecture, "requested_id": stable_id_filter, "modules": modules, "findings": findings, "summary": {"symbols": sum(len(item["descriptors"]) for item in modules), "errors": sum(item["severity"] == "error" for item in findings)}}

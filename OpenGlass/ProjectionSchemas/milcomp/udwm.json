@@ -1,8 +1,16 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "module": "udwm",
   "namespace": "OpenGlass::uDWM",
   "tag": "ProjectionModuleTag",
+  "min_inclusive": {
+    "build": 28000,
+    "revision": 0
+  },
+  "max_exclusive": null,
+  "known_builds": [
+    28000
+  ],
   "symbols": [
     {
       "name": "Symbol_CVisual_UpdateOffset",
@@ -530,7 +538,8 @@
       "min_inclusive": null,
       "max_exclusive": null,
       "kind": "raw",
-      "type": "SetMargin_t"
+      "type": "SetMargin_t",
+      "notes": "Paired IDA audits on 28000.1, 28000.2525, and 28000.2704 show UpdateMargins consumes only AL after its two direct calls, but UpdateMarginsDependentOnStyle privately reuses RCX after the three-argument wrapper returns: cmovz selects the preserved destination pointer as the later SetClipMargins argument. Use the RCX-preserving physical dispatcher and keep replacement dispatch, the original call, and HookRundown release inside the preserved region."
     },
     {
       "name": "Symbol_CGlassColorizationParameters_AdjustWindowColorization",
@@ -1088,7 +1097,7 @@
           "otherwise": true
         }
       ],
-      "notes": "CWindowList::BlurBehindChange\ndata[x] & y"
+      "notes": "Paired 28000.1, 28000.2525, and 28000.2704 uDWM constructors initialize the IsOpenThemeDataPresent bit 0x8 at +672 before the transition and +736 afterward. The later constructors insert a 64-byte std hash-vector bitmap-source cache rooted at +672, shifting these trailing flag bytes by +64."
     },
     {
       "name": "CWindowData_GetClientBlurAttribute",
@@ -1108,7 +1117,7 @@
           "otherwise": true
         }
       ],
-      "notes": "CWindowList::ForceIconicRepresentationChange\nCWindowList::AlphaChange\ndata[x] & y"
+      "notes": "Paired 28000.1, 28000.2525, and 28000.2704 uDWM show CWindowList::AlphaChange, BlurBehindChange, and ForceIconicRepresentationChange applying identical masks at +673 before the transition and +737 afterward. The +64 shift follows the bitmap-source cache inserted at +672 in the later constructors."
     },
     {
       "name": "CWindowData_GetExtendedFrameMargins",
@@ -1449,6 +1458,7 @@
     }
   ],
   "notes": [
-    "MILComp compositor projection inventory; ABI evidence remains independent from Legacy."
+    "MILComp compositor projection inventory; ABI evidence remains independent from Legacy.",
+    "The build 28000 lower bound selects the MILComp architecture. Final otherwise cases intentionally carry the last known Layout forward to later revisions as a compatibility policy, not as proof that an unaudited binary is unchanged."
   ]
 }

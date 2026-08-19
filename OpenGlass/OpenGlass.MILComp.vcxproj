@@ -80,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <MASM Include="Architecture\MILComp\GlassFrameHandler.Shims.asm" />
+    <MASM Include="Architecture\MILComp\GlassFrameDemodernizer.Shims.asm" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ProjectionSchemas\milcomp\dwmcore.json" />

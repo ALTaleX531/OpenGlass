@@ -104,6 +104,7 @@ namespace OpenGlass::Projection
 		LPCSTR m_strings;
 		const size_t* m_symbolNameOffsets;
 		const Version* m_versions;
+		const ULONG* m_knownBuilds;
 		const SymbolSpec* m_symbolSpecs;
 		PVOID* m_candidates;
 		PVOID* m_resolved;
@@ -113,12 +114,14 @@ namespace OpenGlass::Projection
 		const LayoutCase* m_layoutCases;
 		LONG* m_selectedOffsets;
 		bool* m_layoutSupported;
+		VersionRange m_supportedRange;
 		Version m_version{};
 		ULONG m_undecorationFailureCount{};
 		size_t m_layoutCaseCount{};
 		size_t m_symbolNameCount{};
 		size_t m_versionCount{};
 		size_t m_symbolCount{};
+		size_t m_knownBuildCount{};
 		size_t m_bindingCount{};
 		size_t m_layoutCount{};
 		bool m_descriptorError{};
@@ -161,6 +164,7 @@ namespace OpenGlass::Projection
 			LPCSTR strings,
 			std::span<const size_t> symbolNameOffsets,
 			std::span<const Version> versions,
+			std::span<const ULONG> knownBuilds,
 			std::span<const SymbolSpec> symbolSpecs,
 			std::span<PVOID> candidates,
 			std::span<PVOID> resolved,
@@ -169,14 +173,16 @@ namespace OpenGlass::Projection
 			std::span<const LayoutSpec> layoutSpecs,
 			std::span<const LayoutCase> layoutCases,
 			std::span<LONG> selectedOffsets,
-			std::span<bool> layoutSupported
+			std::span<bool> layoutSupported,
+			VersionRange supportedRange = all_versions
 		) noexcept
-			: m_name{name}, m_strings{strings}, m_symbolNameOffsets{symbolNameOffsets.data()}, m_versions{versions.data()}, m_symbolSpecs{symbolSpecs.data()},
-			  m_candidates{candidates.data()}, m_resolved{resolved.data()}, m_resolutionStates{resolutionStates.data()}, m_bindings{bindings.data()},
-			  m_layoutSpecs{layoutSpecs.data()}, m_layoutCases{layoutCases.data()}, m_selectedOffsets{selectedOffsets.data()},
-			  m_layoutSupported{layoutSupported.data()}, m_layoutCaseCount{layoutCases.size()},
-			  m_symbolNameCount{symbolNameOffsets.size()}, m_versionCount{versions.size()},
-			  m_symbolCount{symbolSpecs.size()}, m_bindingCount{bindings.size()}, m_layoutCount{layoutSpecs.size()}
+			: m_name{name}, m_strings{strings}, m_symbolNameOffsets{symbolNameOffsets.data()}, m_versions{versions.data()},
+			  m_knownBuilds{knownBuilds.data()}, m_symbolSpecs{symbolSpecs.data()}, m_candidates{candidates.data()}, m_resolved{resolved.data()},
+			  m_resolutionStates{resolutionStates.data()}, m_bindings{bindings.data()}, m_layoutSpecs{layoutSpecs.data()},
+			  m_layoutCases{layoutCases.data()}, m_selectedOffsets{selectedOffsets.data()}, m_layoutSupported{layoutSupported.data()},
+			  m_supportedRange{supportedRange}, m_layoutCaseCount{layoutCases.size()}, m_symbolNameCount{symbolNameOffsets.size()},
+			  m_versionCount{versions.size()}, m_symbolCount{symbolSpecs.size()}, m_knownBuildCount{knownBuilds.size()},
+			  m_bindingCount{bindings.size()}, m_layoutCount{layoutSpecs.size()}
 		{
 		}
 
@@ -202,6 +208,14 @@ namespace OpenGlass::Projection
 		Version version() const noexcept
 		{
 			return m_version;
+		}
+		bool SupportsVersion(Version version) const noexcept
+		{
+			return IsVersionInRange(version, m_supportedRange);
+		}
+		bool RecognizesBuild(ULONG build) const noexcept
+		{
+			return std::ranges::binary_search(std::span<const ULONG>{m_knownBuilds, m_knownBuildCount}, build);
 		}
 		bool descriptor_error() const noexcept
 		{
