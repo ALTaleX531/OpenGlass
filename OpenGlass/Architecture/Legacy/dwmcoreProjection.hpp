@@ -101,7 +101,7 @@ namespace OpenGlass::dwmcore
 			auto& transformedRect = m_transformedRect;
 			if (matrix)
 			{
-				transformedRect = RectF::TransformRect(originalRect, matrix->GetD2DMatrix());
+				transformedRect = RectF::Transform2DBounds(originalRect, matrix->GetD3DMatrix());
 			}
 			else
 			{
@@ -774,7 +774,7 @@ namespace OpenGlass::dwmcore
 
 			if (GetDeviceTransformFlagValue() & 0x1)
 			{
-				result = RectF::TransformRect(pixelsRect, GetDeviceTransform()->GetD2DMatrix());
+				result = RectF::Transform2DBounds(pixelsRect, GetDeviceTransform()->GetD3DMatrix());
 			}
 
 			return result;

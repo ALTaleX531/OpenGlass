@@ -396,9 +396,9 @@ HRESULT GlassIntegrity::MyCOcclusionContext_CheckAndRecordOverlayCandidate(
 		collected.depth == depth
 	)
 	{
-		const auto worldBounds = RectF::TransformRect(
+		const auto worldBounds = RectF::Transform2DBounds(
 			collected.rectangle,
-			This->GetWorldTransform()->GetD2DMatrix()
+			This->GetWorldTransform()->GetD3DMatrix()
 		);
 		deviceBounds = This->PageInPixelsRectToDeviceRect(worldBounds);
 	}
@@ -844,14 +844,15 @@ HRESULT GlassIntegrity::MyCDrawingContext_DrawVisualTree(
 			g_safetyZonePool.Release(d2dContext, std::move(safetyZoneLayer));
 		});
 
-		D2D1_RECT_F extendedPixelRectangle{};
+		D2D1_RECT_F extendedRectangle{};
 		if (
 			hr = safetyZoneLayer->Push(
 				context,
-				This->GetDeviceTransform()->GetD2DMatrix(),
+				This->GetDeviceTransform()->GetD3DMatrix(),
+				false,
 				rectangle,
 				expansion,
-				extendedPixelRectangle
+				extendedRectangle
 			);
 			FAILED(hr)
 		)
@@ -860,7 +861,7 @@ HRESULT GlassIntegrity::MyCDrawingContext_DrawVisualTree(
 			break;
 		}
 
-		hr = g_CDrawingContext_DrawVisualTree_Org(This, tree, extendedPixelRectangle, occlusionContext, clearMode, padding, visualOverride);
+		hr = g_CDrawingContext_DrawVisualTree_Org(This, tree, extendedRectangle, occlusionContext, clearMode, padding, visualOverride);
 
 		LOG_IF_FAILED(This->ApplyRenderStateInternal(false)); // apply clip and other states
 		LOG_IF_FAILED(This->FlushD2D()); // flush previous draw calls

@@ -1015,6 +1015,28 @@ namespace OpenGlass
 				std::floor(rectangle.bottom + 0.5f)
 			};
 		}
+		FORCEINLINE [[nodiscard]] float PixelAlign(float value, bool upperBound)
+		{
+			// DWM snaps coordinates already within 1/256 pixel of an integer before
+			// applying the outward floor/ceil used for the remaining coordinates.
+			constexpr float pixelSnapTolerance = 1.f / 256.f;
+			const auto nearestInteger = std::round(value);
+			if (std::fabs(value - nearestInteger) <= pixelSnapTolerance)
+			{
+				return nearestInteger;
+			}
+			return upperBound ? std::ceil(value) : std::floor(value);
+		}
+		FORCEINLINE [[nodiscard]] D2D1_RECT_F PixelAlign(const D2D1_RECT_F& rectangle)
+		{
+			return
+			{
+				PixelAlign(rectangle.left, false),
+				PixelAlign(rectangle.top, false),
+				PixelAlign(rectangle.right, true),
+				PixelAlign(rectangle.bottom, true)
+			};
+		}
 		FORCEINLINE [[nodiscard]] D2D1_RECT_F FromRectU(const D2D1_RECT_U& rectangle)
 		{
 			return
@@ -1070,6 +1092,127 @@ namespace OpenGlass
 			transformedRect.bottom = std::max({ topLeft.y, topRight.y, bottomLeft.y, bottomRight.y });
 
 			return transformedRect;
+		}
+		FORCEINLINE [[nodiscard]] D2D1_RECT_F Transform2DBounds(
+			const D2D1_RECT_F& rectangle,
+			const D2D1_MATRIX_4X4_F& matrix
+		)
+		{
+			// Mirrors CMILMatrix::Transform2DBoundsHelper<0> for a z=0 rectangle.
+			constexpr float matrixEpsilon = 0.000081380211f;
+			const auto isNear = [matrixEpsilon](float value, float expected)
+			{
+				return std::fabs(value - expected) < matrixEpsilon;
+			};
+
+			if (
+				isNear(matrix._11, 1.f) &&
+				isNear(matrix._12, 0.f) &&
+				isNear(matrix._14, 0.f) &&
+				isNear(matrix._21, 0.f) &&
+				isNear(matrix._22, 1.f) &&
+				isNear(matrix._24, 0.f) &&
+				isNear(matrix._44, 1.f)
+			)
+			{
+				return
+				{
+					rectangle.left + matrix._41,
+					rectangle.top + matrix._42,
+					rectangle.right + matrix._41,
+					rectangle.bottom + matrix._42
+				};
+			}
+
+			if (
+				isNear(matrix._12, 0.f) &&
+				isNear(matrix._14, 0.f) &&
+				isNear(matrix._21, 0.f) &&
+				isNear(matrix._24, 0.f) &&
+				isNear(matrix._44, 1.f)
+			)
+			{
+				const auto left = rectangle.left * matrix._11 + matrix._41;
+				const auto top = rectangle.top * matrix._22 + matrix._42;
+				const auto right = rectangle.right * matrix._11 + matrix._41;
+				const auto bottom = rectangle.bottom * matrix._22 + matrix._42;
+				return
+				{
+					std::min(left, right),
+					std::min(top, bottom),
+					std::max(left, right),
+					std::max(top, bottom)
+				};
+			}
+
+			struct HomogeneousPoint
+			{
+				float x;
+				float y;
+				float w;
+			};
+			const auto transformPoint = [&](float x, float y)
+			{
+				return HomogeneousPoint
+				{
+					y * matrix._21 + x * matrix._11 + matrix._41,
+					y * matrix._22 + x * matrix._12 + matrix._42,
+					y * matrix._24 + x * matrix._14 + matrix._44
+				};
+			};
+			std::array points
+			{
+				transformPoint(rectangle.left, rectangle.top),
+				transformPoint(rectangle.left, rectangle.bottom),
+				transformPoint(rectangle.right, rectangle.bottom),
+				transformPoint(rectangle.right, rectangle.top)
+			};
+
+			if (std::ranges::any_of(points, [&](const auto& point) { return point.w < matrixEpsilon; }))
+			{
+				if (std::ranges::any_of(points, [&](const auto& point) { return point.w >= -matrixEpsilon; }))
+				{
+					return D2D1::InfiniteRect();
+				}
+				return {};
+			}
+
+			for (auto& point : points)
+			{
+				if (!isNear(point.w, 1.f))
+				{
+					point.x /= point.w;
+					point.y /= point.w;
+				}
+			}
+
+			D2D1_RECT_F transformedRect
+			{
+				points[0].x,
+				points[0].y,
+				points[0].x,
+				points[0].y
+			};
+			for (const auto& point : std::span{ points }.subspan(1))
+			{
+				transformedRect.left = std::min(transformedRect.left, point.x);
+				transformedRect.top = std::min(transformedRect.top, point.y);
+				transformedRect.right = std::max(transformedRect.right, point.x);
+				transformedRect.bottom = std::max(transformedRect.bottom, point.y);
+			}
+			return transformedRect;
+		}
+		FORCEINLINE [[nodiscard]] D2D1_RECT_F ResolveDeviceBounds(
+			const D2D1_RECT_F& rectangle,
+			const D2D1_MATRIX_4X4_F& deviceTransform,
+			bool rectangleIsDeviceSpace
+		)
+		{
+			if (rectangleIsDeviceSpace)
+			{
+				return rectangle;
+			}
+			return PixelAlign(Transform2DBounds(rectangle, deviceTransform));
 		}
 		FORCEINLINE constexpr bool DoesIntersectUnsafe(
 			const D2D1_RECT_F& rc1,

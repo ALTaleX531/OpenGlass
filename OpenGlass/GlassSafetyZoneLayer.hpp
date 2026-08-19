@@ -14,10 +14,11 @@ namespace OpenGlass
 	public:
 		HRESULT Push(
 			ID2D1DeviceContext* context,
-			const D2D1_MATRIX_3X2_F& deviceTransform,
-			const D2D1_RECT_F& originalPixelRectangle,
+			const D2D1_MATRIX_4X4_F& deviceTransform,
+			bool rectangleIsDeviceSpace,
+			const D2D1_RECT_F& originalRectangle,
 			float expansion,
-			D2D1_RECT_F& extendedPixelRectangle
+			D2D1_RECT_F& extendedRectangle
 		);
 		void Pop();
 		ID3D11Texture2D* GetOwner() const { return m_renderTargetTexture.get(); }

@@ -7,70 +7,67 @@ using namespace OpenGlass;
 
 HRESULT CGlassSafetyZoneLayer::Push(
 	ID2D1DeviceContext* context,
-	const D2D1_MATRIX_3X2_F& deviceTransform,
-	const D2D1_RECT_F& originalPixelRectangle,
+	const D2D1_MATRIX_4X4_F& deviceTransform,
+	bool rectangleIsDeviceSpace,
+	const D2D1_RECT_F& originalRectangle,
 	float expansion,
-	D2D1_RECT_F& extendedPixelRectangle
+	D2D1_RECT_F& extendedRectangle
 )
 {
 	winrt::com_ptr<ID2D1Bitmap1> renderTargetBitmap{ nullptr };
 	RETURN_IF_FAILED(Util::GetTargetBitmapFromD2DContext(context, renderTargetBitmap));
 
-	extendedPixelRectangle = originalPixelRectangle;
+	extendedRectangle = originalRectangle;
 	auto pushCleanupScope = wil::scope_exit([this]
 	{
 		m_renderTargetTexture = nullptr;
 	});
-	const auto targetSize = renderTargetBitmap->GetSize();
+	const auto targetSize = renderTargetBitmap->GetPixelSize();
 	const D2D1_RECT_F targetRect
 	{
 		0.f,
 		0.f,
-		targetSize.width,
-		targetSize.height
+		static_cast<float>(targetSize.width),
+		static_cast<float>(targetSize.height)
 	};
 
-	D2D1_RECT_F originalDeviceRectangle;
-	D2D1_RECT_F extendedDeviceRectangle;
-
-	originalDeviceRectangle = RectF::TransformRect(originalPixelRectangle, deviceTransform);
-	originalDeviceRectangle.left = std::floor(originalDeviceRectangle.left);
-	originalDeviceRectangle.top = std::floor(originalDeviceRectangle.top);
-	originalDeviceRectangle.right = std::ceil(originalDeviceRectangle.right);
-	originalDeviceRectangle.bottom = std::ceil(originalDeviceRectangle.bottom);
-	RectF::IntersectUnsafe(originalDeviceRectangle, targetRect);
-
-	extendedDeviceRectangle.left = originalPixelRectangle.left - expansion;
-	extendedDeviceRectangle.top = originalPixelRectangle.top - expansion;
-	extendedDeviceRectangle.right = originalPixelRectangle.right + expansion;
-	extendedDeviceRectangle.bottom = originalPixelRectangle.bottom + expansion;
-	extendedDeviceRectangle = RectF::TransformRect(extendedDeviceRectangle, deviceTransform);
-	extendedDeviceRectangle.left = std::floor(extendedDeviceRectangle.left);
-	extendedDeviceRectangle.top = std::floor(extendedDeviceRectangle.top);
-	extendedDeviceRectangle.right = std::ceil(extendedDeviceRectangle.right);
-	extendedDeviceRectangle.bottom = std::ceil(extendedDeviceRectangle.bottom);
-	RectF::IntersectUnsafe(extendedDeviceRectangle, targetRect);
-
-	D2D1_MATRIX_3X2_F invertedDeviceTransform = deviceTransform;
-	if (D2D1InvertMatrix(&invertedDeviceTransform)) [[unlikely]]
+	D2D1_RECT_F originalDeviceRectangle = RectF::ResolveDeviceBounds(
+		originalRectangle,
+		deviceTransform,
+		rectangleIsDeviceSpace
+	);
+	if (!RectF::IntersectUnsafe(originalDeviceRectangle, targetRect))
 	{
-		extendedPixelRectangle = RectF::TransformRect(extendedDeviceRectangle, invertedDeviceTransform);
-	}
-	else
-	{
-		extendedPixelRectangle.left -= expansion;
-		extendedPixelRectangle.top -= expansion;
-		extendedPixelRectangle.right += expansion;
-		extendedPixelRectangle.bottom += expansion;
+		return S_OK;
 	}
 
+	extendedRectangle =
+	{
+		originalRectangle.left - expansion,
+		originalRectangle.top - expansion,
+		originalRectangle.right + expansion,
+		originalRectangle.bottom + expansion
+	};
+	D2D1_RECT_F extendedDeviceRectangle = RectF::ResolveDeviceBounds(
+		extendedRectangle,
+		deviceTransform,
+		rectangleIsDeviceSpace
+	);
 	if (
-		extendedPixelRectangle.left == originalPixelRectangle.left &&
-		extendedPixelRectangle.top == originalPixelRectangle.top &&
-		extendedPixelRectangle.right == originalPixelRectangle.right &&
-		extendedPixelRectangle.bottom == originalPixelRectangle.bottom
+		!RectF::IntersectUnsafe(extendedDeviceRectangle, targetRect) ||
+		extendedDeviceRectangle.left > originalDeviceRectangle.left ||
+		extendedDeviceRectangle.top > originalDeviceRectangle.top ||
+		extendedDeviceRectangle.right < originalDeviceRectangle.right ||
+		extendedDeviceRectangle.bottom < originalDeviceRectangle.bottom ||
+		(
+			extendedDeviceRectangle.left == originalDeviceRectangle.left &&
+			extendedDeviceRectangle.top == originalDeviceRectangle.top &&
+			extendedDeviceRectangle.right == originalDeviceRectangle.right &&
+			extendedDeviceRectangle.bottom == originalDeviceRectangle.bottom
+		)
 	)
 	{
+		extendedRectangle = originalRectangle;
 		return S_OK;
 	}
 
@@ -125,21 +122,20 @@ HRESULT CGlassSafetyZoneLayer::Push(
 		static_cast<UINT32>(extendedDeviceRectangle.bottom)
 	};
 
-	D2D1_RECT_F extendedRectangle
-	{
-		0.f,
-		0.f,
-		expansion,
-		expansion
-	};
-	extendedRectangle = RectF::TransformRect(extendedRectangle, deviceTransform);
-	const auto actualExtendedAmountX = wil::rect_width(extendedRectangle);
-	const auto actualExtendedAmountY = wil::rect_height(extendedRectangle);
-
-	const UINT verticalWidth = static_cast<UINT>(std::ceil(actualExtendedAmountX)) * 2u;
-	const UINT verticalHeight = static_cast<UINT>(std::ceil(targetSize.height + actualExtendedAmountY));
-	const UINT horizontalWidth = static_cast<UINT>(std::ceil(targetSize.width + actualExtendedAmountX));
-	const UINT horizontalHeight = static_cast<UINT>(std::ceil(actualExtendedAmountY)) * 2u;
+	const UINT verticalWidth =
+		wil::rect_width(m_safetyZoneBounds[0]) +
+		wil::rect_width(m_safetyZoneBounds[2]);
+	const UINT verticalHeight = std::max(
+		wil::rect_height(m_safetyZoneBounds[0]),
+		wil::rect_height(m_safetyZoneBounds[2])
+	);
+	const UINT horizontalWidth = std::max(
+		wil::rect_width(m_safetyZoneBounds[1]),
+		wil::rect_width(m_safetyZoneBounds[3])
+	);
+	const UINT horizontalHeight =
+		wil::rect_height(m_safetyZoneBounds[1]) +
+		wil::rect_height(m_safetyZoneBounds[3]);
 
 	RETURN_IF_FAILED(m_safetyZoneBufferVertical.Ensure(d3dDevice.get(), verticalWidth, verticalHeight, renderTargetDesc, 0, hwProtectionEnabled));
 	RETURN_IF_FAILED(m_safetyZoneBufferHorizontal.Ensure(d3dDevice.get(), horizontalWidth, horizontalHeight, renderTargetDesc, 0, hwProtectionEnabled));

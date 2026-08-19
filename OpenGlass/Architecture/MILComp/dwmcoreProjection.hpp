@@ -376,7 +376,7 @@ namespace OpenGlass::dwmcore
 
 			if (GetDeviceTransformFlagValue() & 0x1)
 			{
-				result = RectF::TransformRect(pixelsRect, GetDeviceTransform()->GetD2DMatrix());
+				result = RectF::Transform2DBounds(pixelsRect, GetDeviceTransform()->GetD3DMatrix());
 			}
 
 			return result;

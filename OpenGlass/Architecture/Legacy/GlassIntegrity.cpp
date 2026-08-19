@@ -220,6 +220,7 @@ namespace OpenGlass::GlassIntegrity
 		dwmcore::CDrawingContext* This,
 		const D2D1_RECT_F& rectangle,
 		const dwmcore::COcclusionContext* occlusionContext,
+		bool rectangleIsDeviceSpace,
 		T&& callback
 	);
 	HRESULT MyCDrawingContext_DrawVisualTree_Win10_1809(
@@ -233,7 +234,7 @@ namespace OpenGlass::GlassIntegrity
 		bool useOcclusionContext,
 		bool unknown4,
 		bool unknown5,
-		bool unknown6,
+		bool rectangleIsDeviceSpace,
 		bool unknown7
 	);
 	HRESULT MyCDrawingContext_DrawVisualTree_Win10_1903(
@@ -247,7 +248,7 @@ namespace OpenGlass::GlassIntegrity
 		bool useOcclusionContext,
 		const D2D1_RECT_F* unknown4,
 		bool unknown5,
-		bool unknown6,
+		bool rectangleIsDeviceSpace,
 		bool unknown7
 	);
 	HRESULT MyCDrawingContext_DrawVisualTree_Win10(
@@ -496,9 +497,9 @@ namespace OpenGlass::GlassIntegrity
 			collected.depth == depth
 		)
 		{
-			const auto worldBounds = RectF::TransformRect(
+			const auto worldBounds = RectF::Transform2DBounds(
 				collected.rectangle,
-				occlusionContext->GetWorldTransform()->GetD2DMatrix()
+				occlusionContext->GetWorldTransform()->GetD3DMatrix()
 			);
 			deviceBounds = occlusionContext->PageInPixelsRectToDeviceRect(worldBounds);
 		}
@@ -1541,6 +1542,7 @@ HRESULT GlassIntegrity::MyCDrawingContext_DrawVisualTree(
 	dwmcore::CDrawingContext* This,
 	const D2D1_RECT_F& rectangle,
 	const dwmcore::COcclusionContext* occlusionContext,
+	bool rectangleIsDeviceSpace,
 	T&& callback
 )
 {
@@ -1578,7 +1580,9 @@ HRESULT GlassIntegrity::MyCDrawingContext_DrawVisualTree(
 		auto mutableOcclusionContext = const_cast<dwmcore::COcclusionContext*>(occlusionContext);
 		mutableOcclusionContext->SetDeviceTransform(This->GetDeviceTransform());
 		const auto coverageSet = occlusionContext->GetArrayBasedCoverageSet();
-		const auto transformedRect = occlusionContext->PageInPixelsRectToDeviceRect(rectangle);
+		const auto transformedRect = rectangleIsDeviceSpace ?
+			rectangle :
+			occlusionContext->PageInPixelsRectToDeviceRect(rectangle);
 		const auto glassCoverageSet = CArrayBasedGlassCoverageSet::GetOrCreate(coverageSet);
 
 		if (
@@ -1627,14 +1631,15 @@ HRESULT GlassIntegrity::MyCDrawingContext_DrawVisualTree(
 			g_safetyZonePool.Release(d2dContext, std::move(safetyZoneLayer));
 		});
 
-		D2D1_RECT_F extendedPixelRectangle{};
+		D2D1_RECT_F extendedRectangle{};
 		if (
 			hr = safetyZoneLayer->Push(
 				context,
-				This->GetDeviceTransform()->GetD2DMatrix(),
+				This->GetDeviceTransform()->GetD3DMatrix(),
+				rectangleIsDeviceSpace,
 				rectangle,
 				expansion,
-				extendedPixelRectangle
+				extendedRectangle
 			);
 			FAILED(hr)
 		)
@@ -1643,7 +1648,7 @@ HRESULT GlassIntegrity::MyCDrawingContext_DrawVisualTree(
 			break;
 		}
 
-		hr = callback(extendedPixelRectangle);
+		hr = callback(extendedRectangle);
 
 		LOG_IF_FAILED(This->ApplyRenderStateInternal(false)); // apply clip and other states
 		LOG_IF_FAILED(This->FlushD2D()); // flush previous draw calls
@@ -1680,7 +1685,7 @@ HRESULT GlassIntegrity::MyCDrawingContext_DrawVisualTree_Win10_1809(
 	bool useOcclusionContext,
 	bool unknown4,
 	bool unknown5,
-	bool unknown6,
+	bool rectangleIsDeviceSpace,
 	bool unknown7
 )
 {
@@ -1688,6 +1693,7 @@ HRESULT GlassIntegrity::MyCDrawingContext_DrawVisualTree_Win10_1809(
 		This,
 		rectangle,
 		useOcclusionContext ? This->GetOcclusionContext() : nullptr,
+		rectangleIsDeviceSpace,
 		[=](const D2D1_RECT_F& replacedRectangle)
 		{
 			return g_CDrawingContext_DrawVisualTree_Win10_1809_Org(
@@ -1701,7 +1707,7 @@ HRESULT GlassIntegrity::MyCDrawingContext_DrawVisualTree_Win10_1809(
 				useOcclusionContext,
 				unknown4,
 				unknown5,
-				unknown6,
+				rectangleIsDeviceSpace,
 				unknown7
 			);
 		}
@@ -1718,7 +1724,7 @@ HRESULT GlassIntegrity::MyCDrawingContext_DrawVisualTree_Win10_1903(
 	bool useOcclusionContext,
 	const D2D1_RECT_F* unknown4,
 	bool unknown5,
-	bool unknown6,
+	bool rectangleIsDeviceSpace,
 	bool unknown7
 )
 {
@@ -1726,6 +1732,7 @@ HRESULT GlassIntegrity::MyCDrawingContext_DrawVisualTree_Win10_1903(
 		This,
 		rectangle,
 		useOcclusionContext ? This->GetOcclusionContext() : nullptr,
+		rectangleIsDeviceSpace,
 		[=](const D2D1_RECT_F& replacedRectangle)
 		{
 			return g_CDrawingContext_DrawVisualTree_Win10_1903_Org(
@@ -1739,7 +1746,7 @@ HRESULT GlassIntegrity::MyCDrawingContext_DrawVisualTree_Win10_1903(
 				useOcclusionContext,
 				unknown4,
 				unknown5,
-				unknown6,
+				rectangleIsDeviceSpace,
 				unknown7
 			);
 		}
@@ -1758,6 +1765,7 @@ HRESULT GlassIntegrity::MyCDrawingContext_DrawVisualTree_Win10(
 		This,
 		rectangle,
 		occlusionContext,
+		false,
 		[=](const D2D1_RECT_F& replacedRectangle)
 		{
 			return g_CDrawingContext_DrawVisualTree_Win10_Org(
@@ -1785,6 +1793,7 @@ HRESULT GlassIntegrity::MyCDrawingContext_DrawVisualTree_Win11(
 		This,
 		rectangle,
 		occlusionContext,
+		false,
 		[=](const D2D1_RECT_F& replacedRectangle)
 		{
 			return g_CDrawingContext_DrawVisualTree_Win11_Org(
