@@ -2,6 +2,7 @@
 #include "MainFrame.hpp"
 #include "ColorSwatchButton.hpp"
 #include "Symbols.hpp"
+#include "BlurSettings.hpp"
 
 namespace OpenGlass
 {
@@ -1045,18 +1046,6 @@ namespace OpenGlass
 			UpdateOptionStatusIcons();
 			UpdateColorizationPresetSelection();
 		};
-		auto blurRadiusToDeviation = [](int radius) -> DWORD {
-			int val = (radius * 10 + 2) / 3;
-			if (val < 0) val = 0;
-			if (val > 100) val = 100;
-			return static_cast<DWORD>(val);
-		};
-		auto blurDeviationToRadius = [](DWORD deviation) -> int {
-			int val = (static_cast<int>(deviation) * 3 + 5) / 10;
-			if (val < 0) val = 0;
-			if (val > 30) val = 30;
-			return val;
-		};
 
 		auto colorToDwordBgr = [](const wxColour& c) -> DWORD {
 			return (c.Red()) | (c.Green() << 8) | (c.Blue() << 16);
@@ -1487,18 +1476,18 @@ namespace OpenGlass
 			}
 			setSliderTooltipValue(m_slMaterialOpacity, val);
 		});
-		m_slBlurDeviation->Bind(wxEVT_SLIDER, [this, updateDword, deleteValue, blurRadiusToDeviation, setSliderTooltipValue]([[maybe_unused]] wxCommandEvent& e) {
-			DWORD val = blurRadiusToDeviation(e.GetInt());
-			if (val == 30)
+		m_slBlurAmount->Bind(wxEVT_SLIDER, [this, updateDword, deleteValue, setSliderTooltipValue]([[maybe_unused]] wxCommandEvent& e) {
+			const DWORD encodedDeviation = BlurSettings::EncodeGuiBlurAmount(e.GetInt());
+			if (encodedDeviation == BlurSettings::DefaultEncodedDeviation)
 			{
 				deleteValue(Settings::Id::BlurDeviation);
 				NotifySettingsChange(ChangeType::Colorization);
 			}
 			else
 			{
-				updateDword(Settings::Id::BlurDeviation, val, ChangeType::Colorization);
+				updateDword(Settings::Id::BlurDeviation, encodedDeviation, ChangeType::Colorization);
 			}
-			setSliderTooltipValue(m_slBlurDeviation, e.GetInt());
+			setSliderTooltipValue(m_slBlurAmount, e.GetInt());
 		});
 		m_chBlurOptimization->Bind(wxEVT_CHOICE, [this, updateDword, deleteValue]([[maybe_unused]] wxCommandEvent& e) {
 			int sel = e.GetSelection();
@@ -1512,29 +1501,16 @@ namespace OpenGlass
 				updateDword(Settings::Id::BlurOptimization, sel, ChangeType::Colorization);
 			}
 		});
-		auto updateD3DControls = [this, blurDeviationToRadius]() {
-			if (m_chkUseD3D->IsChecked())
-			{
-				m_slBlurDeviation->SetValue(3);
-				m_slBlurDeviation->Enable(false);
-				m_slBlurDeviation->SetToolTip(wxString::Format(L"%d", m_slBlurDeviation->GetValue()));
+		auto updateD3DControls = [this]() {
+			const bool enabled = !m_chkUseD3D->IsChecked();
+			const DWORD encodedDeviation = m_config->GetDword(L"BlurDeviation", BlurSettings::DefaultEncodedDeviation);
+			m_slBlurAmount->SetValue(BlurSettings::DecodeGuiBlurAmount(encodedDeviation));
+			m_slBlurAmount->Enable(enabled);
+			m_slBlurAmount->SetToolTip(wxString::Format(L"%d", m_slBlurAmount->GetValue()));
 
-				m_chBlurOptimization->SetSelection(0);
-				m_chBlurOptimization->Enable(false);
-			}
-			else
-			{
-				m_slBlurDeviation->Enable(true);
-				DWORD blurDeviation = m_config->GetDword(L"BlurDeviation", 30);
-				m_slBlurDeviation->SetValue(blurDeviationToRadius(blurDeviation));
-				m_slBlurDeviation->SetToolTip(wxString::Format(L"%d", m_slBlurDeviation->GetValue()));
-
-				m_chBlurOptimization->Enable(true);
-				int blurOpt = static_cast<int>(m_config->GetDword(L"BlurOptimization", 0));
-				if (blurOpt < 0) blurOpt = 0;
-				if (blurOpt > 2) blurOpt = 2;
-				m_chBlurOptimization->SetSelection(blurOpt);
-			}
+			const int blurOptimization = std::clamp<int>(m_config->GetDword(L"BlurOptimization", 0), 0, 2);
+			m_chBlurOptimization->SetSelection(blurOptimization);
+			m_chBlurOptimization->Enable(enabled);
 		};
 
 		m_chkUseD3D->Bind(wxEVT_CHECKBOX, [this, updateDword, updateD3DControls, deleteValue]([[maybe_unused]] wxCommandEvent& e) {

@@ -4,6 +4,7 @@
 #include "D3DGlassRealizer.hpp"
 #include "Shared.hpp"
 #include "DxgiPrivates.hpp"
+#include "BlurSettings.hpp"
 
 using namespace OpenGlass;
 
@@ -547,7 +548,7 @@ HRESULT CD3DGlassRealizer::Render(
 	RETURN_IF_FAILED(m_quarterResBuffer.EnsureRTV(device));
 	RETURN_IF_FAILED(m_quarterResBuffer.EnsureSRV(device));
 
-	CalculateDwmHwSamples(3.f);
+	CalculateDwmHwSamples(BlurSettings::Direct3DStandardDeviation);
 	// DWM inflates bounds by filterRadius = ceil(sigma * 2.3) (sigma=3.0 => 7)
 	const float expansion = static_cast<float>(m_dwmHwSamples.radius);
 	const UINT quarterWidth = std::max<UINT>(1u, backBufferDesc.Width >> 2);
@@ -839,8 +840,8 @@ HRESULT CD3DGlassRealizer::Render(
 	return S_OK;
 }
 
-float CD3DGlassRealizer::GetBlurRadius(float blurAmount)
+float CD3DGlassRealizer::GetBlurExpansion()
 {
-	blurAmount = 3.f;
-	return std::ceil(blurAmount * 2.3f + 0.5f);
+	// Keep the existing conservative capture margin; the pass-local DWM kernel radius is ceil(σ × 2.3).
+	return std::ceil(BlurSettings::Direct3DStandardDeviation * 2.3f + 0.5f);
 }

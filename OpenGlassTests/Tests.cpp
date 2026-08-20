@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "ProjectionFixture.hpp"
 #include "RegistryValueResolver.hpp"
+#include "BlurSettings.hpp"
 #include "PngAssetValidation.hpp"
 #include "ThemeAtlasLayout.hpp"
 #include "../OpenGlassGUI/ColorizationPresets.hpp"
@@ -966,6 +967,27 @@ namespace
 		Check(customApplication.windows7 == CalculateWindows7Parameters(0x804080C0, false));
 	}
 
+	void TestBlurSettings()
+	{
+		Check(BlurSettings::DecodeBlurAmount(0) == 0.f);
+		Check(BlurSettings::DecodeBlurAmount(BlurSettings::DefaultEncodedDeviation) == 9.f);
+		Check(BlurSettings::DecodeBlurAmount(100) == 30.f);
+		Check(BlurSettings::DecodeBlurAmount(UINT32_MAX) == BlurSettings::MaximumBlurAmount);
+		Check(BlurSettings::DecodeGuiBlurAmount(UINT32_MAX) == BlurSettings::GuiMaximumBlurAmount);
+		Check(BlurSettings::EncodeGuiBlurAmount(-1) == 0);
+		Check(BlurSettings::EncodeGuiBlurAmount(9) == BlurSettings::DefaultEncodedDeviation);
+		Check(BlurSettings::EncodeGuiBlurAmount(31) == 100);
+		for (int blurAmount = BlurSettings::GuiMinimumBlurAmount; blurAmount <= BlurSettings::GuiMaximumBlurAmount; ++blurAmount)
+		{
+			Check(
+				BlurSettings::DecodeGuiBlurAmount(
+					BlurSettings::EncodeGuiBlurAmount(blurAmount)
+				) == blurAmount
+			);
+		}
+		Check(BlurSettings::Direct3DStandardDeviation == 3.f);
+	}
+
 	void TestSettingsCatalog()
 	{
 		std::vector<std::wstring_view> names;
@@ -1312,6 +1334,7 @@ int main()
 	TestThemeAtlasLayoutParser();
 	TestOverridableRegistryValueResolution();
 	TestColorizationPresets();
+	TestBlurSettings();
 	TestSettingsCatalog();
 	TestConfigurationMigrationPolicy();
 	TestPresetPackageRoundTrip();

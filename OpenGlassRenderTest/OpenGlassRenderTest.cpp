@@ -15,7 +15,7 @@ namespace
 	constexpr float kBlurAmount = 9.f;
 	constexpr wchar_t kImageFileName[] = L"OpenGlassRenderTest.png";
 
-	float GetBlurRadius(float blurAmount)
+	float GetBlurExpansion(float blurAmount)
 	{
 		return blurAmount * 3.f + 0.5f;
 	}
@@ -516,7 +516,7 @@ private:
 		);
 
 		const auto targetSize = renderTargetBitmap->GetSize();
-		const auto expansion = GetBlurRadius(kBlurAmount);
+		const auto expansion = GetBlurExpansion(kBlurAmount);
 
 		D2D1_RECT_F alignedSamplingWorldBounds
 		{

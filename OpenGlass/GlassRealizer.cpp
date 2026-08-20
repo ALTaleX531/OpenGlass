@@ -59,7 +59,7 @@ HRESULT CGlassRealizer::Render(
 	RETURN_IF_FAILED(geometry->GetBounds(nullptr, &geometryBounds));
 
 	const auto targetSize = renderTargetBitmap->GetSize();
-	const auto expansion = GetBlurRadius(params.blurAmount);
+	const auto expansion = GetBlurExpansion(params.blurAmount);
 	D2D1_RECT_F samplingWorldBounds
 	{
 		std::max(drawingWorldBounds.left - expansion, 0.f),
@@ -240,7 +240,7 @@ HRESULT CGlassRealizer::Render(
 	return S_OK;
 }
 
-float CGlassRealizer::GetBlurRadius(float blurAmount)
+float CGlassRealizer::GetBlurExpansion(float blurAmount)
 {
 	return std::ceil(blurAmount * 3.f);
 }

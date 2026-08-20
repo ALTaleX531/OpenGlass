@@ -61,7 +61,7 @@ namespace OpenGlass::GlassKernel
 	};
 
 	void RedrawAllTopLevelWindow(bool deepRedraw);
-	float GetBlurRadius();
+	float GetBlurExpansion();
 
 	struct CRealizedGlassColorizationParameters
 	{

@@ -420,7 +420,7 @@ HRESULT GlassRenderer::MyCDrawingContext_DrawGeometry(
 			g_renderTargetIgnoresAlpha = pixelFormat.alphaMode == D2D1_ALPHA_MODE_IGNORE;
 		}
 		
-		const auto expansion = GlassKernel::GetBlurRadius();
+		const auto expansion = GlassKernel::GetBlurExpansion();
 		const auto glassCoverageSet = CArrayBasedGlassCoverageSet::GetOrCreate(occlusionContext->GetArrayBasedCoverageSet());
 		const auto reinterpreter = GlassKernel::AlphaChannelReinterpreter(color.a);
 

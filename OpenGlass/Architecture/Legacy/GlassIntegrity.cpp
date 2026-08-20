@@ -477,7 +477,7 @@ namespace OpenGlass::GlassIntegrity
 	)
 	{
 		const auto collected = std::exchange(g_lastCollectedOcclusionRectangle, {});
-		if (!GlassKernel::GetBlurRadius())
+		if (!GlassKernel::GetBlurExpansion())
 		{
 			return false;
 		}
@@ -517,7 +517,7 @@ namespace OpenGlass::GlassIntegrity
 void GlassIntegrity::ShrinkOccludersAboveGlass(dwmcore::COcclusionContext* occlusionContext)
 {
 	const auto frameId = dwmcore::g_versionInfo.build < os::build_w10_2004 ? dwmcore::GetCurrentFrameId() : occlusionContext->GetFrameId();
-	const auto expansion = GlassKernel::GetBlurRadius();
+	const auto expansion = GlassKernel::GetBlurExpansion();
 
 	if (!expansion)
 	{
@@ -785,7 +785,7 @@ HRESULT GlassIntegrity::MyCOcclusionContext_Compute_Pre_W10_2004(
 	{
 		glassCoverageSet->Clear();
 	}
-	const auto expansion = GlassKernel::GetBlurRadius();
+	const auto expansion = GlassKernel::GetBlurExpansion();
 	if (
 		expansion &&
 		count
@@ -855,7 +855,7 @@ HRESULT GlassIntegrity::MyCOcclusionContext_Compute(
 	{
 		glassCoverageSet->Clear();
 	}
-	const auto expansion = GlassKernel::GetBlurRadius();
+	const auto expansion = GlassKernel::GetBlurExpansion();
 	if (
 		expansion &&
 		rectangles.length
@@ -929,7 +929,7 @@ HRESULT GlassIntegrity::MyCOcclusionContext_DrawGeometry(
 
 	const auto solidColorBrush = static_cast<dwmcore::CSolidColorLegacyMilBrush*>(brush);
 	auto color = solidColorBrush->GetRealizedColor();
-	const auto expansion = GlassKernel::GetBlurRadius();
+	const auto expansion = GlassKernel::GetBlurExpansion();
 	const auto reinterpreter = GlassKernel::AlphaChannelReinterpreter(color.a);
 	const auto valid = reinterpreter.GetIsValid();
 	const auto active = reinterpreter.GetIsActive();
@@ -1044,7 +1044,7 @@ bool GlassIntegrity::MyCArrayBasedCoverageSet_IsCovered(
 	Callback&& invokeOriginal
 )
 {
-	const auto expansion = GlassKernel::GetBlurRadius();
+	const auto expansion = GlassKernel::GetBlurExpansion();
 	if (!expansion || !g_calculationContext.IsActive())
 	{
 		return invokeOriginal(coverage, depth);
@@ -1219,7 +1219,7 @@ bool GlassIntegrity::MyCOcclusionContext_IsOccluded(
 		ignoreDeviceTransform
 	);
 
-	const auto expansion = GlassKernel::GetBlurRadius();
+	const auto expansion = GlassKernel::GetBlurExpansion();
 	if (!expansion || !g_calculationContext.IsActive())
 	{
 		return occluded;
@@ -1314,7 +1314,7 @@ bool GlassIntegrity::MyCOcclusionContext_PageInPixelsRectToDeviceRect(
 	{
 		g_calculationContext.dirtyRect = const_cast<D2D1_RECT_F*>(&src);
 		if (
-			const auto expansion = GlassKernel::GetBlurRadius();
+			const auto expansion = GlassKernel::GetBlurExpansion();
 			expansion &&
 			(
 				g_COcclusionContext_PageInPixelsRectToDeviceRect_26100_3912_Org ||
@@ -1571,7 +1571,7 @@ HRESULT GlassIntegrity::MyCDrawingContext_DrawVisualTree(
 			break;
 		}
 
-		const auto expansion = GlassKernel::GetBlurRadius();
+		const auto expansion = GlassKernel::GetBlurExpansion();
 		if (!expansion)
 		{
 			break;

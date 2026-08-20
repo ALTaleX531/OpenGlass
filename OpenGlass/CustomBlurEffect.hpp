@@ -13,7 +13,7 @@ namespace OpenGlass
 {
 	struct CCustomBlurParams
 	{
-		float blurAmount;
+		float blurAmount; // System compositor GaussianBlurEffect.BlurAmount projection.
 		D2D1_GAUSSIANBLUR_OPTIMIZATION optimization;
 	};
 

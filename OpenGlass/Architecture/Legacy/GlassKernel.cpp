@@ -12,6 +12,7 @@
 #include "CustomThemeAtlasLoader.hpp"
 #include "GlassRealizer.hpp"
 #include "D3DGlassRealizer.hpp"
+#include "BlurSettings.hpp"
 
 using namespace OpenGlass;
 namespace OpenGlass::GlassKernel
@@ -271,7 +272,7 @@ void GlassKernel::RedrawAllTopLevelWindow(bool deepRedraw)
 	}
 }
 
-float GlassKernel::GetBlurRadius()
+float GlassKernel::GetBlurExpansion()
 {
 	if (Shared::IsTransparencyDisabled())
 	{
@@ -279,10 +280,10 @@ float GlassKernel::GetBlurRadius()
 	}
 	if (Shared::g_useD3DRendering)
 	{
-		return CD3DGlassRealizer::GetBlurRadius(Shared::g_blurAmount);
+		return CD3DGlassRealizer::GetBlurExpansion();
 	}
 
-	return CGlassRealizer::GetBlurRadius(Shared::g_blurAmount);
+	return CGlassRealizer::GetBlurExpansion(Shared::g_blurAmount);
 }
 
 float GlassKernel::GetColorizationOpacity(bool active, bool maximized)
@@ -535,7 +536,7 @@ void GlassKernel::Update(GlassEngine::UpdateType type)
 
 		Shared::g_reflectionParallaxIntensity = std::clamp(static_cast<float>(GlassEngine::GetDwordFromRegistry(L"ColorizationGlassReflectionParallaxIntensity", 13)) / 100.f, 0.f, 1.f);
 		Shared::g_reflectionPolicy = static_cast<Shared::ReflectionPolicy>(GlassEngine::GetDwordFromRegistry(L"ColorizationGlassReflectionPolicy", 0xFFFFFFFF));
-		Shared::g_blurAmount = std::clamp(static_cast<float>(GlassEngine::GetDwordFromRegistry(L"BlurDeviation", 30)) / 10.f * 3.f, 0.f, 250.f);
+		Shared::g_blurAmount = BlurSettings::DecodeBlurAmount(GlassEngine::GetDwordFromRegistry(L"BlurDeviation", BlurSettings::DefaultEncodedDeviation));
 		Shared::g_blurOptimization = static_cast<D2D1_GAUSSIANBLUR_OPTIMIZATION>(std::clamp(GlassEngine::GetDwordFromRegistry(L"BlurOptimization", 0), 0ul, 2ul));
 		Shared::g_roundRectRadius = static_cast<int>(GlassEngine::GetDwordFromRegistry(L"RoundRectRadius"));
 		ApplyCornerRadiusToWindowFrames(Shared::g_roundRectRadius);

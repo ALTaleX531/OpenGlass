@@ -9,7 +9,7 @@ namespace OpenGlass::GlassKernel
 	abi::ICompositionSurface* GetOrCreateReflectionSurface();
 
 	void RedrawAllTopLevelWindow(bool deepRedraw);
-	float GetBlurRadius();
+	float GetBlurExpansion();
 
 	struct CRealizedGlassColorizationParameters
 	{

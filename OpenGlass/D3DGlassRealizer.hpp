@@ -155,6 +155,6 @@ namespace OpenGlass
 			const CAeroParams& params,
 			Shared::GlassType type
 		);
-		static float GetBlurRadius(float blurAmount);
+		static float GetBlurExpansion();
 	};
 }

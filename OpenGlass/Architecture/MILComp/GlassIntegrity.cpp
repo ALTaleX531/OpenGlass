@@ -236,7 +236,7 @@ namespace OpenGlass::GlassIntegrity
 void GlassIntegrity::ShrinkOccludersAboveGlass(const dwmcore::COcclusionContext* occlusionContext)
 {
 	const auto frameId = occlusionContext->GetFrameId();
-	const auto expansion = GlassKernel::GetBlurRadius();
+	const auto expansion = GlassKernel::GetBlurExpansion();
 
 	if (!expansion)
 	{
@@ -403,7 +403,7 @@ HRESULT GlassIntegrity::MyCOcclusionContext_CheckAndRecordOverlayCandidate(
 		deviceBounds = This->PageInPixelsRectToDeviceRect(worldBounds);
 	}
 
-	if (!wil::rect_is_empty(deviceBounds) && GlassKernel::GetBlurRadius())
+	if (!wil::rect_is_empty(deviceBounds) && GlassKernel::GetBlurExpansion())
 	{
 		const auto glassCoverageSet = CArrayBasedGlassCoverageSet::GetOrCreate(This);
 		if (glassCoverageSet && glassCoverageSet->IsPartiallyCovered(deviceBounds, depth))
@@ -514,7 +514,7 @@ HRESULT GlassIntegrity::MyCOcclusionContext_Compute(
 	{
 		glassCoverageSet->Clear();
 	}
-	const auto expansion = GlassKernel::GetBlurRadius();
+	const auto expansion = GlassKernel::GetBlurExpansion();
 	if (
 		expansion &&
 		rectangles.length
@@ -613,7 +613,7 @@ HRESULT GlassIntegrity::MyCColorBrush_AddOcclusionInformation(
 		}
 
 		auto color = Color::sRGBToscRGB(This->GetColor(), 1.f);
-		const auto expansion = GlassKernel::GetBlurRadius();
+		const auto expansion = GlassKernel::GetBlurExpansion();
 		const auto active = GlassIntegrity::g_glassStatusByGeometry[geometry].test(0);
 		const auto maximized = GlassIntegrity::g_glassStatusByGeometry[geometry].test(1);
 
@@ -703,7 +703,7 @@ bool GlassIntegrity::MyCOcclusionContext_IsOccluded(
 		ignoreDeviceTransform
 	);
 
-	const auto expansion = GlassKernel::GetBlurRadius();
+	const auto expansion = GlassKernel::GetBlurExpansion();
 	if (!expansion || !g_calculationContext.IsActive())
 	{
 		return occluded;
@@ -802,7 +802,7 @@ HRESULT GlassIntegrity::MyCDrawingContext_DrawVisualTree(
 			break;
 		}
 
-		const auto expansion = GlassKernel::GetBlurRadius();
+		const auto expansion = GlassKernel::GetBlurExpansion();
 		if (!expansion)
 		{
 			break;

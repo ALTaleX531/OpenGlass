@@ -199,7 +199,7 @@ namespace OpenGlass
 		wxCheckBox* m_chkCustomThemeMaterial{ nullptr }; // Added
 		wxFilePickerCtrl* m_fpCustomThemeMaterial{ nullptr };
 		wxSlider* m_slMaterialOpacity{ nullptr };
-		wxSlider* m_slBlurDeviation{ nullptr };
+		wxSlider* m_slBlurAmount{ nullptr };
 		wxChoice* m_chBlurOptimization{ nullptr };
 		wxCheckBox* m_chkUseD3D{ nullptr };
 		wxCheckBox* m_chkGlassSafetyZone{ nullptr };

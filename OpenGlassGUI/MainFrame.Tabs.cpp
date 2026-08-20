@@ -3,6 +3,7 @@
 #include "ColorSwatchButton.hpp"
 #include "Symbols.hpp"
 #include "UiControls.hpp"
+#include "BlurSettings.hpp"
 
 namespace OpenGlass
 {
@@ -538,9 +539,18 @@ namespace OpenGlass
 		// General Group
 		wxStaticBoxSizer* generalGroup = new wxStaticBoxSizer(wxVERTICAL, panel, L"General");
 		
-		// Blur Deviation
-		m_slBlurDeviation = new NativeSlider(panel, wxID_ANY, 9, 0, 30, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL | wxSL_AUTOTICKS);
-		AddProperty(panel, generalGroup, L"Blur radius:", m_slBlurDeviation, Settings::Id::BlurDeviation);
+		// CCustomBlur's projected BlurAmount. BlurDeviation is its historical registry encoding.
+		m_slBlurAmount = new NativeSlider(
+			panel,
+			wxID_ANY,
+			BlurSettings::DecodeGuiBlurAmount(BlurSettings::DefaultEncodedDeviation),
+			BlurSettings::GuiMinimumBlurAmount,
+			BlurSettings::GuiMaximumBlurAmount,
+			wxDefaultPosition,
+			wxDefaultSize,
+			wxSL_HORIZONTAL | wxSL_AUTOTICKS
+		);
+		AddProperty(panel, generalGroup, L"Blur amount:", m_slBlurAmount, Settings::Id::BlurDeviation);
 		// Blur Optimization
 		wxArrayString blurOpts;
 		blurOpts.Add(L"Speed first");
@@ -557,7 +567,7 @@ namespace OpenGlass
 			AddOptionStatus(panel, row, Settings::Id::UseDirect3DRendering);
 			generalGroup->Add(row, 0, wxEXPAND | wxALL, 2);
 		}
-		m_chkUseD3D->SetToolTip(L"Use d3d11 backend. Blur radius will be locked to 3.");
+		m_chkUseD3D->SetToolTip(L"Use the Direct3D 11 backend. It ignores BlurDeviation and BlurOptimization and uses a separate fixed Gaussian standard deviation of 3 px.");
 
 		sizer->Add(generalGroup, 0, wxEXPAND | wxALL, 2);
 		// Window Group

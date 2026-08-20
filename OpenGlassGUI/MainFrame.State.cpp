@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "MainFrame.hpp"
+#include "BlurSettings.hpp"
 
 namespace OpenGlass
 {
@@ -161,33 +162,16 @@ namespace OpenGlass
 		m_slMaterialOpacity->SetValue(m_config->GetDword(L"MaterialOpacity", 0));
 		syncSliderTooltip(m_slMaterialOpacity);
 
-		bool useD3D = m_config->GetDword(L"UseDirect3DRendering", 0) != 0;
+		const bool useD3D = m_config->GetDword(L"UseDirect3DRendering", 0) != 0;
 		m_chkUseD3D->SetValue(useD3D);
-		auto blurDeviationToRadius = [](DWORD deviation) -> int {
-			int val = (static_cast<int>(deviation) * 3 + 5) / 10;
-			if (val < 0) val = 0;
-			if (val > 30) val = 30;
-			return val;
-		};
 
-		if (useD3D)
-		{
-			m_slBlurDeviation->SetValue(3);
-			m_slBlurDeviation->Enable(false);
-			syncSliderTooltip(m_slBlurDeviation);
+		const DWORD encodedDeviation = m_config->GetDword(L"BlurDeviation", BlurSettings::DefaultEncodedDeviation);
+		m_slBlurAmount->SetValue(BlurSettings::DecodeGuiBlurAmount(encodedDeviation));
+		m_slBlurAmount->Enable(!useD3D);
+		syncSliderTooltip(m_slBlurAmount);
 
-			m_chBlurOptimization->SetSelection(0);
-			m_chBlurOptimization->Enable(false);
-		}
-		else
-		{
-			m_slBlurDeviation->SetValue(blurDeviationToRadius(m_config->GetDword(L"BlurDeviation", 30)));
-			m_slBlurDeviation->Enable(true);
-			syncSliderTooltip(m_slBlurDeviation);
-
-			m_chBlurOptimization->SetSelection(std::clamp<int>(m_config->GetDword(L"BlurOptimization", 0), 0, 2));
-			m_chBlurOptimization->Enable(true);
-		}
+		m_chBlurOptimization->SetSelection(std::clamp<int>(m_config->GetDword(L"BlurOptimization", 0), 0, 2));
+		m_chBlurOptimization->Enable(!useD3D);
 		m_chkGlassSafetyZone->SetValue(m_config->GetDword(L"GlassSafetyZoneMode", 1) == 0);
 
 		// RoundRect

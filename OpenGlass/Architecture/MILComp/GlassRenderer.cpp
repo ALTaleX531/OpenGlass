@@ -222,7 +222,7 @@ HRESULT GlassRenderer::MyCColorBrush_Draw(
 			}
 		}
 
-		const auto expansion = GlassKernel::GetBlurRadius();
+		const auto expansion = GlassKernel::GetBlurExpansion();
 		//const auto glassCoverageSet = CArrayBasedGlassCoverageSet::GetOrCreate(occlusionContext->GetArrayBasedCoverageSet());
 
 		{
