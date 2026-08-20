@@ -429,5 +429,42 @@ class ProjectionCodegenTests(unittest.TestCase):
 		with self.assertRaisesRegex(projection_schema.SchemaError, r"no runtime call site or direct Symbol consumer"):
 			codegen.run(self.repo, self.architecture, self.output, False)
 
+
+class ProductionProjectionContractTests(unittest.TestCase):
+	def test_server_2022_collect_rectangle_uses_updated_abi(self) -> None:
+		repo = Path(__file__).resolve().parent.parent
+		schema_path = repo / "OpenGlass" / "ProjectionSchemas" / "legacy" / "dwmcore.json"
+		validated = projection_schema.validate_schema(
+			schema_path,
+			"dwmcore",
+			projection_source_check.load_os_constants(repo),
+		)
+		symbols = {symbol["id"]: symbol for symbol in validated["symbols"]}
+		pre_server = symbols["COcclusionContext::CollectRectangleForOcclusion.pre20348"]
+		server = symbols["COcclusionContext::CollectRectangleForOcclusion.20348"]
+
+		self.assertEqual((20348, 0), projection_schema.version_key(pre_server["max_exclusive"]))
+		self.assertEqual((20348, 0), projection_schema.version_key(server["min_inclusive"]))
+		self.assertTrue(any(name.startswith("private: long ") for name in pre_server["symbol_names"]))
+		self.assertTrue(
+			any(name.startswith("private: void ") and ",bool,bool," in name for name in server["symbol_names"])
+		)
+
+		def active(symbol: projection_schema.Symbol, version: tuple[int, int]) -> bool:
+			minimum = projection_schema.version_key(symbol["min_inclusive"])
+			maximum = projection_schema.version_key(symbol["max_exclusive"])
+			return minimum <= version and (not maximum[0] or version < maximum)
+
+		collect_rectangle = [pre_server, server]
+		self.assertEqual(
+			["COcclusionContext::CollectRectangleForOcclusion.pre20348"],
+			[symbol["id"] for symbol in collect_rectangle if active(symbol, (19041, 1))],
+		)
+		self.assertEqual(
+			["COcclusionContext::CollectRectangleForOcclusion.20348"],
+			[symbol["id"] for symbol in collect_rectangle if active(symbol, (20348, 2582))],
+		)
+
+
 if __name__ == "__main__":
 	unittest.main()

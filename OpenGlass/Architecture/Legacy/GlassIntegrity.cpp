@@ -273,8 +273,8 @@ namespace OpenGlass::GlassIntegrity
 	Projection::Detour<dwmcore::Symbol_COcclusionContext_CheckAndRecordOverlayCandidate_19041, dwmcore::COcclusionContext_CheckAndRecordOverlayCandidate_19041_t> g_COcclusionContext_CheckAndRecordOverlayCandidate_19041_Org{};
 	Projection::Detour<dwmcore::Symbol_COcclusionContext_CheckAndRecordOverlayCandidate_26100, dwmcore::COcclusionContext_CheckAndRecordOverlayCandidate_26100_t> g_COcclusionContext_CheckAndRecordOverlayCandidate_26100_Org{};
 	Projection::Detour<dwmcore::Symbol_COcclusionContext_NodeIntersectsOcclusionRegion_26100_3624, dwmcore::COcclusionContext_NodeIntersectsOcclusionRegion_t> g_COcclusionContext_NodeIntersectsOcclusionRegion_Org{};
-	Projection::Detour<dwmcore::Symbol_COcclusionContext_CollectRectangleForOcclusion_Pre_22000, dwmcore::COcclusionContext_CollectRectangleForOcclusion_Pre_22000_t> g_COcclusionContext_CollectRectangleForOcclusion_Pre_22000_Org{};
-	Projection::Detour<dwmcore::Symbol_COcclusionContext_CollectRectangleForOcclusion_22000, dwmcore::COcclusionContext_CollectRectangleForOcclusion_22000_t> g_COcclusionContext_CollectRectangleForOcclusion_22000_Org{};
+	Projection::Detour<dwmcore::Symbol_COcclusionContext_CollectRectangleForOcclusion_Pre_20348, dwmcore::COcclusionContext_CollectRectangleForOcclusion_Pre_20348_t> g_COcclusionContext_CollectRectangleForOcclusion_Pre_20348_Org{};
+	Projection::Detour<dwmcore::Symbol_COcclusionContext_CollectRectangleForOcclusion_20348, dwmcore::COcclusionContext_CollectRectangleForOcclusion_20348_t> g_COcclusionContext_CollectRectangleForOcclusion_20348_Org{};
 	Projection::Detour<dwmcore::Symbol_COcclusionContext_CollectRectangleForOcclusion_26100_Pre_7840, dwmcore::COcclusionContext_CollectRectangleForOcclusion_26100_Pre_7840_t> g_COcclusionContext_CollectRectangleForOcclusion_26100_Pre_7840_Org{};
 	Projection::Detour<dwmcore::Symbol_COcclusionContext_CollectRectangleForOcclusion_26100_7840, dwmcore::COcclusionContext_CollectRectangleForOcclusion_26100_7840_t> g_COcclusionContext_CollectRectangleForOcclusion_26100_7840_Org{};
 
@@ -652,7 +652,7 @@ HRESULT GlassIntegrity::MyCOcclusionContext_CollectRectangleForOcclusion(
 )
 {
 	CaptureCollectedOcclusionRectangle(This, rectangle);
-	const auto hr = g_COcclusionContext_CollectRectangleForOcclusion_Pre_22000_Org(This, rectangle, unknown, outRect);
+	const auto hr = g_COcclusionContext_CollectRectangleForOcclusion_Pre_20348_Org(This, rectangle, unknown, outRect);
 	return hr;
 }
 
@@ -665,7 +665,7 @@ void GlassIntegrity::MyCOcclusionContext_CollectRectangleForOcclusion(
 )
 {
 	CaptureCollectedOcclusionRectangle(This, rectangle);
-	g_COcclusionContext_CollectRectangleForOcclusion_22000_Org(This, rectangle, unknown1, unknown2, outRect);
+	g_COcclusionContext_CollectRectangleForOcclusion_20348_Org(This, rectangle, unknown1, unknown2, outRect);
 }
 
 void GlassIntegrity::MyCOcclusionContext_CollectRectangleForOcclusion(
@@ -1906,8 +1906,8 @@ void GlassIntegrity::Startup()
 			{ &g_COcclusionContext_CheckAndRecordOverlayCandidate_19041_Org, static_cast<dwmcore::COcclusionContext_CheckAndRecordOverlayCandidate_19041_t>(&MyCOcclusionContext_CheckAndRecordOverlayCandidate), !build_before_w10_2004 && build_before_w11_24h2 },
 			{ &g_COcclusionContext_CheckAndRecordOverlayCandidate_26100_Org, static_cast<dwmcore::COcclusionContext_CheckAndRecordOverlayCandidate_26100_t>(&MyCOcclusionContext_CheckAndRecordOverlayCandidate), !build_before_w11_24h2 },
 			{ &g_COcclusionContext_NodeIntersectsOcclusionRegion_Org, &MyCOcclusionContext_NodeIntersectsOcclusionRegion, hasNodeIntersectsOcclusionRegion },
-			{ &g_COcclusionContext_CollectRectangleForOcclusion_Pre_22000_Org, static_cast<dwmcore::COcclusionContext_CollectRectangleForOcclusion_Pre_22000_t>(&MyCOcclusionContext_CollectRectangleForOcclusion), build_before_w11_21h2 },
-			{ &g_COcclusionContext_CollectRectangleForOcclusion_22000_Org, static_cast<dwmcore::COcclusionContext_CollectRectangleForOcclusion_22000_t>(&MyCOcclusionContext_CollectRectangleForOcclusion), !build_before_w11_21h2 && build_before_w11_24h2 },
+			{ &g_COcclusionContext_CollectRectangleForOcclusion_Pre_20348_Org, static_cast<dwmcore::COcclusionContext_CollectRectangleForOcclusion_Pre_20348_t>(&MyCOcclusionContext_CollectRectangleForOcclusion), build_before_server_2022 },
+			{ &g_COcclusionContext_CollectRectangleForOcclusion_20348_Org, static_cast<dwmcore::COcclusionContext_CollectRectangleForOcclusion_20348_t>(&MyCOcclusionContext_CollectRectangleForOcclusion), !build_before_server_2022 && build_before_w11_24h2 },
 			{ &g_COcclusionContext_CollectRectangleForOcclusion_26100_Pre_7840_Org, static_cast<dwmcore::COcclusionContext_CollectRectangleForOcclusion_26100_Pre_7840_t>(&MyCOcclusionContext_CollectRectangleForOcclusion), hasCollectRectangleForOcclusion26100_Pre_7840 },
 			{ &g_COcclusionContext_CollectRectangleForOcclusion_26100_7840_Org, static_cast<dwmcore::COcclusionContext_CollectRectangleForOcclusion_26100_7840_t>(&MyCOcclusionContext_CollectRectangleForOcclusion), hasCollectRectangleForOcclusion26100_7840 },
 
@@ -1974,8 +1974,8 @@ void GlassIntegrity::Shutdown()
 			{ &g_COcclusionContext_CheckAndRecordOverlayCandidate_19041_Org, static_cast<dwmcore::COcclusionContext_CheckAndRecordOverlayCandidate_19041_t>(&MyCOcclusionContext_CheckAndRecordOverlayCandidate), !build_before_w10_2004 && build_before_w11_24h2 },
 			{ &g_COcclusionContext_CheckAndRecordOverlayCandidate_26100_Org, static_cast<dwmcore::COcclusionContext_CheckAndRecordOverlayCandidate_26100_t>(&MyCOcclusionContext_CheckAndRecordOverlayCandidate), !build_before_w11_24h2 },
 			{ &g_COcclusionContext_NodeIntersectsOcclusionRegion_Org, &MyCOcclusionContext_NodeIntersectsOcclusionRegion, hasNodeIntersectsOcclusionRegion },
-			{ &g_COcclusionContext_CollectRectangleForOcclusion_Pre_22000_Org, static_cast<dwmcore::COcclusionContext_CollectRectangleForOcclusion_Pre_22000_t>(&MyCOcclusionContext_CollectRectangleForOcclusion), build_before_w11_21h2 },
-			{ &g_COcclusionContext_CollectRectangleForOcclusion_22000_Org, static_cast<dwmcore::COcclusionContext_CollectRectangleForOcclusion_22000_t>(&MyCOcclusionContext_CollectRectangleForOcclusion), !build_before_w11_21h2 && build_before_w11_24h2 },
+			{ &g_COcclusionContext_CollectRectangleForOcclusion_Pre_20348_Org, static_cast<dwmcore::COcclusionContext_CollectRectangleForOcclusion_Pre_20348_t>(&MyCOcclusionContext_CollectRectangleForOcclusion), build_before_server_2022 },
+			{ &g_COcclusionContext_CollectRectangleForOcclusion_20348_Org, static_cast<dwmcore::COcclusionContext_CollectRectangleForOcclusion_20348_t>(&MyCOcclusionContext_CollectRectangleForOcclusion), !build_before_server_2022 && build_before_w11_24h2 },
 			{ &g_COcclusionContext_CollectRectangleForOcclusion_26100_Pre_7840_Org, static_cast<dwmcore::COcclusionContext_CollectRectangleForOcclusion_26100_Pre_7840_t>(&MyCOcclusionContext_CollectRectangleForOcclusion), hasCollectRectangleForOcclusion26100_Pre_7840 },
 			{ &g_COcclusionContext_CollectRectangleForOcclusion_26100_7840_Org, static_cast<dwmcore::COcclusionContext_CollectRectangleForOcclusion_26100_7840_t>(&MyCOcclusionContext_CollectRectangleForOcclusion), hasCollectRectangleForOcclusion26100_7840 },
 

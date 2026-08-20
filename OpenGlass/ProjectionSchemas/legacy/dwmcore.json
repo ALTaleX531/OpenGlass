@@ -668,29 +668,30 @@
       "type": "COcclusionContext_CheckAndRecordOverlayCandidate_26100_t"
     },
     {
-      "name": "Symbol_COcclusionContext_CollectRectangleForOcclusion_Pre_22000",
-      "id": "COcclusionContext::CollectRectangleForOcclusion.pre22000",
+      "name": "Symbol_COcclusionContext_CollectRectangleForOcclusion_Pre_20348",
+      "id": "COcclusionContext::CollectRectangleForOcclusion.pre20348",
       "symbol_names": [
         "private: long __cdecl COcclusionContext::CollectRectangleForOcclusion(class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const * __ptr64,bool,class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64) __ptr64",
         "private: long __cdecl COcclusionContext::CollectRectangleForOcclusion(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const * __ptr64,bool,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64) __ptr64"
       ],
       "requirement": "required",
       "min_inclusive": null,
-      "max_exclusive": { "build": 22000, "revision": 0 },
+      "max_exclusive": { "build": 20348, "revision": 0 },
       "kind": "raw",
-      "type": "COcclusionContext_CollectRectangleForOcclusion_Pre_22000_t"
+      "type": "COcclusionContext_CollectRectangleForOcclusion_Pre_20348_t"
     },
     {
-      "name": "Symbol_COcclusionContext_CollectRectangleForOcclusion_22000",
-      "id": "COcclusionContext::CollectRectangleForOcclusion.22000",
+      "name": "Symbol_COcclusionContext_CollectRectangleForOcclusion_20348",
+      "id": "COcclusionContext::CollectRectangleForOcclusion.20348",
       "symbol_names": [
         "private: void __cdecl COcclusionContext::CollectRectangleForOcclusion(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const * __ptr64,bool,bool,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64) __ptr64"
       ],
       "requirement": "required",
-      "min_inclusive": { "build": 22000, "revision": 0 },
+      "min_inclusive": { "build": 20348, "revision": 0 },
       "max_exclusive": { "build": 26100, "revision": 0 },
       "kind": "raw",
-      "type": "COcclusionContext_CollectRectangleForOcclusion_22000_t"
+      "type": "COcclusionContext_CollectRectangleForOcclusion_20348_t",
+      "notes": "Build 20348 adds a trailing bool and changes the return type from HRESULT to void. Optimized 20348.2582 callers may leave the added register argument unset because the callee does not consume it; OpenGlass treats it as opaque and only forwards it."
     },
     {
       "name": "Symbol_COcclusionContext_CollectRectangleForOcclusion_26100_Pre_7840",
