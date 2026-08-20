@@ -12,7 +12,6 @@ from pathlib import Path
 from typing import Any
 
 
-SCHEMA_VERSION = 2
 VERSION_RE = re.compile(r"(?:10\.0\.)?([0-9]+)\.([0-9]+)\Z")
 
 TOOL_ROOT = Path(__file__).parents[4]
@@ -22,6 +21,8 @@ try:
 	import projection_source_check
 finally:
 	sys.path.pop(0)
+
+SCHEMA_VERSION = projection_schema.SCHEMA_VERSION
 
 
 class InputError(Exception):

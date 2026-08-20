@@ -41,11 +41,12 @@ class ProjectionLayoutValidationTests(unittest.TestCase):
 		max_exclusive: dict[str, int] | None = None,
 	) -> None:
 		payload = {
-			"schema_version": 2,
+			"schema_version": VALIDATOR.SCHEMA_VERSION,
 			"module": module,
 			"namespace": module,
 			"tag": "Tag",
 			"symbols": [],
+			"known_builds": [100],
 			"layouts": layouts,
 		}
 		if min_inclusive is not None:
