@@ -82,13 +82,22 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ runner.arch }}-nuget-
 
+      - name: Determine vcpkg cache identity
+        id: vcpkg_cache_identity
+        run: |
+          $identity = "$env:ImageOS-$env:ImageVersion"
+          if ($identity -notmatch '^[A-Za-z0-9._-]+$') {
+              throw "Invalid runner image identity: $identity"
+          }
+          "value=$identity" >> $env:GITHUB_OUTPUT
+
       - name: Cache vcpkg binary packages
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ${{ github.workspace }}\.ci-cache\vcpkg-binary-cache
-          key: ${{ runner.os }}-${{ runner.arch }}-v145-x64-windows-static-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json', 'ports/**') }}
+          key: ${{ runner.os }}-${{ runner.arch }}-${{ steps.vcpkg_cache_identity.outputs.value }}-v145-x64-windows-static-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json', 'ports/**') }}
           restore-keys: |
-            ${{ runner.os }}-${{ runner.arch }}-v145-x64-windows-static-
+            ${{ runner.os }}-${{ runner.arch }}-${{ steps.vcpkg_cache_identity.outputs.value }}-v145-x64-windows-static-
 
       - name: Initialize cache directories
         run: |
