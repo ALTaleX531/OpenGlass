@@ -15,6 +15,11 @@ namespace OpenGlass::GlassFrameHandler
 	HRESULT MyCTopLevelWindow_UpdateNCAreaBackground(uDWM::CTopLevelWindow* This);
 }
 
+namespace OpenGlass::GlassKernel
+{
+	HRESULT MyCTopLevelWindow_UpdateNCAreaBackground(uDWM::CTopLevelWindow* This);
+}
+
 namespace OpenGlass::GlassReflectionHandler
 {
 	HRESULT MyCRenderData_TryDrawCommandAsDrawList_Win10(
@@ -72,13 +77,17 @@ namespace OpenGlass::DetourChains
 	using TopLevelWindowValidateVisualDemodernizerNode = TopLevelWindowValidateVisual::Node<0>;
 	using TopLevelWindowValidateVisualFrameHandlerNode = TopLevelWindowValidateVisual::Node<1>;
 
+	// Kernel must remain first so its rounded-region scope encloses every
+	// downstream replacement and the original background update.
 	using TopLevelWindowUpdateNCAreaBackground = Projection::ChainDetour<
 		uDWM::Symbol_CTopLevelWindow_UpdateNCAreaBackground,
+		&GlassKernel::MyCTopLevelWindow_UpdateNCAreaBackground,
 		&GlassFrameDemodernizer::MyCTopLevelWindow_UpdateNCAreaBackground,
 		&GlassFrameHandler::MyCTopLevelWindow_UpdateNCAreaBackground
 	>;
-	using TopLevelWindowUpdateNCAreaBackgroundDemodernizerNode = TopLevelWindowUpdateNCAreaBackground::Node<0>;
-	using TopLevelWindowUpdateNCAreaBackgroundFrameHandlerNode = TopLevelWindowUpdateNCAreaBackground::Node<1>;
+	using TopLevelWindowUpdateNCAreaBackgroundKernelNode = TopLevelWindowUpdateNCAreaBackground::Node<0>;
+	using TopLevelWindowUpdateNCAreaBackgroundDemodernizerNode = TopLevelWindowUpdateNCAreaBackground::Node<1>;
+	using TopLevelWindowUpdateNCAreaBackgroundFrameHandlerNode = TopLevelWindowUpdateNCAreaBackground::Node<2>;
 
 	using RenderDataTryDrawCommandAsDrawListWin10 = Projection::ChainDetour<
 		dwmcore::Symbol_CRenderData_TryDrawCommandAsDrawList_Pre_22000,

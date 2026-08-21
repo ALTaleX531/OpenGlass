@@ -11,6 +11,7 @@ namespace OpenGlass::GlassKernel
 	inline RECT g_roundedBounds{};
 	inline int g_diameter{ 0 };
 	inline std::optional<bool> g_redirectFirstCreateRectRgnCall{};
+	inline wil::unique_hrgn g_combinedRgn{};
 
 	class AlphaChannelReinterpreter
 	{

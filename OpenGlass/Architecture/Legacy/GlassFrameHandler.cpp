@@ -12,7 +12,6 @@ using namespace OpenGlass;
 
 namespace OpenGlass::GlassFrameHandler
 {
-	HRESULT MyResourceHelper_CreateGeometryFromHRGN(HRGN hrgn, uDWM::CRgnGeometryProxy** geometry);
 	void MyCGlassColorizationParameters_AdjustWindowColorization(
 		uDWM::CGlassColorizationParameters* This,
 		const uDWM::GpCC* colorUnused,
@@ -22,14 +21,11 @@ namespace OpenGlass::GlassFrameHandler
 	HRESULT MyCTopLevelWindow_UpdateClientBlur(uDWM::CTopLevelWindow* This);
 	void MyCTopLevelWindow_Destructor(uDWM::CTopLevelWindow* This);
 
-	Projection::Detour<uDWM::Symbol_ResourceHelper_CreateGeometryFromHRGN, &MyResourceHelper_CreateGeometryFromHRGN> g_ResourceHelper_CreateGeometryFromHRGN_Org{};
 	Projection::Detour<uDWM::Symbol_CGlassColorizationParameters_AdjustWindowColorization, &MyCGlassColorizationParameters_AdjustWindowColorization> g_CGlassColorizationParameters_AdjustWindowColorization_Org{};
 	DetourChains::TopLevelWindowUpdateNCAreaBackgroundFrameHandlerNode g_CTopLevelWindow_UpdateNCAreaBackground_Org{};
 	Projection::Detour<uDWM::Symbol_CTopLevelWindow_UpdateClientBlur, &MyCTopLevelWindow_UpdateClientBlur> g_CTopLevelWindow_UpdateClientBlur_Org{};
 	DetourChains::TopLevelWindowValidateVisualFrameHandlerNode g_CTopLevelWindow_ValidateVisual_Org{};
 	Projection::Detour<uDWM::Symbol_CTopLevelWindow__CTopLevelWindow, &MyCTopLevelWindow_Destructor> g_CTopLevelWindow_Destructor_Org{};
-	
-	wil::unique_hrgn g_combinedRgn{ nullptr };
 
 	HRESULT UpdateReflectionViewport(uDWM::CTopLevelWindow* window);
 }
@@ -158,24 +154,6 @@ HRESULT GlassFrameHandler::UpdateReflectionViewport(uDWM::CTopLevelWindow* windo
 	return S_OK;
 }
 
-HRESULT GlassFrameHandler::MyResourceHelper_CreateGeometryFromHRGN(HRGN hrgn, uDWM::CRgnGeometryProxy** geometry)
-{
-	if (g_combinedRgn)
-	{
-		CombineRgn(
-			g_combinedRgn.get(),
-			g_combinedRgn.get(),
-			hrgn,
-			RGN_OR
-		);
-	}
-
-	return g_ResourceHelper_CreateGeometryFromHRGN_Org(
-		hrgn,
-		geometry
-	);
-}
-
 void GlassFrameHandler::MyCGlassColorizationParameters_AdjustWindowColorization(
 	uDWM::CGlassColorizationParameters* This,
 	[[maybe_unused]] const uDWM::GpCC* colorUnused,
@@ -212,11 +190,7 @@ HRESULT GlassFrameHandler::MyCTopLevelWindow_UpdateNCAreaBackground(uDWM::CTopLe
 	const auto active = This->TreatAsActiveWindow();
 	const auto maximized = This->TreatAsMaximized();
 
-	HRESULT hr{ S_OK };
-	GlassKernel::g_redirectFirstCreateRectRgnCall = true;
-	g_combinedRgn.reset(CreateRectRgn(0, 0, 0, 0));
-	const auto combinedRgnScope = wil::scope_exit([] { GlassKernel::g_redirectFirstCreateRectRgnCall = std::nullopt; g_combinedRgn.reset(); });
-	hr = g_CTopLevelWindow_UpdateNCAreaBackground_Org(This);
+	const auto hr = g_CTopLevelWindow_UpdateNCAreaBackground_Org(This);
 
 	auto effectBrush = GlassEffectBrush::GetOrCreate(This);
 
@@ -256,7 +230,7 @@ HRESULT GlassFrameHandler::MyCTopLevelWindow_UpdateNCAreaBackground(uDWM::CTopLe
 			captionGeometry.copy_from(reinterpret_cast<uDWM::CRgnGeometryProxy*>(instruction->GetGeometry()));
 			RETURN_IF_FAILED(
 				uDWM::ResourceHelper::CreateGeometryFromHRGN(
-					g_combinedRgn.get(),
+					GlassKernel::g_combinedRgn.get(),
 					reinterpret_cast<uDWM::CRgnGeometryProxy**>(&captionGeometry)
 				)
 			);
@@ -494,7 +468,6 @@ void GlassFrameHandler::Startup()
 		std::initializer_list<HookHelper::DetourInfo>
 		{
 			{ &g_CGlassColorizationParameters_AdjustWindowColorization_Org },
-			{ &g_ResourceHelper_CreateGeometryFromHRGN_Org },
 			{ &g_CTopLevelWindow_UpdateNCAreaBackground_Org },
 			{ &g_CTopLevelWindow_UpdateClientBlur_Org },
 
@@ -516,7 +489,6 @@ void GlassFrameHandler::Shutdown()
 		std::initializer_list<HookHelper::DetourInfo>
 		{
 			{ &g_CGlassColorizationParameters_AdjustWindowColorization_Org },
-			{ &g_ResourceHelper_CreateGeometryFromHRGN_Org },
 			{ &g_CTopLevelWindow_UpdateNCAreaBackground_Org },
 			{ &g_CTopLevelWindow_UpdateClientBlur_Org },
 
@@ -530,5 +502,4 @@ void GlassFrameHandler::Shutdown()
 
 void GlassFrameHandler::Cleanup()
 {
-	g_combinedRgn.reset();
 }

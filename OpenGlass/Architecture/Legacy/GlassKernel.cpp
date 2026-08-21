@@ -13,6 +13,7 @@
 #include "GlassRealizer.hpp"
 #include "D3DGlassRealizer.hpp"
 #include "BlurSettings.hpp"
+#include "DetourChains.hpp"
 
 using namespace OpenGlass;
 namespace OpenGlass::GlassKernel
@@ -20,6 +21,7 @@ namespace OpenGlass::GlassKernel
 	HRGN WINAPI MyCreateRoundRectRgn(int x1, int y1, int x2, int y2, int w, int h);
 	HRGN WINAPI MyCreateRectRgn(int x1, int y1, int x2, int y2);
 	HRGN WINAPI MyExtCreateRegion(const XFORM* lpx, DWORD nCount, const RGNDATA* lpData);
+	HRESULT MyResourceHelper_CreateGeometryFromHRGN(HRGN hrgn, uDWM::CRgnGeometryProxy** geometry);
 
 	HRESULT MyIDCompositionDesktopDevice_WaitForCommitCompletion(IDCompositionDesktopDevice* This);
 	HRESULT MyCD2DContext_DestroyDeviceResources(dwmcore::CD2DContext* This);
@@ -36,6 +38,9 @@ namespace OpenGlass::GlassKernel
 	decltype(&MyIDCompositionDesktopDevice_WaitForCommitCompletion) g_IDCompositionDesktopDevice_WaitForCommitCompletion_Org{ nullptr };
 	decltype(&MyIDCompositionDesktopDevice_WaitForCommitCompletion)* g_IDCompositionDesktopDevice_WaitForCommitCompletion_Org_Address{ nullptr };
 	HookHelper::PointerHook<&MyIDCompositionDesktopDevice_WaitForCommitCompletion> g_IDCompositionDesktopDevice_WaitForCommitCompletion_Hook;
+	// Rounded frame collection is required even when GlassFrameHandler is disabled.
+	Projection::Detour<uDWM::Symbol_ResourceHelper_CreateGeometryFromHRGN, &MyResourceHelper_CreateGeometryFromHRGN> g_ResourceHelper_CreateGeometryFromHRGN_Org{};
+	DetourChains::TopLevelWindowUpdateNCAreaBackgroundKernelNode g_CTopLevelWindow_UpdateNCAreaBackground_Org{};
 	Projection::Detour<dwmcore::Symbol_CD2DContext_DestroyDeviceResources, &MyCD2DContext_DestroyDeviceResources> g_CD2DContext_DestroyDeviceResources_Org{};
 	Projection::Detour<uDWM::Symbol_CDesktopManager_ReleaseDXGIAdapter, &MyCDesktopManager_ReleaseDXGIAdapter> g_CDesktopManager_ReleaseDXGIAdapter_Org{};
 	Projection::Detour<uDWM::Symbol_CGraphicsDeviceManager_ReleaseGraphicsDevice, &MyCGraphicsDeviceManager_ReleaseGraphicsDevice> g_CGraphicsDeviceManager_ReleaseGraphicsDevice_Org{};
@@ -118,6 +123,36 @@ bool GlassKernel::IsDrawGeometryCommand(UINT commandType, const DWM::span<const 
 	return
 		commandType == g_drawGeometryCommandType &&
 		resources->length == sizeof(dwmcore::CDrawGeometryCommand);
+}
+
+HRESULT GlassKernel::MyResourceHelper_CreateGeometryFromHRGN(HRGN hrgn, uDWM::CRgnGeometryProxy** geometry)
+{
+	if (g_combinedRgn)
+	{
+		CombineRgn(
+			g_combinedRgn.get(),
+			g_combinedRgn.get(),
+			hrgn,
+			RGN_OR
+		);
+	}
+
+	return g_ResourceHelper_CreateGeometryFromHRGN_Org(
+		hrgn,
+		geometry
+	);
+}
+
+HRESULT GlassKernel::MyCTopLevelWindow_UpdateNCAreaBackground(uDWM::CTopLevelWindow* This)
+{
+	g_redirectFirstCreateRectRgnCall = true;
+	g_combinedRgn.reset(CreateRectRgn(0, 0, 0, 0));
+	const auto combinedRgnScope = wil::scope_exit([]
+	{
+		g_redirectFirstCreateRectRgnCall = std::nullopt;
+		g_combinedRgn.reset();
+	});
+	return g_CTopLevelWindow_UpdateNCAreaBackground_Org(This);
 }
 
 HRGN WINAPI GlassKernel::MyCreateRoundRectRgn(int x1, int y1, int x2, int y2, int w, int h)
@@ -670,6 +705,8 @@ void GlassKernel::Startup()
 	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
+			{ &g_CTopLevelWindow_UpdateNCAreaBackground_Org },
+			{ &g_ResourceHelper_CreateGeometryFromHRGN_Org },
 			{ &g_CD2DContext_DestroyDeviceResources_Org },
 			{ &g_CDesktopManager_ReleaseDXGIAdapter_Org, build_before_server_2022 },
 			{ &g_CGraphicsDeviceManager_ReleaseGraphicsDevice_Org, !build_before_server_2022 },
@@ -688,6 +725,8 @@ void GlassKernel::Shutdown()
 	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
+			{ &g_CTopLevelWindow_UpdateNCAreaBackground_Org },
+			{ &g_ResourceHelper_CreateGeometryFromHRGN_Org },
 			{ &g_CD2DContext_DestroyDeviceResources_Org },
 			{ &g_CDesktopManager_ReleaseDXGIAdapter_Org, build_before_server_2022 },
 			{ &g_CGraphicsDeviceManager_ReleaseGraphicsDevice_Org, !build_before_server_2022 },
@@ -705,6 +744,7 @@ void GlassKernel::Shutdown()
 
 void GlassKernel::Cleanup()
 {
+	g_combinedRgn.reset();
 	ApplyCornerRadiusToWindowFrames(0);
 	GlassReflectionBrush::RemoveAll();
 	GlassEffectBrush::RemoveAll();
