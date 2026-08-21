@@ -697,7 +697,13 @@ namespace OpenGlass::Projection
 				);
 
 				State::s_dispatcher = dispatcher;
-				s_activeNodes[Index] = true;
+				// Removal reconstructs DetourInfo while existing dispatchers may
+				// still be draining. Avoid a redundant concurrent write; chain
+				// membership remains fixed until the injected DLL unloads.
+				if (!s_activeNodes[Index])
+				{
+					s_activeNodes[Index] = true;
+				}
 				return dispatcher;
 			}
 
