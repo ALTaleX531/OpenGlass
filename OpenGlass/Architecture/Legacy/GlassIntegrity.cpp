@@ -269,43 +269,43 @@ namespace OpenGlass::GlassIntegrity
 		dwmcore::CVisual* visualOverride
 	);
 
-	Projection::Detour<dwmcore::Symbol_COcclusionContext_CheckAndRecordOverlayCandidate_Pre_19041, dwmcore::COcclusionContext_CheckAndRecordOverlayCandidate_Pre_19041_t> g_COcclusionContext_CheckAndRecordOverlayCandidate_Pre_19041_Org{};
-	Projection::Detour<dwmcore::Symbol_COcclusionContext_CheckAndRecordOverlayCandidate_19041, dwmcore::COcclusionContext_CheckAndRecordOverlayCandidate_19041_t> g_COcclusionContext_CheckAndRecordOverlayCandidate_19041_Org{};
-	Projection::Detour<dwmcore::Symbol_COcclusionContext_CheckAndRecordOverlayCandidate_26100, dwmcore::COcclusionContext_CheckAndRecordOverlayCandidate_26100_t> g_COcclusionContext_CheckAndRecordOverlayCandidate_26100_Org{};
-	Projection::Detour<dwmcore::Symbol_COcclusionContext_NodeIntersectsOcclusionRegion_26100_3624, dwmcore::COcclusionContext_NodeIntersectsOcclusionRegion_t> g_COcclusionContext_NodeIntersectsOcclusionRegion_Org{};
-	Projection::Detour<dwmcore::Symbol_COcclusionContext_CollectRectangleForOcclusion_Pre_20348, dwmcore::COcclusionContext_CollectRectangleForOcclusion_Pre_20348_t> g_COcclusionContext_CollectRectangleForOcclusion_Pre_20348_Org{};
-	Projection::Detour<dwmcore::Symbol_COcclusionContext_CollectRectangleForOcclusion_20348, dwmcore::COcclusionContext_CollectRectangleForOcclusion_20348_t> g_COcclusionContext_CollectRectangleForOcclusion_20348_Org{};
-	Projection::Detour<dwmcore::Symbol_COcclusionContext_CollectRectangleForOcclusion_26100_Pre_7840, dwmcore::COcclusionContext_CollectRectangleForOcclusion_26100_Pre_7840_t> g_COcclusionContext_CollectRectangleForOcclusion_26100_Pre_7840_Org{};
-	Projection::Detour<dwmcore::Symbol_COcclusionContext_CollectRectangleForOcclusion_26100_7840, dwmcore::COcclusionContext_CollectRectangleForOcclusion_26100_7840_t> g_COcclusionContext_CollectRectangleForOcclusion_26100_7840_Org{};
+	Projection::Detour<dwmcore::Symbol_COcclusionContext_CheckAndRecordOverlayCandidate_Pre_19041, static_cast<dwmcore::COcclusionContext_CheckAndRecordOverlayCandidate_Pre_19041_t>(&MyCOcclusionContext_CheckAndRecordOverlayCandidate)> g_COcclusionContext_CheckAndRecordOverlayCandidate_Pre_19041_Org{};
+	Projection::Detour<dwmcore::Symbol_COcclusionContext_CheckAndRecordOverlayCandidate_19041, static_cast<dwmcore::COcclusionContext_CheckAndRecordOverlayCandidate_19041_t>(&MyCOcclusionContext_CheckAndRecordOverlayCandidate)> g_COcclusionContext_CheckAndRecordOverlayCandidate_19041_Org{};
+	Projection::Detour<dwmcore::Symbol_COcclusionContext_CheckAndRecordOverlayCandidate_26100, static_cast<dwmcore::COcclusionContext_CheckAndRecordOverlayCandidate_26100_t>(&MyCOcclusionContext_CheckAndRecordOverlayCandidate)> g_COcclusionContext_CheckAndRecordOverlayCandidate_26100_Org{};
+	Projection::Detour<dwmcore::Symbol_COcclusionContext_NodeIntersectsOcclusionRegion_26100_3624, &MyCOcclusionContext_NodeIntersectsOcclusionRegion> g_COcclusionContext_NodeIntersectsOcclusionRegion_Org{};
+	Projection::Detour<dwmcore::Symbol_COcclusionContext_CollectRectangleForOcclusion_Pre_20348, static_cast<dwmcore::COcclusionContext_CollectRectangleForOcclusion_Pre_20348_t>(&MyCOcclusionContext_CollectRectangleForOcclusion)> g_COcclusionContext_CollectRectangleForOcclusion_Pre_20348_Org{};
+	Projection::Detour<dwmcore::Symbol_COcclusionContext_CollectRectangleForOcclusion_20348, static_cast<dwmcore::COcclusionContext_CollectRectangleForOcclusion_20348_t>(&MyCOcclusionContext_CollectRectangleForOcclusion)> g_COcclusionContext_CollectRectangleForOcclusion_20348_Org{};
+	Projection::Detour<dwmcore::Symbol_COcclusionContext_CollectRectangleForOcclusion_26100_Pre_7840, static_cast<dwmcore::COcclusionContext_CollectRectangleForOcclusion_26100_Pre_7840_t>(&MyCOcclusionContext_CollectRectangleForOcclusion)> g_COcclusionContext_CollectRectangleForOcclusion_26100_Pre_7840_Org{};
+	Projection::Detour<dwmcore::Symbol_COcclusionContext_CollectRectangleForOcclusion_26100_7840, static_cast<dwmcore::COcclusionContext_CollectRectangleForOcclusion_26100_7840_t>(&MyCOcclusionContext_CollectRectangleForOcclusion)> g_COcclusionContext_CollectRectangleForOcclusion_26100_7840_Org{};
 
-	Projection::Detour<dwmcore::Symbol_COcclusionContext_Compute_Pre_19041, decltype(&MyCOcclusionContext_Compute_Pre_W10_2004)> g_COcclusionContext_Compute_Pre_W10_2004_Org{};
-	Projection::Detour<dwmcore::Symbol_COcclusionContext_Compute_19041, decltype(&MyCOcclusionContext_Compute)> g_COcclusionContext_Compute_Org{};
+	Projection::Detour<dwmcore::Symbol_COcclusionContext_Compute_Pre_19041, &MyCOcclusionContext_Compute_Pre_W10_2004> g_COcclusionContext_Compute_Pre_W10_2004_Org{};
+	Projection::Detour<dwmcore::Symbol_COcclusionContext_Compute_19041, &MyCOcclusionContext_Compute> g_COcclusionContext_Compute_Org{};
 	decltype(&MyCOcclusionContext_DrawGeometry) g_COcclusionContext_DrawGeometry_Org{ nullptr };
 	decltype(&MyCOcclusionContext_DrawGeometry)* g_COcclusionContext_DrawGeometry_Org_Address{ nullptr };
 	HookHelper::PointerHook<&MyCOcclusionContext_DrawGeometry> g_COcclusionContext_DrawGeometry_Hook;
-	Projection::Detour<dwmcore::Symbol_COcclusionContext_SetDeviceTransform, decltype(&MyCOcclusionContext_SetDeviceTransform)> g_COcclusionContext_SetDeviceTransform_Org{};
-	Projection::Detour<dwmcore::Symbol_COcclusionContext__COcclusionContext, decltype(&MyCOcclusionContext_Destructor)> g_COcclusionContext_Destructor_Org{};
+	Projection::Detour<dwmcore::Symbol_COcclusionContext_SetDeviceTransform, &MyCOcclusionContext_SetDeviceTransform> g_COcclusionContext_SetDeviceTransform_Org{};
+	Projection::Detour<dwmcore::Symbol_COcclusionContext__COcclusionContext, &MyCOcclusionContext_Destructor> g_COcclusionContext_Destructor_Org{};
 
-	Projection::Detour<dwmcore::Symbol_CArrayBasedCoverageSet_IsCovered_Pre_26100, decltype(&MyCArrayBasedCoverageSet_IsCovered_Pre_26100)> g_CArrayBasedCoverageSet_IsCovered_Pre_26100_Org{};
-	Projection::Detour<dwmcore::Symbol_CArrayBasedCoverageSet_IsCovered_26100_Pre_4484, decltype(&MyCArrayBasedCoverageSet_IsCovered_26100_Pre_4484)> g_CArrayBasedCoverageSet_IsCovered_26100_Pre_4484_Org{};
-	Projection::Detour<dwmcore::Symbol_CArrayBasedCoverageSet_IsCovered_26100, decltype(&MyCArrayBasedCoverageSet_IsCovered_26100)> g_CArrayBasedCoverageSet_IsCovered_26100_Org{};
-	Projection::Detour<dwmcore::Symbol_COcclusionContext_IsOccluded_Pre_22000, decltype(&MyCOcclusionContext_IsOccluded_Pre_22000)> g_COcclusionContext_IsOccluded_Pre_22000_Org{};
-	Projection::Detour<dwmcore::Symbol_COcclusionContext_IsOccluded, decltype(&MyCOcclusionContext_IsOccluded_20348)> g_COcclusionContext_IsOccluded_Org{};
-	Projection::Detour<dwmcore::Symbol_COcclusionContext_PageInPixelsRectToDeviceRect, decltype(&MyCOcclusionContext_PageInPixelsRectToDeviceRect)> g_COcclusionContext_PageInPixelsRectToDeviceRect_Org{};
-	Projection::Detour<dwmcore::Symbol_COcclusionContext_PageInPixelsRectToDeviceRect_26100_3912, decltype(&MyCOcclusionContext_PageInPixelsRectToDeviceRect)> g_COcclusionContext_PageInPixelsRectToDeviceRect_26100_3912_Org{};
-	Projection::Detour<dwmcore::Symbol_CHwndRenderTarget_RenderDirtyRegion, decltype(&MyCHwndRenderTarget_RenderDirtyRegion)> g_CHwndRenderTarget_RenderDirtyRegion_Org{};
+	Projection::Detour<dwmcore::Symbol_CArrayBasedCoverageSet_IsCovered_Pre_26100, &MyCArrayBasedCoverageSet_IsCovered_Pre_26100> g_CArrayBasedCoverageSet_IsCovered_Pre_26100_Org{};
+	Projection::Detour<dwmcore::Symbol_CArrayBasedCoverageSet_IsCovered_26100_Pre_4484, &MyCArrayBasedCoverageSet_IsCovered_26100_Pre_4484> g_CArrayBasedCoverageSet_IsCovered_26100_Pre_4484_Org{};
+	Projection::Detour<dwmcore::Symbol_CArrayBasedCoverageSet_IsCovered_26100, &MyCArrayBasedCoverageSet_IsCovered_26100> g_CArrayBasedCoverageSet_IsCovered_26100_Org{};
+	Projection::Detour<dwmcore::Symbol_COcclusionContext_IsOccluded_Pre_22000, &MyCOcclusionContext_IsOccluded_Pre_22000> g_COcclusionContext_IsOccluded_Pre_22000_Org{};
+	Projection::Detour<dwmcore::Symbol_COcclusionContext_IsOccluded, &MyCOcclusionContext_IsOccluded_20348> g_COcclusionContext_IsOccluded_Org{};
+	Projection::Detour<dwmcore::Symbol_COcclusionContext_PageInPixelsRectToDeviceRect, &MyCOcclusionContext_PageInPixelsRectToDeviceRect> g_COcclusionContext_PageInPixelsRectToDeviceRect_Org{};
+	Projection::Detour<dwmcore::Symbol_COcclusionContext_PageInPixelsRectToDeviceRect_26100_3912, &MyCOcclusionContext_PageInPixelsRectToDeviceRect> g_COcclusionContext_PageInPixelsRectToDeviceRect_26100_3912_Org{};
+	Projection::Detour<dwmcore::Symbol_CHwndRenderTarget_RenderDirtyRegion, &MyCHwndRenderTarget_RenderDirtyRegion> g_CHwndRenderTarget_RenderDirtyRegion_Org{};
 
-	Projection::Detour<dwmcore::Symbol_CDirtyRegion_GetUnOccludedDirtyRegion, decltype(&MyCDirtyRegion_GetUnOccludedDirtyRegion)> g_CDirtyRegion_GetUnOccludedDirtyRegion_Org{};
-	Projection::Detour<dwmcore::Symbol_CDirtyRegion_GetUnOccludedDirtyRect, decltype(&MyCDirtyRegion_GetUnOccludedDirtyRect)> g_CDirtyRegion_GetUnOccludedDirtyRect_Org{};
-	Projection::Detour<dwmcore::Symbol_CDirtyRegion_GetOptimizedRect_Server_2022, decltype(&MyCDirtyRegion_GetOptimizedRect_WS2022)> g_CDirtyRegion_GetOptimizedRect_WS2022_Org{};
-	Projection::Detour<dwmcore::Symbol_CDirtyRegion_GetOptimizedRect, decltype(&MyCDirtyRegion_GetOptimizedRect)> g_CDirtyRegion_GetOptimizedRect_Org{};
-	Projection::Detour<dwmcore::Symbol_CDirtyRegion_GetOptimizedRect_26100_Pre_1000, decltype(&MyCDirtyRegion_GetOptimizedRect_26100_Pre_1000)> g_CDirtyRegion_GetOptimizedRect_26100_Pre_1000_Org{};
-	Projection::Detour<dwmcore::Symbol_CTreeDirty_GetOptimizedRect, decltype(&MyCTreeDirty_GetOptimizedRect)> g_CTreeDirty_GetOptimizedRect_Org{};
+	Projection::Detour<dwmcore::Symbol_CDirtyRegion_GetUnOccludedDirtyRegion, &MyCDirtyRegion_GetUnOccludedDirtyRegion> g_CDirtyRegion_GetUnOccludedDirtyRegion_Org{};
+	Projection::Detour<dwmcore::Symbol_CDirtyRegion_GetUnOccludedDirtyRect, &MyCDirtyRegion_GetUnOccludedDirtyRect> g_CDirtyRegion_GetUnOccludedDirtyRect_Org{};
+	Projection::Detour<dwmcore::Symbol_CDirtyRegion_GetOptimizedRect_Server_2022, &MyCDirtyRegion_GetOptimizedRect_WS2022> g_CDirtyRegion_GetOptimizedRect_WS2022_Org{};
+	Projection::Detour<dwmcore::Symbol_CDirtyRegion_GetOptimizedRect, &MyCDirtyRegion_GetOptimizedRect> g_CDirtyRegion_GetOptimizedRect_Org{};
+	Projection::Detour<dwmcore::Symbol_CDirtyRegion_GetOptimizedRect_26100_Pre_1000, &MyCDirtyRegion_GetOptimizedRect_26100_Pre_1000> g_CDirtyRegion_GetOptimizedRect_26100_Pre_1000_Org{};
+	Projection::Detour<dwmcore::Symbol_CTreeDirty_GetOptimizedRect, &MyCTreeDirty_GetOptimizedRect> g_CTreeDirty_GetOptimizedRect_Org{};
 
-	Projection::Detour<dwmcore::Symbol_CDrawingContext_DrawVisualTree_17763, decltype(&MyCDrawingContext_DrawVisualTree_Win10_1809)> g_CDrawingContext_DrawVisualTree_Win10_1809_Org{};
-	Projection::Detour<dwmcore::Symbol_CDrawingContext_DrawVisualTree_18362, decltype(&MyCDrawingContext_DrawVisualTree_Win10_1903)> g_CDrawingContext_DrawVisualTree_Win10_1903_Org{};
-	Projection::Detour<dwmcore::Symbol_CDrawingContext_DrawVisualTree_19041, decltype(&MyCDrawingContext_DrawVisualTree_Win10)> g_CDrawingContext_DrawVisualTree_Win10_Org{};
-	Projection::Detour<dwmcore::Symbol_CDrawingContext_DrawVisualTree_20348, decltype(&MyCDrawingContext_DrawVisualTree_Win11)> g_CDrawingContext_DrawVisualTree_Win11_Org{};
+	Projection::Detour<dwmcore::Symbol_CDrawingContext_DrawVisualTree_17763, &MyCDrawingContext_DrawVisualTree_Win10_1809> g_CDrawingContext_DrawVisualTree_Win10_1809_Org{};
+	Projection::Detour<dwmcore::Symbol_CDrawingContext_DrawVisualTree_18362, &MyCDrawingContext_DrawVisualTree_Win10_1903> g_CDrawingContext_DrawVisualTree_Win10_1903_Org{};
+	Projection::Detour<dwmcore::Symbol_CDrawingContext_DrawVisualTree_19041, &MyCDrawingContext_DrawVisualTree_Win10> g_CDrawingContext_DrawVisualTree_Win10_Org{};
+	Projection::Detour<dwmcore::Symbol_CDrawingContext_DrawVisualTree_20348, &MyCDrawingContext_DrawVisualTree_Win11> g_CDrawingContext_DrawVisualTree_Win11_Org{};
 
 	bool HasCArrayBasedCoverageSetIsCovered() noexcept
 	{
@@ -1894,40 +1894,40 @@ void GlassIntegrity::Startup()
 	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
-			{ &g_COcclusionContext_CheckAndRecordOverlayCandidate_Pre_19041_Org, static_cast<dwmcore::COcclusionContext_CheckAndRecordOverlayCandidate_Pre_19041_t>(&MyCOcclusionContext_CheckAndRecordOverlayCandidate), build_before_w10_2004 },
-			{ &g_COcclusionContext_CheckAndRecordOverlayCandidate_19041_Org, static_cast<dwmcore::COcclusionContext_CheckAndRecordOverlayCandidate_19041_t>(&MyCOcclusionContext_CheckAndRecordOverlayCandidate), !build_before_w10_2004 && build_before_w11_24h2 },
-			{ &g_COcclusionContext_CheckAndRecordOverlayCandidate_26100_Org, static_cast<dwmcore::COcclusionContext_CheckAndRecordOverlayCandidate_26100_t>(&MyCOcclusionContext_CheckAndRecordOverlayCandidate), !build_before_w11_24h2 },
-			{ &g_COcclusionContext_NodeIntersectsOcclusionRegion_Org, &MyCOcclusionContext_NodeIntersectsOcclusionRegion, hasNodeIntersectsOcclusionRegion },
-			{ &g_COcclusionContext_CollectRectangleForOcclusion_Pre_20348_Org, static_cast<dwmcore::COcclusionContext_CollectRectangleForOcclusion_Pre_20348_t>(&MyCOcclusionContext_CollectRectangleForOcclusion), build_before_server_2022 },
-			{ &g_COcclusionContext_CollectRectangleForOcclusion_20348_Org, static_cast<dwmcore::COcclusionContext_CollectRectangleForOcclusion_20348_t>(&MyCOcclusionContext_CollectRectangleForOcclusion), !build_before_server_2022 && build_before_w11_24h2 },
-			{ &g_COcclusionContext_CollectRectangleForOcclusion_26100_Pre_7840_Org, static_cast<dwmcore::COcclusionContext_CollectRectangleForOcclusion_26100_Pre_7840_t>(&MyCOcclusionContext_CollectRectangleForOcclusion), hasCollectRectangleForOcclusion26100_Pre_7840 },
-			{ &g_COcclusionContext_CollectRectangleForOcclusion_26100_7840_Org, static_cast<dwmcore::COcclusionContext_CollectRectangleForOcclusion_26100_7840_t>(&MyCOcclusionContext_CollectRectangleForOcclusion), hasCollectRectangleForOcclusion26100_7840 },
+			{ &g_COcclusionContext_CheckAndRecordOverlayCandidate_Pre_19041_Org, build_before_w10_2004 },
+			{ &g_COcclusionContext_CheckAndRecordOverlayCandidate_19041_Org, !build_before_w10_2004 && build_before_w11_24h2 },
+			{ &g_COcclusionContext_CheckAndRecordOverlayCandidate_26100_Org, !build_before_w11_24h2 },
+			{ &g_COcclusionContext_NodeIntersectsOcclusionRegion_Org, hasNodeIntersectsOcclusionRegion },
+			{ &g_COcclusionContext_CollectRectangleForOcclusion_Pre_20348_Org, build_before_server_2022 },
+			{ &g_COcclusionContext_CollectRectangleForOcclusion_20348_Org, !build_before_server_2022 && build_before_w11_24h2 },
+			{ &g_COcclusionContext_CollectRectangleForOcclusion_26100_Pre_7840_Org, hasCollectRectangleForOcclusion26100_Pre_7840 },
+			{ &g_COcclusionContext_CollectRectangleForOcclusion_26100_7840_Org, hasCollectRectangleForOcclusion26100_7840 },
 
-			{ &g_COcclusionContext_Compute_Pre_W10_2004_Org, &MyCOcclusionContext_Compute_Pre_W10_2004, build_before_w10_2004 },
-			{ &g_COcclusionContext_Compute_Org, &MyCOcclusionContext_Compute, !build_before_w10_2004 },
-			{ &g_COcclusionContext_SetDeviceTransform_Org, &MyCOcclusionContext_SetDeviceTransform },
-			{ &g_COcclusionContext_Destructor_Org, &MyCOcclusionContext_Destructor },
+			{ &g_COcclusionContext_Compute_Pre_W10_2004_Org, build_before_w10_2004 },
+			{ &g_COcclusionContext_Compute_Org, !build_before_w10_2004 },
+			{ &g_COcclusionContext_SetDeviceTransform_Org },
+			{ &g_COcclusionContext_Destructor_Org },
 
-			{ &g_CHwndRenderTarget_RenderDirtyRegion_Org, &MyCHwndRenderTarget_RenderDirtyRegion, build_before_w10_2004 && !build_before_w10_1903 },
-			{ &g_CDirtyRegion_GetUnOccludedDirtyRegion_Org, &MyCDirtyRegion_GetUnOccludedDirtyRegion, build_before_w10_2004 },
-			{ &g_CDirtyRegion_GetUnOccludedDirtyRect_Org, &MyCDirtyRegion_GetUnOccludedDirtyRect, build_before_server_2022 && !build_before_w10_2004 },
-			{ &g_CDirtyRegion_GetOptimizedRect_WS2022_Org, &MyCDirtyRegion_GetOptimizedRect_WS2022, build_before_w11_21h2 && !build_before_server_2022 },
-			{ &g_CDirtyRegion_GetOptimizedRect_Org, &MyCDirtyRegion_GetOptimizedRect, build_before_w11_24h2 && !build_before_w11_21h2 },
-			{ &g_CDirtyRegion_GetOptimizedRect_26100_Pre_1000_Org, &MyCDirtyRegion_GetOptimizedRect_26100_Pre_1000, hasCDirtyRegionGetOptimizedRect26100_Pre_1000 },
-			{ &g_CTreeDirty_GetOptimizedRect_Org, &MyCTreeDirty_GetOptimizedRect, hasCTreeDirtyGetOptimizedRect },
+			{ &g_CHwndRenderTarget_RenderDirtyRegion_Org, build_before_w10_2004 && !build_before_w10_1903 },
+			{ &g_CDirtyRegion_GetUnOccludedDirtyRegion_Org, build_before_w10_2004 },
+			{ &g_CDirtyRegion_GetUnOccludedDirtyRect_Org, build_before_server_2022 && !build_before_w10_2004 },
+			{ &g_CDirtyRegion_GetOptimizedRect_WS2022_Org, build_before_w11_21h2 && !build_before_server_2022 },
+			{ &g_CDirtyRegion_GetOptimizedRect_Org, build_before_w11_24h2 && !build_before_w11_21h2 },
+			{ &g_CDirtyRegion_GetOptimizedRect_26100_Pre_1000_Org, hasCDirtyRegionGetOptimizedRect26100_Pre_1000 },
+			{ &g_CTreeDirty_GetOptimizedRect_Org, hasCTreeDirtyGetOptimizedRect },
 
-			{ &g_COcclusionContext_IsOccluded_Pre_22000_Org, &MyCOcclusionContext_IsOccluded_Pre_22000, !hasArrayBasedCoverageSetIsCovered && build_before_server_2022 },
-			{ &g_COcclusionContext_IsOccluded_Org, &MyCOcclusionContext_IsOccluded_20348, !hasArrayBasedCoverageSetIsCovered && !build_before_server_2022 },
-			{ &g_CArrayBasedCoverageSet_IsCovered_Pre_26100_Org, &MyCArrayBasedCoverageSet_IsCovered_Pre_26100, hasArrayBasedCoverageSetIsCovered && build_before_w11_24h2 },
-			{ &g_CArrayBasedCoverageSet_IsCovered_26100_Pre_4484_Org, &MyCArrayBasedCoverageSet_IsCovered_26100_Pre_4484, hasArrayBasedCoverageSetIsCovered26100_Pre_4484 },
-			{ &g_CArrayBasedCoverageSet_IsCovered_26100_Org, &MyCArrayBasedCoverageSet_IsCovered_26100, hasArrayBasedCoverageSetIsCovered26100 },
-			{ &g_COcclusionContext_PageInPixelsRectToDeviceRect_Org, &MyCOcclusionContext_PageInPixelsRectToDeviceRect, hasPageInPixelsRectToDeviceRect && hasArrayBasedCoverageSetIsCovered },
-			{ &g_COcclusionContext_PageInPixelsRectToDeviceRect_26100_3912_Org, &MyCOcclusionContext_PageInPixelsRectToDeviceRect, hasPageInPixelsRectToDeviceRect26100_3912 && hasArrayBasedCoverageSetIsCovered },
+			{ &g_COcclusionContext_IsOccluded_Pre_22000_Org, !hasArrayBasedCoverageSetIsCovered && build_before_server_2022 },
+			{ &g_COcclusionContext_IsOccluded_Org, !hasArrayBasedCoverageSetIsCovered && !build_before_server_2022 },
+			{ &g_CArrayBasedCoverageSet_IsCovered_Pre_26100_Org, hasArrayBasedCoverageSetIsCovered && build_before_w11_24h2 },
+			{ &g_CArrayBasedCoverageSet_IsCovered_26100_Pre_4484_Org, hasArrayBasedCoverageSetIsCovered26100_Pre_4484 },
+			{ &g_CArrayBasedCoverageSet_IsCovered_26100_Org, hasArrayBasedCoverageSetIsCovered26100 },
+			{ &g_COcclusionContext_PageInPixelsRectToDeviceRect_Org, hasPageInPixelsRectToDeviceRect && hasArrayBasedCoverageSetIsCovered },
+			{ &g_COcclusionContext_PageInPixelsRectToDeviceRect_26100_3912_Org, hasPageInPixelsRectToDeviceRect26100_3912 && hasArrayBasedCoverageSetIsCovered },
 
-			{ &g_CDrawingContext_DrawVisualTree_Win10_1809_Org, &MyCDrawingContext_DrawVisualTree_Win10_1809, build_before_w10_1903 },
-			{ &g_CDrawingContext_DrawVisualTree_Win10_1903_Org, &MyCDrawingContext_DrawVisualTree_Win10_1903, !build_before_w10_1903 && build_before_w10_2004 },
-			{ &g_CDrawingContext_DrawVisualTree_Win10_Org, &MyCDrawingContext_DrawVisualTree_Win10, !build_before_w10_2004 && build_before_server_2022 },
-			{ &g_CDrawingContext_DrawVisualTree_Win11_Org, &MyCDrawingContext_DrawVisualTree_Win11, !build_before_server_2022 }
+			{ &g_CDrawingContext_DrawVisualTree_Win10_1809_Org, build_before_w10_1903 },
+			{ &g_CDrawingContext_DrawVisualTree_Win10_1903_Org, !build_before_w10_1903 && build_before_w10_2004 },
+			{ &g_CDrawingContext_DrawVisualTree_Win10_Org, !build_before_w10_2004 && build_before_server_2022 },
+			{ &g_CDrawingContext_DrawVisualTree_Win11_Org, !build_before_server_2022 }
 		},
 		true
 	);
@@ -1962,40 +1962,40 @@ void GlassIntegrity::Shutdown()
 	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
-			{ &g_COcclusionContext_CheckAndRecordOverlayCandidate_Pre_19041_Org, static_cast<dwmcore::COcclusionContext_CheckAndRecordOverlayCandidate_Pre_19041_t>(&MyCOcclusionContext_CheckAndRecordOverlayCandidate), build_before_w10_2004 },
-			{ &g_COcclusionContext_CheckAndRecordOverlayCandidate_19041_Org, static_cast<dwmcore::COcclusionContext_CheckAndRecordOverlayCandidate_19041_t>(&MyCOcclusionContext_CheckAndRecordOverlayCandidate), !build_before_w10_2004 && build_before_w11_24h2 },
-			{ &g_COcclusionContext_CheckAndRecordOverlayCandidate_26100_Org, static_cast<dwmcore::COcclusionContext_CheckAndRecordOverlayCandidate_26100_t>(&MyCOcclusionContext_CheckAndRecordOverlayCandidate), !build_before_w11_24h2 },
-			{ &g_COcclusionContext_NodeIntersectsOcclusionRegion_Org, &MyCOcclusionContext_NodeIntersectsOcclusionRegion, hasNodeIntersectsOcclusionRegion },
-			{ &g_COcclusionContext_CollectRectangleForOcclusion_Pre_20348_Org, static_cast<dwmcore::COcclusionContext_CollectRectangleForOcclusion_Pre_20348_t>(&MyCOcclusionContext_CollectRectangleForOcclusion), build_before_server_2022 },
-			{ &g_COcclusionContext_CollectRectangleForOcclusion_20348_Org, static_cast<dwmcore::COcclusionContext_CollectRectangleForOcclusion_20348_t>(&MyCOcclusionContext_CollectRectangleForOcclusion), !build_before_server_2022 && build_before_w11_24h2 },
-			{ &g_COcclusionContext_CollectRectangleForOcclusion_26100_Pre_7840_Org, static_cast<dwmcore::COcclusionContext_CollectRectangleForOcclusion_26100_Pre_7840_t>(&MyCOcclusionContext_CollectRectangleForOcclusion), hasCollectRectangleForOcclusion26100_Pre_7840 },
-			{ &g_COcclusionContext_CollectRectangleForOcclusion_26100_7840_Org, static_cast<dwmcore::COcclusionContext_CollectRectangleForOcclusion_26100_7840_t>(&MyCOcclusionContext_CollectRectangleForOcclusion), hasCollectRectangleForOcclusion26100_7840 },
+			{ &g_COcclusionContext_CheckAndRecordOverlayCandidate_Pre_19041_Org, build_before_w10_2004 },
+			{ &g_COcclusionContext_CheckAndRecordOverlayCandidate_19041_Org, !build_before_w10_2004 && build_before_w11_24h2 },
+			{ &g_COcclusionContext_CheckAndRecordOverlayCandidate_26100_Org, !build_before_w11_24h2 },
+			{ &g_COcclusionContext_NodeIntersectsOcclusionRegion_Org, hasNodeIntersectsOcclusionRegion },
+			{ &g_COcclusionContext_CollectRectangleForOcclusion_Pre_20348_Org, build_before_server_2022 },
+			{ &g_COcclusionContext_CollectRectangleForOcclusion_20348_Org, !build_before_server_2022 && build_before_w11_24h2 },
+			{ &g_COcclusionContext_CollectRectangleForOcclusion_26100_Pre_7840_Org, hasCollectRectangleForOcclusion26100_Pre_7840 },
+			{ &g_COcclusionContext_CollectRectangleForOcclusion_26100_7840_Org, hasCollectRectangleForOcclusion26100_7840 },
 
-			{ &g_COcclusionContext_Compute_Pre_W10_2004_Org, &MyCOcclusionContext_Compute_Pre_W10_2004, build_before_w10_2004 },
-			{ &g_COcclusionContext_Compute_Org, &MyCOcclusionContext_Compute, !build_before_w10_2004 },
-			{ &g_COcclusionContext_SetDeviceTransform_Org, &MyCOcclusionContext_SetDeviceTransform },
-			{ &g_COcclusionContext_Destructor_Org, &MyCOcclusionContext_Destructor },
+			{ &g_COcclusionContext_Compute_Pre_W10_2004_Org, build_before_w10_2004 },
+			{ &g_COcclusionContext_Compute_Org, !build_before_w10_2004 },
+			{ &g_COcclusionContext_SetDeviceTransform_Org },
+			{ &g_COcclusionContext_Destructor_Org },
 
-			{ &g_CHwndRenderTarget_RenderDirtyRegion_Org, &MyCHwndRenderTarget_RenderDirtyRegion, build_before_w10_2004 && !build_before_w10_1903 },
-			{ &g_CDirtyRegion_GetUnOccludedDirtyRegion_Org, &MyCDirtyRegion_GetUnOccludedDirtyRegion, build_before_w10_2004 },
-			{ &g_CDirtyRegion_GetUnOccludedDirtyRect_Org, &MyCDirtyRegion_GetUnOccludedDirtyRect, build_before_server_2022 && !build_before_w10_2004 },
-			{ &g_CDirtyRegion_GetOptimizedRect_WS2022_Org, &MyCDirtyRegion_GetOptimizedRect_WS2022, build_before_w11_21h2 && !build_before_server_2022 },
-			{ &g_CDirtyRegion_GetOptimizedRect_Org, &MyCDirtyRegion_GetOptimizedRect, build_before_w11_24h2 && !build_before_w11_21h2 },
-			{ &g_CDirtyRegion_GetOptimizedRect_26100_Pre_1000_Org, &MyCDirtyRegion_GetOptimizedRect_26100_Pre_1000, hasCDirtyRegionGetOptimizedRect26100_Pre_1000 },
-			{ &g_CTreeDirty_GetOptimizedRect_Org, &MyCTreeDirty_GetOptimizedRect, hasCTreeDirtyGetOptimizedRect },
+			{ &g_CHwndRenderTarget_RenderDirtyRegion_Org, build_before_w10_2004 && !build_before_w10_1903 },
+			{ &g_CDirtyRegion_GetUnOccludedDirtyRegion_Org, build_before_w10_2004 },
+			{ &g_CDirtyRegion_GetUnOccludedDirtyRect_Org, build_before_server_2022 && !build_before_w10_2004 },
+			{ &g_CDirtyRegion_GetOptimizedRect_WS2022_Org, build_before_w11_21h2 && !build_before_server_2022 },
+			{ &g_CDirtyRegion_GetOptimizedRect_Org, build_before_w11_24h2 && !build_before_w11_21h2 },
+			{ &g_CDirtyRegion_GetOptimizedRect_26100_Pre_1000_Org, hasCDirtyRegionGetOptimizedRect26100_Pre_1000 },
+			{ &g_CTreeDirty_GetOptimizedRect_Org, hasCTreeDirtyGetOptimizedRect },
 
-			{ &g_COcclusionContext_IsOccluded_Pre_22000_Org, &MyCOcclusionContext_IsOccluded_Pre_22000, !hasArrayBasedCoverageSetIsCovered && build_before_server_2022 },
-			{ &g_COcclusionContext_IsOccluded_Org, &MyCOcclusionContext_IsOccluded_20348, !hasArrayBasedCoverageSetIsCovered && !build_before_server_2022 },
-			{ &g_CArrayBasedCoverageSet_IsCovered_Pre_26100_Org, &MyCArrayBasedCoverageSet_IsCovered_Pre_26100, hasArrayBasedCoverageSetIsCovered && build_before_w11_24h2 },
-			{ &g_CArrayBasedCoverageSet_IsCovered_26100_Pre_4484_Org, &MyCArrayBasedCoverageSet_IsCovered_26100_Pre_4484, hasArrayBasedCoverageSetIsCovered26100_Pre_4484 },
-			{ &g_CArrayBasedCoverageSet_IsCovered_26100_Org, &MyCArrayBasedCoverageSet_IsCovered_26100, hasArrayBasedCoverageSetIsCovered26100 },
-			{ &g_COcclusionContext_PageInPixelsRectToDeviceRect_Org, &MyCOcclusionContext_PageInPixelsRectToDeviceRect, hasPageInPixelsRectToDeviceRect && hasArrayBasedCoverageSetIsCovered },
-			{ &g_COcclusionContext_PageInPixelsRectToDeviceRect_26100_3912_Org, &MyCOcclusionContext_PageInPixelsRectToDeviceRect, hasPageInPixelsRectToDeviceRect26100_3912 && hasArrayBasedCoverageSetIsCovered },
+			{ &g_COcclusionContext_IsOccluded_Pre_22000_Org, !hasArrayBasedCoverageSetIsCovered && build_before_server_2022 },
+			{ &g_COcclusionContext_IsOccluded_Org, !hasArrayBasedCoverageSetIsCovered && !build_before_server_2022 },
+			{ &g_CArrayBasedCoverageSet_IsCovered_Pre_26100_Org, hasArrayBasedCoverageSetIsCovered && build_before_w11_24h2 },
+			{ &g_CArrayBasedCoverageSet_IsCovered_26100_Pre_4484_Org, hasArrayBasedCoverageSetIsCovered26100_Pre_4484 },
+			{ &g_CArrayBasedCoverageSet_IsCovered_26100_Org, hasArrayBasedCoverageSetIsCovered26100 },
+			{ &g_COcclusionContext_PageInPixelsRectToDeviceRect_Org, hasPageInPixelsRectToDeviceRect && hasArrayBasedCoverageSetIsCovered },
+			{ &g_COcclusionContext_PageInPixelsRectToDeviceRect_26100_3912_Org, hasPageInPixelsRectToDeviceRect26100_3912 && hasArrayBasedCoverageSetIsCovered },
 
-			{ &g_CDrawingContext_DrawVisualTree_Win10_1809_Org, &MyCDrawingContext_DrawVisualTree_Win10_1809, build_before_w10_1903 },
-			{ &g_CDrawingContext_DrawVisualTree_Win10_1903_Org, &MyCDrawingContext_DrawVisualTree_Win10_1903, !build_before_w10_1903 && build_before_w10_2004 },
-			{ &g_CDrawingContext_DrawVisualTree_Win10_Org, &MyCDrawingContext_DrawVisualTree_Win10, !build_before_w10_2004 && build_before_server_2022 },
-			{ &g_CDrawingContext_DrawVisualTree_Win11_Org, &MyCDrawingContext_DrawVisualTree_Win11, !build_before_server_2022 }
+			{ &g_CDrawingContext_DrawVisualTree_Win10_1809_Org, build_before_w10_1903 },
+			{ &g_CDrawingContext_DrawVisualTree_Win10_1903_Org, !build_before_w10_1903 && build_before_w10_2004 },
+			{ &g_CDrawingContext_DrawVisualTree_Win10_Org, !build_before_w10_2004 && build_before_server_2022 },
+			{ &g_CDrawingContext_DrawVisualTree_Win11_Org, !build_before_server_2022 }
 		},
 		false
 	);

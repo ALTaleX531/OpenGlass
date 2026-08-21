@@ -10,7 +10,7 @@ namespace OpenGlass::GlassFrameEnhancer
 		uDWM::CThemePartPrimitive* This,
 		BYTE cloneOptions
 	);
-	Projection::Detour<uDWM::Symbol_CThemePartPrimitive_ShouldClone, decltype(&MyCThemePartPrimitive_ShouldClone)> g_CThemePartPrimitive_ShouldClone_Org{};
+	Projection::Detour<uDWM::Symbol_CThemePartPrimitive_ShouldClone, &MyCThemePartPrimitive_ShouldClone> g_CThemePartPrimitive_ShouldClone_Org{};
 }
 
 bool GlassFrameEnhancer::MyCThemePartPrimitive_ShouldClone(
@@ -37,7 +37,7 @@ void GlassFrameEnhancer::Startup()
 	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
-			{ &g_CThemePartPrimitive_ShouldClone_Org, &MyCThemePartPrimitive_ShouldClone }
+			{ &g_CThemePartPrimitive_ShouldClone_Org }
 		},
 		true
 	);
@@ -48,7 +48,7 @@ void GlassFrameEnhancer::Shutdown()
 	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
-			{ &g_CThemePartPrimitive_ShouldClone_Org, &MyCThemePartPrimitive_ShouldClone }
+			{ &g_CThemePartPrimitive_ShouldClone_Org }
 		},
 		false
 	);

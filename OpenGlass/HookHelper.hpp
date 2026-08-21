@@ -43,11 +43,11 @@ namespace OpenGlass::HookHelper
 		DetourInfo() = default;
 
 		template <function_pointer T> FORCEINLINE DetourInfo(T* p1, T p2, bool condition = true) : original(condition ? reinterpret_cast<LPVOID*>(p1) : nullptr), detour(condition ? reinterpret_cast<LPVOID>(p2) : nullptr) {}
-		template <typename Storage, function_pointer T>
-		requires requires(Storage* storage, T replacement) { storage->detour_storage(); storage->prepare_detour(replacement); }
-		FORCEINLINE DetourInfo(Storage* p1, T p2, bool condition = true) :
+		template <typename Storage>
+		requires requires(Storage* storage) { storage->detour_storage(); storage->prepare_detour(); }
+		FORCEINLINE DetourInfo(Storage* p1, bool condition = true) :
 			original(condition ? reinterpret_cast<LPVOID*>(p1->detour_storage()) : nullptr),
-			detour(condition ? reinterpret_cast<LPVOID>(p1->prepare_detour(p2)) : nullptr)
+			detour(condition ? reinterpret_cast<LPVOID>(p1->prepare_detour()) : nullptr)
 		{
 		}
 	};

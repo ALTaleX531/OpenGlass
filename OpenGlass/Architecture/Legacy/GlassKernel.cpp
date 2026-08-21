@@ -36,11 +36,11 @@ namespace OpenGlass::GlassKernel
 	decltype(&MyIDCompositionDesktopDevice_WaitForCommitCompletion) g_IDCompositionDesktopDevice_WaitForCommitCompletion_Org{ nullptr };
 	decltype(&MyIDCompositionDesktopDevice_WaitForCommitCompletion)* g_IDCompositionDesktopDevice_WaitForCommitCompletion_Org_Address{ nullptr };
 	HookHelper::PointerHook<&MyIDCompositionDesktopDevice_WaitForCommitCompletion> g_IDCompositionDesktopDevice_WaitForCommitCompletion_Hook;
-	Projection::Detour<dwmcore::Symbol_CD2DContext_DestroyDeviceResources, decltype(&MyCD2DContext_DestroyDeviceResources)> g_CD2DContext_DestroyDeviceResources_Org{};
-	Projection::Detour<uDWM::Symbol_CDesktopManager_ReleaseDXGIAdapter, decltype(&MyCDesktopManager_ReleaseDXGIAdapter)> g_CDesktopManager_ReleaseDXGIAdapter_Org{};
-	Projection::Detour<uDWM::Symbol_CGraphicsDeviceManager_ReleaseGraphicsDevice, decltype(&MyCGraphicsDeviceManager_ReleaseGraphicsDevice)> g_CGraphicsDeviceManager_ReleaseGraphicsDevice_Org{};
-	Projection::Detour<uDWM::Symbol_CTopLevelWindow_EnsureImages_Pre_18362, decltype(&MyCTopLevelWindow_EnsureImages_Pre_W10_1903)> g_CTopLevelWindow_EnsureImages_Pre_W10_1903_Org{};
-	Projection::Detour<uDWM::Symbol_CTopLevelWindow_EnsureImages_18362, decltype(&MyCTopLevelWindow_EnsureImages_At_Least_W10_1903)> g_CTopLevelWindow_EnsureImages_At_Least_W10_1903_Org{};
+	Projection::Detour<dwmcore::Symbol_CD2DContext_DestroyDeviceResources, &MyCD2DContext_DestroyDeviceResources> g_CD2DContext_DestroyDeviceResources_Org{};
+	Projection::Detour<uDWM::Symbol_CDesktopManager_ReleaseDXGIAdapter, &MyCDesktopManager_ReleaseDXGIAdapter> g_CDesktopManager_ReleaseDXGIAdapter_Org{};
+	Projection::Detour<uDWM::Symbol_CGraphicsDeviceManager_ReleaseGraphicsDevice, &MyCGraphicsDeviceManager_ReleaseGraphicsDevice> g_CGraphicsDeviceManager_ReleaseGraphicsDevice_Org{};
+	Projection::Detour<uDWM::Symbol_CTopLevelWindow_EnsureImages_Pre_18362, &MyCTopLevelWindow_EnsureImages_Pre_W10_1903> g_CTopLevelWindow_EnsureImages_Pre_W10_1903_Org{};
+	Projection::Detour<uDWM::Symbol_CTopLevelWindow_EnsureImages_18362, &MyCTopLevelWindow_EnsureImages_At_Least_W10_1903> g_CTopLevelWindow_EnsureImages_At_Least_W10_1903_Org{};
 
 	UINT g_drawGeometryCommandType{};
 
@@ -670,11 +670,11 @@ void GlassKernel::Startup()
 	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
-			{ &g_CD2DContext_DestroyDeviceResources_Org, &MyCD2DContext_DestroyDeviceResources },
-			{ &g_CDesktopManager_ReleaseDXGIAdapter_Org, &MyCDesktopManager_ReleaseDXGIAdapter, build_before_server_2022 },
-			{ &g_CGraphicsDeviceManager_ReleaseGraphicsDevice_Org, &MyCGraphicsDeviceManager_ReleaseGraphicsDevice, !build_before_server_2022 },
-			{ &g_CTopLevelWindow_EnsureImages_Pre_W10_1903_Org, &MyCTopLevelWindow_EnsureImages_Pre_W10_1903, build_before_w10_1903 },
-			{ &g_CTopLevelWindow_EnsureImages_At_Least_W10_1903_Org, &MyCTopLevelWindow_EnsureImages_At_Least_W10_1903, build_before_w11_24h2 && !build_before_w10_1903 }
+			{ &g_CD2DContext_DestroyDeviceResources_Org },
+			{ &g_CDesktopManager_ReleaseDXGIAdapter_Org, build_before_server_2022 },
+			{ &g_CGraphicsDeviceManager_ReleaseGraphicsDevice_Org, !build_before_server_2022 },
+			{ &g_CTopLevelWindow_EnsureImages_Pre_W10_1903_Org, build_before_w10_1903 },
+			{ &g_CTopLevelWindow_EnsureImages_At_Least_W10_1903_Org, build_before_w11_24h2 && !build_before_w10_1903 }
 		},
 		true
 	);
@@ -688,11 +688,11 @@ void GlassKernel::Shutdown()
 	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
-			{ &g_CD2DContext_DestroyDeviceResources_Org, &MyCD2DContext_DestroyDeviceResources },
-			{ &g_CDesktopManager_ReleaseDXGIAdapter_Org, &MyCDesktopManager_ReleaseDXGIAdapter, build_before_server_2022 },
-			{ &g_CGraphicsDeviceManager_ReleaseGraphicsDevice_Org, &MyCGraphicsDeviceManager_ReleaseGraphicsDevice, !build_before_server_2022 },
-			{ &g_CTopLevelWindow_EnsureImages_Pre_W10_1903_Org, &MyCTopLevelWindow_EnsureImages_Pre_W10_1903, build_before_w10_1903 },
-			{ &g_CTopLevelWindow_EnsureImages_At_Least_W10_1903_Org, &MyCTopLevelWindow_EnsureImages_At_Least_W10_1903, build_before_w11_24h2 && !build_before_w10_1903 }
+			{ &g_CD2DContext_DestroyDeviceResources_Org },
+			{ &g_CDesktopManager_ReleaseDXGIAdapter_Org, build_before_server_2022 },
+			{ &g_CGraphicsDeviceManager_ReleaseGraphicsDevice_Org, !build_before_server_2022 },
+			{ &g_CTopLevelWindow_EnsureImages_Pre_W10_1903_Org, build_before_w10_1903 },
+			{ &g_CTopLevelWindow_EnsureImages_At_Least_W10_1903_Org, build_before_w11_24h2 && !build_before_w10_1903 }
 		},
 		false
 	);

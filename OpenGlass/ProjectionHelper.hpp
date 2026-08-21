@@ -541,52 +541,60 @@ namespace OpenGlass::Projection
 		}
 	};
 
-	// Projection hooks are exclusive by default. Opt in to ChainDetour only when
-	// multiple independent components intentionally replace the same symbol.
-	template <auto Symbol, function_pointer T> class Detour final
+	template <auto Symbol> struct DetourSymbolState
 	{
 		using SymbolHandleType = std::remove_cvref_t<decltype(Symbol)>;
 		using SymbolPointerType = typename SymbolHandleType::value_type;
-		using ExpectedDetourType = typename DetourSymbolAbi<SymbolPointerType>::type;
+		using T = typename DetourSymbolAbi<SymbolPointerType>::type;
+
+		inline static T s_entryOriginal{};
+		inline static T s_dispatcher{};
+	};
+
+	// Projection hooks are exclusive by default. The replacement is part of the
+	// type so an exclusive detour cannot be rebound at runtime. Opt in to
+	// ChainDetour only when multiple independent components intentionally replace
+	// the same symbol.
+	template <auto Symbol, auto Replacement>
+	requires function_pointer<decltype(Replacement)>
+	class Detour final
+	{
+		using SymbolHandleType = std::remove_cvref_t<decltype(Symbol)>;
+		using SymbolPointerType = typename SymbolHandleType::value_type;
+		using T = typename DetourSymbolAbi<SymbolPointerType>::type;
+		using State = DetourSymbolState<Symbol>;
 		static_assert(
-			std::same_as<ExpectedDetourType, T>,
+			std::same_as<T, decltype(Replacement)>,
 			"detour replacement must match the typed symbol ABI"
 		);
 
-		T m_replacement{};
-		inline static T s_entryOriginal{};
-		inline static Detour* s_owner{};
-
 	public:
-		Detour() = default;
-		Detour(const Detour&) = delete;
-		Detour& operator=(const Detour&) = delete;
-
 		static T EntryOriginal() noexcept
 		{
-			return s_entryOriginal;
+			return State::s_entryOriginal;
 		}
 
 		static decltype(auto) InvokeReplacement(auto&&... args)
 		{
-			return std::invoke(s_owner->m_replacement, std::forward<decltype(args)>(args)...);
+			return std::invoke(Replacement, std::forward<decltype(args)>(args)...);
 		}
 
-		T prepare_detour(T replacement) noexcept
+		T prepare_detour() noexcept
 		{
-			FAIL_FAST_IF_FAILED_MSG(replacement ? S_OK : E_INVALIDARG, "Cannot register an empty detour replacement");
-			FAIL_FAST_IF_FAILED_MSG(!s_owner || s_owner == this ? S_OK : E_UNEXPECTED, "A projection detour cannot be chained or shared");
-			FAIL_FAST_IF_FAILED_MSG(!m_replacement || m_replacement == replacement ? S_OK : E_UNEXPECTED, "A projection detour was rebound to a different replacement");
+			constexpr T dispatcher = &DetourDispatchThunk<Detour, T>::Invoke;
+			FAIL_FAST_IF_FAILED_MSG(
+				!State::s_dispatcher || State::s_dispatcher == dispatcher ? S_OK : E_UNEXPECTED,
+				"A projection symbol cannot have multiple exclusive detours"
+			);
 
-			s_owner = this;
-			m_replacement = replacement;
-			return &DetourDispatchThunk<Detour, T>::Invoke;
+			State::s_dispatcher = dispatcher;
+			return dispatcher;
 		}
 
 		__forceinline T* detour_storage()
 		{
 			return reinterpret_cast<T*>(PrepareDetourStorage(
-				reinterpret_cast<PVOID*>(&s_entryOriginal),
+				reinterpret_cast<PVOID*>(&State::s_entryOriginal),
 				RegistryFor<typename SymbolHandleType::module_tag>(),
 				SymbolHandleType::index
 			));
@@ -594,120 +602,157 @@ namespace OpenGlass::Projection
 
 		explicit operator bool() const noexcept
 		{
-			return s_entryOriginal || static_cast<bool>(Symbol);
+			return State::s_entryOriginal || static_cast<bool>(Symbol);
 		}
 
 		__forceinline decltype(auto) operator()(auto&&... args) const
 		{
-			return std::invoke(s_entryOriginal, std::forward<decltype(args)>(args)...);
+			return std::invoke(State::s_entryOriginal, std::forward<decltype(args)>(args)...);
 		}
 	};
 
-	// ChainDetour gives each replacement the next replacement as its "original" and
-	// shares one physical dispatcher among all owners of the same typed symbol.
-	template <auto Symbol, function_pointer T> class ChainDetour final
+	template <auto Value> struct NttpValueTag
+	{
+	};
+	template <auto... Values> struct UniqueNttpValues : std::true_type
+	{
+	};
+	template <auto First, auto... Rest>
+	struct UniqueNttpValues<First, Rest...> :
+		std::bool_constant<
+			((!std::same_as<NttpValueTag<First>, NttpValueTag<Rest>>) && ...) &&
+			UniqueNttpValues<Rest...>::value
+		>
+	{
+	};
+
+	// ChainDetour fixes chain membership and call order in the type while each
+	// component's Node records whether that replacement is active in this process.
+	// All nodes share one physical dispatcher and original trampoline per symbol.
+	template <auto Symbol, auto... Replacements>
+	requires (function_pointer<decltype(Replacements)> && ...)
+	class ChainDetour final
 	{
 		using SymbolHandleType = std::remove_cvref_t<decltype(Symbol)>;
 		using SymbolPointerType = typename SymbolHandleType::value_type;
-		using ExpectedDetourType = typename DetourSymbolAbi<SymbolPointerType>::type;
+		using T = typename DetourSymbolAbi<SymbolPointerType>::type;
+		using State = DetourSymbolState<Symbol>;
+		static constexpr size_t c_replacementCount = sizeof...(Replacements);
+		static constexpr auto c_replacements = std::tuple{ Replacements... };
+		static_assert(c_replacementCount != 0, "a projection detour chain cannot be empty");
 		static_assert(
-			std::same_as<ExpectedDetourType, T>,
-			"chain detour replacement must match the typed symbol ABI"
+			(std::same_as<T, decltype(Replacements)> && ...),
+			"every chain replacement must match the typed symbol ABI"
+		);
+		static_assert(
+			UniqueNttpValues<Replacements...>::value,
+			"a replacement may appear only once in a projection detour chain"
 		);
 
-		T m_replacement{};
-		T* m_next{};
-		inline static T s_entryOriginal{};
-		inline static ChainDetour* s_head{};
+		inline static std::array<bool, c_replacementCount> s_activeNodes{};
 
-		[[nodiscard]] T Next() const noexcept
+		template <size_t Index>
+		static decltype(auto) InvokeFrom(auto&&... args)
 		{
-			return *m_next;
+			if constexpr (Index == c_replacementCount)
+			{
+				return std::invoke(State::s_entryOriginal, std::forward<decltype(args)>(args)...);
+			}
+			else
+			{
+				if (s_activeNodes[Index])
+				{
+					constexpr auto replacement = std::get<Index>(c_replacements);
+					return std::invoke(replacement, std::forward<decltype(args)>(args)...);
+				}
+				return InvokeFrom<Index + 1>(std::forward<decltype(args)>(args)...);
+			}
 		}
 
 	public:
 		static T EntryOriginal() noexcept
 		{
-			return s_entryOriginal;
+			return State::s_entryOriginal;
 		}
 
 		static decltype(auto) InvokeReplacement(auto&&... args)
 		{
-			return std::invoke(s_head->m_replacement, std::forward<decltype(args)>(args)...);
+			return InvokeFrom<0>(std::forward<decltype(args)>(args)...);
 		}
 
-		T prepare_detour(T replacement) noexcept
+		template <size_t Index>
+		class Node final
 		{
-			FAIL_FAST_IF_FAILED_MSG(replacement ? S_OK : E_INVALIDARG, "Cannot register an empty chain detour replacement");
-			if (m_replacement)
+			static_assert(Index < c_replacementCount, "chain node index is out of range");
+
+		public:
+			T prepare_detour() noexcept
 			{
-				FAIL_FAST_IF_FAILED_MSG(m_replacement == replacement ? S_OK : E_UNEXPECTED, "A projection chain detour was rebound to a different replacement");
-				return &DetourDispatchThunk<ChainDetour, T>::Invoke;
+				constexpr T dispatcher = &DetourDispatchThunk<ChainDetour, T>::Invoke;
+				FAIL_FAST_IF_FAILED_MSG(
+					!State::s_dispatcher || State::s_dispatcher == dispatcher ? S_OK : E_UNEXPECTED,
+					"A projection symbol cannot mix chain and exclusive dispatchers"
+				);
+
+				State::s_dispatcher = dispatcher;
+				s_activeNodes[Index] = true;
+				return dispatcher;
 			}
 
-			m_replacement = replacement;
-			m_next = s_head ? &s_head->m_replacement : &s_entryOriginal;
-			s_head = this;
-			return &DetourDispatchThunk<ChainDetour, T>::Invoke;
-		}
+			__forceinline T* detour_storage()
+			{
+				return reinterpret_cast<T*>(PrepareDetourStorage(
+					reinterpret_cast<PVOID*>(&State::s_entryOriginal),
+					RegistryFor<typename SymbolHandleType::module_tag>(),
+					SymbolHandleType::index
+				));
+			}
 
-		__forceinline T* detour_storage()
-		{
-			return reinterpret_cast<T*>(PrepareDetourStorage(
-				reinterpret_cast<PVOID*>(&s_entryOriginal),
-				RegistryFor<typename SymbolHandleType::module_tag>(),
-				SymbolHandleType::index
-			));
-		}
+			explicit operator bool() const noexcept
+			{
+				return State::s_entryOriginal || static_cast<bool>(Symbol);
+			}
 
-		explicit operator bool() const noexcept
-		{
-			return s_entryOriginal || static_cast<bool>(Symbol);
-		}
-
-		__forceinline decltype(auto) operator()(auto&&... args) const
-		{
-			return std::invoke(Next(), std::forward<decltype(args)>(args)...);
-		}
+			__forceinline decltype(auto) operator()(auto&&... args) const
+			{
+				return InvokeFrom<Index + 1>(std::forward<decltype(args)>(args)...);
+			}
+		};
 	};
 
 	// Some private optimized functions preserve otherwise volatile caller state and
-	// therefore cannot pass through the normal C++ dispatcher. The supplied physical
-	// entry must bracket Dispatch with any private register preservation it requires.
-	template <auto Symbol, function_pointer T> class CustomDispatchDetour final
+	// therefore cannot pass through the normal C++ dispatcher. The physical entry is
+	// part of the type and must bracket Dispatch with the narrow register preservation
+	// required by the audited caller contract.
+	template <auto Symbol, auto DispatchEntry>
+	requires function_pointer<decltype(DispatchEntry)>
+	class CustomDispatchDetour final
 	{
 		using SymbolHandleType = std::remove_cvref_t<decltype(Symbol)>;
 		using SymbolPointerType = typename SymbolHandleType::value_type;
-		using ExpectedDetourType = typename DetourSymbolAbi<SymbolPointerType>::type;
+		using T = typename DetourSymbolAbi<SymbolPointerType>::type;
+		using State = DetourSymbolState<Symbol>;
 		static_assert(
-			std::same_as<ExpectedDetourType, T>,
-			"custom dispatch detour must match the typed symbol ABI"
+			std::same_as<T, decltype(DispatchEntry)>,
+			"custom dispatch entry must match the typed symbol ABI"
 		);
 
-		T m_dispatch{};
-		inline static T s_entryOriginal{};
-		inline static CustomDispatchDetour* s_owner{};
-
 	public:
-		CustomDispatchDetour() = default;
-		CustomDispatchDetour(const CustomDispatchDetour&) = delete;
-		CustomDispatchDetour& operator=(const CustomDispatchDetour&) = delete;
-
-		T prepare_detour(T dispatch) noexcept
+		T prepare_detour() noexcept
 		{
-			FAIL_FAST_IF_FAILED_MSG(dispatch ? S_OK : E_INVALIDARG, "Cannot register an empty custom detour entry");
-			FAIL_FAST_IF_FAILED_MSG(!s_owner || s_owner == this ? S_OK : E_UNEXPECTED, "A custom projection detour cannot be chained or shared");
-			FAIL_FAST_IF_FAILED_MSG(!m_dispatch || m_dispatch == dispatch ? S_OK : E_UNEXPECTED, "A custom projection detour was rebound to a different entry");
+			FAIL_FAST_IF_FAILED_MSG(
+				!State::s_dispatcher || State::s_dispatcher == DispatchEntry ? S_OK : E_UNEXPECTED,
+				"A projection symbol cannot have multiple exclusive dispatchers"
+			);
 
-			s_owner = this;
-			m_dispatch = dispatch;
-			return m_dispatch;
+			State::s_dispatcher = DispatchEntry;
+			return DispatchEntry;
 		}
 
 		__forceinline T* detour_storage()
 		{
 			return reinterpret_cast<T*>(PrepareDetourStorage(
-				reinterpret_cast<PVOID*>(&s_entryOriginal),
+				reinterpret_cast<PVOID*>(&State::s_entryOriginal),
 				RegistryFor<typename SymbolHandleType::module_tag>(),
 				SymbolHandleType::index
 			));
@@ -720,7 +765,7 @@ namespace OpenGlass::Projection
 			auto& rundown = HookHelper::GetHookRundown();
 			if (!rundown.TryAcquire())
 			{
-				return std::invoke(s_entryOriginal, std::forward<decltype(args)>(args)...);
+				return std::invoke(State::s_entryOriginal, std::forward<decltype(args)>(args)...);
 			}
 
 			const auto release = wil::scope_exit([&rundown]
@@ -732,12 +777,12 @@ namespace OpenGlass::Projection
 
 		__forceinline decltype(auto) operator()(auto&&... args) const
 		{
-			return std::invoke(s_entryOriginal, std::forward<decltype(args)>(args)...);
+			return std::invoke(State::s_entryOriginal, std::forward<decltype(args)>(args)...);
 		}
 
 		explicit operator bool() const noexcept
 		{
-			return s_entryOriginal || static_cast<bool>(Symbol);
+			return State::s_entryOriginal || static_cast<bool>(Symbol);
 		}
 	};
 } // namespace OpenGlass::Projection

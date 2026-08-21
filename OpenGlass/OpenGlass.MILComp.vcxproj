@@ -52,6 +52,7 @@
   <ItemGroup>
     <ClInclude Include="Architecture\MILComp\DCompProjection.hpp" />
     <ClInclude Include="Architecture\MILComp\Dwm.hpp" />
+    <ClInclude Include="Architecture\MILComp\DetourChains.hpp" />
     <ClInclude Include="Architecture\MILComp\dwmcoreProjection.hpp" />
     <ClInclude Include="Architecture\MILComp\dwmcoreProjection.Offsets.hpp" />
     <ClInclude Include="Architecture\MILComp\GlassCoverageSet.hpp" />

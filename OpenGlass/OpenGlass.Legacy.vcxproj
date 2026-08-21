@@ -52,6 +52,7 @@
   <ItemGroup>
     <ClInclude Include="Architecture\Legacy\dcompPrivates.hpp" />
     <ClInclude Include="Architecture\Legacy\Dwm.hpp" />
+    <ClInclude Include="Architecture\Legacy\DetourChains.hpp" />
     <ClInclude Include="Architecture\Legacy\dwmcoreProjection.hpp" />
     <ClInclude Include="Architecture\Legacy\dwmcoreProjection.Offsets.hpp" />
     <ClInclude Include="Architecture\Legacy\GlassCoverageSet.hpp" />

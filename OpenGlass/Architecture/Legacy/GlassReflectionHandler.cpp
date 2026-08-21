@@ -5,6 +5,7 @@
 #include "Shared.hpp"
 #include "GlassReflectionBrush.hpp"
 #include "GlassKernel.hpp"
+#include "DetourChains.hpp"
 
 using namespace OpenGlass;
 
@@ -16,25 +17,6 @@ namespace OpenGlass::GlassReflectionHandler
 		UINT commandType,
 		DWM::span<const BYTE>* resources,
 		T&& callback
-	);
-	HRESULT MyCRenderData_TryDrawCommandAsDrawList_Win10(
-		dwmcore::CRenderData* This,
-		dwmcore::CDrawingContext* drawingContext,
-		dwmcore::CDrawListCache* drawListCache,
-		dwmcore::CDrawListEntryBuilder* drawListEntryBuilder,
-		bool unknown,
-		UINT commandType,
-		DWM::span<const BYTE>* resources,
-		bool* succeeded
-	);
-	HRESULT MyCRenderData_TryDrawCommandAsDrawList_Win11(
-		dwmcore::CRenderData* This,
-		dwmcore::CDrawingContext* drawingContext,
-		dwmcore::CDrawListCache* drawListCache,
-		dwmcore::CDrawListEntryBuilder* drawListEntryBuilder,
-		UINT commandType,
-		DWM::span<const BYTE>* resources,
-		bool* succeeded
 	);
 	HRESULT MyCRenderData_DrawImageResource_FillMode_Win10(
 		dwmcore::CRenderData* This,
@@ -87,19 +69,19 @@ namespace OpenGlass::GlassReflectionHandler
 		uDWM::LivePreviewResource* resource
 	);
 	
-	Projection::ChainDetour<dwmcore::Symbol_CRenderData_TryDrawCommandAsDrawList_Pre_22000, decltype(&MyCRenderData_TryDrawCommandAsDrawList_Win10)> g_CRenderData_TryDrawCommandAsDrawList_Win10_Org{};
-	Projection::ChainDetour<dwmcore::Symbol_CRenderData_TryDrawCommandAsDrawList_22000, decltype(&MyCRenderData_TryDrawCommandAsDrawList_Win11)> g_CRenderData_TryDrawCommandAsDrawList_Win11_Org{};
-	Projection::Detour<dwmcore::Symbol_CRenderData_DrawImageResource_FillMode_Pre_19041, decltype(&MyCRenderData_DrawImageResource_FillMode_Pre_W10_2004)> g_CRenderData_DrawImageResource_FillMode_Pre_W10_2004_Org{};
-	Projection::Detour<dwmcore::Symbol_CRenderData_DrawImageResource_FillMode_19041, decltype(&MyCRenderData_DrawImageResource_FillMode_Win10)> g_CRenderData_DrawImageResource_FillMode_Win10_Org{};
-	Projection::Detour<dwmcore::Symbol_CRenderData_DrawImageResource_FillMode_22000, decltype(&MyCRenderData_DrawImageResource_FillMode_Win11_Pre_24H2)> g_CRenderData_DrawImageResource_FillMode_Win11_Pre_24H2_Org{};
-	Projection::Detour<dwmcore::Symbol_CRenderData_DrawImageResource_FillMode_26100_2454, decltype(&MyCRenderData_DrawImageResource_FillMode_Win11_24H2)> g_CRenderData_DrawImageResource_FillMode_Win11_24H2_Org{};
+	DetourChains::RenderDataTryDrawCommandAsDrawListWin10ReflectionNode g_CRenderData_TryDrawCommandAsDrawList_Win10_Org{};
+	DetourChains::RenderDataTryDrawCommandAsDrawListWin11ReflectionNode g_CRenderData_TryDrawCommandAsDrawList_Win11_Org{};
+	Projection::Detour<dwmcore::Symbol_CRenderData_DrawImageResource_FillMode_Pre_19041, &MyCRenderData_DrawImageResource_FillMode_Pre_W10_2004> g_CRenderData_DrawImageResource_FillMode_Pre_W10_2004_Org{};
+	Projection::Detour<dwmcore::Symbol_CRenderData_DrawImageResource_FillMode_19041, &MyCRenderData_DrawImageResource_FillMode_Win10> g_CRenderData_DrawImageResource_FillMode_Win10_Org{};
+	Projection::Detour<dwmcore::Symbol_CRenderData_DrawImageResource_FillMode_22000, &MyCRenderData_DrawImageResource_FillMode_Win11_Pre_24H2> g_CRenderData_DrawImageResource_FillMode_Win11_Pre_24H2_Org{};
+	Projection::Detour<dwmcore::Symbol_CRenderData_DrawImageResource_FillMode_26100_2454, &MyCRenderData_DrawImageResource_FillMode_Win11_24H2> g_CRenderData_DrawImageResource_FillMode_Win11_24H2_Org{};
 
-	Projection::Detour<uDWM::Symbol_CAnimatedGlassSheet_OnRectUpdated, decltype(&MyCAnimatedGlassSheet_OnRectUpdated)> g_CAnimatedGlassSheet_OnRectUpdated_Org{};
-	Projection::Detour<uDWM::Symbol_CAnimatedGlassSheet__CAnimatedGlassSheet, decltype(&MyCAnimatedGlassSheet_Destructor)> g_CAnimatedGlassSheet_Destructor_Org{};
+	Projection::Detour<uDWM::Symbol_CAnimatedGlassSheet_OnRectUpdated, &MyCAnimatedGlassSheet_OnRectUpdated> g_CAnimatedGlassSheet_OnRectUpdated_Org{};
+	Projection::Detour<uDWM::Symbol_CAnimatedGlassSheet__CAnimatedGlassSheet, &MyCAnimatedGlassSheet_Destructor> g_CAnimatedGlassSheet_Destructor_Org{};
 
-	Projection::Detour<uDWM::Symbol_CLivePreview__FadeOutToGlass, decltype(&MyCLivePreview__FadeOutToGlass)> g_CLivePreview__FadeOutToGlass_Org{};
-	Projection::Detour<uDWM::Symbol_CLivePreview__UpdateInstructions, decltype(&MyCLivePreview__UpdateInstructions)> g_CLivePreview__UpdateInstructions_Org{};
-	Projection::Detour<uDWM::Symbol_CLivePreview__UpdateResourcesForMonitorHelper, decltype(&MyCLivePreview__UpdateResourcesForMonitorHelper)> g_CLivePreview__UpdateResourcesForMonitorHelper_Org{};
+	Projection::Detour<uDWM::Symbol_CLivePreview__FadeOutToGlass, &MyCLivePreview__FadeOutToGlass> g_CLivePreview__FadeOutToGlass_Org{};
+	Projection::Detour<uDWM::Symbol_CLivePreview__UpdateInstructions, &MyCLivePreview__UpdateInstructions> g_CLivePreview__UpdateInstructions_Org{};
+	Projection::Detour<uDWM::Symbol_CLivePreview__UpdateResourcesForMonitorHelper, &MyCLivePreview__UpdateResourcesForMonitorHelper> g_CLivePreview__UpdateResourcesForMonitorHelper_Org{};
 
 	bool g_fixLivePreviewRendering{ false };
 	
@@ -660,19 +642,19 @@ void GlassReflectionHandler::Startup()
 	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
-			{ &g_CRenderData_TryDrawCommandAsDrawList_Win10_Org, &MyCRenderData_TryDrawCommandAsDrawList_Win10, dwmcore_build_before_w11_21h2 },
-			{ &g_CRenderData_TryDrawCommandAsDrawList_Win11_Org, &MyCRenderData_TryDrawCommandAsDrawList_Win11, !dwmcore_build_before_w11_21h2 },
-			{ &g_CRenderData_DrawImageResource_FillMode_Pre_W10_2004_Org, &MyCRenderData_DrawImageResource_FillMode_Pre_W10_2004, build_before_w10_2004 },
-			{ &g_CRenderData_DrawImageResource_FillMode_Win10_Org, &MyCRenderData_DrawImageResource_FillMode_Win10, !build_before_w10_2004 && dwmcore_build_before_w11_21h2 },
-			{ &g_CRenderData_DrawImageResource_FillMode_Win11_Pre_24H2_Org, &MyCRenderData_DrawImageResource_FillMode_Win11_Pre_24H2, !dwmcore_build_before_w11_21h2 && build_before_w11_24h2 },
-			{ &g_CRenderData_DrawImageResource_FillMode_Win11_24H2_Org, &MyCRenderData_DrawImageResource_FillMode_Win11_24H2, !build_before_w11_24h2 },
+			{ &g_CRenderData_TryDrawCommandAsDrawList_Win10_Org, dwmcore_build_before_w11_21h2 },
+			{ &g_CRenderData_TryDrawCommandAsDrawList_Win11_Org, !dwmcore_build_before_w11_21h2 },
+			{ &g_CRenderData_DrawImageResource_FillMode_Pre_W10_2004_Org, build_before_w10_2004 },
+			{ &g_CRenderData_DrawImageResource_FillMode_Win10_Org, !build_before_w10_2004 && dwmcore_build_before_w11_21h2 },
+			{ &g_CRenderData_DrawImageResource_FillMode_Win11_Pre_24H2_Org, !dwmcore_build_before_w11_21h2 && build_before_w11_24h2 },
+			{ &g_CRenderData_DrawImageResource_FillMode_Win11_24H2_Org, !build_before_w11_24h2 },
 
-			{ &g_CAnimatedGlassSheet_OnRectUpdated_Org, &MyCAnimatedGlassSheet_OnRectUpdated, udwm_build_before_w11_21h2 },
-			{ &g_CAnimatedGlassSheet_Destructor_Org, &MyCAnimatedGlassSheet_Destructor, udwm_build_before_w11_21h2 },
-			{ &g_CLivePreview__UpdateInstructions_Org, &MyCLivePreview__UpdateInstructions, udwm_build_before_w11_21h2 },
-			{ &g_CLivePreview__UpdateResourcesForMonitorHelper_Org, &MyCLivePreview__UpdateResourcesForMonitorHelper, uDWM::g_versionInfo.build >= os::build_w11_24h2 },
+			{ &g_CAnimatedGlassSheet_OnRectUpdated_Org, udwm_build_before_w11_21h2 },
+			{ &g_CAnimatedGlassSheet_Destructor_Org, udwm_build_before_w11_21h2 },
+			{ &g_CLivePreview__UpdateInstructions_Org, udwm_build_before_w11_21h2 },
+			{ &g_CLivePreview__UpdateResourcesForMonitorHelper_Org, uDWM::g_versionInfo.build >= os::build_w11_24h2 },
 
-			{ &g_CLivePreview__FadeOutToGlass_Org, &MyCLivePreview__FadeOutToGlass, !udwm_build_before_w11_21h2 }
+			{ &g_CLivePreview__FadeOutToGlass_Org, !udwm_build_before_w11_21h2 }
 		},
 		true
 	);
@@ -692,19 +674,19 @@ void GlassReflectionHandler::Shutdown()
 	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
-			{ &g_CRenderData_TryDrawCommandAsDrawList_Win10_Org, &MyCRenderData_TryDrawCommandAsDrawList_Win10, dwmcore_build_before_w11_21h2 },
-			{ &g_CRenderData_TryDrawCommandAsDrawList_Win11_Org, &MyCRenderData_TryDrawCommandAsDrawList_Win11, !dwmcore_build_before_w11_21h2 },
-			{ &g_CRenderData_DrawImageResource_FillMode_Pre_W10_2004_Org, &MyCRenderData_DrawImageResource_FillMode_Pre_W10_2004, build_before_w10_2004 },
-			{ &g_CRenderData_DrawImageResource_FillMode_Win10_Org, &MyCRenderData_DrawImageResource_FillMode_Win10, !build_before_w10_2004 && dwmcore_build_before_w11_21h2 },
-			{ &g_CRenderData_DrawImageResource_FillMode_Win11_Pre_24H2_Org, &MyCRenderData_DrawImageResource_FillMode_Win11_Pre_24H2, !dwmcore_build_before_w11_21h2 && build_before_w11_24h2 },
-			{ &g_CRenderData_DrawImageResource_FillMode_Win11_24H2_Org, &MyCRenderData_DrawImageResource_FillMode_Win11_24H2, !build_before_w11_24h2 },
+			{ &g_CRenderData_TryDrawCommandAsDrawList_Win10_Org, dwmcore_build_before_w11_21h2 },
+			{ &g_CRenderData_TryDrawCommandAsDrawList_Win11_Org, !dwmcore_build_before_w11_21h2 },
+			{ &g_CRenderData_DrawImageResource_FillMode_Pre_W10_2004_Org, build_before_w10_2004 },
+			{ &g_CRenderData_DrawImageResource_FillMode_Win10_Org, !build_before_w10_2004 && dwmcore_build_before_w11_21h2 },
+			{ &g_CRenderData_DrawImageResource_FillMode_Win11_Pre_24H2_Org, !dwmcore_build_before_w11_21h2 && build_before_w11_24h2 },
+			{ &g_CRenderData_DrawImageResource_FillMode_Win11_24H2_Org, !build_before_w11_24h2 },
 
-			{ &g_CAnimatedGlassSheet_OnRectUpdated_Org, &MyCAnimatedGlassSheet_OnRectUpdated, udwm_build_before_w11_21h2 },
-			{ &g_CAnimatedGlassSheet_Destructor_Org, &MyCAnimatedGlassSheet_Destructor, udwm_build_before_w11_21h2 },
-			{ &g_CLivePreview__UpdateInstructions_Org, &MyCLivePreview__UpdateInstructions, udwm_build_before_w11_21h2 },
-			{ &g_CLivePreview__UpdateResourcesForMonitorHelper_Org, &MyCLivePreview__UpdateResourcesForMonitorHelper, uDWM::g_versionInfo.build >= os::build_w11_24h2 },
+			{ &g_CAnimatedGlassSheet_OnRectUpdated_Org, udwm_build_before_w11_21h2 },
+			{ &g_CAnimatedGlassSheet_Destructor_Org, udwm_build_before_w11_21h2 },
+			{ &g_CLivePreview__UpdateInstructions_Org, udwm_build_before_w11_21h2 },
+			{ &g_CLivePreview__UpdateResourcesForMonitorHelper_Org, uDWM::g_versionInfo.build >= os::build_w11_24h2 },
 
-			{ &g_CLivePreview__FadeOutToGlass_Org, &MyCLivePreview__FadeOutToGlass, !udwm_build_before_w11_21h2 }
+			{ &g_CLivePreview__FadeOutToGlass_Org, !udwm_build_before_w11_21h2 }
 		},
 		false
 	);

@@ -19,12 +19,12 @@ namespace OpenGlass::ButtonGlowHandler
 	void MyCVisual_SetDirtyFlags(uDWM::CVisual* This, int flags);
 	void MyCButton_UpdateCrossfade(uDWM::CButton* This);
 
-	Projection::Detour<uDWM::Symbol_CVisual_SetDirtyFlags, decltype(&MyCVisual_SetDirtyFlags)> g_CVisual_SetDirtyFlags_Org{};
-	Projection::Detour<uDWM::Symbol_CButton_UpdateCrossfade, decltype(&MyCButton_UpdateCrossfade)> g_CButton_UpdateCrossfade_Org{};
+	Projection::Detour<uDWM::Symbol_CVisual_SetDirtyFlags, &MyCVisual_SetDirtyFlags> g_CVisual_SetDirtyFlags_Org{};
+	Projection::Detour<uDWM::Symbol_CButton_UpdateCrossfade, &MyCButton_UpdateCrossfade> g_CButton_UpdateCrossfade_Org{};
 
 	HRESULT CreateButtonGlowsFromAtlas(HTHEME hTheme);
 	HRESULT WINAPI MyCTopLevelWindow_CreateGlyphsFromAtlas(HTHEME hTheme);
-	Projection::Detour<uDWM::Symbol_CTopLevelWindow_CreateGlyphsFromAtlas, decltype(&MyCTopLevelWindow_CreateGlyphsFromAtlas)> g_CTopLevelWindow_CreateGlyphsFromAtlas_Org{};
+	Projection::Detour<uDWM::Symbol_CTopLevelWindow_CreateGlyphsFromAtlas, &MyCTopLevelWindow_CreateGlyphsFromAtlas> g_CTopLevelWindow_CreateGlyphsFromAtlas_Org{};
 
 	// Windows 11 21H2+ button glow implementation:
 	// Windows 11 removed the glow image member from CAtlasButton and CButton.
@@ -52,7 +52,7 @@ namespace OpenGlass::ButtonGlowHandler
 	ButtonGlowType GetButtonGlowType(uDWM::CButton* button);
 
 	HRESULT MyCButton_RedrawVisual(uDWM::CButton* This);
-	Projection::Detour<uDWM::Symbol_CButton_RedrawVisual, decltype(&MyCButton_RedrawVisual)> g_CButton_RedrawVisual_Org{};
+	Projection::Detour<uDWM::Symbol_CButton_RedrawVisual, &MyCButton_RedrawVisual> g_CButton_RedrawVisual_Org{};
 
 	void MoveAtlasImageToEnd(uDWM::CAtlasedRectsVisual* parent, uDWM::CAtlasedImage* atlasImage);
 
@@ -68,13 +68,13 @@ namespace OpenGlass::ButtonGlowHandler
 		const uDWM::CTopLevelWindow::WindowFrame* windowFrame
 	);
 
-	Projection::Detour<uDWM::Symbol_CAtlasButton_AppendAtlas, decltype(&MyCAtlasButton_AppendAtlas)> g_CAtlasButton_AppendAtlas_Org{};
-	Projection::Detour<uDWM::Symbol_CAtlasButton_AddApproximateAtlasSize, decltype(&MyCAtlasButton_AddApproximateAtlasSize)> g_CAtlasButton_AddApproximateAtlasSize_Org{};
-	Projection::Detour<uDWM::Symbol_CButton_DrawStateW, decltype(&MyCButton_DrawStateW)> g_CButton_DrawStateW_Org{};
-	Projection::Detour<uDWM::Symbol_CTopLevelWindow_UpdateButtonVisuals, decltype(&MyCTopLevelWindow_UpdateButtonVisuals)> g_CTopLevelWindow_UpdateButtonVisuals_Org{};
+	Projection::Detour<uDWM::Symbol_CAtlasButton_AppendAtlas, &MyCAtlasButton_AppendAtlas> g_CAtlasButton_AppendAtlas_Org{};
+	Projection::Detour<uDWM::Symbol_CAtlasButton_AddApproximateAtlasSize, &MyCAtlasButton_AddApproximateAtlasSize> g_CAtlasButton_AddApproximateAtlasSize_Org{};
+	Projection::Detour<uDWM::Symbol_CButton_DrawStateW, &MyCButton_DrawStateW> g_CButton_DrawStateW_Org{};
+	Projection::Detour<uDWM::Symbol_CTopLevelWindow_UpdateButtonVisuals, &MyCTopLevelWindow_UpdateButtonVisuals> g_CTopLevelWindow_UpdateButtonVisuals_Org{};
 
 	HRESULT WINAPI MyCTopLevelWindow_CreateGlyphsFromAtlas_Win11(HTHEME hTheme);
-	Projection::Detour<uDWM::Symbol_CTopLevelWindow_CreateGlyphsFromAtlas, decltype(&MyCTopLevelWindow_CreateGlyphsFromAtlas_Win11)> g_CTopLevelWindow_CreateGlyphsFromAtlas_Win11_Org{};
+	Projection::Detour<uDWM::Symbol_CTopLevelWindow_CreateGlyphsFromAtlas, &MyCTopLevelWindow_CreateGlyphsFromAtlas_Win11> g_CTopLevelWindow_CreateGlyphsFromAtlas_Win11_Org{};
 
 	void SetGlowImage(uDWM::CAtlasButton* atlasButton, ButtonGlowType glowType);
 	void LoadGlowBitmap(HTHEME hTheme, int partId, GlowBitmap& glow);
@@ -442,10 +442,10 @@ void ButtonGlowHandler::Startup()
 	HookHelper::ApplyInlineHooks(
 			std::initializer_list<HookHelper::DetourInfo>
 			{
-				{ &g_CTopLevelWindow_CreateGlyphsFromAtlas_Org, & MyCTopLevelWindow_CreateGlyphsFromAtlas },
+				{ &g_CTopLevelWindow_CreateGlyphsFromAtlas_Org },
 
-				{ &g_CVisual_SetDirtyFlags_Org, &MyCVisual_SetDirtyFlags },
-				{ &g_CButton_UpdateCrossfade_Org, &MyCButton_UpdateCrossfade }
+				{ &g_CVisual_SetDirtyFlags_Org },
+				{ &g_CButton_UpdateCrossfade_Org }
 			},
 			true
 		);
@@ -456,15 +456,15 @@ void ButtonGlowHandler::Startup()
 	HookHelper::ApplyInlineHooks(
 			std::initializer_list<HookHelper::DetourInfo>
 			{
-				{ &g_CAtlasButton_AppendAtlas_Org, &MyCAtlasButton_AppendAtlas },
-				{ &g_CAtlasButton_AddApproximateAtlasSize_Org, &MyCAtlasButton_AddApproximateAtlasSize },
-				{ &g_CButton_DrawStateW_Org, &MyCButton_DrawStateW },
-				{ &g_CButton_RedrawVisual_Org, &MyCButton_RedrawVisual },
-				{ &g_CTopLevelWindow_UpdateButtonVisuals_Org, &MyCTopLevelWindow_UpdateButtonVisuals },
-				{ &g_CTopLevelWindow_CreateGlyphsFromAtlas_Win11_Org, &MyCTopLevelWindow_CreateGlyphsFromAtlas_Win11 },
+				{ &g_CAtlasButton_AppendAtlas_Org },
+				{ &g_CAtlasButton_AddApproximateAtlasSize_Org },
+				{ &g_CButton_DrawStateW_Org },
+				{ &g_CButton_RedrawVisual_Org },
+				{ &g_CTopLevelWindow_UpdateButtonVisuals_Org },
+				{ &g_CTopLevelWindow_CreateGlyphsFromAtlas_Win11_Org },
 
-				{ &g_CVisual_SetDirtyFlags_Org, &MyCVisual_SetDirtyFlags },
-				{ &g_CButton_UpdateCrossfade_Org, &MyCButton_UpdateCrossfade }
+				{ &g_CVisual_SetDirtyFlags_Org },
+				{ &g_CButton_UpdateCrossfade_Org }
 			},
 			true
 		);
@@ -478,10 +478,10 @@ void ButtonGlowHandler::Shutdown()
 		HookHelper::ApplyInlineHooks(
 			std::initializer_list<HookHelper::DetourInfo>
 			{
-				{ &g_CTopLevelWindow_CreateGlyphsFromAtlas_Org, & MyCTopLevelWindow_CreateGlyphsFromAtlas },
+				{ &g_CTopLevelWindow_CreateGlyphsFromAtlas_Org },
 
-				{ &g_CVisual_SetDirtyFlags_Org, &MyCVisual_SetDirtyFlags },
-				{ &g_CButton_UpdateCrossfade_Org, &MyCButton_UpdateCrossfade }
+				{ &g_CVisual_SetDirtyFlags_Org },
+				{ &g_CButton_UpdateCrossfade_Org }
 			},
 			false
 		);
@@ -492,15 +492,15 @@ void ButtonGlowHandler::Shutdown()
 		HookHelper::ApplyInlineHooks(
 			std::initializer_list<HookHelper::DetourInfo>
 			{
-				{ &g_CAtlasButton_AppendAtlas_Org, &MyCAtlasButton_AppendAtlas },
-				{ &g_CAtlasButton_AddApproximateAtlasSize_Org, &MyCAtlasButton_AddApproximateAtlasSize },
-				{ &g_CButton_DrawStateW_Org, &MyCButton_DrawStateW },
-				{ &g_CButton_RedrawVisual_Org, &MyCButton_RedrawVisual },
-				{ &g_CTopLevelWindow_UpdateButtonVisuals_Org, &MyCTopLevelWindow_UpdateButtonVisuals },
-				{ &g_CTopLevelWindow_CreateGlyphsFromAtlas_Win11_Org, &MyCTopLevelWindow_CreateGlyphsFromAtlas_Win11 },
+				{ &g_CAtlasButton_AppendAtlas_Org },
+				{ &g_CAtlasButton_AddApproximateAtlasSize_Org },
+				{ &g_CButton_DrawStateW_Org },
+				{ &g_CButton_RedrawVisual_Org },
+				{ &g_CTopLevelWindow_UpdateButtonVisuals_Org },
+				{ &g_CTopLevelWindow_CreateGlyphsFromAtlas_Win11_Org },
 
-				{ &g_CVisual_SetDirtyFlags_Org, &MyCVisual_SetDirtyFlags },
-				{ &g_CButton_UpdateCrossfade_Org, &MyCButton_UpdateCrossfade }
+				{ &g_CVisual_SetDirtyFlags_Org },
+				{ &g_CButton_UpdateCrossfade_Org }
 			},
 			false
 		);

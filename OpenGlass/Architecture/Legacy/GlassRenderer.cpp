@@ -11,6 +11,7 @@
 #include "MaterialRealizer.hpp"
 #include "D2DPrivates.hpp"
 #include "GlassCoverageSet.hpp"
+#include "DetourChains.hpp"
 
 using namespace OpenGlass;
 
@@ -25,25 +26,6 @@ namespace OpenGlass::GlassRenderer
 		bool* succeeded,
 		T&& callback
 	);
-	HRESULT MyCRenderData_TryDrawCommandAsDrawList_Win10(
-		dwmcore::CRenderData* This,
-		dwmcore::CDrawingContext* drawingContext,
-		dwmcore::CDrawListCache* drawListCache,
-		dwmcore::CDrawListEntryBuilder* drawListEntryBuilder,
-		bool unknwon,
-		UINT commandType,
-		DWM::span<const BYTE>* resources,
-		bool* succeeded
-	);
-	HRESULT MyCRenderData_TryDrawCommandAsDrawList_Win11(
-		dwmcore::CRenderData* This,
-		dwmcore::CDrawingContext* drawingContext,
-		dwmcore::CDrawListCache* drawListCache,
-		dwmcore::CDrawListEntryBuilder* drawListEntryBuilder,
-		UINT commandType,
-		DWM::span<const BYTE>* resources,
-		bool* succeeded
-	);
 	HRESULT MyCDrawingContext_DrawGeometry(
 		dwmcore::IDrawingContext* This,
 		dwmcore::CLegacyMilBrush* brush,
@@ -56,8 +38,8 @@ namespace OpenGlass::GlassRenderer
 		ID2D1Brush* opacityBrush
 	);
 
-	Projection::ChainDetour<dwmcore::Symbol_CRenderData_TryDrawCommandAsDrawList_Pre_22000, decltype(&MyCRenderData_TryDrawCommandAsDrawList_Win10)> g_CRenderData_TryDrawCommandAsDrawList_Win10_Org{};
-	Projection::ChainDetour<dwmcore::Symbol_CRenderData_TryDrawCommandAsDrawList_22000, decltype(&MyCRenderData_TryDrawCommandAsDrawList_Win11)> g_CRenderData_TryDrawCommandAsDrawList_Win11_Org{};
+	DetourChains::RenderDataTryDrawCommandAsDrawListWin10RendererNode g_CRenderData_TryDrawCommandAsDrawList_Win10_Org{};
+	DetourChains::RenderDataTryDrawCommandAsDrawListWin11RendererNode g_CRenderData_TryDrawCommandAsDrawList_Win11_Org{};
 	decltype(&MyCDrawingContext_DrawGeometry) g_CDrawingContext_DrawGeometry_Org{ nullptr };
 	decltype(&MyCDrawingContext_DrawGeometry)* g_CDrawingContext_DrawGeometry_Org_Address{ nullptr };
 	HookHelper::PointerHook<&MyCDrawingContext_DrawGeometry> g_CDrawingContext_DrawGeometry_Hook;
@@ -784,8 +766,8 @@ void GlassRenderer::Startup()
 	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
-			{ &g_CRenderData_TryDrawCommandAsDrawList_Win10_Org, &MyCRenderData_TryDrawCommandAsDrawList_Win10, build_before_w11_21h2 },
-			{ &g_CRenderData_TryDrawCommandAsDrawList_Win11_Org, &MyCRenderData_TryDrawCommandAsDrawList_Win11, !build_before_w11_21h2 },
+			{ &g_CRenderData_TryDrawCommandAsDrawList_Win10_Org, build_before_w11_21h2 },
+			{ &g_CRenderData_TryDrawCommandAsDrawList_Win11_Org, !build_before_w11_21h2 },
 		},
 		true
 	);
@@ -797,8 +779,8 @@ void GlassRenderer::Shutdown()
 	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
-			{ &g_CRenderData_TryDrawCommandAsDrawList_Win10_Org, &MyCRenderData_TryDrawCommandAsDrawList_Win10, build_before_w11_21h2 },
-			{ &g_CRenderData_TryDrawCommandAsDrawList_Win11_Org, &MyCRenderData_TryDrawCommandAsDrawList_Win11, !build_before_w11_21h2 },
+			{ &g_CRenderData_TryDrawCommandAsDrawList_Win10_Org, build_before_w11_21h2 },
+			{ &g_CRenderData_TryDrawCommandAsDrawList_Win11_Org, !build_before_w11_21h2 },
 		},
 		false
 	);

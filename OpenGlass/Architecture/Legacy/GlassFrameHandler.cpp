@@ -6,6 +6,7 @@
 #include "dwmcoreProjection.hpp"
 #include "GlassEffectBrush.hpp"
 #include "GlassReflectionBrush.hpp"
+#include "DetourChains.hpp"
 
 using namespace OpenGlass;
 
@@ -18,17 +19,15 @@ namespace OpenGlass::GlassFrameHandler
 		float opacity,
 		UINT flag
 	);
-	HRESULT MyCTopLevelWindow_UpdateNCAreaBackground(uDWM::CTopLevelWindow* This);
 	HRESULT MyCTopLevelWindow_UpdateClientBlur(uDWM::CTopLevelWindow* This);
-	HRESULT MyCTopLevelWindow_ValidateVisual(uDWM::CTopLevelWindow* This);
 	void MyCTopLevelWindow_Destructor(uDWM::CTopLevelWindow* This);
 
-	Projection::Detour<uDWM::Symbol_ResourceHelper_CreateGeometryFromHRGN, decltype(&MyResourceHelper_CreateGeometryFromHRGN)> g_ResourceHelper_CreateGeometryFromHRGN_Org{};
-	Projection::Detour<uDWM::Symbol_CGlassColorizationParameters_AdjustWindowColorization, decltype(&MyCGlassColorizationParameters_AdjustWindowColorization)> g_CGlassColorizationParameters_AdjustWindowColorization_Org{};
-	Projection::ChainDetour<uDWM::Symbol_CTopLevelWindow_UpdateNCAreaBackground, decltype(&MyCTopLevelWindow_UpdateNCAreaBackground)> g_CTopLevelWindow_UpdateNCAreaBackground_Org{};
-	Projection::Detour<uDWM::Symbol_CTopLevelWindow_UpdateClientBlur, decltype(&MyCTopLevelWindow_UpdateClientBlur)> g_CTopLevelWindow_UpdateClientBlur_Org{};
-	Projection::ChainDetour<uDWM::Symbol_CTopLevelWindow_ValidateVisual, decltype(&MyCTopLevelWindow_ValidateVisual)> g_CTopLevelWindow_ValidateVisual_Org{};
-	Projection::Detour<uDWM::Symbol_CTopLevelWindow__CTopLevelWindow, decltype(&MyCTopLevelWindow_Destructor)> g_CTopLevelWindow_Destructor_Org{};
+	Projection::Detour<uDWM::Symbol_ResourceHelper_CreateGeometryFromHRGN, &MyResourceHelper_CreateGeometryFromHRGN> g_ResourceHelper_CreateGeometryFromHRGN_Org{};
+	Projection::Detour<uDWM::Symbol_CGlassColorizationParameters_AdjustWindowColorization, &MyCGlassColorizationParameters_AdjustWindowColorization> g_CGlassColorizationParameters_AdjustWindowColorization_Org{};
+	DetourChains::TopLevelWindowUpdateNCAreaBackgroundFrameHandlerNode g_CTopLevelWindow_UpdateNCAreaBackground_Org{};
+	Projection::Detour<uDWM::Symbol_CTopLevelWindow_UpdateClientBlur, &MyCTopLevelWindow_UpdateClientBlur> g_CTopLevelWindow_UpdateClientBlur_Org{};
+	DetourChains::TopLevelWindowValidateVisualFrameHandlerNode g_CTopLevelWindow_ValidateVisual_Org{};
+	Projection::Detour<uDWM::Symbol_CTopLevelWindow__CTopLevelWindow, &MyCTopLevelWindow_Destructor> g_CTopLevelWindow_Destructor_Org{};
 	
 	wil::unique_hrgn g_combinedRgn{ nullptr };
 
@@ -494,13 +493,13 @@ void GlassFrameHandler::Startup()
 	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
-			{ &g_CGlassColorizationParameters_AdjustWindowColorization_Org, &MyCGlassColorizationParameters_AdjustWindowColorization },
-			{ &g_ResourceHelper_CreateGeometryFromHRGN_Org, &MyResourceHelper_CreateGeometryFromHRGN },
-			{ &g_CTopLevelWindow_UpdateNCAreaBackground_Org, &MyCTopLevelWindow_UpdateNCAreaBackground },
-			{ &g_CTopLevelWindow_UpdateClientBlur_Org, &MyCTopLevelWindow_UpdateClientBlur },
+			{ &g_CGlassColorizationParameters_AdjustWindowColorization_Org },
+			{ &g_ResourceHelper_CreateGeometryFromHRGN_Org },
+			{ &g_CTopLevelWindow_UpdateNCAreaBackground_Org },
+			{ &g_CTopLevelWindow_UpdateClientBlur_Org },
 
-			{ &g_CTopLevelWindow_Destructor_Org, &MyCTopLevelWindow_Destructor },
-			{ &g_CTopLevelWindow_ValidateVisual_Org, &MyCTopLevelWindow_ValidateVisual }
+			{ &g_CTopLevelWindow_Destructor_Org },
+			{ &g_CTopLevelWindow_ValidateVisual_Org }
 		},
 		true
 	);
@@ -516,13 +515,13 @@ void GlassFrameHandler::Shutdown()
 	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
-			{ &g_CGlassColorizationParameters_AdjustWindowColorization_Org, &MyCGlassColorizationParameters_AdjustWindowColorization },
-			{ &g_ResourceHelper_CreateGeometryFromHRGN_Org, &MyResourceHelper_CreateGeometryFromHRGN },
-			{ &g_CTopLevelWindow_UpdateNCAreaBackground_Org, &MyCTopLevelWindow_UpdateNCAreaBackground },
-			{ &g_CTopLevelWindow_UpdateClientBlur_Org, &MyCTopLevelWindow_UpdateClientBlur },
+			{ &g_CGlassColorizationParameters_AdjustWindowColorization_Org },
+			{ &g_ResourceHelper_CreateGeometryFromHRGN_Org },
+			{ &g_CTopLevelWindow_UpdateNCAreaBackground_Org },
+			{ &g_CTopLevelWindow_UpdateClientBlur_Org },
 
-			{ &g_CTopLevelWindow_Destructor_Org, &MyCTopLevelWindow_Destructor },
-			{ &g_CTopLevelWindow_ValidateVisual_Org, &MyCTopLevelWindow_ValidateVisual }
+			{ &g_CTopLevelWindow_Destructor_Org },
+			{ &g_CTopLevelWindow_ValidateVisual_Org }
 		},
 		false
 	);

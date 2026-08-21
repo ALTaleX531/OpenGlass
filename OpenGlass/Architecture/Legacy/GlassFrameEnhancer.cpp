@@ -13,10 +13,10 @@ namespace OpenGlass::GlassFrameEnhancer
 	// TO-DO: implement pre-w10-2004 specialization
 	HRESULT MyCButton_CloneVisualTree(uDWM::CButton* This, uDWM::CButton** clonedVisual, UINT cloneOption);
 	
-	Projection::Detour<uDWM::Symbol_CTopLevelAtlasedRectsVisual_ShouldCloneAtlasImage_Pre_19041, decltype(&MyCTopLevelAtlasedRectsVisual_ShouldCloneAtlasImage_Before_W10_2004)> g_CTopLevelAtlasedRectsVisual_ShouldCloneAtlasImage_Before_W10_2004_Org{};
-	Projection::Detour<uDWM::Symbol_CTopLevelAtlasedRectsVisual_ShouldCloneAtlasImage_19041, decltype(&MyCTopLevelAtlasedRectsVisual_ShouldCloneAtlasImage_At_Least_W10_2004)> g_CTopLevelAtlasedRectsVisual_ShouldCloneAtlasImage_At_Least_W10_2004_Org{};
-	Projection::Detour<uDWM::Symbol_CTopLevelWindow_CloneVisualTreeForLivePreview_Win10, decltype(&MyCTopLevelWindow_CloneVisualTreeForLivePreview_Win10)> g_CTopLevelWindow_CloneVisualTreeForLivePreview_Win10_Org{};
-	Projection::Detour<uDWM::Symbol_CTopLevelWindow_CloneVisualTreeForLivePreview_Win11, decltype(&MyCTopLevelWindow_CloneVisualTreeForLivePreview_Win11)> g_CTopLevelWindow_CloneVisualTreeForLivePreview_Win11_Org{};
+	Projection::Detour<uDWM::Symbol_CTopLevelAtlasedRectsVisual_ShouldCloneAtlasImage_Pre_19041, &MyCTopLevelAtlasedRectsVisual_ShouldCloneAtlasImage_Before_W10_2004> g_CTopLevelAtlasedRectsVisual_ShouldCloneAtlasImage_Before_W10_2004_Org{};
+	Projection::Detour<uDWM::Symbol_CTopLevelAtlasedRectsVisual_ShouldCloneAtlasImage_19041, &MyCTopLevelAtlasedRectsVisual_ShouldCloneAtlasImage_At_Least_W10_2004> g_CTopLevelAtlasedRectsVisual_ShouldCloneAtlasImage_At_Least_W10_2004_Org{};
+	Projection::Detour<uDWM::Symbol_CTopLevelWindow_CloneVisualTreeForLivePreview_Win10, &MyCTopLevelWindow_CloneVisualTreeForLivePreview_Win10> g_CTopLevelWindow_CloneVisualTreeForLivePreview_Win10_Org{};
+	Projection::Detour<uDWM::Symbol_CTopLevelWindow_CloneVisualTreeForLivePreview_Win11, &MyCTopLevelWindow_CloneVisualTreeForLivePreview_Win11> g_CTopLevelWindow_CloneVisualTreeForLivePreview_Win11_Org{};
 	decltype(&MyCButton_CloneVisualTree) g_CButton_CloneVisualTree_Org{ nullptr };
 	decltype(&MyCButton_CloneVisualTree)* g_CButton_CloneVisualTree_Org_Address{ nullptr };
 	HookHelper::PointerHook<&MyCButton_CloneVisualTree> g_CButton_CloneVisualTree_Hook;
@@ -186,15 +186,11 @@ void GlassFrameEnhancer::Startup()
 	const auto build_before_w10_2004 = uDWM::g_versionInfo.build < os::build_w10_2004;
 	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>{
-			{&g_CTopLevelAtlasedRectsVisual_ShouldCloneAtlasImage_Before_W10_2004_Org,
-			 &MyCTopLevelAtlasedRectsVisual_ShouldCloneAtlasImage_Before_W10_2004, build_before_w10_2004},
-			{&g_CTopLevelAtlasedRectsVisual_ShouldCloneAtlasImage_At_Least_W10_2004_Org,
-			 &MyCTopLevelAtlasedRectsVisual_ShouldCloneAtlasImage_At_Least_W10_2004, !build_before_w10_2004},
+			{&g_CTopLevelAtlasedRectsVisual_ShouldCloneAtlasImage_Before_W10_2004_Org, build_before_w10_2004},
+			{&g_CTopLevelAtlasedRectsVisual_ShouldCloneAtlasImage_At_Least_W10_2004_Org, !build_before_w10_2004},
 
-			{&g_CTopLevelWindow_CloneVisualTreeForLivePreview_Win10_Org,
-			 &MyCTopLevelWindow_CloneVisualTreeForLivePreview_Win10, build_before_or_at_w11_21h2},
-			{&g_CTopLevelWindow_CloneVisualTreeForLivePreview_Win11_Org,
-			 &MyCTopLevelWindow_CloneVisualTreeForLivePreview_Win11, !build_before_or_at_w11_21h2}},
+			{&g_CTopLevelWindow_CloneVisualTreeForLivePreview_Win10_Org, build_before_or_at_w11_21h2},
+			{&g_CTopLevelWindow_CloneVisualTreeForLivePreview_Win11_Org, !build_before_or_at_w11_21h2}},
 		true);
 }
 
@@ -204,15 +200,11 @@ void GlassFrameEnhancer::Shutdown()
 	const auto build_before_w10_2004 = uDWM::g_versionInfo.build < os::build_w10_2004;
 	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>{
-			{&g_CTopLevelAtlasedRectsVisual_ShouldCloneAtlasImage_Before_W10_2004_Org,
-			 &MyCTopLevelAtlasedRectsVisual_ShouldCloneAtlasImage_Before_W10_2004, build_before_w10_2004},
-			{&g_CTopLevelAtlasedRectsVisual_ShouldCloneAtlasImage_At_Least_W10_2004_Org,
-			 &MyCTopLevelAtlasedRectsVisual_ShouldCloneAtlasImage_At_Least_W10_2004, !build_before_w10_2004},
+			{&g_CTopLevelAtlasedRectsVisual_ShouldCloneAtlasImage_Before_W10_2004_Org, build_before_w10_2004},
+			{&g_CTopLevelAtlasedRectsVisual_ShouldCloneAtlasImage_At_Least_W10_2004_Org, !build_before_w10_2004},
 
-			{&g_CTopLevelWindow_CloneVisualTreeForLivePreview_Win10_Org,
-			 &MyCTopLevelWindow_CloneVisualTreeForLivePreview_Win10, build_before_or_at_w11_21h2},
-			{&g_CTopLevelWindow_CloneVisualTreeForLivePreview_Win11_Org,
-			 &MyCTopLevelWindow_CloneVisualTreeForLivePreview_Win11, !build_before_or_at_w11_21h2}},
+			{&g_CTopLevelWindow_CloneVisualTreeForLivePreview_Win10_Org, build_before_or_at_w11_21h2},
+			{&g_CTopLevelWindow_CloneVisualTreeForLivePreview_Win11_Org, !build_before_or_at_w11_21h2}},
 		false);
 
 	if (g_CButton_CloneVisualTree_Org)

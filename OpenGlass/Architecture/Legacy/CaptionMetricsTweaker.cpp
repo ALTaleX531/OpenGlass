@@ -12,7 +12,7 @@ namespace OpenGlass::CaptionMetricsTweaker
 	decltype(&MyCButton_SetSize) g_CButton_SetSize_Org{ nullptr };
 	decltype(&MyCButton_SetSize)* g_CButton_SetSize_Org_Address{ nullptr };
 	HookHelper::PointerHook<&MyCButton_SetSize> g_CButton_SetSize_Hook;
-	Projection::Detour<uDWM::Symbol_CTopLevelWindow_UpdateNCAreaPositionsAndSizes, decltype(&MyCTopLevelWindow_UpdateNCAreaPositionsAndSizes)> g_CTopLevelWindow_UpdateNCAreaPositionsAndSizes_Org{};
+	Projection::Detour<uDWM::Symbol_CTopLevelWindow_UpdateNCAreaPositionsAndSizes, &MyCTopLevelWindow_UpdateNCAreaPositionsAndSizes> g_CTopLevelWindow_UpdateNCAreaPositionsAndSizes_Org{};
 
 	enum CaptionButtons : UINT
 	{
@@ -213,7 +213,7 @@ void CaptionMetricsTweaker::Startup()
 	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
-			{ &g_CTopLevelWindow_UpdateNCAreaPositionsAndSizes_Org, &MyCTopLevelWindow_UpdateNCAreaPositionsAndSizes },
+			{ &g_CTopLevelWindow_UpdateNCAreaPositionsAndSizes_Org },
 		},
 		true
 	);
@@ -229,7 +229,7 @@ void CaptionMetricsTweaker::Shutdown()
 	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
-			{ &g_CTopLevelWindow_UpdateNCAreaPositionsAndSizes_Org, &MyCTopLevelWindow_UpdateNCAreaPositionsAndSizes },
+			{ &g_CTopLevelWindow_UpdateNCAreaPositionsAndSizes_Org },
 		},
 		false
 	);

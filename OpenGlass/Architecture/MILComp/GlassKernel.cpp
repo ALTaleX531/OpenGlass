@@ -18,8 +18,8 @@ namespace OpenGlass::GlassKernel
 	HRESULT MyCD2DContext_DestroyDeviceResources(dwmcore::CD2DContext* This);
 	HRESULT MyCXXX_ReleaseXXX(uDWM::CGraphicsDeviceManager* This);
 
-	Projection::Detour<dwmcore::Symbol_CD2DContext_DestroyDeviceResources, decltype(&MyCD2DContext_DestroyDeviceResources)> g_CD2DContext_DestroyDeviceResources_Org{};
-	Projection::Detour<uDWM::Symbol_CGraphicsDeviceManager_ReleaseGraphicsDevice, decltype(&MyCXXX_ReleaseXXX)> g_CXXX_ReleaseXXX_Org{};
+	Projection::Detour<dwmcore::Symbol_CD2DContext_DestroyDeviceResources, &MyCD2DContext_DestroyDeviceResources> g_CD2DContext_DestroyDeviceResources_Org{};
+	Projection::Detour<uDWM::Symbol_CGraphicsDeviceManager_ReleaseGraphicsDevice, &MyCXXX_ReleaseXXX> g_CXXX_ReleaseXXX_Org{};
 
 	void RedrawTopLevelWindow(uDWM::CTopLevelWindow* window, bool deepRedraw)
 	{
@@ -388,8 +388,8 @@ void GlassKernel::Startup()
 	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
-			{ &g_CD2DContext_DestroyDeviceResources_Org, &MyCD2DContext_DestroyDeviceResources },
-			{ &g_CXXX_ReleaseXXX_Org, &MyCXXX_ReleaseXXX }
+			{ &g_CD2DContext_DestroyDeviceResources_Org },
+			{ &g_CXXX_ReleaseXXX_Org }
 		},
 		true
 	);
@@ -400,8 +400,8 @@ void GlassKernel::Shutdown()
 	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
-			{ &g_CD2DContext_DestroyDeviceResources_Org, &MyCD2DContext_DestroyDeviceResources },
-			{ &g_CXXX_ReleaseXXX_Org, &MyCXXX_ReleaseXXX }
+			{ &g_CD2DContext_DestroyDeviceResources_Org },
+			{ &g_CXXX_ReleaseXXX_Org }
 		},
 		false
 	);

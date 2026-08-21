@@ -71,19 +71,25 @@ namespace
 	}
 	int ProjectionChainReplacement1(int value);
 	int ProjectionChainReplacement2(int value);
-	Projection::ChainDetour<g_symbol, TestFunction> g_projectionChain1;
-	Projection::ChainDetour<g_symbol, TestFunction> g_projectionChain2;
+	using ProjectionChain = Projection::ChainDetour<
+		g_symbol,
+		&ProjectionChainReplacement2,
+		&ProjectionChainReplacement1
+	>;
+	ProjectionChain::Node<1> g_projectionChain1;
+	ProjectionChain::Node<0> g_projectionChain2;
 	inline constexpr Projection::SymbolHandle<FixtureModuleTag, 1, TestFunction> g_customDispatchSymbol{};
+	inline constexpr Projection::SymbolHandle<FixtureModuleTag, 2, TestFunction> g_customPhysicalDispatchSymbol{};
 	int ProjectionReplacement(int value)
 	{
 		return value;
 	}
-	Projection::Detour<g_customDispatchSymbol, TestFunction> g_projectionDetour{};
+	Projection::Detour<g_customDispatchSymbol, &ProjectionReplacement> g_projectionDetour{};
 	int CustomPhysicalDispatch(int value)
 	{
 		return value;
 	}
-	Projection::CustomDispatchDetour<g_customDispatchSymbol, TestFunction> g_customDispatchDetour{};
+	Projection::CustomDispatchDetour<g_customPhysicalDispatchSymbol, &CustomPhysicalDispatch> g_customDispatchDetour{};
 	int ProjectionChainReplacement1(int value)
 	{
 		return g_projectionChain1(value) + 100;
@@ -529,18 +535,19 @@ namespace
 		Check(g_symbol(1) == 11);
 
 		HookHelper::GetHookRundown().Open();
-		const std::array chainedHooks
-		{
-			HookHelper::DetourInfo{ &g_projectionChain1, &ProjectionChainReplacement1 },
-			HookHelper::DetourInfo{ &g_projectionChain2, &ProjectionChainReplacement2 }
-		};
+		const HookHelper::DetourInfo firstChainHook{ &g_projectionChain1 };
+		const auto chainDispatch = reinterpret_cast<TestFunction>(firstChainHook.detour);
+		Check(chainDispatch(1) == 111);
+		const HookHelper::DetourInfo secondChainHook{ &g_projectionChain2 };
+		Check(chainDispatch(1) == 1111);
+		const std::array chainedHooks{ firstChainHook, secondChainHook };
 		Check(chainedHooks[0].original == chainedHooks[1].original);
 		Check(chainedHooks[0].detour == chainedHooks[1].detour);
-		const auto projectionDispatch = g_projectionDetour.prepare_detour(&ProjectionReplacement);
+		const auto projectionDispatch = g_projectionDetour.prepare_detour();
 		Check(projectionDispatch != &ProjectionReplacement);
-		Check(g_projectionDetour.prepare_detour(&ProjectionReplacement) == projectionDispatch);
-		Check(g_customDispatchDetour.prepare_detour(&CustomPhysicalDispatch) == &CustomPhysicalDispatch);
-		Check(g_customDispatchDetour.prepare_detour(&CustomPhysicalDispatch) == &CustomPhysicalDispatch);
+		Check(g_projectionDetour.prepare_detour() == projectionDispatch);
+		Check(g_customDispatchDetour.prepare_detour() == &CustomPhysicalDispatch);
+		Check(g_customDispatchDetour.prepare_detour() == &CustomPhysicalDispatch);
 		{
 			HookHelper::HookTransaction transaction{ HookHelper::HookMode::Install };
 			transaction.ApplyInline("ProjectionChain", chainedHooks);

@@ -30,10 +30,10 @@ namespace OpenGlass::AccentOverrider
 	void MyCAccent_Destructor(
 		uDWM::CAccent* This
 	);
-	Projection::Detour<uDWM::Symbol_CAccent_UpdateAccentPolicy, decltype(&MyCAccent_UpdateAccentPolicy)> g_CAccent_UpdateAccentPolicy_Org{};
-	Projection::Detour<uDWM::Symbol_CAccent__UpdateSolidFill, decltype(&MyCAccent__UpdateSolidFill)> g_CAccent__UpdateSolidFill_Org{};
-	Projection::Detour<uDWM::Symbol_CAccent_SetClipRegion, decltype(&MyCAccent_SetClipRegion)> g_CAccent_SetClipRegion_Org{};
-	Projection::Detour<uDWM::Symbol_CAccent__CAccent, decltype(&MyCAccent_Destructor)> g_CAccent_Destructor_Org{};
+	Projection::Detour<uDWM::Symbol_CAccent_UpdateAccentPolicy, &MyCAccent_UpdateAccentPolicy> g_CAccent_UpdateAccentPolicy_Org{};
+	Projection::Detour<uDWM::Symbol_CAccent__UpdateSolidFill, &MyCAccent__UpdateSolidFill> g_CAccent__UpdateSolidFill_Org{};
+	Projection::Detour<uDWM::Symbol_CAccent_SetClipRegion, &MyCAccent_SetClipRegion> g_CAccent_SetClipRegion_Org{};
+	Projection::Detour<uDWM::Symbol_CAccent__CAccent, &MyCAccent_Destructor> g_CAccent_Destructor_Org{};
 
 	struct CAccentInfo
 	{
@@ -356,10 +356,10 @@ void AccentOverrider::Startup()
 	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
-			{ &g_CAccent_UpdateAccentPolicy_Org, &MyCAccent_UpdateAccentPolicy },
-			{ &g_CAccent__UpdateSolidFill_Org, &MyCAccent__UpdateSolidFill },
-			{ &g_CAccent_SetClipRegion_Org, &MyCAccent_SetClipRegion },
-			{ &g_CAccent_Destructor_Org, &MyCAccent_Destructor },
+			{ &g_CAccent_UpdateAccentPolicy_Org },
+			{ &g_CAccent__UpdateSolidFill_Org },
+			{ &g_CAccent_SetClipRegion_Org },
+			{ &g_CAccent_Destructor_Org },
 		},
 		true
 	);
@@ -375,10 +375,10 @@ void AccentOverrider::Shutdown()
 	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
-			{ &g_CAccent_UpdateAccentPolicy_Org, &MyCAccent_UpdateAccentPolicy },
-			{ &g_CAccent__UpdateSolidFill_Org, &MyCAccent__UpdateSolidFill },
-			{ &g_CAccent_SetClipRegion_Org, &MyCAccent_SetClipRegion },
-			{ &g_CAccent_Destructor_Org, &MyCAccent_Destructor },
+			{ &g_CAccent_UpdateAccentPolicy_Org },
+			{ &g_CAccent__UpdateSolidFill_Org },
+			{ &g_CAccent_SetClipRegion_Org },
+			{ &g_CAccent_Destructor_Org },
 		},
 		false
 	);

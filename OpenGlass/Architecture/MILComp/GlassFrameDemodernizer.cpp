@@ -1,13 +1,12 @@
 #include "pch.h"
 #include "Shared.hpp"
 #include "GlassFrameDemodernizer.hpp"
+#include "DetourChains.hpp"
 
 using namespace OpenGlass;
 
 namespace OpenGlass::GlassFrameDemodernizer
 {
-	HRESULT MyCTopLevelWindow_ValidateVisual(uDWM::CTopLevelWindow* This);
-	HRESULT MyCTopLevelWindow_UpdateNCAreaBackground(uDWM::CTopLevelWindow* This);
 	extern "C" bool WINAPI MySetMargin(
 		MARGINS* dstMargins,
 		int cxLeftWidth,
@@ -25,9 +24,9 @@ namespace OpenGlass::GlassFrameDemodernizer
 		const MARGINS* srcMargins
 	);
 
-	Projection::ChainDetour<uDWM::Symbol_CTopLevelWindow_ValidateVisual, decltype(&MyCTopLevelWindow_ValidateVisual)> g_CTopLevelWindow_ValidateVisual_Org{};
-	Projection::ChainDetour<uDWM::Symbol_CTopLevelWindow_UpdateNCAreaBackground, decltype(&MyCTopLevelWindow_UpdateNCAreaBackground)> g_CTopLevelWindow_UpdateNCAreaBackground_Org{};
-	Projection::CustomDispatchDetour<uDWM::Symbol_SetMargin, decltype(&MySetMargin)> g_SetMargin_Org{};
+	DetourChains::TopLevelWindowValidateVisualDemodernizerNode g_CTopLevelWindow_ValidateVisual_Org{};
+	DetourChains::TopLevelWindowUpdateNCAreaBackgroundDemodernizerNode g_CTopLevelWindow_UpdateNCAreaBackground_Org{};
+	Projection::CustomDispatchDetour<uDWM::Symbol_SetMargin, &MySetMargin> g_SetMargin_Org{};
 
 	UCHAR g_callCDesktopManager_IsHighContrastMode_Instructions[]
 	{
@@ -303,9 +302,9 @@ void GlassFrameDemodernizer::Startup()
 	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
-			{ &g_CTopLevelWindow_ValidateVisual_Org, &MyCTopLevelWindow_ValidateVisual },
-			{ &g_CTopLevelWindow_UpdateNCAreaBackground_Org, &MyCTopLevelWindow_UpdateNCAreaBackground },
-			{ &g_SetMargin_Org, &MySetMargin },
+			{ &g_CTopLevelWindow_ValidateVisual_Org },
+			{ &g_CTopLevelWindow_UpdateNCAreaBackground_Org },
+			{ &g_SetMargin_Org },
 		},
 		true
 	);
@@ -316,9 +315,9 @@ void GlassFrameDemodernizer::Shutdown()
 	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
-			{ &g_CTopLevelWindow_ValidateVisual_Org, &MyCTopLevelWindow_ValidateVisual },
-			{ &g_CTopLevelWindow_UpdateNCAreaBackground_Org, &MyCTopLevelWindow_UpdateNCAreaBackground },
-			{ &g_SetMargin_Org, &MySetMargin },
+			{ &g_CTopLevelWindow_ValidateVisual_Org },
+			{ &g_CTopLevelWindow_UpdateNCAreaBackground_Org },
+			{ &g_SetMargin_Org },
 		},
 		false
 	);

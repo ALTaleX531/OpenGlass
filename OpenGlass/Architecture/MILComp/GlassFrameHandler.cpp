@@ -5,6 +5,7 @@
 #include "uDWMProjection.hpp"
 #include "dwmcoreProjection.hpp"
 #include "ReflectionVisual.hpp"
+#include "DetourChains.hpp"
 
 using namespace OpenGlass;
 
@@ -34,33 +35,31 @@ namespace OpenGlass::GlassFrameHandler
 
 	void MyCRectangleVisual_SetRect(uDWM::CRectangleVisual* This, const D2D1_RECT_F& rc);
 	HRESULT MyCTopLevelWindow_UpdateClientBlur(uDWM::CTopLevelWindow* This);
-	HRESULT MyCTopLevelWindow_UpdateNCAreaBackground(uDWM::CTopLevelWindow* This);
 	int MyCTopLevelWindow_EdgeBorderMustBeOpaque(uDWM::CTopLevelWindow* This);
 
-	HRESULT MyCTopLevelWindow_ValidateVisual(uDWM::CTopLevelWindow* This);
 	void MyCTopLevelWindow_Destructor(uDWM::CTopLevelWindow* This);
 
-	Projection::Detour<uDWM::Symbol_CGlassColorizationParameters_AdjustWindowColorization, decltype(&MyCGlassColorizationParameters_AdjustWindowColorization)> g_CGlassColorizationParameters_AdjustWindowColorization_Org{};
+	Projection::Detour<uDWM::Symbol_CGlassColorizationParameters_AdjustWindowColorization, &MyCGlassColorizationParameters_AdjustWindowColorization> g_CGlassColorizationParameters_AdjustWindowColorization_Org{};
 
-	Projection::Detour<dwmcore::Symbol_CChannel_CombinedGeometryUpdate, decltype(&MyCChannel_CombinedGeometryUpdate)> g_CChannel_CombinedGeometryUpdate_Org{};
-	Projection::Detour<uDWM::Symbol_CLegacyNonClientBackground_ClearAll, decltype(&MyCLegacyNonClientBackground_ClearAll)> g_CLegacyNonClientBackground_ClearAll_Org{};
+	Projection::Detour<dwmcore::Symbol_CChannel_CombinedGeometryUpdate, &MyCChannel_CombinedGeometryUpdate> g_CChannel_CombinedGeometryUpdate_Org{};
+	Projection::Detour<uDWM::Symbol_CLegacyNonClientBackground_ClearAll, &MyCLegacyNonClientBackground_ClearAll> g_CLegacyNonClientBackground_ClearAll_Org{};
 	using CLegacyNonClientBackground_HasSomethingToRender_Detour = Projection::CustomDispatchDetour<
 		uDWM::Symbol_CLegacyNonClientBackground_HasSomethingToRender,
-		decltype(&MyCLegacyNonClientBackground_HasSomethingToRender)
+		&MyCLegacyNonClientBackground_HasSomethingToRender
 	>;
 	CLegacyNonClientBackground_HasSomethingToRender_Detour g_CLegacyNonClientBackground_HasSomethingToRender_Org{};
-	Projection::Detour<uDWM::Symbol_CLegacyNonClientBackground_SetCaptionRect, decltype(&MyCLegacyNonClientBackground_SetCaptionRect)> g_CLegacyNonClientBackground_SetCaptionRect_Org{};
-	Projection::Detour<uDWM::Symbol_CLegacyNonClientBackground_SetBorderRects, decltype(&MyCLegacyNonClientBackground_SetBorderRects)> g_CLegacyNonClientBackground_SetBorderRects_Org{};
-	Projection::Detour<uDWM::Symbol_CLegacyNonClientBackground_SetCaptionColor, decltype(&MyCLegacyNonClientBackground_SetCaptionColor)> g_CLegacyNonClientBackground_SetCaptionColor_Org{};
-	Projection::Detour<uDWM::Symbol_CLegacyNonClientBackground_CLegacyNonClientBackground, decltype(&MyCLegacyNonClientBackground_Destructor)> g_CLegacyNonClientBackground_Destructor_Org{};
+	Projection::Detour<uDWM::Symbol_CLegacyNonClientBackground_SetCaptionRect, &MyCLegacyNonClientBackground_SetCaptionRect> g_CLegacyNonClientBackground_SetCaptionRect_Org{};
+	Projection::Detour<uDWM::Symbol_CLegacyNonClientBackground_SetBorderRects, &MyCLegacyNonClientBackground_SetBorderRects> g_CLegacyNonClientBackground_SetBorderRects_Org{};
+	Projection::Detour<uDWM::Symbol_CLegacyNonClientBackground_SetCaptionColor, &MyCLegacyNonClientBackground_SetCaptionColor> g_CLegacyNonClientBackground_SetCaptionColor_Org{};
+	Projection::Detour<uDWM::Symbol_CLegacyNonClientBackground_CLegacyNonClientBackground, &MyCLegacyNonClientBackground_Destructor> g_CLegacyNonClientBackground_Destructor_Org{};
 
-	Projection::Detour<uDWM::Symbol_CRectangleVisual_SetRect, decltype(&MyCRectangleVisual_SetRect)> g_CRectangleVisual_SetRect_Org{};
-	Projection::Detour<uDWM::Symbol_CTopLevelWindow_UpdateClientBlur, decltype(&MyCTopLevelWindow_UpdateClientBlur)> g_CTopLevelWindow_UpdateClientBlur_Org{};
-	Projection::ChainDetour<uDWM::Symbol_CTopLevelWindow_UpdateNCAreaBackground, decltype(&MyCTopLevelWindow_UpdateNCAreaBackground)> g_CTopLevelWindow_UpdateNCAreaBackground_Org{};
-	Projection::Detour<uDWM::Symbol_CTopLevelWindow_EdgeBorderMustBeOpaque, decltype(&MyCTopLevelWindow_EdgeBorderMustBeOpaque)> g_CTopLevelWindow_EdgeBorderMustBeOpaque_Org{};
+	Projection::Detour<uDWM::Symbol_CRectangleVisual_SetRect, &MyCRectangleVisual_SetRect> g_CRectangleVisual_SetRect_Org{};
+	Projection::Detour<uDWM::Symbol_CTopLevelWindow_UpdateClientBlur, &MyCTopLevelWindow_UpdateClientBlur> g_CTopLevelWindow_UpdateClientBlur_Org{};
+	DetourChains::TopLevelWindowUpdateNCAreaBackgroundFrameHandlerNode g_CTopLevelWindow_UpdateNCAreaBackground_Org{};
+	Projection::Detour<uDWM::Symbol_CTopLevelWindow_EdgeBorderMustBeOpaque, &MyCTopLevelWindow_EdgeBorderMustBeOpaque> g_CTopLevelWindow_EdgeBorderMustBeOpaque_Org{};
 
-	Projection::ChainDetour<uDWM::Symbol_CTopLevelWindow_ValidateVisual, decltype(&MyCTopLevelWindow_ValidateVisual)> g_CTopLevelWindow_ValidateVisual_Org{};
-	Projection::Detour<uDWM::Symbol_CTopLevelWindow_CTopLevelWindow, decltype(&MyCTopLevelWindow_Destructor)> g_CTopLevelWindow_Destructor_Org{};
+	DetourChains::TopLevelWindowValidateVisualFrameHandlerNode g_CTopLevelWindow_ValidateVisual_Org{};
+	Projection::Detour<uDWM::Symbol_CTopLevelWindow_CTopLevelWindow, &MyCTopLevelWindow_Destructor> g_CTopLevelWindow_Destructor_Org{};
 
 	std::unordered_map<uDWM::CLegacyNonClientBackground*, winrt::com_ptr<uDWM::CSolidRectangleVisual>> g_effectVisualMap{};
 	winrt::com_ptr<uDWM::CSolidRectangleVisual> GetOrCreateEffectVisual(uDWM::CLegacyNonClientBackground* background, bool createIfNecessary)
@@ -630,23 +629,23 @@ void GlassFrameHandler::Startup()
 	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
-			{ &g_CGlassColorizationParameters_AdjustWindowColorization_Org, &MyCGlassColorizationParameters_AdjustWindowColorization },
+			{ &g_CGlassColorizationParameters_AdjustWindowColorization_Org },
 
-			{ &g_CChannel_CombinedGeometryUpdate_Org, &MyCChannel_CombinedGeometryUpdate },
-			{ &g_CLegacyNonClientBackground_ClearAll_Org, &MyCLegacyNonClientBackground_ClearAll },
-			{ &g_CLegacyNonClientBackground_HasSomethingToRender_Org, &MyCLegacyNonClientBackground_HasSomethingToRender },
-			{ &g_CLegacyNonClientBackground_SetCaptionRect_Org, &MyCLegacyNonClientBackground_SetCaptionRect },
-			{ &g_CLegacyNonClientBackground_SetBorderRects_Org, &MyCLegacyNonClientBackground_SetBorderRects },
-			{ &g_CLegacyNonClientBackground_SetCaptionColor_Org, &MyCLegacyNonClientBackground_SetCaptionColor },
-			{ &g_CLegacyNonClientBackground_Destructor_Org, &MyCLegacyNonClientBackground_Destructor },
+			{ &g_CChannel_CombinedGeometryUpdate_Org },
+			{ &g_CLegacyNonClientBackground_ClearAll_Org },
+			{ &g_CLegacyNonClientBackground_HasSomethingToRender_Org },
+			{ &g_CLegacyNonClientBackground_SetCaptionRect_Org },
+			{ &g_CLegacyNonClientBackground_SetBorderRects_Org },
+			{ &g_CLegacyNonClientBackground_SetCaptionColor_Org },
+			{ &g_CLegacyNonClientBackground_Destructor_Org },
 
-			{ &g_CRectangleVisual_SetRect_Org, &MyCRectangleVisual_SetRect },
-			{ &g_CTopLevelWindow_UpdateClientBlur_Org, &MyCTopLevelWindow_UpdateClientBlur },
-			{ &g_CTopLevelWindow_UpdateNCAreaBackground_Org, &MyCTopLevelWindow_UpdateNCAreaBackground },
-			{ &g_CTopLevelWindow_EdgeBorderMustBeOpaque_Org, &MyCTopLevelWindow_EdgeBorderMustBeOpaque },
+			{ &g_CRectangleVisual_SetRect_Org },
+			{ &g_CTopLevelWindow_UpdateClientBlur_Org },
+			{ &g_CTopLevelWindow_UpdateNCAreaBackground_Org },
+			{ &g_CTopLevelWindow_EdgeBorderMustBeOpaque_Org },
 
-			{ &g_CTopLevelWindow_ValidateVisual_Org, &MyCTopLevelWindow_ValidateVisual },
-			{ &g_CTopLevelWindow_Destructor_Org, &MyCTopLevelWindow_Destructor },
+			{ &g_CTopLevelWindow_ValidateVisual_Org },
+			{ &g_CTopLevelWindow_Destructor_Org },
 		},
 		true
 	);
@@ -662,23 +661,23 @@ void GlassFrameHandler::Shutdown()
 	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
-			{ &g_CGlassColorizationParameters_AdjustWindowColorization_Org, &MyCGlassColorizationParameters_AdjustWindowColorization },
+			{ &g_CGlassColorizationParameters_AdjustWindowColorization_Org },
 
-			{ &g_CChannel_CombinedGeometryUpdate_Org, &MyCChannel_CombinedGeometryUpdate },
-			{ &g_CLegacyNonClientBackground_ClearAll_Org, &MyCLegacyNonClientBackground_ClearAll },
-			{ &g_CLegacyNonClientBackground_HasSomethingToRender_Org, &MyCLegacyNonClientBackground_HasSomethingToRender },
-			{ &g_CLegacyNonClientBackground_SetCaptionRect_Org, &MyCLegacyNonClientBackground_SetCaptionRect },
-			{ &g_CLegacyNonClientBackground_SetBorderRects_Org, &MyCLegacyNonClientBackground_SetBorderRects },
-			{ &g_CLegacyNonClientBackground_SetCaptionColor_Org, &MyCLegacyNonClientBackground_SetCaptionColor },
-			{ &g_CLegacyNonClientBackground_Destructor_Org, &MyCLegacyNonClientBackground_Destructor },
+			{ &g_CChannel_CombinedGeometryUpdate_Org },
+			{ &g_CLegacyNonClientBackground_ClearAll_Org },
+			{ &g_CLegacyNonClientBackground_HasSomethingToRender_Org },
+			{ &g_CLegacyNonClientBackground_SetCaptionRect_Org },
+			{ &g_CLegacyNonClientBackground_SetBorderRects_Org },
+			{ &g_CLegacyNonClientBackground_SetCaptionColor_Org },
+			{ &g_CLegacyNonClientBackground_Destructor_Org },
 
-			{ &g_CRectangleVisual_SetRect_Org, &MyCRectangleVisual_SetRect },
-			{ &g_CTopLevelWindow_UpdateClientBlur_Org, &MyCTopLevelWindow_UpdateClientBlur },
-			{ &g_CTopLevelWindow_UpdateNCAreaBackground_Org, &MyCTopLevelWindow_UpdateNCAreaBackground },
-			{ &g_CTopLevelWindow_EdgeBorderMustBeOpaque_Org, &MyCTopLevelWindow_EdgeBorderMustBeOpaque },
+			{ &g_CRectangleVisual_SetRect_Org },
+			{ &g_CTopLevelWindow_UpdateClientBlur_Org },
+			{ &g_CTopLevelWindow_UpdateNCAreaBackground_Org },
+			{ &g_CTopLevelWindow_EdgeBorderMustBeOpaque_Org },
 
-			{ &g_CTopLevelWindow_ValidateVisual_Org, &MyCTopLevelWindow_ValidateVisual },
-			{ &g_CTopLevelWindow_Destructor_Org, &MyCTopLevelWindow_Destructor },
+			{ &g_CTopLevelWindow_ValidateVisual_Org },
+			{ &g_CTopLevelWindow_Destructor_Org },
 		},
 		false
 	);

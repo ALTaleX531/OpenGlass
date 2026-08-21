@@ -67,13 +67,13 @@ namespace OpenGlass::CaptionTextHandler
 	decltype(&MyCreateBitmap) g_CreateBitmap_Org{ nullptr };
 	HookHelper::ImportHook g_textImportHooks;
 	decltype(&MyIWICImagingFactory2_CreateBitmapFromHBITMAP) g_IWICImagingFactory2_CreateBitmapFromHBITMAP_Org{ nullptr };
-	Projection::Detour<uDWM::Symbol_CText_ValidateResources, decltype(&MyCText_ValidateResources)> g_CText_ValidateResources_Org{};
-	Projection::Detour<uDWM::Symbol_CText_InitializeVisualTreeClone, decltype(&MyCText_InitializeVisualTreeClone)> g_CText_InitializeVisualTreeClone_Org{};
-	Projection::Detour<uDWM::Symbol_CText_CloneVisualTree, decltype(&MyCText_CloneVisualTree)> g_CText_CloneVisualTree_Org{};
+	Projection::Detour<uDWM::Symbol_CText_ValidateResources, &MyCText_ValidateResources> g_CText_ValidateResources_Org{};
+	Projection::Detour<uDWM::Symbol_CText_InitializeVisualTreeClone, &MyCText_InitializeVisualTreeClone> g_CText_InitializeVisualTreeClone_Org{};
+	Projection::Detour<uDWM::Symbol_CText_CloneVisualTree, &MyCText_CloneVisualTree> g_CText_CloneVisualTree_Org{};
 	decltype(&MyCText_scalar_deleting_destructor) g_CText_scalar_deleting_destructor_Org{ nullptr };
 	decltype(&MyCText_scalar_deleting_destructor)* g_CText_scalar_deleting_destructor_Org_Address{ nullptr };
 	HookHelper::PointerHook<&MyCText_scalar_deleting_destructor> g_CText_scalar_deleting_destructor_Hook;
-	Projection::Detour<dwmcore::Symbol_CChannel_MatrixTransformUpdate, decltype(&MyCChannel_MatrixTransformUpdate)> g_CChannel_MatrixTransformUpdate_Org{};
+	Projection::Detour<dwmcore::Symbol_CChannel_MatrixTransformUpdate, &MyCChannel_MatrixTransformUpdate> g_CChannel_MatrixTransformUpdate_Org{};
 	decltype(&MyIWICImagingFactory2_CreateBitmapFromHBITMAP)* g_IWICImagingFactory2_CreateBitmapFromHBITMAP_Org_Address{ nullptr };
 	HookHelper::PointerHook<&MyIWICImagingFactory2_CreateBitmapFromHBITMAP> g_IWICImagingFactory2_CreateBitmapFromHBITMAP_Hook;
 
@@ -86,14 +86,14 @@ namespace OpenGlass::CaptionTextHandler
 	decltype(&MyICompositionSurfaceBrush2_put_Offset) g_ICompositionSurfaceBrush2_put_Offset_Org{ nullptr };
 	decltype(&MyICompositionSurfaceBrush2_put_Offset)* g_ICompositionSurfaceBrush2_put_Offset_Org_Address{ nullptr };
 	HookHelper::PointerHook<&MyICompositionSurfaceBrush2_put_Offset> g_ICompositionSurfaceBrush2_put_Offset_Hook;
-	Projection::Detour<uDWM::Symbol_CDWriteText_ValidateVisual, decltype(&MyCDWriteText_ValidateVisual)> g_CDWriteText_ValidateVisual_Org{};
+	Projection::Detour<uDWM::Symbol_CDWriteText_ValidateVisual, &MyCDWriteText_ValidateVisual> g_CDWriteText_ValidateVisual_Org{};
 	decltype(&MyCDWriteText_UpdateOffset) g_CDWriteText_UpdateOffset_Org{ nullptr };
 	decltype(&MyCDWriteText_UpdateOffset)* g_CDWriteText_UpdateOffset_Org_Address{ nullptr };
 	HookHelper::PointerHook<&MyCDWriteText_UpdateOffset> g_CDWriteText_UpdateOffset_Hook;
 	decltype(&MyCDWriteText_SetSize) g_CDWriteText_SetSize_Org{ nullptr };
 	decltype(&MyCDWriteText_SetSize)* g_CDWriteText_SetSize_Org_Address{ nullptr };
 	HookHelper::PointerHook<&MyCDWriteText_SetSize> g_CDWriteText_SetSize_Hook;
-	Projection::Detour<uDWM::Symbol_CDWriteText_InitializeVisualTreeClone, decltype(&MyCDWriteText_InitializeVisualTreeClone)> g_CDWriteText_InitializeVisualTreeClone_Org{};
+	Projection::Detour<uDWM::Symbol_CDWriteText_InitializeVisualTreeClone, &MyCDWriteText_InitializeVisualTreeClone> g_CDWriteText_InitializeVisualTreeClone_Org{};
 	decltype(&MyCDWriteText_scalar_deleting_destructor) g_CDWriteText_scalar_deleting_destructor_Org{ nullptr };
 	decltype(&MyCDWriteText_scalar_deleting_destructor)* g_CDWriteText_scalar_deleting_destructor_Org_Address{ nullptr };
 	HookHelper::PointerHook<&MyCDWriteText_scalar_deleting_destructor> g_CDWriteText_scalar_deleting_destructor_Hook;
@@ -1229,10 +1229,10 @@ void CaptionTextHandler::Startup()
 	HookHelper::ApplyInlineHooks(
 			std::initializer_list<HookHelper::DetourInfo>
 			{
-				{ &g_CChannel_MatrixTransformUpdate_Org, &MyCChannel_MatrixTransformUpdate },
-				{ &g_CText_ValidateResources_Org, &MyCText_ValidateResources },
-				{ &g_CText_InitializeVisualTreeClone_Org, &MyCText_InitializeVisualTreeClone, !build_before_w10_2004 },
-				{ &g_CText_CloneVisualTree_Org, &MyCText_CloneVisualTree, build_before_w10_2004 }
+				{ &g_CChannel_MatrixTransformUpdate_Org },
+				{ &g_CText_ValidateResources_Org },
+				{ &g_CText_InitializeVisualTreeClone_Org, !build_before_w10_2004 },
+				{ &g_CText_CloneVisualTree_Org, build_before_w10_2004 }
 			},
 			true
 		);
@@ -1285,8 +1285,8 @@ void CaptionTextHandler::Startup()
 	HookHelper::ApplyInlineHooks(
 			std::initializer_list<HookHelper::DetourInfo>
 			{
-				{ &g_CDWriteText_ValidateVisual_Org, &MyCDWriteText_ValidateVisual },
-				{ &g_CDWriteText_InitializeVisualTreeClone_Org, &MyCDWriteText_InitializeVisualTreeClone }
+				{ &g_CDWriteText_ValidateVisual_Org },
+				{ &g_CDWriteText_InitializeVisualTreeClone_Org }
 			},
 			true
 		);
@@ -1310,10 +1310,10 @@ void CaptionTextHandler::Shutdown()
 		HookHelper::ApplyInlineHooks(
 			std::initializer_list<HookHelper::DetourInfo>
 			{
-				{ &g_CChannel_MatrixTransformUpdate_Org, &MyCChannel_MatrixTransformUpdate },
-				{ &g_CText_ValidateResources_Org, &MyCText_ValidateResources },
-				{ &g_CText_InitializeVisualTreeClone_Org, &MyCText_InitializeVisualTreeClone, !build_before_w10_2004 },
-				{ &g_CText_CloneVisualTree_Org, &MyCText_CloneVisualTree, build_before_w10_2004 }
+				{ &g_CChannel_MatrixTransformUpdate_Org },
+				{ &g_CText_ValidateResources_Org },
+				{ &g_CText_InitializeVisualTreeClone_Org, !build_before_w10_2004 },
+				{ &g_CText_CloneVisualTree_Org, build_before_w10_2004 }
 			},
 			false
 		);
@@ -1340,8 +1340,8 @@ void CaptionTextHandler::Shutdown()
 		HookHelper::ApplyInlineHooks(
 			std::initializer_list<HookHelper::DetourInfo>
 			{
-				{ &g_CDWriteText_ValidateVisual_Org, &MyCDWriteText_ValidateVisual },
-				{ &g_CDWriteText_InitializeVisualTreeClone_Org, &MyCDWriteText_InitializeVisualTreeClone }
+				{ &g_CDWriteText_ValidateVisual_Org },
+				{ &g_CDWriteText_InitializeVisualTreeClone_Org }
 			},
 			false
 		);

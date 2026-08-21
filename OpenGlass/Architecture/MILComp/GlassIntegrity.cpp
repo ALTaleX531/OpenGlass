@@ -94,27 +94,27 @@ namespace OpenGlass::GlassIntegrity
 		dwmcore::CVisual* visualOverride
 	);
 
-	Projection::Detour<dwmcore::Symbol_COcclusionContext_CheckAndRecordOverlayCandidate, decltype(&MyCOcclusionContext_CheckAndRecordOverlayCandidate)> g_COcclusionContext_CheckAndRecordOverlayCandidate_Org{};
-	Projection::Detour<dwmcore::Symbol_COcclusionContext_CollectRectangleForOcclusion, decltype(&MyCOcclusionContext_CollectRectangleForOcclusion)> g_COcclusionContext_CollectRectangleForOcclusion_Org{};
+	Projection::Detour<dwmcore::Symbol_COcclusionContext_CheckAndRecordOverlayCandidate, &MyCOcclusionContext_CheckAndRecordOverlayCandidate> g_COcclusionContext_CheckAndRecordOverlayCandidate_Org{};
+	Projection::Detour<dwmcore::Symbol_COcclusionContext_CollectRectangleForOcclusion, &MyCOcclusionContext_CollectRectangleForOcclusion> g_COcclusionContext_CollectRectangleForOcclusion_Org{};
 
-	Projection::Detour<dwmcore::Symbol_CCombinedGeometry_ProcessUpdate, decltype(&MyCCombinedGeometry_ProcessUpdate)> g_CCombinedGeometry_ProcessUpdate_Org{};
-	Projection::Detour<dwmcore::Symbol_CVisual_SetClip, decltype(&MyCVisual_SetClip)> g_CVisual_SetClip_Org{};
-	Projection::Detour<dwmcore::Symbol_CSpriteVisual_CSpriteVisual, decltype(&MyCSpriteVisual_Destructor)> g_CSpriteVisual_Destructor_Org{};
-	Projection::Detour<dwmcore::Symbol_CShape_AllowsOcclusion, decltype(&MyCShape_AllowsOcclusion)> g_CShape_AllowsOcclusion_Org{};
-	Projection::Detour<dwmcore::Symbol_CGeometry_GetShapeData, decltype(&MyCGeometry_GetShapeData)> g_CGeometry_GetShapeData_Org{};
-	Projection::Detour<dwmcore::Symbol_CGeometry_CGeometry, decltype(&MyCGeometry_Destructor)> g_CGeometry_Destructor_Org{};
+	Projection::Detour<dwmcore::Symbol_CCombinedGeometry_ProcessUpdate, &MyCCombinedGeometry_ProcessUpdate> g_CCombinedGeometry_ProcessUpdate_Org{};
+	Projection::Detour<dwmcore::Symbol_CVisual_SetClip, &MyCVisual_SetClip> g_CVisual_SetClip_Org{};
+	Projection::Detour<dwmcore::Symbol_CSpriteVisual_CSpriteVisual, &MyCSpriteVisual_Destructor> g_CSpriteVisual_Destructor_Org{};
+	Projection::Detour<dwmcore::Symbol_CShape_AllowsOcclusion, &MyCShape_AllowsOcclusion> g_CShape_AllowsOcclusion_Org{};
+	Projection::Detour<dwmcore::Symbol_CGeometry_GetShapeData, &MyCGeometry_GetShapeData> g_CGeometry_GetShapeData_Org{};
+	Projection::Detour<dwmcore::Symbol_CGeometry_CGeometry, &MyCGeometry_Destructor> g_CGeometry_Destructor_Org{};
 
-	Projection::Detour<dwmcore::Symbol_COcclusionContext_Compute, decltype(&MyCOcclusionContext_Compute)> g_COcclusionContext_Compute_Org{};
-	Projection::Detour<dwmcore::Symbol_COcclusionContext_SetDeviceTransform, decltype(&MyCOcclusionContext_SetDeviceTransform)> g_COcclusionContext_SetDeviceTransform_Org{};
-	Projection::Detour<dwmcore::Symbol_CVisual_CollectOcclusion, decltype(&MyCVisual_CollectOcclusion)> g_CVisual_CollectOcclusion_Org{};
+	Projection::Detour<dwmcore::Symbol_COcclusionContext_Compute, &MyCOcclusionContext_Compute> g_COcclusionContext_Compute_Org{};
+	Projection::Detour<dwmcore::Symbol_COcclusionContext_SetDeviceTransform, &MyCOcclusionContext_SetDeviceTransform> g_COcclusionContext_SetDeviceTransform_Org{};
+	Projection::Detour<dwmcore::Symbol_CVisual_CollectOcclusion, &MyCVisual_CollectOcclusion> g_CVisual_CollectOcclusion_Org{};
 	decltype(&MyCColorBrush_AddOcclusionInformation) g_CColorBrush_AddOcclusionInformation_Org{ nullptr };
 	decltype(&MyCColorBrush_AddOcclusionInformation)* g_CColorBrush_AddOcclusionInformation_Org_Address{ nullptr };
 	HookHelper::PointerHook<&MyCColorBrush_AddOcclusionInformation> g_CColorBrush_AddOcclusionInformation_Hook;
-	Projection::Detour<dwmcore::Symbol_COcclusionContext_COcclusionContext, decltype(&MyCOcclusionContext_Destructor)> g_COcclusionContext_Destructor_Org{};
+	Projection::Detour<dwmcore::Symbol_COcclusionContext_COcclusionContext, &MyCOcclusionContext_Destructor> g_COcclusionContext_Destructor_Org{};
 
-	Projection::Detour<dwmcore::Symbol_COcclusionContext_IsOccluded, decltype(&MyCOcclusionContext_IsOccluded)> g_COcclusionContext_IsOccluded_Org{};
-	Projection::Detour<dwmcore::Symbol_CTreeDirty_GetOptimizedRect, decltype(&MyCTreeDirty_GetOptimizedRect)> g_CTreeDirty_GetOptimizedRect_Org{};
-	Projection::Detour<dwmcore::Symbol_CDrawingContext_DrawVisualTree, decltype(&MyCDrawingContext_DrawVisualTree)> g_CDrawingContext_DrawVisualTree_Org{};
+	Projection::Detour<dwmcore::Symbol_COcclusionContext_IsOccluded, &MyCOcclusionContext_IsOccluded> g_COcclusionContext_IsOccluded_Org{};
+	Projection::Detour<dwmcore::Symbol_CTreeDirty_GetOptimizedRect, &MyCTreeDirty_GetOptimizedRect> g_CTreeDirty_GetOptimizedRect_Org{};
+	Projection::Detour<dwmcore::Symbol_CDrawingContext_DrawVisualTree, &MyCDrawingContext_DrawVisualTree> g_CDrawingContext_DrawVisualTree_Org{};
 
 	uint16_t g_COcclusionContext_MinimumOcclusionAreaBranch_DirectCutoff_Instructions[] =
 	{
@@ -1061,24 +1061,24 @@ void GlassIntegrity::Startup()
 	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
-			{ &g_COcclusionContext_CheckAndRecordOverlayCandidate_Org, &MyCOcclusionContext_CheckAndRecordOverlayCandidate },
-			{ &g_COcclusionContext_CollectRectangleForOcclusion_Org, &MyCOcclusionContext_CollectRectangleForOcclusion },
+			{ &g_COcclusionContext_CheckAndRecordOverlayCandidate_Org },
+			{ &g_COcclusionContext_CollectRectangleForOcclusion_Org },
 
-			{ &g_CCombinedGeometry_ProcessUpdate_Org, &MyCCombinedGeometry_ProcessUpdate },
-			{ &g_CVisual_SetClip_Org, &MyCVisual_SetClip },
-			{ &g_CSpriteVisual_Destructor_Org, &MyCSpriteVisual_Destructor },
-			{ &g_CShape_AllowsOcclusion_Org, &MyCShape_AllowsOcclusion },
-			{ &g_CGeometry_GetShapeData_Org, &MyCGeometry_GetShapeData },
-			{ &g_CGeometry_Destructor_Org, &MyCGeometry_Destructor },
+			{ &g_CCombinedGeometry_ProcessUpdate_Org },
+			{ &g_CVisual_SetClip_Org },
+			{ &g_CSpriteVisual_Destructor_Org },
+			{ &g_CShape_AllowsOcclusion_Org },
+			{ &g_CGeometry_GetShapeData_Org },
+			{ &g_CGeometry_Destructor_Org },
 
-			{ &g_COcclusionContext_Compute_Org, &MyCOcclusionContext_Compute },
-			{ &g_COcclusionContext_SetDeviceTransform_Org, &MyCOcclusionContext_SetDeviceTransform },
-			{ &g_CVisual_CollectOcclusion_Org, &MyCVisual_CollectOcclusion },
-			{ &g_COcclusionContext_Destructor_Org, &MyCOcclusionContext_Destructor },
+			{ &g_COcclusionContext_Compute_Org },
+			{ &g_COcclusionContext_SetDeviceTransform_Org },
+			{ &g_CVisual_CollectOcclusion_Org },
+			{ &g_COcclusionContext_Destructor_Org },
 
-			{ &g_COcclusionContext_IsOccluded_Org, &MyCOcclusionContext_IsOccluded },
-			{ &g_CTreeDirty_GetOptimizedRect_Org, &MyCTreeDirty_GetOptimizedRect },
-			{ &g_CDrawingContext_DrawVisualTree_Org, &MyCDrawingContext_DrawVisualTree },
+			{ &g_COcclusionContext_IsOccluded_Org },
+			{ &g_CTreeDirty_GetOptimizedRect_Org },
+			{ &g_CDrawingContext_DrawVisualTree_Org },
 		},
 		true
 	);
@@ -1094,24 +1094,24 @@ void GlassIntegrity::Shutdown()
 	HookHelper::ApplyInlineHooks(
 		std::initializer_list<HookHelper::DetourInfo>
 		{
-			{ &g_COcclusionContext_CheckAndRecordOverlayCandidate_Org, &MyCOcclusionContext_CheckAndRecordOverlayCandidate },
-			{ &g_COcclusionContext_CollectRectangleForOcclusion_Org, &MyCOcclusionContext_CollectRectangleForOcclusion },
+			{ &g_COcclusionContext_CheckAndRecordOverlayCandidate_Org },
+			{ &g_COcclusionContext_CollectRectangleForOcclusion_Org },
 
-			{ &g_CCombinedGeometry_ProcessUpdate_Org, &MyCCombinedGeometry_ProcessUpdate },
-			{ &g_CVisual_SetClip_Org, &MyCVisual_SetClip },
-			{ &g_CSpriteVisual_Destructor_Org, &MyCSpriteVisual_Destructor },
-			{ &g_CShape_AllowsOcclusion_Org, &MyCShape_AllowsOcclusion },
-			{ &g_CGeometry_GetShapeData_Org, &MyCGeometry_GetShapeData },
-			{ &g_CGeometry_Destructor_Org, &MyCGeometry_Destructor },
+			{ &g_CCombinedGeometry_ProcessUpdate_Org },
+			{ &g_CVisual_SetClip_Org },
+			{ &g_CSpriteVisual_Destructor_Org },
+			{ &g_CShape_AllowsOcclusion_Org },
+			{ &g_CGeometry_GetShapeData_Org },
+			{ &g_CGeometry_Destructor_Org },
 
-			{ &g_COcclusionContext_Compute_Org, &MyCOcclusionContext_Compute },
-			{ &g_COcclusionContext_SetDeviceTransform_Org, &MyCOcclusionContext_SetDeviceTransform },
-			{ &g_CVisual_CollectOcclusion_Org, &MyCVisual_CollectOcclusion },
-			{ &g_COcclusionContext_Destructor_Org, &MyCOcclusionContext_Destructor },
+			{ &g_COcclusionContext_Compute_Org },
+			{ &g_COcclusionContext_SetDeviceTransform_Org },
+			{ &g_CVisual_CollectOcclusion_Org },
+			{ &g_COcclusionContext_Destructor_Org },
 
-			{ &g_COcclusionContext_IsOccluded_Org, &MyCOcclusionContext_IsOccluded },
-			{ &g_CTreeDirty_GetOptimizedRect_Org, &MyCTreeDirty_GetOptimizedRect },
-			{ &g_CDrawingContext_DrawVisualTree_Org, &MyCDrawingContext_DrawVisualTree },
+			{ &g_COcclusionContext_IsOccluded_Org },
+			{ &g_CTreeDirty_GetOptimizedRect_Org },
+			{ &g_CDrawingContext_DrawVisualTree_Org },
 		},
 		false
 	);
