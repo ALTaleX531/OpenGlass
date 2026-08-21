@@ -1051,86 +1051,49 @@ bool GlassIntegrity::MyCArrayBasedCoverageSet_IsCovered(
 	}
 
 	const auto dirtyRectScope = wil::scope_exit([] static { g_calculationContext.dirtyRect = nullptr; });
-	const auto glassCoverageSet = CArrayBasedGlassCoverageSet::GetOrCreate(This);
-	if (Util::VersionBefore<os::build_w11_24h2, os::revision_24h2_with_25h2_code_staged>(dwmcore::g_versionInfo.build, dwmcore::g_versionInfo.revision))
+	if (!Util::VersionBefore<os::build_w11_24h2, os::revision_24h2_with_25h2_code_staged>(dwmcore::g_versionInfo.build, dwmcore::g_versionInfo.revision))
 	{
-		auto covered = invokeOriginal(coverage, depth);
-		if (
-			glassCoverageSet &&
-			!glassCoverageSet->IsEmpty() &&
-			!covered &&
-			glassCoverageSet->IsPartiallyCovered(coverage, depth)
-		)
-		{
-			const D2D1_RECT_F extendedCoverage
-			{
-				coverage.left - expansion,
-				coverage.top - expansion,
-				coverage.right + expansion,
-				coverage.bottom + expansion
-			};
-
-			covered = invokeOriginal(extendedCoverage, depth);
-
-			if (!covered)
-			{
-				// unpaged dirty rect
-				if (g_calculationContext.dirtyRect)
-				{
-					g_calculationContext.dirtyRect->left -= expansion;
-					g_calculationContext.dirtyRect->top -= expansion;
-					g_calculationContext.dirtyRect->right += expansion;
-					g_calculationContext.dirtyRect->bottom += expansion;
-				}
-				// paged dirty rect
-				const_cast<D2D1_RECT_F&>(coverage) = extendedCoverage;
-			}
-		}
-
-		return covered;
+		// GetOptimizedRect has already cached the converted rectangle before calling
+		// IsCovered. The necessary expansion is therefore selected before conversion
+		// in PageInPixelsRectToDeviceRect and cannot be rolled back from this detour.
+		return invokeOriginal(coverage, depth);
 	}
-	else
+
+	const auto glassCoverageSet = CArrayBasedGlassCoverageSet::GetOrCreate(This);
+	auto covered = invokeOriginal(coverage, depth);
+	if (
+		glassCoverageSet &&
+		!glassCoverageSet->IsEmpty() &&
+		!covered &&
+		glassCoverageSet->IsPartiallyCovered(coverage, depth)
+	)
 	{
-		const D2D1_RECT_F shrunkCoverage =
+		const D2D1_RECT_F extendedCoverage
 		{
-			coverage.left + expansion,
-			coverage.top + expansion,
-			coverage.right - expansion,
-			coverage.bottom - expansion
+			coverage.left - expansion,
+			coverage.top - expansion,
+			coverage.right + expansion,
+			coverage.bottom + expansion
 		};
-		auto covered = invokeOriginal(shrunkCoverage, depth);
-		bool shrink = true;
-		if (
-			glassCoverageSet &&
-			!glassCoverageSet->IsEmpty() &&
-			glassCoverageSet->IsPartiallyCovered(shrunkCoverage, depth) &&
-			!covered
-		)
-		{
-			covered = invokeOriginal(coverage, depth);
 
-			if (!covered)
-			{
-				shrink = false;
-			}
-		}
+		covered = invokeOriginal(extendedCoverage, depth);
 
-		if (shrink)
+		if (!covered)
 		{
 			// unpaged dirty rect
 			if (g_calculationContext.dirtyRect)
 			{
-				g_calculationContext.dirtyRect->left += expansion;
-				g_calculationContext.dirtyRect->top += expansion;
-				g_calculationContext.dirtyRect->right -= expansion;
-				g_calculationContext.dirtyRect->bottom -= expansion;
+				g_calculationContext.dirtyRect->left -= expansion;
+				g_calculationContext.dirtyRect->top -= expansion;
+				g_calculationContext.dirtyRect->right += expansion;
+				g_calculationContext.dirtyRect->bottom += expansion;
 			}
 			// paged dirty rect
-			const_cast<D2D1_RECT_F&>(coverage) = shrunkCoverage;
+			const_cast<D2D1_RECT_F&>(coverage) = extendedCoverage;
 		}
-
-		return covered;
 	}
+
+	return covered;
 }
 
 bool GlassIntegrity::MyCArrayBasedCoverageSet_IsCovered_Pre_26100(
@@ -1310,6 +1273,24 @@ bool GlassIntegrity::MyCOcclusionContext_PageInPixelsRectToDeviceRect(
 	D2D1_RECT_F* dst
 )
 {
+	const auto invokeOriginal = [This](const D2D1_RECT_F& candidate, D2D1_RECT_F* result)
+	{
+		if (g_COcclusionContext_PageInPixelsRectToDeviceRect_Org)
+		{
+			return g_COcclusionContext_PageInPixelsRectToDeviceRect_Org(
+				This,
+				candidate,
+				result
+			);
+		}
+
+		return g_COcclusionContext_PageInPixelsRectToDeviceRect_26100_3912_Org(
+			This,
+			candidate,
+			result
+		);
+	};
+
 	if (g_calculationContext.IsActive())
 	{
 		g_calculationContext.dirtyRect = const_cast<D2D1_RECT_F*>(&src);
@@ -1322,27 +1303,38 @@ bool GlassIntegrity::MyCOcclusionContext_PageInPixelsRectToDeviceRect(
 			)
 		)
 		{
-			g_calculationContext.dirtyRect->left -= expansion;
-			g_calculationContext.dirtyRect->top -= expansion;
-			g_calculationContext.dirtyRect->right += expansion;
-			g_calculationContext.dirtyRect->bottom += expansion;
+			const D2D1_RECT_F extendedDirtyRect
+			{
+				src.left - expansion,
+				src.top - expansion,
+				src.right + expansion,
+				src.bottom + expansion
+			};
+			D2D1_RECT_F extendedDeviceRect{};
+			bool useExtendedDirtyRect{};
+			if (g_glassSafetyZoneMode == GlassSafetyZoneMode::Always)
+			{
+				useExtendedDirtyRect = invokeOriginal(extendedDirtyRect, &extendedDeviceRect);
+			}
+			else
+			{
+				const auto coverageSet = This->GetArrayBasedCoverageSet();
+				const auto glassCoverageSet = CArrayBasedGlassCoverageSet::GetOrCreate(coverageSet);
+				useExtendedDirtyRect =
+					glassCoverageSet &&
+					invokeOriginal(extendedDirtyRect, &extendedDeviceRect) &&
+					glassCoverageSet->IsVisible(extendedDeviceRect, coverageSet);
+			}
+			if (useExtendedDirtyRect)
+			{
+				*g_calculationContext.dirtyRect = extendedDirtyRect;
+				*dst = extendedDeviceRect;
+				return true;
+			}
 		}
 	}
 
-	if (g_COcclusionContext_PageInPixelsRectToDeviceRect_Org)
-	{
-		return g_COcclusionContext_PageInPixelsRectToDeviceRect_Org(
-			This,
-			src,
-			dst
-		);
-	}
-
-	return g_COcclusionContext_PageInPixelsRectToDeviceRect_26100_3912_Org(
-		This,
-		src,
-		dst
-	);
+	return invokeOriginal(src, dst);
 }
 
 HRESULT GlassIntegrity::MyCHwndRenderTarget_RenderDirtyRegion(
