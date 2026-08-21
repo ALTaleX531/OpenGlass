@@ -316,14 +316,14 @@ namespace
 		Check(callSecond(1) == 4);
 	}
 
-	template <size_t SymbolCount, size_t BindingCount, size_t LayoutCount, size_t CaseCount>
+	template <size_t SymbolCount, size_t BindingCount, size_t LayoutCount, size_t CaseCount, size_t SymbolSpecCount = SymbolCount>
 	struct RegistryStorage
 	{
 		std::array<char, 512> strings{};
 		std::array<size_t, 8> symbolNameOffsets{};
 		std::array<Projection::Version, 4> versions{};
 		std::array<ULONG, 2> knownBuilds{200, 250};
-		std::array<Projection::SymbolSpec, SymbolCount> symbols{};
+		std::array<Projection::SymbolSpec, SymbolSpecCount> symbols{};
 		std::array<PVOID, SymbolCount> candidates{};
 		std::array<PVOID, SymbolCount> resolved{};
 		std::array<Projection::ResolutionState, SymbolCount> resolutionStates{};
@@ -449,8 +449,8 @@ namespace
 		storage.symbolNameOffsets[1] = AddString(storage, cursor, "public: int __cdecl TargetAlias(int)");
 		const auto optionalId = AddString(storage, cursor, "Optional.Id");
 		storage.symbolNameOffsets[2] = AddString(storage, cursor, "public: int __cdecl Optional(int)");
-		storage.symbols = {{{requiredId, 0, 2, 0, 0, Projection::Requirement::Required, Projection::SymbolFlags::None},
-			{optionalId, 2, 1, 0, 0, Projection::Requirement::Optional, Projection::SymbolFlags::None}}};
+		storage.symbols = {{{0, requiredId, 0, 2, 0, 0, Projection::Requirement::Required, Projection::SymbolFlags::None},
+			{1, optionalId, 2, 1, 0, 0, Projection::Requirement::Optional, Projection::SymbolFlags::None}}};
 		PVOID published{};
 		storage.bindings[0] = {0, &published, Util::force_cast_from(&Replacement)};
 		g_activeRegistry = &storage.registry;
@@ -487,8 +487,8 @@ namespace
 		overloads.symbolNameOffsets[0] = AddString(overloads, cursor, "public: int __cdecl Overload(int)");
 		const auto secondId = AddString(overloads, cursor, "Overload.Double");
 		overloads.symbolNameOffsets[1] = AddString(overloads, cursor, "public: int __cdecl Overload(double)");
-		overloads.symbols = {{{firstId, 0, 1, 0, 0, Projection::Requirement::Required, Projection::SymbolFlags::None},
-			{secondId, 1, 1, 0, 0, Projection::Requirement::Required, Projection::SymbolFlags::None}}};
+		overloads.symbols = {{{0, firstId, 0, 1, 0, 0, Projection::Requirement::Required, Projection::SymbolFlags::None},
+			{1, secondId, 1, 1, 0, 0, Projection::Requirement::Required, Projection::SymbolFlags::None}}};
 		Check(overloads.registry.Freeze({150, 0}));
 		overloads.registry.Collect("public: int __cdecl Overload(int)", Util::force_cast_from(&Target));
 		overloads.registry.Collect("public: int __cdecl Overload(double)", Util::force_cast_from(&Replacement));
@@ -500,8 +500,8 @@ namespace
 		vtables.symbolNameOffsets[0] = AddString(vtables, cursor, "const Derived::`vftable'{for `BaseA'}");
 		const auto siblingId = AddString(vtables, cursor, "Sibling.Vtable");
 		vtables.symbolNameOffsets[1] = AddString(vtables, cursor, "const Derived::`vftable'{for `BaseB'}");
-		vtables.symbols = {{{derivedId, 0, 1, 0, 0, Projection::Requirement::Required, Projection::SymbolFlags::None},
-			{siblingId, 1, 1, 0, 0, Projection::Requirement::Required, Projection::SymbolFlags::None}}};
+		vtables.symbols = {{{0, derivedId, 0, 1, 0, 0, Projection::Requirement::Required, Projection::SymbolFlags::None},
+			{1, siblingId, 1, 1, 0, 0, Projection::Requirement::Required, Projection::SymbolFlags::None}}};
 		Check(vtables.registry.Freeze({150, 0}));
 		vtables.registry.Collect("const Derived::`vftable'{for `BaseA'}", Util::force_cast_from(&Target));
 		vtables.registry.Collect("const Derived::`vftable'{for `BaseB'}", Util::force_cast_from(&Replacement));
@@ -518,8 +518,8 @@ namespace
 		cursor = 1;
 		const auto secondId = AddString(second, cursor, "Target.Id");
 		second.symbolNameOffsets[0] = AddString(second, cursor, "public: int __cdecl Target(int)");
-		first.symbols[0] = {firstId, 0, 1, 0, 0, Projection::Requirement::Required, Projection::SymbolFlags::None};
-		second.symbols[0] = {secondId, 0, 1, 0, 0, Projection::Requirement::Required, Projection::SymbolFlags::None};
+		first.symbols[0] = {0, firstId, 0, 1, 0, 0, Projection::Requirement::Required, Projection::SymbolFlags::None};
+		second.symbols[0] = {0, secondId, 0, 1, 0, 0, Projection::Requirement::Required, Projection::SymbolFlags::None};
 		Check(first.registry.Freeze({150, 0}));
 		Check(second.registry.Freeze({150, 0}));
 		first.registry.Collect("public: int __cdecl Target(int)", Util::force_cast_from(&Target));
@@ -575,8 +575,8 @@ namespace
 		const auto newId = AddString(storage, cursor, "Target.New");
 		storage.symbolNameOffsets[1] = AddString(storage, cursor, "public: int __cdecl TargetNew(int)");
 		storage.versions[1] = {100, 0};
-		storage.symbols = {{{oldId, 0, 1, 0, 1, Projection::Requirement::Required, Projection::SymbolFlags::None},
-			{newId, 1, 1, 1, 0, Projection::Requirement::Required, Projection::SymbolFlags::None}}};
+		storage.symbols = {{{0, oldId, 0, 1, 0, 1, Projection::Requirement::Required, Projection::SymbolFlags::None},
+			{1, newId, 1, 1, 1, 0, Projection::Requirement::Required, Projection::SymbolFlags::None}}};
 		PVOID published{};
 		storage.bindings = {{{0, &published, Util::force_cast_from(&Replacement)},
 			{1, &published, Util::force_cast_from(&Replacement)}}};
@@ -595,13 +595,66 @@ namespace
 		Check(published == Util::force_cast_from(&Replacement));
 	}
 
+	void TestLogicalSymbolBindings()
+	{
+		RegistryStorage<1, 1, 0, 0, 2> storage;
+		size_t cursor{1};
+		const auto id = AddString(storage, cursor, "Target.Logical");
+		storage.symbolNameOffsets[0] = AddString(storage, cursor, "public: int __cdecl TargetOld(int)");
+		storage.symbolNameOffsets[1] = AddString(storage, cursor, "public: int __cdecl TargetNew(int)");
+		storage.versions[1] = {100, 0};
+		storage.versions[2] = {200, 0};
+		storage.symbols = {{{0, id, 0, 1, 0, 1, Projection::Requirement::Required, Projection::SymbolFlags::None},
+			{0, id, 1, 1, 2, 0, Projection::Requirement::Required, Projection::SymbolFlags::None}}};
+		PVOID published{};
+		storage.bindings[0] = {0, &published, Util::force_cast_from(&Replacement)};
+
+		Check(storage.registry.Freeze({99, 0}));
+		storage.registry.Collect("public: int __cdecl TargetOld(int)", Util::force_cast_from(&Target));
+		Check(storage.registry.ValidateSymbols());
+		Check(Projection::IsVersionInRange({99, 0}, storage.registry.SymbolRange(0)));
+		storage.registry.CommitSymbols();
+		Check(storage.registry.SymbolAddress(0, false) == Util::force_cast_from(&Target));
+		Check(published == Util::force_cast_from(&Target));
+
+		Check(storage.registry.Freeze({150, 0}));
+		Check(storage.registry.ValidateSymbols());
+		Check(!Projection::IsVersionInRange({150, 0}, storage.registry.SymbolRange(0)));
+		storage.registry.CommitSymbols();
+		Check(storage.registry.SymbolAddress(0, false) == nullptr);
+		Check(published == Util::force_cast_from(&Replacement));
+
+		Check(storage.registry.Freeze({200, 0}));
+		storage.registry.Collect("public: int __cdecl TargetNew(int)", Util::force_cast_from(&Replacement2));
+		Check(storage.registry.ValidateSymbols());
+		Check(Projection::IsVersionInRange({200, 0}, storage.registry.SymbolRange(0)));
+		storage.registry.CommitSymbols();
+		Check(storage.registry.SymbolAddress(0, false) == Util::force_cast_from(&Replacement2));
+		Check(published == Util::force_cast_from(&Replacement2));
+	}
+
 	void TestInvalidMetadata()
 	{
 		RegistryStorage<1, 0, 1, 0> storage;
-		storage.symbols[0] = {0, 8, 1, 0, 0, Projection::Requirement::Required, Projection::SymbolFlags::None};
+		storage.symbols[0] = {0, 0, 8, 1, 0, 0, Projection::Requirement::Required, Projection::SymbolFlags::None};
 		storage.layouts[0] = {0, 1};
 		Check(!storage.registry.Freeze({150, 0}));
 		Check(storage.registry.descriptor_error());
+
+		RegistryStorage<1, 0, 0, 0, 2> overlappingBindings;
+		size_t cursor{1};
+		overlappingBindings.symbolNameOffsets[0] = AddString(
+			overlappingBindings,
+			cursor,
+			"public: int __cdecl Target(int)"
+		);
+		overlappingBindings.symbols = {{{
+			0, 0, 0, 1, 0, 0, Projection::Requirement::Required, Projection::SymbolFlags::None
+		}, {
+			0, 0, 0, 1, 0, 0, Projection::Requirement::Required, Projection::SymbolFlags::None
+		}}};
+		Check(!overlappingBindings.registry.Freeze({150, 0}));
+		Check(overlappingBindings.registry.descriptor_error());
 	}
 
 	void TestOverridableRegistryValueResolution()
@@ -1336,6 +1389,7 @@ int main()
 	TestCompleteNameResolutionAndFallback();
 	TestAtomicCommitAndDetourStorage();
 	TestDisjointProjectedBindings();
+	TestLogicalSymbolBindings();
 	TestInvalidMetadata();
 	TestPngAssetValidation();
 	TestThemeAtlasLayoutParser();

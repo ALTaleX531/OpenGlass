@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Any, Literal, NotRequired, TypedDict, cast
 
 
-SCHEMA_VERSION = 3
+SCHEMA_VERSION = 4
 UINT32_MAX = 0xFFFFFFFF
 COMPLETE_NAME_CAPACITY = 64 * 1024
 MODULES = ("udwm", "dwmcore")
@@ -37,6 +37,11 @@ class SymbolVersion(TypedDict):
     revision: NotRequired[int]
 
 
+class SymbolBinding(TypedDict):
+    symbol_names: list[str]
+    min_inclusive: SymbolVersion | None
+    max_exclusive: SymbolVersion | None
+
 class LayoutBoundary(TypedDict):
     build: str
     revision: NotRequired[str]
@@ -51,11 +56,9 @@ class LayoutCase(TypedDict):
 class Symbol(TypedDict):
     name: str
     id: str
-    symbol_names: list[str]
+    bindings: list[SymbolBinding]
     kind: Literal["raw", "projected_function", "projected_variable"]
     requirement: Literal["required", "optional"]
-    min_inclusive: SymbolVersion | None
-    max_exclusive: SymbolVersion | None
     type: NotRequired[str]
     target: NotRequired[str]
     fallback: NotRequired[str]
@@ -220,19 +223,12 @@ def version_key(value: Any) -> tuple[int, int]:
     return (int(value["build"]), int(value.get("revision", 0)))
 
 
-def _validate_symbol(item: dict[str, Any], context: str) -> tuple[Version, Version]:
-    allowed = {
-        "name", "id", "symbol_names", "kind", "type", "target", "requirement",
-        "min_inclusive", "max_exclusive", "fallback", "condition", "diagnostic_only", "usage", "notes",
-        "abi_compatibility",
-    }
+def _validate_symbol_binding(item: dict[str, Any], context: str) -> tuple[Version, Version]:
+    allowed = {"symbol_names", "min_inclusive", "max_exclusive"}
     extra = set(item) - allowed
     if extra:
         raise SchemaError(f"{context} has unknown fields: {', '.join(sorted(extra))}")
 
-    require_optional_note(item.get("notes"), f"{context}.notes")
-    require_string(item.get("name"), f"{context}.name", identifier=True)
-    require_string(item.get("id"), f"{context}.id")
     candidates = require_list(item.get("symbol_names"), f"{context}.symbol_names")
     if not candidates:
         raise SchemaError(f"{context}.symbol_names must not be empty")
@@ -242,6 +238,40 @@ def _validate_symbol(item: dict[str, Any], context: str) -> tuple[Version, Versi
     ]
     if len(set(checked_candidates)) != len(checked_candidates):
         raise SchemaError(f"{context}.symbol_names contains a duplicate candidate")
+
+    minimum = parse_version(item.get("min_inclusive"), f"{context}.min_inclusive")
+    maximum = parse_version(item.get("max_exclusive"), f"{context}.max_exclusive")
+    if maximum.build and not minimum < maximum:
+        raise SchemaError(f"{context}: max_exclusive must follow min_inclusive")
+    return minimum, maximum
+
+
+def _validate_symbol(item: dict[str, Any], context: str) -> list[tuple[Version, Version]]:
+    allowed = {
+        "name", "id", "bindings", "kind", "type", "target", "requirement",
+        "fallback", "condition", "diagnostic_only", "usage", "notes", "abi_compatibility",
+    }
+    extra = set(item) - allowed
+    if extra:
+        raise SchemaError(f"{context} has unknown fields: {', '.join(sorted(extra))}")
+
+    require_optional_note(item.get("notes"), f"{context}.notes")
+    require_string(item.get("name"), f"{context}.name", identifier=True)
+    require_string(item.get("id"), f"{context}.id")
+    raw_bindings = require_list(item.get("bindings"), f"{context}.bindings")
+    if not raw_bindings:
+        raise SchemaError(f"{context}.bindings must not be empty")
+    ranges: list[tuple[Version, Version]] = []
+    for index, raw_binding in enumerate(raw_bindings):
+        binding_context = f"{context}.bindings[{index}]"
+        binding = require_object(raw_binding, binding_context)
+        current_range = _validate_symbol_binding(binding, binding_context)
+        if ranges and current_range[0] < ranges[-1][0]:
+            raise SchemaError(f"{binding_context}: bindings must be ordered by min_inclusive")
+        for prior_range in ranges:
+            if ranges_overlap(current_range, prior_range):
+                raise SchemaError(f"{binding_context}: binding range overlaps a prior binding")
+        ranges.append(current_range)
 
     kind = require_string(item.get("kind"), f"{context}.kind")
     if kind not in SYMBOL_KINDS:
@@ -296,12 +326,7 @@ def _validate_symbol(item: dict[str, Any], context: str) -> tuple[Version, Versi
         raise SchemaError(f"{context}.condition only supports debug")
     if "diagnostic_only" in item:
         require_bool(item["diagnostic_only"], f"{context}.diagnostic_only")
-
-    minimum = parse_version(item.get("min_inclusive"), f"{context}.min_inclusive")
-    maximum = parse_version(item.get("max_exclusive"), f"{context}.max_exclusive")
-    if maximum.build and not minimum < maximum:
-        raise SchemaError(f"{context}: max_exclusive must follow min_inclusive")
-    return minimum, maximum
+    return ranges
 
 
 def _validate_symbols(path: Path, raw_symbols: Any) -> list[Symbol]:
@@ -315,7 +340,7 @@ def _validate_symbols(path: Path, raw_symbols: Any) -> list[Symbol]:
     for index, raw in enumerate(symbols):
         context = f"{path}: symbols[{index}]"
         item = require_object(raw, context)
-        minimum, maximum = _validate_symbol(item, context)
+        ranges = _validate_symbol(item, context)
         name = cast(str, item["name"])
         stable_id = cast(str, item["id"])
         kind = cast(str, item["kind"])
@@ -324,36 +349,41 @@ def _validate_symbols(path: Path, raw_symbols: Any) -> list[Symbol]:
             raise SchemaError(f"{context}: duplicate C++ handle name {name}")
         symbol_handles.add(name)
 
-        for prior_min, prior_max, prior_name in ranges_by_id.setdefault(stable_id, []):
-            if ranges_overlap((minimum, maximum), (prior_min, prior_max)):
-                raise SchemaError(f"{context}: stable ID range overlaps {prior_name}")
-        ranges_by_id[stable_id].append((minimum, maximum, name))
-
-        if kind == "projected_function":
-            target = normalize_target(cast(str, item["target"]))
-            fallback = cast(str | None, item.get("fallback"))
-            for prior_min, prior_max, prior_name, prior_fallback in ranges_by_function_target.setdefault(target, []):
+        for minimum, maximum in ranges:
+            for prior_min, prior_max, prior_name in ranges_by_id.setdefault(stable_id, []):
                 if ranges_overlap((minimum, maximum), (prior_min, prior_max)):
-                    raise SchemaError(f"{context}: projected target range overlaps {prior_name}")
-                if fallback != prior_fallback:
-                    raise SchemaError(f"{context}: projected target variants must use the same fallback")
-            ranges_by_function_target[target].append((minimum, maximum, name, fallback))
-        elif kind == "projected_variable":
-            target = normalize_target(cast(str, item["target"]))
-            for prior_min, prior_max, prior_name in ranges_by_variable_target.setdefault(target, []):
-                if ranges_overlap((minimum, maximum), (prior_min, prior_max)):
-                    raise SchemaError(f"{context}: projected variable target range overlaps {prior_name}")
-            ranges_by_variable_target[target].append((minimum, maximum, name))
+                    raise SchemaError(f"{context}: stable ID range overlaps {prior_name}")
+            ranges_by_id[stable_id].append((minimum, maximum, name))
 
-        for candidate in cast(list[str], item["symbol_names"]):
-            for prior_min, prior_max, prior_name in ranges_by_candidate.setdefault(candidate, []):
-                if ranges_overlap((minimum, maximum), (prior_min, prior_max)):
-                    raise SchemaError(
-                        f"{context}: complete symbol name overlaps descriptor {prior_name}: {candidate}"
-                    )
-            ranges_by_candidate[candidate].append((minimum, maximum, name))
+            if kind == "projected_function":
+                target = normalize_target(cast(str, item["target"]))
+                fallback = cast(str | None, item.get("fallback"))
+                for prior_min, prior_max, prior_name, prior_fallback in ranges_by_function_target.setdefault(target, []):
+                    if ranges_overlap((minimum, maximum), (prior_min, prior_max)):
+                        raise SchemaError(f"{context}: projected target range overlaps {prior_name}")
+                    if fallback != prior_fallback:
+                        raise SchemaError(f"{context}: projected target variants must use the same fallback")
+                ranges_by_function_target[target].append((minimum, maximum, name, fallback))
+            elif kind == "projected_variable":
+                target = normalize_target(cast(str, item["target"]))
+                for prior_min, prior_max, prior_name in ranges_by_variable_target.setdefault(target, []):
+                    if ranges_overlap((minimum, maximum), (prior_min, prior_max)):
+                        raise SchemaError(f"{context}: projected variable target range overlaps {prior_name}")
+                ranges_by_variable_target[target].append((minimum, maximum, name))
 
-    return cast(list[Symbol], sorted(symbols, key=lambda item: (item["id"], version_key(item.get("min_inclusive")), item["name"])))
+        for binding, (minimum, maximum) in zip(cast(list[SymbolBinding], item["bindings"]), ranges):
+            for candidate in binding["symbol_names"]:
+                for prior_min, prior_max, prior_name in ranges_by_candidate.setdefault(candidate, []):
+                    if ranges_overlap((minimum, maximum), (prior_min, prior_max)):
+                        raise SchemaError(
+                            f"{context}: complete symbol name overlaps descriptor {prior_name}: {candidate}"
+                        )
+                ranges_by_candidate[candidate].append((minimum, maximum, name))
+
+    return cast(list[Symbol], sorted(
+        symbols,
+        key=lambda item: (item["id"], version_key(item["bindings"][0].get("min_inclusive")), item["name"]),
+    ))
 
 
 def _validate_layout(item: dict[str, Any], context: str, constants: dict[str, int]) -> None:

@@ -19,9 +19,11 @@ def schema(module: str, *, projected: bool) -> dict:
 	if projected:
 		symbols.append({
 			"name": "Symbol_Test_Run", "id": "Test::Run",
-			"symbol_names": ["public: void __cdecl Test::Run(void)"],
+			"bindings": [{
+				"symbol_names": ["public: void __cdecl Test::Run(void)"],
+				"min_inclusive": None, "max_exclusive": None,
+			}],
 			"kind": "projected_function", "target": "&Test::Run", "requirement": "required",
-			"min_inclusive": None, "max_exclusive": None,
 		})
 		invoke = "Projection::Invoke<&Test::Run>();"
 	return {
@@ -140,13 +142,13 @@ class ProjectionCodegenTests(unittest.TestCase):
 
 	def test_rejects_invalid_and_duplicate_complete_names(self) -> None:
 		bad = schema("udwm", projected=True)
-		bad["symbols"][0]["symbol_names"] = ["public: void Test::Run(void)", "public: void Test::Run(void)"]
+		bad["symbols"][0]["bindings"][0]["symbol_names"] = ["public: void Test::Run(void)", "public: void Test::Run(void)"]
 		self.write("udwm", bad)
 		with self.assertRaises(projection_schema.SchemaError):
 			codegen.run(self.repo, self.architecture, self.output, False)
 
 		bad = schema("udwm", projected=True)
-		bad["symbols"][0]["symbol_names"] = ["public:\0 void Test::Run(void)"]
+		bad["symbols"][0]["bindings"][0]["symbol_names"] = ["public:\0 void Test::Run(void)"]
 		self.write("udwm", bad)
 		with self.assertRaises(projection_schema.SchemaError):
 			codegen.run(self.repo, self.architecture, self.output, False)
@@ -159,6 +161,32 @@ class ProjectionCodegenTests(unittest.TestCase):
 		bad["symbols"].append(second)
 		self.write("udwm", bad)
 		with self.assertRaises(projection_schema.SchemaError):
+			codegen.run(self.repo, self.architecture, self.output, False)
+
+	def test_logical_symbol_accepts_disjoint_bindings_and_rejects_overlap(self) -> None:
+		value = schema("udwm", projected=True)
+		first = value["symbols"][0]["bindings"][0]
+		first["max_exclusive"] = {"build": 100, "revision": 0}
+		value["symbols"][0]["bindings"].append({
+			"symbol_names": ["public: void __cdecl Test::Run(void)"],
+			"min_inclusive": {"build": 100, "revision": 1},
+			"max_exclusive": None,
+		})
+		self.write("udwm", value)
+		codegen.run(self.repo, self.architecture, self.output, False)
+		generated = (self.output / "ProjectionRegistry.generated.inc").read_text(encoding="utf-8")
+		self.assertIn("g_udwmCandidates[1]", generated)
+		self.assertEqual(2, generated.count("Projection::Requirement::Required"))
+
+		value["symbols"][0]["bindings"][1]["min_inclusive"] = {"build": 99, "revision": 0}
+		self.write("udwm", value)
+		with self.assertRaisesRegex(projection_schema.SchemaError, r"binding range overlaps"):
+			codegen.run(self.repo, self.architecture, self.output, False)
+
+		value["symbols"][0]["bindings"][1]["min_inclusive"] = {"build": 100, "revision": 1}
+		value["symbols"][0]["bindings"].reverse()
+		self.write("udwm", value)
+		with self.assertRaisesRegex(projection_schema.SchemaError, r"bindings must be ordered"):
 			codegen.run(self.repo, self.architecture, self.output, False)
 
 	def test_rejects_optional_projected_function_without_fallback(self) -> None:
@@ -220,9 +248,11 @@ class ProjectionCodegenTests(unittest.TestCase):
 		bad = schema("dwmcore", projected=False)
 		bad["symbols"] = [{
 			"name": "Symbol_Test_Raw", "id": "Test::Raw",
-			"symbol_names": ["public: void __cdecl Test::Raw(void)"],
+			"bindings": [{
+				"symbol_names": ["public: void __cdecl Test::Raw(void)"],
+				"min_inclusive": None, "max_exclusive": None,
+			}],
 			"kind": "raw", "type": "PVOID", "requirement": "required",
-			"min_inclusive": None, "max_exclusive": None,
 		}]
 		self.write("dwmcore", bad)
 		with self.assertRaisesRegex(projection_schema.SchemaError, r"typed ABI"):
@@ -232,9 +262,11 @@ class ProjectionCodegenTests(unittest.TestCase):
 		bad = schema("dwmcore", projected=False)
 		bad["symbols"] = [{
 			"name": "Symbol_Test_Anchor", "id": "Test::Anchor",
-			"symbol_names": ["public: void __cdecl Test::Anchor(void)"],
+			"bindings": [{
+				"symbol_names": ["public: void __cdecl Test::Anchor(void)"],
+				"min_inclusive": None, "max_exclusive": None,
+			}],
 			"kind": "raw", "type": "BYTE*", "requirement": "required",
-			"min_inclusive": None, "max_exclusive": None,
 		}]
 		self.write("dwmcore", bad)
 		with self.assertRaisesRegex(projection_schema.SchemaError, r"code_address"):
@@ -252,15 +284,15 @@ class ProjectionCodegenTests(unittest.TestCase):
 		value = schema("udwm", projected=True)
 		old = value["symbols"][0]
 		old["name"] = "Symbol_Test_Run_Pre100"
-		old["symbol_names"] = ["public: long __cdecl Test::Run(void)"]
-		old["max_exclusive"] = {"build": 100, "revision": 0}
+		old["bindings"][0]["symbol_names"] = ["public: long __cdecl Test::Run(void)"]
+		old["bindings"][0]["max_exclusive"] = {"build": 100, "revision": 0}
 		old["type"] = "HRESULT (*)(Test*)"
 		old["abi_compatibility"] = "discard_return"
 		current = copy.deepcopy(value["symbols"][0])
 		current["name"] = "Symbol_Test_Run"
-		current["symbol_names"] = ["public: void __cdecl Test::Run(void)"]
-		current["min_inclusive"] = {"build": 100, "revision": 0}
-		current["max_exclusive"] = None
+		current["bindings"][0]["symbol_names"] = ["public: void __cdecl Test::Run(void)"]
+		current["bindings"][0]["min_inclusive"] = {"build": 100, "revision": 0}
+		current["bindings"][0]["max_exclusive"] = None
 		current.pop("type")
 		current.pop("abi_compatibility")
 		value["symbols"].append(current)
@@ -269,7 +301,7 @@ class ProjectionCodegenTests(unittest.TestCase):
 		generated = (self.output / "ProjectionRegistry.generated.inc").read_text(encoding="utf-8")
 		self.assertIn("is_discard_return_compatible_v<HRESULT (*)(Test*)", generated)
 
-		value["symbols"][1]["min_inclusive"] = None
+		value["symbols"][1]["bindings"][0]["min_inclusive"] = None
 		self.write("udwm", value)
 		with self.assertRaisesRegex(projection_schema.SchemaError, r"range overlaps"):
 			codegen.run(self.repo, self.architecture, self.output, False)
@@ -286,15 +318,19 @@ class ProjectionCodegenTests(unittest.TestCase):
 		bad["symbols"] = [
 			{
 				"name": "Symbol_Test_ValueA", "id": "Test::ValueA",
-				"symbol_names": ["public: static void * Test::s_value"],
+				"bindings": [{
+					"symbol_names": ["public: static void * Test::s_value"],
+					"min_inclusive": None, "max_exclusive": None,
+				}],
 				"kind": "projected_variable", "target": "&Test::s_value", "requirement": "required",
-				"min_inclusive": None, "max_exclusive": None,
 			},
 			{
 				"name": "Symbol_Test_ValueB", "id": "Test::ValueB",
-				"symbol_names": ["private: static void * Test::s_value"],
+				"bindings": [{
+					"symbol_names": ["private: static void * Test::s_value"],
+					"min_inclusive": None, "max_exclusive": None,
+				}],
 				"kind": "projected_variable", "target": "&Test::s_value", "requirement": "required",
-				"min_inclusive": None, "max_exclusive": None,
 			},
 		]
 		self.write("dwmcore", bad)
@@ -305,9 +341,11 @@ class ProjectionCodegenTests(unittest.TestCase):
 		bad = schema("dwmcore", projected=False)
 		bad["symbols"] = [{
 			"name": "Symbol_Test_Value", "id": "Test::Value",
-			"symbol_names": ["public: static void * Test::s_value"],
+			"bindings": [{
+				"symbol_names": ["public: static void * Test::s_value"],
+				"min_inclusive": None, "max_exclusive": None,
+			}],
 			"kind": "projected_variable", "target": "&Test::s_value", "requirement": "required",
-			"min_inclusive": None, "max_exclusive": None,
 		}]
 		self.write("dwmcore", bad)
 		(self.repo / "OpenGlass" / "ProjectionVariable.cpp").write_text(
@@ -322,9 +360,11 @@ class ProjectionCodegenTests(unittest.TestCase):
 		value = schema("dwmcore", projected=False)
 		value["symbols"] = [{
 			"name": "Symbol_Test_Value", "id": "Test::Value",
-			"symbol_names": ["public: static void * Test::s_value"],
+			"bindings": [{
+				"symbol_names": ["public: static void * Test::s_value"],
+				"min_inclusive": None, "max_exclusive": None,
+			}],
 			"kind": "projected_variable", "target": "&Test::s_value", "requirement": "required",
-			"min_inclusive": None, "max_exclusive": None,
 		}]
 		self.write("dwmcore", value)
 		(self.repo / "OpenGlass" / "ProjectionVariable.cpp").write_text(
@@ -337,9 +377,11 @@ class ProjectionCodegenTests(unittest.TestCase):
 		bad = schema("dwmcore", projected=False)
 		bad["symbols"] = [{
 			"name": "Symbol_Test_Raw", "id": "Test::Raw",
-			"symbol_names": ["public: void __cdecl Test::Raw(void)"],
+			"bindings": [{
+				"symbol_names": ["public: void __cdecl Test::Raw(void)"],
+				"min_inclusive": None, "max_exclusive": None,
+			}],
 			"kind": "raw", "type": "void (*)()", "requirement": "required",
-			"min_inclusive": None, "max_exclusive": None,
 		}]
 		self.write("dwmcore", bad)
 		with self.assertRaisesRegex(projection_schema.SchemaError, r"raw symbol schema has no direct consumer"):
@@ -400,9 +442,12 @@ class ProjectionCodegenTests(unittest.TestCase):
 		large["symbols"] = [
 			{
 				"name": f"Symbol_Test_{index}", "id": f"Test::{index}",
-				"symbol_names": [f"public: void __cdecl Test::Run{index}(void)"],
+				"bindings": [{
+					"symbol_names": [f"public: void __cdecl Test::Run{index}(void)"],
+					"min_inclusive": None, "max_exclusive": None,
+				}],
 				"kind": "raw", "type": "void (*)()", "requirement": "required",
-				"min_inclusive": None, "max_exclusive": None, "diagnostic_only": True,
+				"diagnostic_only": True,
 			}
 			for index in range(300)
 		]
@@ -443,17 +488,20 @@ class ProductionProjectionContractTests(unittest.TestCase):
 		pre_server = symbols["COcclusionContext::CollectRectangleForOcclusion.pre20348"]
 		server = symbols["COcclusionContext::CollectRectangleForOcclusion.20348"]
 
-		self.assertEqual((20348, 0), projection_schema.version_key(pre_server["max_exclusive"]))
-		self.assertEqual((20348, 0), projection_schema.version_key(server["min_inclusive"]))
-		self.assertTrue(any(name.startswith("private: long ") for name in pre_server["symbol_names"]))
+		self.assertEqual((20348, 0), projection_schema.version_key(pre_server["bindings"][0]["max_exclusive"]))
+		self.assertEqual((20348, 0), projection_schema.version_key(server["bindings"][0]["min_inclusive"]))
+		self.assertTrue(any(name.startswith("private: long ") for name in pre_server["bindings"][0]["symbol_names"]))
 		self.assertTrue(
-			any(name.startswith("private: void ") and ",bool,bool," in name for name in server["symbol_names"])
+			any(name.startswith("private: void ") and ",bool,bool," in name for name in server["bindings"][0]["symbol_names"])
 		)
 
 		def active(symbol: projection_schema.Symbol, version: tuple[int, int]) -> bool:
-			minimum = projection_schema.version_key(symbol["min_inclusive"])
-			maximum = projection_schema.version_key(symbol["max_exclusive"])
-			return minimum <= version and (not maximum[0] or version < maximum)
+			return any(
+				projection_schema.version_key(binding["min_inclusive"]) <= version and
+				(not projection_schema.version_key(binding["max_exclusive"])[0] or
+				 version < projection_schema.version_key(binding["max_exclusive"]))
+				for binding in symbol["bindings"]
+			)
 
 		collect_rectangle = [pre_server, server]
 		self.assertEqual(

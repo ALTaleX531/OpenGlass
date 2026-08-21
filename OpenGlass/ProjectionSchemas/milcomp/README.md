@@ -16,6 +16,8 @@ Generated C++ belongs under `$(IntDir)` and must not be committed. Runtime metad
 
 Raw Symbols must retain their exact function-pointer type; a `BYTE*` Symbol is permitted only with explicit `usage: "code_address"` for instruction-pattern navigation. Model projected ABI changes as disjoint typed ranges. The narrowly supported `abi_compatibility` forms are compile-time-checked exceptions for intentionally discarded returns or one extra trailing Win64 argument, not a general ABI escape hatch.
 
+Each logical Symbol owns one typed slot and a non-empty ordered `bindings` array. A binding contains the exact `symbol_names` and one `[min_inclusive, max_exclusive)` resolution interval. Bindings within a Symbol must not overlap; an uncovered interval makes the Symbol version-inactive rather than unresolved. Merge versioned descriptors only when module, semantic target, kind/usage, requirement, fallback, and underlying ABI are identical. ABI changes remain separate logical Symbols even when their intervals are mutually exclusive.
+
 The Symbol validator treats a projected wrapper as a declaration, not a consumer. Every projected function must have a real runtime call site or a direct typed Symbol consumer such as a Detour; delete unused descriptors rather than letting them become Required startup gates.
 
 ```powershell

@@ -24,9 +24,17 @@ class SymbolResolutionAuditTests(unittest.TestCase):
 		self.assertFalse(AUDIT.in_range(AUDIT.Version(22000, 9), descriptor))
 		self.assertTrue(AUDIT.in_range(AUDIT.Version(22000, 10), descriptor))
 		self.assertFalse(AUDIT.in_range(AUDIT.Version(26100, 5), descriptor))
-		debug_descriptor = {"min_inclusive": None, "max_exclusive": None, "condition": "debug"}
-		self.assertFalse(AUDIT.is_active(AUDIT.Version(26100, 1), debug_descriptor, "release"))
-		self.assertTrue(AUDIT.is_active(AUDIT.Version(26100, 1), debug_descriptor, "debug"))
+		debug_descriptor = {
+			"bindings": [
+				{"symbol_names": ["Debug"], "min_inclusive": None, "max_exclusive": {"build": 26100, "revision": 5}},
+				{"symbol_names": ["Debug"], "min_inclusive": {"build": 26100, "revision": 10}, "max_exclusive": None},
+			],
+			"condition": "debug",
+		}
+		self.assertIsNone(AUDIT.select_binding(AUDIT.Version(26100, 1), debug_descriptor, "release"))
+		self.assertEqual(0, AUDIT.select_binding(AUDIT.Version(26100, 1), debug_descriptor, "debug")[0])
+		self.assertIsNone(AUDIT.select_binding(AUDIT.Version(26100, 7), debug_descriptor, "debug"))
+		self.assertEqual(1, AUDIT.select_binding(AUDIT.Version(26100, 10), debug_descriptor, "debug")[0])
 
 	def test_pe_and_pdb_guid_age_pairing(self) -> None:
 		guid = uuid.UUID("12345678-1234-5678-90ab-cdef12345678")

@@ -22,4 +22,4 @@ Pass `--architecture legacy` or `--architecture milcomp` to both schema validato
 - milcomp markers include its reduced visual/compositor projection set;
 - an unfamiliar schema or detached checkout requires manual inspection of the selected architecture's consumers.
 
-When changing shared projection mechanisms, validate both architectures independently. Never copy Layout values, Symbol ranges, complete symbol names, private types, or semantic conclusions between them merely because stable IDs or short PDB names match.
+When changing shared projection mechanisms, validate both architectures independently. Never copy Layout values, logical Symbol bindings or binding ranges, complete symbol names, private types, or semantic conclusions between them merely because stable IDs or short PDB names match.

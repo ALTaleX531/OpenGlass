@@ -1,5 +1,5 @@
 {
-  "schema_version": 3,
+  "schema_version": 4,
   "module": "udwm",
   "namespace": "OpenGlass::uDWM",
   "tag": "ProjectionModuleTag",
@@ -24,30 +24,38 @@
     {
       "name": "Symbol_CResource_Create",
       "id": "CResource::Create",
-      "symbol_names": [
-        "public: static long __cdecl CResource::Create(enum DwmResourceType::Enum,struct IDwmChannel * __ptr64,class CResource * __ptr64 * __ptr64)"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: static long __cdecl CResource::Create(enum DwmResourceType::Enum,struct IDwmChannel * __ptr64,class CResource * __ptr64 * __ptr64)"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": {
+            "build": 18362,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": {
-        "build": 18362,
-        "revision": 0
-      },
       "target": "&CResource::Create",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CSolidColorLegacyMilBrushProxy_Update",
       "id": "CSolidColorLegacyMilBrushProxy::Update",
-      "symbol_names": [
-        "public: long __cdecl CSolidColorLegacyMilBrushProxy::Update(double,struct _D3DCOLORVALUE const & __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: long __cdecl CSolidColorLegacyMilBrushProxy::Update(double,struct _D3DCOLORVALUE const & __ptr64) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 18362,
+            "revision": 0
+          },
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 18362,
-        "revision": 0
-      },
-      "max_exclusive": null,
       "target": "&CSolidColorLegacyMilBrushProxy::Update",
       "kind": "projected_function",
       "fallback": "&Fallback_CSolidColorLegacyMilBrushProxy_Update"
@@ -55,16 +63,20 @@
     {
       "name": "Symbol_CImageLegacyMilBrushProxy_Update",
       "id": "CImageLegacyMilBrushProxy::Update",
-      "symbol_names": [
-        "public: long __cdecl CImageLegacyMilBrushProxy::Update(double,struct MilRectF const & __ptr64,struct MilRectF const & __ptr64,class CDoubleResourceProxy const * __ptr64,enum MilBrushMappingMode::Enum,enum MilBrushMappingMode::Enum,class CRectResourceProxy const * __ptr64,class CRectResourceProxy const * __ptr64,enum MilStretch::Enum,enum MilTileMode::Enum,enum MilHorizontalAlignment::Enum,enum MilVerticalAlignment::Enum,class CBaseImageProxy const * __ptr64) __ptr64",
-        "public: long __cdecl CImageLegacyMilBrushProxy::Update(double,struct D2D_RECT_F const & __ptr64,struct D2D_RECT_F const & __ptr64,class CDoubleResourceProxy const * __ptr64,enum MilBrushMappingMode::Enum,enum MilBrushMappingMode::Enum,class CRectResourceProxy const * __ptr64,class CRectResourceProxy const * __ptr64,enum MilStretch::Enum,enum MilTileMode::Enum,enum MilHorizontalAlignment::Enum,enum MilVerticalAlignment::Enum,class CBaseImageProxy const * __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: long __cdecl CImageLegacyMilBrushProxy::Update(double,struct MilRectF const & __ptr64,struct MilRectF const & __ptr64,class CDoubleResourceProxy const * __ptr64,enum MilBrushMappingMode::Enum,enum MilBrushMappingMode::Enum,class CRectResourceProxy const * __ptr64,class CRectResourceProxy const * __ptr64,enum MilStretch::Enum,enum MilTileMode::Enum,enum MilHorizontalAlignment::Enum,enum MilVerticalAlignment::Enum,class CBaseImageProxy const * __ptr64) __ptr64",
+            "public: long __cdecl CImageLegacyMilBrushProxy::Update(double,struct D2D_RECT_F const & __ptr64,struct D2D_RECT_F const & __ptr64,class CDoubleResourceProxy const * __ptr64,enum MilBrushMappingMode::Enum,enum MilBrushMappingMode::Enum,class CRectResourceProxy const * __ptr64,class CRectResourceProxy const * __ptr64,enum MilStretch::Enum,enum MilTileMode::Enum,enum MilHorizontalAlignment::Enum,enum MilVerticalAlignment::Enum,class CBaseImageProxy const * __ptr64) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 19041,
+            "revision": 0
+          },
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 19041,
-        "revision": 0
-      },
-      "max_exclusive": null,
       "target": "&CImageLegacyMilBrushProxy::Update",
       "kind": "projected_function",
       "fallback": "&Fallback_CImageLegacyMilBrushProxy_Update",
@@ -73,15 +85,19 @@
     {
       "name": "Symbol_CVisual_UpdateOffset",
       "id": "CVisual::UpdateOffset",
-      "symbol_names": [
-        "protected: virtual long __cdecl CVisual::UpdateOffset(void) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "protected: virtual long __cdecl CVisual::UpdateOffset(void) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 22621,
+            "revision": 0
+          },
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 22621,
-        "revision": 0
-      },
-      "max_exclusive": null,
       "kind": "raw",
       "type": "BYTE*",
       "usage": "code_address"
@@ -89,15 +105,19 @@
     {
       "name": "Symbol_CVisual_SetSize_Pre26100",
       "id": "CVisual::SetSize",
-      "symbol_names": [
-        "public: virtual long __cdecl CVisual::SetSize(struct tagSIZE const * __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: virtual long __cdecl CVisual::SetSize(struct tagSIZE const * __ptr64) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": {
+            "build": 26100,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": {
-        "build": 26100,
-        "revision": 0
-      },
       "target": "&CVisual::SetSize",
       "kind": "projected_function",
       "type": "HRESULT (*)(CVisual*, const SIZE*)",
@@ -107,197 +127,253 @@
     {
       "name": "Symbol_CVisual_SetSize",
       "id": "CVisual::SetSize",
-      "symbol_names": [
-        "public: virtual void __cdecl CVisual::SetSize(struct tagSIZE const * __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: virtual void __cdecl CVisual::SetSize(struct tagSIZE const * __ptr64) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 26100,
+            "revision": 0
+          },
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 26100,
-        "revision": 0
-      },
-      "max_exclusive": null,
       "target": "&CVisual::SetSize",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CVisual_SetInsetFromParent",
       "id": "CVisual::SetInsetFromParent",
-      "symbol_names": [
-        "public: void __cdecl CVisual::SetInsetFromParent(struct _MARGINS const & __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: void __cdecl CVisual::SetInsetFromParent(struct _MARGINS const & __ptr64) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "target": "&CVisual::SetInsetFromParent",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CVisual_SetInsetFromParentLeft",
       "id": "CVisual::SetInsetFromParentLeft",
-      "symbol_names": [
-        "public: void __cdecl CVisual::SetInsetFromParentLeft(int) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: void __cdecl CVisual::SetInsetFromParentLeft(int) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "target": "&CVisual::SetInsetFromParentLeft",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CVisual_SetDirtyFlags",
       "id": "CVisual::SetDirtyFlags",
-      "symbol_names": [
-        "public: virtual void __cdecl CVisual::SetDirtyFlags(unsigned long) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: virtual void __cdecl CVisual::SetDirtyFlags(unsigned long) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "target": "&CVisual::SetDirtyFlags",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CVisual_RenderRecursive",
       "id": "CVisual::RenderRecursive",
-      "symbol_names": [
-        "public: virtual long __cdecl CVisual::RenderRecursive(void) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: virtual long __cdecl CVisual::RenderRecursive(void) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "target": "&CVisual::RenderRecursive",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CVisualProxy_SetSize",
       "id": "CVisualProxy::SetSize",
-      "symbol_names": [
-        "public: long __cdecl CVisualProxy::SetSize(double,double) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: long __cdecl CVisualProxy::SetSize(double,double) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 22621,
+            "revision": 0
+          },
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 22621,
-        "revision": 0
-      },
-      "max_exclusive": null,
       "target": "&CVisualProxy::SetSize",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_VisualCollection_Remove",
       "id": "VisualCollection::Remove",
-      "symbol_names": [
-        "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "target": "&VisualCollection::Remove",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_VisualCollection_InsertRelative",
       "id": "VisualCollection::InsertRelative",
-      "symbol_names": [
-        "public: long __cdecl VisualCollection::InsertRelative(class CVisual * __ptr64,class CVisual * __ptr64,bool,bool) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: long __cdecl VisualCollection::InsertRelative(class CVisual * __ptr64,class CVisual * __ptr64,bool,bool) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "target": "&VisualCollection::InsertRelative",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CText_ValidateResources",
       "id": "CText::ValidateResources",
-      "symbol_names": [
-        "private: long __cdecl CText::ValidateResources(void) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "private: long __cdecl CText::ValidateResources(void) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": {
+            "build": 22621,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": {
-        "build": 22621,
-        "revision": 0
-      },
       "kind": "raw",
       "type": "HRESULT (*)(CText*)"
     },
     {
       "name": "Symbol_CText_CloneVisualTree",
       "id": "CText::CloneVisualTree",
-      "symbol_names": [
-        "public: virtual long __cdecl CText::CloneVisualTree(class CVisual * __ptr64 * __ptr64,enum CloneOptions) __ptr64",
-        "public: virtual long __cdecl CText::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: virtual long __cdecl CText::CloneVisualTree(class CVisual * __ptr64 * __ptr64,enum CloneOptions) __ptr64",
+            "public: virtual long __cdecl CText::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": {
+            "build": 19041,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": {
-        "build": 19041,
-        "revision": 0
-      },
       "kind": "raw",
       "type": "HRESULT (*)(CText*, CText**, bool, bool, bool)"
     },
     {
       "name": "Symbol_CText_InitializeVisualTreeClone",
       "id": "CText::InitializeVisualTreeClone",
-      "symbol_names": [
-        "protected: long __cdecl CText::InitializeVisualTreeClone(class CText * __ptr64,enum CloneOptions) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "protected: long __cdecl CText::InitializeVisualTreeClone(class CText * __ptr64,enum CloneOptions) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 19041,
+            "revision": 0
+          },
+          "max_exclusive": {
+            "build": 22621,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 19041,
-        "revision": 0
-      },
-      "max_exclusive": {
-        "build": 22621,
-        "revision": 0
-      },
       "kind": "raw",
       "type": "HRESULT (*)(CText*, CText*, UINT)"
     },
     {
       "name": "Symbol_CDWriteText_ValidateVisual",
       "id": "CDWriteText::ValidateVisual",
-      "symbol_names": [
-        "public: virtual long __cdecl CDWriteText::ValidateVisual(void) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: virtual long __cdecl CDWriteText::ValidateVisual(void) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 22621,
+            "revision": 0
+          },
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 22621,
-        "revision": 0
-      },
-      "max_exclusive": null,
       "kind": "raw",
       "type": "HRESULT (*)(CDWriteText*)"
     },
     {
       "name": "Symbol_CDWriteText_InitializeVisualTreeClone",
       "id": "CDWriteText::InitializeVisualTreeClone",
-      "symbol_names": [
-        "protected: long __cdecl CDWriteText::InitializeVisualTreeClone(class CDWriteText * __ptr64,enum CloneOptions) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "protected: long __cdecl CDWriteText::InitializeVisualTreeClone(class CDWriteText * __ptr64,enum CloneOptions) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 22621,
+            "revision": 0
+          },
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 22621,
-        "revision": 0
-      },
-      "max_exclusive": null,
       "kind": "raw",
       "type": "HRESULT (*)(CDWriteText*, CDWriteText*, UINT)"
     },
     {
       "name": "Symbol_CSpriteVisual_SetSize",
       "id": "CSpriteVisual::SetSize",
-      "symbol_names": [
-        "public: virtual long __cdecl CSpriteVisual::SetSize(struct tagSIZE const * __ptr64) __ptr64",
-        "public: virtual void __cdecl CSpriteVisual::SetSize(struct tagSIZE const * __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: virtual long __cdecl CSpriteVisual::SetSize(struct tagSIZE const * __ptr64) __ptr64",
+            "public: virtual void __cdecl CSpriteVisual::SetSize(struct tagSIZE const * __ptr64) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 22621,
+            "revision": 0
+          },
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 22621,
-        "revision": 0
-      },
-      "max_exclusive": null,
       "kind": "raw",
       "type": "BYTE*",
       "usage": "code_address"
@@ -305,18 +381,22 @@
     {
       "name": "Symbol_CAtlasedRectsVisual_CloneVisualTree",
       "id": "CAtlasedRectsVisual::CloneVisualTree",
-      "symbol_names": [
-        "public: virtual long __cdecl CAtlasedRectsVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,enum CloneOptions) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: virtual long __cdecl CAtlasedRectsVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,enum CloneOptions) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 19041,
+            "revision": 0
+          },
+          "max_exclusive": {
+            "build": 22621,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 19041,
-        "revision": 0
-      },
-      "max_exclusive": {
-        "build": 22621,
-        "revision": 0
-      },
       "kind": "raw",
       "type": "BYTE*",
       "usage": "code_address"
@@ -324,614 +404,790 @@
     {
       "name": "Symbol_CAtlasedRectsVisual_InitializeVisualTreeClone",
       "id": "CAtlasedRectsVisual::InitializeVisualTreeClone",
-      "symbol_names": [
-        "protected: long __cdecl CAtlasedRectsVisual::InitializeVisualTreeClone(class CAtlasedRectsVisual * __ptr64,enum CloneOptions) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "protected: long __cdecl CAtlasedRectsVisual::InitializeVisualTreeClone(class CAtlasedRectsVisual * __ptr64,enum CloneOptions) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 19041,
+            "revision": 0
+          },
+          "max_exclusive": {
+            "build": 22621,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 19041,
-        "revision": 0
-      },
-      "max_exclusive": {
-        "build": 22621,
-        "revision": 0
-      },
       "target": "&CAtlasedRectsVisual::InitializeVisualTreeClone",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CTopLevelAtlasedRectsVisual_ShouldCloneAtlasImage_Pre_19041",
       "id": "CTopLevelAtlasedRectsVisual::ShouldCloneAtlasImage",
-      "symbol_names": [
-        "protected: virtual bool __cdecl CTopLevelAtlasedRectsVisual::ShouldCloneAtlasImage(class CAtlasedImage const * __ptr64,bool,bool,bool) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "protected: virtual bool __cdecl CTopLevelAtlasedRectsVisual::ShouldCloneAtlasImage(class CAtlasedImage const * __ptr64,bool,bool,bool) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": {
+            "build": 19041,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": {
-        "build": 19041,
-        "revision": 0
-      },
       "kind": "raw",
       "type": "bool (*)(CTopLevelAtlasedRectsVisual*, const CAtlasedImage*, bool, bool, bool)"
     },
     {
       "name": "Symbol_CTopLevelAtlasedRectsVisual_ShouldCloneAtlasImage_19041",
       "id": "CTopLevelAtlasedRectsVisual::ShouldCloneAtlasImage",
-      "symbol_names": [
-        "protected: virtual bool __cdecl CTopLevelAtlasedRectsVisual::ShouldCloneAtlasImage(class CAtlasedImage const * __ptr64,enum CloneOptions) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "protected: virtual bool __cdecl CTopLevelAtlasedRectsVisual::ShouldCloneAtlasImage(class CAtlasedImage const * __ptr64,enum CloneOptions) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 19041,
+            "revision": 0
+          },
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 19041,
-        "revision": 0
-      },
-      "max_exclusive": null,
       "kind": "raw",
       "type": "bool (*)(CTopLevelAtlasedRectsVisual*, const CAtlasedImage*, UINT)"
     },
     {
       "name": "Symbol_CButton_vftable",
       "id": "CButton::`vftable'",
-      "symbol_names": [
-        "const CButton::`vftable'"
+      "bindings": [
+        {
+          "symbol_names": [
+            "const CButton::`vftable'"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "target": "&CButton::vftable",
       "kind": "projected_variable"
     },
     {
       "name": "Symbol_CButton_Create",
       "id": "CButton::Create",
-      "symbol_names": [
-        "public: static long __cdecl CButton::Create(class CButton * __ptr64 * __ptr64)"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: static long __cdecl CButton::Create(class CButton * __ptr64 * __ptr64)"
+          ],
+          "min_inclusive": {
+            "build": 19041,
+            "revision": 0
+          },
+          "max_exclusive": {
+            "build": 22621,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 19041,
-        "revision": 0
-      },
-      "max_exclusive": {
-        "build": 22621,
-        "revision": 0
-      },
       "target": "&CButton::Create",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CButton_SetVisualStates_Win10",
       "id": "CButton::SetVisualStates",
-      "symbol_names": [
-        "public: long __cdecl CButton::SetVisualStates(class CBitmapSourceArray const & __ptr64,class CBitmapSourceArray const & __ptr64,class CBitmapSource * __ptr64,float) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: long __cdecl CButton::SetVisualStates(class CBitmapSourceArray const & __ptr64,class CBitmapSourceArray const & __ptr64,class CBitmapSource * __ptr64,float) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": {
+            "build": 22000,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": {
-        "build": 22000,
-        "revision": 0
-      },
       "target": "&CButton::SetVisualStates_Win10",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CButton_SetVisualStates_Win11",
       "id": "CButton::SetVisualStates",
-      "symbol_names": [
-        "public: long __cdecl CButton::SetVisualStates(class CBitmapSourceArray const & __ptr64,class CBitmapSourceArray const & __ptr64,float) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: long __cdecl CButton::SetVisualStates(class CBitmapSourceArray const & __ptr64,class CBitmapSourceArray const & __ptr64,float) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 22000,
+            "revision": 0
+          },
+          "max_exclusive": {
+            "build": 22621,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 22000,
-        "revision": 0
-      },
-      "max_exclusive": {
-        "build": 22621,
-        "revision": 0
-      },
       "target": "&CButton::SetVisualStates_Win11",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CButton_UpdateCrossfade",
       "id": "CButton::UpdateCrossfade",
-      "symbol_names": [
-        "private: void __cdecl CButton::UpdateCrossfade(void) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "private: void __cdecl CButton::UpdateCrossfade(void) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "target": "&CButton::UpdateCrossfade",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CButton_DrawStateW",
       "id": "CButton::DrawStateW",
-      "symbol_names": [
-        "private: void __cdecl CButton::DrawStateW(class CAtlasButton * __ptr64,enum CButton::ButtonStates) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "private: void __cdecl CButton::DrawStateW(class CAtlasButton * __ptr64,enum CButton::ButtonStates) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 22000,
+            "revision": 0
+          },
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 22000,
-        "revision": 0
-      },
-      "max_exclusive": null,
       "target": "&CButton::DrawStateW",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CAtlasButton_AppendAtlas",
       "id": "CAtlasButton::AppendAtlas",
-      "symbol_names": [
-        "protected: virtual long __cdecl CAtlasButton::AppendAtlas(struct AtlasedRects & __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "protected: virtual long __cdecl CAtlasButton::AppendAtlas(struct AtlasedRects & __ptr64) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 22000,
+            "revision": 0
+          },
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 22000,
-        "revision": 0
-      },
-      "max_exclusive": null,
       "target": "&CAtlasButton::AppendAtlas",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CAtlasButton_AddApproximateAtlasSize",
       "id": "CAtlasButton::AddApproximateAtlasSize",
-      "symbol_names": [
-        "protected: virtual void __cdecl CAtlasButton::AddApproximateAtlasSize(unsigned int * __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "protected: virtual void __cdecl CAtlasButton::AddApproximateAtlasSize(unsigned int * __ptr64) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 22000,
+            "revision": 0
+          },
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 22000,
-        "revision": 0
-      },
-      "max_exclusive": null,
       "target": "&CAtlasButton::AddApproximateAtlasSize",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CAtlasedImage_AppendAtlasNineGrid",
       "id": "CAtlasedImage::AppendAtlasNineGrid",
-      "symbol_names": [
-        "protected: virtual long __cdecl CAtlasedImage::AppendAtlasNineGrid(struct AtlasedRects & __ptr64,class CBitmapSource * __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "protected: virtual long __cdecl CAtlasedImage::AppendAtlasNineGrid(struct AtlasedRects & __ptr64,class CBitmapSource * __ptr64) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 22000,
+            "revision": 0
+          },
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 22000,
-        "revision": 0
-      },
-      "max_exclusive": null,
       "target": "&CAtlasedImage::AppendAtlasNineGrid",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CAtlasedImage_AddNineGridAtlasSize",
       "id": "CAtlasedImage::AddNineGridAtlasSize",
-      "symbol_names": [
-        "protected: virtual void __cdecl CAtlasedImage::AddNineGridAtlasSize(struct _MARGINS const & __ptr64,unsigned int * __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "protected: virtual void __cdecl CAtlasedImage::AddNineGridAtlasSize(struct _MARGINS const & __ptr64,unsigned int * __ptr64) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 22000,
+            "revision": 0
+          },
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 22000,
-        "revision": 0
-      },
-      "max_exclusive": null,
       "target": "&CAtlasedImage::AddNineGridAtlasSize",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CAtlasedImage_SetDirtyFlags",
       "id": "CAtlasedImage::SetDirtyFlags",
-      "symbol_names": [
-        "protected: void __cdecl CAtlasedImage::SetDirtyFlags(unsigned long,unsigned long) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "protected: void __cdecl CAtlasedImage::SetDirtyFlags(unsigned long,unsigned long) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 22000,
+            "revision": 0
+          },
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 22000,
-        "revision": 0
-      },
-      "max_exclusive": null,
       "target": "&CAtlasedImage::SetDirtyFlags",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CTopLevelWindow_UpdateButtonVisuals",
       "id": "CTopLevelWindow::UpdateButtonVisuals",
-      "symbol_names": [
-        "private: long __cdecl CTopLevelWindow::UpdateButtonVisuals(struct CTopLevelWindow::WindowFrame const * __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "private: long __cdecl CTopLevelWindow::UpdateButtonVisuals(struct CTopLevelWindow::WindowFrame const * __ptr64) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 22000,
+            "revision": 0
+          },
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 22000,
-        "revision": 0
-      },
-      "max_exclusive": null,
       "target": "&CTopLevelWindow::UpdateButtonVisuals",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CVisual_MoveToFront",
       "id": "CVisual::MoveToFront",
-      "symbol_names": [
-        "public: long __cdecl CVisual::MoveToFront(bool) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: long __cdecl CVisual::MoveToFront(bool) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 22000,
+            "revision": 0
+          },
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 22000,
-        "revision": 0
-      },
-      "max_exclusive": null,
       "target": "&CVisual::MoveToFront",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CButton_RedrawVisual",
       "id": "CButton::RedrawVisual",
-      "symbol_names": [
-        "private: long __cdecl CButton::RedrawVisual(void) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "private: long __cdecl CButton::RedrawVisual(void) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 22000,
+            "revision": 0
+          },
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 22000,
-        "revision": 0
-      },
-      "max_exclusive": null,
       "target": "&CButton::RedrawVisual",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CAtlasedRectsVisual_RemoveAtlasImage",
       "id": "CAtlasedRectsVisual::RemoveAtlasImage",
-      "symbol_names": [
-        "public: void __cdecl CAtlasedRectsVisual::RemoveAtlasImage(class CAtlasedImage * __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: void __cdecl CAtlasedRectsVisual::RemoveAtlasImage(class CAtlasedImage * __ptr64) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 22000,
+            "revision": 0
+          },
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 22000,
-        "revision": 0
-      },
-      "max_exclusive": null,
       "target": "&CAtlasedRectsVisual::RemoveAtlasImage",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CAtlasedRectsVisual_AddAtlasImage",
       "id": "CAtlasedRectsVisual::AddAtlasImage",
-      "symbol_names": [
-        "public: long __cdecl CAtlasedRectsVisual::AddAtlasImage(class CAtlasedImage * __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: long __cdecl CAtlasedRectsVisual::AddAtlasImage(class CAtlasedImage * __ptr64) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 26100,
+            "revision": 0
+          },
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 26100,
-        "revision": 0
-      },
-      "max_exclusive": null,
       "target": "&CAtlasedRectsVisual::AddAtlasImage",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CAtlasedRectsVisual_InsertAtlasImageAtIndex",
       "id": "CAtlasedRectsVisual::InsertAtlasImageAtIndex",
-      "symbol_names": [
-        "public: long __cdecl CAtlasedRectsVisual::InsertAtlasImageAtIndex(class CAtlasedImage * __ptr64,unsigned int) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: long __cdecl CAtlasedRectsVisual::InsertAtlasImageAtIndex(class CAtlasedImage * __ptr64,unsigned int) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 22000,
+            "revision": 0
+          },
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 22000,
-        "revision": 0
-      },
-      "max_exclusive": null,
       "target": "&CAtlasedRectsVisual::InsertAtlasImageAtIndex",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CDrawGeometryInstruction_Create",
       "id": "CDrawGeometryInstruction::Create",
-      "symbol_names": [
-        "public: static long __cdecl CDrawGeometryInstruction::Create(class CBaseLegacyMilBrushProxy * __ptr64,class CBaseGeometryProxy * __ptr64,class CDrawGeometryInstruction * __ptr64 * __ptr64)",
-        "public: static long __cdecl CDrawGeometryInstruction::Create(class CResource * __ptr64,class CResource * __ptr64,class CDrawGeometryInstruction * __ptr64 * __ptr64)"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: static long __cdecl CDrawGeometryInstruction::Create(class CBaseLegacyMilBrushProxy * __ptr64,class CBaseGeometryProxy * __ptr64,class CDrawGeometryInstruction * __ptr64 * __ptr64)",
+            "public: static long __cdecl CDrawGeometryInstruction::Create(class CResource * __ptr64,class CResource * __ptr64,class CDrawGeometryInstruction * __ptr64 * __ptr64)"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "target": "&CDrawGeometryInstruction::Create",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CRenderDataVisual_Create_Pre_W10_1903",
       "id": "CRenderDataVisual::Create",
-      "symbol_names": [
-        "public: static long __cdecl CRenderDataVisual::Create(struct IDwmChannel * __ptr64,class CRenderDataVisual * __ptr64 * __ptr64)"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: static long __cdecl CRenderDataVisual::Create(struct IDwmChannel * __ptr64,class CRenderDataVisual * __ptr64 * __ptr64)"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": {
+            "build": 18362,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": {
-        "build": 18362,
-        "revision": 0
-      },
       "target": "&CRenderDataVisual::Create_Pre_W10_1903",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CRenderDataVisual_Create_At_Least_W10_1903",
       "id": "CRenderDataVisual::Create",
-      "symbol_names": [
-        "public: static long __cdecl CRenderDataVisual::Create(class CRenderDataVisual * __ptr64 * __ptr64)"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: static long __cdecl CRenderDataVisual::Create(class CRenderDataVisual * __ptr64 * __ptr64)"
+          ],
+          "min_inclusive": {
+            "build": 18362,
+            "revision": 0
+          },
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 18362,
-        "revision": 0
-      },
-      "max_exclusive": null,
       "target": "&CRenderDataVisual::Create_At_Least_W10_1903",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CRenderDataVisual_AddInstruction",
       "id": "CRenderDataVisual::AddInstruction",
-      "symbol_names": [
-        "public: long __cdecl CRenderDataVisual::AddInstruction(class CRenderDataInstruction * __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: long __cdecl CRenderDataVisual::AddInstruction(class CRenderDataInstruction * __ptr64) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "target": "&CRenderDataVisual::AddInstruction",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CRenderDataVisual_ClearInstructions",
       "id": "CRenderDataVisual::ClearInstructions",
-      "symbol_names": [
-        "public: long __cdecl CRenderDataVisual::ClearInstructions(void) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: long __cdecl CRenderDataVisual::ClearInstructions(void) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "target": "&CRenderDataVisual::ClearInstructions",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CRenderDataVisual_UpdateRenderData",
       "id": "CRenderDataVisual::UpdateRenderData",
-      "symbol_names": [
-        "public: virtual long __cdecl CRenderDataVisual::UpdateRenderData(void) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: virtual long __cdecl CRenderDataVisual::UpdateRenderData(void) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "target": "&CRenderDataVisual::UpdateRenderData",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CAccent_UpdateAccentPolicy",
       "id": "CAccent::UpdateAccentPolicy",
-      "symbol_names": [
-        "public: long __cdecl CAccent::UpdateAccentPolicy(struct tagRECT const * __ptr64,struct ACCENT_POLICY const * __ptr64,class CBaseGeometryProxy * __ptr64) __ptr64",
-        "public: long __cdecl CAccent::UpdateAccentPolicy(struct tagRECT const * __ptr64,struct ACCENT_POLICY const * __ptr64,class CResource * __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: long __cdecl CAccent::UpdateAccentPolicy(struct tagRECT const * __ptr64,struct ACCENT_POLICY const * __ptr64,class CBaseGeometryProxy * __ptr64) __ptr64",
+            "public: long __cdecl CAccent::UpdateAccentPolicy(struct tagRECT const * __ptr64,struct ACCENT_POLICY const * __ptr64,class CResource * __ptr64) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "kind": "raw",
       "type": "HRESULT (*)(CAccent*, LPCRECT, ACCENT_POLICY*, CBaseGeometryProxy*)"
     },
     {
       "name": "Symbol_CAccent__UpdateSolidFill",
       "id": "CAccent::_UpdateSolidFill",
-      "symbol_names": [
-        "protected: long __cdecl CAccent::_UpdateSolidFill(class CRenderDataVisual * __ptr64,unsigned long,class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const * __ptr64,float) __ptr64",
-        "protected: long __cdecl CAccent::_UpdateSolidFill(class CRenderDataVisual * __ptr64,unsigned long,class TMilRect_<float,struct D2D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const * __ptr64,float) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "protected: long __cdecl CAccent::_UpdateSolidFill(class CRenderDataVisual * __ptr64,unsigned long,class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const * __ptr64,float) __ptr64",
+            "protected: long __cdecl CAccent::_UpdateSolidFill(class CRenderDataVisual * __ptr64,unsigned long,class TMilRect_<float,struct D2D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const * __ptr64,float) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "kind": "raw",
       "type": "HRESULT (*)(CAccent*, CRenderDataVisual*, UINT, const D2D1_RECT_F&, float)"
     },
     {
       "name": "Symbol_CAccent_SetClipRegion",
       "id": "CAccent::SetClipRegion",
-      "symbol_names": [
-        "public: void __cdecl CAccent::SetClipRegion(class CBaseGeometryProxy * __ptr64) __ptr64",
-        "public: void __cdecl CAccent::SetClipRegion(class CResource * __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: void __cdecl CAccent::SetClipRegion(class CBaseGeometryProxy * __ptr64) __ptr64",
+            "public: void __cdecl CAccent::SetClipRegion(class CResource * __ptr64) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "kind": "raw",
       "type": "void (*)(CAccent*, CBaseGeometryProxy*)"
     },
     {
       "name": "Symbol_CAccent__CAccent",
       "id": "CAccent::~CAccent",
-      "symbol_names": [
-        "protected: virtual __cdecl CAccent::~CAccent(void) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "protected: virtual __cdecl CAccent::~CAccent(void) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "kind": "raw",
       "type": "void (*)(CAccent*)"
     },
     {
       "name": "Symbol_CWindowBorder_EnableBorder",
       "id": "CWindowBorder::EnableBorder",
-      "symbol_names": [
-        "public: long __cdecl CWindowBorder::EnableBorder(bool) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: long __cdecl CWindowBorder::EnableBorder(bool) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 22000,
+            "revision": 0
+          },
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 22000,
-        "revision": 0
-      },
-      "max_exclusive": null,
       "target": "&CWindowBorder::EnableBorder",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CTopLevelWindow_vftable",
       "id": "CTopLevelWindow::`vftable'",
-      "symbol_names": [
-        "const CTopLevelWindow::`vftable'"
+      "bindings": [
+        {
+          "symbol_names": [
+            "const CTopLevelWindow::`vftable'"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "target": "&CTopLevelWindow::vftable",
       "kind": "projected_variable"
     },
     {
       "name": "Symbol_CTopLevelWindow_CloneVisualTreeForLivePreview_Win10",
       "id": "CTopLevelWindow::CloneVisualTreeForLivePreview",
-      "symbol_names": [
-        "public: long __cdecl CTopLevelWindow::CloneVisualTreeForLivePreview(bool,bool,bool,class CTopLevelWindow * __ptr64 * __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: long __cdecl CTopLevelWindow::CloneVisualTreeForLivePreview(bool,bool,bool,class CTopLevelWindow * __ptr64 * __ptr64) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": {
+            "build": 22621,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": {
-        "build": 22621,
-        "revision": 0
-      },
       "target": "&CTopLevelWindow::CloneVisualTreeForLivePreview_Win10",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CTopLevelWindow_CloneVisualTreeForLivePreview_Win11",
       "id": "CTopLevelWindow::CloneVisualTreeForLivePreview",
-      "symbol_names": [
-        "public: long __cdecl CTopLevelWindow::CloneVisualTreeForLivePreview(bool,class CTopLevelWindow * __ptr64 * __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: long __cdecl CTopLevelWindow::CloneVisualTreeForLivePreview(bool,class CTopLevelWindow * __ptr64 * __ptr64) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 22621,
+            "revision": 0
+          },
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 22621,
-        "revision": 0
-      },
-      "max_exclusive": null,
       "target": "&CTopLevelWindow::CloneVisualTreeForLivePreview_Win11",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CTopLevelWindow_GetActualWindowRect",
       "id": "CTopLevelWindow::GetActualWindowRect",
-      "symbol_names": [
-        "public: struct tagRECT __cdecl CTopLevelWindow::GetActualWindowRect(bool,bool,bool)const __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: struct tagRECT __cdecl CTopLevelWindow::GetActualWindowRect(bool,bool,bool)const __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "target": "&CTopLevelWindow::GetActualWindowRect",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CTopLevelWindow_TreatAsActiveWindow",
       "id": "CTopLevelWindow::TreatAsActiveWindow",
-      "symbol_names": [
-        "private: bool __cdecl CTopLevelWindow::TreatAsActiveWindow(void) __ptr64",
-        "private: bool __cdecl CTopLevelWindow::TreatAsActiveWindow(void)const __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "private: bool __cdecl CTopLevelWindow::TreatAsActiveWindow(void) __ptr64",
+            "private: bool __cdecl CTopLevelWindow::TreatAsActiveWindow(void)const __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "target": "&CTopLevelWindow::TreatAsActiveWindow",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CTopLevelWindow_OnBlurBehindUpdated",
       "id": "CTopLevelWindow::OnBlurBehindUpdated",
-      "symbol_names": [
-        "public: void __cdecl CTopLevelWindow::OnBlurBehindUpdated(void) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: void __cdecl CTopLevelWindow::OnBlurBehindUpdated(void) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "target": "&CTopLevelWindow::OnBlurBehindUpdated",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CTopLevelWindow_OnAccentPolicyUpdated",
       "id": "CTopLevelWindow::OnAccentPolicyUpdated",
-      "symbol_names": [
-        "public: void __cdecl CTopLevelWindow::OnAccentPolicyUpdated(void) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: void __cdecl CTopLevelWindow::OnAccentPolicyUpdated(void) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "target": "&CTopLevelWindow::OnAccentPolicyUpdated",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CTopLevelWindow_s_rgpwfWindowFrames",
       "id": "CTopLevelWindow::s_rgpwfWindowFrames",
-      "symbol_names": [
-        "private: static class DynArray<struct CTopLevelWindow::WindowFrame * __ptr64,0> CTopLevelWindow::s_rgpwfWindowFrames"
+      "bindings": [
+        {
+          "symbol_names": [
+            "private: static class DynArray<struct CTopLevelWindow::WindowFrame * __ptr64,0> CTopLevelWindow::s_rgpwfWindowFrames"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "target": "&CTopLevelWindow::s_rgpwfWindowFrames",
       "kind": "projected_variable"
     },
     {
       "name": "Symbol_CTopLevelWindow_UpdateNCAreaBackground",
       "id": "CTopLevelWindow::UpdateNCAreaBackground",
-      "symbol_names": [
-        "private: long __cdecl CTopLevelWindow::UpdateNCAreaBackground(void) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "private: long __cdecl CTopLevelWindow::UpdateNCAreaBackground(void) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "kind": "raw",
       "type": "HRESULT (*)(CTopLevelWindow*)"
     },
     {
       "name": "Symbol_CTopLevelWindow_UpdateNCAreaPositionsAndSizes",
       "id": "CTopLevelWindow::UpdateNCAreaPositionsAndSizes",
-      "symbol_names": [
-        "private: long __cdecl CTopLevelWindow::UpdateNCAreaPositionsAndSizes(void) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "private: long __cdecl CTopLevelWindow::UpdateNCAreaPositionsAndSizes(void) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "kind": "raw",
       "type": "HRESULT (*)(CTopLevelWindow*)"
     },
     {
       "name": "Symbol_CTopLevelWindow_UpdateClientBlur",
       "id": "CTopLevelWindow::UpdateClientBlur",
-      "symbol_names": [
-        "private: long __cdecl CTopLevelWindow::UpdateClientBlur(void) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "private: long __cdecl CTopLevelWindow::UpdateClientBlur(void) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "kind": "raw",
       "type": "HRESULT (*)(CTopLevelWindow*)"
     },
     {
       "name": "Symbol_CTopLevelWindow_ValidateVisual",
       "id": "CTopLevelWindow::ValidateVisual",
-      "symbol_names": [
-        "public: virtual long __cdecl CTopLevelWindow::ValidateVisual(void) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: virtual long __cdecl CTopLevelWindow::ValidateVisual(void) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "kind": "raw",
       "type": "HRESULT (*)(CTopLevelWindow*)"
     },
     {
       "name": "Symbol_CTopLevelWindow_UpdateWindowVisuals",
       "id": "CTopLevelWindow::UpdateWindowVisuals",
-      "symbol_names": [
-        "private: long __cdecl CTopLevelWindow::UpdateWindowVisuals(void) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "private: long __cdecl CTopLevelWindow::UpdateWindowVisuals(void) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 22000,
+            "revision": 0
+          },
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 22000,
-        "revision": 0
-      },
-      "max_exclusive": null,
       "kind": "raw",
       "type": "BYTE*",
       "usage": "code_address"
@@ -939,28 +1195,36 @@
     {
       "name": "Symbol_CTopLevelWindow__CTopLevelWindow",
       "id": "CTopLevelWindow::~CTopLevelWindow",
-      "symbol_names": [
-        "protected: virtual __cdecl CTopLevelWindow::~CTopLevelWindow(void) __ptr64",
-        "private: virtual __cdecl CTopLevelWindow::~CTopLevelWindow(void) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "protected: virtual __cdecl CTopLevelWindow::~CTopLevelWindow(void) __ptr64",
+            "private: virtual __cdecl CTopLevelWindow::~CTopLevelWindow(void) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "kind": "raw",
       "type": "void (*)(CTopLevelWindow*)"
     },
     {
       "name": "Symbol_CTopLevelWindow_IsShadowNCAreaPart",
       "id": "CTopLevelWindow::IsShadowNCAreaPart",
-      "symbol_names": [
-        "private: static bool __cdecl CTopLevelWindow::IsShadowNCAreaPart(unsigned int)"
+      "bindings": [
+        {
+          "symbol_names": [
+            "private: static bool __cdecl CTopLevelWindow::IsShadowNCAreaPart(unsigned int)"
+          ],
+          "min_inclusive": {
+            "build": 26100,
+            "revision": 0
+          },
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 26100,
-        "revision": 0
-      },
-      "max_exclusive": null,
       "kind": "raw",
       "type": "BYTE*",
       "usage": "code_address"
@@ -968,72 +1232,92 @@
     {
       "name": "Symbol_CTopLevelWindow_CreateBitmapFromAtlas",
       "id": "CTopLevelWindow::CreateBitmapFromAtlas",
-      "symbol_names": [
-        "public: static long __cdecl CTopLevelWindow::CreateBitmapFromAtlas(void * __ptr64 const,int,struct _MARGINS * __ptr64,class CBitmapSource * __ptr64 * __ptr64)"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: static long __cdecl CTopLevelWindow::CreateBitmapFromAtlas(void * __ptr64 const,int,struct _MARGINS * __ptr64,class CBitmapSource * __ptr64 * __ptr64)"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "target": "&CTopLevelWindow::CreateBitmapFromAtlas",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CTopLevelWindow_CreateGlyphsFromAtlas",
       "id": "CTopLevelWindow::CreateGlyphsFromAtlas",
-      "symbol_names": [
-        "private: static long __cdecl CTopLevelWindow::CreateGlyphsFromAtlas(void * __ptr64 const)"
+      "bindings": [
+        {
+          "symbol_names": [
+            "private: static long __cdecl CTopLevelWindow::CreateGlyphsFromAtlas(void * __ptr64 const)"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "target": "&CTopLevelWindow::CreateGlyphsFromAtlas",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CTopLevelWindow_EnsureImages_Pre_18362",
       "id": "CTopLevelWindow::EnsureImages",
-      "symbol_names": [
-        "public: static long __cdecl CTopLevelWindow::EnsureImages(struct IDwmChannel * __ptr64)"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: static long __cdecl CTopLevelWindow::EnsureImages(struct IDwmChannel * __ptr64)"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": {
+            "build": 18362,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": {
-        "build": 18362,
-        "revision": 0
-      },
       "kind": "raw",
       "type": "HRESULT (*)(IDwmChannel*)"
     },
     {
       "name": "Symbol_CTopLevelWindow_EnsureImages_18362",
       "id": "CTopLevelWindow::EnsureImages",
-      "symbol_names": [
-        "public: static long __cdecl CTopLevelWindow::EnsureImages(void)"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: static long __cdecl CTopLevelWindow::EnsureImages(void)"
+          ],
+          "min_inclusive": {
+            "build": 18362,
+            "revision": 0
+          },
+          "max_exclusive": {
+            "build": 26100,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 18362,
-        "revision": 0
-      },
-      "max_exclusive": {
-        "build": 26100,
-        "revision": 0
-      },
       "kind": "raw",
       "type": "HRESULT (*)()"
     },
     {
       "name": "Symbol_SetMargin",
       "id": "SetMargin",
-      "symbol_names": [
-        "bool __cdecl SetMargin(struct _MARGINS * __ptr64,int,int,int,int,struct _MARGINS const * __ptr64)"
+      "bindings": [
+        {
+          "symbol_names": [
+            "bool __cdecl SetMargin(struct _MARGINS * __ptr64,int,int,int,int,struct _MARGINS const * __ptr64)"
+          ],
+          "min_inclusive": {
+            "build": 22000,
+            "revision": 0
+          },
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 22000,
-        "revision": 0
-      },
-      "max_exclusive": null,
       "kind": "raw",
       "type": "bool (WINAPI*)(MARGINS*, int, int, int, int, const MARGINS*)",
       "notes": "Paired IDA audits show no private RCX dependency after either direct SetMargin call on 22000.194 or 22621.1, so those builds use the ordinary C++ dispatcher. On 26100.1, 26100.7705, and 26100.8972, UpdateMarginsDependentOnStyle calls a three-argument wrapper whose third path consumes the preserved destination pointer from RCX through a later cmovz after the wrapper returns. Use the RCX-preserving physical dispatcher for build 26100 and later; keep replacement dispatch, the original call, and HookRundown release inside the preserved region."
@@ -1041,153 +1325,197 @@
     {
       "name": "Symbol_CLivePreview__UpdateResources",
       "id": "CLivePreview::_UpdateResources",
-      "symbol_names": [
-        "private: long __cdecl CLivePreview::_UpdateResources(void) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "private: long __cdecl CLivePreview::_UpdateResources(void) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 22000,
+            "revision": 0
+          },
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 22000,
-        "revision": 0
-      },
-      "max_exclusive": null,
       "target": "&CLivePreview::_UpdateResources",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CLivePreview__FadeOutToGlass",
       "id": "CLivePreview::_FadeOutToGlass",
-      "symbol_names": [
-        "private: long __cdecl CLivePreview::_FadeOutToGlass(void) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "private: long __cdecl CLivePreview::_FadeOutToGlass(void) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 22000,
+            "revision": 0
+          },
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 22000,
-        "revision": 0
-      },
-      "max_exclusive": null,
       "kind": "raw",
       "type": "HRESULT (*)(CLivePreview*)"
     },
     {
       "name": "Symbol_CLivePreview__UpdateInstructions",
       "id": "CLivePreview::_UpdateInstructions",
-      "symbol_names": [
-        "private: long __cdecl CLivePreview::_UpdateInstructions(void) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "private: long __cdecl CLivePreview::_UpdateInstructions(void) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": {
+            "build": 22000,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": {
-        "build": 22000,
-        "revision": 0
-      },
       "kind": "raw",
       "type": "HRESULT (*)(CLivePreview*)"
     },
     {
       "name": "Symbol_CLivePreview__UpdateResourcesForMonitorHelper",
       "id": "CLivePreview::_UpdateResourcesForMonitorHelper",
-      "symbol_names": [
-        "private: long __cdecl CLivePreview::_UpdateResourcesForMonitorHelper(class CTopLevelWindow const * __ptr64,struct LivePreviewResource * __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "private: long __cdecl CLivePreview::_UpdateResourcesForMonitorHelper(class CTopLevelWindow const * __ptr64,struct LivePreviewResource * __ptr64) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 26100,
+            "revision": 0
+          },
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 26100,
-        "revision": 0
-      },
-      "max_exclusive": null,
       "kind": "raw",
       "type": "HRESULT (*)(CLivePreview*, const CTopLevelWindow*, LivePreviewResource*)"
     },
     {
       "name": "Symbol_CAnimatedGlassSheet_OnRectUpdated",
       "id": "CAnimatedGlassSheet::OnRectUpdated",
-      "symbol_names": [
-        "private: void __cdecl CAnimatedGlassSheet::OnRectUpdated(struct tagRECT const * __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "private: void __cdecl CAnimatedGlassSheet::OnRectUpdated(struct tagRECT const * __ptr64) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": {
+            "build": 22000,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": {
-        "build": 22000,
-        "revision": 0
-      },
       "kind": "raw",
       "type": "void (*)(CAnimatedGlassSheet*, LPCRECT)"
     },
     {
       "name": "Symbol_CAnimatedGlassSheet__CAnimatedGlassSheet",
       "id": "CAnimatedGlassSheet::~CAnimatedGlassSheet",
-      "symbol_names": [
-        "public: virtual __cdecl CAnimatedGlassSheet::~CAnimatedGlassSheet(void) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: virtual __cdecl CAnimatedGlassSheet::~CAnimatedGlassSheet(void) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": {
+            "build": 22000,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": {
-        "build": 22000,
-        "revision": 0
-      },
       "kind": "raw",
       "type": "void (*)(CAnimatedGlassSheet*)"
     },
     {
       "name": "Symbol_CGlassColorizationParameters_AdjustWindowColorization",
       "id": "CGlassColorizationParameters::AdjustWindowColorization",
-      "symbol_names": [
-        "public: void __cdecl CGlassColorizationParameters::AdjustWindowColorization(union GpCC const * __ptr64,float,struct TMILFlagsEnum<enum ColorizationFlags::FlagsEnum>) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: void __cdecl CGlassColorizationParameters::AdjustWindowColorization(union GpCC const * __ptr64,float,struct TMILFlagsEnum<enum ColorizationFlags::FlagsEnum>) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "kind": "raw",
       "type": "void (*)(CGlassColorizationParameters*, const GpCC*, float, UINT)"
     },
     {
       "name": "Symbol_CWindowList_GetWindowListForDesktop",
       "id": "CWindowList::GetWindowListForDesktop",
-      "symbol_names": [
-        "public: struct _LIST_ENTRY * __ptr64 __cdecl CWindowList::GetWindowListForDesktop(unsigned __int64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: struct _LIST_ENTRY * __ptr64 __cdecl CWindowList::GetWindowListForDesktop(unsigned __int64) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "target": "&CWindowList::GetWindowListForDesktop",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CDesktopManager_s_pDesktopManagerInstance",
       "id": "CDesktopManager::s_pDesktopManagerInstance",
-      "symbol_names": [
-        "private: static class CDesktopManager * __ptr64 __ptr64 CDesktopManager::s_pDesktopManagerInstance"
+      "bindings": [
+        {
+          "symbol_names": [
+            "private: static class CDesktopManager * __ptr64 __ptr64 CDesktopManager::s_pDesktopManagerInstance"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "target": "&CDesktopManager::s_pDesktopManagerInstance",
       "kind": "projected_variable"
     },
     {
       "name": "Symbol_CDesktopManager_s_csDwmInstance",
       "id": "CDesktopManager::s_csDwmInstance",
-      "symbol_names": [
-        "public: static class CDwmCS CDesktopManager::s_csDwmInstance"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: static class CDwmCS CDesktopManager::s_csDwmInstance"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "target": "&CDesktopManager::s_csDwmInstance",
       "kind": "projected_variable"
     },
     {
       "name": "Symbol_CDesktopManager_IsHighContrastMode",
       "id": "CDesktopManager::IsHighContrastMode",
-      "symbol_names": [
-        "public: static bool __cdecl CDesktopManager::IsHighContrastMode(void)"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: static bool __cdecl CDesktopManager::IsHighContrastMode(void)"
+          ],
+          "min_inclusive": {
+            "build": 22000,
+            "revision": 0
+          },
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 22000,
-        "revision": 0
-      },
-      "max_exclusive": null,
       "kind": "raw",
       "type": "BYTE*",
       "usage": "code_address"
@@ -1195,45 +1523,57 @@
     {
       "name": "Symbol_CDesktopManager_ReleaseDXGIAdapter",
       "id": "CDesktopManager::ReleaseDXGIAdapter",
-      "symbol_names": [
-        "private: long __cdecl CDesktopManager::ReleaseDXGIAdapter(void) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "private: long __cdecl CDesktopManager::ReleaseDXGIAdapter(void) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": {
+            "build": 20348,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": {
-        "build": 20348,
-        "revision": 0
-      },
       "kind": "raw",
       "type": "HRESULT (*)(CDesktopManager*)"
     },
     {
       "name": "Symbol_CGraphicsDeviceManager_ReleaseGraphicsDevice",
       "id": "CGraphicsDeviceManager::ReleaseGraphicsDevice",
-      "symbol_names": [
-        "protected: long __cdecl CGraphicsDeviceManager::ReleaseGraphicsDevice(void) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "protected: long __cdecl CGraphicsDeviceManager::ReleaseGraphicsDevice(void) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 20348,
+            "revision": 0
+          },
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 20348,
-        "revision": 0
-      },
-      "max_exclusive": null,
       "kind": "raw",
       "type": "HRESULT (*)(void*)"
     },
     {
       "name": "Symbol_CCompositor_CreateSolidColorLegacyMilBrushProxy",
       "id": "CCompositor::CreateProxy<CSolidColorLegacyMilBrushProxy>",
-      "symbol_names": [
-        "protected: long __cdecl CCompositor::CreateProxy<class CSolidColorLegacyMilBrushProxy>(class CSolidColorLegacyMilBrushProxy * __ptr64 * __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "protected: long __cdecl CCompositor::CreateProxy<class CSolidColorLegacyMilBrushProxy>(class CSolidColorLegacyMilBrushProxy * __ptr64 * __ptr64) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 18362,
+            "revision": 0
+          },
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 18362,
-        "revision": 0
-      },
-      "max_exclusive": null,
       "target": "&CCompositor::CreateSolidColorLegacyMilBrushProxy",
       "kind": "projected_function",
       "fallback": "&Fallback_CCompositor_CreateSolidColorLegacyMilBrushProxy"
@@ -1241,15 +1581,19 @@
     {
       "name": "Symbol_CCompositor_CreateImageLegacyMilBrushProxy",
       "id": "CCompositor::CreateProxy<CImageLegacyMilBrushProxy>",
-      "symbol_names": [
-        "protected: long __cdecl CCompositor::CreateProxy<class CImageLegacyMilBrushProxy>(class CImageLegacyMilBrushProxy * __ptr64 * __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "protected: long __cdecl CCompositor::CreateProxy<class CImageLegacyMilBrushProxy>(class CImageLegacyMilBrushProxy * __ptr64 * __ptr64) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 18362,
+            "revision": 0
+          },
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 18362,
-        "revision": 0
-      },
-      "max_exclusive": null,
       "target": "&CCompositor::CreateImageLegacyMilBrushProxy",
       "kind": "projected_function",
       "fallback": "&Fallback_CCompositor_CreateImageLegacyMilBrushProxy"
@@ -1257,26 +1601,34 @@
     {
       "name": "Symbol_ResourceHelper_CreateGeometryFromHRGN",
       "id": "ResourceHelper::CreateGeometryFromHRGN",
-      "symbol_names": [
-        "public: static long __cdecl ResourceHelper::CreateGeometryFromHRGN(struct HRGN__ * __ptr64,class CRgnGeometryProxy * __ptr64 * __ptr64)",
-        "public: static long __cdecl ResourceHelper::CreateGeometryFromHRGN(struct HRGN__ * __ptr64,class CResource * __ptr64 * __ptr64)"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: static long __cdecl ResourceHelper::CreateGeometryFromHRGN(struct HRGN__ * __ptr64,class CRgnGeometryProxy * __ptr64 * __ptr64)",
+            "public: static long __cdecl ResourceHelper::CreateGeometryFromHRGN(struct HRGN__ * __ptr64,class CResource * __ptr64 * __ptr64)"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "target": "&ResourceHelper::CreateGeometryFromHRGN",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_ResourceHelper_CreateCombinedGeometry",
       "id": "ResourceHelper::CreateCombinedGeometry",
-      "symbol_names": [
-        "public: static long __cdecl ResourceHelper::CreateCombinedGeometry(class CBaseGeometryProxy const * __ptr64,class CBaseGeometryProxy const * __ptr64,enum MilCombineMode::Enum,class CCombinedGeometryProxy * __ptr64 * __ptr64)",
-        "public: static long __cdecl ResourceHelper::CreateCombinedGeometry(class CResource const * __ptr64,class CResource const * __ptr64,enum MilCombineMode::Enum,class CResource * __ptr64 * __ptr64)"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: static long __cdecl ResourceHelper::CreateCombinedGeometry(class CBaseGeometryProxy const * __ptr64,class CBaseGeometryProxy const * __ptr64,enum MilCombineMode::Enum,class CCombinedGeometryProxy * __ptr64 * __ptr64)",
+            "public: static long __cdecl ResourceHelper::CreateCombinedGeometry(class CResource const * __ptr64,class CResource const * __ptr64,enum MilCombineMode::Enum,class CResource * __ptr64 * __ptr64)"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "target": "&ResourceHelper::CreateCombinedGeometry",
       "kind": "projected_function"
     }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 3,
+  "schema_version": 4,
   "module": "dwmcore",
   "namespace": "OpenGlass::dwmcore",
   "tag": "ProjectionModuleTag",
@@ -24,45 +24,57 @@
     {
       "name": "Symbol_CChannel_MatrixTransformUpdate",
       "id": "CChannel::MatrixTransformUpdate",
-      "symbol_names": [
-        "public: virtual long __cdecl CChannel::MatrixTransformUpdate(unsigned int,struct _MilMatrix3x2D const & __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: virtual long __cdecl CChannel::MatrixTransformUpdate(unsigned int,struct _MilMatrix3x2D const & __ptr64) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": {
+            "build": 22621,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": {
-        "build": 22621,
-        "revision": 0
-      },
       "target": "&CChannel::MatrixTransformUpdate",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CChannel_SolidColorLegacyMilBrushUpdate",
       "id": "CChannel::SolidColorLegacyMilBrushUpdate",
-      "symbol_names": [
-        "public: virtual long __cdecl CChannel::SolidColorLegacyMilBrushUpdate(unsigned int,double,struct _D3DCOLORVALUE const & __ptr64,unsigned int,unsigned int,unsigned int) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: virtual long __cdecl CChannel::SolidColorLegacyMilBrushUpdate(unsigned int,double,struct _D3DCOLORVALUE const & __ptr64,unsigned int,unsigned int,unsigned int) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": {
+            "build": 18362,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": {
-        "build": 18362,
-        "revision": 0
-      },
       "target": "&CChannel::SolidColorLegacyMilBrushUpdate",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CChannel_ImageLegacyMilBrushUpdate",
       "id": "CChannel::ImageLegacyMilBrushUpdate",
-      "symbol_names": [
-        "public: virtual long __cdecl CChannel::ImageLegacyMilBrushUpdate(unsigned int,double,struct MilRectF const & __ptr64,struct MilRectF const & __ptr64,unsigned int,unsigned int,unsigned int,enum MilBrushMappingMode::Enum,enum MilBrushMappingMode::Enum,unsigned int,unsigned int,enum MilStretch::Enum,enum MilTileMode::Enum,enum MilHorizontalAlignment::Enum,enum MilVerticalAlignment::Enum,unsigned int) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: virtual long __cdecl CChannel::ImageLegacyMilBrushUpdate(unsigned int,double,struct MilRectF const & __ptr64,struct MilRectF const & __ptr64,unsigned int,unsigned int,unsigned int,enum MilBrushMappingMode::Enum,enum MilBrushMappingMode::Enum,unsigned int,unsigned int,enum MilStretch::Enum,enum MilTileMode::Enum,enum MilHorizontalAlignment::Enum,enum MilVerticalAlignment::Enum,unsigned int) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": {
+            "build": 19041,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": {
-        "build": 19041,
-        "revision": 0
-      },
       "target": "&CChannel::ImageLegacyMilBrushUpdate",
       "kind": "projected_function",
       "notes": "This handle-based channel method remains the CImageLegacyMilBrushProxy::Update fallback through build 18362. The pointer-form uDWM proxy method is not ABI-compatible and becomes active at build 19041."
@@ -70,66 +82,86 @@
     {
       "name": "Symbol_CMILMatrix_Identity",
       "id": "CMILMatrix::Identity",
-      "symbol_names": [
-        "public: static class CMILMatrix_IdentityType const CMILMatrix::Identity"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: static class CMILMatrix_IdentityType const CMILMatrix::Identity"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "target": "&CMILMatrix::Identity",
       "kind": "projected_variable"
     },
     {
       "name": "Symbol_CMatrixStack_GetTopByReference",
       "id": "CMatrixStack::GetTopByReference",
-      "symbol_names": [
-        "public: class CMILMatrix const * __ptr64 __cdecl CMatrixStack::GetTopByReference(void)const __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: class CMILMatrix const * __ptr64 __cdecl CMatrixStack::GetTopByReference(void)const __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "target": "&CMatrixStack::GetTopByReference",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CShape_CopyShape",
       "id": "CShape::CopyShape",
-      "symbol_names": [
-        "public: long __cdecl CShape::CopyShape(class CMILMatrix const * __ptr64,class CShape * __ptr64 * __ptr64)const __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: long __cdecl CShape::CopyShape(class CMILMatrix const * __ptr64,class CShape * __ptr64 * __ptr64)const __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "target": "&CShape::CopyShape",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CShape_Combine",
       "id": "CShape::Combine",
-      "symbol_names": [
-        "public: static long __cdecl CShape::Combine(class CShape const * __ptr64,class CMILMatrix const * __ptr64,class CShape const * __ptr64,class CMILMatrix const * __ptr64,enum MilCombineMode::Enum,class CShape * __ptr64 * __ptr64)"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: static long __cdecl CShape::Combine(class CShape const * __ptr64,class CMILMatrix const * __ptr64,class CShape const * __ptr64,class CMILMatrix const * __ptr64,enum MilCombineMode::Enum,class CShape * __ptr64 * __ptr64)"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": {
+            "build": 19041,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": {
-        "build": 19041,
-        "revision": 0
-      },
       "target": "&CShape::Combine",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CRegionShape_BuildFromRects",
       "id": "CRegionShape::BuildFromRects",
-      "symbol_names": [
-        "public: long __cdecl CRegionShape::BuildFromRects(class TMilRect_<int,struct tagRECT,struct MilPointAndSizeL,struct RectUniqueness::_CMilRectL_> const * __ptr64,unsigned int) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: long __cdecl CRegionShape::BuildFromRects(class TMilRect_<int,struct tagRECT,struct MilPointAndSizeL,struct RectUniqueness::_CMilRectL_> const * __ptr64,unsigned int) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": {
+            "build": 19041,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": {
-        "build": 19041,
-        "revision": 0
-      },
       "target": "&CRegionShape::BuildFromRects",
       "kind": "projected_function",
       "notes": "The 19040 preview exposes an ABI-incompatible void return instead of HRESULT. Do not accept it as an alias; keep that unsupported preview inert rather than publishing a mismatched slot."
@@ -137,42 +169,54 @@
     {
       "name": "Symbol_CRegionShape_vftable",
       "id": "CRegionShape::`vftable'",
-      "symbol_names": [
-        "const CRegionShape::`vftable'"
+      "bindings": [
+        {
+          "symbol_names": [
+            "const CRegionShape::`vftable'"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": {
+            "build": 19041,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": {
-        "build": 19041,
-        "revision": 0
-      },
       "target": "&CRegionShape::vftable",
       "kind": "projected_variable"
     },
     {
       "name": "Symbol_CRegionShape_dtor",
       "id": "CRegionShape::~CRegionShape",
-      "symbol_names": [
-        "public: virtual __cdecl CRegionShape::~CRegionShape(void) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: virtual __cdecl CRegionShape::~CRegionShape(void) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": {
+            "build": 19041,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": {
-        "build": 19041,
-        "revision": 0
-      },
       "target": "&CRegionShape::dtor",
       "kind": "projected_variable"
     },
     {
       "name": "Symbol_CRenderDataBuilder_DrawGeometry",
       "id": "CRenderDataBuilder::DrawGeometry",
-      "symbol_names": [
-        "public: virtual long __cdecl CRenderDataBuilder::DrawGeometry(unsigned int,unsigned int) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: virtual long __cdecl CRenderDataBuilder::DrawGeometry(unsigned int,unsigned int) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "kind": "raw",
       "type": "BYTE*",
       "usage": "code_address"
@@ -180,15 +224,19 @@
     {
       "name": "Symbol_CRenderData_TryDrawCommandAsDrawList_Pre_22000",
       "id": "CRenderData::TryDrawCommandAsDrawList.pre22000",
-      "symbol_names": [
-        "private: long __cdecl CRenderData::TryDrawCommandAsDrawList(class CDrawingContext * __ptr64,class CDrawListCache * __ptr64,class CDrawListEntryBuilder * __ptr64,bool,unsigned int,class gsl::span<unsigned char const ,-1>,bool * __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "private: long __cdecl CRenderData::TryDrawCommandAsDrawList(class CDrawingContext * __ptr64,class CDrawListCache * __ptr64,class CDrawListEntryBuilder * __ptr64,bool,unsigned int,class gsl::span<unsigned char const ,-1>,bool * __ptr64) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": {
+            "build": 22000,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": {
-        "build": 22000,
-        "revision": 0
-      },
       "kind": "raw",
       "type": "HRESULT (*)(CRenderData*, CDrawingContext*, CDrawListCache*, CDrawListEntryBuilder*, bool, UINT, DWM::span<const BYTE>*, bool*)",
       "notes": "The PDB exposes gsl::span<const BYTE> by value. Win64 passes this 16-byte aggregate indirectly, so the detour models the lowered pointer while retaining the semantic element type."
@@ -196,15 +244,19 @@
     {
       "name": "Symbol_CRenderData_TryDrawCommandAsDrawList_22000",
       "id": "CRenderData::TryDrawCommandAsDrawList.22000",
-      "symbol_names": [
-        "private: long __cdecl CRenderData::TryDrawCommandAsDrawList(class CDrawingContext * __ptr64,class CDrawListCache * __ptr64,class CDrawListEntryBuilder * __ptr64,unsigned int,class gsl::span<unsigned char const ,-1>,bool * __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "private: long __cdecl CRenderData::TryDrawCommandAsDrawList(class CDrawingContext * __ptr64,class CDrawListCache * __ptr64,class CDrawListEntryBuilder * __ptr64,unsigned int,class gsl::span<unsigned char const ,-1>,bool * __ptr64) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 22000,
+            "revision": 0
+          },
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 22000,
-        "revision": 0
-      },
-      "max_exclusive": null,
       "kind": "raw",
       "type": "HRESULT (*)(CRenderData*, CDrawingContext*, CDrawListCache*, CDrawListEntryBuilder*, UINT, DWM::span<const BYTE>*, bool*)",
       "notes": "The PDB exposes gsl::span<const BYTE> by value. Win64 passes this 16-byte aggregate indirectly, so the detour models the lowered pointer while retaining the semantic element type."
@@ -212,130 +264,166 @@
     {
       "name": "Symbol_CRenderData_DrawImageResource_FillMode_Pre_19041",
       "id": "CRenderData::DrawImageResource_FillMode.pre19041",
-      "symbol_names": [
-        "private: long __cdecl CRenderData::DrawImageResource_FillMode(class CDrawingContext * __ptr64,class CDrawListEntryBuilder * __ptr64,bool,class CImageSource * __ptr64,struct D2D_RECT_F const * __ptr64,struct D2D_RECT_F const * __ptr64,float,struct D2D_RECT_F const * __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "private: long __cdecl CRenderData::DrawImageResource_FillMode(class CDrawingContext * __ptr64,class CDrawListEntryBuilder * __ptr64,bool,class CImageSource * __ptr64,struct D2D_RECT_F const * __ptr64,struct D2D_RECT_F const * __ptr64,float,struct D2D_RECT_F const * __ptr64) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": {
+            "build": 19041,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": {
-        "build": 19041,
-        "revision": 0
-      },
       "kind": "raw",
       "type": "HRESULT (*)(CRenderData*, CDrawingContext*, CDrawListEntryBuilder*, bool, CImageSource*, const D2D1_RECT_F*, const D2D1_RECT_F*, float, const D2D1_RECT_F*)"
     },
     {
       "name": "Symbol_CRenderData_DrawImageResource_FillMode_19041",
       "id": "CRenderData::DrawImageResource_FillMode.19041",
-      "symbol_names": [
-        "private: long __cdecl CRenderData::DrawImageResource_FillMode(class CDrawingContext * __ptr64,class CDrawListEntryBuilder * __ptr64,bool,class CImageSource * __ptr64,struct D2D_RECT_F const * __ptr64,struct D2D_RECT_F const * __ptr64,float) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "private: long __cdecl CRenderData::DrawImageResource_FillMode(class CDrawingContext * __ptr64,class CDrawListEntryBuilder * __ptr64,bool,class CImageSource * __ptr64,struct D2D_RECT_F const * __ptr64,struct D2D_RECT_F const * __ptr64,float) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 19041,
+            "revision": 0
+          },
+          "max_exclusive": {
+            "build": 22000,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 19041,
-        "revision": 0
-      },
-      "max_exclusive": {
-        "build": 22000,
-        "revision": 0
-      },
       "kind": "raw",
       "type": "HRESULT (*)(CRenderData*, CDrawingContext*, CDrawListEntryBuilder*, bool, CImageSource*, const D2D1_RECT_F*, const D2D1_RECT_F*, float)"
     },
     {
       "name": "Symbol_CRenderData_DrawImageResource_FillMode_22000",
       "id": "CRenderData::DrawImageResource_FillMode.22000",
-      "symbol_names": [
-        "private: long __cdecl CRenderData::DrawImageResource_FillMode(class CDrawingContext * __ptr64,class CDrawListEntryBuilder * __ptr64,class CImageSource * __ptr64,struct D2D_RECT_F const * __ptr64,struct D2D_RECT_F const * __ptr64,float) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "private: long __cdecl CRenderData::DrawImageResource_FillMode(class CDrawingContext * __ptr64,class CDrawListEntryBuilder * __ptr64,class CImageSource * __ptr64,struct D2D_RECT_F const * __ptr64,struct D2D_RECT_F const * __ptr64,float) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 22000,
+            "revision": 0
+          },
+          "max_exclusive": {
+            "build": 26100,
+            "revision": 2454
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 22000,
-        "revision": 0
-      },
-      "max_exclusive": {
-        "build": 26100,
-        "revision": 2454
-      },
       "kind": "raw",
       "type": "HRESULT (*)(CRenderData*, CDrawingContext*, CDrawListEntryBuilder*, CImageSource*, const D2D1_RECT_F*, const D2D1_RECT_F*, float)"
     },
     {
       "name": "Symbol_CRenderData_DrawImageResource_FillMode_26100_2454",
       "id": "CRenderData::DrawImageResource_FillMode.26100.2454",
-      "symbol_names": [
-        "private: static long __cdecl CRenderData::DrawImageResource_FillMode(class CDrawingContext * __ptr64,class CDrawListEntryBuilder * __ptr64,class CImageSource * __ptr64,struct D2D_RECT_F const * __ptr64,struct D2D_RECT_F const * __ptr64,float)"
+      "bindings": [
+        {
+          "symbol_names": [
+            "private: static long __cdecl CRenderData::DrawImageResource_FillMode(class CDrawingContext * __ptr64,class CDrawListEntryBuilder * __ptr64,class CImageSource * __ptr64,struct D2D_RECT_F const * __ptr64,struct D2D_RECT_F const * __ptr64,float)"
+          ],
+          "min_inclusive": {
+            "build": 26100,
+            "revision": 2454
+          },
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 26100,
-        "revision": 2454
-      },
-      "max_exclusive": null,
       "kind": "raw",
       "type": "HRESULT (*)(CDrawingContext*, CDrawListEntryBuilder*, CImageSource*, const D2D1_RECT_F*, const D2D1_RECT_F*, float)"
     },
     {
       "name": "Symbol_CGeometry_GetShapeData",
       "id": "CGeometry::GetShapeData",
-      "symbol_names": [
-        "public: long __cdecl CGeometry::GetShapeData(struct D2D_SIZE_F const * __ptr64,class CShapePtr * __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: long __cdecl CGeometry::GetShapeData(struct D2D_SIZE_F const * __ptr64,class CShapePtr * __ptr64) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "target": "&CGeometry::GetShapeData",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CRectangleGeometry_vftable",
       "id": "CRectangleGeometry::`vftable'",
-      "symbol_names": [
-        "const CRectangleGeometry::`vftable'"
+      "bindings": [
+        {
+          "symbol_names": [
+            "const CRectangleGeometry::`vftable'"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "target": "&CRectangleGeometry::vftable",
       "kind": "projected_variable"
     },
     {
       "name": "Symbol_CSolidColorLegacyMilBrush_vftable",
       "id": "CSolidColorLegacyMilBrush::`vftable'",
-      "symbol_names": [
-        "const CSolidColorLegacyMilBrush::`vftable'"
+      "bindings": [
+        {
+          "symbol_names": [
+            "const CSolidColorLegacyMilBrush::`vftable'"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "target": "&CSolidColorLegacyMilBrush::vftable",
       "kind": "projected_variable"
     },
     {
       "name": "Symbol_CImageLegacyMilBrush_vftable",
       "id": "CImageLegacyMilBrush::`vftable'",
-      "symbol_names": [
-        "const CImageLegacyMilBrush::`vftable'"
+      "bindings": [
+        {
+          "symbol_names": [
+            "const CImageLegacyMilBrush::`vftable'"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "target": "&CImageLegacyMilBrush::vftable",
       "kind": "projected_variable"
     },
     {
       "name": "Symbol_CArrayBasedCoverageSet_IsCovered_Pre_26100",
       "id": "CArrayBasedCoverageSet::IsCovered.pre26100",
-      "symbol_names": [
-        "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
-        "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
+            "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": {
+            "build": 26100,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "optional",
-      "min_inclusive": null,
-      "max_exclusive": {
-        "build": 26100,
-        "revision": 0
-      },
       "kind": "raw",
       "type": "bool (*)(CArrayBasedCoverageSet*, const D2D1_RECT_F&, int, bool)",
       "notes": "The trailing bool is part of the private ABI even where the 17763 implementation does not consume it. Detours must preserve and forward the caller-provided value."
@@ -343,18 +431,22 @@
     {
       "name": "Symbol_CArrayBasedCoverageSet_IsCovered_26100",
       "id": "CArrayBasedCoverageSet::IsCovered.26100",
-      "symbol_names": [
-        "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool,bool)const __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool,bool)const __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 26100,
+            "revision": 4484
+          },
+          "max_exclusive": {
+            "build": 28000,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 26100,
-        "revision": 4484
-      },
-      "max_exclusive": {
-        "build": 28000,
-        "revision": 0
-      },
       "kind": "raw",
       "type": "bool (*)(CArrayBasedCoverageSet*, const D2D1_RECT_F&, int, bool, bool)",
       "notes": "The DWM_MPO_Enhancement implementation uses 48-byte coverage entries and delegates overlap handling to CheckOccludedAndOptimize. GetOptimizedRect calls this emitted function, so its detour participates directly in dirty-region expansion. Both trailing values remain opaque to OpenGlass and must be forwarded unchanged."
@@ -362,18 +454,22 @@
     {
       "name": "Symbol_CArrayBasedCoverageSet_IsCovered_26100_Pre_4484",
       "id": "CArrayBasedCoverageSet::IsCovered.26100.pre4484",
-      "symbol_names": [
-        "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 26100,
+            "revision": 3912
+          },
+          "max_exclusive": {
+            "build": 26100,
+            "revision": 4484
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 26100,
-        "revision": 3912
-      },
-      "max_exclusive": {
-        "build": 26100,
-        "revision": 4484
-      },
       "kind": "raw",
       "type": "bool (*)(CArrayBasedCoverageSet*, const D2D1_RECT_F&, int, bool)",
       "notes": "Paired PDBs for 26100.1, 26100.3624, and 26100.3775 expose no complete name for CArrayBasedCoverageSet::IsCovered; do not infer class removal because the implementation may be inlined. The emitted symbol first resolves at 26100.3912. This implementation scans 36-byte coverage entries. DrawVisualTree calls it, but GetOptimizedRect still uses GetLargestOccluder directly; keep the direct GetOptimizedRect detour active throughout this interval."
@@ -381,69 +477,89 @@
     {
       "name": "Symbol_CD2DContext_DestroyDeviceResources",
       "id": "CD2DContext::DestroyDeviceResources",
-      "symbol_names": [
-        "protected: long __cdecl CD2DContext::DestroyDeviceResources(void) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "protected: long __cdecl CD2DContext::DestroyDeviceResources(void) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "kind": "raw",
       "type": "HRESULT (*)(CD2DContext*)"
     },
     {
       "name": "Symbol_CD2DContext_EnsureBeginDraw",
       "id": "CD2DContext::EnsureBeginDraw",
-      "symbol_names": [
-        "private: void __cdecl CD2DContext::EnsureBeginDraw(void) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "private: void __cdecl CD2DContext::EnsureBeginDraw(void) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "target": "&CD2DContext::EnsureBeginDraw",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CDrawingContext_IsBounding",
       "id": "CDrawingContext::IsBounding",
-      "symbol_names": [
-        "public: bool __cdecl CDrawingContext::IsBounding(void)const __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: bool __cdecl CDrawingContext::IsBounding(void)const __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": {
+            "build": 19041,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": {
-        "build": 19041,
-        "revision": 0
-      },
       "target": "&CDrawingContext::IsBounding",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CDrawingContext_CalcPartiallyVisibleRectangleSet",
       "id": "CDrawingContext::CalcPartiallyVisibleRectangleSet",
-      "symbol_names": [
-        "private: bool __cdecl CDrawingContext::CalcPartiallyVisibleRectangleSet(class CRectF<struct CoordinateSpace::LocalRenderingHPC> const & __ptr64,int,class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64 * __ptr64,unsigned int * __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "private: bool __cdecl CDrawingContext::CalcPartiallyVisibleRectangleSet(class CRectF<struct CoordinateSpace::LocalRenderingHPC> const & __ptr64,int,class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64 * __ptr64,unsigned int * __ptr64) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": {
+            "build": 19041,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": {
-        "build": 19041,
-        "revision": 0
-      },
       "target": "&CDrawingContext::CalcPartiallyVisibleRectangleSet",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CDrawingContext_GetUnOccludedWorldShape",
       "id": "CDrawingContext::GetUnOccludedWorldShape",
-      "symbol_names": [
-        "private: long __cdecl CDrawingContext::GetUnOccludedWorldShape(class CShape const & __ptr64,int,class CShape * __ptr64 * __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "private: long __cdecl CDrawingContext::GetUnOccludedWorldShape(class CShape const & __ptr64,int,class CShape * __ptr64 * __ptr64) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 19041,
+            "revision": 0
+          },
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 19041,
-        "revision": 0
-      },
-      "max_exclusive": null,
       "target": "&CDrawingContext::GetUnOccludedWorldShape",
       "kind": "projected_function",
       "fallback": "&Fallback_CDrawingContext_GetUnOccludedWorldShape"
@@ -451,33 +567,41 @@
     {
       "name": "Symbol_CDrawingContext_CalcWorldSpaceClippedBounds",
       "id": "CDrawingContext::CalcWorldSpaceClippedBounds",
-      "symbol_names": [
-        "public: void __cdecl CDrawingContext::CalcWorldSpaceClippedBounds(class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: void __cdecl CDrawingContext::CalcWorldSpaceClippedBounds(class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": {
+            "build": 19041,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": {
-        "build": 19041,
-        "revision": 0
-      },
       "target": "&CDrawingContext::CalcWorldSpaceClippedBounds",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CDrawingContext_GetClipBoundsWorld_Pre26100",
       "id": "CDrawingContext::GetClipBoundsWorld",
-      "symbol_names": [
-        "public: void __cdecl CDrawingContext::GetClipBoundsWorld(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: void __cdecl CDrawingContext::GetClipBoundsWorld(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 19041,
+            "revision": 0
+          },
+          "max_exclusive": {
+            "build": 26100,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 19041,
-        "revision": 0
-      },
-      "max_exclusive": {
-        "build": 26100,
-        "revision": 0
-      },
       "target": "&CDrawingContext::GetClipBoundsWorld",
       "kind": "projected_function",
       "fallback": "&Fallback_CDrawingContext_GetClipBoundsWorld",
@@ -488,15 +612,19 @@
     {
       "name": "Symbol_CDrawingContext_GetClipBoundsWorld",
       "id": "CDrawingContext::GetClipBoundsWorld",
-      "symbol_names": [
-        "public: void __cdecl CDrawingContext::GetClipBoundsWorld(class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> * __ptr64,bool)const __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: void __cdecl CDrawingContext::GetClipBoundsWorld(class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> * __ptr64,bool)const __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 26100,
+            "revision": 0
+          },
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 26100,
-        "revision": 0
-      },
-      "max_exclusive": null,
       "target": "&CDrawingContext::GetClipBoundsWorld",
       "kind": "projected_function",
       "fallback": "&Fallback_CDrawingContext_GetClipBoundsWorld"
@@ -504,127 +632,172 @@
     {
       "name": "Symbol_CDrawingContext_FillShapeWithBrush",
       "id": "CDrawingContext::FillShapeWithBrush",
-      "symbol_names": [
-        "public: long __cdecl CDrawingContext::FillShapeWithBrush(class CShape const & __ptr64,struct ID2D1Brush * __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: long __cdecl CDrawingContext::FillShapeWithBrush(class CShape const & __ptr64,struct ID2D1Brush * __ptr64) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "target": "&CDrawingContext::FillShapeWithBrush",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CDrawingContext_FlushD2D",
       "id": "CDrawingContext::FlushD2D",
-      "symbol_names": [
-        "public: long __cdecl CDrawingContext::FlushD2D(void) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: long __cdecl CDrawingContext::FlushD2D(void) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "target": "&CDrawingContext::FlushD2D",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CDrawingContext_ApplyRenderStateInternal",
       "id": "CDrawingContext::ApplyRenderStateInternal",
-      "symbol_names": [
-        "private: long __cdecl CDrawingContext::ApplyRenderStateInternal(bool) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "private: long __cdecl CDrawingContext::ApplyRenderStateInternal(bool) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "target": "&CDrawingContext::ApplyRenderStateInternal",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_CDrawingContext_DrawVisualTree_17763",
       "id": "CDrawingContext::DrawVisualTree.17763",
-      "symbol_names": [
-        "public: long __cdecl CDrawingContext::DrawVisualTree(class CVisualTree const * __ptr64,class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class COverlayContext * __ptr64,int,bool,bool,bool,bool,bool,bool,bool) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: long __cdecl CDrawingContext::DrawVisualTree(class CVisualTree const * __ptr64,class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class COverlayContext * __ptr64,int,bool,bool,bool,bool,bool,bool,bool) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": {
+            "build": 18362,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": {
-        "build": 18362,
-        "revision": 0
-      },
       "kind": "raw",
       "type": "HRESULT (*)(CDrawingContext*, const CVisualTree*, const D2D1_RECT_F&, COverlayContext*, int, bool, bool, bool, bool, bool, bool, bool)"
     },
     {
       "name": "Symbol_CDrawingContext_DrawVisualTree_18362",
       "id": "CDrawingContext::DrawVisualTree.18362",
-      "symbol_names": [
-        "public: long __cdecl CDrawingContext::DrawVisualTree(class CVisualTree const * __ptr64,class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class COverlayContext * __ptr64,int,bool,bool,bool,class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const * __ptr64,bool,bool,bool) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: long __cdecl CDrawingContext::DrawVisualTree(class CVisualTree const * __ptr64,class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class COverlayContext * __ptr64,int,bool,bool,bool,class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const * __ptr64,bool,bool,bool) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 18362,
+            "revision": 0
+          },
+          "max_exclusive": {
+            "build": 19041,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 18362,
-        "revision": 0
-      },
-      "max_exclusive": {
-        "build": 19041,
-        "revision": 0
-      },
       "kind": "raw",
       "type": "HRESULT (*)(CDrawingContext*, const CVisualTree*, const D2D1_RECT_F&, COverlayContext*, int, bool, bool, bool, const D2D1_RECT_F*, bool, bool, bool)"
     },
     {
       "name": "Symbol_CDrawingContext_DrawVisualTree_19041",
       "id": "CDrawingContext::DrawVisualTree.19041",
-      "symbol_names": [
-        "public: long __cdecl CDrawingContext::DrawVisualTree(class CVisualTree const * __ptr64,class TMil3DRect<float,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded>,struct Mil3DRectF,struct RectUniqueness::NotNeeded> const & __ptr64,class COcclusionContext const * __ptr64,enum ClearMode::Enum,bool) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: long __cdecl CDrawingContext::DrawVisualTree(class CVisualTree const * __ptr64,class TMil3DRect<float,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded>,struct Mil3DRectF,struct RectUniqueness::NotNeeded> const & __ptr64,class COcclusionContext const * __ptr64,enum ClearMode::Enum,bool) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 19041,
+            "revision": 0
+          },
+          "max_exclusive": {
+            "build": 20348,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 19041,
-        "revision": 0
-      },
-      "max_exclusive": {
-        "build": 20348,
-        "revision": 0
-      },
       "kind": "raw",
       "type": "HRESULT (*)(CDrawingContext*, const CVisualTree*, const D2D1_RECT_F&, const COcclusionContext*, int, bool)"
     },
     {
       "name": "Symbol_CDrawingContext_DrawVisualTree_20348",
       "id": "CDrawingContext::DrawVisualTree.20348",
-      "symbol_names": [
-        "public: long __cdecl CDrawingContext::DrawVisualTree(class CVisualTree const * __ptr64,class TMil3DRect<float,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded>,struct Mil3DRectF,struct RectUniqueness::NotNeeded> const & __ptr64,class COcclusionContext const * __ptr64,enum ClearMode::Enum,bool,class CVisual * __ptr64) __ptr64",
-        "public: long __cdecl CDrawingContext::DrawVisualTree(class CVisualTree const * __ptr64,class TMil3DRect<float,class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded>,struct D3D_RECT_F,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class COcclusionContext const * __ptr64,enum ClearMode::Enum,bool,class CVisual * __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: long __cdecl CDrawingContext::DrawVisualTree(class CVisualTree const * __ptr64,class TMil3DRect<float,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded>,struct Mil3DRectF,struct RectUniqueness::NotNeeded> const & __ptr64,class COcclusionContext const * __ptr64,enum ClearMode::Enum,bool,class CVisual * __ptr64) __ptr64",
+            "public: long __cdecl CDrawingContext::DrawVisualTree(class CVisualTree const * __ptr64,class TMil3DRect<float,class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded>,struct D3D_RECT_F,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class COcclusionContext const * __ptr64,enum ClearMode::Enum,bool,class CVisual * __ptr64) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 20348,
+            "revision": 0
+          },
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 20348,
-        "revision": 0
-      },
-      "max_exclusive": null,
       "kind": "raw",
       "type": "HRESULT (*)(CDrawingContext*, const CVisualTree*, const D2D1_RECT_F&, const COcclusionContext*, int, bool, CVisual*)"
     },
     {
       "name": "Symbol_COcclusionContext_CheckAndRecordOverlayCandidate_Pre_19041",
       "id": "COcclusionContext::CheckAndRecordOverlayCandidate.pre19041",
-      "symbol_names": [
-        "public: long __cdecl COcclusionContext::CheckAndRecordOverlayCandidate(class CVisual * __ptr64,class ISwapChainContent * __ptr64,class CMILMatrix const * __ptr64,class CShape const * __ptr64,struct TMILFlagsEnum<enum MilSourceModification::FlagsEnum>) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: long __cdecl COcclusionContext::CheckAndRecordOverlayCandidate(class CVisual * __ptr64,class ISwapChainContent * __ptr64,class CMILMatrix const * __ptr64,class CShape const * __ptr64,struct TMILFlagsEnum<enum MilSourceModification::FlagsEnum>) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": {
+            "build": 19041,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": { "build": 19041, "revision": 0 },
       "kind": "raw",
       "type": "COcclusionContext_CheckAndRecordOverlayCandidate_Pre_19041_t"
     },
     {
       "name": "Symbol_COcclusionContext_PreSubgraph_26100_Pre_3624",
       "id": "COcclusionContext::PreSubgraph.26100.pre3624",
-      "symbol_names": [
-        "public: long __cdecl COcclusionContext::PreSubgraph(class CVisualTree const * __ptr64,bool * __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: long __cdecl COcclusionContext::PreSubgraph(class CVisualTree const * __ptr64,bool * __ptr64) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 26100,
+            "revision": 0
+          },
+          "max_exclusive": {
+            "build": 26100,
+            "revision": 3624
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": { "build": 26100, "revision": 0 },
-      "max_exclusive": { "build": 26100, "revision": 3624 },
       "kind": "raw",
       "type": "BYTE*",
       "usage": "code_address",
@@ -633,12 +806,22 @@
     {
       "name": "Symbol_COcclusionContext_NodeIntersectsOcclusionRegion_26100_3624",
       "id": "COcclusionContext::NodeIntersectsOcclusionRegion.26100.3624",
-      "symbol_names": [
-        "private: bool __cdecl COcclusionContext::NodeIntersectsOcclusionRegion(class CVisual const * __ptr64,class COcclusionInfo * __ptr64,float * __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "private: bool __cdecl COcclusionContext::NodeIntersectsOcclusionRegion(class CVisual const * __ptr64,class COcclusionInfo * __ptr64,float * __ptr64) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 26100,
+            "revision": 3624
+          },
+          "max_exclusive": {
+            "build": 28000,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": { "build": 26100, "revision": 3624 },
-      "max_exclusive": { "build": 28000, "revision": 0 },
       "kind": "raw",
       "type": "COcclusionContext_NodeIntersectsOcclusionRegion_t",
       "notes": "The function preserves the transformed-and-clipped bounds stack, records whether the node intersects the active occlusion region, and writes the finite intersection area used by PreSubgraph's small-node cutoff. It first appears as a separately emitted function on 26100.3624."
@@ -646,49 +829,86 @@
     {
       "name": "Symbol_COcclusionContext_CheckAndRecordOverlayCandidate_19041",
       "id": "COcclusionContext::CheckAndRecordOverlayCandidate.19041",
-      "symbol_names": [
-        "public: long __cdecl COcclusionContext::CheckAndRecordOverlayCandidate(class CVisual * __ptr64,class CCompositionSurfaceInfo * __ptr64,class CMILMatrix const * __ptr64,class CShape const * __ptr64,struct TMILFlagsEnum<enum MilSourceModification::FlagsEnum>) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: long __cdecl COcclusionContext::CheckAndRecordOverlayCandidate(class CVisual * __ptr64,class CCompositionSurfaceInfo * __ptr64,class CMILMatrix const * __ptr64,class CShape const * __ptr64,struct TMILFlagsEnum<enum MilSourceModification::FlagsEnum>) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 19041,
+            "revision": 0
+          },
+          "max_exclusive": {
+            "build": 26100,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": { "build": 19041, "revision": 0 },
-      "max_exclusive": { "build": 26100, "revision": 0 },
       "kind": "raw",
       "type": "COcclusionContext_CheckAndRecordOverlayCandidate_19041_t"
     },
     {
       "name": "Symbol_COcclusionContext_CheckAndRecordOverlayCandidate_26100",
       "id": "COcclusionContext::CheckAndRecordOverlayCandidate.26100",
-      "symbol_names": [
-        "public: long __cdecl COcclusionContext::CheckAndRecordOverlayCandidate(class CVisual * __ptr64,class CCompositionSurfaceInfo * __ptr64,class CMILMatrix const & __ptr64,class CShape const * __ptr64,struct TMILFlagsEnum<enum MilSourceModification::FlagsEnum>) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: long __cdecl COcclusionContext::CheckAndRecordOverlayCandidate(class CVisual * __ptr64,class CCompositionSurfaceInfo * __ptr64,class CMILMatrix const & __ptr64,class CShape const * __ptr64,struct TMILFlagsEnum<enum MilSourceModification::FlagsEnum>) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 26100,
+            "revision": 0
+          },
+          "max_exclusive": {
+            "build": 28000,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": { "build": 26100, "revision": 0 },
-      "max_exclusive": { "build": 28000, "revision": 0 },
       "kind": "raw",
       "type": "COcclusionContext_CheckAndRecordOverlayCandidate_26100_t"
     },
     {
       "name": "Symbol_COcclusionContext_CollectRectangleForOcclusion_Pre_20348",
       "id": "COcclusionContext::CollectRectangleForOcclusion.pre20348",
-      "symbol_names": [
-        "private: long __cdecl COcclusionContext::CollectRectangleForOcclusion(class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const * __ptr64,bool,class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64) __ptr64",
-        "private: long __cdecl COcclusionContext::CollectRectangleForOcclusion(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const * __ptr64,bool,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "private: long __cdecl COcclusionContext::CollectRectangleForOcclusion(class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const * __ptr64,bool,class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64) __ptr64",
+            "private: long __cdecl COcclusionContext::CollectRectangleForOcclusion(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const * __ptr64,bool,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": {
+            "build": 20348,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": { "build": 20348, "revision": 0 },
       "kind": "raw",
       "type": "COcclusionContext_CollectRectangleForOcclusion_Pre_20348_t"
     },
     {
       "name": "Symbol_COcclusionContext_CollectRectangleForOcclusion_20348",
       "id": "COcclusionContext::CollectRectangleForOcclusion.20348",
-      "symbol_names": [
-        "private: void __cdecl COcclusionContext::CollectRectangleForOcclusion(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const * __ptr64,bool,bool,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "private: void __cdecl COcclusionContext::CollectRectangleForOcclusion(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const * __ptr64,bool,bool,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 20348,
+            "revision": 0
+          },
+          "max_exclusive": {
+            "build": 26100,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": { "build": 20348, "revision": 0 },
-      "max_exclusive": { "build": 26100, "revision": 0 },
       "kind": "raw",
       "type": "COcclusionContext_CollectRectangleForOcclusion_20348_t",
       "notes": "Build 20348 adds a trailing bool and changes the return type from HRESULT to void. Optimized 20348.2582 callers may leave the added register argument unset because the callee does not consume it; OpenGlass treats it as opaque and only forwards it."
@@ -696,24 +916,44 @@
     {
       "name": "Symbol_COcclusionContext_CollectRectangleForOcclusion_26100_Pre_7840",
       "id": "COcclusionContext::CollectRectangleForOcclusion.26100.pre7840",
-      "symbol_names": [
-        "private: void __cdecl COcclusionContext::CollectRectangleForOcclusion(class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const & __ptr64,class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> * __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "private: void __cdecl COcclusionContext::CollectRectangleForOcclusion(class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const & __ptr64,class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> * __ptr64) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 26100,
+            "revision": 0
+          },
+          "max_exclusive": {
+            "build": 26100,
+            "revision": 4484
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": { "build": 26100, "revision": 0 },
-      "max_exclusive": { "build": 26100, "revision": 4484 },
       "kind": "raw",
       "type": "COcclusionContext_CollectRectangleForOcclusion_26100_Pre_7840_t"
     },
     {
       "name": "Symbol_COcclusionContext_CollectRectangleForOcclusion_26100_7840",
       "id": "COcclusionContext::CollectRectangleForOcclusion.26100.7840",
-      "symbol_names": [
-        "private: void __cdecl COcclusionContext::CollectRectangleForOcclusion(class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const & __ptr64,bool,class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> * __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "private: void __cdecl COcclusionContext::CollectRectangleForOcclusion(class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const & __ptr64,bool,class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> * __ptr64) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 26100,
+            "revision": 4484
+          },
+          "max_exclusive": {
+            "build": 28000,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": { "build": 26100, "revision": 4484 },
-      "max_exclusive": { "build": 28000, "revision": 0 },
       "kind": "raw",
       "type": "COcclusionContext_CollectRectangleForOcclusion_26100_7840_t",
       "notes": "The intervening bool is an ABI break, not a trailing compatibility argument. Under DWM_MPO_Enhancement it bypasses the minimum-area test and is stored in CTempOcclusionRect; callers must preserve it exactly."
@@ -721,29 +961,37 @@
     {
       "name": "Symbol_COcclusionContext_SetDeviceTransform",
       "id": "COcclusionContext::SetDeviceTransform",
-      "symbol_names": [
-        "public: long __cdecl COcclusionContext::SetDeviceTransform(class CMILMatrix const * __ptr64)const __ptr64",
-        "public: long __cdecl COcclusionContext::SetDeviceTransform(class CMILMatrix const * __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: long __cdecl COcclusionContext::SetDeviceTransform(class CMILMatrix const * __ptr64)const __ptr64",
+            "public: long __cdecl COcclusionContext::SetDeviceTransform(class CMILMatrix const * __ptr64) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "target": "&COcclusionContext::SetDeviceTransform",
       "kind": "projected_function"
     },
     {
       "name": "Symbol_COcclusionContext_IsOccluded_Pre_22000",
       "id": "COcclusionContext::IsOccluded.pre22000",
-      "symbol_names": [
-        "public: bool __cdecl COcclusionContext::IsOccluded(class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,bool,int)const __ptr64",
-        "public: bool __cdecl COcclusionContext::IsOccluded(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,bool,int)const __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: bool __cdecl COcclusionContext::IsOccluded(class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,bool,int)const __ptr64",
+            "public: bool __cdecl COcclusionContext::IsOccluded(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,bool,int)const __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": {
+            "build": 20348,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": {
-        "build": 20348,
-        "revision": 0
-      },
       "kind": "raw",
       "type": "bool (*)(COcclusionContext*, const D2D1_RECT_F&, bool, int)",
       "notes": "17763 IDA data flow identifies the bool as ignoreDeviceTransform and the final int as depth; the detour signature must retain this order through the pre-20348 interval."
@@ -751,16 +999,20 @@
     {
       "name": "Symbol_COcclusionContext_IsOccluded",
       "id": "COcclusionContext::IsOccluded.22000",
-      "symbol_names": [
-        "public: bool __cdecl COcclusionContext::IsOccluded(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
-        "public: bool __cdecl COcclusionContext::IsOccluded(class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: bool __cdecl COcclusionContext::IsOccluded(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
+            "public: bool __cdecl COcclusionContext::IsOccluded(class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 20348,
+            "revision": 0
+          },
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 20348,
-        "revision": 0
-      },
-      "max_exclusive": null,
       "kind": "raw",
       "type": "bool (*)(COcclusionContext*, const D2D1_RECT_F&, int, bool)",
       "notes": "Windows Server 2022 already reorders the final parameters to depth followed by ignoreDeviceTransform; Windows 11 retains that ABI."
@@ -768,115 +1020,133 @@
     {
       "name": "Symbol_COcclusionContext_Compute_Pre_19041",
       "id": "COcclusionContext::Compute.pre19041",
-      "symbol_names": [
-        "private: long __cdecl COcclusionContext::Compute(class CVisualTree const * __ptr64,unsigned int,class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const * __ptr64,float,bool,class CMILMatrix const * __ptr64,class gsl::span<class COverlayContext * __ptr64,-1> const & __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "private: long __cdecl COcclusionContext::Compute(class CVisualTree const * __ptr64,unsigned int,class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const * __ptr64,float,bool,class CMILMatrix const * __ptr64,class gsl::span<class COverlayContext * __ptr64,-1> const & __ptr64) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": {
+            "build": 19041,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": {
-        "build": 19041,
-        "revision": 0
-      },
       "kind": "raw",
       "type": "HRESULT (*)(COcclusionContext*, const CVisualTree*, UINT, const D2D1_RECT_F*, float, bool, const CMILMatrix*, const DWM::span<COverlayContext*>&)"
     },
     {
       "name": "Symbol_COcclusionContext_Compute_19041",
       "id": "COcclusionContext::Compute.19041",
-      "symbol_names": [
-        "protected: long __cdecl COcclusionContext::Compute(class CVisualTree const * __ptr64,class gsl::span<class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const ,-1> const & __ptr64,float,class gsl::span<class COverlayContext * __ptr64,-1> const & __ptr64) __ptr64",
-        "protected: long __cdecl COcclusionContext::Compute(class CVisualTree const * __ptr64,class gsl::span<class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const ,-1> const & __ptr64,float,class gsl::span<class COverlayContext * __ptr64,-1> const & __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "protected: long __cdecl COcclusionContext::Compute(class CVisualTree const * __ptr64,class gsl::span<class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const ,-1> const & __ptr64,float,class gsl::span<class COverlayContext * __ptr64,-1> const & __ptr64) __ptr64",
+            "protected: long __cdecl COcclusionContext::Compute(class CVisualTree const * __ptr64,class gsl::span<class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const ,-1> const & __ptr64,float,class gsl::span<class COverlayContext * __ptr64,-1> const & __ptr64) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 19041,
+            "revision": 0
+          },
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 19041,
-        "revision": 0
-      },
-      "max_exclusive": null,
       "kind": "raw",
       "type": "HRESULT (*)(COcclusionContext*, const CVisualTree*, const DWM::span<const D2D1_RECT_F>&, float, const DWM::span<COverlayContext*>&)"
     },
     {
       "name": "Symbol_COcclusionContext_PageInPixelsRectToDeviceRect",
       "id": "COcclusionContext::PageInPixelsRectToDeviceRect",
-      "symbol_names": [
-        "private: bool __cdecl COcclusionContext::PageInPixelsRectToDeviceRect(class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64",
-        "private: bool __cdecl COcclusionContext::PageInPixelsRectToDeviceRect(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64",
-        "private: bool __cdecl COcclusionContext::PageInPixelsRectToDeviceRect(class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const & __ptr64,class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "private: bool __cdecl COcclusionContext::PageInPixelsRectToDeviceRect(class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64",
+            "private: bool __cdecl COcclusionContext::PageInPixelsRectToDeviceRect(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64",
+            "private: bool __cdecl COcclusionContext::PageInPixelsRectToDeviceRect(class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const & __ptr64,class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": {
+            "build": 26100,
+            "revision": 2161
+          }
+        },
+        {
+          "symbol_names": [
+            "private: bool __cdecl COcclusionContext::PageInPixelsRectToDeviceRect(class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const & __ptr64,class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 26100,
+            "revision": 3912
+          },
+          "max_exclusive": {
+            "build": 28000,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": {
-        "build": 26100,
-        "revision": 2161
-      },
       "kind": "raw",
       "type": "bool (*)(COcclusionContext*, const D2D1_RECT_F&, D2D1_RECT_F*)",
-      "notes": "The transform is emitted as a helper in this interval. At the right boundary both EndOverlayCandidateCollection and the NCEDR2 dirty-region implementations inline the same Transform2DBoundsHelper path."
-    },
-    {
-      "name": "Symbol_COcclusionContext_PageInPixelsRectToDeviceRect_26100_3912",
-      "id": "COcclusionContext::PageInPixelsRectToDeviceRect.26100.3912",
-      "symbol_names": [
-        "private: bool __cdecl COcclusionContext::PageInPixelsRectToDeviceRect(class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const & __ptr64,class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64"
-      ],
-      "requirement": "required",
-      "min_inclusive": {
-        "build": 26100,
-        "revision": 3912
-      },
-      "max_exclusive": {
-        "build": 28000,
-        "revision": 0
-      },
-      "kind": "raw",
-      "type": "bool (*)(COcclusionContext*, const D2D1_RECT_F&, D2D1_RECT_F*)",
-      "notes": "The helper is emitted again after the 26100.2161-3775 inlining interval. In the 26100.3912-4483 CTreeDirty implementation it is the only stable call before the inlined 36-byte coverage scan, so the direct GetOptimizedRect detour uses it to expand the dirty rectangle."
+      "notes": "At the first binding's right boundary both EndOverlayCandidateCollection and the NCEDR2 dirty-region implementations inline the same Transform2DBoundsHelper path. After the helper is emitted again, the 26100.3912-4483 CTreeDirty implementation uses it as the only stable call before the inlined 36-byte coverage scan, so the direct GetOptimizedRect detour expands the dirty rectangle there."
     },
     {
       "name": "Symbol_COcclusionContext__COcclusionContext",
       "id": "COcclusionContext::~COcclusionContext",
-      "symbol_names": [
-        "public: __cdecl COcclusionContext::~COcclusionContext(void) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: __cdecl COcclusionContext::~COcclusionContext(void) __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "kind": "raw",
       "type": "void (*)(COcclusionContext*)"
     },
     {
       "name": "Symbol_CHwndRenderTarget_RenderDirtyRegion",
       "id": "CHwndRenderTarget::RenderDirtyRegion",
-      "symbol_names": [
-        "private: long __cdecl CHwndRenderTarget::RenderDirtyRegion(class CDrawingContext * __ptr64,class CComposeTop * __ptr64) __ptr64",
-        "protected: long __cdecl CHwndRenderTarget::RenderDirtyRegion(class CDrawingContext * __ptr64,class CComposeTop * __ptr64) __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "private: long __cdecl CHwndRenderTarget::RenderDirtyRegion(class CDrawingContext * __ptr64,class CComposeTop * __ptr64) __ptr64",
+            "protected: long __cdecl CHwndRenderTarget::RenderDirtyRegion(class CDrawingContext * __ptr64,class CComposeTop * __ptr64) __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 18362,
+            "revision": 0
+          },
+          "max_exclusive": {
+            "build": 19041,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 18362,
-        "revision": 0
-      },
-      "max_exclusive": {
-        "build": 19041,
-        "revision": 0
-      },
       "kind": "raw",
       "type": "HRESULT (*)(CHwndRenderTarget*, CDrawingContext*, CComposeTop*)"
     },
     {
       "name": "Symbol_CDirtyRegion_GetUnOccludedDirtyRegion",
       "id": "CDirtyRegion::GetUnOccludedDirtyRegion",
-      "symbol_names": [
-        "public: class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64 __cdecl CDirtyRegion::GetUnOccludedDirtyRegion(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64,class COcclusionContext * __ptr64,class CVisualTree const * __ptr64,bool,unsigned int,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64)const __ptr64",
-        "public: class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> __cdecl CDirtyRegion::GetUnOccludedDirtyRegion(class COcclusionContext * __ptr64,class CVisualTree const * __ptr64,bool,unsigned int,class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64)const __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64 __cdecl CDirtyRegion::GetUnOccludedDirtyRegion(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64,class COcclusionContext * __ptr64,class CVisualTree const * __ptr64,bool,unsigned int,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64)const __ptr64",
+            "public: class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> __cdecl CDirtyRegion::GetUnOccludedDirtyRegion(class COcclusionContext * __ptr64,class CVisualTree const * __ptr64,bool,unsigned int,class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64)const __ptr64"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": {
+            "build": 19041,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": {
-        "build": 19041,
-        "revision": 0
-      },
       "kind": "raw",
       "type": "D2D1_RECT_F* (*)(CDirtyRegion*, D2D1_RECT_F*, COcclusionContext*, const CVisualTree*, bool, UINT, const D2D1_RECT_F&)",
       "notes": "Win64 lowers the returned rectangle through the hidden storage parameter used by the pre-19041 detour."
@@ -884,36 +1154,44 @@
     {
       "name": "Symbol_CDirtyRegion_GetUnOccludedDirtyRect",
       "id": "CDirtyRegion::GetUnOccludedDirtyRect",
-      "symbol_names": [
-        "public: class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> __cdecl CDirtyRegion::GetUnOccludedDirtyRect(unsigned int,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,bool,class gsl::span<class CVisual const * __ptr64,-1> const & __ptr64,class COcclusionContext const * __ptr64)const __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> __cdecl CDirtyRegion::GetUnOccludedDirtyRect(unsigned int,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,bool,class gsl::span<class CVisual const * __ptr64,-1> const & __ptr64,class COcclusionContext const * __ptr64)const __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 19041,
+            "revision": 0
+          },
+          "max_exclusive": {
+            "build": 20348,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 19041,
-        "revision": 0
-      },
-      "max_exclusive": {
-        "build": 20348,
-        "revision": 0
-      },
       "kind": "raw",
       "type": "D2D1_RECT_F* (*)(CDirtyRegion*, D2D1_RECT_F*, UINT, const D2D1_RECT_F&, bool, const DWM::span<const CVisual*>&, const COcclusionContext*)"
     },
     {
       "name": "Symbol_CDirtyRegion_GetOptimizedRect_Server_2022",
       "id": "CDirtyRegion::GetOptimizedRect.server2022",
-      "symbol_names": [
-        "public: class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> __cdecl CDirtyRegion::GetOptimizedRect(unsigned int,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,struct D2D_SIZE_U const & __ptr64,bool,class CMILMatrix const * __ptr64,class gsl::span<class CVisual const * __ptr64,-1> const & __ptr64,class CRegion * __ptr64,class COcclusionContext const * __ptr64)const __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> __cdecl CDirtyRegion::GetOptimizedRect(unsigned int,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,struct D2D_SIZE_U const & __ptr64,bool,class CMILMatrix const * __ptr64,class gsl::span<class CVisual const * __ptr64,-1> const & __ptr64,class CRegion * __ptr64,class COcclusionContext const * __ptr64)const __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 20348,
+            "revision": 0
+          },
+          "max_exclusive": {
+            "build": 22000,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 20348,
-        "revision": 0
-      },
-      "max_exclusive": {
-        "build": 22000,
-        "revision": 0
-      },
       "kind": "raw",
       "type": "D2D1_RECT_F* (*)(CDirtyRegion*, D2D1_RECT_F*, UINT, const D2D1_RECT_F&, const D2D1_SIZE_U&, bool, const CMILMatrix*, const DWM::span<const CVisual*>&, CRegion*, const COcclusionContext*)",
       "notes": "Server 2022 inserts D2D_SIZE_U and a transform flag before the matrix, then passes the visual span before the region; keep its detour ABI separate from Windows 11."
@@ -921,36 +1199,44 @@
     {
       "name": "Symbol_CDirtyRegion_GetOptimizedRect",
       "id": "CDirtyRegion::GetOptimizedRect",
-      "symbol_names": [
-        "public: class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> __cdecl CDirtyRegion::GetOptimizedRect(unsigned int,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class CRegion * __ptr64,class CMILMatrix const * __ptr64,bool,class gsl::span<class CVisual const * __ptr64,-1> const & __ptr64,class COcclusionContext const * __ptr64)const __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> __cdecl CDirtyRegion::GetOptimizedRect(unsigned int,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class CRegion * __ptr64,class CMILMatrix const * __ptr64,bool,class gsl::span<class CVisual const * __ptr64,-1> const & __ptr64,class COcclusionContext const * __ptr64)const __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 22000,
+            "revision": 0
+          },
+          "max_exclusive": {
+            "build": 26100,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 22000,
-        "revision": 0
-      },
-      "max_exclusive": {
-        "build": 26100,
-        "revision": 0
-      },
       "kind": "raw",
       "type": "D2D1_RECT_F* (*)(CDirtyRegion*, D2D1_RECT_F*, UINT, const D2D1_RECT_F&, CRegion*, const CMILMatrix*, bool, const DWM::span<const CVisual*>&, const COcclusionContext*)"
     },
     {
       "name": "Symbol_CDirtyRegion_GetOptimizedRect_26100_Pre_1000",
       "id": "CDirtyRegion::GetOptimizedRect.26100.pre1000",
-      "symbol_names": [
-        "public: class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> __cdecl CDirtyRegion::GetOptimizedRect(unsigned int,class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const & __ptr64,class COcclusionContext const & __ptr64,class CRegion * __ptr64,class CMILMatrix const * __ptr64,bool,class gsl::span<class CVisual const * __ptr64,-1> const & __ptr64)const __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> __cdecl CDirtyRegion::GetOptimizedRect(unsigned int,class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const & __ptr64,class COcclusionContext const & __ptr64,class CRegion * __ptr64,class CMILMatrix const * __ptr64,bool,class gsl::span<class CVisual const * __ptr64,-1> const & __ptr64)const __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 26100,
+            "revision": 0
+          },
+          "max_exclusive": {
+            "build": 26100,
+            "revision": 1000
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 26100,
-        "revision": 0
-      },
-      "max_exclusive": {
-        "build": 26100,
-        "revision": 1000
-      },
       "kind": "raw",
       "type": "D2D1_RECT_F* (*)(CDirtyRegion*, D2D1_RECT_F*, UINT, const D2D1_RECT_F&, const COcclusionContext&, CRegion*, const CMILMatrix*, bool, const DWM::span<const CVisual*>&)",
       "notes": "This monolithic implementation already has the later context-reference ABI. At the right boundary CTreeDirty becomes the public feature dispatcher for NCEDR2_On::CTreeDirty and NCEDR2_Off::CDirtyRegion."
@@ -958,18 +1244,22 @@
     {
       "name": "Symbol_CTreeDirty_GetOptimizedRect",
       "id": "CTreeDirty::GetOptimizedRect",
-      "symbol_names": [
-        "public: class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> __cdecl CTreeDirty::GetOptimizedRect(unsigned int,class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const & __ptr64,class COcclusionContext const & __ptr64,class CRegion * __ptr64,class CMILMatrix const * __ptr64,bool,class gsl::span<class CVisual const * __ptr64,-1> const & __ptr64)const __ptr64"
+      "bindings": [
+        {
+          "symbol_names": [
+            "public: class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> __cdecl CTreeDirty::GetOptimizedRect(unsigned int,class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const & __ptr64,class COcclusionContext const & __ptr64,class CRegion * __ptr64,class CMILMatrix const * __ptr64,bool,class gsl::span<class CVisual const * __ptr64,-1> const & __ptr64)const __ptr64"
+          ],
+          "min_inclusive": {
+            "build": 26100,
+            "revision": 1000
+          },
+          "max_exclusive": {
+            "build": 28000,
+            "revision": 0
+          }
+        }
       ],
       "requirement": "required",
-      "min_inclusive": {
-        "build": 26100,
-        "revision": 1000
-      },
-      "max_exclusive": {
-        "build": 28000,
-        "revision": 0
-      },
       "kind": "raw",
       "type": "D2D1_RECT_F* (*)(CTreeDirty*, D2D1_RECT_F*, UINT, const D2D1_RECT_F&, const COcclusionContext&, CRegion*, const CMILMatrix*, bool, const DWM::span<const CVisual*>&)",
       "notes": "The first emitted implementation is a feature dispatcher selecting NCEDR2_On::CTreeDirty or NCEDR2_Off::CDirtyRegion while preserving this public ABI."
@@ -977,12 +1267,16 @@
     {
       "name": "Symbol_GetCurrentFrameId",
       "id": "GetCurrentFrameId",
-      "symbol_names": [
-        "unsigned __int64 __cdecl GetCurrentFrameId(void)"
+      "bindings": [
+        {
+          "symbol_names": [
+            "unsigned __int64 __cdecl GetCurrentFrameId(void)"
+          ],
+          "min_inclusive": null,
+          "max_exclusive": null
+        }
       ],
       "requirement": "required",
-      "min_inclusive": null,
-      "max_exclusive": null,
       "target": "&GetCurrentFrameId",
       "kind": "projected_function"
     }

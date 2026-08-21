@@ -47,6 +47,7 @@ namespace OpenGlass::os
 		revision_21h2_rtm_0 = 194,
 		revision_21h2_post_rtm_0 = 282,
 		revision_24h2_rtm_1 = 2454,
+		revision_24h2_page_in_pixels_helper_reemitted = 3912,
 		revision_24h2_with_25h2_code_staged = 4484,
 		revision_24h2_kb5067036 = 7019,
 		revision_25h2_kb5068861 = 7019,

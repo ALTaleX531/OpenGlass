@@ -36,11 +36,10 @@ void Projection::ModuleRegistry::PublishBindings() noexcept
 			{
 				continue;
 			}
-			const auto& spec = m_symbolSpecs[candidateBinding.symbolIndex];
-			if (IsEnabled(spec) && IsVersionInRange(m_version, RangeOf(spec)) &&
-				m_resolutionStates[candidateBinding.symbolIndex] == ResolutionState::Unique)
+			const auto symbolIndex = candidateBinding.symbolIndex;
+			if (m_resolutionStates[symbolIndex] == ResolutionState::Unique)
 			{
-				value = m_candidates[candidateBinding.symbolIndex];
+				value = m_candidates[symbolIndex];
 				break;
 			}
 		}
@@ -60,12 +59,32 @@ bool Projection::ModuleRegistry::Freeze(Version version) noexcept
 		return false;
 	}
 
-	for (const auto& spec : std::span{m_symbolSpecs, m_symbolCount})
+	for (const auto& spec : std::span{m_symbolSpecs, m_symbolSpecCount})
 	{
-		if (!spec.nameCount || static_cast<size_t>(spec.firstNameIndex) + spec.nameCount > m_symbolNameCount ||
+		if (spec.symbolIndex >= m_symbolCount || !spec.nameCount ||
+			static_cast<size_t>(spec.firstNameIndex) + spec.nameCount > m_symbolNameCount ||
 			spec.minVersionIndex >= m_versionCount || spec.maxVersionIndex >= m_versionCount)
 		{
 			m_descriptorError = true;
+		}
+	}
+
+	for (size_t symbolIndex = 0; symbolIndex < m_symbolCount; symbolIndex++)
+	{
+		bool activeBinding{};
+		for (const auto& spec : std::span{m_symbolSpecs, m_symbolSpecCount})
+		{
+			if (spec.symbolIndex != symbolIndex || !IsEnabled(spec) ||
+				!IsVersionInRange(version, RangeOf(spec)))
+			{
+				continue;
+			}
+			if (activeBinding)
+			{
+				m_descriptorError = true;
+				break;
+			}
+			activeBinding = true;
 		}
 	}
 
@@ -109,24 +128,25 @@ void Projection::ModuleRegistry::ResetSymbols() noexcept
 
 void Projection::ModuleRegistry::Collect(LPCSTR completeSymbolName, PVOID address) noexcept
 {
-	for (size_t index = 0; index < m_symbolCount; index++)
+	for (size_t specIndex = 0; specIndex < m_symbolSpecCount; specIndex++)
 	{
-		const auto& spec = m_symbolSpecs[index];
+		const auto& spec = m_symbolSpecs[specIndex];
 		if (!IsEnabled(spec) || !IsVersionInRange(m_version, RangeOf(spec)) ||
 			!Matches(spec, completeSymbolName))
 		{
 			continue;
 		}
-		switch (m_resolutionStates[index])
+		const auto symbolIndex = spec.symbolIndex;
+		switch (m_resolutionStates[symbolIndex])
 		{
 		case ResolutionState::Missing:
-			m_candidates[index] = address;
-			m_resolutionStates[index] = ResolutionState::Unique;
+			m_candidates[symbolIndex] = address;
+			m_resolutionStates[symbolIndex] = ResolutionState::Unique;
 			break;
 		case ResolutionState::Unique:
-			if (m_candidates[index] != address)
+			if (m_candidates[symbolIndex] != address)
 			{
-				m_resolutionStates[index] = ResolutionState::Ambiguous;
+				m_resolutionStates[symbolIndex] = ResolutionState::Ambiguous;
 			}
 			break;
 		case ResolutionState::Ambiguous:
@@ -149,11 +169,11 @@ bool Projection::ModuleRegistry::ValidateSymbols() const noexcept
 	{
 		return false;
 	}
-	for (size_t index = 0; index < m_symbolCount; index++)
+	for (size_t specIndex = 0; specIndex < m_symbolSpecCount; specIndex++)
 	{
-		const auto& spec = m_symbolSpecs[index];
+		const auto& spec = m_symbolSpecs[specIndex];
 		if (IsEnabled(spec) && IsRequired(spec) && IsVersionInRange(m_version, RangeOf(spec)) &&
-			m_resolutionStates[index] != ResolutionState::Unique)
+			m_resolutionStates[spec.symbolIndex] != ResolutionState::Unique)
 		{
 			return false;
 		}
@@ -163,13 +183,13 @@ bool Projection::ModuleRegistry::ValidateSymbols() const noexcept
 
 void Projection::ModuleRegistry::CommitSymbols() noexcept
 {
-	for (size_t index = 0; index < m_symbolCount; index++)
+	for (size_t specIndex = 0; specIndex < m_symbolSpecCount; specIndex++)
 	{
-		const auto& spec = m_symbolSpecs[index];
+		const auto& spec = m_symbolSpecs[specIndex];
 		if (IsEnabled(spec) && IsVersionInRange(m_version, RangeOf(spec)) &&
-			m_resolutionStates[index] == ResolutionState::Unique)
+			m_resolutionStates[spec.symbolIndex] == ResolutionState::Unique)
 		{
-			m_resolved[index] = m_candidates[index];
+			m_resolved[spec.symbolIndex] = m_candidates[spec.symbolIndex];
 		}
 	}
 	PublishBindings();
@@ -178,18 +198,18 @@ void Projection::ModuleRegistry::CommitSymbols() noexcept
 void Projection::ModuleRegistry::ReportUnresolved(std::string& output, std::string_view prefix) const
 {
 	bool hasUnresolvedRequiredSymbol{};
-	for (size_t index = 0; index < m_symbolCount; index++)
+	for (size_t specIndex = 0; specIndex < m_symbolSpecCount; specIndex++)
 	{
-		const auto& spec = m_symbolSpecs[index];
+		const auto& spec = m_symbolSpecs[specIndex];
 		if (!IsEnabled(spec) || !IsRequired(spec) || !IsVersionInRange(m_version, RangeOf(spec)) ||
-			m_resolutionStates[index] == ResolutionState::Unique)
+			m_resolutionStates[spec.symbolIndex] == ResolutionState::Unique)
 		{
 			continue;
 		}
 		hasUnresolvedRequiredSymbol = true;
 		output.append(prefix);
 		output.append(String(spec.idOffset));
-		output.append(m_resolutionStates[index] == ResolutionState::Ambiguous ? " (ambiguous)\n" : " (missing)\n");
+		output.append(m_resolutionStates[spec.symbolIndex] == ResolutionState::Ambiguous ? " (ambiguous)\n" : " (missing)\n");
 	}
 	if (hasUnresolvedRequiredSymbol && m_undecorationFailureCount)
 	{
@@ -209,7 +229,14 @@ PVOID Projection::ModuleRegistry::SymbolAddress(size_t index, bool checked) cons
 
 Projection::VersionRange Projection::ModuleRegistry::SymbolRange(size_t index) const
 {
-	return RangeOf(m_symbolSpecs[index]);
+	for (const auto& spec : std::span{m_symbolSpecs, m_symbolSpecCount})
+	{
+		if (spec.symbolIndex == index && IsEnabled(spec) && IsVersionInRange(m_version, RangeOf(spec)))
+		{
+			return RangeOf(spec);
+		}
+	}
+	return {{1, 0}, {1, 0}};
 }
 
 LONG Projection::ModuleRegistry::LayoutOffset(size_t index) const

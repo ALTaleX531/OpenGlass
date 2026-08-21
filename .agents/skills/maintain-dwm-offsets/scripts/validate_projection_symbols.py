@@ -63,20 +63,26 @@ def inspect(repo: Path, architecture: str, module_filter: str, stable_id_filter:
 				callsite_count, consumer_count = projection_source_check.projected_function_consumer_counts(source, symbol)
 			if symbol["kind"] == "raw" and not symbol.get("diagnostic_only") and not consumer_count:
 				findings.append({"severity": "error", "module": schema["module"], "id": symbol["id"], "message": "raw Symbol has no source consumer"})
+			bindings = symbol["bindings"]
+			symbol_names = [
+				candidate
+				for binding in bindings
+				for candidate in binding["symbol_names"]
+			]
 			descriptor = {
 				"index": index,
 				"name": symbol["name"],
 				"id": symbol["id"],
-				"symbol_names": symbol["symbol_names"],
-				"candidate_count": len(symbol["symbol_names"]),
-				"multiple_complete_names": len(symbol["symbol_names"]) > 1,
+				"bindings": bindings,
+				"binding_count": len(bindings),
+				"symbol_names": symbol_names,
+				"candidate_count": len(symbol_names),
+				"multiple_complete_names": len(symbol_names) > 1,
 				"kind": symbol["kind"],
 				"type": symbol.get("type"),
 				"abi_compatibility": symbol.get("abi_compatibility"),
 				"usage": symbol.get("usage"),
 				"requirement": symbol["requirement"],
-				"min_inclusive": symbol.get("min_inclusive"),
-				"max_exclusive": symbol.get("max_exclusive"),
 				"consumer_count": consumer_count,
 				"callsite_count": callsite_count,
 			}
@@ -113,8 +119,14 @@ def main(argv: list[str] | None = None) -> int:
 			for descriptor in module["descriptors"]:
 				if result.get("requested_id"):
 					print(f"  {descriptor['id']} [{descriptor['requirement']}, {descriptor['kind']}]")
-					for name in descriptor["symbol_names"]:
-						print(f"    {name}")
+					for binding_index, binding in enumerate(descriptor["bindings"]):
+						minimum = binding["min_inclusive"]
+						maximum = binding["max_exclusive"]
+						minimum_text = "*" if minimum is None else f"{minimum['build']}.{minimum.get('revision', 0)}"
+						maximum_text = "*" if maximum is None else f"{maximum['build']}.{maximum.get('revision', 0)}"
+						print(f"    binding {binding_index}: [{minimum_text}, {maximum_text})")
+						for name in binding["symbol_names"]:
+							print(f"      {name}")
 		for finding in result["findings"]:
 			print(f"{finding['severity'].upper()}: {finding['module']}:{finding['id']}: {finding['message']}")
 	return 1 if result["summary"]["errors"] else 0

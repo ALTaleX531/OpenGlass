@@ -321,10 +321,17 @@ def in_range(version: Version, symbol: dict[str, Any]) -> bool:
 	return current >= minimum and projection_schema.before(current, maximum)
 
 
-def is_active(version: Version, symbol: dict[str, Any], configuration: str) -> bool:
-	return in_range(version, symbol) and not (
-		symbol.get("condition") == "debug" and configuration != "debug"
-	)
+def select_binding(
+	version: Version,
+	symbol: dict[str, Any],
+	configuration: str,
+) -> tuple[int, dict[str, Any]] | None:
+	if symbol.get("condition") == "debug" and configuration != "debug":
+		return None
+	for index, binding in enumerate(symbol.get("bindings", [])):
+		if in_range(version, binding):
+			return index, binding
+	return None
 
 
 def inspect(args: argparse.Namespace) -> dict[str, Any]:
@@ -350,10 +357,12 @@ def inspect(args: argparse.Namespace) -> dict[str, Any]:
 	for symbol in schema.get("symbols", []):
 		if args.stable_id and symbol.get("id") != args.stable_id:
 			continue
-		active = is_active(requested, symbol, args.configuration)
+		selected = select_binding(requested, symbol, args.configuration)
+		active = selected is not None
+		binding_index, binding = selected if selected is not None else (None, None)
 		addresses: set[int] = set()
 		matched_names = []
-		for candidate in symbol.get("symbol_names", []):
+		for candidate in binding.get("symbol_names", []) if binding else []:
 			candidate_addresses = names.get(candidate, set())
 			if candidate_addresses:
 				matched_names.append(candidate)
@@ -363,8 +372,13 @@ def inspect(args: argparse.Namespace) -> dict[str, Any]:
 			"id": symbol.get("id"), "name": symbol.get("name"), "requirement": symbol.get("requirement"),
 			"kind": symbol.get("kind"), "type": symbol.get("type"),
 			"abi_compatibility": symbol.get("abi_compatibility"), "usage": symbol.get("usage"),
-			"range": {"min_inclusive": symbol.get("min_inclusive"), "max_exclusive": symbol.get("max_exclusive")},
-			"symbol_names": symbol.get("symbol_names"), "matched_names": matched_names,
+			"binding_index": binding_index,
+			"range": None if binding is None else {
+				"min_inclusive": binding.get("min_inclusive"),
+				"max_exclusive": binding.get("max_exclusive"),
+			},
+			"symbol_names": binding.get("symbol_names") if binding else [],
+			"matched_names": matched_names,
 			"rvas": [f"0x{address:X}" for address in sorted(addresses)], "status": status,
 		})
 	if args.stable_id and not descriptors:

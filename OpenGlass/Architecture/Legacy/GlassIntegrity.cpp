@@ -292,7 +292,6 @@ namespace OpenGlass::GlassIntegrity
 	Projection::Detour<dwmcore::Symbol_COcclusionContext_IsOccluded_Pre_22000, &MyCOcclusionContext_IsOccluded_Pre_22000> g_COcclusionContext_IsOccluded_Pre_22000_Org{};
 	Projection::Detour<dwmcore::Symbol_COcclusionContext_IsOccluded, &MyCOcclusionContext_IsOccluded_20348> g_COcclusionContext_IsOccluded_Org{};
 	Projection::Detour<dwmcore::Symbol_COcclusionContext_PageInPixelsRectToDeviceRect, &MyCOcclusionContext_PageInPixelsRectToDeviceRect> g_COcclusionContext_PageInPixelsRectToDeviceRect_Org{};
-	Projection::Detour<dwmcore::Symbol_COcclusionContext_PageInPixelsRectToDeviceRect_26100_3912, &MyCOcclusionContext_PageInPixelsRectToDeviceRect> g_COcclusionContext_PageInPixelsRectToDeviceRect_26100_3912_Org{};
 	Projection::Detour<dwmcore::Symbol_CHwndRenderTarget_RenderDirtyRegion, &MyCHwndRenderTarget_RenderDirtyRegion> g_CHwndRenderTarget_RenderDirtyRegion_Org{};
 
 	Projection::Detour<dwmcore::Symbol_CDirtyRegion_GetUnOccludedDirtyRegion, &MyCDirtyRegion_GetUnOccludedDirtyRegion> g_CDirtyRegion_GetUnOccludedDirtyRegion_Org{};
@@ -1275,16 +1274,7 @@ bool GlassIntegrity::MyCOcclusionContext_PageInPixelsRectToDeviceRect(
 {
 	const auto invokeOriginal = [This](const D2D1_RECT_F& candidate, D2D1_RECT_F* result)
 	{
-		if (g_COcclusionContext_PageInPixelsRectToDeviceRect_Org)
-		{
-			return g_COcclusionContext_PageInPixelsRectToDeviceRect_Org(
-				This,
-				candidate,
-				result
-			);
-		}
-
-		return g_COcclusionContext_PageInPixelsRectToDeviceRect_26100_3912_Org(
+		return g_COcclusionContext_PageInPixelsRectToDeviceRect_Org(
 			This,
 			candidate,
 			result
@@ -1297,9 +1287,9 @@ bool GlassIntegrity::MyCOcclusionContext_PageInPixelsRectToDeviceRect(
 		if (
 			const auto expansion = GlassKernel::GetBlurExpansion();
 			expansion &&
-			(
-				g_COcclusionContext_PageInPixelsRectToDeviceRect_26100_3912_Org ||
-				!Util::VersionBefore<os::build_w11_24h2, os::revision_24h2_with_25h2_code_staged>(dwmcore::g_versionInfo.build, dwmcore::g_versionInfo.revision)
+			!Util::VersionBefore<os::build_w11_24h2, os::revision_24h2_page_in_pixels_helper_reemitted>(
+				dwmcore::g_versionInfo.build,
+				dwmcore::g_versionInfo.revision
 			)
 		)
 		{
@@ -1825,7 +1815,6 @@ void GlassIntegrity::Startup()
 	const auto hasArrayBasedCoverageSetIsCovered26100_Pre_4484 = static_cast<bool>(dwmcore::Symbol_CArrayBasedCoverageSet_IsCovered_26100_Pre_4484);
 	const auto hasArrayBasedCoverageSetIsCovered26100 = static_cast<bool>(dwmcore::Symbol_CArrayBasedCoverageSet_IsCovered_26100);
 	const auto hasPageInPixelsRectToDeviceRect = static_cast<bool>(dwmcore::Symbol_COcclusionContext_PageInPixelsRectToDeviceRect);
-	const auto hasPageInPixelsRectToDeviceRect26100_3912 = static_cast<bool>(dwmcore::Symbol_COcclusionContext_PageInPixelsRectToDeviceRect_26100_3912);
 	const auto hasCollectRectangleForOcclusion26100_Pre_7840 = static_cast<bool>(dwmcore::Symbol_COcclusionContext_CollectRectangleForOcclusion_26100_Pre_7840);
 	const auto hasCollectRectangleForOcclusion26100_7840 = static_cast<bool>(dwmcore::Symbol_COcclusionContext_CollectRectangleForOcclusion_26100_7840);
 	const auto hasCDirtyRegionGetOptimizedRect26100_Pre_1000 = static_cast<bool>(dwmcore::Symbol_CDirtyRegion_GetOptimizedRect_26100_Pre_1000);
@@ -1922,7 +1911,6 @@ void GlassIntegrity::Startup()
 			{ &g_CArrayBasedCoverageSet_IsCovered_26100_Pre_4484_Org, hasArrayBasedCoverageSetIsCovered26100_Pre_4484 },
 			{ &g_CArrayBasedCoverageSet_IsCovered_26100_Org, hasArrayBasedCoverageSetIsCovered26100 },
 			{ &g_COcclusionContext_PageInPixelsRectToDeviceRect_Org, hasPageInPixelsRectToDeviceRect && hasArrayBasedCoverageSetIsCovered },
-			{ &g_COcclusionContext_PageInPixelsRectToDeviceRect_26100_3912_Org, hasPageInPixelsRectToDeviceRect26100_3912 && hasArrayBasedCoverageSetIsCovered },
 
 			{ &g_CDrawingContext_DrawVisualTree_Win10_1809_Org, build_before_w10_1903 },
 			{ &g_CDrawingContext_DrawVisualTree_Win10_1903_Org, !build_before_w10_1903 && build_before_w10_2004 },
@@ -1953,7 +1941,6 @@ void GlassIntegrity::Shutdown()
 	const auto hasArrayBasedCoverageSetIsCovered26100_Pre_4484 = static_cast<bool>(dwmcore::Symbol_CArrayBasedCoverageSet_IsCovered_26100_Pre_4484);
 	const auto hasArrayBasedCoverageSetIsCovered26100 = static_cast<bool>(dwmcore::Symbol_CArrayBasedCoverageSet_IsCovered_26100);
 	const auto hasPageInPixelsRectToDeviceRect = static_cast<bool>(dwmcore::Symbol_COcclusionContext_PageInPixelsRectToDeviceRect);
-	const auto hasPageInPixelsRectToDeviceRect26100_3912 = static_cast<bool>(dwmcore::Symbol_COcclusionContext_PageInPixelsRectToDeviceRect_26100_3912);
 	const auto hasCollectRectangleForOcclusion26100_Pre_7840 = static_cast<bool>(dwmcore::Symbol_COcclusionContext_CollectRectangleForOcclusion_26100_Pre_7840);
 	const auto hasCollectRectangleForOcclusion26100_7840 = static_cast<bool>(dwmcore::Symbol_COcclusionContext_CollectRectangleForOcclusion_26100_7840);
 	const auto hasCDirtyRegionGetOptimizedRect26100_Pre_1000 = static_cast<bool>(dwmcore::Symbol_CDirtyRegion_GetOptimizedRect_26100_Pre_1000);
@@ -1990,7 +1977,6 @@ void GlassIntegrity::Shutdown()
 			{ &g_CArrayBasedCoverageSet_IsCovered_26100_Pre_4484_Org, hasArrayBasedCoverageSetIsCovered26100_Pre_4484 },
 			{ &g_CArrayBasedCoverageSet_IsCovered_26100_Org, hasArrayBasedCoverageSetIsCovered26100 },
 			{ &g_COcclusionContext_PageInPixelsRectToDeviceRect_Org, hasPageInPixelsRectToDeviceRect && hasArrayBasedCoverageSetIsCovered },
-			{ &g_COcclusionContext_PageInPixelsRectToDeviceRect_26100_3912_Org, hasPageInPixelsRectToDeviceRect26100_3912 && hasArrayBasedCoverageSetIsCovered },
 
 			{ &g_CDrawingContext_DrawVisualTree_Win10_1809_Org, build_before_w10_1903 },
 			{ &g_CDrawingContext_DrawVisualTree_Win10_1903_Org, !build_before_w10_1903 && build_before_w10_2004 },

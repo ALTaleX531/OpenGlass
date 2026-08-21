@@ -175,16 +175,18 @@ def generate_registry_inc(schemas: Sequence[ProjectionSchema]) -> str:
         case_assertions: list[str] = []
         layout_rows: list[str] = []
         for index, symbol in enumerate(schema["symbols"]):
-            first_name_index = len(symbol_name_offsets)
-            symbol_name_offsets.extend(pool.add(candidate) for candidate in symbol["symbol_names"])
             id_offset = pool.add(symbol["id"])
-            minimum_index = add_json_version(symbol.get("min_inclusive"))
-            maximum_index = add_json_version(symbol.get("max_exclusive"))
             requirement = f"Projection::Requirement::{requirement_cpp(symbol['requirement'])}"
             flags = "Projection::SymbolFlags::DebugOnly" if symbol.get("condition") == "debug" else "Projection::SymbolFlags::None"
-            symbol_rows.append(
-                f"\t{{{id_offset}, {first_name_index}, {len(symbol['symbol_names'])}, {minimum_index}, {maximum_index}, {requirement}, {flags}}},"
-            )
+            for binding in symbol["bindings"]:
+                first_name_index = len(symbol_name_offsets)
+                symbol_name_offsets.extend(pool.add(candidate) for candidate in binding["symbol_names"])
+                minimum_index = add_json_version(binding.get("min_inclusive"))
+                maximum_index = add_json_version(binding.get("max_exclusive"))
+                symbol_rows.append(
+                    f"\t{{{index}, {id_offset}, {first_name_index}, {len(binding['symbol_names'])}, "
+                    f"{minimum_index}, {maximum_index}, {requirement}, {flags}}},"
+                )
             if symbol["kind"].startswith("projected_"):
                 target = symbol["target"]
                 if symbol["kind"] == "projected_function":
@@ -250,9 +252,9 @@ def generate_registry_inc(schemas: Sequence[ProjectionSchema]) -> str:
             "\t{",
             *symbol_rows,
             "\t};",
-            f"\tPVOID g_{module}Candidates[std::size(g_{module}SymbolSpecs)]{{}};",
-            f"\tPVOID g_{module}Resolved[std::size(g_{module}SymbolSpecs)]{{}};",
-            f"\tProjection::ResolutionState g_{module}ResolutionStates[std::size(g_{module}SymbolSpecs)]{{}};",
+            f"\tPVOID g_{module}Candidates[{len(schema['symbols'])}]{{}};",
+            f"\tPVOID g_{module}Resolved[{len(schema['symbols'])}]{{}};",
+            f"\tProjection::ResolutionState g_{module}ResolutionStates[{len(schema['symbols'])}]{{}};",
             *binding_assertions,
             f"\tconst Projection::BindingSpec g_{module}Bindings[] =",
             "\t{",

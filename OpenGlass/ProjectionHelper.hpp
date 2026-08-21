@@ -70,6 +70,7 @@ namespace OpenGlass::Projection
 
 	struct SymbolSpec
 	{
+		size_t symbolIndex;
 		size_t idOffset;
 		size_t firstNameIndex;
 		size_t nameCount;
@@ -120,6 +121,7 @@ namespace OpenGlass::Projection
 		size_t m_layoutCaseCount{};
 		size_t m_symbolNameCount{};
 		size_t m_versionCount{};
+		size_t m_symbolSpecCount{};
 		size_t m_symbolCount{};
 		size_t m_knownBuildCount{};
 		size_t m_bindingCount{};
@@ -181,8 +183,8 @@ namespace OpenGlass::Projection
 			  m_resolutionStates{resolutionStates.data()}, m_bindings{bindings.data()}, m_layoutSpecs{layoutSpecs.data()},
 			  m_layoutCases{layoutCases.data()}, m_selectedOffsets{selectedOffsets.data()}, m_layoutSupported{layoutSupported.data()},
 			  m_supportedRange{supportedRange}, m_layoutCaseCount{layoutCases.size()}, m_symbolNameCount{symbolNameOffsets.size()},
-			  m_versionCount{versions.size()}, m_symbolCount{symbolSpecs.size()}, m_knownBuildCount{knownBuilds.size()},
-			  m_bindingCount{bindings.size()}, m_layoutCount{layoutSpecs.size()}
+			  m_versionCount{versions.size()}, m_symbolSpecCount{symbolSpecs.size()}, m_symbolCount{candidates.size()},
+			  m_knownBuildCount{knownBuilds.size()}, m_bindingCount{bindings.size()}, m_layoutCount{layoutSpecs.size()}
 		{
 		}
 
