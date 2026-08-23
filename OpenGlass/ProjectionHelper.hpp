@@ -29,8 +29,14 @@ namespace OpenGlass::Projection
 	enum class SymbolFlags : UCHAR
 	{
 		None = 0,
-		DebugOnly = 1
+		DebugOnly = 1,
+		Data = 2
 	};
+	constexpr SymbolFlags operator|(SymbolFlags left, SymbolFlags right) noexcept
+	{
+		return static_cast<SymbolFlags>(std::to_underlying(left) | std::to_underlying(right));
+	}
+
 
 	struct Version
 	{
@@ -143,12 +149,17 @@ namespace OpenGlass::Projection
 			return {VersionAt(spec.minVersionIndex), VersionAt(spec.maxVersionIndex)};
 		}
 
+		static constexpr bool HasFlag(SymbolFlags value, SymbolFlags flag) noexcept
+		{
+			return (std::to_underlying(value) & std::to_underlying(flag)) != 0;
+		}
+
 		static constexpr bool IsEnabled([[maybe_unused]] const SymbolSpec& spec) noexcept
 		{
 #ifdef _DEBUG
 			return true;
 #else
-			return spec.flags != SymbolFlags::DebugOnly;
+			return !HasFlag(spec.flags, SymbolFlags::DebugOnly);
 #endif
 		}
 
@@ -159,6 +170,7 @@ namespace OpenGlass::Projection
 
 		bool Matches(const SymbolSpec& spec, LPCSTR completeSymbolName) const noexcept;
 		void PublishBindings() noexcept;
+		bool CollectAddress(size_t symbolIndex, PVOID address) noexcept;
 
 	public:
 		constexpr ModuleRegistry(
@@ -191,6 +203,8 @@ namespace OpenGlass::Projection
 		bool Freeze(Version version) noexcept;
 		void ResetSymbols() noexcept;
 		void Collect(LPCSTR completeSymbolName, PVOID address) noexcept;
+		bool CollectResolvedAddress(size_t symbolIndex, PVOID address) noexcept;
+		bool SymbolIsData(size_t symbolIndex, bool& isData) const noexcept;
 		void RecordUndecorationFailure() noexcept;
 		bool ValidateSymbols() const noexcept;
 		void CommitSymbols() noexcept;
@@ -226,6 +240,10 @@ namespace OpenGlass::Projection
 		size_t descriptor_count() const noexcept
 		{
 			return m_symbolCount + m_layoutCount;
+		}
+		size_t symbol_count() const noexcept
+		{
+			return m_symbolCount;
 		}
 	};
 

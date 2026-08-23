@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "architecture": "legacy",
+  "resolver": {
+    "dbghelp": {
+      "version": "26100.8249",
+      "sha256": "140adb286a11fbdfb63b6d8dff30039c50ff9c88b6909be9ce8292680d5be2af"
+    }
+  },
+  "sources": [
+    "udwm/17763.json",
+    "udwm/18362.json",
+    "udwm/19041.json",
+    "udwm/20348.json",
+    "udwm/22000.json",
+    "udwm/22621.json",
+    "udwm/26100.json",
+    "dwmcore/17763.json",
+    "dwmcore/18362.json",
+    "dwmcore/19041.json",
+    "dwmcore/20348.json",
+    "dwmcore/22000.json",
+    "dwmcore/22621.json",
+    "dwmcore/26100.json"
+  ]
+}

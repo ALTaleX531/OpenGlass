@@ -10,6 +10,8 @@
 #include "../OpenGlassGUI/PresetPackage.hpp"
 #include "HookHelper.hpp"
 #include "Util.hpp"
+#include "PeCodeViewIdentity.hpp"
+#include "SymbolCatalog.hpp"
 
 #include <wx/init.h>
 #include <wx/wfstream.h>
@@ -450,12 +452,16 @@ namespace
 		const auto optionalId = AddString(storage, cursor, "Optional.Id");
 		storage.symbolNameOffsets[2] = AddString(storage, cursor, "public: int __cdecl Optional(int)");
 		storage.symbols = {{{0, requiredId, 0, 2, 0, 0, Projection::Requirement::Required, Projection::SymbolFlags::None},
-			{1, optionalId, 2, 1, 0, 0, Projection::Requirement::Optional, Projection::SymbolFlags::None}}};
+			{1, optionalId, 2, 1, 0, 0, Projection::Requirement::Optional, Projection::SymbolFlags::Data}}};
 		PVOID published{};
 		storage.bindings[0] = {0, &published, Util::force_cast_from(&Replacement)};
 		g_activeRegistry = &storage.registry;
 
 		Check(storage.registry.Freeze({150, 0}));
+		bool isData{};
+		Check(storage.registry.SymbolIsData(0, isData) && !isData);
+		Check(storage.registry.SymbolIsData(1, isData) && isData);
+		Check(!storage.registry.SymbolIsData(storage.registry.symbol_count(), isData));
 		Check(published == Util::force_cast_from(&Replacement));
 		storage.registry.Collect("public: int __cdecl Target(int)", Util::force_cast_from(&Target));
 		storage.registry.Collect("public: int __cdecl TargetAlias(int)", Util::force_cast_from(&Target));
@@ -480,6 +486,15 @@ namespace
 		storage.registry.ReportUnresolved(report, "test!");
 		Check(report.find("Required.Id (ambiguous)") != std::string::npos);
 		Check(report.find("complete-name undecoration failures: 1") != std::string::npos);
+
+		storage.registry.ResetSymbols();
+		Check(!storage.registry.CollectResolvedAddress(storage.registry.symbol_count(), Util::force_cast_from(&Target)));
+		Check(!storage.registry.CollectResolvedAddress(0, nullptr));
+		Check(storage.registry.CollectResolvedAddress(0, Util::force_cast_from(&Target)));
+		Check(storage.registry.CollectResolvedAddress(0, Util::force_cast_from(&Target)));
+		Check(storage.registry.ValidateSymbols());
+		Check(storage.registry.CollectResolvedAddress(0, Util::force_cast_from(&Replacement)));
+		Check(!storage.registry.ValidateSymbols());
 
 		RegistryStorage<2, 0, 0, 0> overloads;
 		cursor = 1;
@@ -506,6 +521,152 @@ namespace
 		vtables.registry.Collect("const Derived::`vftable'{for `BaseA'}", Util::force_cast_from(&Target));
 		vtables.registry.Collect("const Derived::`vftable'{for `BaseB'}", Util::force_cast_from(&Replacement));
 		Check(vtables.registry.ValidateSymbols());
+	}
+
+	void TestSymbolCatalogCollection()
+	{
+		RegistryStorage<1, 0, 0, 0> storage;
+		size_t cursor{1};
+		const auto id = AddString(storage, cursor, "Catalog.Target");
+		storage.symbolNameOffsets[0] = AddString(storage, cursor, "public: int __cdecl Target(int)");
+		storage.symbols[0] = {
+			0, id, 0, 1, 0, 0,
+			Projection::Requirement::Required,
+			Projection::SymbolFlags::None
+		};
+
+		const auto module = GetModuleHandleW(nullptr);
+		PeCodeViewIdentity identity{};
+		Check(SUCCEEDED(ReadLoadedPeCodeViewIdentity(module, identity)));
+		const auto base = reinterpret_cast<const BYTE*>(module);
+		const auto target = reinterpret_cast<const BYTE*>(Util::force_cast_from(&Target));
+		const auto replacement = reinterpret_cast<const BYTE*>(Util::force_cast_from(&Replacement));
+		Check(target >= base);
+		Check(replacement >= base);
+		const auto targetRva = static_cast<UINT32>(target - base);
+		const auto replacementRva = static_cast<UINT32>(replacement - base);
+		Check(static_cast<size_t>(targetRva) == static_cast<size_t>(target - base));
+		Check(static_cast<size_t>(replacementRva) == static_cast<size_t>(replacement - base));
+
+		const Projection::Version firstVersion{100, 7};
+		const Projection::Version secondVersion{100, 8};
+		std::wstring strings = identity.pdbName;
+		strings.push_back(L'\0');
+		Projection::SymbolCatalogRecord exactRecord
+		{
+			Projection::ModuleId::uDWM,
+			identity.machine,
+			identity.timeDateStamp,
+			identity.sizeOfImage,
+			identity.pdbGuid,
+			identity.pdbAge,
+			0,
+			firstVersion,
+			1,
+			1
+		};
+		auto otherRecord = exactRecord;
+		otherRecord.version = secondVersion;
+		otherRecord.pdbGuid.Data4[7] ^= 1;
+		otherRecord.firstEntry = 0;
+		std::array records{otherRecord, exactRecord};
+		std::array entries
+		{
+			replacementRva,
+			targetRva
+		};
+		Projection::SymbolCatalog catalog
+		{
+			strings.c_str(),
+			strings.size(),
+			records,
+			entries
+		};
+
+		Check(storage.registry.Freeze(firstVersion));
+		Check(
+			Projection::CollectSymbolsFromCatalog(
+				module,
+				Projection::ModuleId::uDWM,
+				storage.registry,
+				catalog
+			) == Projection::SymbolCatalogResult::Collected
+		);
+		storage.registry.CommitSymbols();
+		Check(storage.registry.SymbolAddress(0, false) == Util::force_cast_from(&Target));
+
+		records[0] = exactRecord;
+		records[0].version = secondVersion;
+		records[0].firstEntry = 0;
+		records[1].pdbGuid.Data4[7] ^= 1;
+		Check(storage.registry.Freeze(secondVersion));
+		Check(
+			Projection::CollectSymbolsFromCatalog(
+				module,
+				Projection::ModuleId::uDWM,
+				storage.registry,
+				catalog
+			) == Projection::SymbolCatalogResult::Collected
+		);
+		storage.registry.CommitSymbols();
+		Check(storage.registry.SymbolAddress(0, false) == Util::force_cast_from(&Replacement));
+
+		Check(storage.registry.Freeze(firstVersion));
+		records[0].module = Projection::ModuleId::DwmCore;
+		Check(
+			Projection::CollectSymbolsFromCatalog(
+				module,
+				Projection::ModuleId::uDWM,
+				storage.registry,
+				catalog
+			) == Projection::SymbolCatalogResult::NotFound
+		);
+		records[0].module = Projection::ModuleId::uDWM;
+		Check(storage.registry.CollectResolvedAddress(0, Util::force_cast_from(&Target)));
+		Check(storage.registry.ValidateSymbols());
+
+		records[0] = exactRecord;
+		records[1] = exactRecord;
+		Check(
+			Projection::CollectSymbolsFromCatalog(
+				module,
+				Projection::ModuleId::uDWM,
+				storage.registry,
+				catalog
+			) == Projection::SymbolCatalogResult::Rejected
+		);
+		Check(!storage.registry.ValidateSymbols());
+
+		records[1].pdbGuid.Data4[7] ^= 1;
+		entries[1] = identity.sizeOfImage;
+		Check(
+			Projection::CollectSymbolsFromCatalog(
+				module,
+				Projection::ModuleId::uDWM,
+				storage.registry,
+				catalog
+			) == Projection::SymbolCatalogResult::Rejected
+		);
+		Check(!storage.registry.ValidateSymbols());
+		entries[1] = targetRva;
+
+		std::array lateFailureEntries
+		{
+			targetRva,
+			replacementRva
+		};
+		records[0].firstEntry = 0;
+		records[0].entryCount = lateFailureEntries.size();
+		catalog.entries = lateFailureEntries;
+		Check(
+			Projection::CollectSymbolsFromCatalog(
+				module,
+				Projection::ModuleId::uDWM,
+				storage.registry,
+				catalog
+			) == Projection::SymbolCatalogResult::Rejected
+		);
+		Check(!storage.registry.ValidateSymbols());
 	}
 
 	void TestAtomicCommitAndDetourStorage()
@@ -1387,6 +1548,7 @@ int main()
 	TestHookRundown();
 	TestVersionsAndFields();
 	TestCompleteNameResolutionAndFallback();
+	TestSymbolCatalogCollection();
 	TestAtomicCommitAndDetourStorage();
 	TestDisjointProjectedBindings();
 	TestLogicalSymbolBindings();

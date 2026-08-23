@@ -18,6 +18,7 @@
 	<ClInclude Include="$(MSBuildThisFileDirectory)ApplicationPaths.hpp" />
 	<ClInclude Include="$(MSBuildThisFileDirectory)BlurSettings.hpp" />
 	<ClInclude Include="$(MSBuildThisFileDirectory)PngAssetValidation.hpp" />
+	<ClInclude Include="$(MSBuildThisFileDirectory)PeCodeViewIdentity.hpp" />
 	<ClInclude Include="$(MSBuildThisFileDirectory)ThemeAtlasLayout.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)RegistryValueResolver.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)SettingsCatalog.hpp" />

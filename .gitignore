@@ -433,3 +433,4 @@ FodyWeavers.xsd
 vcpkg_installed/
 OpenGlassRenderTest/OpenGlassRenderTest.png
 *.cso
+.archive

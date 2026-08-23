@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "architecture": "milcomp",
+  "resolver": {
+    "dbghelp": {
+      "version": "26100.8249",
+      "sha256": "140adb286a11fbdfb63b6d8dff30039c50ff9c88b6909be9ce8292680d5be2af"
+    }
+  },
+  "sources": [
+    "udwm/28000.json",
+    "dwmcore/28000.json"
+  ]
+}

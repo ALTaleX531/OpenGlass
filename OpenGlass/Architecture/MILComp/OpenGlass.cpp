@@ -7,6 +7,7 @@
 #include "HookHelper.hpp"
 #include "SymbolParser.hpp"
 #include "SymbolDownloader.hpp"
+#include "SymbolCatalog.hpp"
 #include "OSHelper.hpp"
 #include "uDWMProjection.hpp"
 #include "dwmcoreProjection.hpp"
@@ -361,15 +362,31 @@ bool OpenGlass::InitializeProjectionBySymbols()
 		{
 			return false;
 		}
-		// The installer grants Window Manager (S-1-5-90-0) write permissions to this shared cache.
-		const auto symbolPath = ApplicationPaths::GetProgramDataSubdirectory(L"symbols");
-		if (!PathFileExistsW(symbolPath.c_str()))
+		std::filesystem::path symbolPath;
+		std::unique_ptr<CSymbolParser> parser;
+		std::unique_ptr<CSymbolDownloader> downloader;
+		const auto ensureSymbolParser = [&]()
 		{
-			wil::CreateDirectoryDeep(symbolPath.c_str());
-		}
+			if (parser)
+			{
+				return;
+			}
+			// The installer grants Window Manager (S-1-5-90-0) write permissions to this shared cache.
+			symbolPath = ApplicationPaths::GetProgramDataSubdirectory(L"symbols");
+			if (!PathFileExistsW(symbolPath.c_str()))
+			{
+				wil::CreateDirectoryDeep(symbolPath.c_str());
+			}
+			parser = std::make_unique<CSymbolParser>(symbolPath.c_str());
+		};
+		const auto ensureDownloader = [&]()
+		{
+			if (!downloader)
+			{
+				downloader = std::make_unique<CSymbolDownloader>();
+			}
+		};
 		const auto symbolServerBase = L"https://msdl.microsoft.com/download/symbols/";
-		const auto downloader = std::make_unique<CSymbolDownloader>();
-		const auto parser = std::make_unique<CSymbolParser>(symbolPath.c_str());
 		HRESULT hr{ S_OK };
 
 		const auto showSymbolDownloaderUI = []()
@@ -402,11 +419,30 @@ bool OpenGlass::InitializeProjectionBySymbols()
 			g_symbolDownloadCompleted = false;
 			g_symbolRequiresDownloading = false;
 			g_detailsInfo.clear();
-			hr = parser->ParsePdb(udwmModuleHandle, uDWM::g_registry);
+			const auto udwmCatalogResult = Projection::CollectBuiltInSymbols(
+				udwmModuleHandle,
+				Projection::ModuleId::uDWM,
+				uDWM::g_registry
+			);
+			LOG_HR_IF_MSG(
+				HRESULT_FROM_WIN32(ERROR_INVALID_DATA),
+				udwmCatalogResult == Projection::SymbolCatalogResult::Rejected,
+				"Rejected built-in uDWM symbol catalog record; falling back to PDB resolution"
+			);
+			if (udwmCatalogResult == Projection::SymbolCatalogResult::Collected)
+			{
+				hr = S_OK;
+			}
+			else
+			{
+				ensureSymbolParser();
+				hr = parser->ParsePdb(udwmModuleHandle, uDWM::g_registry);
+			}
 			if (hr == HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND))
 			{
 				showSymbolDownloaderUI();
 
+				ensureDownloader();
 				hr = DownloadSymbolForModuleAsync(
 					*downloader,
 					udwmModuleHandle,
@@ -467,11 +503,30 @@ bool OpenGlass::InitializeProjectionBySymbols()
 			g_symbolDownloadCompleted = false;
 			g_symbolRequiresDownloading = false;
 			g_detailsInfo.clear();
-			hr = parser->ParsePdb(dwmcoreModuleHandle, dwmcore::g_registry);
+			const auto dwmcoreCatalogResult = Projection::CollectBuiltInSymbols(
+				dwmcoreModuleHandle,
+				Projection::ModuleId::DwmCore,
+				dwmcore::g_registry
+			);
+			LOG_HR_IF_MSG(
+				HRESULT_FROM_WIN32(ERROR_INVALID_DATA),
+				dwmcoreCatalogResult == Projection::SymbolCatalogResult::Rejected,
+				"Rejected built-in dwmcore symbol catalog record; falling back to PDB resolution"
+			);
+			if (dwmcoreCatalogResult == Projection::SymbolCatalogResult::Collected)
+			{
+				hr = S_OK;
+			}
+			else
+			{
+				ensureSymbolParser();
+				hr = parser->ParsePdb(dwmcoreModuleHandle, dwmcore::g_registry);
+			}
 			if (hr == HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND))
 			{
 				showSymbolDownloaderUI();
 
+				ensureDownloader();
 				hr = DownloadSymbolForModuleAsync(
 					*downloader,
 					dwmcoreModuleHandle,

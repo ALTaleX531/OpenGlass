@@ -51,15 +51,18 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Shared.hpp"><Link>Header Files\Shared.hpp</Link></ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)SymbolDownloader.hpp"><Link>Header Files\SymbolDownloader.hpp</Link></ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)SymbolParser.hpp"><Link>Header Files\SymbolParser.hpp</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)SymbolCatalog.hpp"><Link>Header Files\SymbolCatalog.hpp</Link></ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)Util.hpp"><Link>Header Files\Util.hpp</Link></ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)wil.hpp"><Link>Header Files\wil.hpp</Link></ClInclude>
   </ItemGroup>
   <ItemGroup>
 	<ClCompile Include="$(MSBuildThisFileDirectory)..\Common\PngAssetValidation.cpp"><Link>Source Files\Common\PngAssetValidation.cpp</Link><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
+	<ClCompile Include="$(MSBuildThisFileDirectory)..\Common\PeCodeViewIdentity.cpp"><Link>Source Files\Common\PeCodeViewIdentity.cpp</Link><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
 	<ClCompile Include="$(MSBuildThisFileDirectory)..\Common\ThemeAtlasLayout.cpp"><Link>Source Files\Common\ThemeAtlasLayout.cpp</Link><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)AeroColorizationEffect.cpp"><Link>Source Files\AeroColorizationEffect.cpp</Link></ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)AeroEffect.cpp"><Link>Source Files\AeroEffect.cpp</Link></ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)BlurEffect.cpp"><Link>Source Files\BlurEffect.cpp</Link></ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)BuiltInSymbolCatalog.cpp"><Link>Source Files\BuiltInSymbolCatalog.cpp</Link></ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)CustomBlurEffect.cpp"><Link>Source Files\CustomBlurEffect.cpp</Link></ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)CustomThemeAtlasLoader.cpp"><Link>Source Files\CustomThemeAtlasLoader.cpp</Link></ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)D3DGlassRealizer.cpp"><Link>Source Files\D3DGlassRealizer.cpp</Link></ClCompile>
@@ -77,6 +80,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)ServiceHandler.cpp"><Link>Source Files\ServiceHandler.cpp</Link></ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)SymbolDownloader.cpp"><Link>Source Files\SymbolDownloader.cpp</Link></ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)SymbolParser.cpp"><Link>Source Files\SymbolParser.cpp</Link></ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)SymbolCatalog.cpp"><Link>Source Files\SymbolCatalog.cpp</Link></ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)AeroColorizationEffect.cso"><Link>Shader Binaries\AeroColorizationEffect.cso</Link></None>

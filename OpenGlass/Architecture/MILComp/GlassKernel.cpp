@@ -16,10 +16,10 @@ using namespace OpenGlass;
 namespace OpenGlass::GlassKernel
 {
 	HRESULT MyCD2DContext_DestroyDeviceResources(dwmcore::CD2DContext* This);
-	HRESULT MyCXXX_ReleaseXXX(uDWM::CGraphicsDeviceManager* This);
+	HRESULT MyCGraphicsDeviceManager_ReleaseGraphicsDevice(uDWM::CGraphicsDeviceManager* This);
 
 	Projection::Detour<dwmcore::Symbol_CD2DContext_DestroyDeviceResources, &MyCD2DContext_DestroyDeviceResources> g_CD2DContext_DestroyDeviceResources_Org{};
-	Projection::Detour<uDWM::Symbol_CGraphicsDeviceManager_ReleaseGraphicsDevice, &MyCXXX_ReleaseXXX> g_CXXX_ReleaseXXX_Org{};
+	Projection::Detour<uDWM::Symbol_CGraphicsDeviceManager_ReleaseGraphicsDevice, &MyCGraphicsDeviceManager_ReleaseGraphicsDevice> g_CGraphicsDeviceManager_ReleaseGraphicsDevice_Org{};
 
 	void RedrawTopLevelWindow(uDWM::CTopLevelWindow* window, bool deepRedraw)
 	{
@@ -68,11 +68,11 @@ HRESULT GlassKernel::MyCD2DContext_DestroyDeviceResources(dwmcore::CD2DContext* 
 	return g_CD2DContext_DestroyDeviceResources_Org(This);
 }
 
-HRESULT GlassKernel::MyCXXX_ReleaseXXX(uDWM::CGraphicsDeviceManager* This)
+HRESULT GlassKernel::MyCGraphicsDeviceManager_ReleaseGraphicsDevice(uDWM::CGraphicsDeviceManager* This)
 {
 	CaptionTextHandler::DestroyDeviceResources();
 	g_reflectionSurface = nullptr;
-	return g_CXXX_ReleaseXXX_Org(This);
+	return g_CGraphicsDeviceManager_ReleaseGraphicsDevice_Org(This);
 }
 
 void GlassKernel::RedrawAllTopLevelWindow(bool deepRedraw)
@@ -389,7 +389,7 @@ void GlassKernel::Startup()
 		std::initializer_list<HookHelper::DetourInfo>
 		{
 			{ &g_CD2DContext_DestroyDeviceResources_Org },
-			{ &g_CXXX_ReleaseXXX_Org }
+			{ &g_CGraphicsDeviceManager_ReleaseGraphicsDevice_Org }
 		},
 		true
 	);
@@ -401,7 +401,7 @@ void GlassKernel::Shutdown()
 		std::initializer_list<HookHelper::DetourInfo>
 		{
 			{ &g_CD2DContext_DestroyDeviceResources_Org },
-			{ &g_CXXX_ReleaseXXX_Org }
+			{ &g_CGraphicsDeviceManager_ReleaseGraphicsDevice_Org }
 		},
 		false
 	);

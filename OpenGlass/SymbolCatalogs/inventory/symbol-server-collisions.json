@@ -1,0 +1,1295 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 17763,
+        "revision": 1
+      },
+      "expected_sha256": "a4cf683a54f4e175b23d68ca81659696ee00a93812745f949fb241972d046407",
+      "returned_sha256": "f72827aa6e240b68de4028e6ae5b886fed2f72b770ce8868d916d9a7641eaf3d",
+      "symbol_server_key": "A3929D7C361000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 17763,
+        "revision": 1075
+      },
+      "expected_sha256": "779811551b35ebad5b2b990ad432e3115d6f1bda4892045b418176d462ffb426",
+      "returned_sha256": "e0e3dd526b1938010d7e595bc16c411f7d0e7f1b36fe5d37f7d98e5b397f1d64",
+      "symbol_server_key": "9C23A67235d000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 17763,
+        "revision": 1432
+      },
+      "expected_sha256": "18db9332060ef0d4a514e83da0af081d5ff76e63bd831fa54d8332743365de3e",
+      "returned_sha256": "7382c27bbc346c7a9d536dbe1cb33a7f502c42fd2c7ca1c86a9fa2333a66e44f",
+      "symbol_server_key": "7D165FE335d000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 17763,
+        "revision": 2686
+      },
+      "expected_sha256": "df2ef2b07e3a7058160b7a3cf24ac6ce539f1c0532b6caf96bf90e74c8d602d4",
+      "returned_sha256": "4234bc3672c45451ca45ee31d7a62f111ec6e4b5ad254c7194820f60c743c70c",
+      "symbol_server_key": "E3457FF435c000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 17763,
+        "revision": 3532
+      },
+      "expected_sha256": "59206e61bde69b28807fa8eaf18724a10e5105a0ab0c96cc302686e8f5465bd9",
+      "returned_sha256": "37295a1dc2c30e5538eb280989c84f7da9e916ecd931f46bc88207f06b0d3cfb",
+      "symbol_server_key": "FD6A12AC35c000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 17763,
+        "revision": 5122
+      },
+      "expected_sha256": "565c5da2ab92d16b02b686590edc14a72332305de0c01def78f75dbb78b1c031",
+      "returned_sha256": "282276de7c689b17e5a91039a15d0a2bf32c364b546f59745b79c7452658eb17",
+      "symbol_server_key": "4280526A35c000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 17763,
+        "revision": 5820
+      },
+      "expected_sha256": "46f2390f1a77090239012e03da4626460c42f6496f83c23561cbefb97acdcf57",
+      "returned_sha256": "060cbf52c5bb48c1819dfb7194d8b49cecccfb7025d91bfe64e75c5029964242",
+      "symbol_server_key": "34358745361000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 17763,
+        "revision": 7136
+      },
+      "expected_sha256": "54896c6c4e906367e823bfb1b9001e2c3a887bc0443ce94b9389eaf43a21bc86",
+      "returned_sha256": "6bfa8983ba77203596cedf3a8eb7ca7f57d0a09d20f7e808a3539f6fe496d054",
+      "symbol_server_key": "A114B34535f000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 17763,
+        "revision": 7314
+      },
+      "expected_sha256": "f24d5bf5a65ca9b58ca866a9d74935639c5f143541175abde4fc4c6982565944",
+      "returned_sha256": "0a7ca903b577a8859229612fd30baae7dc77a95359d5a073f38adafa7c1f9abb",
+      "symbol_server_key": "8C2A436C360000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 17763,
+        "revision": 7553
+      },
+      "expected_sha256": "86be879c7bde35fed6afd61a93b69e2576c11ecc19975e28ca6780b90fa309a4",
+      "returned_sha256": "7ba8924bbea6dffa4edfca531246dae3a8a4a484efd946ac488efac4d5bac9aa",
+      "symbol_server_key": "4ABC88F5360000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 17763,
+        "revision": 8276
+      },
+      "expected_sha256": "2762cf1700eac4f697d0d709d209883f178e68967c00ddfd73b82d2440da0a8d",
+      "returned_sha256": "ce1ae62f6d01cd81c41e195c0df3c875aae5b603594f0c0ce25466cfaf040bed",
+      "symbol_server_key": "4FFFA970360000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 18362,
+        "revision": 1
+      },
+      "expected_sha256": "71ae157abde54c15f1d63b5b913b7fd25016bceb72063f7e17bd9c5a0b9e9350",
+      "returned_sha256": "c8b72774df3461fc46874eb57ab0874b32d54ec1a6efa3ea678077c8b5c56603",
+      "symbol_server_key": "B9C883AE36c000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 18362,
+        "revision": 207
+      },
+      "expected_sha256": "201a16656d888a1894e1d4ad7a6bc61c41c53987cbbb320f3ee7d3af7b83e343",
+      "returned_sha256": "64cabcce17d2332527c0bd56bc959330bdd5e21432b6c443a03f5209f2e91bd0",
+      "symbol_server_key": "823BE99E36b000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 18362,
+        "revision": 267
+      },
+      "expected_sha256": "9c5cf518af225f395e707ff5b4a4431b148c64df36eb58566962abe1f1be3333",
+      "returned_sha256": "320db553dfcfd68ddead86905f30dff7d175615f54c55f94c099ecd2357a5433",
+      "symbol_server_key": "216E9E9F36b000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 18362,
+        "revision": 1714
+      },
+      "expected_sha256": "dac663078854e162ed1bc8374c80de46b118016c0227185a9a180b9baaee18a5",
+      "returned_sha256": "1502b99db63ae5a106c5cc450bea7de7a8bcc1df9ee3ac01d242ccdc911ffbd6",
+      "symbol_server_key": "5F213D4436a000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 18362,
+        "revision": 2037
+      },
+      "expected_sha256": "750f8c5f70f3e7ee4b41c615c2184d997528e663b8e7fcb2ed15b0c42d944132",
+      "returned_sha256": "f556633c7c5984066c76f56e00b5a7785883883ba6b35f089c8495d1e2fed495",
+      "symbol_server_key": "9F44A325369000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 19041,
+        "revision": 1
+      },
+      "expected_sha256": "4aa87ca5c497b1ac41e0cd0b443d9d2690edca04450327aace80e27cd74cce44",
+      "returned_sha256": "7529fbe53bad644f6ae87d0872f6c593ffb5d90a9b109d94a659e1a623472cf7",
+      "symbol_server_key": "29D3478D374000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 19041,
+        "revision": 662
+      },
+      "expected_sha256": "1c4029a1a031df7a4b80306dcaecbac61648e95c7010bea0c3091109c65e969a",
+      "returned_sha256": "ac48bc9fb4b25f1d3b36168ee8266cac353524e5c3c9a580b62786c94a6a92fc",
+      "symbol_server_key": "2DE34A31374000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 19041,
+        "revision": 1151
+      },
+      "expected_sha256": "e280d67673773226163839fd24a6296c1bf568f4108521b99ef4eff2cc793126",
+      "returned_sha256": "f9d84ada3bfe0027385dca6f760670e17323869b908bf076d38b7e57e4014529",
+      "symbol_server_key": "990BA262376000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 19041,
+        "revision": 1320
+      },
+      "expected_sha256": "b0dc68617d24f9e1bbef14aa331b477f7cf1fea306a7fdd760bf9545ad2c7a5c",
+      "returned_sha256": "260bc54db33bc805f74ca240c12a027c36fdab096734d52524cf10e743abbccc",
+      "symbol_server_key": "C277F0D7373000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 19041,
+        "revision": 1466
+      },
+      "expected_sha256": "846e93f5c0d7079164143b0de307c0772e51abd7ec921af27879b8cbbe0d0a45",
+      "returned_sha256": "7280fea08c757d48ada41afb9050ae410a1e3f4db594e9cb3695ff27aa0d31c5",
+      "symbol_server_key": "B9F65688373000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 19041,
+        "revision": 3155
+      },
+      "expected_sha256": "739ab7cc0b062913f6a02f7ece04f680a4e55d69514d329579f969bae6ff0cd6",
+      "returned_sha256": "823f43dfed2bfe18801e181eb69ed1ee78ac2a795ffa2aa5fa6bae61c6209368",
+      "symbol_server_key": "ADD77E8B372000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 19041,
+        "revision": 5854
+      },
+      "expected_sha256": "0d8d6304034370353a662c5dedb0b8e5b2a47ad5c585f8dba8b780a7968ea298",
+      "returned_sha256": "4b783f9b9dfe3430e57c72705da53472a575312cfccdcd784a8b9560c020e4a3",
+      "symbol_server_key": "863FC0EC375000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 22000,
+        "revision": 282
+      },
+      "expected_sha256": "7ed8a238cb7408c66781d562bed969f14940aef16f361fd592e70fc52a076b72",
+      "returned_sha256": "6fbd7bcba4258461a93e3395ff204a0b39fdf5198a167c96bd5d62a61ba35dcf",
+      "symbol_server_key": "6CDF0960400000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 22000,
+        "revision": 653
+      },
+      "expected_sha256": "e44d159f934b1961730f13859f76e5561f4984b4990c3ef44af827c1689dde8b",
+      "returned_sha256": "bfa258ef613c3e3f053990533e9b2de91829c7bd47708544f8a7869121872236",
+      "symbol_server_key": "925BDBDA400000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 22000,
+        "revision": 708
+      },
+      "expected_sha256": "fd92e1231bc7eaa97abec49a60e6f203f2c825f1efc6da6b133d13479a9c55f7",
+      "returned_sha256": "c75ff1e7acff2044124566ab6339455e346199b1d9ef6448f2a9d3cdabed21d1",
+      "symbol_server_key": "920C2CAB400000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 22000,
+        "revision": 778
+      },
+      "expected_sha256": "c81f33f601c2fbd5bf6d2376a0de86b1f3ec67251ffa9c39b707c5855741a2c6",
+      "returned_sha256": "f39299e0bf388c90e26986f003ba3fcebe38b0c364e677dc0741f5450c3dcfeb",
+      "symbol_server_key": "9AB5D260400000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 22000,
+        "revision": 1641
+      },
+      "expected_sha256": "9731e0ab75c1035d1120f86e21d29ea3bf2caf1b8a0fabb30f4f81446f11d924",
+      "returned_sha256": "bb3829b15699d4c1a0d1ca77c4fff649573f2b508c537988f0f48156e232c64a",
+      "symbol_server_key": "1B962DD4401000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 22000,
+        "revision": 1761
+      },
+      "expected_sha256": "bb63716bb8ce7bb27fb56e7d907f43f34b4ee60a660628e2517a6531169d2199",
+      "returned_sha256": "5422cc2ff9ec8aa0aee3bd51b411311a7fdcd23629aee47703d49393b45c9f08",
+      "symbol_server_key": "0974BAC3400000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 22000,
+        "revision": 1880
+      },
+      "expected_sha256": "c51101e397b760718c515879f48faddc577a5368c3705d41c5f4e689273182dc",
+      "returned_sha256": "96a53423e1f428292c5c860fc9e92daca93eda72592dad08aea0ad31e91c6e54",
+      "symbol_server_key": "F4043D2A401000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 22000,
+        "revision": 2124
+      },
+      "expected_sha256": "f9f2dc9a5fd7689349db34eb9b475574740e7126dee780b10619e964434b2a54",
+      "returned_sha256": "24ac4c1436675b848b7b5600000653d105278353afee7cb9e36d242e248da732",
+      "symbol_server_key": "30EBFB8F401000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 22000,
+        "revision": 2360
+      },
+      "expected_sha256": "2419fd856b3ea77b23dfd624ae439fc82773033c30731dd219ca77318abb962f",
+      "returned_sha256": "c411ca564555bf7e2f3f3da63d910982a171eea491a7524dea639c683144a617",
+      "symbol_server_key": "F008D8B1400000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 22000,
+        "revision": 2600
+      },
+      "expected_sha256": "b1a148458584df94decbdc3ddd8114e2b84003176e59a37821f9787da3936671",
+      "returned_sha256": "b626035629467aa31b552ddd8beb42c8b8ef64fec0ffe86c7c58e874e57741b2",
+      "symbol_server_key": "66E2E99E400000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 22000,
+        "revision": 3079
+      },
+      "expected_sha256": "9921889ac43845e7334d97ae067ad6d06b09910b821d82031a9e02a83a6b7487",
+      "returned_sha256": "96ce64bfff5e3f4b198908807deab66a7deeedc121d5fca8bed67aa066f8f52b",
+      "symbol_server_key": "5A12DAEA403000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 22000,
+        "revision": 3147
+      },
+      "expected_sha256": "24c88628f9b70897c27084018e48980656f5c71d1e541c30598c65a2d132d3b1",
+      "returned_sha256": "f4aa206b8f58a5e7b3c45239b493f6794e7105d31b27ffd5a50c34f58f27da57",
+      "symbol_server_key": "B9184488404000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 22621,
+        "revision": 457
+      },
+      "expected_sha256": "f945dc1e02f2ed943839a61873546354d5eb892889cf5f197ed3fc72114ab689",
+      "returned_sha256": "797bfe422ded412fa9345c5450f2fa659550709f3181e3036a2c4e4f8d0a43e7",
+      "symbol_server_key": "BD4720E5414000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 22621,
+        "revision": 755
+      },
+      "expected_sha256": "11a758a4cba61b1c3a5879c192dc35d98086381700d9b01bb2338f47493440a6",
+      "returned_sha256": "0706152f3882477a63747acf1166bd2b7779c97cda7a4fa7c65f09b38284cc01",
+      "symbol_server_key": "42B17525415000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 22621,
+        "revision": 1344
+      },
+      "expected_sha256": "d888279c41eba1cccb25baf3f7a6722d7d334b1584e70f5ae8da12c8a4eae9a8",
+      "returned_sha256": "71e0049e8403b418a344b83a099efcbb697cdb1ba765c75ecf3cd3cac3a213ad",
+      "symbol_server_key": "D200A55A40f000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 22621,
+        "revision": 1635
+      },
+      "expected_sha256": "d883b42be740f6b1b39a62d54fba142ad3189651469b7b00578618bf1ab9c966",
+      "returned_sha256": "f2ced94bf93b4c389201ef2e88470cfcd61a60c99a86346d171336978d20da70",
+      "symbol_server_key": "B311D93C40f000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 22621,
+        "revision": 1928
+      },
+      "expected_sha256": "faab962bb59a19af8d1ab0c56fcd88c82d50a55f94733bb7908898eaf6d91407",
+      "returned_sha256": "4dd1c5d42f08b43544dc2898600acff9fe74776187a44ccdd358301c218d1cff",
+      "symbol_server_key": "26557D25410000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 22621,
+        "revision": 2215
+      },
+      "expected_sha256": "b78a531de26781415b60bf933fa337992452518da883f5d64d900a73083bdbc3",
+      "returned_sha256": "9ea97b135ed2a5c087884ced462ae164c6eeb109fd65fac33df715411a4e0012",
+      "symbol_server_key": "69D28BD440f000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 22621,
+        "revision": 2506
+      },
+      "expected_sha256": "7a430da0731f869962788942bd59e443776cb7c2f0f2fded34aa74f5ab0242e0",
+      "returned_sha256": "976108da18c894b07b85b15d50a05f312a69a0a6538e70dce6b9c23da47854c2",
+      "symbol_server_key": "2CC115D340f000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 22621,
+        "revision": 2715
+      },
+      "expected_sha256": "24964d8d03ffd213a15eeb02b280441885d2bdb874eae12de05aa2ffa2437b6d",
+      "returned_sha256": "07adeb74d175d9b225932252da646aebdfb68fa34164661894a8675471471f89",
+      "symbol_server_key": "C95A35C040f000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 22621,
+        "revision": 3085
+      },
+      "expected_sha256": "efb299e3460dbad4c05e6ddb9b85b4fab0b9b3359b6110a8c5250a6823a82d3a",
+      "returned_sha256": "1d723d0d2f0009bb8ea060dad080838186f3ac0cf89213305d87d435263ad67d",
+      "symbol_server_key": "D13E616F40f000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 22621,
+        "revision": 3235
+      },
+      "expected_sha256": "66856ae59c5f3b8e1f69ab7ce01d26911bceee59138a941c191a0572201ac25a",
+      "returned_sha256": "5af03cbc793c75ae43f119e9a6328ad6f6d24ccfcc14739458310e7b6d528050",
+      "symbol_server_key": "CC00B57640f000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 22621,
+        "revision": 3447
+      },
+      "expected_sha256": "fe6e74c795554e759947b7492c7ddf3ffc267f233b15150160c2507edc134a58",
+      "returned_sha256": "47f9bcda4d2381ac75bbcfffd3674f1cc932ab5ceb6a615a55aa05e148aeb758",
+      "symbol_server_key": "1501F850410000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 22621,
+        "revision": 3672
+      },
+      "expected_sha256": "57096fe4f35f028e8ccf2f1add5da17dfe55b86c8459e47cafda9caac36e52a5",
+      "returned_sha256": "64278b3b50c1523c1c06945a4c9ea4959f20828ecea85064fd2e3cf58778abb2",
+      "symbol_server_key": "F8A2940E415000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 22621,
+        "revision": 4036
+      },
+      "expected_sha256": "8a322428581f80a861f2904b4885bd7cdefcb5142915055e8359cdb01ddef977",
+      "returned_sha256": "15c100cf5688d3fcae90e43cff99a0e735e84d9781f80b70a3c831839b56fd9f",
+      "symbol_server_key": "A44FDE33417000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 22621,
+        "revision": 4111
+      },
+      "expected_sha256": "88eae305a1a5692c5fad59db5d1aa4ec9bd3d2a6bf837c66e8ad477818263849",
+      "returned_sha256": "2da69bfa1ffab69ae7f051f59bd6f556ad55c3af97050b42d3ce59f6de5cee6d",
+      "symbol_server_key": "448124DA417000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 22621,
+        "revision": 4249
+      },
+      "expected_sha256": "854a555e4608efe90f35098eadebad93ef023b68d688518106a88633d3236dfb",
+      "returned_sha256": "3fc7c28b9d58af2b3d25fea8d6649ba3bd2124caf7eb4cbc2e95638a7894da4c",
+      "symbol_server_key": "360D212A417000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 22621,
+        "revision": 4830
+      },
+      "expected_sha256": "0d75f09de1a3eba7a6d481dcfed963b2ebaea08f51554c606d342525b223425c",
+      "returned_sha256": "1a0cb4db81f264fa5a8ce7171252a467a223fa37f615faa0dd5659252d228bc7",
+      "symbol_server_key": "42658F03419000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 22621,
+        "revision": 4974
+      },
+      "expected_sha256": "2e16efab400fc96654dfa8b8a3a83de12395f153fb3878de5b289cec58d12281",
+      "returned_sha256": "19333eaa8570cf189dadded4b6275518da3c2197c5263e0f4783a32c77c9d49d",
+      "symbol_server_key": "4E03A3FF419000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 22621,
+        "revision": 5185
+      },
+      "expected_sha256": "7bb861d277a360a0f026080d6427d230e430a0be7e854c9031929e4052927dae",
+      "returned_sha256": "74f372c3c69b28c7b220b2334044fa61e0046f535eb6f34988107e788fb5e219",
+      "symbol_server_key": "9A831EF9419000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 22621,
+        "revision": 5415
+      },
+      "expected_sha256": "371106132a72014c8aaebf0ac2b1848ecd9103a3acbb65cc4541f537683c09a8",
+      "returned_sha256": "cf4e666cb1a0caa36f35e900258d60d00787ef4f4fe4524a3bde511d5c4a70fe",
+      "symbol_server_key": "56B37F2A419000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 22621,
+        "revision": 5697
+      },
+      "expected_sha256": "1d9c2c7c440e2db8afa22f9afc8cc52f7228dcbeb8879e8244dd70edcea847dc",
+      "returned_sha256": "972b496ec3021c7d363d3f85d7c1fc72011de3419c8d648fa1ef07305be2e363",
+      "symbol_server_key": "B40F1A7D419000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 22621,
+        "revision": 6274
+      },
+      "expected_sha256": "fa4f84889a5fed524faa4789aa655cf7d82c2dc445e84aa0a94d488e6e9a493a",
+      "returned_sha256": "ca703e5bfddcaaf24dbad91b451644ef11eb22b64e1b45d0bfd08798e9b23572",
+      "symbol_server_key": "7AB4B80641a000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 22621,
+        "revision": 6489
+      },
+      "expected_sha256": "71e3e654af215f453340c723c4b03a4f76d647a30e2a3527a8222f8f18b0abea",
+      "returned_sha256": "eb23a0ca23e27a747abbbc3b39b22a8f5397da4a97d3a8c89b583d455761f109",
+      "symbol_server_key": "43E5A0DE41a000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 22621,
+        "revision": 6931
+      },
+      "expected_sha256": "b7d6cbc4d7a37595f16f1dc3ab3dcc0f35dc0f9a83e86c208bfcda82b41c3553",
+      "returned_sha256": "b969907852f17e4582189d8ec0c4d7b0e8042d44a950376b627628f3f831f47e",
+      "symbol_server_key": "9DB6584441b000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 22621,
+        "revision": 7219
+      },
+      "expected_sha256": "1270023054b5b2a77ff534b651bd12ad6ce0056f0da4f0b399620974d4f80242",
+      "returned_sha256": "b97385f71e184e4f1d9dec9d793fb331ccd07259ae5c64b4e04803b361d6301b",
+      "symbol_server_key": "F007DB7D41b000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 22621,
+        "revision": 7376
+      },
+      "expected_sha256": "e89bbd0ed9f9d3d518f4b3e5de1006312ef87c5920bd32649b18946322e3dbc4",
+      "returned_sha256": "883383544cc3ceb49a276903e06be609043cd104d05a14c2fa44901ac460b384",
+      "symbol_server_key": "EA758D0941c000"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 22621,
+        "revision": 7517
+      },
+      "expected_sha256": "2c3c85eaa26cfac26df8e2c7a33f4c33f9546d3753b72e2a4318004bbb17d56a",
+      "returned_sha256": "5c27d1700932baffde5d1a0e4cebbf1cb60891afa8d283dd6432aba27be88cc3",
+      "symbol_server_key": "0858FF2D41c000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 17763,
+        "revision": 1
+      },
+      "expected_sha256": "b6e1ddbe8070ed47ab954ca1b2ce59589e403f659dd1b329b54c6ff4aa02e8cb",
+      "returned_sha256": "635010a7ad981842f9f8d0a370ddd35fcd9ed539fa031651f600c12b2aa00363",
+      "symbol_server_key": "98E5D42Af0000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 17763,
+        "revision": 1075
+      },
+      "expected_sha256": "86691b3ca7e69a24c1c4b99d8d55a61e7b51c6f98601cd273acd7d18aeed6614",
+      "returned_sha256": "2449c122fe66cd79a843a9fab867ed7d18b89f79c955cad19ff9a3c9995967ef",
+      "symbol_server_key": "E1E0385Eef000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 17763,
+        "revision": 1369
+      },
+      "expected_sha256": "dba66d6402d674e94b3f5738815586e6fc1467abe7f5b72334638e914c150190",
+      "returned_sha256": "db25e5a7776691470965e8a6defce39d108bcb2cd608b16834358f9d36d9ce4a",
+      "symbol_server_key": "DC68FBB4ee000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 17763,
+        "revision": 1613
+      },
+      "expected_sha256": "bbcf8d36431385b751c4cb6f56728747010b7b7c172e1625475059c7cba0017f",
+      "returned_sha256": "9e1772c34e5e3f66b048324e5c1f06c41c6fb65af70966e9e8e686915a0c3f21",
+      "symbol_server_key": "B4F10F40ef000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 17763,
+        "revision": 6766
+      },
+      "expected_sha256": "e52f0800b85dd44e986bd3786ef718b9f76b46de7db00623b7e8e25a8694eab4",
+      "returned_sha256": "80c8d13f970223c18b5b44304d5ca9299de5497624a5b920863802da356122a7",
+      "symbol_server_key": "02718C62ee000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 17763,
+        "revision": 7136
+      },
+      "expected_sha256": "8332079ea95e5b011f35ddb274cb81e1d8aec9d1ea67f31be37f011c62f87494",
+      "returned_sha256": "00a7a9524d82be664a857525977529dbecbd5193d73b9d41ec75aa4245c05e42",
+      "symbol_server_key": "59C64227ee000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 17763,
+        "revision": 7553
+      },
+      "expected_sha256": "cab631a9b2f9740fbf5d8c776c9e3f7ec22847e60c579e4fdebb6c2867f2d4d8",
+      "returned_sha256": "ebf140dc5869030bd792309ab5e9eadac602b94a9aeb8eb327cb8298956397f6",
+      "symbol_server_key": "0E58B7A0ee000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 17763,
+        "revision": 7786
+      },
+      "expected_sha256": "fbdd146a6dec919bc6564b837fea45ab42266576033d49b9c1c8dc403cc86403",
+      "returned_sha256": "cf74bc7a5d23c2d1ffb713b07fa93c6d62684828bdc417492e7873b63fe444ba",
+      "symbol_server_key": "F8010C2Aee000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 17763,
+        "revision": 7919
+      },
+      "expected_sha256": "9c8d0fd0fd5a210893710efc2b69dc84a77e075af2c74797e25d0302ffba84cd",
+      "returned_sha256": "a7fe76a59349d69a5c505629f7c5718613b1358b6e9a321686ca899741153228",
+      "symbol_server_key": "A5A1A58Fee000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 17763,
+        "revision": 8024
+      },
+      "expected_sha256": "8bab2890924cec553b484b1f6c02efe7d310d95b8a4eaa64a4927358c6e1e866",
+      "returned_sha256": "54f7170de6ad7d4f16eda99750eceb64c1becd637b8a5f21925fce24176268e8",
+      "symbol_server_key": "DCC7F4DFee000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 17763,
+        "revision": 8276
+      },
+      "expected_sha256": "8d6aabe56e0b58568d876f28bf7673e900af5e5f6732fe8c22a4ee1c750bbbe0",
+      "returned_sha256": "1986ae12b09c4114888247730d08c23aafc08a160b67050eb13342f16c48fd13",
+      "symbol_server_key": "56ECA85Fee000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 17763,
+        "revision": 8385
+      },
+      "expected_sha256": "e2c37d90d26f3f2ffcb491c5e96414e21ee120484573cf4b20ce0ad20ab159bf",
+      "returned_sha256": "f351d39e7dd29e5b8ae3541030450c4df163625f523974725efb0134ea715b65",
+      "symbol_server_key": "DF516DE7ee000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 18362,
+        "revision": 1
+      },
+      "expected_sha256": "f5f3d5f39aa766006d24984df3425346d2a58632dc15fc9942e28d5492eb87d0",
+      "returned_sha256": "e582a89d9c5e1e9f362631bcb6c1fe81bba0a0d16195af0a6bf2a7d399c06d66",
+      "symbol_server_key": "6D687258f6000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 18362,
+        "revision": 387
+      },
+      "expected_sha256": "8e354a50ceab0770d54f64250c3b3b32810d5bdcfc0909c1c3acf397ff2585db",
+      "returned_sha256": "143f96e6c72ab0a6be4a4ddbd427ca2901a9c8766f2b3fa71f2d29e0571afd04",
+      "symbol_server_key": "748274D8f6000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 18362,
+        "revision": 449
+      },
+      "expected_sha256": "4a1520b7399088fce4c4cca1346d58271b642b92e5db8ddbfcbb02455512da27",
+      "returned_sha256": "2526b7c861b8935dbba39283f52d331947f7c7ceea7cc0d2b44a2840577ae9d0",
+      "symbol_server_key": "81AA0119f6000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 19041,
+        "revision": 1
+      },
+      "expected_sha256": "0f568436ea5c7fce6435b4eec9966b2ea0437c5f34700b6bce080493352d697b",
+      "returned_sha256": "bdc39e1a815be87dc4ef065b2a8efe1ef6c21695f2df3467902fb8d13ab2ee0e",
+      "symbol_server_key": "1EB981B7fd000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 19041,
+        "revision": 662
+      },
+      "expected_sha256": "5c503e4d30bd7571ce73250550dffe84a8ab011490d4a7e5daeface01322a672",
+      "returned_sha256": "bf28ffe166a964211cde3fcd4f34ee7b75a744db28ea7643d8dd76b69833b017",
+      "symbol_server_key": "A5BAE656100000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 19041,
+        "revision": 1266
+      },
+      "expected_sha256": "12285abc3fbc45cfb7be2a7e780f0ccce91c4a702302d1f29e4cd19b3653e189",
+      "returned_sha256": "6fc04abeb9f90c77d00f8280121e1e4644797ab998fb06325f01d06e6ea49826",
+      "symbol_server_key": "D0E13C8Dff000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 19041,
+        "revision": 1620
+      },
+      "expected_sha256": "a84270b8ed2e78fcb80d8897f77382e9361985e996081c15cf44a6de04ce56af",
+      "returned_sha256": "e6cc1f1afad57792b8ee88a7e990f23d39b26b69203715543060a94d03a791c1",
+      "symbol_server_key": "638C57DBff000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 19041,
+        "revision": 3636
+      },
+      "expected_sha256": "233a7ba8f486abe44e715acadb9887abe4a870d633ccfeb7e837ace4f1da2bb5",
+      "returned_sha256": "19d5d3f77d596e826288e0b98deee53dda1071effe8b38cc6b8685be8c7e8e76",
+      "symbol_server_key": "EC9125DEfd000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 19041,
+        "revision": 3758
+      },
+      "expected_sha256": "857812d2a92fe87bd482c4ceb766bf013c50c1de6c114304be7a5e93336fe499",
+      "returned_sha256": "b527cf70e5db9e7a31ea894390c3cf9d5628ca7507bd6e86a7baa4c401b60b31",
+      "symbol_server_key": "96A62465fd000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 19041,
+        "revision": 4239
+      },
+      "expected_sha256": "f833317f3e20a0e69b260097db504e8412fc0682869c0c83a84f5e84c7b3b733",
+      "returned_sha256": "f97659ab965cdb4fb0a0c29ed6210de30655f0cd6af353cbaf7b40328ba7114c",
+      "symbol_server_key": "6173C4F4fd000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 19041,
+        "revision": 4355
+      },
+      "expected_sha256": "0a46ebfd202b1fe94014d7fb6b42d4ca88db36791614e33a289b837f6954fb9e",
+      "returned_sha256": "4d9b961a9e0c18e92f064232b9ff06883ae52e4b1cf70428ec1acbec45df727f",
+      "symbol_server_key": "644A6E08fd000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 19041,
+        "revision": 5737
+      },
+      "expected_sha256": "a48a32e625bec593976b29a2786ed411167877a19d338c149ae7eb15622b6ce3",
+      "returned_sha256": "e48e286e95d8c3e902f64c71da46d4b4d7d6e5a1c4fca524e2145aeae9d82207",
+      "symbol_server_key": "9C4E9602100000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 19041,
+        "revision": 5794
+      },
+      "expected_sha256": "caa343fbdfb353b061bd8be646c5965d2706d02ac3f2250d2dc705ec49b2b3e9",
+      "returned_sha256": "c642bf0713ef3b919e2bbc887651abd07ac71c482f4a4048e7258118f8c4047d",
+      "symbol_server_key": "8E0FFC10ff000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 19041,
+        "revision": 5848
+      },
+      "expected_sha256": "6eaf208370cb0aaeb68f5c656345572caa786eed38fafdf3749f0a76ec6b8d6f",
+      "returned_sha256": "fb0fef1d79bb3b565525b65d2a9eff277096f5c5f062621e4c0d9af109ab5a2b",
+      "symbol_server_key": "E3B550AEff000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 19041,
+        "revision": 6575
+      },
+      "expected_sha256": "ba20437d17560e511a551af30c505768db4e1f3a6f24ab06a3f7cfd8958c0403",
+      "returned_sha256": "1481479ea3296655bb90464339b2ca6c6c2302fac46efc55e7969b074b350a14",
+      "symbol_server_key": "843E4060fe000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 19041,
+        "revision": 6807
+      },
+      "expected_sha256": "d2bd8f9d7241e8cd3eebf8fc515be14b80bc5b34358b8242d898617db25de43a",
+      "returned_sha256": "c4c926849cb973b922f75dbdbe9819b64650c76defcee89c72c29ebefabfaad5",
+      "symbol_server_key": "40AC3BCCfe000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 19041,
+        "revision": 6926
+      },
+      "expected_sha256": "0bf3529d1199c053c6a6a673067b680962023032110b78ce762742496d48cf6b",
+      "returned_sha256": "99bfc16735dd8d11b156ac6bf1546c778feb9de72a7bfc956780892edb6341bd",
+      "symbol_server_key": "6BDD0AB5fe000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 19041,
+        "revision": 7181
+      },
+      "expected_sha256": "6ba6ecf0f48b853d521669f237299f86202d819cb2ebeee7fe63854f48c53224",
+      "returned_sha256": "7accb93eae75677e23d4b869cc403a7c6bd0aa3991ef46d8a17814b75f7c01a4",
+      "symbol_server_key": "BD478B62fe000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 19041,
+        "revision": 7417
+      },
+      "expected_sha256": "9fd9c40c1568f959823228c964ba2680543790611d4140b0941d45649a168e7a",
+      "returned_sha256": "c06f06f8d7faa36ff453f2155df8259b12c4a08afdd6b320bb2e3ddd6b100202",
+      "symbol_server_key": "92963762fe000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 22000,
+        "revision": 194
+      },
+      "expected_sha256": "43891274af4b74a15760473f559b3e11e74a9ed18e8988fd6e42b6c3c42a7027",
+      "returned_sha256": "e6d8ca88e2ba027cc7d87386665e8af9f7aee0331aeaf1cc8a30df26a7c92334",
+      "symbol_server_key": "4EDBCD24164000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 22000,
+        "revision": 708
+      },
+      "expected_sha256": "56648eb9d10e30859aed8cb90aee773ecb436d81e55df6da09b25edced6c592b",
+      "returned_sha256": "de08c6d09db2fd24942d07803688f310c786176d0366164dcd4b018c9dadb471",
+      "symbol_server_key": "AE23F494164000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 22000,
+        "revision": 1761
+      },
+      "expected_sha256": "8c29042874d8f22ff253e454d6bdbb8293559b51edc016083ab3395ecfb0de32",
+      "returned_sha256": "a4c9b69a023075f481e96a40498cf4f9b0045ad90e315a2968dd22b06b13f4b4",
+      "symbol_server_key": "A3B38BDA164000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 22000,
+        "revision": 2600
+      },
+      "expected_sha256": "f0bd43ff465c9e6e3b39026c88b58feb4a34827e06ea5f359e45651dfa98c9b3",
+      "returned_sha256": "a2690fe6259e68ea5d090baa0c7344fe368d8f9b2da61bf36bfa02253845b6dc",
+      "symbol_server_key": "CEF285E4164000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 22621,
+        "revision": 1
+      },
+      "expected_sha256": "9d89eccfbf4a7d54abe100203abb14c4fd9610176b1c9ec686207ceb6e1bcf92",
+      "returned_sha256": "a99e89be365c28511affbe54cbac62ce2459bdc369bc8afad80c2198126025b3",
+      "symbol_server_key": "C243A51515b000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 22621,
+        "revision": 457
+      },
+      "expected_sha256": "f74533c65bf3fbae86d77dad8e32a324e9f4712501cd3312ea3fbdc38c1c2e6d",
+      "returned_sha256": "ac65f69403cc4cde5d8f15c53046dc00aed91dbc58243b97a3e1b2af80107ad0",
+      "symbol_server_key": "209E946415b000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 22621,
+        "revision": 1105
+      },
+      "expected_sha256": "ac5e74131968394e882ea2d812a137fa41dbb8b7abbed07b99f015e05591fcce",
+      "returned_sha256": "54b3c3de0e4c475bd63776a20edb839b492c411a84fe781fe7246c6f478d46fd",
+      "symbol_server_key": "721F8C9A15c000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 22621,
+        "revision": 1344
+      },
+      "expected_sha256": "22e2a8055073d3689117a492c6547c6ac6b5c172bb31623faadefdca79bff087",
+      "returned_sha256": "a7401715f0303e7762e33354e58eca3ff07aa31b81eba32854bf93b9596a1b2d",
+      "symbol_server_key": "3653D58415c000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 22621,
+        "revision": 1485
+      },
+      "expected_sha256": "42d4d7edacd51c0f4f9f39b44ea16e8d8ceb390a5a408e4118be58c5af176dd4",
+      "returned_sha256": "612029bd5d483945e70409fe7110f7af5427e3d60cf9368d0e948145fd25339f",
+      "symbol_server_key": "D587F1C915b000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 22621,
+        "revision": 1778
+      },
+      "expected_sha256": "140f39384442a9cafe558ec34c97c3347c2a9fbc193c54e5c6f5e68a9a3d2d93",
+      "returned_sha256": "569c18255fb2bd4db848cc1977ae058aa21f367b325177e680ba19ee125d021f",
+      "symbol_server_key": "954511A315c000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 22621,
+        "revision": 1928
+      },
+      "expected_sha256": "781f7aa03c6a172d5cdc475a4887fa7731ceccfd61490346f98d4d5aa3b62d15",
+      "returned_sha256": "29a2f519663da313a00abe724b2a0fd7d7478cacc471a125ff1abdf87406eaf6",
+      "symbol_server_key": "FD2B50EA15b000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 22621,
+        "revision": 2361
+      },
+      "expected_sha256": "d14e21a3e5afdd3be0bda303a63d3368db4219fa3c4536c7239634b7603046bb",
+      "returned_sha256": "14904c7bdf7e6c55665486273f41188560461e06340b8c1d40826a193c38aea6",
+      "symbol_server_key": "AFAA8A3C15b000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 22621,
+        "revision": 2506
+      },
+      "expected_sha256": "6d181372a5ac50ef2827237174718b5d4d2fc68304f52835ffa6b521d3fa2dc0",
+      "returned_sha256": "d169a22ab04aa6d15e0a05fd1bef6e2eb1bf03063870c53b517b47a86013a8cf",
+      "symbol_server_key": "6EDC7E5215b000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 22621,
+        "revision": 2792
+      },
+      "expected_sha256": "ef338a6fbf007fd556a72ab9cf8d6fc62262779f4325ff8f88c3bfa7e76ac955",
+      "returned_sha256": "3263be370014e260b9be9862e7b04fe4ea89ce2c32d465b61dafe457216813dc",
+      "symbol_server_key": "0A17C60815b000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 22621,
+        "revision": 3085
+      },
+      "expected_sha256": "19e1e2113e83e8599255f55a996d40dce891074a8ad0c837788b1fba7dd0f6e6",
+      "returned_sha256": "4a538b42dbcb46f2f348e0da5b53f00717e7b2c36e44e18298d6f8c9c715cc6f",
+      "symbol_server_key": "0237293A15c000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 22621,
+        "revision": 3235
+      },
+      "expected_sha256": "83043f8b972011210586c49d0eade94f767f95557eaa6ff848eda1cafde70eaa",
+      "returned_sha256": "2472f6d00387f312df6726e7b999b87a853b3792bf7a2fc720751733a99b85ea",
+      "symbol_server_key": "8768BD1F163000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 22621,
+        "revision": 3374
+      },
+      "expected_sha256": "c2886d4e4fe7333bb32176c03b0d876afb1b7d00e5bc6cd7ccd589c96aedbc48",
+      "returned_sha256": "3e558a8e9f68ec328083754db1fa3b02b7c9cba5bc0c7afc3a38c586c7ecc3a6",
+      "symbol_server_key": "CF273B74163000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 22621,
+        "revision": 3527
+      },
+      "expected_sha256": "151576ce2472d9f52c3d65eaa2aca08cb1e305fbefaac7b2293a49d4f5f8d641",
+      "returned_sha256": "f635410ffa7d5d26731f0fd78e497133301d1aa9543cb26f0319ca5aa59f2fb1",
+      "symbol_server_key": "0E319003163000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 22621,
+        "revision": 3672
+      },
+      "expected_sha256": "451703ab931135c7d948adadd379055d5151904520c9ad6aef5106704afbfb11",
+      "returned_sha256": "647d0c20fdb6d7be2b33ccd3c9573d147bf3c850ed86da6a12b1b5375a7b35fd",
+      "symbol_server_key": "B81FB90A163000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 22621,
+        "revision": 3810
+      },
+      "expected_sha256": "a562f02458630538ba7e847e363e2be6ae05cc52e3dbf37555f33814febfefe3",
+      "returned_sha256": "3acc1fcb9fdecee2d7fc1de2c6d9a0f484d73052fff523cf2949e0de748284d0",
+      "symbol_server_key": "CB56458A163000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 22621,
+        "revision": 3958
+      },
+      "expected_sha256": "a54dad10faf2fc394072890d24565a9e07415022f6709f050913afe74046034f",
+      "returned_sha256": "989d1e08845029e197825defee88031c92c41eea8c8619b6c62a196ebac5bc5d",
+      "symbol_server_key": "61CA2916163000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 22621,
+        "revision": 4111
+      },
+      "expected_sha256": "87b52fccf6f564c423237f36ed6339040c1445b1ed640a48da202b675b8b36b1",
+      "returned_sha256": "2cc1b03d2f137001ca14bff6539d1a3a90187ec621992933ef138eb4b0909af9",
+      "symbol_server_key": "E28EEA64163000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 22621,
+        "revision": 4249
+      },
+      "expected_sha256": "1876c8efc07f7cb1d5ab3087b1222f6b049fc69ac0fbfa7a70a6346b0a126db1",
+      "returned_sha256": "37b8a051fe20e1d9b931144802b87c71ea9a90b2828a52289d00ec0dd4a73d92",
+      "symbol_server_key": "78744C7C163000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 22621,
+        "revision": 4391
+      },
+      "expected_sha256": "dbee1b40665849aac78dbaa3b7ef15688ac1b0ec3b1be947bde4872f4f32c3ef",
+      "returned_sha256": "d28f890b9c9262f8ad10719a55c232576432fe87e0d3af2ef823e7dbd5434265",
+      "symbol_server_key": "989B917F162000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 22621,
+        "revision": 4601
+      },
+      "expected_sha256": "63f885e2ac99ec4e2c385e5b3ae07ee0cd702698e83869e4aec5ed49bc1910ff",
+      "returned_sha256": "037f6c2922c48bcb6cf7633ddc2ec7ac707433b3528cf6e748c9031ff94ccada",
+      "symbol_server_key": "E4D1DA73168000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 22621,
+        "revision": 4830
+      },
+      "expected_sha256": "7aa6a10ec9a564deb08c548dfd9e85a9abd8dcf30451b971a29c7caba2cdaa71",
+      "returned_sha256": "da9513e39c306002989a8819f78ae95a17b51c88c1fd0d7afb4dba360ffe0eb4",
+      "symbol_server_key": "C4D5F480168000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 22621,
+        "revision": 4974
+      },
+      "expected_sha256": "adf3e22cbe7a6d504675a2da6f102b0cb89e388dfea7a6deefb8eb166c3e4c90",
+      "returned_sha256": "e1841f4d1c4703fe1047cead2a0a08d183f1270589f6b08cd2400fe0f5431f05",
+      "symbol_server_key": "F9FA8811168000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 22621,
+        "revision": 5185
+      },
+      "expected_sha256": "80884acd7c977fb7fec48f80d6688d8056ab7d26ea60e68bc2795259a4cb120e",
+      "returned_sha256": "368e97ab394bce438a91133802a1ad89dbe19ef71824bbe8d5fce5dba9157b9f",
+      "symbol_server_key": "9A533B7F169000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 22621,
+        "revision": 5697
+      },
+      "expected_sha256": "7dd891b49d41c7f5bdc773209764add23a0c953a968a5ded667aa1601728cdf9",
+      "returned_sha256": "f1a1b1195dffbc7c1737832993f23ef7b05ec57d29b2bd2738f15623c4f4c68f",
+      "symbol_server_key": "98A10FF0168000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 22621,
+        "revision": 5840
+      },
+      "expected_sha256": "b4bda412348f290ecbee0a2cb25cdacf1cbf658f9b672a752f6ff9ffb8838735",
+      "returned_sha256": "1e3cfe2e81ebf2bc432ffb76d01ecfd057418d74c1c004f788b685c877423521",
+      "symbol_server_key": "33B8EBE116a000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 22621,
+        "revision": 6199
+      },
+      "expected_sha256": "0deb45fca6e020f3d72b98d26ee1b43992675bf3a2bfdacc9741e4379e373df2",
+      "returned_sha256": "f55471fa44bdd485d06827a01dac6844280c6e5845dc0b4e3ef003a3087e88b0",
+      "symbol_server_key": "E19C323416a000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 22621,
+        "revision": 6489
+      },
+      "expected_sha256": "8805f086bcee9c12197eee580efbbc9df4dc7722cf12fbe3e5d51dc2b5096248",
+      "returned_sha256": "233e5f99c38642b215229d24d440f347fecf0e3dfdad1af37610713d3cece579",
+      "symbol_server_key": "CCF60FF216a000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 22621,
+        "revision": 6630
+      },
+      "expected_sha256": "36895ce23894387b9e86c864cd99d92cb317db4f8cd627f9b1da9922dc4e2f87",
+      "returned_sha256": "c810a1b0f84f98f60db452e3a1a02a266e735da6aec3c817568a0ff70f992b2f",
+      "symbol_server_key": "D9334A7F16a000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 22621,
+        "revision": 6931
+      },
+      "expected_sha256": "8fde0b785808a019919aae75d41f76df45db752f95b2079a2b57ce78df5bcd24",
+      "returned_sha256": "3adeea22d6bbc2a97b5dae728bc1e1a384be2d65cc1103c58ae10dbdbd552e48",
+      "symbol_server_key": "DC8813A016a000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 22621,
+        "revision": 7219
+      },
+      "expected_sha256": "e5d2955b96ef6778bdd18e96d72605eb2636ac4d309cf7a68475f9a5ca3bc7bd",
+      "returned_sha256": "08fb4789bb7ec17748562e89b397527c185c249c7849218730ddf70420d24d99",
+      "symbol_server_key": "6E0A502116a000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 22621,
+        "revision": 7376
+      },
+      "expected_sha256": "e46e9602e893feca63caece1d476d53384567ee10791a37e9fb1fdad67c8d13c",
+      "returned_sha256": "ac7c64c9e21ccf86ba6693e4fdad68ac89b00f85bf42637123172cc7e1e26c08",
+      "symbol_server_key": "3404CB31169000"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 22621,
+        "revision": 7517
+      },
+      "expected_sha256": "06004ea24b56500b56eb892c19fb851597b9368cd47db0fe211305d8078f3f0e",
+      "returned_sha256": "9f53937ae3bc798212676f6dbcdc23f4981be2d92b0b4cfe8d1162083ce78fd7",
+      "symbol_server_key": "A8FE455316a000"
+    }
+  ]
+}

@@ -12,6 +12,7 @@ from pathlib import Path
 import projection_emit
 import projection_schema
 import projection_source_check
+import symbol_catalog
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
@@ -53,7 +54,14 @@ def generate(repo: Path, architecture: str) -> dict[str, str]:
         for module in projection_schema.MODULES
     ]
     projection_source_check.validate_source_completeness(projection_root, schemas)
-    return projection_emit.generate_files(schemas)
+    generated = projection_emit.generate_files(schemas)
+    catalog = symbol_catalog.load_catalog_sources(
+        repo / "OpenGlass" / "SymbolCatalogs" / architecture / "index.json",
+        architecture,
+        schemas,
+    )
+    generated.update(symbol_catalog.generate_files(catalog))
+    return generated
 
 
 def atomic_write(path: Path, content: str) -> None:

@@ -82,11 +82,16 @@ Keep three verification layers distinct: static verification combines schema val
 
 Use `Scripts/dump_symbols.py --input IMAGE [--output SYMBOL_CACHE] [--grep TEXT]` for quick complete-name discovery directly from an image. The symbol cache defaults to `%TEMP%\symbols`. Its output is convenient schema input, not a production audit report; use `Scripts/audit_symbol_resolution.py` to record PE/PDB identity and IDA to establish semantics.
 
+The built-in symbol catalog is regenerated in three steps: `inventory` freezes all recognized x64 Winbindex candidates, `collect` downloads only exact Microsoft symbol-server PE/PDB pairs and writes architecture shards, and `verify` proves that every frozen candidate is classified exactly once as a catalog record, a symbol-server collision, or a committed exclusion. Commit `OpenGlass/SymbolCatalogs/inventory/`, both architecture indexes, and every listed shard; never commit the cache, missing-output report, downloaded PE/PDB files, or generated C++. Changing the catalog DbgHelp identity requires rerunning `collect` with `--replace-resolver`, which clears all architecture shards before the complete recollection.
+
 ```powershell
 python .agents/skills/maintain-dwm-offsets/scripts/validate_projection_layouts.py . --architecture legacy --module udwm --id STABLE_ID --version BUILD.REVISION
 python .agents/skills/maintain-dwm-offsets/scripts/validate_projection_symbols.py . --architecture legacy
 python Scripts/audit_symbol_resolution.py . --architecture legacy --module udwm --version BUILD.REVISION --image PATH_TO_DLL --symbol-path PATH_TO_SYMBOLS --configuration release
 python Scripts/audit_winbindex_revisions.py . --architecture legacy --module dwmcore --build BUILD --list-only
+python Scripts/maintain_symbol_catalog.py inventory . --output-root OpenGlass/SymbolCatalogs/inventory
+python Scripts/maintain_symbol_catalog.py collect . --cache PATH_TO_CACHE --dbghelp PATH_TO_DBGHELP --missing-output missing-images.json
+python Scripts/maintain_symbol_catalog.py verify .
 python -m unittest discover -s .agents/skills/maintain-dwm-offsets/tests -p "test_*.py"
 python Scripts/test_audit_symbol_resolution.py
 python Scripts/test_projection_codegen.py

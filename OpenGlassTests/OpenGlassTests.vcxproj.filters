@@ -43,6 +43,9 @@
 		<ClCompile Include="..\Common\PngAssetValidation.cpp">
 			<Filter>Shared Sources\Common</Filter>
 		</ClCompile>
+		<ClCompile Include="..\Common\PeCodeViewIdentity.cpp">
+			<Filter>Shared Sources\Common</Filter>
+		</ClCompile>
 		<ClCompile Include="..\Common\ThemeAtlasLayout.cpp">
 			<Filter>Shared Sources\Common</Filter>
 		</ClCompile>
@@ -50,6 +53,9 @@
 			<Filter>Shared Sources\OpenGlass</Filter>
 		</ClCompile>
 		<ClCompile Include="..\OpenGlass\ProjectionRuntime.cpp">
+			<Filter>Shared Sources\OpenGlass</Filter>
+		</ClCompile>
+		<ClCompile Include="..\OpenGlass\SymbolCatalog.cpp">
 			<Filter>Shared Sources\OpenGlass</Filter>
 		</ClCompile>
 		<ClCompile Include="..\OpenGlassGUI\PresetPackage.cpp">

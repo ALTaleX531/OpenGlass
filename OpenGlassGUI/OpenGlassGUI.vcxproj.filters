@@ -104,6 +104,9 @@
 		<ClCompile Include="..\Common\PngAssetValidation.cpp">
 			<Filter>Source Files</Filter>
 		</ClCompile>
+		<ClCompile Include="..\Common\PeCodeViewIdentity.cpp">
+			<Filter>Source Files</Filter>
+		</ClCompile>
 		<ClCompile Include="..\Common\ThemeAtlasLayout.cpp">
 			<Filter>Source Files</Filter>
 		</ClCompile>

@@ -90,6 +90,21 @@
     <None Include="ProjectionSchemas\legacy\dwmcore.json" />
     <None Include="ProjectionSchemas\legacy\README.md" />
     <None Include="ProjectionSchemas\legacy\udwm.json" />
+    <SymbolCatalogSource Include="SymbolCatalogs\legacy\index.json" />
+    <SymbolCatalogSource Include="SymbolCatalogs\legacy\udwm\17763.json" />
+    <SymbolCatalogSource Include="SymbolCatalogs\legacy\udwm\18362.json" />
+    <SymbolCatalogSource Include="SymbolCatalogs\legacy\udwm\19041.json" />
+    <SymbolCatalogSource Include="SymbolCatalogs\legacy\udwm\20348.json" />
+    <SymbolCatalogSource Include="SymbolCatalogs\legacy\udwm\22000.json" />
+    <SymbolCatalogSource Include="SymbolCatalogs\legacy\udwm\22621.json" />
+    <SymbolCatalogSource Include="SymbolCatalogs\legacy\udwm\26100.json" />
+    <SymbolCatalogSource Include="SymbolCatalogs\legacy\dwmcore\17763.json" />
+    <SymbolCatalogSource Include="SymbolCatalogs\legacy\dwmcore\18362.json" />
+    <SymbolCatalogSource Include="SymbolCatalogs\legacy\dwmcore\19041.json" />
+    <SymbolCatalogSource Include="SymbolCatalogs\legacy\dwmcore\20348.json" />
+    <SymbolCatalogSource Include="SymbolCatalogs\legacy\dwmcore\22000.json" />
+    <SymbolCatalogSource Include="SymbolCatalogs\legacy\dwmcore\22621.json" />
+    <SymbolCatalogSource Include="SymbolCatalogs\legacy\dwmcore\26100.json" />
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='ReleaseSigned'">
     <ClCompile><PreprocessorDefinitions>OPENGLASS_ENFORCE_SIGNING=1;%(PreprocessorDefinitions)</PreprocessorDefinitions></ClCompile>
@@ -97,8 +112,8 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <Target Name="GenerateProjectionMetadata"
           BeforeTargets="ClCompile"
-          Inputs="$(ProjectionSchemaDir)\udwm.json;$(ProjectionSchemaDir)\dwmcore.json;$(ProjectDir)..\Scripts\projection_codegen.py;$(ProjectDir)..\Scripts\projection_schema.py;$(ProjectDir)..\Scripts\projection_emit.py;$(ProjectDir)..\Scripts\projection_source_check.py;$(ProjectDir)OSHelper.hpp;@(ClCompile);@(ClInclude)"
-          Outputs="$(ProjectionGeneratedDir)\udwm.Layouts.generated.hpp;$(ProjectionGeneratedDir)\udwm.Symbols.generated.hpp;$(ProjectionGeneratedDir)\dwmcore.Layouts.generated.hpp;$(ProjectionGeneratedDir)\dwmcore.Symbols.generated.hpp;$(ProjectionGeneratedDir)\ProjectionRegistry.generated.inc">
+          Inputs="$(ProjectionSchemaDir)\udwm.json;$(ProjectionSchemaDir)\dwmcore.json;@(SymbolCatalogSource);$(ProjectDir)..\Scripts\projection_codegen.py;$(ProjectDir)..\Scripts\projection_schema.py;$(ProjectDir)..\Scripts\projection_emit.py;$(ProjectDir)..\Scripts\projection_source_check.py;$(ProjectDir)..\Scripts\symbol_catalog.py;$(ProjectDir)OSHelper.hpp;@(ClCompile);@(ClInclude)"
+          Outputs="$(ProjectionGeneratedDir)\udwm.Layouts.generated.hpp;$(ProjectionGeneratedDir)\udwm.Symbols.generated.hpp;$(ProjectionGeneratedDir)\dwmcore.Layouts.generated.hpp;$(ProjectionGeneratedDir)\dwmcore.Symbols.generated.hpp;$(ProjectionGeneratedDir)\ProjectionRegistry.generated.inc;$(ProjectionGeneratedDir)\SymbolCatalog.generated.hpp;$(ProjectionGeneratedDir)\SymbolCatalog.generated.inc">
     <MakeDir Directories="$(ProjectionGeneratedDir)" />
     <Exec Command="&quot;$(ProjectionPython)&quot; --version" IgnoreExitCode="true" ConsoleToMSBuild="true"><Output TaskParameter="ExitCode" PropertyName="ProjectionPythonExitCode" /></Exec>
     <Error Condition="'$(ProjectionPythonExitCode)'!='0'" Text="OpenGlass projection generation requires Python 3. Set ProjectionPython to a working python.exe." />

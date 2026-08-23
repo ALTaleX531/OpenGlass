@@ -1,0 +1,4361 @@
+{
+  "schema_version": 1,
+  "module": "dwmcore.dll",
+  "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+  "recognized_builds": [
+    17763,
+    18362,
+    19041,
+    20348,
+    22000,
+    22621,
+    26100,
+    28000
+  ],
+  "records": [
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 1
+      },
+      "sha256": "a4cf683a54f4e175b23d68ca81659696ee00a93812745f949fb241972d046407",
+      "time_date_stamp": 2744294780,
+      "size_of_image": 3543040,
+      "file_size": 3504640,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | BASE"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 168
+      },
+      "sha256": "b622ca6777cf68c9fcfcc6443e8163713b64a771395efeb4cb540648ec7bad67",
+      "time_date_stamp": 587816255,
+      "size_of_image": 3543040,
+      "file_size": 3504640,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB4469342",
+        "1809 | KB4471332",
+        "1809 | KB4476976",
+        "1809 | KB4480116",
+        "1809 | KB4483235",
+        "1809 | KB4487044"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 348
+      },
+      "sha256": "f65b0ec8f2b17d24d674c3fe75312392db22f93b925d3100ff7461e8158d2eeb",
+      "time_date_stamp": 574666969,
+      "size_of_image": 3543040,
+      "file_size": 3504128,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB4482887",
+        "1809 | KB4489899",
+        "1809 | KB4490481",
+        "1809 | KB4493509",
+        "1809 | KB4494441",
+        "1809 | KB4495667",
+        "1809 | KB4497934",
+        "1809 | KB4501371",
+        "1809 | KB4501835",
+        "1809 | KB4503327",
+        "1809 | KB4505056",
+        "1809 | KB4505658",
+        "1809 | KB4507469",
+        "1809 | KB4509479",
+        "1809 | KB4511553"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 719
+      },
+      "sha256": "e35f294bbbc0e273e257e191845ffb0fe7765025ea10016536cdf073d010e597",
+      "time_date_stamp": 1798348404,
+      "size_of_image": 3526656,
+      "file_size": 3490816,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB4512534",
+        "1809 | KB4512578",
+        "1809 | KB4516077",
+        "1809 | KB4519338",
+        "1809 | KB4520062",
+        "1809 | KB4522015",
+        "1809 | KB4523205",
+        "1809 | KB4524148",
+        "1809 | KB4530715",
+        "1809 | KB4532691",
+        "1809 | KB4534273",
+        "1809 | KB4534321"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 1075
+      },
+      "sha256": "779811551b35ebad5b2b990ad432e3115d6f1bda4892045b418176d462ffb426",
+      "time_date_stamp": 2619582066,
+      "size_of_image": 3526656,
+      "file_size": 3490304,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB4537818",
+        "1809 | KB4538461"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 1131
+      },
+      "sha256": "478899068dfdcfbc3abe8df3b9412fb1304ebfc407ede0fb8372854bb0e400b7",
+      "time_date_stamp": 3616621034,
+      "size_of_image": 3526656,
+      "file_size": 3493376,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB4541331",
+        "1809 | KB4549949",
+        "1809 | KB4550969",
+        "1809 | KB4551853",
+        "1809 | KB4554354",
+        "1809 | KB4558998",
+        "1809 | KB4559003",
+        "1809 | KB4561608",
+        "1809 | KB4565349",
+        "1809 | KB4567513"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 1432
+      },
+      "sha256": "18db9332060ef0d4a514e83da0af081d5ff76e63bd831fa54d8332743365de3e",
+      "time_date_stamp": 2098618339,
+      "size_of_image": 3526656,
+      "file_size": 3491328,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB4570333",
+        "1809 | KB4571748",
+        "1809 | KB4577069",
+        "1809 | KB4577668",
+        "1809 | KB4580390",
+        "1809 | KB4586793",
+        "1809 | KB4586839",
+        "1809 | KB4592440",
+        "1809 | KB4594442",
+        "1809 | KB4598230",
+        "1809 | KB4598296",
+        "1809 | KB4601345"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 1790
+      },
+      "sha256": "b663ff50e3c980793ceb602ded24dd27ca81f5321355f211c991c9e9361755d0",
+      "time_date_stamp": 708362770,
+      "size_of_image": 3526656,
+      "file_size": 3493376,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB4601383",
+        "1809 | KB5000822",
+        "1809 | KB5000854",
+        "1809 | KB5001568",
+        "1809 | KB5001638"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 1879
+      },
+      "sha256": "66acbb4247501ddc774be45604a84db6e76e0f5840b7392704cd1a97d64af61e",
+      "time_date_stamp": 2290784548,
+      "size_of_image": 3526656,
+      "file_size": 3489792,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB5001342",
+        "1809 | KB5001384",
+        "1809 | KB5003171",
+        "1809 | KB5003217",
+        "1809 | KB5003646"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 2028
+      },
+      "sha256": "03ef9ce62383077dbf3bfda0a60fb573ebd8495cf0ffa649295dda328b8c4071",
+      "time_date_stamp": 1295982355,
+      "size_of_image": 3522560,
+      "file_size": 3488768,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB5003703",
+        "1809 | KB5004244",
+        "1809 | KB5004308",
+        "1809 | KB5004947",
+        "1809 | KB5005030",
+        "1809 | KB5005102",
+        "1809 | KB5005394"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 2183
+      },
+      "sha256": "1685f22a2114270904cef09cb464ba21b2cfe7cfc64b82eeb38220ca18777585",
+      "time_date_stamp": 4094290247,
+      "size_of_image": 3522560,
+      "file_size": 3487744,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB5005568",
+        "1809 | KB5005625",
+        "1809 | KB5006672",
+        "1809 | KB5006744",
+        "1809 | KB5007206",
+        "1809 | KB5007266",
+        "1809 | KB5008218",
+        "1809 | KB5008602",
+        "1809 | KB5010196"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 2452
+      },
+      "sha256": "7d3e88aaa6d347d935135cb1ac656b4d124c0361c1f597722dac190f411a7987",
+      "time_date_stamp": 2464738100,
+      "size_of_image": 3522560,
+      "file_size": 3486720,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB5009557",
+        "1809 | KB5009616",
+        "1809 | KB5010791"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 2565
+      },
+      "sha256": "15a9777a140fe5a1cdddf8f2da0ed703546df884247ac656c7f59528b8b922f6",
+      "time_date_stamp": 259917934,
+      "size_of_image": 3522560,
+      "file_size": 3486720,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB5010351",
+        "1809 | KB5010427"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 2686
+      },
+      "sha256": "df2ef2b07e3a7058160b7a3cf24ac6ce539f1c0532b6caf96bf90e74c8d602d4",
+      "time_date_stamp": 3812982772,
+      "size_of_image": 3522560,
+      "file_size": 3487232,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB5011503",
+        "1809 | KB5011551"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 2803
+      },
+      "sha256": "733f24e069bf85f3a4e9b1dbe40f4f8f7ed90af3478546944e67565f16e33eac",
+      "time_date_stamp": 1849557989,
+      "size_of_image": 3522560,
+      "file_size": 3487232,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB5012636",
+        "1809 | KB5012647",
+        "1809 | KB5013941"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 2931
+      },
+      "sha256": "28a95b45d4ebefa4aeb461940b69b0607fc046d356906fe1cff5d2a255e93905",
+      "time_date_stamp": 1082370243,
+      "size_of_image": 3522560,
+      "file_size": 3487232,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB5015018"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 2989
+      },
+      "sha256": "6375d6405d497848a07d95b481edc9600b938f71967af86b7e52279a9ee27501",
+      "time_date_stamp": 2637244219,
+      "size_of_image": 3522560,
+      "file_size": 3484672,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB5014022",
+        "1809 | KB5014669",
+        "1809 | KB5014692",
+        "1809 | KB5015811",
+        "1809 | KB5015880",
+        "1809 | KB5016623",
+        "1809 | KB5016690",
+        "1809 | KB5017315",
+        "1809 | KB5017379"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 3532
+      },
+      "sha256": "59206e61bde69b28807fa8eaf18724a10e5105a0ab0c96cc302686e8f5465bd9",
+      "time_date_stamp": 4251587244,
+      "size_of_image": 3522560,
+      "file_size": 3484672,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB5018419",
+        "1809 | KB5020438"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 3650
+      },
+      "sha256": "9cfb8b7a2e12034ed36733e4b8f04f92c501a9329ff5f0c1121edae1ac8d6663",
+      "time_date_stamp": 3483700079,
+      "size_of_image": 3522560,
+      "file_size": 3484672,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB5019966",
+        "1809 | KB5021237",
+        "1809 | KB5021655",
+        "1809 | KB5022286",
+        "1809 | KB5022554",
+        "1809 | KB5022840",
+        "1809 | KB5023702",
+        "1809 | KB5025229",
+        "1809 | KB5026362",
+        "1809 | KB5027222"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 4644
+      },
+      "sha256": "ddedeae9a121ce77d10ca4a16bf237875ab4025ac22b17d8afe908c79d07a1dd",
+      "time_date_stamp": 4082906448,
+      "size_of_image": 3522560,
+      "file_size": 3484672,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB5028168",
+        "1809 | KB5029247",
+        "1809 | KB5030214",
+        "1809 | KB5031361"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 5122
+      },
+      "sha256": "565c5da2ab92d16b02b686590edc14a72332305de0c01def78f75dbb78b1c031",
+      "time_date_stamp": 1115705962,
+      "size_of_image": 3522560,
+      "file_size": 3485184,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB5032196",
+        "1809 | KB5033371",
+        "1809 | KB5034127",
+        "1809 | KB5034768",
+        "1809 | KB5035849",
+        "1809 | KB5037425"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 5696
+      },
+      "sha256": "d17f885ef4d695bda9c7a10d32698de7d43ef0d317d65340a44f675238991bc6",
+      "time_date_stamp": 1994272655,
+      "size_of_image": 3526656,
+      "file_size": 3490816,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB5036896"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 5820
+      },
+      "sha256": "46f2390f1a77090239012e03da4626460c42f6496f83c23561cbefb97acdcf57",
+      "time_date_stamp": 875923269,
+      "size_of_image": 3543040,
+      "file_size": 3507200,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB5037765"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 5830
+      },
+      "sha256": "060cbf52c5bb48c1819dfb7194d8b49cecccfb7025d91bfe64e75c5029964242",
+      "time_date_stamp": 875923269,
+      "size_of_image": 3543040,
+      "file_size": 3507200,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB5039705"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 5933
+      },
+      "sha256": "d94f4d35dd320b11812d76ed9d381578ff8792b0c77ba3a076a2335798ee84f6",
+      "time_date_stamp": 2686814557,
+      "size_of_image": 3543040,
+      "file_size": 3505152,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB5039217"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 6054
+      },
+      "sha256": "8bf360caec4dac50a9df4b0b3e297fe826361c1d1355b43c88a7cc600a386ef9",
+      "time_date_stamp": 3320075649,
+      "size_of_image": 3534848,
+      "file_size": 3498496,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB5040430",
+        "1809 | KB5041578",
+        "1809 | KB5043050",
+        "1809 | KB5044277"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 6530
+      },
+      "sha256": "9ec2fd8af6d2f87b325cccfd9e2cd1c4b64346ce8df0e97d07bd10ca2696a0cb",
+      "time_date_stamp": 3443516109,
+      "size_of_image": 3538944,
+      "file_size": 3499008,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB5046615",
+        "1809 | KB5048661",
+        "1809 | KB5050008"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 6893
+      },
+      "sha256": "0435088a4b58d73cbf0c76d6aeb174eb0a40a37b1675d53d0dd1c8826a9f28f0",
+      "time_date_stamp": 2940808140,
+      "size_of_image": 3534848,
+      "file_size": 3498496,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB5052000",
+        "1809 | KB5053596"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 7136
+      },
+      "sha256": "54896c6c4e906367e823bfb1b9001e2c3a887bc0443ce94b9389eaf43a21bc86",
+      "time_date_stamp": 2702488389,
+      "size_of_image": 3534848,
+      "file_size": 3498496,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB5055519",
+        "1809 | KB5058922",
+        "1809 | KB5059091"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 7314
+      },
+      "sha256": "f24d5bf5a65ca9b58ca866a9d74935639c5f143541175abde4fc4c6982565944",
+      "time_date_stamp": 2351580012,
+      "size_of_image": 3538944,
+      "file_size": 3499520,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB5058392"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 7322
+      },
+      "sha256": "0a7ca903b577a8859229612fd30baae7dc77a95359d5a073f38adafa7c1f9abb",
+      "time_date_stamp": 2351580012,
+      "size_of_image": 3538944,
+      "file_size": 3499520,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB5061978"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 7434
+      },
+      "sha256": "a34cb9de5b28f7454c3185d20b920b80e883bcdeaba1ec3ff9235e5b5e5bc0f0",
+      "time_date_stamp": 3446263571,
+      "size_of_image": 3538944,
+      "file_size": 3499520,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB5060531"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 7553
+      },
+      "sha256": "86be879c7bde35fed6afd61a93b69e2576c11ecc19975e28ca6780b90fa309a4",
+      "time_date_stamp": 1253869813,
+      "size_of_image": 3538944,
+      "file_size": 3499520,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB5062557"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 7671
+      },
+      "sha256": "b141bfc2ec226a26bc800143f254a698928ca15894313c4bc4c63fbac1f6e407",
+      "time_date_stamp": 3664329235,
+      "size_of_image": 3534848,
+      "file_size": 3498496,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB5063877",
+        "1809 | KB5066187"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 7786
+      },
+      "sha256": "c33b47051bcf2a9a25c8b03f64a0709434a9fd6fe36e1285120855d794fdddc1",
+      "time_date_stamp": 4078343911,
+      "size_of_image": 3538944,
+      "file_size": 3499520,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB5065428"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 7919
+      },
+      "sha256": "e68e5880d26a0cca1e139686411b46ac6dff412a9c10c1b79c7208c2ae903be3",
+      "time_date_stamp": 3745977957,
+      "size_of_image": 3538944,
+      "file_size": 3500544,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB5066586",
+        "1809 | KB5068791",
+        "1809 | KB5071544",
+        "1809 | KB5074975"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 8276
+      },
+      "sha256": "2762cf1700eac4f697d0d709d209883f178e68967c00ddfd73b82d2440da0a8d",
+      "time_date_stamp": 1342155120,
+      "size_of_image": 3538944,
+      "file_size": 3500544,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB5073723",
+        "1809 | KB5077795",
+        "1809 | KB5078131"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 8385
+      },
+      "sha256": "60d43214e3cb6301309a018337373c476e2d9725fc0bc64c0195b30849069113",
+      "time_date_stamp": 2121773324,
+      "size_of_image": 3538944,
+      "file_size": 3500032,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB5075904"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 8510
+      },
+      "sha256": "3a6c4c3bf1b7a2a1da1f7adc279f54dc5683884898ed638c203d7365e6b82076",
+      "time_date_stamp": 3370096549,
+      "size_of_image": 3538944,
+      "file_size": 3500032,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB5078752"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 8641
+      },
+      "sha256": "0bef2010d541ad3902d940393798cd0e20d19e85f06a6ffc54f011d31c53c1c6",
+      "time_date_stamp": 2449233467,
+      "size_of_image": 3538944,
+      "file_size": 3500032,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB5082123",
+        "1809 | KB5091573"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 8755
+      },
+      "sha256": "d32c9ca42cef13f9ddb8433af62547a48e4b7e84c3d42d95edc509710562b3f0",
+      "time_date_stamp": 899210955,
+      "size_of_image": 3538944,
+      "file_size": 3500544,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB5087538"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 8880
+      },
+      "sha256": "f741771f8b54ce0b9a07fc21d826578caa3982b3450ee24bdf728e2d6cc94ca6",
+      "time_date_stamp": 304391919,
+      "size_of_image": 3538944,
+      "file_size": 3501056,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB5094123"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 9020
+      },
+      "sha256": "bc09f7c9fcf21ce3df05c5ac279fce9395802a33ae25c256a22ec0f56a68f359",
+      "time_date_stamp": 1125585797,
+      "size_of_image": 3538944,
+      "file_size": 3501568,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB5099538"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 17763,
+        "revision": 9121
+      },
+      "sha256": "2105598c47006967acf6f80f6cff95c189699494e468c5cbe621f80531208362",
+      "time_date_stamp": 2632488966,
+      "size_of_image": 3538944,
+      "file_size": 3501568,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1809 | KB5120238"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 18362,
+        "revision": 1
+      },
+      "sha256": "71ae157abde54c15f1d63b5b913b7fd25016bceb72063f7e17bd9c5a0b9e9350",
+      "time_date_stamp": 3116925870,
+      "size_of_image": 3588096,
+      "file_size": 3552256,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1903 | BASE"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 18362,
+        "revision": 145
+      },
+      "sha256": "9e687f0211b50130bc80f1327e3c5e0215ff11009faf2c13a254e24fb7a6221f",
+      "time_date_stamp": 2032098331,
+      "size_of_image": 3584000,
+      "file_size": 3550720,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1903 | KB4497935",
+        "1903 | KB4503293"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 18362,
+        "revision": 207
+      },
+      "sha256": "201a16656d888a1894e1d4ad7a6bc61c41c53987cbbb320f3ee7d3af7b83e343",
+      "time_date_stamp": 2184964510,
+      "size_of_image": 3584000,
+      "file_size": 3550720,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1903 | KB4501375",
+        "1903 | KB4507453"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 18362,
+        "revision": 267
+      },
+      "sha256": "9c5cf518af225f395e707ff5b4a4431b148c64df36eb58566962abe1f1be3333",
+      "time_date_stamp": 560897695,
+      "size_of_image": 3584000,
+      "file_size": 3550720,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1903 | KB4505903"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 18362,
+        "revision": 295
+      },
+      "sha256": "320db553dfcfd68ddead86905f30dff7d175615f54c55f94c099ecd2357a5433",
+      "time_date_stamp": 560897695,
+      "size_of_image": 3584000,
+      "file_size": 3550720,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1903 | KB4512508"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 18362,
+        "revision": 329
+      },
+      "sha256": "e77488127fc6e394780c41f638a69bb5ab376eb3bf146af65ede2046d2e5113a",
+      "time_date_stamp": 1075228198,
+      "size_of_image": 3584000,
+      "file_size": 3551232,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1903 | KB4512941",
+        "1903 | KB4515384",
+        "1903 | KB4522016"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 18362,
+        "revision": 387
+      },
+      "sha256": "eb47c1e154c38227dc3db467637932773114d5845940e7fead57b700b8e67e62",
+      "time_date_stamp": 1762042824,
+      "size_of_image": 3584000,
+      "file_size": 3553280,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1903 | KB4517211",
+        "1903 | KB4517389",
+        "1903 | KB4522355",
+        "1903 | KB4524147",
+        "1903 | KB4524570",
+        "1903 | KB4528760",
+        "1903 | KB4530684",
+        "1909 | BASE"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 18362,
+        "revision": 628
+      },
+      "sha256": "188b0cc423a1d45b0daa175300b7e51112d704f3f337b61eef6c19161c65ccbf",
+      "time_date_stamp": 823029233,
+      "size_of_image": 3579904,
+      "file_size": 3550208,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1903 | KB4532693",
+        "1903 | KB4532695"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 18362,
+        "revision": 693
+      },
+      "sha256": "408a175ab3cdf6d02fadc8d5da78bc7236b7b74cd36f0a61d2a0347f5d2a66c5",
+      "time_date_stamp": 756518404,
+      "size_of_image": 3588096,
+      "file_size": 3552768,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1903 | KB4535996",
+        "1903 | KB4540673",
+        "1903 | KB4551762"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 18362,
+        "revision": 752
+      },
+      "sha256": "60bacd782fc0c1aa825f1f74c801ee59f8c5b21bbb2e5440c45fd7da84750cfa",
+      "time_date_stamp": 396245820,
+      "size_of_image": 3579904,
+      "file_size": 3547648,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1903 | KB4541335",
+        "1903 | KB4549951",
+        "1903 | KB4550945",
+        "1903 | KB4554364",
+        "1903 | KB4556799",
+        "1903 | KB4559004",
+        "1903 | KB4560960",
+        "1903 | KB4565351",
+        "1903 | KB4565483",
+        "1903 | KB4567512"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 18362,
+        "revision": 1049
+      },
+      "sha256": "a8a1595f58f0f90dbeb138f051685e83f388e41fa972c58c8e936c781076d294",
+      "time_date_stamp": 3384150383,
+      "size_of_image": 3579904,
+      "file_size": 3547136,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1903 | KB4566116",
+        "1903 | KB4574727"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 18362,
+        "revision": 1110
+      },
+      "sha256": "91f9ad0335cc9f51db2e70daf6d5dd2f32b2b5ad1cf596003a986ba6752ded67",
+      "time_date_stamp": 3799271597,
+      "size_of_image": 3579904,
+      "file_size": 3545088,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1903 | KB4577062",
+        "1903 | KB4577671",
+        "1903 | KB4580386",
+        "1903 | KB4586786",
+        "1903 | KB4586819",
+        "1903 | KB4592449",
+        "1903 | KB4594443",
+        "1909 | KB4598229",
+        "1909 | KB4598298",
+        "1909 | KB4601315",
+        "1909 | KB5001028"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 18362,
+        "revision": 1411
+      },
+      "sha256": "bf0fd4d02ed335258bc058f798c3f1d19cc50cd621fbeeb93dfac2fa07b03609",
+      "time_date_stamp": 2265026555,
+      "size_of_image": 3579904,
+      "file_size": 3546112,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1909 | KB4601380",
+        "1909 | KB5000808",
+        "1909 | KB5000850",
+        "1909 | KB5001566",
+        "1909 | KB5001648"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 18362,
+        "revision": 1500
+      },
+      "sha256": "05572ff7646e9eab66e14f6df3199545a63b3b004fd13974f9bcf77d52070b69",
+      "time_date_stamp": 3564574261,
+      "size_of_image": 3579904,
+      "file_size": 3543552,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1909 | KB5001337",
+        "1909 | KB5001396",
+        "1909 | KB5003169"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 18362,
+        "revision": 1593
+      },
+      "sha256": "efc167d35f178d6853f40a90c7ad2e61af213b5da65d6a4fd91f5a01baafcba6",
+      "time_date_stamp": 3858475268,
+      "size_of_image": 3575808,
+      "file_size": 3543040,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1909 | KB5003212"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 18362,
+        "revision": 1621
+      },
+      "sha256": "c58678c6da7465188aae773913c08d7aa2499b94ee3a4760a84c7c59df07f9f7",
+      "time_date_stamp": 3883190801,
+      "size_of_image": 3575808,
+      "file_size": 3543040,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1909 | KB5003635"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 18362,
+        "revision": 1645
+      },
+      "sha256": "106c057a6418c65dc6ddfc63d51dc74912023a87525a65971143042ee33baf73",
+      "time_date_stamp": 3856399305,
+      "size_of_image": 3575808,
+      "file_size": 3540480,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1909 | KB5003698",
+        "1909 | KB5004245",
+        "1909 | KB5004946"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 18362,
+        "revision": 1714
+      },
+      "sha256": "dac663078854e162ed1bc8374c80de46b118016c0227185a9a180b9baaee18a5",
+      "time_date_stamp": 1596013892,
+      "size_of_image": 3579904,
+      "file_size": 3544576,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1909 | KB5004293",
+        "1909 | KB5005031",
+        "1909 | KB5005103"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 18362,
+        "revision": 1801
+      },
+      "sha256": "777c0bdd1e0990aa9be9bae61eb7ff9dde75b75d7dfdf687a032d6a1a8dad0e6",
+      "time_date_stamp": 648412738,
+      "size_of_image": 3579904,
+      "file_size": 3543040,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1909 | KB5005566"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 18362,
+        "revision": 1832
+      },
+      "sha256": "340012da3bd68262c6bfd538543a42f991bf2ca8ee11c49d065fd5f25022f0c9",
+      "time_date_stamp": 628716399,
+      "size_of_image": 3579904,
+      "file_size": 3545600,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1909 | KB5005624"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 18362,
+        "revision": 1854
+      },
+      "sha256": "c85ff564f16bc9bd5cfc5f7e33d7baf4948e4131f6b1463bae0f61a4b8c34899",
+      "time_date_stamp": 900371902,
+      "size_of_image": 3579904,
+      "file_size": 3545600,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1909 | KB5006667",
+        "1909 | KB5007189",
+        "1909 | KB5008206"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 18362,
+        "revision": 2037
+      },
+      "sha256": "750f8c5f70f3e7ee4b41c615c2184d997528e663b8e7fcb2ed15b0c42d944132",
+      "time_date_stamp": 2672075557,
+      "size_of_image": 3575808,
+      "file_size": 3542528,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1909 | KB5009545",
+        "1909 | KB5010792"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 18362,
+        "revision": 2094
+      },
+      "sha256": "cceba63117823d2442e43bea88bb2ac3ddb7091f5d4ef21e6801ad93a91e0ae5",
+      "time_date_stamp": 3772604250,
+      "size_of_image": 3575808,
+      "file_size": 3542528,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1909 | KB5010345"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 18362,
+        "revision": 2158
+      },
+      "sha256": "44d40a7cd7281f62174c4bd06fa1aab539663d33989d1d7ec93b9478c536785c",
+      "time_date_stamp": 2591274435,
+      "size_of_image": 3567616,
+      "file_size": 3536896,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1909 | KB5011485"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 18362,
+        "revision": 2212
+      },
+      "sha256": "92d74693e8b85273476298e96f183814e77e793b12f5e777e4b8ce3da7c3d27e",
+      "time_date_stamp": 3241390626,
+      "size_of_image": 3567616,
+      "file_size": 3536896,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "1909 | KB5012591",
+        "1909 | KB5013945"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 1
+      },
+      "sha256": "4aa87ca5c497b1ac41e0cd0b443d9d2690edca04450327aace80e27cd74cce44",
+      "time_date_stamp": 701712269,
+      "size_of_image": 3620864,
+      "file_size": 3585024,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "2004 | BASE"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 423
+      },
+      "sha256": "617b7b4283e5b0a49da3dc645437410bfbb8c5c3611d994c345e130f8ea39762",
+      "time_date_stamp": 694926011,
+      "size_of_image": 3624960,
+      "file_size": 3588096,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "2004 | KB4566782",
+        "2004 | KB4568831"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 488
+      },
+      "sha256": "abcc281844d3c9ff7b2545745f078a9f1384bc075c0a91351af5cd3724712c30",
+      "time_date_stamp": 1589075666,
+      "size_of_image": 3620864,
+      "file_size": 3587584,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "2004 | KB4571744",
+        "2004 | KB4571756",
+        "20H2 | BASE"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 546
+      },
+      "sha256": "6dc41bcb98c331c703eb3aba6e3c8e2043067b63dd9be3504d9c763b3f55fb9a",
+      "time_date_stamp": 4024726140,
+      "size_of_image": 3620864,
+      "file_size": 3587072,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "2004 | KB4577063",
+        "2004 | KB4579311",
+        "2004 | KB4580364",
+        "2004 | KB4586781",
+        "2004 | KB4594440"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 662
+      },
+      "sha256": "1c4029a1a031df7a4b80306dcaecbac61648e95c7010bea0c3091109c65e969a",
+      "time_date_stamp": 769870385,
+      "size_of_image": 3620864,
+      "file_size": 3586048,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "2004 | KB4586853",
+        "2004 | KB4592438"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 746
+      },
+      "sha256": "3d40c32d6974cfd41dfb73e5295e61bd9cd7b45d482bbf59db2ac2077b2037c9",
+      "time_date_stamp": 2370157866,
+      "size_of_image": 3620864,
+      "file_size": 3586560,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "2004 | KB4598242"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 789
+      },
+      "sha256": "7a862ef629f828711cc5f53d1054c0aeb59260abe3aec43fb5f04f8380e5cfa6",
+      "time_date_stamp": 3817500027,
+      "size_of_image": 3624960,
+      "file_size": 3591168,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "2004 | KB4598291",
+        "2004 | KB4601319"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 844
+      },
+      "sha256": "299309ff351ccebf6c24bdd77b769cf808aeda481ccd53a6f3e5156b64d6ace9",
+      "time_date_stamp": 1897462204,
+      "size_of_image": 3629056,
+      "file_size": 3592192,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "2004 | KB4601382",
+        "2004 | KB5000802",
+        "2004 | KB5001567",
+        "2004 | KB5001649"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 906
+      },
+      "sha256": "be634948a05fed449361f6d568c595fbc58194f079301b3ba2c24d17210029c5",
+      "time_date_stamp": 2268439070,
+      "size_of_image": 3633152,
+      "file_size": 3597824,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "2004 | KB5000842"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 928
+      },
+      "sha256": "844987f0230a6e8f4319f31a217ef1f6f6df4124e25b2c43b8dae78df7ecd102",
+      "time_date_stamp": 448320866,
+      "size_of_image": 3633152,
+      "file_size": 3597312,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "2004 | KB5001330",
+        "21H1 | BASE"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 964
+      },
+      "sha256": "99529aa27d0382aaec2793783ec6fb1f09d6d2508ef01490cdc2343749f8ecfc",
+      "time_date_stamp": 2277323568,
+      "size_of_image": 3633152,
+      "file_size": 3597824,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "2004 | KB5001391",
+        "2004 | KB5003173"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 1023
+      },
+      "sha256": "595d9e9a4c7b98f61637673907d2be7c5cb875654c50bdfa028f024cc8601fae",
+      "time_date_stamp": 2467999163,
+      "size_of_image": 3633152,
+      "file_size": 3596800,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "2004 | KB5003214"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 1052
+      },
+      "sha256": "ed0b058f35c858f2094ccbded8b5fb20f3dcc38911adf01dd8f291e7b2a5aab3",
+      "time_date_stamp": 4110872732,
+      "size_of_image": 3633152,
+      "file_size": 3596800,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "2004 | KB5003637",
+        "2004 | KB5004476"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 1081
+      },
+      "sha256": "9798692ec8faecf64e37c87f9e5cb49590429f86cff58f9dd2abaa3c821da996",
+      "time_date_stamp": 1969457967,
+      "size_of_image": 3629056,
+      "file_size": 3591680,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "2004 | KB5003690",
+        "2004 | KB5004237",
+        "2004 | KB5004760",
+        "2004 | KB5004945"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 1151
+      },
+      "sha256": "e280d67673773226163839fd24a6296c1bf568f4108521b99ef4eff2cc793126",
+      "time_date_stamp": 2567676514,
+      "size_of_image": 3629056,
+      "file_size": 3591680,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "2004 | KB5004296",
+        "2004 | KB5005033"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 1202
+      },
+      "sha256": "70525ab78a192af6f56ff57e04ef748033cd69b2022b6a1aae2f7531aa425305",
+      "time_date_stamp": 3353786110,
+      "size_of_image": 3624960,
+      "file_size": 3590656,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "2004 | KB5005101"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 1237
+      },
+      "sha256": "f1cf67cd08e14fab115fc873a486cd1525d371db9307fa76c88901ec7d68b008",
+      "time_date_stamp": 4049827902,
+      "size_of_image": 3624960,
+      "file_size": 3589120,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "2004 | KB5005565"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 1266
+      },
+      "sha256": "a3c5df16cac6ca53ad43fdb44c6724556e3c7f88dd1d42b675e2fc0b99c60656",
+      "time_date_stamp": 806169044,
+      "size_of_image": 3620864,
+      "file_size": 3584000,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "2004 | KB5005611"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 1288
+      },
+      "sha256": "445c1f96b4fc23558b9e07a50aab15bd4c7e297d11823f273673e13034cc7fe1",
+      "time_date_stamp": 552361616,
+      "size_of_image": 3620864,
+      "file_size": 3584000,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "2004 | KB5006670",
+        "21H2 | BASE"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 1320
+      },
+      "sha256": "b0dc68617d24f9e1bbef14aa331b477f7cf1fea306a7fdd760bf9545ad2c7a5c",
+      "time_date_stamp": 3262640343,
+      "size_of_image": 3616768,
+      "file_size": 3580928,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "2004 | KB5006738",
+        "2004 | KB5007186"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 1387
+      },
+      "sha256": "c843d140b7ddf98dae7de2267cbd94ad1d14865fe6345f2783ae794d7bb78c67",
+      "time_date_stamp": 905096521,
+      "size_of_image": 3616768,
+      "file_size": 3580416,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "2004 | KB5007253",
+        "2004 | KB5008212"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 1466
+      },
+      "sha256": "846e93f5c0d7079164143b0de307c0772e51abd7ec921af27879b8cbbe0d0a45",
+      "time_date_stamp": 3119928968,
+      "size_of_image": 3616768,
+      "file_size": 3579392,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "20H2 | KB5009543",
+        "20H2 | KB5010793"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 1503
+      },
+      "sha256": "4d29427aa4bc35c81fbc507690dd4c25c93929a47ed6de51146d7a8e5e3f1105",
+      "time_date_stamp": 2770274633,
+      "size_of_image": 3616768,
+      "file_size": 3580416,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "20H2 | KB5009596"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 1526
+      },
+      "sha256": "4eea0cbadf5464c6b9d874402a954b4d9dd4f24144d0889116a78c61d28d4c0e",
+      "time_date_stamp": 2166510937,
+      "size_of_image": 3616768,
+      "file_size": 3580416,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "20H2 | KB5010342",
+        "20H2 | KB5010415"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 1586
+      },
+      "sha256": "197af9e8ef0a63153de3eedb1e95e75c67cedd88908f29ce7f35109a3e5227a9",
+      "time_date_stamp": 2785526524,
+      "size_of_image": 3616768,
+      "file_size": 3580416,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "20H2 | KB5011487"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 1620
+      },
+      "sha256": "0a4eac9096010fcffcd4a2e978b1b12f23e3dae2fedc8b2fb1d55f0b891079ed",
+      "time_date_stamp": 1930685143,
+      "size_of_image": 3616768,
+      "file_size": 3580416,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "20H2 | KB5011543"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 1645
+      },
+      "sha256": "f460a0fbda390f3ca243cc4128c3e266acd8bac38ee269bbe69a5cdcd04e336d",
+      "time_date_stamp": 316535540,
+      "size_of_image": 3616768,
+      "file_size": 3580416,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "20H2 | KB5012599"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 1682
+      },
+      "sha256": "d0fabc1ddf5d9881e40d5e06c9dcf96382335ffba27d3600fe17a0f44ca07d79",
+      "time_date_stamp": 380758396,
+      "size_of_image": 3612672,
+      "file_size": 3574784,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "20H2 | KB5011831",
+        "20H2 | KB5013942",
+        "20H2 | KB5014023",
+        "20H2 | KB5014699",
+        "20H2 | KB5015020"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 1806
+      },
+      "sha256": "222b85d011ebf76f025895e418aa389ad4a0da2e18d338ea909620b7eadcae45",
+      "time_date_stamp": 1355351639,
+      "size_of_image": 3612672,
+      "file_size": 3575296,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "20H2 | KB5014666",
+        "20H2 | KB5015807",
+        "20H2 | KB5015878",
+        "20H2 | KB5016616"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 1949
+      },
+      "sha256": "2efd2daecb7e8ba9853919344866f1ed18bf7c72124b82bd26f5eb9e90c36907",
+      "time_date_stamp": 2416445689,
+      "size_of_image": 3612672,
+      "file_size": 3576320,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "20H2 | KB5016688",
+        "20H2 | KB5017308",
+        "20H2 | KB5017380",
+        "22H2 | BASE"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 2130
+      },
+      "sha256": "3f8b9336b43ecd3a32205f10bb6898aed7778cc88e9aabcaf05da9e29824f0cb",
+      "time_date_stamp": 1077560978,
+      "size_of_image": 3612672,
+      "file_size": 3576320,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "20H2 | KB5018410",
+        "20H2 | KB5018482",
+        "20H2 | KB5020435",
+        "20H2 | KB5020953"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 2251
+      },
+      "sha256": "14259a134cd027ef7d2a0ee423e13bcd14a860307bce030028d6b588d08e5d4b",
+      "time_date_stamp": 405376103,
+      "size_of_image": 3612672,
+      "file_size": 3576832,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "20H2 | KB5019959"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 2311
+      },
+      "sha256": "1e8c11209908e9008017f048ca030b5c72e745b9fd9201dfd8856f2078a01a22",
+      "time_date_stamp": 447738597,
+      "size_of_image": 3612672,
+      "file_size": 3576320,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "20H2 | KB5019275",
+        "20H2 | KB5020030",
+        "20H2 | KB5021233",
+        "20H2 | KB5022282",
+        "20H2 | KB5022834"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 2673
+      },
+      "sha256": "0964ee3d914dd9267fdc288483f71ae48f127956180611ae87e3206ed68ca59e",
+      "time_date_stamp": 316949131,
+      "size_of_image": 3612672,
+      "file_size": 3575296,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "20H2 | KB5022906",
+        "20H2 | KB5023696",
+        "20H2 | KB5023773",
+        "20H2 | KB5025221"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 2913
+      },
+      "sha256": "f269d8f2eef649de4276edfa08b9ee0a8e9c5587f464da0260b644d390742846",
+      "time_date_stamp": 2479412196,
+      "size_of_image": 3612672,
+      "file_size": 3577344,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "20H2 | KB5026361",
+        "21H2 | KB5027215",
+        "22H2 | KB5025297",
+        "22H2 | KB5026435"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 3155
+      },
+      "sha256": "739ab7cc0b062913f6a02f7ece04f680a4e55d69514d329579f969bae6ff0cd6",
+      "time_date_stamp": 2916581003,
+      "size_of_image": 3612672,
+      "file_size": 3577344,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "21H2 | KB5028166",
+        "21H2 | KB5029244",
+        "22H2 | KB5027293",
+        "22H2 | KB5028244"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 3393
+      },
+      "sha256": "6e4b973e615db3411069b897fd5bbf23e91412ea20d1a2d2c2f4a700a4c40de2",
+      "time_date_stamp": 3877047296,
+      "size_of_image": 3612672,
+      "file_size": 3576320,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "21H2 | KB5030211",
+        "22H2 | KB5029331",
+        "22H2 | KB5030300"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 3570
+      },
+      "sha256": "87ef8e9b26364e923bcf0e1588bfdd7304c114872dcd7f3a70dd795aac0a9a80",
+      "time_date_stamp": 1307705829,
+      "size_of_image": 3612672,
+      "file_size": 3576320,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "21H2 | KB5031356"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 3636
+      },
+      "sha256": "122e00a501847a334c68ae5d9296a072d1c9989b568163a9fbf3e4475a4ca59f",
+      "time_date_stamp": 901265297,
+      "size_of_image": 3612672,
+      "file_size": 3576320,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "22H2 | KB5031445"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 3693
+      },
+      "sha256": "44a113c5f308f726de0a537607fc1ad5bca4f971280b34b5d830d80302437d31",
+      "time_date_stamp": 3547492951,
+      "size_of_image": 3612672,
+      "file_size": 3576320,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "21H2 | KB5032189",
+        "21H2 | KB5033372",
+        "21H2 | KB5034122",
+        "21H2 | KB5034763",
+        "21H2 | KB5035845",
+        "22H2 | KB5032278",
+        "22H2 | KB5034203",
+        "22H2 | KB5034843",
+        "22H2 | KB5035941"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 4291
+      },
+      "sha256": "90ea765c3cef640322e09598d18a65e71e484736601641053f81364a18cccc93",
+      "time_date_stamp": 3760898315,
+      "size_of_image": 3616768,
+      "file_size": 3578368,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "21H2 | KB5036892"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 4355
+      },
+      "sha256": "3c073f2ad8fb1f500e15fd4213f9d726a4259e82463efb2185fcfbb672b79f94",
+      "time_date_stamp": 1970742647,
+      "size_of_image": 3616768,
+      "file_size": 3578368,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "22H2 | KB5036979"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 4412
+      },
+      "sha256": "52fde710a4286e01411d0ec4623928442140f15cdca1985eaa2c3391b80fc58b",
+      "time_date_stamp": 192079066,
+      "size_of_image": 3633152,
+      "file_size": 3596288,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "21H2 | KB5037768",
+        "21H2 | KB5039211",
+        "22H2 | KB5037849"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 4597
+      },
+      "sha256": "0729ef1d187b59a55c6e3603140fa78325326a43346ee56778ac588deab1f580",
+      "time_date_stamp": 2868583531,
+      "size_of_image": 3629056,
+      "file_size": 3593216,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "21H2 | KB5040427",
+        "22H2 | KB5039299"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 4717
+      },
+      "sha256": "1ea437b7fc645d5309c70bc15e2a5d8bf455fd1312a4d2f3b683349c23006e2c",
+      "time_date_stamp": 3928445770,
+      "size_of_image": 3624960,
+      "file_size": 3585024,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "22H2 | KB5040525"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 4780
+      },
+      "sha256": "5e7a4f07e33c6ae9c9339a8b1fe3af4007fd30c2eae58dea83a8d116abc14172",
+      "time_date_stamp": 771302265,
+      "size_of_image": 3624960,
+      "file_size": 3586560,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "21H2 | KB5041580",
+        "21H2 | KB5043064",
+        "21H2 | KB5044273",
+        "22H2 | KB5041582",
+        "22H2 | KB5043131",
+        "22H2 | KB5045594"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 5129
+      },
+      "sha256": "7b0e040ecf5a7f4d923a2691dbf204dc4a36fe59b9ed064a887f282384efb6ba",
+      "time_date_stamp": 317395886,
+      "size_of_image": 3624960,
+      "file_size": 3587584,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "21H2 | KB5046613"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 5198
+      },
+      "sha256": "17f7db3ca45547fd685e3b8048b1af581fe173b8847f60e903d6463e24e83e2f",
+      "time_date_stamp": 1677390471,
+      "size_of_image": 3624960,
+      "file_size": 3585536,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "21H2 | KB5048652",
+        "21H2 | KB5049981",
+        "21H2 | KB5051974",
+        "22H2 | KB5046714",
+        "22H2 | KB5050081"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 5553
+      },
+      "sha256": "085d2ee7dead0d895e7a01dcfe4692afd55cbc8377eadba3b4ac185fbb3b07d7",
+      "time_date_stamp": 2740451975,
+      "size_of_image": 3624960,
+      "file_size": 3585024,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "21H2 | KB5053606",
+        "22H2 | KB5052077",
+        "22H2 | KB5053643"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 5737
+      },
+      "sha256": "039234a8ac0ea0805d3351f5655b8e21a474f269305e2ddaa94431cd3f5817b6",
+      "time_date_stamp": 2917590207,
+      "size_of_image": 3624960,
+      "file_size": 3585024,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "21H2 | KB5055518"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 5794
+      },
+      "sha256": "518695f1228d4083ec670f65c17028b60a961776f18947a440fd0202269bfed6",
+      "time_date_stamp": 955269310,
+      "size_of_image": 3624960,
+      "file_size": 3585024,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "22H2 | KB5055612"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 5854
+      },
+      "sha256": "0d8d6304034370353a662c5dedb0b8e5b2a47ad5c585f8dba8b780a7968ea298",
+      "time_date_stamp": 2252325100,
+      "size_of_image": 3624960,
+      "file_size": 3586048,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "21H2 | KB5058379"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 5856
+      },
+      "sha256": "4b783f9b9dfe3430e57c72705da53472a575312cfccdcd784a8b9560c020e4a3",
+      "time_date_stamp": 2252325100,
+      "size_of_image": 3624960,
+      "file_size": 3586048,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "21H2 | KB5060533",
+        "21H2 | KB5061768",
+        "21H2 | KB5061979",
+        "21H2 | KB5062554",
+        "22H2 | KB5058481",
+        "22H2 | KB5061087",
+        "22H2 | KB5063159"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 6157
+      },
+      "sha256": "c7181e79aa66a5b9243d21512e01a4f65818e3312be01aaf328a275e5934d324",
+      "time_date_stamp": 1719257566,
+      "size_of_image": 3624960,
+      "file_size": 3586048,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "21H2 | KB5063709",
+        "21H2 | KB5066188",
+        "22H2 | KB5062649",
+        "22H2 | KB5063842"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 6328
+      },
+      "sha256": "6d16b359dad3d6913357ce95f6403f00a5d9b478715d998c9ac8ed324b4437b1",
+      "time_date_stamp": 1021687797,
+      "size_of_image": 3624960,
+      "file_size": 3587072,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "21H2 | KB5065429",
+        "22H2 | KB5066198"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 6456
+      },
+      "sha256": "203b28606997a36a15b57d542bc4b55c75b10036a2b33e87623f9c2b46795090",
+      "time_date_stamp": 119417812,
+      "size_of_image": 3629056,
+      "file_size": 3589632,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "21H2 | KB5066791",
+        "21H2 | KB5068781",
+        "21H2 | KB5071546",
+        "21H2 | KB5074976"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 6807
+      },
+      "sha256": "a8ca3ed643845e882b9c46d384f33c6c006377659fe4c24d9773c7395b0e1ba4",
+      "time_date_stamp": 1922058801,
+      "size_of_image": 3629056,
+      "file_size": 3589632,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "21H2 | KB5073724",
+        "21H2 | KB5077796",
+        "21H2 | KB5078129"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 6937
+      },
+      "sha256": "4ab70f8aa3a3fc02688f6c1d9da17031f5b5027ee4f39c23e5ef36e5032d0971",
+      "time_date_stamp": 1602601106,
+      "size_of_image": 3624960,
+      "file_size": 3587584,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "21H2 | KB5075912"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 7058
+      },
+      "sha256": "7c30f4f25e2a58e2d4b40c37571460f19defd37150b91a619eb10e0049851c5a",
+      "time_date_stamp": 776401262,
+      "size_of_image": 3624960,
+      "file_size": 3588096,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "21H2 | KB5078885"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 7181
+      },
+      "sha256": "8e1a30090b346ec52d355cd5850a2301a0dd917025cea6a244691deff9f3bad8",
+      "time_date_stamp": 1664675036,
+      "size_of_image": 3624960,
+      "file_size": 3589120,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "21H2 | KB5082200"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 7291
+      },
+      "sha256": "7c37ef6a38b6efb25d021308673943fa89618224130c4de9ebd8c6140dd8e06c",
+      "time_date_stamp": 1246693660,
+      "size_of_image": 3629056,
+      "file_size": 3590656,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "21H2 | KB5087544"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 7417
+      },
+      "sha256": "86affc5cdbfe3a8d3e304ebc72ab54515037f48eae9ed1639ecd65af9b7af801",
+      "time_date_stamp": 1967120647,
+      "size_of_image": 3629056,
+      "file_size": 3590656,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "21H2 | KB5094127"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 7548
+      },
+      "sha256": "0cb02444bd32660077f0fc9cb0a854099c9dc182890406c5de2c639c22d403ff",
+      "time_date_stamp": 411759261,
+      "size_of_image": 3629056,
+      "file_size": 3592704,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "21H2 | KB5099539"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 19041,
+        "revision": 7663
+      },
+      "sha256": "1938e2972604abaa533fec371ac0e510fee9365729b7ab1230e29c46b7309356",
+      "time_date_stamp": 1870213636,
+      "size_of_image": 3629056,
+      "file_size": 3593216,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "21H2 | KB5120249"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22000,
+        "revision": 194
+      },
+      "sha256": "c4f24504f8fa0b4e7bd8944ba8c466f0103550067a9b3cbb093f7ac2b8e0a4c7",
+      "time_date_stamp": 2238069931,
+      "size_of_image": 4194304,
+      "file_size": 4173824,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-21H2 | BASE"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22000,
+        "revision": 258
+      },
+      "sha256": "f145dde8fb1f28ac7dd975f4862e9581607e2cb3647bf95cb7a8118a9f5bad1f",
+      "time_date_stamp": 2546943143,
+      "size_of_image": 4194304,
+      "file_size": 4173824,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-21H2 | KB5006674"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22000,
+        "revision": 282
+      },
+      "sha256": "7ed8a238cb7408c66781d562bed969f14940aef16f361fd592e70fc52a076b72",
+      "time_date_stamp": 1826556256,
+      "size_of_image": 4194304,
+      "file_size": 4173824,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-21H2 | KB5006746",
+        "11-21H2 | KB5007215",
+        "11-21H2 | KB5007262",
+        "11-21H2 | KB5008215"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22000,
+        "revision": 434
+      },
+      "sha256": "8a656a0d51564fd5460cbfd6a0dfbdbc83faa3a5276a4a51d7289e5f1bfd23d0",
+      "time_date_stamp": 1675479395,
+      "size_of_image": 4194304,
+      "file_size": 4173824,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-21H2 | KB5008353",
+        "11-21H2 | KB5009566",
+        "11-21H2 | KB5010795"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22000,
+        "revision": 493
+      },
+      "sha256": "7bcfe56377c5af7b71d5b55b2183a3a5ea3aeeb7a9f3517148ab21a97ab036ac",
+      "time_date_stamp": 1027978865,
+      "size_of_image": 4194304,
+      "file_size": 4173824,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-21H2 | KB5010386"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22000,
+        "revision": 527
+      },
+      "sha256": "ef0866ac57d702a696af841e1933085d7b96b0cbfc132cda0e8bf1245aad64f2",
+      "time_date_stamp": 550883199,
+      "size_of_image": 4194304,
+      "file_size": 4173824,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-21H2 | KB5010414"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22000,
+        "revision": 556
+      },
+      "sha256": "76ee539cc2f156d2c345659b225d2585eb25abed59466adc4c8a01027bb1cc42",
+      "time_date_stamp": 4095609656,
+      "size_of_image": 4194304,
+      "file_size": 4173824,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-21H2 | KB5011493",
+        "11-21H2 | KB5011563"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22000,
+        "revision": 613
+      },
+      "sha256": "424c8f56f600b0be67d3b62941937631116b2b13eb1faac47d48825d81f2287f",
+      "time_date_stamp": 1525621129,
+      "size_of_image": 4194304,
+      "file_size": 4173824,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-21H2 | KB5012592"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22000,
+        "revision": 652
+      },
+      "sha256": "bfa258ef613c3e3f053990533e9b2de91829c7bd47708544f8a7869121872236",
+      "time_date_stamp": 2455493594,
+      "size_of_image": 4194304,
+      "file_size": 4173824,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-21H2 | KB5012643"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22000,
+        "revision": 653
+      },
+      "sha256": "e44d159f934b1961730f13859f76e5561f4984b4990c3ef44af827c1689dde8b",
+      "time_date_stamp": 2455493594,
+      "size_of_image": 4194304,
+      "file_size": 4173824,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-21H2 | KB5013943"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22000,
+        "revision": 708
+      },
+      "sha256": "fd92e1231bc7eaa97abec49a60e6f203f2c825f1efc6da6b133d13479a9c55f7",
+      "time_date_stamp": 2450271403,
+      "size_of_image": 4194304,
+      "file_size": 4173824,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-21H2 | KB5014019",
+        "11-21H2 | KB5014697"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22000,
+        "revision": 778
+      },
+      "sha256": "c81f33f601c2fbd5bf6d2376a0de86b1f3ec67251ffa9c39b707c5855741a2c6",
+      "time_date_stamp": 2595607136,
+      "size_of_image": 4194304,
+      "file_size": 4173824,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-21H2 | KB5014668",
+        "11-21H2 | KB5015814"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22000,
+        "revision": 832
+      },
+      "sha256": "f60969d4f1ab1d25e5a940b57bf9deb6643473d191dd79c605130df3216e3453",
+      "time_date_stamp": 1063091925,
+      "size_of_image": 4198400,
+      "file_size": 4177920,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-21H2 | KB5015882",
+        "11-21H2 | KB5016629"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22000,
+        "revision": 918
+      },
+      "sha256": "9a606ff9e4f86c84eb887ca32b0e408ce76c589ae9709bacd0bbce66913b9908",
+      "time_date_stamp": 500870560,
+      "size_of_image": 4194304,
+      "file_size": 4173824,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-21H2 | KB5016691",
+        "11-21H2 | KB5017328"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22000,
+        "revision": 1042
+      },
+      "sha256": "02f7ae4152f3d620bfef1affe0422583af92743530b5aef264c285a17a6a4cee",
+      "time_date_stamp": 1190750779,
+      "size_of_image": 4194304,
+      "file_size": 4173824,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-21H2 | KB5017383"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22000,
+        "revision": 1098
+      },
+      "sha256": "e6541169ebd137a9082a9223a2487ad6aa0978d661364e02b4dcbc9741e9d8b5",
+      "time_date_stamp": 288377682,
+      "size_of_image": 4194304,
+      "file_size": 4173824,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-21H2 | KB5018418",
+        "11-21H2 | KB5018483",
+        "11-21H2 | KB5020387"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22000,
+        "revision": 1219
+      },
+      "sha256": "bf26e8fecbf4ee417a5333fa1b755ccd6857ac975dd982f021e6a907b6ff57db",
+      "time_date_stamp": 439699660,
+      "size_of_image": 4194304,
+      "file_size": 4173824,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-21H2 | KB5019961"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22000,
+        "revision": 1281
+      },
+      "sha256": "872090092fc57c7e621acf8d437b8f4e2bc7785c58e2292b22f408807a3d62f4",
+      "time_date_stamp": 1880991653,
+      "size_of_image": 4194304,
+      "file_size": 4173824,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-21H2 | KB5019157",
+        "11-21H2 | KB5019274",
+        "11-21H2 | KB5021234",
+        "11-21H2 | KB5022287",
+        "11-21H2 | KB5022836"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22000,
+        "revision": 1641
+      },
+      "sha256": "9731e0ab75c1035d1120f86e21d29ea3bf2caf1b8a0fabb30f4f81446f11d924",
+      "time_date_stamp": 462826964,
+      "size_of_image": 4198400,
+      "file_size": 4177920,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-21H2 | KB5022905",
+        "11-21H2 | KB5023698"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22000,
+        "revision": 1761
+      },
+      "sha256": "bb63716bb8ce7bb27fb56e7d907f43f34b4ee60a660628e2517a6531169d2199",
+      "time_date_stamp": 158644931,
+      "size_of_image": 4194304,
+      "file_size": 4173824,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-21H2 | KB5023774",
+        "11-21H2 | KB5025224"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22000,
+        "revision": 1880
+      },
+      "sha256": "c51101e397b760718c515879f48faddc577a5368c3705d41c5f4e689273182dc",
+      "time_date_stamp": 4093918506,
+      "size_of_image": 4198400,
+      "file_size": 4177920,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-21H2 | KB5025298",
+        "11-21H2 | KB5026368",
+        "11-21H2 | KB5026436",
+        "11-21H2 | KB5027223"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22000,
+        "revision": 2124
+      },
+      "sha256": "f9f2dc9a5fd7689349db34eb9b475574740e7126dee780b10619e964434b2a54",
+      "time_date_stamp": 820771727,
+      "size_of_image": 4198400,
+      "file_size": 4177920,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-21H2 | KB5027292",
+        "11-21H2 | KB5028182",
+        "11-21H2 | KB5028245",
+        "11-21H2 | KB5029253"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22000,
+        "revision": 2360
+      },
+      "sha256": "2419fd856b3ea77b23dfd624ae439fc82773033c30731dd219ca77318abb962f",
+      "time_date_stamp": 4027111601,
+      "size_of_image": 4194304,
+      "file_size": 4173824,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-21H2 | KB5029332",
+        "11-21H2 | KB5030217",
+        "11-21H2 | KB5030301"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22000,
+        "revision": 2538
+      },
+      "sha256": "b3eabb118635e4b9b3945bc122c1c983544f125f48d9bd9bb599680e4caee30f",
+      "time_date_stamp": 572184655,
+      "size_of_image": 4194304,
+      "file_size": 4173824,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-21H2 | KB5031358"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22000,
+        "revision": 2600
+      },
+      "sha256": "b1a148458584df94decbdc3ddd8114e2b84003176e59a37821f9787da3936671",
+      "time_date_stamp": 1726146974,
+      "size_of_image": 4194304,
+      "file_size": 4173824,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-21H2 | KB5032192",
+        "11-21H2 | KB5033369",
+        "11-21H2 | KB5034121",
+        "11-21H2 | KB5034766",
+        "11-21H2 | KB5035854"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22000,
+        "revision": 2899
+      },
+      "sha256": "215a3dd83d6dc374fc78c9658cf4b6af6c691f2d12490fe94b7415c515f6347d",
+      "time_date_stamp": 3977242571,
+      "size_of_image": 4206592,
+      "file_size": 4186112,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-21H2 | KB5036894"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22000,
+        "revision": 2960
+      },
+      "sha256": "0ff4707a6f88169d794f53327db975a843e665d4095190bd5adf3814261604ab",
+      "time_date_stamp": 3233089292,
+      "size_of_image": 4218880,
+      "file_size": 4198400,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-21H2 | KB5037770"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22000,
+        "revision": 3019
+      },
+      "sha256": "80efa9db0688b73a7a08eb6d8cbf020f05c200b3d27c6816198c72b3e151cfcb",
+      "time_date_stamp": 2409086991,
+      "size_of_image": 4214784,
+      "file_size": 4194304,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-21H2 | KB5039213"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22000,
+        "revision": 3079
+      },
+      "sha256": "9921889ac43845e7334d97ae067ad6d06b09910b821d82031a9e02a83a6b7487",
+      "time_date_stamp": 1511185130,
+      "size_of_image": 4206592,
+      "file_size": 4186112,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-21H2 | KB5040431"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22000,
+        "revision": 3147
+      },
+      "sha256": "24c88628f9b70897c27084018e48980656f5c71d1e541c30598c65a2d132d3b1",
+      "time_date_stamp": 3105375368,
+      "size_of_image": 4210688,
+      "file_size": 4190208,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-21H2 | KB5041592",
+        "11-21H2 | KB5043067",
+        "11-21H2 | KB5044280"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 169
+      },
+      "sha256": "535ffd8ea45558bfe495dfbf419ef53383e49d80e4f5dd82637c5e42ade42920",
+      "time_date_stamp": 1982273889,
+      "size_of_image": 4272128,
+      "file_size": 4251648,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-22H2 | BASE"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 457
+      },
+      "sha256": "f945dc1e02f2ed943839a61873546354d5eb892889cf5f197ed3fc72114ab689",
+      "time_date_stamp": 3175555301,
+      "size_of_image": 4276224,
+      "file_size": 4255744,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-22H2 | KB5019311"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 608
+      },
+      "sha256": "a57bd71db1e5cf1483826fbc761c07cfbd064e1a0dd4c109e64eccee235b2840",
+      "time_date_stamp": 1494362353,
+      "size_of_image": 4276224,
+      "file_size": 4255744,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-22H2 | KB5017389"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 674
+      },
+      "sha256": "ff3a8ce52e655143b31ab0ae71176da3b83e95948ea031b8abb3fe75d99e04fa",
+      "time_date_stamp": 2026040954,
+      "size_of_image": 4280320,
+      "file_size": 4259840,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-22H2 | KB5018427"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 675
+      },
+      "sha256": "9f56ef048b0b8d60535e30a04fdee7fab9c34cd4fefd98c8b55761007f8459b3",
+      "time_date_stamp": 2518614140,
+      "size_of_image": 4276224,
+      "file_size": 4255744,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-22H2 | KB5019509"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 755
+      },
+      "sha256": "11a758a4cba61b1c3a5879c192dc35d98086381700d9b01bb2338f47493440a6",
+      "time_date_stamp": 1118926117,
+      "size_of_image": 4280320,
+      "file_size": 4259840,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-22H2 | KB5018496"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 819
+      },
+      "sha256": "7348bbe10bc4422284ed4ca2943d6c17d27f2fb4e35ba3268415fcecb7623a27",
+      "time_date_stamp": 3022982383,
+      "size_of_image": 4280320,
+      "file_size": 4259840,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-22H2 | KB5019980"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 900
+      },
+      "sha256": "4c469a960512800efea84265f1d171073e139de95cde82067cc8b84d0658fa33",
+      "time_date_stamp": 3021588338,
+      "size_of_image": 4280320,
+      "file_size": 4259840,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-22H2 | KB5020044",
+        "11-22H2 | KB5021255",
+        "11-22H2 | KB5022303",
+        "11-22H2 | KB5022360",
+        "11-22H2 | KB5022845"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 1344
+      },
+      "sha256": "d888279c41eba1cccb25baf3f7a6722d7d334b1584e70f5ae8da12c8a4eae9a8",
+      "time_date_stamp": 3523257690,
+      "size_of_image": 4255744,
+      "file_size": 4235264,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-22H2 | KB5022913",
+        "11-22H2 | KB5023706",
+        "11-22H2 | KB5023778",
+        "11-22H2 | KB5025239"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 1635
+      },
+      "sha256": "d883b42be740f6b1b39a62d54fba142ad3189651469b7b00578618bf1ab9c966",
+      "time_date_stamp": 3004291388,
+      "size_of_image": 4255744,
+      "file_size": 4235264,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-22H2 | KB5025305",
+        "11-22H2 | KB5026372",
+        "11-22H2 | KB5026446",
+        "11-22H2 | KB5027231"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 1928
+      },
+      "sha256": "faab962bb59a19af8d1ab0c56fcd88c82d50a55f94733bb7908898eaf6d91407",
+      "time_date_stamp": 643136805,
+      "size_of_image": 4259840,
+      "file_size": 4239360,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-22H2 | KB5027303",
+        "11-22H2 | KB5028185",
+        "11-22H2 | KB5028254",
+        "11-22H2 | KB5029263"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 2215
+      },
+      "sha256": "b78a531de26781415b60bf933fa337992452518da883f5d64d900a73083bdbc3",
+      "time_date_stamp": 1775406036,
+      "size_of_image": 4255744,
+      "file_size": 4235264,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-22H2 | KB5029351",
+        "11-22H2 | KB5030219",
+        "11-22H2 | KB5030310",
+        "11-22H2 | KB5031354",
+        "11-23H2 | BASE"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 2506
+      },
+      "sha256": "7a430da0731f869962788942bd59e443776cb7c2f0f2fded34aa74f5ab0242e0",
+      "time_date_stamp": 750851539,
+      "size_of_image": 4255744,
+      "file_size": 4235264,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-22H2 | KB5031455"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 2715
+      },
+      "sha256": "24964d8d03ffd213a15eeb02b280441885d2bdb874eae12de05aa2ffa2437b6d",
+      "time_date_stamp": 3378132416,
+      "size_of_image": 4255744,
+      "file_size": 4235264,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-22H2 | KB5032190",
+        "11-22H2 | KB5032288",
+        "11-22H2 | KB5033375",
+        "11-22H2 | KB5034123"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 3085
+      },
+      "sha256": "efb299e3460dbad4c05e6ddb9b85b4fab0b9b3359b6110a8c5250a6823a82d3a",
+      "time_date_stamp": 3510526319,
+      "size_of_image": 4255744,
+      "file_size": 4235264,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-22H2 | KB5034204",
+        "11-22H2 | KB5034765"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 3235
+      },
+      "sha256": "66856ae59c5f3b8e1f69ab7ce01d26911bceee59138a941c191a0572201ac25a",
+      "time_date_stamp": 3422598518,
+      "size_of_image": 4255744,
+      "file_size": 4235264,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-22H2 | KB5034848",
+        "11-22H2 | KB5035853",
+        "11-22H2 | KB5035942"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 3447
+      },
+      "sha256": "fe6e74c795554e759947b7492c7ddf3ffc267f233b15150160c2507edc134a58",
+      "time_date_stamp": 352450640,
+      "size_of_image": 4259840,
+      "file_size": 4239360,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-22H2 | KB5036893"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 3527
+      },
+      "sha256": "185c580813d23513858530d79a1e88435b882e8db0daae77518910a8c6f05d7a",
+      "time_date_stamp": 2977101757,
+      "size_of_image": 4259840,
+      "file_size": 4239360,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-22H2 | KB5036980"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 3593
+      },
+      "sha256": "e4f3333a592560b0b1131e25c7505eb8bd7bb6a7012ce698d901056bb389574d",
+      "time_date_stamp": 3958026812,
+      "size_of_image": 4280320,
+      "file_size": 4259840,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-22H2 | KB5037771"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 3672
+      },
+      "sha256": "57096fe4f35f028e8ccf2f1add5da17dfe55b86c8459e47cafda9caac36e52a5",
+      "time_date_stamp": 4171404302,
+      "size_of_image": 4280320,
+      "file_size": 4259840,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-22H2 | KB5037853",
+        "11-22H2 | KB5039212"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 3810
+      },
+      "sha256": "3860c5bb8c771fd26c62f54cad7b6aa62da1aea9a571abf2f366e8f6bf218aa1",
+      "time_date_stamp": 1574925690,
+      "size_of_image": 4272128,
+      "file_size": 4251648,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-22H2 | KB5039302",
+        "11-22H2 | KB5040442"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 3958
+      },
+      "sha256": "6fcda53894972b0b3a7085463c0429b2fbbfa92657eab8346627ac5634b549e2",
+      "time_date_stamp": 41885947,
+      "size_of_image": 4288512,
+      "file_size": 4268032,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-22H2 | KB5040527"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 4036
+      },
+      "sha256": "8a322428581f80a861f2904b4885bd7cdefcb5142915055e8359cdb01ddef977",
+      "time_date_stamp": 2756697651,
+      "size_of_image": 4288512,
+      "file_size": 4268032,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-22H2 | KB5041585"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 4111
+      },
+      "sha256": "88eae305a1a5692c5fad59db5d1aa4ec9bd3d2a6bf837c66e8ad477818263849",
+      "time_date_stamp": 1149314266,
+      "size_of_image": 4288512,
+      "file_size": 4268032,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-22H2 | KB5041587",
+        "11-22H2 | KB5043076"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 4249
+      },
+      "sha256": "854a555e4608efe90f35098eadebad93ef023b68d688518106a88633d3236dfb",
+      "time_date_stamp": 906830122,
+      "size_of_image": 4288512,
+      "file_size": 4268032,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-22H2 | KB5043145",
+        "11-22H2 | KB5044285"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 4391
+      },
+      "sha256": "46c776c652fcda31507913268a9a02d406be4047dcf70a9d64ba493e18e81902",
+      "time_date_stamp": 1217109761,
+      "size_of_image": 4296704,
+      "file_size": 4276224,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-22H2 | KB5044380"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 4455
+      },
+      "sha256": "a945b8bf90b20e61293605566e2cb6d9ca94e998399e181bb98a0c5ed1542b4b",
+      "time_date_stamp": 1531412478,
+      "size_of_image": 4296704,
+      "file_size": 4276224,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-22H2 | KB5046633"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 4541
+      },
+      "sha256": "b3eba724f8590d0b59b7941f23eef7a021ea08471eb9c98e14786fa57aa54e41",
+      "time_date_stamp": 988503816,
+      "size_of_image": 4292608,
+      "file_size": 4272128,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-22H2 | KB5046732",
+        "11-22H2 | KB5048685",
+        "11-22H2 | KB5050021"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 4830
+      },
+      "sha256": "0d75f09de1a3eba7a6d481dcfed963b2ebaea08f51554c606d342525b223425c",
+      "time_date_stamp": 1113952003,
+      "size_of_image": 4296704,
+      "file_size": 4276224,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-22H2 | KB5050092",
+        "11-22H2 | KB5051989"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 4974
+      },
+      "sha256": "2e16efab400fc96654dfa8b8a3a83de12395f153fb3878de5b289cec58d12281",
+      "time_date_stamp": 1308861439,
+      "size_of_image": 4296704,
+      "file_size": 4276224,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-22H2 | KB5052094",
+        "11-22H2 | KB5053602"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 5124
+      },
+      "sha256": "7813948fd973de7eeb4663029ba086b836b386ceb701bf5c39274ea35673e041",
+      "time_date_stamp": 1806386258,
+      "size_of_image": 4296704,
+      "file_size": 4276224,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-22H2 | KB5053657"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 5185
+      },
+      "sha256": "7bb861d277a360a0f026080d6427d230e430a0be7e854c9031929e4052927dae",
+      "time_date_stamp": 2592284409,
+      "size_of_image": 4296704,
+      "file_size": 4276224,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-22H2 | KB5055528",
+        "11-22H2 | KB5058919"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 5262
+      },
+      "sha256": "c81f402a9fad238d6ff09dc9df6ea619ce40d1577d38c4132f00117fba920bb7",
+      "time_date_stamp": 1144230656,
+      "size_of_image": 4296704,
+      "file_size": 4276224,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-22H2 | KB5055629"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 5331
+      },
+      "sha256": "9292471643db6049868381b7163fd79907094555084f99bfb064b68e6627a39d",
+      "time_date_stamp": 368338148,
+      "size_of_image": 4296704,
+      "file_size": 4276224,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-22H2 | KB5058405"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 5413
+      },
+      "sha256": "386a91305b6d9d59ed2cc6cd024633b8f648294ee50c7f1a441d5299a5242dac",
+      "time_date_stamp": 2632862370,
+      "size_of_image": 4296704,
+      "file_size": 4276224,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-22H2 | KB5058502"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 5415
+      },
+      "sha256": "371106132a72014c8aaebf0ac2b1848ecd9103a3acbb65cc4541f537683c09a8",
+      "time_date_stamp": 1454604074,
+      "size_of_image": 4296704,
+      "file_size": 4276224,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-22H2 | KB5060826",
+        "11-22H2 | KB5060999",
+        "11-22H2 | KB5062170",
+        "11-22H2 | KB5062552"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 5697
+      },
+      "sha256": "1d9c2c7c440e2db8afa22f9afc8cc52f7228dcbeb8879e8244dd70edcea847dc",
+      "time_date_stamp": 3020888701,
+      "size_of_image": 4296704,
+      "file_size": 4276224,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-22H2 | KB5062663",
+        "11-22H2 | KB5063875",
+        "11-22H2 | KB5066189"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 5840
+      },
+      "sha256": "f5a73b355169542dd3eef5278d96b4d7833cd56e3c989304893227f7fcb6951f",
+      "time_date_stamp": 3916155631,
+      "size_of_image": 4300800,
+      "file_size": 4280320,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-23H2 | KB5064080"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 5909
+      },
+      "sha256": "6f5af0cb91fec21b98be59774d29aca6a8b1fc85e44afc566a44fab0178c49be",
+      "time_date_stamp": 1475237116,
+      "size_of_image": 4300800,
+      "file_size": 4280320,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-22H2 | KB5065431",
+        "11-23H2 | KB5065790"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 6060
+      },
+      "sha256": "15f28d178ccb443e936013b19632323ae04da3f1c824d0bf5de33be2c9622181",
+      "time_date_stamp": 1628125876,
+      "size_of_image": 4300800,
+      "file_size": 4280320,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-22H2 | KB5066793",
+        "11-23H2 | KB5067112",
+        "11-23H2 | KB5068865"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 6274
+      },
+      "sha256": "fa4f84889a5fed524faa4789aa655cf7d82c2dc445e84aa0a94d488e6e9a493a",
+      "time_date_stamp": 2058663942,
+      "size_of_image": 4300800,
+      "file_size": 4280320,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-23H2 | KB5070312",
+        "11-23H2 | KB5071417"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 6489
+      },
+      "sha256": "71e3e654af215f453340c723c4b03a4f76d647a30e2a3527a8222f8f18b0abea",
+      "time_date_stamp": 1139122398,
+      "size_of_image": 4300800,
+      "file_size": 4280320,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-23H2 | KB5073455",
+        "11-23H2 | KB5077797",
+        "11-23H2 | KB5078132"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 6649
+      },
+      "sha256": "67f96a2d56fb8efd6516cc9579d367555cfe008534b4f82fd5bb878c8894e606",
+      "time_date_stamp": 241504039,
+      "size_of_image": 4300800,
+      "file_size": 4280320,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-23H2 | KB5075941"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 6783
+      },
+      "sha256": "11b16438e4b5fe2182335c99dd7c1a6a340f0bd50776088a632442944f276bba",
+      "time_date_stamp": 1133378257,
+      "size_of_image": 4300800,
+      "file_size": 4280320,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-23H2 | KB5078883"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 6931
+      },
+      "sha256": "b7d6cbc4d7a37595f16f1dc3ab3dcc0f35dc0f9a83e86c208bfcda82b41c3553",
+      "time_date_stamp": 2645973060,
+      "size_of_image": 4304896,
+      "file_size": 4284416,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-23H2 | KB5082052"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 7079
+      },
+      "sha256": "4e065e2434838ce473af4a0a2a792734637cf2d4657371741400e1f755485cc2",
+      "time_date_stamp": 637185351,
+      "size_of_image": 4304896,
+      "file_size": 4284416,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-23H2 | KB5087420"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 7219
+      },
+      "sha256": "1270023054b5b2a77ff534b651bd12ad6ce0056f0da4f0b399620974d4f80242",
+      "time_date_stamp": 4027046781,
+      "size_of_image": 4304896,
+      "file_size": 4284416,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-23H2 | KB5093998"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 7376
+      },
+      "sha256": "e89bbd0ed9f9d3d518f4b3e5de1006312ef87c5920bd32649b18946322e3dbc4",
+      "time_date_stamp": 3933572361,
+      "size_of_image": 4308992,
+      "file_size": 4288512,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-23H2 | KB5099414"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 22621,
+        "revision": 7517
+      },
+      "sha256": "2c3c85eaa26cfac26df8e2c7a33f4c33f9546d3753b72e2a4318004bbb17d56a",
+      "time_date_stamp": 140050221,
+      "size_of_image": 4308992,
+      "file_size": 4288512,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-23H2 | KB5120240"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 1
+      },
+      "sha256": "38225febff2b43f6f19dd12e4f6833ebe12a2d68dee631a9552d7d402e1991ae",
+      "time_date_stamp": 2350972387,
+      "size_of_image": 4300800,
+      "file_size": 4280320,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | BASE"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 863
+      },
+      "sha256": "4abbf0e635015efe0c364c2068a6ac04d21f50c17a4e4079ab908277c46f34f6",
+      "time_date_stamp": 1515099844,
+      "size_of_image": 4304896,
+      "file_size": 4284416,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | KB5039239"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 1000
+      },
+      "sha256": "c05f92bd65d4517844f4b3512e76a848a4c4106851b282a78c5d5b4ffbe48c60",
+      "time_date_stamp": 3491265253,
+      "size_of_image": 4317184,
+      "file_size": 4296704,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | KB5039304"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 1150
+      },
+      "sha256": "7f3d36d953582771e5dcff43f414569168f8e6b40b5763f8f75c9d44cfabc973",
+      "time_date_stamp": 3393892117,
+      "size_of_image": 4317184,
+      "file_size": 4296704,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | KB5040435"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 1301
+      },
+      "sha256": "cd2184d67fb4f0a3e060f9fa245ca5ccd4d95ff7bcd70687142180acb62123ca",
+      "time_date_stamp": 2429396196,
+      "size_of_image": 4325376,
+      "file_size": 4304896,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | KB5040529"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 1455
+      },
+      "sha256": "c12acdde010eb8ea61d3fce3ace9016a9d840916c27e9e0ef60f02d8a7495847",
+      "time_date_stamp": 1275297141,
+      "size_of_image": 4329472,
+      "file_size": 4308992,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | KB5041571"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 1591
+      },
+      "sha256": "2cb4eda249298b0fb0091c04f2b49aeb7ed5ed0afd34e38c2789df805a515b70",
+      "time_date_stamp": 893345292,
+      "size_of_image": 4476928,
+      "file_size": 4456448,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | KB5041865",
+        "11-24H2 | KB5043080"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 1882
+      },
+      "sha256": "c861c43bc49cd1968b471d80bb3a04c101ebff17e0c995eb5b9aa58d4cae5a21",
+      "time_date_stamp": 2172281048,
+      "size_of_image": 4481024,
+      "file_size": 4460544,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | KB5043178"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 2033
+      },
+      "sha256": "62f8c07003e15dfe02716f0a4a65d2a87cc0eb6770382a0813aae80a0340ea92",
+      "time_date_stamp": 3344419145,
+      "size_of_image": 4481024,
+      "file_size": 4460544,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | KB5044284"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 2161
+      },
+      "sha256": "47eb01376561715145e3af652d661ceaec8b0fabc4d0eef670ce28a78792eba6",
+      "time_date_stamp": 46047772,
+      "size_of_image": 4489216,
+      "file_size": 4468736,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | KB5044384"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 2314
+      },
+      "sha256": "36602684d8ef5222c0b1f2715e348f0ed6f24714da2b62929c28ca262e3436bb",
+      "time_date_stamp": 761189606,
+      "size_of_image": 4493312,
+      "file_size": 4472832,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | KB5046617"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 2454
+      },
+      "sha256": "af28e8353f0216ea6b1969db779d5d5feb6d3052eab61792c48234b2d0b2a73b",
+      "time_date_stamp": 3106252813,
+      "size_of_image": 4472832,
+      "file_size": 4452352,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | KB5046740"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 2605
+      },
+      "sha256": "efcb2a5431459a152f5af70f7f2569a7e31a68d2d1bc76296d161483077d7cc1",
+      "time_date_stamp": 31684655,
+      "size_of_image": 4472832,
+      "file_size": 4452352,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | KB5048667",
+        "11-24H2 | KB5050009"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 3037
+      },
+      "sha256": "82c5880079e7e4b551ab5d05bac3edb8674752c123fcf8e0aad90f54eafb49ed",
+      "time_date_stamp": 3959296411,
+      "size_of_image": 4485120,
+      "file_size": 4460544,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | KB5050094",
+        "11-24H2 | KB5051987"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 3323
+      },
+      "sha256": "dc955b7cc75471248b2db263d1c4fe924bcfb7b1eacf899e920ceb32d3202f24",
+      "time_date_stamp": 2569935075,
+      "size_of_image": 4460544,
+      "file_size": 4440064,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | KB5052093",
+        "11-24H2 | KB5053598"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 3624
+      },
+      "sha256": "d07fd839a0da4ac381bfc0f977ac2e01af92ca9301571b5fa320bf997142de55",
+      "time_date_stamp": 2150748299,
+      "size_of_image": 4460544,
+      "file_size": 4440064,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | KB5053656"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 3775
+      },
+      "sha256": "e7fb0f7c19045cb69a921fb129cf93f200182610c8c2a94b3a22e0f9a1038ea8",
+      "time_date_stamp": 1997735758,
+      "size_of_image": 4460544,
+      "file_size": 4440064,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | KB5055523"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 3912
+      },
+      "sha256": "d7a322f8995489c5c3a7888e119cc554b69038c80f478d45e20453be689a49d7",
+      "time_date_stamp": 2857748656,
+      "size_of_image": 4534272,
+      "file_size": 4513792,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | KB5055627"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 4061
+      },
+      "sha256": "ca54bcad6b5dad63ddb2af36c4748f8cc35555bb72ac906dee5e4885d6b23efe",
+      "time_date_stamp": 583529155,
+      "size_of_image": 4534272,
+      "file_size": 4513792,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | KB5058411",
+        "11-24H2 | KB5061977"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 4202
+      },
+      "sha256": "641b041a65a8ef52919f7e039b2d8b5d8c31fedda57644da5d7f815542a7694d",
+      "time_date_stamp": 3501282555,
+      "size_of_image": 4513792,
+      "file_size": 4493312,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | KB5058499",
+        "11-24H2 | KB5060842",
+        "11-24H2 | KB5063060"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 4484
+      },
+      "sha256": "4dae2192ae7deb8ecf11527cb223f2540492ef606095b6f42be13ff474d13f9b",
+      "time_date_stamp": 1993622153,
+      "size_of_image": 4513792,
+      "file_size": 4489216,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | KB5060829",
+        "11-24H2 | KB5062553",
+        "11-24H2 | KB5064489"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 4768
+      },
+      "sha256": "af99c9cfdd5575b8d4e9d1ef248424cc167bd2bbc4c55d24d0454bf8fa06a2bb",
+      "time_date_stamp": 829363851,
+      "size_of_image": 4485120,
+      "file_size": 4464640,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | KB5062660"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 4946
+      },
+      "sha256": "d81efc3a05b4d4cacd424706cf06a98400136f6660806666177436ea75f99427",
+      "time_date_stamp": 515069109,
+      "size_of_image": 4485120,
+      "file_size": 4464640,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | KB5063878"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 5074
+      },
+      "sha256": "e6a842bc79829a531c5998d86421e6b588b7643d86a5052bfc3ee66d1373b99a",
+      "time_date_stamp": 2933296284,
+      "size_of_image": 4431872,
+      "file_size": 4411392,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | KB5064081",
+        "11-24H2 | KB5065426",
+        "11-24H2 | KB5068221",
+        "11-25H2 | BASE"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 6725
+      },
+      "sha256": "4a3027266c4a6857540e7dea4ea73e8b0998e8fb8f45500964213ec06f7eece9",
+      "time_date_stamp": 2370394183,
+      "size_of_image": 4427776,
+      "file_size": 4407296,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | KB5065789"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 6899
+      },
+      "sha256": "70e36aeada5974a61c944408dcb3cab6876b8826049a0adb82752f0d1b428968",
+      "time_date_stamp": 1680194596,
+      "size_of_image": 4427776,
+      "file_size": 4407296,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | KB5066835",
+        "11-24H2 | KB5070773"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 7019
+      },
+      "sha256": "b692ea344cd8970769aff9c69063cdc2229573fa510c6f1fe6c1d4ff6e70d1ce",
+      "time_date_stamp": 134811220,
+      "size_of_image": 4431872,
+      "file_size": 4411392,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | KB5067036",
+        "11-24H2 | KB5068861"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 7309
+      },
+      "sha256": "c35d281a859d60fe88d5f2101f371c3ae8a1f15b8bd25cec212e3c522b1e329a",
+      "time_date_stamp": 670323858,
+      "size_of_image": 4395008,
+      "file_size": 4374528,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | KB5070311",
+        "11-24H2 | KB5072033"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 7623
+      },
+      "sha256": "fafc2eef140df62be31213bb6a74058273aaf56cf09bb383d05c15c25d952ba5",
+      "time_date_stamp": 1180077628,
+      "size_of_image": 4395008,
+      "file_size": 4374528,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | KB5074109",
+        "11-24H2 | KB5077744",
+        "11-24H2 | KB5078127"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 7705
+      },
+      "sha256": "617e0b91fde238acf7d74b9abc3fd6fcf7e13a1c693513919ff92ee020292f46",
+      "time_date_stamp": 3965937398,
+      "size_of_image": 4403200,
+      "file_size": 4382720,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | KB5074105"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 7840
+      },
+      "sha256": "68b48704c3c38b0badd5004b5ba0840afa3f20b6b1c64356e269b0e5947ad559",
+      "time_date_stamp": 3997891956,
+      "size_of_image": 4399104,
+      "file_size": 4378624,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | KB5077181"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 7920
+      },
+      "sha256": "d30f6275a45927092a9e1bee9c363c1305e63b8b07d201c9cabba288343fd578",
+      "time_date_stamp": 3508310862,
+      "size_of_image": 4382720,
+      "file_size": 4362240,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | KB5077241",
+        "11-24H2 | KB5079473",
+        "11-24H2 | KB5085516"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 8115
+      },
+      "sha256": "f3de9059c845b96cf04b176ee0d8aa34311bb21860fcda5683a3a7325c0b5a3d",
+      "time_date_stamp": 3839337809,
+      "size_of_image": 4390912,
+      "file_size": 4370432,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | KB5079391",
+        "11-24H2 | KB5086672"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 8246
+      },
+      "sha256": "4b3c3cea4b7a35b2ab931ed173ada708624ba3994fb00d0a3cc09a21ab82331b",
+      "time_date_stamp": 839248919,
+      "size_of_image": 4395008,
+      "file_size": 4374528,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | KB5083769"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 8328
+      },
+      "sha256": "ecd02b233ec405ecc5ccbce54b3fccc84fe09117c4b9443e5db14a7cafb80116",
+      "time_date_stamp": 2312722669,
+      "size_of_image": 4390912,
+      "file_size": 4370432,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | KB5083631"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 8457
+      },
+      "sha256": "eb375a32b7b3d64fe54dcfcbcea982b47a77066904aad9c886dc8ce63cc42296",
+      "time_date_stamp": 1937450430,
+      "size_of_image": 4395008,
+      "file_size": 4374528,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | KB5089549"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 8521
+      },
+      "sha256": "b5293d02f2990de2c447344550d039982b216172df5262cf1e23653e81a92dfb",
+      "time_date_stamp": 2187726000,
+      "size_of_image": 4382720,
+      "file_size": 4362240,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | KB5089573"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 8655
+      },
+      "sha256": "03c820b55d3cf470c9e80c9905186f43937a7e79cc1d81bce524da823b6fca8d",
+      "time_date_stamp": 1377927121,
+      "size_of_image": 4382720,
+      "file_size": 4362240,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | KB5094126"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 8737
+      },
+      "sha256": "ce3d19ebfab7b753aca6795c95d7b79d051b8dc6ee22ca8315e627428b9cecc6",
+      "time_date_stamp": 1101800425,
+      "size_of_image": 4390912,
+      "file_size": 4370432,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | KB5095093"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 8875
+      },
+      "sha256": "70b1db28146b36513a650b3585c81db8b1eaf4710f92162dbd042add1e9a8e01",
+      "time_date_stamp": 993464825,
+      "size_of_image": 4390912,
+      "file_size": 4370432,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | KB5101650",
+        "11-24H2 | KB5121767"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 8972
+      },
+      "sha256": "ce7a9da65154e004fbf483d9f6b9cb2f1a4dcf6493aa2952622449fb74e8a2ef",
+      "time_date_stamp": 4183648249,
+      "size_of_image": 4386816,
+      "file_size": 4362240,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | KB5101684"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 26100,
+        "revision": 9168
+      },
+      "sha256": "825726f26bd6b5a02b49f6145963b54d537d3d1239055dda28d1fb0b3e864ef3",
+      "time_date_stamp": 267582741,
+      "size_of_image": 4386816,
+      "file_size": 4362240,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-24H2 | KB5121003"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 28000,
+        "revision": 1575
+      },
+      "sha256": "42fcce61541c7449232bc81bef191dca0f11eb1b9dd7ceaae39d3831de8dcbae",
+      "time_date_stamp": 162189948,
+      "size_of_image": 4263936,
+      "file_size": 4243456,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-26H1 | KB5077179"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 28000,
+        "revision": 1643
+      },
+      "sha256": "4a17378a625f8937886bea18ddc32a54ea1f56304db73af07488d655fecba969",
+      "time_date_stamp": 3495896839,
+      "size_of_image": 4263936,
+      "file_size": 4243456,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-26H1 | KB5077239",
+        "11-26H1 | KB5079466"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 28000,
+        "revision": 1761
+      },
+      "sha256": "8c40f93083a1a9ae3e8292edfbcf69657a53f25540ce2995171963132db9aeb5",
+      "time_date_stamp": 2409426939,
+      "size_of_image": 4268032,
+      "file_size": 4247552,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-26H1 | KB5079489"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 28000,
+        "revision": 1830
+      },
+      "sha256": "8f2fb988e7ca8d7008af03c0b3498ddf9f391874d13b6f68a863fa2688780b94",
+      "time_date_stamp": 1676483792,
+      "size_of_image": 4268032,
+      "file_size": 4247552,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-26H1 | KB5083768"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 28000,
+        "revision": 1896
+      },
+      "sha256": "68829e35c6f6697e7a6a6d9b1bb7f0f94f383c81759bf7ed7e876f494daf3a85",
+      "time_date_stamp": 2339475905,
+      "size_of_image": 4284416,
+      "file_size": 4263936,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-26H1 | KB5083806"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 28000,
+        "revision": 2113
+      },
+      "sha256": "aaa7bf7499aeb8cad6e0837828c335845cf237d9bff2fd7b5f4dfd6134ee5638",
+      "time_date_stamp": 48498886,
+      "size_of_image": 4284416,
+      "file_size": 4263936,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-26H1 | KB5089548"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 28000,
+        "revision": 2179
+      },
+      "sha256": "d2400b22180581357ef45b88b160dc19ecc115b10bbcf572c3530563c4d3367a",
+      "time_date_stamp": 1324369432,
+      "size_of_image": 4296704,
+      "file_size": 4276224,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-26H1 | KB5089570"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 28000,
+        "revision": 2269
+      },
+      "sha256": "d632934df9563766890f20060152e6da444173fb6a73f5cc147b7172e1b136f4",
+      "time_date_stamp": 416268025,
+      "size_of_image": 4296704,
+      "file_size": 4276224,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-26H1 | KB5095051"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 28000,
+        "revision": 2336
+      },
+      "sha256": "4af977c8f6d1e96b01c9bf4342026c12a0b9286187993333cbc49aaafd4d0278",
+      "time_date_stamp": 2297249043,
+      "size_of_image": 4288512,
+      "file_size": 4268032,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-26H1 | KB5095091"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 28000,
+        "revision": 2525
+      },
+      "sha256": "fc7e37f11818614e1d602152ab36d5e3b6032592fa11112f781b3fe4c8790d38",
+      "time_date_stamp": 2685879973,
+      "size_of_image": 4292608,
+      "file_size": 4272128,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-26H1 | KB5101649"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 28000,
+        "revision": 2605
+      },
+      "sha256": "2625071a1a3fa8b9f34bee1d9b19bc07b4615b6494a840523fd2ebec1153507b",
+      "time_date_stamp": 348698581,
+      "size_of_image": 4280320,
+      "file_size": 4259840,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-26H1 | KB5101681"
+      ]
+    },
+    {
+      "module": "dwmcore.dll",
+      "version": {
+        "build": 28000,
+        "revision": 2704
+      },
+      "sha256": "975eba81b1d1a48d61ecf2972f0cfea87cfa48ea207c54ee86cfcbade5644093",
+      "time_date_stamp": 2850404734,
+      "size_of_image": 4284416,
+      "file_size": 4263936,
+      "source_index_sha256": "47c52e6f4dc9ea26ae03e6351e78055265f42529fb01a8099f9970f58025a105",
+      "provenance": [
+        "11-26H1 | KB5121000"
+      ]
+    }
+  ]
+}

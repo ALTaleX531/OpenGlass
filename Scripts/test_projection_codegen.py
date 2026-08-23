@@ -11,6 +11,7 @@ import projection_codegen as codegen
 import projection_emit
 import projection_schema
 import projection_source_check
+import symbol_catalog
 
 
 def schema(module: str, *, projected: bool) -> dict:
@@ -46,6 +47,7 @@ class ProjectionCodegenTests(unittest.TestCase):
 		self.projection_root = self.repo / "OpenGlass" / "Architecture" / "Legacy"
 		(self.repo / "OpenGlass" / "ProjectionSchemas" / self.architecture).mkdir(parents=True)
 		self.projection_root.mkdir(parents=True)
+		(self.repo / "OpenGlass" / "SymbolCatalogs").mkdir(parents=True)
 		(self.repo / "OpenGlass" / "OSHelper.hpp").write_text("enum os_build : ULONG { build_test = 100 }; enum os_revision : ULONG { revision_test = 1 };", encoding="utf-8")
 		(self.projection_root / "uDwmProjection.hpp").write_text(
 			"inline void Test::Run() { OPENGLASS_MUSTTAIL return Projection::Invoke<&Test::Run>(); }",
@@ -62,6 +64,46 @@ class ProjectionCodegenTests(unittest.TestCase):
 		)
 		self.write("udwm", schema("udwm", projected=True))
 		self.write("dwmcore", schema("dwmcore", projected=False))
+		catalog_root = self.repo / "OpenGlass" / "SymbolCatalogs"
+		for index, module in enumerate(("udwm", "dwmcore"), 1):
+			digest = str(index) * 64
+			module_schema = schema(module, projected=module == "udwm")
+			symbols = {} if module == "dwmcore" else {
+				"Test::Run": {
+					"name": "public: void __cdecl Test::Run(void)",
+					"rva": "0x1000",
+				},
+			}
+			source = catalog_root / self.architecture / module / "100.json"
+			source.parent.mkdir(parents=True, exist_ok=True)
+			source.write_text(json.dumps({
+				"schema_version": 1,
+				"records": [{
+					"revision": 7,
+					"image": {
+						"time_date_stamp": 123 + index,
+						"size_of_image": 0x10000,
+						"sha256": digest,
+					},
+					"pdb": {
+						"name": f"{module}.pdb",
+						"guid": "12345678-1234-5678-90ab-cdef01234567",
+						"age": index,
+						"sha256": "b" * 64,
+					},
+					"resolution_contract": symbol_catalog.resolution_contract(
+						module_schema, projection_schema.Version(100, 7), "release"
+					),
+					"symbols": symbols,
+				}],
+			}), encoding="utf-8")
+		index_root = catalog_root / self.architecture
+		(index_root / "index.json").write_text(json.dumps({
+			"schema_version": 1,
+			"architecture": self.architecture,
+			"resolver": {"dbghelp": {"version": "10.0.1.2", "sha256": "c" * 64}},
+			"sources": ["udwm/100.json", "dwmcore/100.json"],
+		}), encoding="utf-8")
 		self.output = self.repo / "out"
 
 	def tearDown(self) -> None:
@@ -69,6 +111,23 @@ class ProjectionCodegenTests(unittest.TestCase):
 
 	def write(self, module: str, value: dict) -> None:
 		(self.repo / "OpenGlass" / "ProjectionSchemas" / self.architecture / f"{module}.json").write_text(json.dumps(value), encoding="utf-8")
+
+	def refresh_catalog(self, module: str, value: dict) -> None:
+		version = projection_schema.Version(100, 7)
+		path = self.repo / "OpenGlass" / "SymbolCatalogs" / self.architecture / module / "100.json"
+		source = json.loads(path.read_text(encoding="utf-8"))
+		symbols = {}
+		for symbol in value["symbols"]:
+			selected = symbol_catalog._selected_binding(symbol, version, "release")
+			if selected is None:
+				continue
+			symbols[symbol["id"]] = {
+				"name": selected[1]["symbol_names"][0],
+				"rva": "0x1000",
+			}
+		source["records"][0]["resolution_contract"] = symbol_catalog.resolution_contract(value, version, "release")
+		source["records"][0]["symbols"] = symbols
+		path.write_text(json.dumps(source), encoding="utf-8")
 
 	def test_deterministic_incremental_atomic_output(self) -> None:
 		codegen.run(self.repo, self.architecture, self.output, False)
@@ -103,6 +162,8 @@ class ProjectionCodegenTests(unittest.TestCase):
 				"dwmcore.Layouts.generated.hpp",
 				"dwmcore.Symbols.generated.hpp",
 				"ProjectionRegistry.generated.inc",
+				"SymbolCatalog.generated.hpp",
+				"SymbolCatalog.generated.inc",
 			},
 			set(generated),
 		)
@@ -173,6 +234,7 @@ class ProjectionCodegenTests(unittest.TestCase):
 			"max_exclusive": None,
 		})
 		self.write("udwm", value)
+		self.refresh_catalog("udwm", value)
 		codegen.run(self.repo, self.architecture, self.output, False)
 		generated = (self.output / "ProjectionRegistry.generated.inc").read_text(encoding="utf-8")
 		self.assertIn("g_udwmCandidates[1]", generated)
@@ -278,6 +340,7 @@ class ProjectionCodegenTests(unittest.TestCase):
 			"auto anchor = Symbol_Test_Anchor.get(); void Use(Test* test) { test->Run(); }",
 			encoding="utf-8",
 		)
+		self.refresh_catalog("dwmcore", bad)
 		codegen.run(self.repo, self.architecture, self.output, False)
 
 	def test_projected_abi_compatibility_and_disjoint_target_variants(self) -> None:
@@ -297,6 +360,7 @@ class ProjectionCodegenTests(unittest.TestCase):
 		current.pop("abi_compatibility")
 		value["symbols"].append(current)
 		self.write("udwm", value)
+		self.refresh_catalog("udwm", value)
 		codegen.run(self.repo, self.architecture, self.output, False)
 		generated = (self.output / "ProjectionRegistry.generated.inc").read_text(encoding="utf-8")
 		self.assertIn("is_discard_return_compatible_v<HRESULT (*)(Test*)", generated)
@@ -371,7 +435,12 @@ class ProjectionCodegenTests(unittest.TestCase):
 			"struct Test { inline static void* s_value; }; void UseValue() { (void)Test::s_value; }",
 			encoding="utf-8",
 		)
+		self.refresh_catalog("dwmcore", value)
 		codegen.run(self.repo, self.architecture, self.output, False)
+		self.assertIn(
+			"Projection::SymbolFlags::Data",
+			(self.output / "ProjectionRegistry.generated.inc").read_text(encoding="utf-8"),
+		)
 
 	def test_rejects_raw_symbol_without_consumer(self) -> None:
 		bad = schema("dwmcore", projected=False)

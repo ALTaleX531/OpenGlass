@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 17763,
+        "revision": 2931
+      },
+      "sha256": "28a95b45d4ebefa4aeb461940b69b0607fc046d356906fe1cff5d2a255e93905",
+      "kind": "symbol_resolution_rejected",
+      "detail": "symbol audit.descriptors[50]: RVA address class must be Data"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 17763,
+        "revision": 5830
+      },
+      "sha256": "060cbf52c5bb48c1819dfb7194d8b49cecccfb7025d91bfe64e75c5029964242",
+      "kind": "symbol_resolution_rejected",
+      "detail": "symbol audit.descriptors[50]: RVA address class must be Data"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 17763,
+        "revision": 7322
+      },
+      "sha256": "0a7ca903b577a8859229612fd30baae7dc77a95359d5a073f38adafa7c1f9abb",
+      "kind": "symbol_resolution_rejected",
+      "detail": "symbol audit.descriptors[50]: RVA address class must be Data"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 17763,
+        "revision": 8385
+      },
+      "sha256": "60d43214e3cb6301309a018337373c476e2d9725fc0bc64c0195b30849069113",
+      "kind": "symbol_resolution_rejected",
+      "detail": "symbol audit.descriptors[50]: RVA address class must be Data"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 17763,
+        "revision": 8510
+      },
+      "sha256": "3a6c4c3bf1b7a2a1da1f7adc279f54dc5683884898ed638c203d7365e6b82076",
+      "kind": "symbol_resolution_rejected",
+      "detail": "symbol audit.descriptors[50]: RVA address class must be Data"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 17763,
+        "revision": 8641
+      },
+      "sha256": "0bef2010d541ad3902d940393798cd0e20d19e85f06a6ffc54f011d31c53c1c6",
+      "kind": "symbol_resolution_rejected",
+      "detail": "symbol audit.descriptors[50]: RVA address class must be Data"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 17763,
+        "revision": 8755
+      },
+      "sha256": "d32c9ca42cef13f9ddb8433af62547a48e4b7e84c3d42d95edc509710562b3f0",
+      "kind": "symbol_resolution_rejected",
+      "detail": "symbol audit.descriptors[50]: RVA address class must be Data"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 17763,
+        "revision": 9121
+      },
+      "sha256": "2105598c47006967acf6f80f6cff95c189699494e468c5cbe621f80531208362",
+      "kind": "symbol_resolution_rejected",
+      "detail": "symbol audit.descriptors[50]: RVA address class must be Data"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 18362,
+        "revision": 1832
+      },
+      "sha256": "340012da3bd68262c6bfd538543a42f991bf2ca8ee11c49d065fd5f25022f0c9",
+      "kind": "symbol_resolution_rejected",
+      "detail": "symbol audit.descriptors[50]: RVA address class must be Data"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 18362,
+        "revision": 2158
+      },
+      "sha256": "44d40a7cd7281f62174c4bd06fa1aab539663d33989d1d7ec93b9478c536785c",
+      "kind": "symbol_resolution_rejected",
+      "detail": "symbol audit.descriptors[50]: RVA address class must be Data"
+    },
+    {
+      "module": "dwmcore",
+      "version": {
+        "build": 28000,
+        "revision": 1896
+      },
+      "sha256": "68829e35c6f6697e7a6a6d9b1bb7f0f94f383c81759bf7ed7e876f494daf3a85",
+      "kind": "pdb_unavailable",
+      "detail": "cannot acquire paired PDB; direct=cannot download https://msdl.microsoft.com/download/symbols/dwmcore.pdb/81D72F45BAB8416A264AF3987632ABB81/dwmcore.pdb after 4 attempts: HTTP Error 404: Not Found; compressed=cannot download https://msdl.microsoft.com/download/symbols/dwmcore.pdb/81D72F45BAB8416A264AF3987632ABB81/dwmcore.pd_ after 4 attempts: HTTP Error 404: Not Found"
+    },
+    {
+      "module": "udwm",
+      "version": {
+        "build": 28000,
+        "revision": 1896
+      },
+      "sha256": "fe21fa7fdf2e258f19946f791ca566d73b805fc5f1dd54ac3df1f362cd67ebc8",
+      "kind": "pdb_unavailable",
+      "detail": "cannot acquire paired PDB; direct=cannot download https://msdl.microsoft.com/download/symbols/uDWM.pdb/747037BC9C16ED929CB937D8CA55A8601/uDWM.pdb after 4 attempts: HTTP Error 404: Not Found; compressed=cannot download https://msdl.microsoft.com/download/symbols/uDWM.pdb/747037BC9C16ED929CB937D8CA55A8601/uDWM.pd_ after 4 attempts: HTTP Error 404: Not Found"
+    }
+  ]
+}

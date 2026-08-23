@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "ApplicationPaths.hpp"
+#include "PeCodeViewIdentity.hpp"
 #include "Symbols.hpp"
 
 #include <winrt/Windows.Foundation.h>
@@ -9,12 +10,10 @@
 #include <winrt/Windows.Web.Http.Filters.h>
 #include <wil/cppwinrt.h>
 
-#include <DbgHelp.h>
 #include <chrono>
 #include <filesystem>
 #include <roapi.h>
 
-#pragma comment(lib, "DbgHelp.lib")
 #pragma comment(lib, "runtimeobject.lib")
 #pragma comment(lib, "windowsapp.lib")
 
@@ -22,13 +21,6 @@ namespace OpenGlass
 {
 	namespace
 	{
-		struct PdbInfo
-		{
-			DWORD Signature;
-			GUID Guid;
-			DWORD Age;
-			char PdbFileName[1];
-		};
 
 		struct RawDownloadProgress
 		{
@@ -192,24 +184,6 @@ namespace OpenGlass
 			return (std::filesystem::path{ systemPath } / moduleName).wstring();
 		}
 
-		HRESULT MultiByteToWideString(const char* source, std::wstring& destination)
-		{
-			const int required = MultiByteToWideChar(CP_ACP, 0, source, -1, nullptr, 0);
-			if (required == 0)
-			{
-				return HRESULT_FROM_WIN32(GetLastError());
-			}
-
-			std::wstring buffer(static_cast<size_t>(required), L'\0');
-			if (MultiByteToWideChar(CP_ACP, 0, source, -1, buffer.data(), required) == 0)
-			{
-				return HRESULT_FROM_WIN32(GetLastError());
-			}
-
-			buffer.resize(static_cast<size_t>(required - 1));
-			destination = std::move(buffer);
-			return S_OK;
-		}
 
 		std::wstring FormatHResult(HRESULT hr)
 		{
@@ -232,105 +206,39 @@ namespace OpenGlass
 
 		HRESULT BuildModuleDownloadInfo(const std::wstring& modulePath, PCWSTR moduleName, LPCWSTR symbolServerBase, ModuleDownloadInfo& info)
 		{
-			PdbInfo* pdbInfo = nullptr;
 			info = {};
 			info.moduleName = moduleName;
 			info.modulePath = modulePath;
 			info.url = symbolServerBase;
 
-			wil::unique_hfile file
-			{
-				CreateFileW(
-					modulePath.c_str(),
-					GENERIC_READ,
-					FILE_SHARE_READ,
-					nullptr,
-					OPEN_EXISTING,
-					FILE_ATTRIBUTE_NORMAL,
-					nullptr
-				)
-			};
-			RETURN_LAST_ERROR_IF(!file);
+			PeCodeViewIdentity identity{};
+			RETURN_IF_FAILED(ReadFilePeCodeViewIdentity(modulePath.c_str(), identity));
+			info.pdbFileName = identity.pdbName;
 
-			wil::unique_handle fileMapping
-			{
-				CreateFileMappingW(
-					file.get(),
-					nullptr,
-					PAGE_READONLY,
-					0,
-					0,
-					nullptr
-				)
-			};
-			RETURN_LAST_ERROR_IF(!fileMapping);
-
-			wil::unique_mapview_ptr<void> imageBase
-			{
-				MapViewOfFile(
-					fileMapping.get(),
-					FILE_MAP_READ,
-					0,
-					0,
-					0
-				)
-			};
-			RETURN_LAST_ERROR_IF(!imageBase);
-
-			ULONG size = 0;
-			const auto debugDirectory = reinterpret_cast<PIMAGE_DEBUG_DIRECTORY>(
-				ImageDirectoryEntryToDataEx(
-					imageBase.get(),
-					FALSE,
-					IMAGE_DIRECTORY_ENTRY_DEBUG,
-					&size,
-					nullptr
-				)
+			WCHAR identifier[48]{};
+			swprintf_s(
+				identifier,
+				L"%08lX%04hX%04hX%02hhX%02hhX%02hhX%02hhX%02hhX%02hhX%02hhX%02hhX%x",
+				identity.pdbGuid.Data1,
+				identity.pdbGuid.Data2,
+				identity.pdbGuid.Data3,
+				identity.pdbGuid.Data4[0],
+				identity.pdbGuid.Data4[1],
+				identity.pdbGuid.Data4[2],
+				identity.pdbGuid.Data4[3],
+				identity.pdbGuid.Data4[4],
+				identity.pdbGuid.Data4[5],
+				identity.pdbGuid.Data4[6],
+				identity.pdbGuid.Data4[7],
+				identity.pdbAge
 			);
-			RETURN_HR_IF(HRESULT_FROM_WIN32(ERROR_NOT_FOUND), !debugDirectory || size < sizeof(IMAGE_DEBUG_DIRECTORY));
 
-			for (ULONG index = 0; index < size / sizeof(IMAGE_DEBUG_DIRECTORY); ++index)
-			{
-				if (debugDirectory[index].Type != IMAGE_DEBUG_TYPE_CODEVIEW)
-				{
-					continue;
-				}
-
-				pdbInfo = reinterpret_cast<PdbInfo*>(reinterpret_cast<ULONG_PTR>(imageBase.get()) + debugDirectory[index].PointerToRawData);
-				if (constexpr DWORD RSDS = 'SDSR'; *reinterpret_cast<DWORD const*>(&pdbInfo->Signature) != RSDS)
-				{
-					continue;
-				}
-
-				RETURN_IF_FAILED(MultiByteToWideString(pdbInfo->PdbFileName, info.pdbFileName));
-
-				WCHAR identifier[40]{};
-				swprintf_s(
-					identifier,
-					L"%08lX%04hX%04hX%02hhX%02hhX%02hhX%02hhX%02hhX%02hhX%02hhX%02hhX%x",
-					pdbInfo->Guid.Data1,
-					pdbInfo->Guid.Data2,
-					pdbInfo->Guid.Data3,
-					pdbInfo->Guid.Data4[0],
-					pdbInfo->Guid.Data4[1],
-					pdbInfo->Guid.Data4[2],
-					pdbInfo->Guid.Data4[3],
-					pdbInfo->Guid.Data4[4],
-					pdbInfo->Guid.Data4[5],
-					pdbInfo->Guid.Data4[6],
-					pdbInfo->Guid.Data4[7],
-					pdbInfo->Age
-				);
-
-				info.url += info.pdbFileName;
-				info.url += L"/";
-				info.url += identifier;
-				info.url += L"/";
-				info.url += info.pdbFileName;
-				return S_OK;
-			}
-
-			return HRESULT_FROM_WIN32(ERROR_NOT_FOUND);
+			info.url += info.pdbFileName;
+			info.url += L"/";
+			info.url += identifier;
+			info.url += L"/";
+			info.url += info.pdbFileName;
+			return S_OK;
 		}
 
 		SymbolDownloadProgress MakeProgress(int percent, bool indeterminate, std::wstring phase, std::wstring detail)

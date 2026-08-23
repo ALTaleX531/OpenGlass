@@ -1,0 +1,3098 @@
+{
+  "schema_version": 1,
+  "module": "uDWM.dll",
+  "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+  "recognized_builds": [
+    17763,
+    18362,
+    19041,
+    20348,
+    22000,
+    22621,
+    26100,
+    28000
+  ],
+  "records": [
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 17763,
+        "revision": 1
+      },
+      "sha256": "b6e1ddbe8070ed47ab954ca1b2ce59589e403f659dd1b329b54c6ff4aa02e8cb",
+      "time_date_stamp": 2565198890,
+      "size_of_image": 983040,
+      "file_size": 948224,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "1809 | BASE"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 17763,
+        "revision": 168
+      },
+      "sha256": "7c0f260df429e3fbaf318340ca30055c93705694d56ad7461fb4ad8f5b615935",
+      "time_date_stamp": 609877894,
+      "size_of_image": 974848,
+      "file_size": 947200,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "1809 | KB4469342",
+        "1809 | KB4471332",
+        "1809 | KB4476976",
+        "1809 | KB4480116",
+        "1809 | KB4482887",
+        "1809 | KB4483235",
+        "1809 | KB4487044",
+        "1809 | KB4489899"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 17763,
+        "revision": 404
+      },
+      "sha256": "f1a13585d9d86daf68329067dd337a15e4ae153e49d55170141747daf625162d",
+      "time_date_stamp": 3295955637,
+      "size_of_image": 983040,
+      "file_size": 948224,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "1809 | KB4490481",
+        "1809 | KB4493509",
+        "1809 | KB4494441",
+        "1809 | KB4495667",
+        "1809 | KB4497934",
+        "1809 | KB4501371",
+        "1809 | KB4501835",
+        "1809 | KB4503327",
+        "1809 | KB4505056",
+        "1809 | KB4505658",
+        "1809 | KB4507469",
+        "1809 | KB4509479",
+        "1809 | KB4511553"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 17763,
+        "revision": 719
+      },
+      "sha256": "412c9971fd7bb55cc027bd0d2b663e503bcf6322afa09d3ef26fdb7ee703d575",
+      "time_date_stamp": 1002035632,
+      "size_of_image": 983040,
+      "file_size": 948224,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "1809 | KB4512534",
+        "1809 | KB4512578",
+        "1809 | KB4522015"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 17763,
+        "revision": 771
+      },
+      "sha256": "8eea5149042d0d9f42255d07ba0fca3c29e70bf33d9ec843fe7157b3ab8dda61",
+      "time_date_stamp": 3396769767,
+      "size_of_image": 983040,
+      "file_size": 948224,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "1809 | KB4516077",
+        "1809 | KB4519338",
+        "1809 | KB4524148"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 17763,
+        "revision": 831
+      },
+      "sha256": "9564ac960f90f3c7d6b53a68463e760d022fd4b324f8ca0ce4327241a62f1405",
+      "time_date_stamp": 588480810,
+      "size_of_image": 983040,
+      "file_size": 948224,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "1809 | KB4520062",
+        "1809 | KB4523205",
+        "1809 | KB4530715",
+        "1809 | KB4532691",
+        "1809 | KB4534273",
+        "1809 | KB4534321"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 17763,
+        "revision": 1075
+      },
+      "sha256": "86691b3ca7e69a24c1c4b99d8d55a61e7b51c6f98601cd273acd7d18aeed6614",
+      "time_date_stamp": 3789568094,
+      "size_of_image": 978944,
+      "file_size": 947200,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "1809 | KB4537818",
+        "1809 | KB4538461"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 17763,
+        "revision": 1131
+      },
+      "sha256": "95c1f983ef1450a5b7d1cb8a3ac8baac948ef0ae1ce4c59fc68014ea7c2d578d",
+      "time_date_stamp": 2084792335,
+      "size_of_image": 978944,
+      "file_size": 947200,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "1809 | KB4541331",
+        "1809 | KB4549949",
+        "1809 | KB4550969",
+        "1809 | KB4551853",
+        "1809 | KB4554354",
+        "1809 | KB4558998",
+        "1809 | KB4561608",
+        "1809 | KB4567513"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 17763,
+        "revision": 1369
+      },
+      "sha256": "dba66d6402d674e94b3f5738815586e6fc1467abe7f5b72334638e914c150190",
+      "time_date_stamp": 3697867700,
+      "size_of_image": 974848,
+      "file_size": 946688,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "1809 | KB4559003",
+        "1809 | KB4565349",
+        "1809 | KB4571748"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 17763,
+        "revision": 1457
+      },
+      "sha256": "833658f47cbd789cc44ac9e2c2464297af58640d2e39a907e43e467aad2040fc",
+      "time_date_stamp": 3561387042,
+      "size_of_image": 974848,
+      "file_size": 946688,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "1809 | KB4570333"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 17763,
+        "revision": 1490
+      },
+      "sha256": "ff744ed18b77a6c575f58684ad06319f26f9090338f2a9364ef6c7506b56a642",
+      "time_date_stamp": 2645606735,
+      "size_of_image": 974848,
+      "file_size": 946176,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "1809 | KB4577069",
+        "1809 | KB4577668",
+        "1809 | KB4580390",
+        "1809 | KB4586793",
+        "1809 | KB4594442"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 17763,
+        "revision": 1613
+      },
+      "sha256": "bbcf8d36431385b751c4cb6f56728747010b7b7c172e1625475059c7cba0017f",
+      "time_date_stamp": 3035696960,
+      "size_of_image": 978944,
+      "file_size": 946688,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "1809 | KB4586839",
+        "1809 | KB4592440"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 17763,
+        "revision": 1697
+      },
+      "sha256": "0810a8a017f6201bd31348c1152aa10363b375c493f414e0e7e4edede38114b8",
+      "time_date_stamp": 1281444411,
+      "size_of_image": 978944,
+      "file_size": 946688,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "1809 | KB4598230",
+        "1809 | KB4598296",
+        "1809 | KB4601345",
+        "1809 | KB4601383",
+        "1809 | KB5000822",
+        "1809 | KB5001568",
+        "1809 | KB5001638"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 17763,
+        "revision": 1852
+      },
+      "sha256": "21ffd264983a0a12a4854ae8af8c020a19b869b760a62afbe06e78c0c3d80e21",
+      "time_date_stamp": 1866219357,
+      "size_of_image": 974848,
+      "file_size": 945152,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "1809 | KB5000854",
+        "1809 | KB5001342",
+        "1809 | KB5001384",
+        "1809 | KB5003171",
+        "1809 | KB5003217",
+        "1809 | KB5003646",
+        "1809 | KB5003703",
+        "1809 | KB5004244",
+        "1809 | KB5004308",
+        "1809 | KB5004947",
+        "1809 | KB5005030",
+        "1809 | KB5005102",
+        "1809 | KB5005394",
+        "1809 | KB5005568",
+        "1809 | KB5005625",
+        "1809 | KB5006672",
+        "1809 | KB5006744",
+        "1809 | KB5007206",
+        "1809 | KB5007266",
+        "1809 | KB5008218",
+        "1809 | KB5008602",
+        "1809 | KB5009557",
+        "1809 | KB5009616",
+        "1809 | KB5010196",
+        "1809 | KB5010351",
+        "1809 | KB5010427",
+        "1809 | KB5010791",
+        "1809 | KB5011503",
+        "1809 | KB5011551",
+        "1809 | KB5012636",
+        "1809 | KB5012647",
+        "1809 | KB5013941",
+        "1809 | KB5015018"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 17763,
+        "revision": 2989
+      },
+      "sha256": "1738e43d85cf68d70996e0bcd7096e4d5e2e2a96059cb67c9b7d8e9a73f6dc3d",
+      "time_date_stamp": 2822905686,
+      "size_of_image": 974848,
+      "file_size": 942080,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "1809 | KB5014022",
+        "1809 | KB5014669",
+        "1809 | KB5014692",
+        "1809 | KB5015811",
+        "1809 | KB5015880",
+        "1809 | KB5016623",
+        "1809 | KB5016690",
+        "1809 | KB5017315",
+        "1809 | KB5017379",
+        "1809 | KB5018419",
+        "1809 | KB5019966",
+        "1809 | KB5020438",
+        "1809 | KB5021237",
+        "1809 | KB5021655",
+        "1809 | KB5022286",
+        "1809 | KB5022554",
+        "1809 | KB5022840",
+        "1809 | KB5023702",
+        "1809 | KB5025229",
+        "1809 | KB5026362",
+        "1809 | KB5027222",
+        "1809 | KB5028168",
+        "1809 | KB5029247",
+        "1809 | KB5030214",
+        "1809 | KB5031361",
+        "1809 | KB5032196",
+        "1809 | KB5033371",
+        "1809 | KB5034127",
+        "1809 | KB5034768",
+        "1809 | KB5035849",
+        "1809 | KB5036896",
+        "1809 | KB5037425",
+        "1809 | KB5037765",
+        "1809 | KB5039217",
+        "1809 | KB5039705",
+        "1809 | KB5040430",
+        "1809 | KB5041578",
+        "1809 | KB5043050",
+        "1809 | KB5044277",
+        "1809 | KB5046615",
+        "1809 | KB5048661"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 17763,
+        "revision": 6766
+      },
+      "sha256": "e52f0800b85dd44e986bd3786ef718b9f76b46de7db00623b7e8e25a8694eab4",
+      "time_date_stamp": 40995938,
+      "size_of_image": 974848,
+      "file_size": 945152,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "1809 | KB5050008",
+        "1809 | KB5052000",
+        "1809 | KB5053596"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 17763,
+        "revision": 7136
+      },
+      "sha256": "8332079ea95e5b011f35ddb274cb81e1d8aec9d1ea67f31be37f011c62f87494",
+      "time_date_stamp": 1506165287,
+      "size_of_image": 974848,
+      "file_size": 944640,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "1809 | KB5055519",
+        "1809 | KB5058922",
+        "1809 | KB5059091"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 17763,
+        "revision": 7309
+      },
+      "sha256": "cc1766479357e064bc7c5905d748652eaf97d7f2daf61b83bf4f8274b76aa3a1",
+      "time_date_stamp": 3114825223,
+      "size_of_image": 974848,
+      "file_size": 944640,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "1809 | KB5058392",
+        "1809 | KB5061978"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 17763,
+        "revision": 7434
+      },
+      "sha256": "5687b7b11986efca9b9a3c7c42be68fc62660c15453078025513b7bf1fae82e0",
+      "time_date_stamp": 1282286326,
+      "size_of_image": 974848,
+      "file_size": 944640,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "1809 | KB5060531"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 17763,
+        "revision": 7553
+      },
+      "sha256": "cab631a9b2f9740fbf5d8c776c9e3f7ec22847e60c579e4fdebb6c2867f2d4d8",
+      "time_date_stamp": 240695200,
+      "size_of_image": 974848,
+      "file_size": 944640,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "1809 | KB5062557",
+        "1809 | KB5063877",
+        "1809 | KB5066187"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 17763,
+        "revision": 7786
+      },
+      "sha256": "fbdd146a6dec919bc6564b837fea45ab42266576033d49b9c1c8dc403cc86403",
+      "time_date_stamp": 4160818218,
+      "size_of_image": 974848,
+      "file_size": 943616,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "1809 | KB5065428"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 17763,
+        "revision": 7919
+      },
+      "sha256": "9c8d0fd0fd5a210893710efc2b69dc84a77e075af2c74797e25d0302ffba84cd",
+      "time_date_stamp": 2778834319,
+      "size_of_image": 974848,
+      "file_size": 944640,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "1809 | KB5066586"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 17763,
+        "revision": 8024
+      },
+      "sha256": "8bab2890924cec553b484b1f6c02efe7d310d95b8a4eaa64a4927358c6e1e866",
+      "time_date_stamp": 3704091871,
+      "size_of_image": 974848,
+      "file_size": 944640,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "1809 | KB5068791",
+        "1809 | KB5071544",
+        "1809 | KB5074975"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 17763,
+        "revision": 8276
+      },
+      "sha256": "8d6aabe56e0b58568d876f28bf7673e900af5e5f6732fe8c22a4ee1c750bbbe0",
+      "time_date_stamp": 1458350175,
+      "size_of_image": 974848,
+      "file_size": 945152,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "1809 | KB5073723",
+        "1809 | KB5077795",
+        "1809 | KB5078131"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 17763,
+        "revision": 8385
+      },
+      "sha256": "e2c37d90d26f3f2ffcb491c5e96414e21ee120484573cf4b20ce0ad20ab159bf",
+      "time_date_stamp": 3746655719,
+      "size_of_image": 974848,
+      "file_size": 943616,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "1809 | KB5075904",
+        "1809 | KB5078752"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 17763,
+        "revision": 8641
+      },
+      "sha256": "4a5de7f3614976dd999a6bb1720ec45c47cf6f4e6402b1d45a7893dcfad8e62f",
+      "time_date_stamp": 3753183238,
+      "size_of_image": 974848,
+      "file_size": 945152,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "1809 | KB5082123",
+        "1809 | KB5087538",
+        "1809 | KB5091573"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 17763,
+        "revision": 8880
+      },
+      "sha256": "62c9cc1ca0dfeb3c4916e780fdf436e2bedb9127b482afa521200b14863a2016",
+      "time_date_stamp": 3530422082,
+      "size_of_image": 974848,
+      "file_size": 945152,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "1809 | KB5094123"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 17763,
+        "revision": 9020
+      },
+      "sha256": "556d8a48232f477f56d0fc3e61f96f5508f3598644e586025c5e28ce0a4572da",
+      "time_date_stamp": 3398323337,
+      "size_of_image": 974848,
+      "file_size": 943616,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "1809 | KB5099538"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 17763,
+        "revision": 9121
+      },
+      "sha256": "056451f46cc5177defcdede3567ce09af096545061cd70f83ae86d460d22f0ad",
+      "time_date_stamp": 4265632256,
+      "size_of_image": 974848,
+      "file_size": 943616,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "1809 | KB5120238"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 18362,
+        "revision": 1
+      },
+      "sha256": "f5f3d5f39aa766006d24984df3425346d2a58632dc15fc9942e28d5492eb87d0",
+      "time_date_stamp": 1835561560,
+      "size_of_image": 1007616,
+      "file_size": 975360,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "1903 | BASE"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 18362,
+        "revision": 267
+      },
+      "sha256": "8073df58bee4148fe621cd78fef95e681f7fa8d5645e0ce1cd59c85b4326babf",
+      "time_date_stamp": 4018251812,
+      "size_of_image": 1007616,
+      "file_size": 975360,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "1903 | KB4505903",
+        "1903 | KB4512508",
+        "1903 | KB4512941",
+        "1903 | KB4515384",
+        "1903 | KB4522016"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 18362,
+        "revision": 387
+      },
+      "sha256": "8e354a50ceab0770d54f64250c3b3b32810d5bdcfc0909c1c3acf397ff2585db",
+      "time_date_stamp": 1954706648,
+      "size_of_image": 1007616,
+      "file_size": 975872,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "1903 | KB4517211",
+        "1903 | KB4517389",
+        "1903 | KB4524147",
+        "1909 | BASE"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 18362,
+        "revision": 449
+      },
+      "sha256": "4a1520b7399088fce4c4cca1346d58271b642b92e5db8ddbfcbb02455512da27",
+      "time_date_stamp": 2175402265,
+      "size_of_image": 1007616,
+      "file_size": 975872,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "1903 | KB4522355",
+        "1903 | KB4524570",
+        "1903 | KB4528760",
+        "1903 | KB4530684"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 18362,
+        "revision": 628
+      },
+      "sha256": "65cde8d2bd7726051fe5f0b8bbb5be9b863d9dd28ab09c7b0880268d5884048b",
+      "time_date_stamp": 262640049,
+      "size_of_image": 1007616,
+      "file_size": 974336,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "1903 | KB4532693",
+        "1903 | KB4532695"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 18362,
+        "revision": 693
+      },
+      "sha256": "02d69e07406d4f3d8eea77756893380ff2e3d57cd3a82a2a6e1e70f8e3fa65e5",
+      "time_date_stamp": 1777855037,
+      "size_of_image": 1007616,
+      "file_size": 974848,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "1903 | KB4535996",
+        "1903 | KB4540673",
+        "1903 | KB4551762"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 18362,
+        "revision": 752
+      },
+      "sha256": "e5c4578e36ac8fa33e5da5ee3d5dcbb98ee05b67e617f241e22f4662fc3eb30c",
+      "time_date_stamp": 2667945125,
+      "size_of_image": 1007616,
+      "file_size": 974336,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "1903 | KB4541335",
+        "1903 | KB4549951",
+        "1903 | KB4550945",
+        "1903 | KB4554364",
+        "1903 | KB4556799",
+        "1903 | KB4559004",
+        "1903 | KB4560960",
+        "1903 | KB4565351",
+        "1903 | KB4565483",
+        "1903 | KB4566116",
+        "1903 | KB4567512",
+        "1903 | KB4574727"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 18362,
+        "revision": 1110
+      },
+      "sha256": "c308a83c35536970d0bdbd0bf654a0b9230c06c176252ac8bf1984a199d39c17",
+      "time_date_stamp": 1219840087,
+      "size_of_image": 1007616,
+      "file_size": 974336,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "1903 | KB4577062",
+        "1903 | KB4577671",
+        "1903 | KB4580386",
+        "1903 | KB4586786",
+        "1903 | KB4594443"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 18362,
+        "revision": 1237
+      },
+      "sha256": "e3c0ff7f009186638704ef9b0ea8dd390c1debd130b01fa8d653c4d1456753e9",
+      "time_date_stamp": 2093092799,
+      "size_of_image": 1007616,
+      "file_size": 975872,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "1903 | KB4586819",
+        "1903 | KB4592449"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 18362,
+        "revision": 1316
+      },
+      "sha256": "cf40016ee1dc776f5a987bf19685e17b76184a255f33477e50ce4be4f3bfe586",
+      "time_date_stamp": 766490410,
+      "size_of_image": 1007616,
+      "file_size": 975872,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "1909 | KB4598229",
+        "1909 | KB4598298",
+        "1909 | KB4601315",
+        "1909 | KB4601380",
+        "1909 | KB5000808",
+        "1909 | KB5001028",
+        "1909 | KB5001566",
+        "1909 | KB5001648"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 18362,
+        "revision": 1474
+      },
+      "sha256": "4bdd50b286575f46f982c212beab2819dc812e9f318d7d90162f0171d2a177b3",
+      "time_date_stamp": 3725234714,
+      "size_of_image": 1007616,
+      "file_size": 974848,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "1909 | KB5000850",
+        "1909 | KB5001337",
+        "1909 | KB5001396",
+        "1909 | KB5003169",
+        "1909 | KB5003212",
+        "1909 | KB5003635",
+        "1909 | KB5003698",
+        "1909 | KB5004245",
+        "1909 | KB5004293",
+        "1909 | KB5004946",
+        "1909 | KB5005031",
+        "1909 | KB5005103",
+        "1909 | KB5005566",
+        "1909 | KB5005624",
+        "1909 | KB5006667",
+        "1909 | KB5007189",
+        "1909 | KB5008206",
+        "1909 | KB5009545",
+        "1909 | KB5010345",
+        "1909 | KB5010792",
+        "1909 | KB5011485",
+        "1909 | KB5012591",
+        "1909 | KB5013945"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 19041,
+        "revision": 1
+      },
+      "sha256": "0f568436ea5c7fce6435b4eec9966b2ea0437c5f34700b6bce080493352d697b",
+      "time_date_stamp": 515473847,
+      "size_of_image": 1036288,
+      "file_size": 1004544,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "2004 | BASE"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 19041,
+        "revision": 388
+      },
+      "sha256": "77beddbc7b5c803abf89efffe1a88a119224a618fd69e8099c82884bb0181103",
+      "time_date_stamp": 1749720521,
+      "size_of_image": 1036288,
+      "file_size": 1006592,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "2004 | KB4565503"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 19041,
+        "revision": 423
+      },
+      "sha256": "710b19d292b4cbd476882f93f22a38df95ab8544b72059a9f184da1a64805877",
+      "time_date_stamp": 3349211907,
+      "size_of_image": 1044480,
+      "file_size": 1009664,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "2004 | KB4566782",
+        "2004 | KB4568831"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 19041,
+        "revision": 488
+      },
+      "sha256": "f214588653819ddac41c42abb9e846e0e2f0428daf33c4757e3f251e8fd5ee97",
+      "time_date_stamp": 1795668404,
+      "size_of_image": 1044480,
+      "file_size": 1009664,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "2004 | KB4571744",
+        "2004 | KB4571756",
+        "20H2 | BASE"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 19041,
+        "revision": 546
+      },
+      "sha256": "c50f0da088d6190133cf3ac058b5bd944ebc1bbf897a69bf2249185bf90c9516",
+      "time_date_stamp": 2993424644,
+      "size_of_image": 1044480,
+      "file_size": 1010176,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "2004 | KB4577063",
+        "2004 | KB4579311",
+        "2004 | KB4580364",
+        "2004 | KB4586781",
+        "2004 | KB4594440"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 19041,
+        "revision": 662
+      },
+      "sha256": "5c503e4d30bd7571ce73250550dffe84a8ab011490d4a7e5daeface01322a672",
+      "time_date_stamp": 2780489302,
+      "size_of_image": 1048576,
+      "file_size": 1011200,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "2004 | KB4586853",
+        "2004 | KB4592438"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 19041,
+        "revision": 746
+      },
+      "sha256": "59a2d5e88c2a65b5d8299cfbb5695cf4277c36b9b1fe16009fb2963b768b7d04",
+      "time_date_stamp": 1545693069,
+      "size_of_image": 1048576,
+      "file_size": 1011200,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "2004 | KB4598242",
+        "2004 | KB4598291",
+        "2004 | KB4601319",
+        "2004 | KB4601382",
+        "2004 | KB5000802",
+        "2004 | KB5001567",
+        "2004 | KB5001649"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 19041,
+        "revision": 906
+      },
+      "sha256": "fe586b7e4e6ab43e325f0a30bae11613fbd5c901352d080eec71345efcd5bc33",
+      "time_date_stamp": 3555030447,
+      "size_of_image": 1044480,
+      "file_size": 1010176,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "2004 | KB5000842",
+        "2004 | KB5001330",
+        "2004 | KB5001391",
+        "2004 | KB5003173",
+        "2004 | KB5003214",
+        "2004 | KB5003637",
+        "2004 | KB5003690",
+        "2004 | KB5004237",
+        "2004 | KB5004296",
+        "2004 | KB5004476",
+        "2004 | KB5004760",
+        "2004 | KB5004945",
+        "2004 | KB5005033",
+        "2004 | KB5005101",
+        "2004 | KB5005565",
+        "21H1 | BASE"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 19041,
+        "revision": 1266
+      },
+      "sha256": "12285abc3fbc45cfb7be2a7e780f0ccce91c4a702302d1f29e4cd19b3653e189",
+      "time_date_stamp": 3504422029,
+      "size_of_image": 1044480,
+      "file_size": 1010176,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "2004 | KB5005611",
+        "2004 | KB5006670",
+        "2004 | KB5006738",
+        "2004 | KB5007186",
+        "2004 | KB5007253",
+        "2004 | KB5008212",
+        "20H2 | KB5009543",
+        "20H2 | KB5009596",
+        "20H2 | KB5010342",
+        "20H2 | KB5010415",
+        "20H2 | KB5010793",
+        "20H2 | KB5011487",
+        "21H2 | BASE"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 19041,
+        "revision": 1620
+      },
+      "sha256": "a84270b8ed2e78fcb80d8897f77382e9361985e996081c15cf44a6de04ce56af",
+      "time_date_stamp": 1670141915,
+      "size_of_image": 1044480,
+      "file_size": 1010176,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "20H2 | KB5011543",
+        "20H2 | KB5011831",
+        "20H2 | KB5012599",
+        "20H2 | KB5013942",
+        "20H2 | KB5015020"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 19041,
+        "revision": 1741
+      },
+      "sha256": "8fd32a456a47c4e2e21fe1550fe780485b11c63a399aba022843c7fb1778511a",
+      "time_date_stamp": 719959868,
+      "size_of_image": 1040384,
+      "file_size": 1009664,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "20H2 | KB5014023",
+        "20H2 | KB5014666",
+        "20H2 | KB5014699",
+        "20H2 | KB5015807",
+        "20H2 | KB5015878",
+        "20H2 | KB5016616",
+        "20H2 | KB5016688",
+        "20H2 | KB5017308",
+        "22H2 | BASE"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 19041,
+        "revision": 2075
+      },
+      "sha256": "8a418577685635e9370a9b0fc2a83c791815d58527c3c9f79f423d897a1a59e5",
+      "time_date_stamp": 4032608024,
+      "size_of_image": 1036288,
+      "file_size": 1008128,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "20H2 | KB5017380",
+        "20H2 | KB5018410",
+        "20H2 | KB5018482",
+        "20H2 | KB5019959",
+        "20H2 | KB5020030",
+        "20H2 | KB5020435",
+        "20H2 | KB5020953",
+        "20H2 | KB5021233"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 19041,
+        "revision": 2486
+      },
+      "sha256": "2726aeea08374ef88e00fc2560ea256e05cc3246cfdfde089a06f8610b894b18",
+      "time_date_stamp": 916972861,
+      "size_of_image": 1036288,
+      "file_size": 1008128,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "20H2 | KB5019275",
+        "20H2 | KB5022282",
+        "20H2 | KB5022834",
+        "20H2 | KB5022906",
+        "20H2 | KB5023696",
+        "20H2 | KB5023773",
+        "20H2 | KB5025221",
+        "20H2 | KB5026361",
+        "21H2 | KB5027215",
+        "21H2 | KB5028166",
+        "21H2 | KB5029244",
+        "21H2 | KB5030211",
+        "22H2 | KB5025297",
+        "22H2 | KB5026435",
+        "22H2 | KB5027293",
+        "22H2 | KB5028244",
+        "22H2 | KB5029331",
+        "22H2 | KB5030300"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 19041,
+        "revision": 3570
+      },
+      "sha256": "34d48b7535e561cccf94fc715d232430623f40d9554a7c211d3cb232e69267b5",
+      "time_date_stamp": 1707579802,
+      "size_of_image": 1036288,
+      "file_size": 1008128,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "21H2 | KB5031356"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 19041,
+        "revision": 3636
+      },
+      "sha256": "233a7ba8f486abe44e715acadb9887abe4a870d633ccfeb7e837ace4f1da2bb5",
+      "time_date_stamp": 3968935390,
+      "size_of_image": 1036288,
+      "file_size": 1008128,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "21H2 | KB5032189",
+        "22H2 | KB5031445"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 19041,
+        "revision": 3758
+      },
+      "sha256": "857812d2a92fe87bd482c4ceb766bf013c50c1de6c114304be7a5e93336fe499",
+      "time_date_stamp": 2527470693,
+      "size_of_image": 1036288,
+      "file_size": 1009152,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "21H2 | KB5033372",
+        "21H2 | KB5034122",
+        "21H2 | KB5034763",
+        "21H2 | KB5035845",
+        "22H2 | KB5032278",
+        "22H2 | KB5034203",
+        "22H2 | KB5034843"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 19041,
+        "revision": 4239
+      },
+      "sha256": "f833317f3e20a0e69b260097db504e8412fc0682869c0c83a84f5e84c7b3b733",
+      "time_date_stamp": 1634977012,
+      "size_of_image": 1036288,
+      "file_size": 1009152,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "21H2 | KB5036892",
+        "22H2 | KB5035941"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 19041,
+        "revision": 4355
+      },
+      "sha256": "0a46ebfd202b1fe94014d7fb6b42d4ca88db36791614e33a289b837f6954fb9e",
+      "time_date_stamp": 1682599432,
+      "size_of_image": 1036288,
+      "file_size": 1009152,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "21H2 | KB5037768",
+        "21H2 | KB5039211",
+        "21H2 | KB5040427",
+        "21H2 | KB5041580",
+        "21H2 | KB5043064",
+        "21H2 | KB5044273",
+        "21H2 | KB5046613",
+        "21H2 | KB5048652",
+        "22H2 | KB5036979",
+        "22H2 | KB5037849",
+        "22H2 | KB5039299",
+        "22H2 | KB5040525",
+        "22H2 | KB5041582",
+        "22H2 | KB5043131",
+        "22H2 | KB5045594",
+        "22H2 | KB5046714"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 19041,
+        "revision": 5369
+      },
+      "sha256": "bfd9976b1b3ed3837c787a8c8d9213fd4d0fbe84d868d3e979cd63b944d5950a",
+      "time_date_stamp": 1493868621,
+      "size_of_image": 1040384,
+      "file_size": 1011712,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "21H2 | KB5049981",
+        "21H2 | KB5051974",
+        "21H2 | KB5053606",
+        "22H2 | KB5050081",
+        "22H2 | KB5052077",
+        "22H2 | KB5053643"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 19041,
+        "revision": 5737
+      },
+      "sha256": "a48a32e625bec593976b29a2786ed411167877a19d338c149ae7eb15622b6ce3",
+      "time_date_stamp": 2622395906,
+      "size_of_image": 1048576,
+      "file_size": 1014784,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "21H2 | KB5055518"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 19041,
+        "revision": 5794
+      },
+      "sha256": "caa343fbdfb353b061bd8be646c5965d2706d02ac3f2250d2dc705ec49b2b3e9",
+      "time_date_stamp": 2383412240,
+      "size_of_image": 1044480,
+      "file_size": 1013248,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "22H2 | KB5055612"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 19041,
+        "revision": 5848
+      },
+      "sha256": "6eaf208370cb0aaeb68f5c656345572caa786eed38fafdf3749f0a76ec6b8d6f",
+      "time_date_stamp": 3820310702,
+      "size_of_image": 1044480,
+      "file_size": 1013248,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "21H2 | KB5058379",
+        "21H2 | KB5061768",
+        "21H2 | KB5061979",
+        "22H2 | KB5058481"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 19041,
+        "revision": 5965
+      },
+      "sha256": "1f3910e72dbdd19cb0affebbd1cd0d70b2d28010bd107d9d8f773243b0874936",
+      "time_date_stamp": 3676376998,
+      "size_of_image": 1044480,
+      "file_size": 1013760,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "21H2 | KB5060533",
+        "21H2 | KB5062554",
+        "22H2 | KB5061087",
+        "22H2 | KB5063159"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 19041,
+        "revision": 6157
+      },
+      "sha256": "112bec755a113da2c65893a915a8e6e75b522ec15ef0e0633111ea608dc87731",
+      "time_date_stamp": 2385532582,
+      "size_of_image": 1040384,
+      "file_size": 1011200,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "21H2 | KB5063709",
+        "21H2 | KB5065429",
+        "21H2 | KB5066188",
+        "22H2 | KB5062649",
+        "22H2 | KB5063842",
+        "22H2 | KB5066198"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 19041,
+        "revision": 6456
+      },
+      "sha256": "24cf447ec886c3b0711f1a346e8c3347b847f04f45b6655f659411eb31f9fb37",
+      "time_date_stamp": 1964863528,
+      "size_of_image": 1040384,
+      "file_size": 1011712,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "21H2 | KB5066791"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 19041,
+        "revision": 6575
+      },
+      "sha256": "ba20437d17560e511a551af30c505768db4e1f3a6f24ab06a3f7cfd8958c0403",
+      "time_date_stamp": 2218672224,
+      "size_of_image": 1040384,
+      "file_size": 1011712,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "21H2 | KB5068781",
+        "21H2 | KB5071546",
+        "21H2 | KB5074976"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 19041,
+        "revision": 6807
+      },
+      "sha256": "d2bd8f9d7241e8cd3eebf8fc515be14b80bc5b34358b8242d898617db25de43a",
+      "time_date_stamp": 1085029324,
+      "size_of_image": 1040384,
+      "file_size": 1011712,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "21H2 | KB5073724",
+        "21H2 | KB5077796",
+        "21H2 | KB5078129"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 19041,
+        "revision": 6926
+      },
+      "sha256": "0bf3529d1199c053c6a6a673067b680962023032110b78ce762742496d48cf6b",
+      "time_date_stamp": 1809648309,
+      "size_of_image": 1040384,
+      "file_size": 1011200,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "21H2 | KB5075912",
+        "21H2 | KB5078885"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 19041,
+        "revision": 7181
+      },
+      "sha256": "6ba6ecf0f48b853d521669f237299f86202d819cb2ebeee7fe63854f48c53224",
+      "time_date_stamp": 3175582562,
+      "size_of_image": 1040384,
+      "file_size": 1011712,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "21H2 | KB5082200",
+        "21H2 | KB5087544"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 19041,
+        "revision": 7417
+      },
+      "sha256": "9fd9c40c1568f959823228c964ba2680543790611d4140b0941d45649a168e7a",
+      "time_date_stamp": 2459318114,
+      "size_of_image": 1040384,
+      "file_size": 1011712,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "21H2 | KB5094127"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 19041,
+        "revision": 7548
+      },
+      "sha256": "321ad9f19968139a1bf6301532a20776471a728e21cbb2e973bf3320915312d8",
+      "time_date_stamp": 1986306604,
+      "size_of_image": 1040384,
+      "file_size": 1011200,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "21H2 | KB5099539"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 19041,
+        "revision": 7663
+      },
+      "sha256": "c6eec2e5ce7d0f6b3f2eae8facc1a29e2f62ea5d2e80b5ca48f3c6d3afb7f397",
+      "time_date_stamp": 3781410947,
+      "size_of_image": 1040384,
+      "file_size": 1011712,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "21H2 | KB5120249"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22000,
+        "revision": 194
+      },
+      "sha256": "43891274af4b74a15760473f559b3e11e74a9ed18e8988fd6e42b6c3c42a7027",
+      "time_date_stamp": 1323027748,
+      "size_of_image": 1458176,
+      "file_size": 1441792,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-21H2 | BASE",
+        "11-21H2 | KB5006674"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22000,
+        "revision": 282
+      },
+      "sha256": "97511b6351eca5d8893920aa95526956b527f66ccb5b45ab55279a78d69776cd",
+      "time_date_stamp": 2983646581,
+      "size_of_image": 1458176,
+      "file_size": 1441792,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-21H2 | KB5006746",
+        "11-21H2 | KB5007215",
+        "11-21H2 | KB5007262",
+        "11-21H2 | KB5008215",
+        "11-21H2 | KB5009566",
+        "11-21H2 | KB5010795"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22000,
+        "revision": 469
+      },
+      "sha256": "5804616508b6fbdce2831f7ca7fa3313adc1b76300c6f464b9c8754b9fa3ba71",
+      "time_date_stamp": 387195991,
+      "size_of_image": 1462272,
+      "file_size": 1445888,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-21H2 | KB5008353",
+        "11-21H2 | KB5010386",
+        "11-21H2 | KB5010414",
+        "11-21H2 | KB5011493",
+        "11-21H2 | KB5011563",
+        "11-21H2 | KB5012592",
+        "11-21H2 | KB5012643",
+        "11-21H2 | KB5013943"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22000,
+        "revision": 708
+      },
+      "sha256": "56648eb9d10e30859aed8cb90aee773ecb436d81e55df6da09b25edced6c592b",
+      "time_date_stamp": 2921591956,
+      "size_of_image": 1458176,
+      "file_size": 1441792,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-21H2 | KB5014019",
+        "11-21H2 | KB5014668",
+        "11-21H2 | KB5014697",
+        "11-21H2 | KB5015814"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22000,
+        "revision": 832
+      },
+      "sha256": "299dfa2187fb780afacae4e0a9cb38a551ffefc2de620845b282566097f19b82",
+      "time_date_stamp": 2522534592,
+      "size_of_image": 1458176,
+      "file_size": 1441792,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-21H2 | KB5015882",
+        "11-21H2 | KB5016629"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22000,
+        "revision": 918
+      },
+      "sha256": "e89d88a335c5b05aee6c84eb9640663e0a674a7258c18207af0f78865ed5dfca",
+      "time_date_stamp": 1463764845,
+      "size_of_image": 1458176,
+      "file_size": 1441792,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-21H2 | KB5016691",
+        "11-21H2 | KB5017328",
+        "11-21H2 | KB5017383",
+        "11-21H2 | KB5018418",
+        "11-21H2 | KB5018483",
+        "11-21H2 | KB5020387"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22000,
+        "revision": 1219
+      },
+      "sha256": "470c141c4cf0a1f7d8bedbd26f582cc4a204479c00de7ea9bcc9e4c1eb1fad8b",
+      "time_date_stamp": 3021112692,
+      "size_of_image": 1458176,
+      "file_size": 1441792,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-21H2 | KB5019961"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22000,
+        "revision": 1281
+      },
+      "sha256": "fae3fa3979bf843f94fbb4e3ab36773a83cb10400332c81e8fa7db3e14ee9d8e",
+      "time_date_stamp": 4191099752,
+      "size_of_image": 1458176,
+      "file_size": 1441792,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-21H2 | KB5019157",
+        "11-21H2 | KB5021234"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22000,
+        "revision": 1455
+      },
+      "sha256": "ead33ef1ca8d827fc3ff61f98b124d1146f2532d30d26509ed7bb6e12911b4a5",
+      "time_date_stamp": 3045856823,
+      "size_of_image": 1458176,
+      "file_size": 1441792,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-21H2 | KB5022287"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22000,
+        "revision": 1516
+      },
+      "sha256": "83986df58ecba8e0b889740897e151789d5e3f015494b0b518e001139e01935a",
+      "time_date_stamp": 4013686853,
+      "size_of_image": 1458176,
+      "file_size": 1441792,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-21H2 | KB5019274"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22000,
+        "revision": 1574
+      },
+      "sha256": "38f4d35ad3af22044da90842d0457613d786465c667bd28286e586703fb3285b",
+      "time_date_stamp": 819056877,
+      "size_of_image": 1458176,
+      "file_size": 1441792,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-21H2 | KB5022836",
+        "11-21H2 | KB5022905",
+        "11-21H2 | KB5023698"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22000,
+        "revision": 1761
+      },
+      "sha256": "8c29042874d8f22ff253e454d6bdbb8293559b51edc016083ab3395ecfb0de32",
+      "time_date_stamp": 2746452954,
+      "size_of_image": 1458176,
+      "file_size": 1441792,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-21H2 | KB5023774",
+        "11-21H2 | KB5025224",
+        "11-21H2 | KB5025298",
+        "11-21H2 | KB5026368",
+        "11-21H2 | KB5026436",
+        "11-21H2 | KB5027223",
+        "11-21H2 | KB5027292",
+        "11-21H2 | KB5028182",
+        "11-21H2 | KB5028245",
+        "11-21H2 | KB5029253",
+        "11-21H2 | KB5029332",
+        "11-21H2 | KB5030217",
+        "11-21H2 | KB5030301",
+        "11-21H2 | KB5031358"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22000,
+        "revision": 2600
+      },
+      "sha256": "f0bd43ff465c9e6e3b39026c88b58feb4a34827e06ea5f359e45651dfa98c9b3",
+      "time_date_stamp": 3472000484,
+      "size_of_image": 1458176,
+      "file_size": 1441792,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-21H2 | KB5032192",
+        "11-21H2 | KB5033369",
+        "11-21H2 | KB5034121",
+        "11-21H2 | KB5034766",
+        "11-21H2 | KB5035854",
+        "11-21H2 | KB5036894",
+        "11-21H2 | KB5037770",
+        "11-21H2 | KB5039213",
+        "11-21H2 | KB5040431",
+        "11-21H2 | KB5041592",
+        "11-21H2 | KB5043067",
+        "11-21H2 | KB5044280"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 1
+      },
+      "sha256": "9d89eccfbf4a7d54abe100203abb14c4fd9610176b1c9ec686207ceb6e1bcf92",
+      "time_date_stamp": 3259213077,
+      "size_of_image": 1421312,
+      "file_size": 1404928,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-22H2 | BASE"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 457
+      },
+      "sha256": "f74533c65bf3fbae86d77dad8e32a324e9f4712501cd3312ea3fbdc38c1c2e6d",
+      "time_date_stamp": 547263588,
+      "size_of_image": 1421312,
+      "file_size": 1404928,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-22H2 | KB5019311"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 608
+      },
+      "sha256": "4eaa10210f7561e0bc6d7d20f3a6deeb0e0015d7bdf96394304ab8ce68f19cfa",
+      "time_date_stamp": 1487853716,
+      "size_of_image": 1421312,
+      "file_size": 1404928,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-22H2 | KB5017389",
+        "11-22H2 | KB5018427",
+        "11-22H2 | KB5019509"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 755
+      },
+      "sha256": "e64ec6837ad510e2ccf3ed8a2432aa139360fe6028cc5aa9a10faa4d61814615",
+      "time_date_stamp": 1541969649,
+      "size_of_image": 1425408,
+      "file_size": 1409024,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-22H2 | KB5018496",
+        "11-22H2 | KB5019980",
+        "11-22H2 | KB5020044",
+        "11-22H2 | KB5021255"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 1105
+      },
+      "sha256": "ac5e74131968394e882ea2d812a137fa41dbb8b7abbed07b99f015e05591fcce",
+      "time_date_stamp": 1914670234,
+      "size_of_image": 1425408,
+      "file_size": 1409024,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-22H2 | KB5022303"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 1194
+      },
+      "sha256": "daf8f2862c72e1d9e1ea9c03d9ef06052831711a003e6de97109b2b16e6146e5",
+      "time_date_stamp": 4116641044,
+      "size_of_image": 1425408,
+      "file_size": 1409024,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-22H2 | KB5022360",
+        "11-22H2 | KB5022845"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 1344
+      },
+      "sha256": "22e2a8055073d3689117a492c6547c6ac6b5c172bb31623faadefdca79bff087",
+      "time_date_stamp": 911463812,
+      "size_of_image": 1425408,
+      "file_size": 1409024,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-22H2 | KB5022913",
+        "11-22H2 | KB5023706"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 1485
+      },
+      "sha256": "42d4d7edacd51c0f4f9f39b44ea16e8d8ceb390a5a408e4118be58c5af176dd4",
+      "time_date_stamp": 3582456265,
+      "size_of_image": 1421312,
+      "file_size": 1404928,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-22H2 | KB5023778",
+        "11-22H2 | KB5025239",
+        "11-22H2 | KB5025305",
+        "11-22H2 | KB5026372"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 1778
+      },
+      "sha256": "140f39384442a9cafe558ec34c97c3347c2a9fbc193c54e5c6f5e68a9a3d2d93",
+      "time_date_stamp": 2504331683,
+      "size_of_image": 1425408,
+      "file_size": 1409024,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-22H2 | KB5026446",
+        "11-22H2 | KB5027231"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 1928
+      },
+      "sha256": "781f7aa03c6a172d5cdc475a4887fa7731ceccfd61490346f98d4d5aa3b62d15",
+      "time_date_stamp": 4247474410,
+      "size_of_image": 1421312,
+      "file_size": 1404928,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-22H2 | KB5027303",
+        "11-22H2 | KB5028185",
+        "11-22H2 | KB5028254",
+        "11-22H2 | KB5029263",
+        "11-22H2 | KB5029351",
+        "11-22H2 | KB5030219"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 2361
+      },
+      "sha256": "d14e21a3e5afdd3be0bda303a63d3368db4219fa3c4536c7239634b7603046bb",
+      "time_date_stamp": 2947189308,
+      "size_of_image": 1421312,
+      "file_size": 1404928,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-22H2 | KB5030310",
+        "11-22H2 | KB5031354",
+        "11-23H2 | BASE"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 2506
+      },
+      "sha256": "6d181372a5ac50ef2827237174718b5d4d2fc68304f52835ffa6b521d3fa2dc0",
+      "time_date_stamp": 1859944018,
+      "size_of_image": 1421312,
+      "file_size": 1404928,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-22H2 | KB5031455",
+        "11-22H2 | KB5032190"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 2792
+      },
+      "sha256": "ef338a6fbf007fd556a72ab9cf8d6fc62262779f4325ff8f88c3bfa7e76ac955",
+      "time_date_stamp": 169330184,
+      "size_of_image": 1421312,
+      "file_size": 1404928,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-22H2 | KB5032288",
+        "11-22H2 | KB5033375",
+        "11-22H2 | KB5034123"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 3085
+      },
+      "sha256": "19e1e2113e83e8599255f55a996d40dce891074a8ad0c837788b1fba7dd0f6e6",
+      "time_date_stamp": 37169466,
+      "size_of_image": 1425408,
+      "file_size": 1409024,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-22H2 | KB5034204",
+        "11-22H2 | KB5034765"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 3235
+      },
+      "sha256": "83043f8b972011210586c49d0eade94f767f95557eaa6ff848eda1cafde70eaa",
+      "time_date_stamp": 2271788319,
+      "size_of_image": 1454080,
+      "file_size": 1437696,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-22H2 | KB5034848",
+        "11-22H2 | KB5035853"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 3374
+      },
+      "sha256": "c2886d4e4fe7333bb32176c03b0d876afb1b7d00e5bc6cd7ccd589c96aedbc48",
+      "time_date_stamp": 3475454836,
+      "size_of_image": 1454080,
+      "file_size": 1437696,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-22H2 | KB5035942",
+        "11-22H2 | KB5036893"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 3527
+      },
+      "sha256": "151576ce2472d9f52c3d65eaa2aca08cb1e305fbefaac7b2293a49d4f5f8d641",
+      "time_date_stamp": 238129155,
+      "size_of_image": 1454080,
+      "file_size": 1437696,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-22H2 | KB5036980",
+        "11-22H2 | KB5037771"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 3672
+      },
+      "sha256": "451703ab931135c7d948adadd379055d5151904520c9ad6aef5106704afbfb11",
+      "time_date_stamp": 3089086730,
+      "size_of_image": 1454080,
+      "file_size": 1437696,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-22H2 | KB5037853",
+        "11-22H2 | KB5039212"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 3810
+      },
+      "sha256": "a562f02458630538ba7e847e363e2be6ae05cc52e3dbf37555f33814febfefe3",
+      "time_date_stamp": 3411428746,
+      "size_of_image": 1454080,
+      "file_size": 1437696,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-22H2 | KB5039302",
+        "11-22H2 | KB5040442"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 3958
+      },
+      "sha256": "a54dad10faf2fc394072890d24565a9e07415022f6709f050913afe74046034f",
+      "time_date_stamp": 1640638742,
+      "size_of_image": 1454080,
+      "file_size": 1437696,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-22H2 | KB5040527",
+        "11-22H2 | KB5041585"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 4111
+      },
+      "sha256": "87b52fccf6f564c423237f36ed6339040c1445b1ed640a48da202b675b8b36b1",
+      "time_date_stamp": 3801016932,
+      "size_of_image": 1454080,
+      "file_size": 1437696,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-22H2 | KB5041587",
+        "11-22H2 | KB5043076"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 4249
+      },
+      "sha256": "1876c8efc07f7cb1d5ab3087b1222f6b049fc69ac0fbfa7a70a6346b0a126db1",
+      "time_date_stamp": 2020887676,
+      "size_of_image": 1454080,
+      "file_size": 1437696,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-22H2 | KB5043145",
+        "11-22H2 | KB5044285"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 4391
+      },
+      "sha256": "dbee1b40665849aac78dbaa3b7ef15688ac1b0ec3b1be947bde4872f4f32c3ef",
+      "time_date_stamp": 2560332159,
+      "size_of_image": 1449984,
+      "file_size": 1433600,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-22H2 | KB5044380",
+        "11-22H2 | KB5046633"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 4541
+      },
+      "sha256": "c88ee0f063fcd0b5cf85bf0bf29aa56e44b6250782a9b78f32269aa1562cfa7e",
+      "time_date_stamp": 1743080177,
+      "size_of_image": 1474560,
+      "file_size": 1454080,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-22H2 | KB5046732"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 4601
+      },
+      "sha256": "63f885e2ac99ec4e2c385e5b3ae07ee0cd702698e83869e4aec5ed49bc1910ff",
+      "time_date_stamp": 3838958195,
+      "size_of_image": 1474560,
+      "file_size": 1454080,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-22H2 | KB5048685",
+        "11-22H2 | KB5050021"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 4830
+      },
+      "sha256": "7aa6a10ec9a564deb08c548dfd9e85a9abd8dcf30451b971a29c7caba2cdaa71",
+      "time_date_stamp": 3302356096,
+      "size_of_image": 1474560,
+      "file_size": 1454080,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-22H2 | KB5050092",
+        "11-22H2 | KB5051989"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 4974
+      },
+      "sha256": "adf3e22cbe7a6d504675a2da6f102b0cb89e388dfea7a6deefb8eb166c3e4c90",
+      "time_date_stamp": 4193945617,
+      "size_of_image": 1474560,
+      "file_size": 1454080,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-22H2 | KB5052094",
+        "11-22H2 | KB5053602"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 5124
+      },
+      "sha256": "b64c985612c0c757b2c511de0e3e9f1e9a412e463dec1058f247b5cc69e71a1f",
+      "time_date_stamp": 1453209428,
+      "size_of_image": 1474560,
+      "file_size": 1454080,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-22H2 | KB5053657"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 5185
+      },
+      "sha256": "80884acd7c977fb7fec48f80d6688d8056ab7d26ea60e68bc2795259a4cb120e",
+      "time_date_stamp": 2589145983,
+      "size_of_image": 1478656,
+      "file_size": 1458176,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-22H2 | KB5055528",
+        "11-22H2 | KB5058919"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 5262
+      },
+      "sha256": "852c2900d548b55e03e1ab9264e61610928a484c79acbeb14d28fb66af63767b",
+      "time_date_stamp": 1800993619,
+      "size_of_image": 1478656,
+      "file_size": 1458176,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-22H2 | KB5055629"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 5331
+      },
+      "sha256": "af0ecdd0fd2e244e17c8bad68e59b1ee190475e0e8db1a51591ec2671426215b",
+      "time_date_stamp": 1640215738,
+      "size_of_image": 1478656,
+      "file_size": 1458176,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-22H2 | KB5058405",
+        "11-22H2 | KB5058502"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 5415
+      },
+      "sha256": "e75c71c816c15ea839df509c04f5a6b7867b3daf837fb15496005ea1f101035e",
+      "time_date_stamp": 1517314008,
+      "size_of_image": 1478656,
+      "file_size": 1458176,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-22H2 | KB5062170"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 5471
+      },
+      "sha256": "91d7160302befb2201118f2d84b9ea3a7cd49f01b7eb428f71d43da5c4366570",
+      "time_date_stamp": 1932456463,
+      "size_of_image": 1478656,
+      "file_size": 1458176,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-22H2 | KB5060826",
+        "11-22H2 | KB5060999",
+        "11-22H2 | KB5062552"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 5697
+      },
+      "sha256": "7dd891b49d41c7f5bdc773209764add23a0c953a968a5ded667aa1601728cdf9",
+      "time_date_stamp": 2560692208,
+      "size_of_image": 1474560,
+      "file_size": 1454080,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-22H2 | KB5062663",
+        "11-22H2 | KB5063875",
+        "11-22H2 | KB5066189"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 5840
+      },
+      "sha256": "b4bda412348f290ecbee0a2cb25cdacf1cbf658f9b672a752f6ff9ffb8838735",
+      "time_date_stamp": 867757025,
+      "size_of_image": 1482752,
+      "file_size": 1462272,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-22H2 | KB5065431",
+        "11-23H2 | KB5064080"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 5983
+      },
+      "sha256": "724dd5fab7c718086cd0810549156d06f95d6f4397772a18bc7a41998c468d0e",
+      "time_date_stamp": 1503568987,
+      "size_of_image": 1482752,
+      "file_size": 1462272,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-23H2 | KB5065790"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 6060
+      },
+      "sha256": "d6ff8192c2742839b1e83e1864674b5a7aa9c68c40c5ee41e5c6af67bd9ae963",
+      "time_date_stamp": 1342820643,
+      "size_of_image": 1482752,
+      "file_size": 1462272,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-22H2 | KB5066793",
+        "11-23H2 | KB5067112"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 6199
+      },
+      "sha256": "0deb45fca6e020f3d72b98d26ee1b43992675bf3a2bfdacc9741e4379e373df2",
+      "time_date_stamp": 3785110068,
+      "size_of_image": 1482752,
+      "file_size": 1462272,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-23H2 | KB5068865",
+        "11-23H2 | KB5070312",
+        "11-23H2 | KB5071417"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 6489
+      },
+      "sha256": "8805f086bcee9c12197eee580efbbc9df4dc7722cf12fbe3e5d51dc2b5096248",
+      "time_date_stamp": 3438678002,
+      "size_of_image": 1482752,
+      "file_size": 1462272,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-23H2 | KB5073455",
+        "11-23H2 | KB5077797",
+        "11-23H2 | KB5078132"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 6630
+      },
+      "sha256": "36895ce23894387b9e86c864cd99d92cb317db4f8cd627f9b1da9922dc4e2f87",
+      "time_date_stamp": 3644017279,
+      "size_of_image": 1482752,
+      "file_size": 1462272,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-23H2 | KB5075941",
+        "11-23H2 | KB5078883"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 6931
+      },
+      "sha256": "8fde0b785808a019919aae75d41f76df45db752f95b2079a2b57ce78df5bcd24",
+      "time_date_stamp": 3699905440,
+      "size_of_image": 1482752,
+      "file_size": 1462272,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-23H2 | KB5082052",
+        "11-23H2 | KB5087420"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 7219
+      },
+      "sha256": "e5d2955b96ef6778bdd18e96d72605eb2636ac4d309cf7a68475f9a5ca3bc7bd",
+      "time_date_stamp": 1846169633,
+      "size_of_image": 1482752,
+      "file_size": 1462272,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-23H2 | KB5093998"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 7376
+      },
+      "sha256": "e46e9602e893feca63caece1d476d53384567ee10791a37e9fb1fdad67c8d13c",
+      "time_date_stamp": 872729393,
+      "size_of_image": 1478656,
+      "file_size": 1458176,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-23H2 | KB5099414"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 22621,
+        "revision": 7517
+      },
+      "sha256": "06004ea24b56500b56eb892c19fb851597b9368cd47db0fe211305d8078f3f0e",
+      "time_date_stamp": 2835236179,
+      "size_of_image": 1482752,
+      "file_size": 1462272,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-23H2 | KB5120240"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 26100,
+        "revision": 1
+      },
+      "sha256": "8f6860b1d4d84af9eab60517eb9a55abcca306bf9650821096e8d46203553909",
+      "time_date_stamp": 171677632,
+      "size_of_image": 1245184,
+      "file_size": 1228800,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-24H2 | BASE"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 26100,
+        "revision": 863
+      },
+      "sha256": "a8437fad13c920b5bdfb378956b12631ecb04cd981b37369e03996e8f2f06bf6",
+      "time_date_stamp": 914267132,
+      "size_of_image": 1245184,
+      "file_size": 1228800,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-24H2 | KB5039239"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 26100,
+        "revision": 1000
+      },
+      "sha256": "19573effb61cf3a6e0016daaa99e018182381f56624f32b1c043329c04d150cd",
+      "time_date_stamp": 1013337736,
+      "size_of_image": 1249280,
+      "file_size": 1232896,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-24H2 | KB5039304"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 26100,
+        "revision": 1150
+      },
+      "sha256": "2cc473fd8e4dc351a621e6a66e7c8ad73b3cb36ddb13093ad20c37bc8ec55d12",
+      "time_date_stamp": 3589713020,
+      "size_of_image": 1249280,
+      "file_size": 1232896,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-24H2 | KB5040435"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 26100,
+        "revision": 1301
+      },
+      "sha256": "790b506af443599d159d5ce1fec9c79116dcf99bd550636b19dee3aa142eabd3",
+      "time_date_stamp": 3397047413,
+      "size_of_image": 1269760,
+      "file_size": 1253376,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-24H2 | KB5040529",
+        "11-24H2 | KB5041571"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 26100,
+        "revision": 1591
+      },
+      "sha256": "254d95d70300d86e831420d5635d27ebe3600eb684fd649639381d9dc45d268d",
+      "time_date_stamp": 2457341121,
+      "size_of_image": 1277952,
+      "file_size": 1261568,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-24H2 | KB5041865",
+        "11-24H2 | KB5043080"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 26100,
+        "revision": 1882
+      },
+      "sha256": "dd40b3371a247f1a10d8a906754c6e1105a02aca70caccdad70a7c3160c81f32",
+      "time_date_stamp": 3236668629,
+      "size_of_image": 1277952,
+      "file_size": 1261568,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-24H2 | KB5043178",
+        "11-24H2 | KB5044284"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 26100,
+        "revision": 2161
+      },
+      "sha256": "62f3298c3872417437d63f94cc5f7c2fb05ca3cbe62547a5b447964ea2dddb03",
+      "time_date_stamp": 1280703564,
+      "size_of_image": 1282048,
+      "file_size": 1265664,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-24H2 | KB5044384",
+        "11-24H2 | KB5046617"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 26100,
+        "revision": 2454
+      },
+      "sha256": "000f7eef3436e6abd350b1898a6e5570d084945ded5f7a8dc802aa8fb5e928e7",
+      "time_date_stamp": 574583694,
+      "size_of_image": 1290240,
+      "file_size": 1269760,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-24H2 | KB5046740"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 26100,
+        "revision": 2605
+      },
+      "sha256": "36c63ca7ef545c854e08f9f7e77cd3b52e6db441c8ce4e36f178bd2ffaae028a",
+      "time_date_stamp": 1382009835,
+      "size_of_image": 1290240,
+      "file_size": 1269760,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-24H2 | KB5048667",
+        "11-24H2 | KB5050009"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 26100,
+        "revision": 3037
+      },
+      "sha256": "a5a2d641a52e725278fb6f1f95660fc0b6b7690f17e1cfc66f6bc1bcc0cbe3fb",
+      "time_date_stamp": 3987762474,
+      "size_of_image": 1290240,
+      "file_size": 1269760,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-24H2 | KB5050094",
+        "11-24H2 | KB5051987"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 26100,
+        "revision": 3323
+      },
+      "sha256": "6027297b831bea044350f547f3593816ee7868e3b973d55e3e8c6f4eac43854d",
+      "time_date_stamp": 486819561,
+      "size_of_image": 1290240,
+      "file_size": 1269760,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-24H2 | KB5052093",
+        "11-24H2 | KB5053598"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 26100,
+        "revision": 3624
+      },
+      "sha256": "12201ca9db2d205720fac924a1422db1f76bbd58f5211aeb2aacee33f710740e",
+      "time_date_stamp": 2029235308,
+      "size_of_image": 1294336,
+      "file_size": 1273856,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-24H2 | KB5053656"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 26100,
+        "revision": 3775
+      },
+      "sha256": "ccb2592ed0abe70724f71248687bb394fee8bb31d685e47f8244a8d1f9be34ef",
+      "time_date_stamp": 3699473894,
+      "size_of_image": 1294336,
+      "file_size": 1273856,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-24H2 | KB5055523"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 26100,
+        "revision": 3912
+      },
+      "sha256": "d267a37099ecc7daeb156af23faaad2ca3fa487c0c202ebc786de5018386c649",
+      "time_date_stamp": 685796468,
+      "size_of_image": 1302528,
+      "file_size": 1282048,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-24H2 | KB5055627"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 26100,
+        "revision": 4061
+      },
+      "sha256": "7c66d938817fde0326aeee0805fca90f01209624ef387dde9172cad55f15c645",
+      "time_date_stamp": 4176198014,
+      "size_of_image": 1302528,
+      "file_size": 1282048,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-24H2 | KB5058411",
+        "11-24H2 | KB5061977"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 26100,
+        "revision": 4202
+      },
+      "sha256": "c757c247d81c8e8474777810ca206a6738a917638c1020904853a5e854eaabd5",
+      "time_date_stamp": 811179976,
+      "size_of_image": 1302528,
+      "file_size": 1282048,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-24H2 | KB5058499"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 26100,
+        "revision": 4343
+      },
+      "sha256": "194af585dbf9f35edaf15437edc4b50db2c72ee0b09f7342d25fa2227165b8b1",
+      "time_date_stamp": 39981695,
+      "size_of_image": 1306624,
+      "file_size": 1286144,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-24H2 | KB5060842",
+        "11-24H2 | KB5063060"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 26100,
+        "revision": 4484
+      },
+      "sha256": "a89808c361fb5c36cd9b6cc737bb8559869b4c945f3cdee1376ba929d218e47b",
+      "time_date_stamp": 510328324,
+      "size_of_image": 1310720,
+      "file_size": 1290240,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-24H2 | KB5060829",
+        "11-24H2 | KB5062553",
+        "11-24H2 | KB5064489"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 26100,
+        "revision": 4768
+      },
+      "sha256": "2cb1fe1ca398e7907bd4351794a708bdfb8c39c6e730245e4815eede3b8458bf",
+      "time_date_stamp": 3902345848,
+      "size_of_image": 1306624,
+      "file_size": 1286144,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-24H2 | KB5062660",
+        "11-24H2 | KB5063878"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 26100,
+        "revision": 5074
+      },
+      "sha256": "3ecec64daf3db07f58d726db74f6175e89a17581758eb0226c1be89d91e2da70",
+      "time_date_stamp": 3915238691,
+      "size_of_image": 1265664,
+      "file_size": 1249280,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-24H2 | KB5064081",
+        "11-24H2 | KB5065426",
+        "11-24H2 | KB5068221",
+        "11-25H2 | BASE"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 26100,
+        "revision": 6725
+      },
+      "sha256": "071ad85179d34ad8df64c8fdb7a05997a263be62836cfacdb8a00459318d645d",
+      "time_date_stamp": 1451340284,
+      "size_of_image": 1265664,
+      "file_size": 1249280,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-24H2 | KB5065789"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 26100,
+        "revision": 6899
+      },
+      "sha256": "c9ecee81bbf5bcb66968f4f653e73b9a50c7354bf1b4c1a578c79780adf41428",
+      "time_date_stamp": 3610013415,
+      "size_of_image": 1265664,
+      "file_size": 1249280,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-24H2 | KB5066835",
+        "11-24H2 | KB5070773"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 26100,
+        "revision": 7019
+      },
+      "sha256": "a2f49cbe6651dca96fdf74c006d368ef033fb30ad30c9ff8fc34257c5fb1b65c",
+      "time_date_stamp": 2629402219,
+      "size_of_image": 1273856,
+      "file_size": 1257472,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-24H2 | KB5067036"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 26100,
+        "revision": 7171
+      },
+      "sha256": "f66382fcf59bfb4f50891337593d104dba6de7b891f9d1bf64fceefd3e3e35b9",
+      "time_date_stamp": 2374526017,
+      "size_of_image": 1273856,
+      "file_size": 1257472,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-24H2 | KB5068861"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 26100,
+        "revision": 7309
+      },
+      "sha256": "d24323b60cc1759e4c334d4f387f948e8e61aa801fbfc279824b581cfbb391f8",
+      "time_date_stamp": 2972410679,
+      "size_of_image": 1273856,
+      "file_size": 1257472,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-24H2 | KB5070311",
+        "11-24H2 | KB5072033",
+        "11-24H2 | KB5074109",
+        "11-24H2 | KB5077744",
+        "11-24H2 | KB5078127"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 26100,
+        "revision": 7705
+      },
+      "sha256": "19462e0e4e9bfe34a0af27e6474913aad73503a76de41ab6b46516ac17b657ce",
+      "time_date_stamp": 807621647,
+      "size_of_image": 1331200,
+      "file_size": 1314816,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-24H2 | KB5074105",
+        "11-24H2 | KB5077181"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 26100,
+        "revision": 7920
+      },
+      "sha256": "5e71c8007e61c26ffb92c2fec9475465e0550b80f0c08e817dd42feb37b049ab",
+      "time_date_stamp": 3845008684,
+      "size_of_image": 1323008,
+      "file_size": 1306624,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-24H2 | KB5077241",
+        "11-24H2 | KB5079473",
+        "11-24H2 | KB5085516"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 26100,
+        "revision": 8115
+      },
+      "sha256": "29a771f69e84645084400248ee116d35972a33cd83029ee47ee78ed27fda91a6",
+      "time_date_stamp": 1506142677,
+      "size_of_image": 1327104,
+      "file_size": 1310720,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-24H2 | KB5079391",
+        "11-24H2 | KB5086672"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 26100,
+        "revision": 8246
+      },
+      "sha256": "725cc9dca519f48787b8747cee1d2cc0d1d69bebe87f5172ca6cdab392c6a758",
+      "time_date_stamp": 219818472,
+      "size_of_image": 1327104,
+      "file_size": 1310720,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-24H2 | KB5083769"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 26100,
+        "revision": 8328
+      },
+      "sha256": "017280e8c43f09c6b2351fda0e8d013d687913f0afb12df0dcdc0b99cfdcfa74",
+      "time_date_stamp": 3203342482,
+      "size_of_image": 1331200,
+      "file_size": 1310720,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-24H2 | KB5083631"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 26100,
+        "revision": 8457
+      },
+      "sha256": "a28d3f0fb0cd054aaabefc3d0d3395eeaf238c0f211f26d4849b20c3791ba600",
+      "time_date_stamp": 3541601097,
+      "size_of_image": 1331200,
+      "file_size": 1310720,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-24H2 | KB5089549"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 26100,
+        "revision": 8521
+      },
+      "sha256": "258620725bcdc5748b616d87c3ec68ba26dfc07ac389d006db6082f176e741de",
+      "time_date_stamp": 1337732186,
+      "size_of_image": 1331200,
+      "file_size": 1314816,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-24H2 | KB5089573",
+        "11-24H2 | KB5094126"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 26100,
+        "revision": 8737
+      },
+      "sha256": "e17741d61ac7587fc15fc9363beedebcdd60b214c08c97cbec03331c3c8a00ff",
+      "time_date_stamp": 2420897105,
+      "size_of_image": 1302528,
+      "file_size": 1282048,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-24H2 | KB5095093"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 26100,
+        "revision": 8875
+      },
+      "sha256": "ba1ec455293a39e9d402f46375d7ef229162c4ea141d718d7f521d715f9704d9",
+      "time_date_stamp": 2575667666,
+      "size_of_image": 1302528,
+      "file_size": 1282048,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-24H2 | KB5101650",
+        "11-24H2 | KB5121767"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 26100,
+        "revision": 8972
+      },
+      "sha256": "d2e948ea0097b2b92c8b8847afff088903495aaf2922eaa43a0cb95a1c280b28",
+      "time_date_stamp": 3780400204,
+      "size_of_image": 1306624,
+      "file_size": 1286144,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-24H2 | KB5101684"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 26100,
+        "revision": 9168
+      },
+      "sha256": "a726dbda9227af6e9a06feb8d6c289de28067027af250c61085fe70928486934",
+      "time_date_stamp": 4032428396,
+      "size_of_image": 1310720,
+      "file_size": 1290240,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-24H2 | KB5121003"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 28000,
+        "revision": 1516
+      },
+      "sha256": "64e7ca2631de16b4769996ed146850103662f84c6fc1cb2997da9cfbe52c0873",
+      "time_date_stamp": 397869906,
+      "size_of_image": 1245184,
+      "file_size": 1228800,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-26H1 | KB5077179"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 28000,
+        "revision": 1643
+      },
+      "sha256": "1f482ade450f244952c50fa9ec9a8a49b3b32910d5065571ce0d231c38b89ab7",
+      "time_date_stamp": 3088869104,
+      "size_of_image": 1253376,
+      "file_size": 1236992,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-26H1 | KB5077239",
+        "11-26H1 | KB5079466"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 28000,
+        "revision": 1761
+      },
+      "sha256": "b61497f1eb028a6e58b484d31b4e0acec0be417fca4917a9fb75a3840115d376",
+      "time_date_stamp": 3418938383,
+      "size_of_image": 1249280,
+      "file_size": 1232896,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-26H1 | KB5079489"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 28000,
+        "revision": 1830
+      },
+      "sha256": "2fd79860be0c2e3e7ed9e465ada4534f9031631fb14585953cd5e7b974bc39bf",
+      "time_date_stamp": 1122297838,
+      "size_of_image": 1253376,
+      "file_size": 1236992,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-26H1 | KB5083768"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 28000,
+        "revision": 1896
+      },
+      "sha256": "fe21fa7fdf2e258f19946f791ca566d73b805fc5f1dd54ac3df1f362cd67ebc8",
+      "time_date_stamp": 2386922009,
+      "size_of_image": 1261568,
+      "file_size": 1245184,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-26H1 | KB5083806",
+        "11-26H1 | KB5089548"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 28000,
+        "revision": 2179
+      },
+      "sha256": "647a127e84b8f0f4846af985f1db6c32d97fe128c9cc56cb5315d11d9e10fb04",
+      "time_date_stamp": 3670034437,
+      "size_of_image": 1261568,
+      "file_size": 1245184,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-26H1 | KB5089570",
+        "11-26H1 | KB5095051"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 28000,
+        "revision": 2336
+      },
+      "sha256": "4129601c1aa5a8f4a4490acdfc7a1fbc9e88c6b561824aafff6f1c8de87f658d",
+      "time_date_stamp": 2153333620,
+      "size_of_image": 1265664,
+      "file_size": 1249280,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-26H1 | KB5095091"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 28000,
+        "revision": 2525
+      },
+      "sha256": "88ca6cd72ce95fcea2e405a95685cb03ded7d032224ec6910bb65e802e81bd06",
+      "time_date_stamp": 1779362147,
+      "size_of_image": 1265664,
+      "file_size": 1249280,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-26H1 | KB5101649"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 28000,
+        "revision": 2605
+      },
+      "sha256": "d4492dda5e557626564a92d295a975da1e6a981eb9a21064ad6c45c0d7b86c6c",
+      "time_date_stamp": 1415948320,
+      "size_of_image": 1269760,
+      "file_size": 1253376,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-26H1 | KB5101681"
+      ]
+    },
+    {
+      "module": "uDWM.dll",
+      "version": {
+        "build": 28000,
+        "revision": 2704
+      },
+      "sha256": "2693a539e0c73d94208ba040353ddcfe8c3bf91f8f4f4979fda956d048f06d94",
+      "time_date_stamp": 2870208604,
+      "size_of_image": 1277952,
+      "file_size": 1257472,
+      "source_index_sha256": "53bcebb3d287f033b74248fa63ee9af9ad3b63904bac853f8c18fd53e765c0fd",
+      "provenance": [
+        "11-26H1 | KB5121000"
+      ]
+    }
+  ]
+}

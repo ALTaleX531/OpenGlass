@@ -126,6 +126,30 @@ void Projection::ModuleRegistry::ResetSymbols() noexcept
 	PublishBindings();
 }
 
+bool Projection::ModuleRegistry::CollectAddress(size_t symbolIndex, PVOID address) noexcept
+{
+	if (symbolIndex >= m_symbolCount || !address)
+	{
+		return false;
+	}
+	switch (m_resolutionStates[symbolIndex])
+	{
+	case ResolutionState::Missing:
+		m_candidates[symbolIndex] = address;
+		m_resolutionStates[symbolIndex] = ResolutionState::Unique;
+		break;
+	case ResolutionState::Unique:
+		if (m_candidates[symbolIndex] != address)
+		{
+			m_resolutionStates[symbolIndex] = ResolutionState::Ambiguous;
+		}
+		break;
+	case ResolutionState::Ambiguous:
+		break;
+	}
+	return true;
+}
+
 void Projection::ModuleRegistry::Collect(LPCSTR completeSymbolName, PVOID address) noexcept
 {
 	for (size_t specIndex = 0; specIndex < m_symbolSpecCount; specIndex++)
@@ -136,24 +160,32 @@ void Projection::ModuleRegistry::Collect(LPCSTR completeSymbolName, PVOID addres
 		{
 			continue;
 		}
-		const auto symbolIndex = spec.symbolIndex;
-		switch (m_resolutionStates[symbolIndex])
-		{
-		case ResolutionState::Missing:
-			m_candidates[symbolIndex] = address;
-			m_resolutionStates[symbolIndex] = ResolutionState::Unique;
-			break;
-		case ResolutionState::Unique:
-			if (m_candidates[symbolIndex] != address)
-			{
-				m_resolutionStates[symbolIndex] = ResolutionState::Ambiguous;
-			}
-			break;
-		case ResolutionState::Ambiguous:
-			break;
-		}
+		CollectAddress(spec.symbolIndex, address);
 	}
 }
+
+bool Projection::ModuleRegistry::CollectResolvedAddress(size_t symbolIndex, PVOID address) noexcept
+{
+	return CollectAddress(symbolIndex, address);
+}
+bool Projection::ModuleRegistry::SymbolIsData(size_t symbolIndex, bool& isData) const noexcept
+{
+	if (symbolIndex >= m_symbolCount)
+	{
+		return false;
+	}
+	for (size_t specIndex = 0; specIndex < m_symbolSpecCount; specIndex++)
+	{
+		const auto& spec = m_symbolSpecs[specIndex];
+		if (spec.symbolIndex == symbolIndex && IsEnabled(spec) && IsVersionInRange(m_version, RangeOf(spec)))
+		{
+			isData = HasFlag(spec.flags, SymbolFlags::Data);
+			return true;
+		}
+	}
+	return false;
+}
+
 
 void Projection::ModuleRegistry::RecordUndecorationFailure() noexcept
 {

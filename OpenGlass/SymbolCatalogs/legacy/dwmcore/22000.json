@@ -1,0 +1,2399 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "revision": 194,
+      "image": {
+        "time_date_stamp": 2238069931,
+        "size_of_image": 4194304,
+        "sha256": "c4f24504f8fa0b4e7bd8944ba8c466f0103550067a9b3cbb093f7ac2b8e0a4c7"
+      },
+      "pdb": {
+        "name": "dwmcore.pdb",
+        "guid": "8848bfb2-a5f8-148c-d5db-6db3b8a22c8c",
+        "age": 1,
+        "sha256": "71234a187a9b968e26f27a7e60d6c11c9d6a6104aa44686a287e3523b2aabb98"
+      },
+      "resolution_contract": "6c475f8e07f62904eb48cc2b0bd642eba575020100eace5dbccdb027ce821a96",
+      "symbols": {
+        "CArrayBasedCoverageSet::IsCovered.pre26100": {
+          "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
+          "rva": "0xBAC40"
+        },
+        "CChannel::MatrixTransformUpdate": {
+          "name": "public: virtual long __cdecl CChannel::MatrixTransformUpdate(unsigned int,struct _MilMatrix3x2D const & __ptr64) __ptr64",
+          "rva": "0x2CEF0"
+        },
+        "CD2DContext::DestroyDeviceResources": {
+          "name": "protected: long __cdecl CD2DContext::DestroyDeviceResources(void) __ptr64",
+          "rva": "0x81B7C"
+        },
+        "CD2DContext::EnsureBeginDraw": {
+          "name": "private: void __cdecl CD2DContext::EnsureBeginDraw(void) __ptr64",
+          "rva": "0x3CBC8"
+        },
+        "CDirtyRegion::GetOptimizedRect": {
+          "name": "public: class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> __cdecl CDirtyRegion::GetOptimizedRect(unsigned int,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class CRegion * __ptr64,class CMILMatrix const * __ptr64,bool,class gsl::span<class CVisual const * __ptr64,-1> const & __ptr64,class COcclusionContext const * __ptr64)const __ptr64",
+          "rva": "0x74B48"
+        },
+        "CDrawingContext::ApplyRenderStateInternal": {
+          "name": "private: long __cdecl CDrawingContext::ApplyRenderStateInternal(bool) __ptr64",
+          "rva": "0x56EB0"
+        },
+        "CDrawingContext::DrawVisualTree.20348": {
+          "name": "public: long __cdecl CDrawingContext::DrawVisualTree(class CVisualTree const * __ptr64,class TMil3DRect<float,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded>,struct Mil3DRectF,struct RectUniqueness::NotNeeded> const & __ptr64,class COcclusionContext const * __ptr64,enum ClearMode::Enum,bool,class CVisual * __ptr64) __ptr64",
+          "rva": "0x449D8"
+        },
+        "CDrawingContext::FillShapeWithBrush": {
+          "name": "public: long __cdecl CDrawingContext::FillShapeWithBrush(class CShape const & __ptr64,struct ID2D1Brush * __ptr64) __ptr64",
+          "rva": "0x50A40"
+        },
+        "CDrawingContext::FlushD2D": {
+          "name": "public: long __cdecl CDrawingContext::FlushD2D(void) __ptr64",
+          "rva": "0x1B03F8"
+        },
+        "CDrawingContext::GetClipBoundsWorld": {
+          "name": "public: void __cdecl CDrawingContext::GetClipBoundsWorld(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64",
+          "rva": "0xD4BE4"
+        },
+        "CDrawingContext::GetUnOccludedWorldShape": {
+          "name": "private: long __cdecl CDrawingContext::GetUnOccludedWorldShape(class CShape const & __ptr64,int,class CShape * __ptr64 * __ptr64) __ptr64",
+          "rva": "0x6D808"
+        },
+        "CGeometry::GetShapeData": {
+          "name": "public: long __cdecl CGeometry::GetShapeData(struct D2D_SIZE_F const * __ptr64,class CShapePtr * __ptr64) __ptr64",
+          "rva": "0x57490"
+        },
+        "CImageLegacyMilBrush::`vftable'": {
+          "name": "const CImageLegacyMilBrush::`vftable'",
+          "rva": "0x2B6890"
+        },
+        "CMILMatrix::Identity": {
+          "name": "public: static class CMILMatrix_IdentityType const CMILMatrix::Identity",
+          "rva": "0x3CD620"
+        },
+        "CMatrixStack::GetTopByReference": {
+          "name": "public: class CMILMatrix const * __ptr64 __cdecl CMatrixStack::GetTopByReference(void)const __ptr64",
+          "rva": "0x474F0"
+        },
+        "COcclusionContext::CheckAndRecordOverlayCandidate.19041": {
+          "name": "public: long __cdecl COcclusionContext::CheckAndRecordOverlayCandidate(class CVisual * __ptr64,class CCompositionSurfaceInfo * __ptr64,class CMILMatrix const * __ptr64,class CShape const * __ptr64,struct TMILFlagsEnum<enum MilSourceModification::FlagsEnum>) __ptr64",
+          "rva": "0x8AD8"
+        },
+        "COcclusionContext::CollectRectangleForOcclusion.20348": {
+          "name": "private: void __cdecl COcclusionContext::CollectRectangleForOcclusion(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const * __ptr64,bool,bool,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64) __ptr64",
+          "rva": "0x73E78"
+        },
+        "COcclusionContext::Compute.19041": {
+          "name": "protected: long __cdecl COcclusionContext::Compute(class CVisualTree const * __ptr64,class gsl::span<class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const ,-1> const & __ptr64,float,class gsl::span<class COverlayContext * __ptr64,-1> const & __ptr64) __ptr64",
+          "rva": "0x48348"
+        },
+        "COcclusionContext::IsOccluded.22000": {
+          "name": "public: bool __cdecl COcclusionContext::IsOccluded(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
+          "rva": "0xDB350"
+        },
+        "COcclusionContext::PageInPixelsRectToDeviceRect": {
+          "name": "private: bool __cdecl COcclusionContext::PageInPixelsRectToDeviceRect(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64",
+          "rva": "0x1BE1B8"
+        },
+        "COcclusionContext::SetDeviceTransform": {
+          "name": "public: long __cdecl COcclusionContext::SetDeviceTransform(class CMILMatrix const * __ptr64)const __ptr64",
+          "rva": "0x4811C"
+        },
+        "COcclusionContext::~COcclusionContext": {
+          "name": "public: __cdecl COcclusionContext::~COcclusionContext(void) __ptr64",
+          "rva": "0x8FFB8"
+        },
+        "CRectangleGeometry::`vftable'": {
+          "name": "const CRectangleGeometry::`vftable'",
+          "rva": "0x2B01D0"
+        },
+        "CRenderData::DrawImageResource_FillMode.22000": {
+          "name": "private: long __cdecl CRenderData::DrawImageResource_FillMode(class CDrawingContext * __ptr64,class CDrawListEntryBuilder * __ptr64,class CImageSource * __ptr64,struct D2D_RECT_F const * __ptr64,struct D2D_RECT_F const * __ptr64,float) __ptr64",
+          "rva": "0xB2B24"
+        },
+        "CRenderData::TryDrawCommandAsDrawList.22000": {
+          "name": "private: long __cdecl CRenderData::TryDrawCommandAsDrawList(class CDrawingContext * __ptr64,class CDrawListCache * __ptr64,class CDrawListEntryBuilder * __ptr64,unsigned int,class gsl::span<unsigned char const ,-1>,bool * __ptr64) __ptr64",
+          "rva": "0xB4960"
+        },
+        "CRenderDataBuilder::DrawGeometry": {
+          "name": "public: virtual long __cdecl CRenderDataBuilder::DrawGeometry(unsigned int,unsigned int) __ptr64",
+          "rva": "0xE46E0"
+        },
+        "CShape::CopyShape": {
+          "name": "public: long __cdecl CShape::CopyShape(class CMILMatrix const * __ptr64,class CShape * __ptr64 * __ptr64)const __ptr64",
+          "rva": "0x57A50"
+        },
+        "CSolidColorLegacyMilBrush::`vftable'": {
+          "name": "const CSolidColorLegacyMilBrush::`vftable'",
+          "rva": "0x2B6950"
+        },
+        "GetCurrentFrameId": {
+          "name": "unsigned __int64 __cdecl GetCurrentFrameId(void)",
+          "rva": "0x4F540"
+        }
+      }
+    },
+    {
+      "revision": 258,
+      "image": {
+        "time_date_stamp": 2546943143,
+        "size_of_image": 4194304,
+        "sha256": "f145dde8fb1f28ac7dd975f4862e9581607e2cb3647bf95cb7a8118a9f5bad1f"
+      },
+      "pdb": {
+        "name": "dwmcore.pdb",
+        "guid": "65ab45b1-b373-29eb-d56c-aa6986133c2f",
+        "age": 1,
+        "sha256": "609f5eb3f5a88377b5f714c9ee45d3404d53a727cdb8b746cfeb22f80dac4ed4"
+      },
+      "resolution_contract": "6c475f8e07f62904eb48cc2b0bd642eba575020100eace5dbccdb027ce821a96",
+      "symbols": {
+        "CArrayBasedCoverageSet::IsCovered.pre26100": {
+          "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
+          "rva": "0xBAC40"
+        },
+        "CChannel::MatrixTransformUpdate": {
+          "name": "public: virtual long __cdecl CChannel::MatrixTransformUpdate(unsigned int,struct _MilMatrix3x2D const & __ptr64) __ptr64",
+          "rva": "0x2CEF0"
+        },
+        "CD2DContext::DestroyDeviceResources": {
+          "name": "protected: long __cdecl CD2DContext::DestroyDeviceResources(void) __ptr64",
+          "rva": "0x81B7C"
+        },
+        "CD2DContext::EnsureBeginDraw": {
+          "name": "private: void __cdecl CD2DContext::EnsureBeginDraw(void) __ptr64",
+          "rva": "0x3CBC8"
+        },
+        "CDirtyRegion::GetOptimizedRect": {
+          "name": "public: class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> __cdecl CDirtyRegion::GetOptimizedRect(unsigned int,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class CRegion * __ptr64,class CMILMatrix const * __ptr64,bool,class gsl::span<class CVisual const * __ptr64,-1> const & __ptr64,class COcclusionContext const * __ptr64)const __ptr64",
+          "rva": "0x74B48"
+        },
+        "CDrawingContext::ApplyRenderStateInternal": {
+          "name": "private: long __cdecl CDrawingContext::ApplyRenderStateInternal(bool) __ptr64",
+          "rva": "0x56EB0"
+        },
+        "CDrawingContext::DrawVisualTree.20348": {
+          "name": "public: long __cdecl CDrawingContext::DrawVisualTree(class CVisualTree const * __ptr64,class TMil3DRect<float,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded>,struct Mil3DRectF,struct RectUniqueness::NotNeeded> const & __ptr64,class COcclusionContext const * __ptr64,enum ClearMode::Enum,bool,class CVisual * __ptr64) __ptr64",
+          "rva": "0x449D8"
+        },
+        "CDrawingContext::FillShapeWithBrush": {
+          "name": "public: long __cdecl CDrawingContext::FillShapeWithBrush(class CShape const & __ptr64,struct ID2D1Brush * __ptr64) __ptr64",
+          "rva": "0x50A40"
+        },
+        "CDrawingContext::FlushD2D": {
+          "name": "public: long __cdecl CDrawingContext::FlushD2D(void) __ptr64",
+          "rva": "0x1B03F8"
+        },
+        "CDrawingContext::GetClipBoundsWorld": {
+          "name": "public: void __cdecl CDrawingContext::GetClipBoundsWorld(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64",
+          "rva": "0xD4BE4"
+        },
+        "CDrawingContext::GetUnOccludedWorldShape": {
+          "name": "private: long __cdecl CDrawingContext::GetUnOccludedWorldShape(class CShape const & __ptr64,int,class CShape * __ptr64 * __ptr64) __ptr64",
+          "rva": "0x6D808"
+        },
+        "CGeometry::GetShapeData": {
+          "name": "public: long __cdecl CGeometry::GetShapeData(struct D2D_SIZE_F const * __ptr64,class CShapePtr * __ptr64) __ptr64",
+          "rva": "0x57490"
+        },
+        "CImageLegacyMilBrush::`vftable'": {
+          "name": "const CImageLegacyMilBrush::`vftable'",
+          "rva": "0x2B6890"
+        },
+        "CMILMatrix::Identity": {
+          "name": "public: static class CMILMatrix_IdentityType const CMILMatrix::Identity",
+          "rva": "0x3CD620"
+        },
+        "CMatrixStack::GetTopByReference": {
+          "name": "public: class CMILMatrix const * __ptr64 __cdecl CMatrixStack::GetTopByReference(void)const __ptr64",
+          "rva": "0x474F0"
+        },
+        "COcclusionContext::CheckAndRecordOverlayCandidate.19041": {
+          "name": "public: long __cdecl COcclusionContext::CheckAndRecordOverlayCandidate(class CVisual * __ptr64,class CCompositionSurfaceInfo * __ptr64,class CMILMatrix const * __ptr64,class CShape const * __ptr64,struct TMILFlagsEnum<enum MilSourceModification::FlagsEnum>) __ptr64",
+          "rva": "0x8AD8"
+        },
+        "COcclusionContext::CollectRectangleForOcclusion.20348": {
+          "name": "private: void __cdecl COcclusionContext::CollectRectangleForOcclusion(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const * __ptr64,bool,bool,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64) __ptr64",
+          "rva": "0x73E78"
+        },
+        "COcclusionContext::Compute.19041": {
+          "name": "protected: long __cdecl COcclusionContext::Compute(class CVisualTree const * __ptr64,class gsl::span<class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const ,-1> const & __ptr64,float,class gsl::span<class COverlayContext * __ptr64,-1> const & __ptr64) __ptr64",
+          "rva": "0x48348"
+        },
+        "COcclusionContext::IsOccluded.22000": {
+          "name": "public: bool __cdecl COcclusionContext::IsOccluded(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
+          "rva": "0xDB350"
+        },
+        "COcclusionContext::PageInPixelsRectToDeviceRect": {
+          "name": "private: bool __cdecl COcclusionContext::PageInPixelsRectToDeviceRect(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64",
+          "rva": "0x1BE1B8"
+        },
+        "COcclusionContext::SetDeviceTransform": {
+          "name": "public: long __cdecl COcclusionContext::SetDeviceTransform(class CMILMatrix const * __ptr64)const __ptr64",
+          "rva": "0x4811C"
+        },
+        "COcclusionContext::~COcclusionContext": {
+          "name": "public: __cdecl COcclusionContext::~COcclusionContext(void) __ptr64",
+          "rva": "0x8FFB8"
+        },
+        "CRectangleGeometry::`vftable'": {
+          "name": "const CRectangleGeometry::`vftable'",
+          "rva": "0x2B01D0"
+        },
+        "CRenderData::DrawImageResource_FillMode.22000": {
+          "name": "private: long __cdecl CRenderData::DrawImageResource_FillMode(class CDrawingContext * __ptr64,class CDrawListEntryBuilder * __ptr64,class CImageSource * __ptr64,struct D2D_RECT_F const * __ptr64,struct D2D_RECT_F const * __ptr64,float) __ptr64",
+          "rva": "0xB2B24"
+        },
+        "CRenderData::TryDrawCommandAsDrawList.22000": {
+          "name": "private: long __cdecl CRenderData::TryDrawCommandAsDrawList(class CDrawingContext * __ptr64,class CDrawListCache * __ptr64,class CDrawListEntryBuilder * __ptr64,unsigned int,class gsl::span<unsigned char const ,-1>,bool * __ptr64) __ptr64",
+          "rva": "0xB4960"
+        },
+        "CRenderDataBuilder::DrawGeometry": {
+          "name": "public: virtual long __cdecl CRenderDataBuilder::DrawGeometry(unsigned int,unsigned int) __ptr64",
+          "rva": "0xE46E0"
+        },
+        "CShape::CopyShape": {
+          "name": "public: long __cdecl CShape::CopyShape(class CMILMatrix const * __ptr64,class CShape * __ptr64 * __ptr64)const __ptr64",
+          "rva": "0x57A50"
+        },
+        "CSolidColorLegacyMilBrush::`vftable'": {
+          "name": "const CSolidColorLegacyMilBrush::`vftable'",
+          "rva": "0x2B6950"
+        },
+        "GetCurrentFrameId": {
+          "name": "unsigned __int64 __cdecl GetCurrentFrameId(void)",
+          "rva": "0x4F540"
+        }
+      }
+    },
+    {
+      "revision": 434,
+      "image": {
+        "time_date_stamp": 1675479395,
+        "size_of_image": 4194304,
+        "sha256": "8a656a0d51564fd5460cbfd6a0dfbdbc83faa3a5276a4a51d7289e5f1bfd23d0"
+      },
+      "pdb": {
+        "name": "dwmcore.pdb",
+        "guid": "dc921402-c112-4318-e7e6-97d3d4279610",
+        "age": 1,
+        "sha256": "7d9f937397f9552c7f345bccc98ceb29d3cbe5fe650e8732b5e2b056cccefd90"
+      },
+      "resolution_contract": "6c475f8e07f62904eb48cc2b0bd642eba575020100eace5dbccdb027ce821a96",
+      "symbols": {
+        "CArrayBasedCoverageSet::IsCovered.pre26100": {
+          "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
+          "rva": "0xBB3F0"
+        },
+        "CChannel::MatrixTransformUpdate": {
+          "name": "public: virtual long __cdecl CChannel::MatrixTransformUpdate(unsigned int,struct _MilMatrix3x2D const & __ptr64) __ptr64",
+          "rva": "0x2D210"
+        },
+        "CD2DContext::DestroyDeviceResources": {
+          "name": "protected: long __cdecl CD2DContext::DestroyDeviceResources(void) __ptr64",
+          "rva": "0x81FFC"
+        },
+        "CD2DContext::EnsureBeginDraw": {
+          "name": "private: void __cdecl CD2DContext::EnsureBeginDraw(void) __ptr64",
+          "rva": "0x3D018"
+        },
+        "CDirtyRegion::GetOptimizedRect": {
+          "name": "public: class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> __cdecl CDirtyRegion::GetOptimizedRect(unsigned int,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class CRegion * __ptr64,class CMILMatrix const * __ptr64,bool,class gsl::span<class CVisual const * __ptr64,-1> const & __ptr64,class COcclusionContext const * __ptr64)const __ptr64",
+          "rva": "0x74FC8"
+        },
+        "CDrawingContext::ApplyRenderStateInternal": {
+          "name": "private: long __cdecl CDrawingContext::ApplyRenderStateInternal(bool) __ptr64",
+          "rva": "0x57330"
+        },
+        "CDrawingContext::DrawVisualTree.20348": {
+          "name": "public: long __cdecl CDrawingContext::DrawVisualTree(class CVisualTree const * __ptr64,class TMil3DRect<float,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded>,struct Mil3DRectF,struct RectUniqueness::NotNeeded> const & __ptr64,class COcclusionContext const * __ptr64,enum ClearMode::Enum,bool,class CVisual * __ptr64) __ptr64",
+          "rva": "0x44E28"
+        },
+        "CDrawingContext::FillShapeWithBrush": {
+          "name": "public: long __cdecl CDrawingContext::FillShapeWithBrush(class CShape const & __ptr64,struct ID2D1Brush * __ptr64) __ptr64",
+          "rva": "0x50E90"
+        },
+        "CDrawingContext::FlushD2D": {
+          "name": "public: long __cdecl CDrawingContext::FlushD2D(void) __ptr64",
+          "rva": "0x1B0248"
+        },
+        "CDrawingContext::GetClipBoundsWorld": {
+          "name": "public: void __cdecl CDrawingContext::GetClipBoundsWorld(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64",
+          "rva": "0xD5394"
+        },
+        "CDrawingContext::GetUnOccludedWorldShape": {
+          "name": "private: long __cdecl CDrawingContext::GetUnOccludedWorldShape(class CShape const & __ptr64,int,class CShape * __ptr64 * __ptr64) __ptr64",
+          "rva": "0x6DC88"
+        },
+        "CGeometry::GetShapeData": {
+          "name": "public: long __cdecl CGeometry::GetShapeData(struct D2D_SIZE_F const * __ptr64,class CShapePtr * __ptr64) __ptr64",
+          "rva": "0x57910"
+        },
+        "CImageLegacyMilBrush::`vftable'": {
+          "name": "const CImageLegacyMilBrush::`vftable'",
+          "rva": "0x2B6890"
+        },
+        "CMILMatrix::Identity": {
+          "name": "public: static class CMILMatrix_IdentityType const CMILMatrix::Identity",
+          "rva": "0x3CD620"
+        },
+        "CMatrixStack::GetTopByReference": {
+          "name": "public: class CMILMatrix const * __ptr64 __cdecl CMatrixStack::GetTopByReference(void)const __ptr64",
+          "rva": "0x47940"
+        },
+        "COcclusionContext::CheckAndRecordOverlayCandidate.19041": {
+          "name": "public: long __cdecl COcclusionContext::CheckAndRecordOverlayCandidate(class CVisual * __ptr64,class CCompositionSurfaceInfo * __ptr64,class CMILMatrix const * __ptr64,class CShape const * __ptr64,struct TMILFlagsEnum<enum MilSourceModification::FlagsEnum>) __ptr64",
+          "rva": "0x8AD8"
+        },
+        "COcclusionContext::CollectRectangleForOcclusion.20348": {
+          "name": "private: void __cdecl COcclusionContext::CollectRectangleForOcclusion(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const * __ptr64,bool,bool,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64) __ptr64",
+          "rva": "0x742F8"
+        },
+        "COcclusionContext::Compute.19041": {
+          "name": "protected: long __cdecl COcclusionContext::Compute(class CVisualTree const * __ptr64,class gsl::span<class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const ,-1> const & __ptr64,float,class gsl::span<class COverlayContext * __ptr64,-1> const & __ptr64) __ptr64",
+          "rva": "0x48798"
+        },
+        "COcclusionContext::IsOccluded.22000": {
+          "name": "public: bool __cdecl COcclusionContext::IsOccluded(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
+          "rva": "0xDBB00"
+        },
+        "COcclusionContext::PageInPixelsRectToDeviceRect": {
+          "name": "private: bool __cdecl COcclusionContext::PageInPixelsRectToDeviceRect(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64",
+          "rva": "0x1BE008"
+        },
+        "COcclusionContext::SetDeviceTransform": {
+          "name": "public: long __cdecl COcclusionContext::SetDeviceTransform(class CMILMatrix const * __ptr64)const __ptr64",
+          "rva": "0x4856C"
+        },
+        "COcclusionContext::~COcclusionContext": {
+          "name": "public: __cdecl COcclusionContext::~COcclusionContext(void) __ptr64",
+          "rva": "0x90438"
+        },
+        "CRectangleGeometry::`vftable'": {
+          "name": "const CRectangleGeometry::`vftable'",
+          "rva": "0x2B01D0"
+        },
+        "CRenderData::DrawImageResource_FillMode.22000": {
+          "name": "private: long __cdecl CRenderData::DrawImageResource_FillMode(class CDrawingContext * __ptr64,class CDrawListEntryBuilder * __ptr64,class CImageSource * __ptr64,struct D2D_RECT_F const * __ptr64,struct D2D_RECT_F const * __ptr64,float) __ptr64",
+          "rva": "0xB32D4"
+        },
+        "CRenderData::TryDrawCommandAsDrawList.22000": {
+          "name": "private: long __cdecl CRenderData::TryDrawCommandAsDrawList(class CDrawingContext * __ptr64,class CDrawListCache * __ptr64,class CDrawListEntryBuilder * __ptr64,unsigned int,class gsl::span<unsigned char const ,-1>,bool * __ptr64) __ptr64",
+          "rva": "0xB5110"
+        },
+        "CRenderDataBuilder::DrawGeometry": {
+          "name": "public: virtual long __cdecl CRenderDataBuilder::DrawGeometry(unsigned int,unsigned int) __ptr64",
+          "rva": "0xE4E90"
+        },
+        "CShape::CopyShape": {
+          "name": "public: long __cdecl CShape::CopyShape(class CMILMatrix const * __ptr64,class CShape * __ptr64 * __ptr64)const __ptr64",
+          "rva": "0x57ED0"
+        },
+        "CSolidColorLegacyMilBrush::`vftable'": {
+          "name": "const CSolidColorLegacyMilBrush::`vftable'",
+          "rva": "0x2B6950"
+        },
+        "GetCurrentFrameId": {
+          "name": "unsigned __int64 __cdecl GetCurrentFrameId(void)",
+          "rva": "0x4F990"
+        }
+      }
+    },
+    {
+      "revision": 493,
+      "image": {
+        "time_date_stamp": 1027978865,
+        "size_of_image": 4194304,
+        "sha256": "7bcfe56377c5af7b71d5b55b2183a3a5ea3aeeb7a9f3517148ab21a97ab036ac"
+      },
+      "pdb": {
+        "name": "dwmcore.pdb",
+        "guid": "01e9fd6d-b022-f950-732d-375533e25901",
+        "age": 1,
+        "sha256": "1589221ee5460826638ea69f3fc0b5bfff7fd46363c739c593ddb086314e9197"
+      },
+      "resolution_contract": "6c475f8e07f62904eb48cc2b0bd642eba575020100eace5dbccdb027ce821a96",
+      "symbols": {
+        "CArrayBasedCoverageSet::IsCovered.pre26100": {
+          "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
+          "rva": "0xBB3F0"
+        },
+        "CChannel::MatrixTransformUpdate": {
+          "name": "public: virtual long __cdecl CChannel::MatrixTransformUpdate(unsigned int,struct _MilMatrix3x2D const & __ptr64) __ptr64",
+          "rva": "0x2D210"
+        },
+        "CD2DContext::DestroyDeviceResources": {
+          "name": "protected: long __cdecl CD2DContext::DestroyDeviceResources(void) __ptr64",
+          "rva": "0x81FFC"
+        },
+        "CD2DContext::EnsureBeginDraw": {
+          "name": "private: void __cdecl CD2DContext::EnsureBeginDraw(void) __ptr64",
+          "rva": "0x3D018"
+        },
+        "CDirtyRegion::GetOptimizedRect": {
+          "name": "public: class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> __cdecl CDirtyRegion::GetOptimizedRect(unsigned int,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class CRegion * __ptr64,class CMILMatrix const * __ptr64,bool,class gsl::span<class CVisual const * __ptr64,-1> const & __ptr64,class COcclusionContext const * __ptr64)const __ptr64",
+          "rva": "0x74FC8"
+        },
+        "CDrawingContext::ApplyRenderStateInternal": {
+          "name": "private: long __cdecl CDrawingContext::ApplyRenderStateInternal(bool) __ptr64",
+          "rva": "0x57330"
+        },
+        "CDrawingContext::DrawVisualTree.20348": {
+          "name": "public: long __cdecl CDrawingContext::DrawVisualTree(class CVisualTree const * __ptr64,class TMil3DRect<float,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded>,struct Mil3DRectF,struct RectUniqueness::NotNeeded> const & __ptr64,class COcclusionContext const * __ptr64,enum ClearMode::Enum,bool,class CVisual * __ptr64) __ptr64",
+          "rva": "0x44E28"
+        },
+        "CDrawingContext::FillShapeWithBrush": {
+          "name": "public: long __cdecl CDrawingContext::FillShapeWithBrush(class CShape const & __ptr64,struct ID2D1Brush * __ptr64) __ptr64",
+          "rva": "0x50E90"
+        },
+        "CDrawingContext::FlushD2D": {
+          "name": "public: long __cdecl CDrawingContext::FlushD2D(void) __ptr64",
+          "rva": "0x1B0248"
+        },
+        "CDrawingContext::GetClipBoundsWorld": {
+          "name": "public: void __cdecl CDrawingContext::GetClipBoundsWorld(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64",
+          "rva": "0xD5394"
+        },
+        "CDrawingContext::GetUnOccludedWorldShape": {
+          "name": "private: long __cdecl CDrawingContext::GetUnOccludedWorldShape(class CShape const & __ptr64,int,class CShape * __ptr64 * __ptr64) __ptr64",
+          "rva": "0x6DC88"
+        },
+        "CGeometry::GetShapeData": {
+          "name": "public: long __cdecl CGeometry::GetShapeData(struct D2D_SIZE_F const * __ptr64,class CShapePtr * __ptr64) __ptr64",
+          "rva": "0x57910"
+        },
+        "CImageLegacyMilBrush::`vftable'": {
+          "name": "const CImageLegacyMilBrush::`vftable'",
+          "rva": "0x2B6890"
+        },
+        "CMILMatrix::Identity": {
+          "name": "public: static class CMILMatrix_IdentityType const CMILMatrix::Identity",
+          "rva": "0x3CD620"
+        },
+        "CMatrixStack::GetTopByReference": {
+          "name": "public: class CMILMatrix const * __ptr64 __cdecl CMatrixStack::GetTopByReference(void)const __ptr64",
+          "rva": "0x47940"
+        },
+        "COcclusionContext::CheckAndRecordOverlayCandidate.19041": {
+          "name": "public: long __cdecl COcclusionContext::CheckAndRecordOverlayCandidate(class CVisual * __ptr64,class CCompositionSurfaceInfo * __ptr64,class CMILMatrix const * __ptr64,class CShape const * __ptr64,struct TMILFlagsEnum<enum MilSourceModification::FlagsEnum>) __ptr64",
+          "rva": "0x8AD8"
+        },
+        "COcclusionContext::CollectRectangleForOcclusion.20348": {
+          "name": "private: void __cdecl COcclusionContext::CollectRectangleForOcclusion(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const * __ptr64,bool,bool,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64) __ptr64",
+          "rva": "0x742F8"
+        },
+        "COcclusionContext::Compute.19041": {
+          "name": "protected: long __cdecl COcclusionContext::Compute(class CVisualTree const * __ptr64,class gsl::span<class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const ,-1> const & __ptr64,float,class gsl::span<class COverlayContext * __ptr64,-1> const & __ptr64) __ptr64",
+          "rva": "0x48798"
+        },
+        "COcclusionContext::IsOccluded.22000": {
+          "name": "public: bool __cdecl COcclusionContext::IsOccluded(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
+          "rva": "0xDBB00"
+        },
+        "COcclusionContext::PageInPixelsRectToDeviceRect": {
+          "name": "private: bool __cdecl COcclusionContext::PageInPixelsRectToDeviceRect(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64",
+          "rva": "0x1BE008"
+        },
+        "COcclusionContext::SetDeviceTransform": {
+          "name": "public: long __cdecl COcclusionContext::SetDeviceTransform(class CMILMatrix const * __ptr64)const __ptr64",
+          "rva": "0x4856C"
+        },
+        "COcclusionContext::~COcclusionContext": {
+          "name": "public: __cdecl COcclusionContext::~COcclusionContext(void) __ptr64",
+          "rva": "0x90438"
+        },
+        "CRectangleGeometry::`vftable'": {
+          "name": "const CRectangleGeometry::`vftable'",
+          "rva": "0x2B01D0"
+        },
+        "CRenderData::DrawImageResource_FillMode.22000": {
+          "name": "private: long __cdecl CRenderData::DrawImageResource_FillMode(class CDrawingContext * __ptr64,class CDrawListEntryBuilder * __ptr64,class CImageSource * __ptr64,struct D2D_RECT_F const * __ptr64,struct D2D_RECT_F const * __ptr64,float) __ptr64",
+          "rva": "0xB32D4"
+        },
+        "CRenderData::TryDrawCommandAsDrawList.22000": {
+          "name": "private: long __cdecl CRenderData::TryDrawCommandAsDrawList(class CDrawingContext * __ptr64,class CDrawListCache * __ptr64,class CDrawListEntryBuilder * __ptr64,unsigned int,class gsl::span<unsigned char const ,-1>,bool * __ptr64) __ptr64",
+          "rva": "0xB5110"
+        },
+        "CRenderDataBuilder::DrawGeometry": {
+          "name": "public: virtual long __cdecl CRenderDataBuilder::DrawGeometry(unsigned int,unsigned int) __ptr64",
+          "rva": "0xE4E90"
+        },
+        "CShape::CopyShape": {
+          "name": "public: long __cdecl CShape::CopyShape(class CMILMatrix const * __ptr64,class CShape * __ptr64 * __ptr64)const __ptr64",
+          "rva": "0x57ED0"
+        },
+        "CSolidColorLegacyMilBrush::`vftable'": {
+          "name": "const CSolidColorLegacyMilBrush::`vftable'",
+          "rva": "0x2B6950"
+        },
+        "GetCurrentFrameId": {
+          "name": "unsigned __int64 __cdecl GetCurrentFrameId(void)",
+          "rva": "0x4F990"
+        }
+      }
+    },
+    {
+      "revision": 527,
+      "image": {
+        "time_date_stamp": 550883199,
+        "size_of_image": 4194304,
+        "sha256": "ef0866ac57d702a696af841e1933085d7b96b0cbfc132cda0e8bf1245aad64f2"
+      },
+      "pdb": {
+        "name": "dwmcore.pdb",
+        "guid": "004b8219-0c80-a355-45e4-a5e2ffde18db",
+        "age": 1,
+        "sha256": "312dbe09d12eee0c33d432e79297d6aa5323f279aa15aa08f7013138d74dc2b1"
+      },
+      "resolution_contract": "6c475f8e07f62904eb48cc2b0bd642eba575020100eace5dbccdb027ce821a96",
+      "symbols": {
+        "CArrayBasedCoverageSet::IsCovered.pre26100": {
+          "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
+          "rva": "0xBB3F0"
+        },
+        "CChannel::MatrixTransformUpdate": {
+          "name": "public: virtual long __cdecl CChannel::MatrixTransformUpdate(unsigned int,struct _MilMatrix3x2D const & __ptr64) __ptr64",
+          "rva": "0x2D210"
+        },
+        "CD2DContext::DestroyDeviceResources": {
+          "name": "protected: long __cdecl CD2DContext::DestroyDeviceResources(void) __ptr64",
+          "rva": "0x81FFC"
+        },
+        "CD2DContext::EnsureBeginDraw": {
+          "name": "private: void __cdecl CD2DContext::EnsureBeginDraw(void) __ptr64",
+          "rva": "0x3D018"
+        },
+        "CDirtyRegion::GetOptimizedRect": {
+          "name": "public: class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> __cdecl CDirtyRegion::GetOptimizedRect(unsigned int,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class CRegion * __ptr64,class CMILMatrix const * __ptr64,bool,class gsl::span<class CVisual const * __ptr64,-1> const & __ptr64,class COcclusionContext const * __ptr64)const __ptr64",
+          "rva": "0x74FC8"
+        },
+        "CDrawingContext::ApplyRenderStateInternal": {
+          "name": "private: long __cdecl CDrawingContext::ApplyRenderStateInternal(bool) __ptr64",
+          "rva": "0x57330"
+        },
+        "CDrawingContext::DrawVisualTree.20348": {
+          "name": "public: long __cdecl CDrawingContext::DrawVisualTree(class CVisualTree const * __ptr64,class TMil3DRect<float,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded>,struct Mil3DRectF,struct RectUniqueness::NotNeeded> const & __ptr64,class COcclusionContext const * __ptr64,enum ClearMode::Enum,bool,class CVisual * __ptr64) __ptr64",
+          "rva": "0x44E28"
+        },
+        "CDrawingContext::FillShapeWithBrush": {
+          "name": "public: long __cdecl CDrawingContext::FillShapeWithBrush(class CShape const & __ptr64,struct ID2D1Brush * __ptr64) __ptr64",
+          "rva": "0x50E90"
+        },
+        "CDrawingContext::FlushD2D": {
+          "name": "public: long __cdecl CDrawingContext::FlushD2D(void) __ptr64",
+          "rva": "0x1B0558"
+        },
+        "CDrawingContext::GetClipBoundsWorld": {
+          "name": "public: void __cdecl CDrawingContext::GetClipBoundsWorld(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64",
+          "rva": "0xD54A4"
+        },
+        "CDrawingContext::GetUnOccludedWorldShape": {
+          "name": "private: long __cdecl CDrawingContext::GetUnOccludedWorldShape(class CShape const & __ptr64,int,class CShape * __ptr64 * __ptr64) __ptr64",
+          "rva": "0x6DC88"
+        },
+        "CGeometry::GetShapeData": {
+          "name": "public: long __cdecl CGeometry::GetShapeData(struct D2D_SIZE_F const * __ptr64,class CShapePtr * __ptr64) __ptr64",
+          "rva": "0x57910"
+        },
+        "CImageLegacyMilBrush::`vftable'": {
+          "name": "const CImageLegacyMilBrush::`vftable'",
+          "rva": "0x2B6890"
+        },
+        "CMILMatrix::Identity": {
+          "name": "public: static class CMILMatrix_IdentityType const CMILMatrix::Identity",
+          "rva": "0x3CD620"
+        },
+        "CMatrixStack::GetTopByReference": {
+          "name": "public: class CMILMatrix const * __ptr64 __cdecl CMatrixStack::GetTopByReference(void)const __ptr64",
+          "rva": "0x47940"
+        },
+        "COcclusionContext::CheckAndRecordOverlayCandidate.19041": {
+          "name": "public: long __cdecl COcclusionContext::CheckAndRecordOverlayCandidate(class CVisual * __ptr64,class CCompositionSurfaceInfo * __ptr64,class CMILMatrix const * __ptr64,class CShape const * __ptr64,struct TMILFlagsEnum<enum MilSourceModification::FlagsEnum>) __ptr64",
+          "rva": "0x8AD8"
+        },
+        "COcclusionContext::CollectRectangleForOcclusion.20348": {
+          "name": "private: void __cdecl COcclusionContext::CollectRectangleForOcclusion(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const * __ptr64,bool,bool,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64) __ptr64",
+          "rva": "0x742F8"
+        },
+        "COcclusionContext::Compute.19041": {
+          "name": "protected: long __cdecl COcclusionContext::Compute(class CVisualTree const * __ptr64,class gsl::span<class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const ,-1> const & __ptr64,float,class gsl::span<class COverlayContext * __ptr64,-1> const & __ptr64) __ptr64",
+          "rva": "0x48798"
+        },
+        "COcclusionContext::IsOccluded.22000": {
+          "name": "public: bool __cdecl COcclusionContext::IsOccluded(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
+          "rva": "0xDBC10"
+        },
+        "COcclusionContext::PageInPixelsRectToDeviceRect": {
+          "name": "private: bool __cdecl COcclusionContext::PageInPixelsRectToDeviceRect(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64",
+          "rva": "0x1BE318"
+        },
+        "COcclusionContext::SetDeviceTransform": {
+          "name": "public: long __cdecl COcclusionContext::SetDeviceTransform(class CMILMatrix const * __ptr64)const __ptr64",
+          "rva": "0x4856C"
+        },
+        "COcclusionContext::~COcclusionContext": {
+          "name": "public: __cdecl COcclusionContext::~COcclusionContext(void) __ptr64",
+          "rva": "0x90438"
+        },
+        "CRectangleGeometry::`vftable'": {
+          "name": "const CRectangleGeometry::`vftable'",
+          "rva": "0x2B01D0"
+        },
+        "CRenderData::DrawImageResource_FillMode.22000": {
+          "name": "private: long __cdecl CRenderData::DrawImageResource_FillMode(class CDrawingContext * __ptr64,class CDrawListEntryBuilder * __ptr64,class CImageSource * __ptr64,struct D2D_RECT_F const * __ptr64,struct D2D_RECT_F const * __ptr64,float) __ptr64",
+          "rva": "0xB32D4"
+        },
+        "CRenderData::TryDrawCommandAsDrawList.22000": {
+          "name": "private: long __cdecl CRenderData::TryDrawCommandAsDrawList(class CDrawingContext * __ptr64,class CDrawListCache * __ptr64,class CDrawListEntryBuilder * __ptr64,unsigned int,class gsl::span<unsigned char const ,-1>,bool * __ptr64) __ptr64",
+          "rva": "0xB5110"
+        },
+        "CRenderDataBuilder::DrawGeometry": {
+          "name": "public: virtual long __cdecl CRenderDataBuilder::DrawGeometry(unsigned int,unsigned int) __ptr64",
+          "rva": "0xE4FA0"
+        },
+        "CShape::CopyShape": {
+          "name": "public: long __cdecl CShape::CopyShape(class CMILMatrix const * __ptr64,class CShape * __ptr64 * __ptr64)const __ptr64",
+          "rva": "0x57ED0"
+        },
+        "CSolidColorLegacyMilBrush::`vftable'": {
+          "name": "const CSolidColorLegacyMilBrush::`vftable'",
+          "rva": "0x2B6950"
+        },
+        "GetCurrentFrameId": {
+          "name": "unsigned __int64 __cdecl GetCurrentFrameId(void)",
+          "rva": "0x4F990"
+        }
+      }
+    },
+    {
+      "revision": 556,
+      "image": {
+        "time_date_stamp": 4095609656,
+        "size_of_image": 4194304,
+        "sha256": "76ee539cc2f156d2c345659b225d2585eb25abed59466adc4c8a01027bb1cc42"
+      },
+      "pdb": {
+        "name": "dwmcore.pdb",
+        "guid": "e3fd60e6-3dcb-4f74-5901-8183001e8ce9",
+        "age": 1,
+        "sha256": "90b343af053d1d92c729811ca64634a3010293d5770e946a5b2936695a226709"
+      },
+      "resolution_contract": "6c475f8e07f62904eb48cc2b0bd642eba575020100eace5dbccdb027ce821a96",
+      "symbols": {
+        "CArrayBasedCoverageSet::IsCovered.pre26100": {
+          "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
+          "rva": "0xBB3F0"
+        },
+        "CChannel::MatrixTransformUpdate": {
+          "name": "public: virtual long __cdecl CChannel::MatrixTransformUpdate(unsigned int,struct _MilMatrix3x2D const & __ptr64) __ptr64",
+          "rva": "0x2D210"
+        },
+        "CD2DContext::DestroyDeviceResources": {
+          "name": "protected: long __cdecl CD2DContext::DestroyDeviceResources(void) __ptr64",
+          "rva": "0x81FFC"
+        },
+        "CD2DContext::EnsureBeginDraw": {
+          "name": "private: void __cdecl CD2DContext::EnsureBeginDraw(void) __ptr64",
+          "rva": "0x3D018"
+        },
+        "CDirtyRegion::GetOptimizedRect": {
+          "name": "public: class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> __cdecl CDirtyRegion::GetOptimizedRect(unsigned int,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class CRegion * __ptr64,class CMILMatrix const * __ptr64,bool,class gsl::span<class CVisual const * __ptr64,-1> const & __ptr64,class COcclusionContext const * __ptr64)const __ptr64",
+          "rva": "0x74FC8"
+        },
+        "CDrawingContext::ApplyRenderStateInternal": {
+          "name": "private: long __cdecl CDrawingContext::ApplyRenderStateInternal(bool) __ptr64",
+          "rva": "0x57330"
+        },
+        "CDrawingContext::DrawVisualTree.20348": {
+          "name": "public: long __cdecl CDrawingContext::DrawVisualTree(class CVisualTree const * __ptr64,class TMil3DRect<float,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded>,struct Mil3DRectF,struct RectUniqueness::NotNeeded> const & __ptr64,class COcclusionContext const * __ptr64,enum ClearMode::Enum,bool,class CVisual * __ptr64) __ptr64",
+          "rva": "0x44E28"
+        },
+        "CDrawingContext::FillShapeWithBrush": {
+          "name": "public: long __cdecl CDrawingContext::FillShapeWithBrush(class CShape const & __ptr64,struct ID2D1Brush * __ptr64) __ptr64",
+          "rva": "0x50E90"
+        },
+        "CDrawingContext::FlushD2D": {
+          "name": "public: long __cdecl CDrawingContext::FlushD2D(void) __ptr64",
+          "rva": "0x1B0578"
+        },
+        "CDrawingContext::GetClipBoundsWorld": {
+          "name": "public: void __cdecl CDrawingContext::GetClipBoundsWorld(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64",
+          "rva": "0xD54B4"
+        },
+        "CDrawingContext::GetUnOccludedWorldShape": {
+          "name": "private: long __cdecl CDrawingContext::GetUnOccludedWorldShape(class CShape const & __ptr64,int,class CShape * __ptr64 * __ptr64) __ptr64",
+          "rva": "0x6DC88"
+        },
+        "CGeometry::GetShapeData": {
+          "name": "public: long __cdecl CGeometry::GetShapeData(struct D2D_SIZE_F const * __ptr64,class CShapePtr * __ptr64) __ptr64",
+          "rva": "0x57910"
+        },
+        "CImageLegacyMilBrush::`vftable'": {
+          "name": "const CImageLegacyMilBrush::`vftable'",
+          "rva": "0x2B6980"
+        },
+        "CMILMatrix::Identity": {
+          "name": "public: static class CMILMatrix_IdentityType const CMILMatrix::Identity",
+          "rva": "0x3CD620"
+        },
+        "CMatrixStack::GetTopByReference": {
+          "name": "public: class CMILMatrix const * __ptr64 __cdecl CMatrixStack::GetTopByReference(void)const __ptr64",
+          "rva": "0x47940"
+        },
+        "COcclusionContext::CheckAndRecordOverlayCandidate.19041": {
+          "name": "public: long __cdecl COcclusionContext::CheckAndRecordOverlayCandidate(class CVisual * __ptr64,class CCompositionSurfaceInfo * __ptr64,class CMILMatrix const * __ptr64,class CShape const * __ptr64,struct TMILFlagsEnum<enum MilSourceModification::FlagsEnum>) __ptr64",
+          "rva": "0x8AD8"
+        },
+        "COcclusionContext::CollectRectangleForOcclusion.20348": {
+          "name": "private: void __cdecl COcclusionContext::CollectRectangleForOcclusion(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const * __ptr64,bool,bool,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64) __ptr64",
+          "rva": "0x742F8"
+        },
+        "COcclusionContext::Compute.19041": {
+          "name": "protected: long __cdecl COcclusionContext::Compute(class CVisualTree const * __ptr64,class gsl::span<class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const ,-1> const & __ptr64,float,class gsl::span<class COverlayContext * __ptr64,-1> const & __ptr64) __ptr64",
+          "rva": "0x48798"
+        },
+        "COcclusionContext::IsOccluded.22000": {
+          "name": "public: bool __cdecl COcclusionContext::IsOccluded(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
+          "rva": "0xDBC20"
+        },
+        "COcclusionContext::PageInPixelsRectToDeviceRect": {
+          "name": "private: bool __cdecl COcclusionContext::PageInPixelsRectToDeviceRect(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64",
+          "rva": "0x1BE338"
+        },
+        "COcclusionContext::SetDeviceTransform": {
+          "name": "public: long __cdecl COcclusionContext::SetDeviceTransform(class CMILMatrix const * __ptr64)const __ptr64",
+          "rva": "0x4856C"
+        },
+        "COcclusionContext::~COcclusionContext": {
+          "name": "public: __cdecl COcclusionContext::~COcclusionContext(void) __ptr64",
+          "rva": "0x90438"
+        },
+        "CRectangleGeometry::`vftable'": {
+          "name": "const CRectangleGeometry::`vftable'",
+          "rva": "0x2B01D0"
+        },
+        "CRenderData::DrawImageResource_FillMode.22000": {
+          "name": "private: long __cdecl CRenderData::DrawImageResource_FillMode(class CDrawingContext * __ptr64,class CDrawListEntryBuilder * __ptr64,class CImageSource * __ptr64,struct D2D_RECT_F const * __ptr64,struct D2D_RECT_F const * __ptr64,float) __ptr64",
+          "rva": "0xB32D4"
+        },
+        "CRenderData::TryDrawCommandAsDrawList.22000": {
+          "name": "private: long __cdecl CRenderData::TryDrawCommandAsDrawList(class CDrawingContext * __ptr64,class CDrawListCache * __ptr64,class CDrawListEntryBuilder * __ptr64,unsigned int,class gsl::span<unsigned char const ,-1>,bool * __ptr64) __ptr64",
+          "rva": "0xB5110"
+        },
+        "CRenderDataBuilder::DrawGeometry": {
+          "name": "public: virtual long __cdecl CRenderDataBuilder::DrawGeometry(unsigned int,unsigned int) __ptr64",
+          "rva": "0xE4FB0"
+        },
+        "CShape::CopyShape": {
+          "name": "public: long __cdecl CShape::CopyShape(class CMILMatrix const * __ptr64,class CShape * __ptr64 * __ptr64)const __ptr64",
+          "rva": "0x57ED0"
+        },
+        "CSolidColorLegacyMilBrush::`vftable'": {
+          "name": "const CSolidColorLegacyMilBrush::`vftable'",
+          "rva": "0x2B6A40"
+        },
+        "GetCurrentFrameId": {
+          "name": "unsigned __int64 __cdecl GetCurrentFrameId(void)",
+          "rva": "0x4F990"
+        }
+      }
+    },
+    {
+      "revision": 613,
+      "image": {
+        "time_date_stamp": 1525621129,
+        "size_of_image": 4194304,
+        "sha256": "424c8f56f600b0be67d3b62941937631116b2b13eb1faac47d48825d81f2287f"
+      },
+      "pdb": {
+        "name": "dwmcore.pdb",
+        "guid": "f7904264-0bcf-9327-b2d8-89f389796192",
+        "age": 1,
+        "sha256": "b607e45b146015dfbe8f5b4d14797462b17ba76f2087628848f55f0bd4947491"
+      },
+      "resolution_contract": "6c475f8e07f62904eb48cc2b0bd642eba575020100eace5dbccdb027ce821a96",
+      "symbols": {
+        "CArrayBasedCoverageSet::IsCovered.pre26100": {
+          "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
+          "rva": "0xBB7F0"
+        },
+        "CChannel::MatrixTransformUpdate": {
+          "name": "public: virtual long __cdecl CChannel::MatrixTransformUpdate(unsigned int,struct _MilMatrix3x2D const & __ptr64) __ptr64",
+          "rva": "0x2D210"
+        },
+        "CD2DContext::DestroyDeviceResources": {
+          "name": "protected: long __cdecl CD2DContext::DestroyDeviceResources(void) __ptr64",
+          "rva": "0x81FFC"
+        },
+        "CD2DContext::EnsureBeginDraw": {
+          "name": "private: void __cdecl CD2DContext::EnsureBeginDraw(void) __ptr64",
+          "rva": "0x3D018"
+        },
+        "CDirtyRegion::GetOptimizedRect": {
+          "name": "public: class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> __cdecl CDirtyRegion::GetOptimizedRect(unsigned int,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class CRegion * __ptr64,class CMILMatrix const * __ptr64,bool,class gsl::span<class CVisual const * __ptr64,-1> const & __ptr64,class COcclusionContext const * __ptr64)const __ptr64",
+          "rva": "0x74FC8"
+        },
+        "CDrawingContext::ApplyRenderStateInternal": {
+          "name": "private: long __cdecl CDrawingContext::ApplyRenderStateInternal(bool) __ptr64",
+          "rva": "0x57330"
+        },
+        "CDrawingContext::DrawVisualTree.20348": {
+          "name": "public: long __cdecl CDrawingContext::DrawVisualTree(class CVisualTree const * __ptr64,class TMil3DRect<float,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded>,struct Mil3DRectF,struct RectUniqueness::NotNeeded> const & __ptr64,class COcclusionContext const * __ptr64,enum ClearMode::Enum,bool,class CVisual * __ptr64) __ptr64",
+          "rva": "0x44E28"
+        },
+        "CDrawingContext::FillShapeWithBrush": {
+          "name": "public: long __cdecl CDrawingContext::FillShapeWithBrush(class CShape const & __ptr64,struct ID2D1Brush * __ptr64) __ptr64",
+          "rva": "0x50E90"
+        },
+        "CDrawingContext::FlushD2D": {
+          "name": "public: long __cdecl CDrawingContext::FlushD2D(void) __ptr64",
+          "rva": "0x1B0668"
+        },
+        "CDrawingContext::GetClipBoundsWorld": {
+          "name": "public: void __cdecl CDrawingContext::GetClipBoundsWorld(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64",
+          "rva": "0xD4944"
+        },
+        "CDrawingContext::GetUnOccludedWorldShape": {
+          "name": "private: long __cdecl CDrawingContext::GetUnOccludedWorldShape(class CShape const & __ptr64,int,class CShape * __ptr64 * __ptr64) __ptr64",
+          "rva": "0x6DC88"
+        },
+        "CGeometry::GetShapeData": {
+          "name": "public: long __cdecl CGeometry::GetShapeData(struct D2D_SIZE_F const * __ptr64,class CShapePtr * __ptr64) __ptr64",
+          "rva": "0x57910"
+        },
+        "CImageLegacyMilBrush::`vftable'": {
+          "name": "const CImageLegacyMilBrush::`vftable'",
+          "rva": "0x2B2C38"
+        },
+        "CMILMatrix::Identity": {
+          "name": "public: static class CMILMatrix_IdentityType const CMILMatrix::Identity",
+          "rva": "0x3CD620"
+        },
+        "CMatrixStack::GetTopByReference": {
+          "name": "public: class CMILMatrix const * __ptr64 __cdecl CMatrixStack::GetTopByReference(void)const __ptr64",
+          "rva": "0x47940"
+        },
+        "COcclusionContext::CheckAndRecordOverlayCandidate.19041": {
+          "name": "public: long __cdecl COcclusionContext::CheckAndRecordOverlayCandidate(class CVisual * __ptr64,class CCompositionSurfaceInfo * __ptr64,class CMILMatrix const * __ptr64,class CShape const * __ptr64,struct TMILFlagsEnum<enum MilSourceModification::FlagsEnum>) __ptr64",
+          "rva": "0x8AD8"
+        },
+        "COcclusionContext::CollectRectangleForOcclusion.20348": {
+          "name": "private: void __cdecl COcclusionContext::CollectRectangleForOcclusion(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const * __ptr64,bool,bool,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64) __ptr64",
+          "rva": "0x742F8"
+        },
+        "COcclusionContext::Compute.19041": {
+          "name": "protected: long __cdecl COcclusionContext::Compute(class CVisualTree const * __ptr64,class gsl::span<class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const ,-1> const & __ptr64,float,class gsl::span<class COverlayContext * __ptr64,-1> const & __ptr64) __ptr64",
+          "rva": "0x48798"
+        },
+        "COcclusionContext::IsOccluded.22000": {
+          "name": "public: bool __cdecl COcclusionContext::IsOccluded(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
+          "rva": "0xDAEA0"
+        },
+        "COcclusionContext::PageInPixelsRectToDeviceRect": {
+          "name": "private: bool __cdecl COcclusionContext::PageInPixelsRectToDeviceRect(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64",
+          "rva": "0x1BE428"
+        },
+        "COcclusionContext::SetDeviceTransform": {
+          "name": "public: long __cdecl COcclusionContext::SetDeviceTransform(class CMILMatrix const * __ptr64)const __ptr64",
+          "rva": "0x4856C"
+        },
+        "COcclusionContext::~COcclusionContext": {
+          "name": "public: __cdecl COcclusionContext::~COcclusionContext(void) __ptr64",
+          "rva": "0x90438"
+        },
+        "CRectangleGeometry::`vftable'": {
+          "name": "const CRectangleGeometry::`vftable'",
+          "rva": "0x2B01D0"
+        },
+        "CRenderData::DrawImageResource_FillMode.22000": {
+          "name": "private: long __cdecl CRenderData::DrawImageResource_FillMode(class CDrawingContext * __ptr64,class CDrawListEntryBuilder * __ptr64,class CImageSource * __ptr64,struct D2D_RECT_F const * __ptr64,struct D2D_RECT_F const * __ptr64,float) __ptr64",
+          "rva": "0xB4344"
+        },
+        "CRenderData::TryDrawCommandAsDrawList.22000": {
+          "name": "private: long __cdecl CRenderData::TryDrawCommandAsDrawList(class CDrawingContext * __ptr64,class CDrawListCache * __ptr64,class CDrawListEntryBuilder * __ptr64,unsigned int,class gsl::span<unsigned char const ,-1>,bool * __ptr64) __ptr64",
+          "rva": "0xB6180"
+        },
+        "CRenderDataBuilder::DrawGeometry": {
+          "name": "public: virtual long __cdecl CRenderDataBuilder::DrawGeometry(unsigned int,unsigned int) __ptr64",
+          "rva": "0xE4ED0"
+        },
+        "CShape::CopyShape": {
+          "name": "public: long __cdecl CShape::CopyShape(class CMILMatrix const * __ptr64,class CShape * __ptr64 * __ptr64)const __ptr64",
+          "rva": "0x57ED0"
+        },
+        "CSolidColorLegacyMilBrush::`vftable'": {
+          "name": "const CSolidColorLegacyMilBrush::`vftable'",
+          "rva": "0x2B2CF8"
+        },
+        "GetCurrentFrameId": {
+          "name": "unsigned __int64 __cdecl GetCurrentFrameId(void)",
+          "rva": "0x4F990"
+        }
+      }
+    },
+    {
+      "revision": 652,
+      "image": {
+        "time_date_stamp": 2455493594,
+        "size_of_image": 4194304,
+        "sha256": "bfa258ef613c3e3f053990533e9b2de91829c7bd47708544f8a7869121872236"
+      },
+      "pdb": {
+        "name": "dwmcore.pdb",
+        "guid": "fca1dc0f-9fdc-59c6-58ba-e78f48caff80",
+        "age": 1,
+        "sha256": "7145b672773013f343b1ab2c8abf83b659be9fa6418a58928470a6c625b5a596"
+      },
+      "resolution_contract": "6c475f8e07f62904eb48cc2b0bd642eba575020100eace5dbccdb027ce821a96",
+      "symbols": {
+        "CArrayBasedCoverageSet::IsCovered.pre26100": {
+          "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
+          "rva": "0xBB4D0"
+        },
+        "CChannel::MatrixTransformUpdate": {
+          "name": "public: virtual long __cdecl CChannel::MatrixTransformUpdate(unsigned int,struct _MilMatrix3x2D const & __ptr64) __ptr64",
+          "rva": "0x2D210"
+        },
+        "CD2DContext::DestroyDeviceResources": {
+          "name": "protected: long __cdecl CD2DContext::DestroyDeviceResources(void) __ptr64",
+          "rva": "0x81EBC"
+        },
+        "CD2DContext::EnsureBeginDraw": {
+          "name": "private: void __cdecl CD2DContext::EnsureBeginDraw(void) __ptr64",
+          "rva": "0x3CED8"
+        },
+        "CDirtyRegion::GetOptimizedRect": {
+          "name": "public: class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> __cdecl CDirtyRegion::GetOptimizedRect(unsigned int,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class CRegion * __ptr64,class CMILMatrix const * __ptr64,bool,class gsl::span<class CVisual const * __ptr64,-1> const & __ptr64,class COcclusionContext const * __ptr64)const __ptr64",
+          "rva": "0x74E88"
+        },
+        "CDrawingContext::ApplyRenderStateInternal": {
+          "name": "private: long __cdecl CDrawingContext::ApplyRenderStateInternal(bool) __ptr64",
+          "rva": "0x571F0"
+        },
+        "CDrawingContext::DrawVisualTree.20348": {
+          "name": "public: long __cdecl CDrawingContext::DrawVisualTree(class CVisualTree const * __ptr64,class TMil3DRect<float,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded>,struct Mil3DRectF,struct RectUniqueness::NotNeeded> const & __ptr64,class COcclusionContext const * __ptr64,enum ClearMode::Enum,bool,class CVisual * __ptr64) __ptr64",
+          "rva": "0x44CE8"
+        },
+        "CDrawingContext::FillShapeWithBrush": {
+          "name": "public: long __cdecl CDrawingContext::FillShapeWithBrush(class CShape const & __ptr64,struct ID2D1Brush * __ptr64) __ptr64",
+          "rva": "0x50D50"
+        },
+        "CDrawingContext::FlushD2D": {
+          "name": "public: long __cdecl CDrawingContext::FlushD2D(void) __ptr64",
+          "rva": "0x1B0558"
+        },
+        "CDrawingContext::GetClipBoundsWorld": {
+          "name": "public: void __cdecl CDrawingContext::GetClipBoundsWorld(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64",
+          "rva": "0xD4784"
+        },
+        "CDrawingContext::GetUnOccludedWorldShape": {
+          "name": "private: long __cdecl CDrawingContext::GetUnOccludedWorldShape(class CShape const & __ptr64,int,class CShape * __ptr64 * __ptr64) __ptr64",
+          "rva": "0x6DB48"
+        },
+        "CGeometry::GetShapeData": {
+          "name": "public: long __cdecl CGeometry::GetShapeData(struct D2D_SIZE_F const * __ptr64,class CShapePtr * __ptr64) __ptr64",
+          "rva": "0x577D0"
+        },
+        "CImageLegacyMilBrush::`vftable'": {
+          "name": "const CImageLegacyMilBrush::`vftable'",
+          "rva": "0x2B2C38"
+        },
+        "CMILMatrix::Identity": {
+          "name": "public: static class CMILMatrix_IdentityType const CMILMatrix::Identity",
+          "rva": "0x3CD620"
+        },
+        "CMatrixStack::GetTopByReference": {
+          "name": "public: class CMILMatrix const * __ptr64 __cdecl CMatrixStack::GetTopByReference(void)const __ptr64",
+          "rva": "0x47800"
+        },
+        "COcclusionContext::CheckAndRecordOverlayCandidate.19041": {
+          "name": "public: long __cdecl COcclusionContext::CheckAndRecordOverlayCandidate(class CVisual * __ptr64,class CCompositionSurfaceInfo * __ptr64,class CMILMatrix const * __ptr64,class CShape const * __ptr64,struct TMILFlagsEnum<enum MilSourceModification::FlagsEnum>) __ptr64",
+          "rva": "0x8AD8"
+        },
+        "COcclusionContext::CollectRectangleForOcclusion.20348": {
+          "name": "private: void __cdecl COcclusionContext::CollectRectangleForOcclusion(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const * __ptr64,bool,bool,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64) __ptr64",
+          "rva": "0x741B8"
+        },
+        "COcclusionContext::Compute.19041": {
+          "name": "protected: long __cdecl COcclusionContext::Compute(class CVisualTree const * __ptr64,class gsl::span<class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const ,-1> const & __ptr64,float,class gsl::span<class COverlayContext * __ptr64,-1> const & __ptr64) __ptr64",
+          "rva": "0x48658"
+        },
+        "COcclusionContext::IsOccluded.22000": {
+          "name": "public: bool __cdecl COcclusionContext::IsOccluded(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
+          "rva": "0xDAD00"
+        },
+        "COcclusionContext::PageInPixelsRectToDeviceRect": {
+          "name": "private: bool __cdecl COcclusionContext::PageInPixelsRectToDeviceRect(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64",
+          "rva": "0x1BE318"
+        },
+        "COcclusionContext::SetDeviceTransform": {
+          "name": "public: long __cdecl COcclusionContext::SetDeviceTransform(class CMILMatrix const * __ptr64)const __ptr64",
+          "rva": "0x4842C"
+        },
+        "COcclusionContext::~COcclusionContext": {
+          "name": "public: __cdecl COcclusionContext::~COcclusionContext(void) __ptr64",
+          "rva": "0x90148"
+        },
+        "CRectangleGeometry::`vftable'": {
+          "name": "const CRectangleGeometry::`vftable'",
+          "rva": "0x2B01D0"
+        },
+        "CRenderData::DrawImageResource_FillMode.22000": {
+          "name": "private: long __cdecl CRenderData::DrawImageResource_FillMode(class CDrawingContext * __ptr64,class CDrawListEntryBuilder * __ptr64,class CImageSource * __ptr64,struct D2D_RECT_F const * __ptr64,struct D2D_RECT_F const * __ptr64,float) __ptr64",
+          "rva": "0xB4024"
+        },
+        "CRenderData::TryDrawCommandAsDrawList.22000": {
+          "name": "private: long __cdecl CRenderData::TryDrawCommandAsDrawList(class CDrawingContext * __ptr64,class CDrawListCache * __ptr64,class CDrawListEntryBuilder * __ptr64,unsigned int,class gsl::span<unsigned char const ,-1>,bool * __ptr64) __ptr64",
+          "rva": "0xB5E60"
+        },
+        "CRenderDataBuilder::DrawGeometry": {
+          "name": "public: virtual long __cdecl CRenderDataBuilder::DrawGeometry(unsigned int,unsigned int) __ptr64",
+          "rva": "0xE4D30"
+        },
+        "CShape::CopyShape": {
+          "name": "public: long __cdecl CShape::CopyShape(class CMILMatrix const * __ptr64,class CShape * __ptr64 * __ptr64)const __ptr64",
+          "rva": "0x57D90"
+        },
+        "CSolidColorLegacyMilBrush::`vftable'": {
+          "name": "const CSolidColorLegacyMilBrush::`vftable'",
+          "rva": "0x2B2CF8"
+        },
+        "GetCurrentFrameId": {
+          "name": "unsigned __int64 __cdecl GetCurrentFrameId(void)",
+          "rva": "0x4F850"
+        }
+      }
+    },
+    {
+      "revision": 832,
+      "image": {
+        "time_date_stamp": 1063091925,
+        "size_of_image": 4198400,
+        "sha256": "f60969d4f1ab1d25e5a940b57bf9deb6643473d191dd79c605130df3216e3453"
+      },
+      "pdb": {
+        "name": "dwmcore.pdb",
+        "guid": "893af766-386d-d440-ffcd-77ea69f12ecb",
+        "age": 1,
+        "sha256": "5e721f383efbe11574e382d2029a7c4601a2f055fdd17df1e12fee588f709b61"
+      },
+      "resolution_contract": "6c475f8e07f62904eb48cc2b0bd642eba575020100eace5dbccdb027ce821a96",
+      "symbols": {
+        "CArrayBasedCoverageSet::IsCovered.pre26100": {
+          "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
+          "rva": "0xBB640"
+        },
+        "CChannel::MatrixTransformUpdate": {
+          "name": "public: virtual long __cdecl CChannel::MatrixTransformUpdate(unsigned int,struct _MilMatrix3x2D const & __ptr64) __ptr64",
+          "rva": "0x2D380"
+        },
+        "CD2DContext::DestroyDeviceResources": {
+          "name": "protected: long __cdecl CD2DContext::DestroyDeviceResources(void) __ptr64",
+          "rva": "0x8202C"
+        },
+        "CD2DContext::EnsureBeginDraw": {
+          "name": "private: void __cdecl CD2DContext::EnsureBeginDraw(void) __ptr64",
+          "rva": "0x3D048"
+        },
+        "CDirtyRegion::GetOptimizedRect": {
+          "name": "public: class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> __cdecl CDirtyRegion::GetOptimizedRect(unsigned int,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class CRegion * __ptr64,class CMILMatrix const * __ptr64,bool,class gsl::span<class CVisual const * __ptr64,-1> const & __ptr64,class COcclusionContext const * __ptr64)const __ptr64",
+          "rva": "0x74FF8"
+        },
+        "CDrawingContext::ApplyRenderStateInternal": {
+          "name": "private: long __cdecl CDrawingContext::ApplyRenderStateInternal(bool) __ptr64",
+          "rva": "0x57360"
+        },
+        "CDrawingContext::DrawVisualTree.20348": {
+          "name": "public: long __cdecl CDrawingContext::DrawVisualTree(class CVisualTree const * __ptr64,class TMil3DRect<float,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded>,struct Mil3DRectF,struct RectUniqueness::NotNeeded> const & __ptr64,class COcclusionContext const * __ptr64,enum ClearMode::Enum,bool,class CVisual * __ptr64) __ptr64",
+          "rva": "0x44E58"
+        },
+        "CDrawingContext::FillShapeWithBrush": {
+          "name": "public: long __cdecl CDrawingContext::FillShapeWithBrush(class CShape const & __ptr64,struct ID2D1Brush * __ptr64) __ptr64",
+          "rva": "0x50EC0"
+        },
+        "CDrawingContext::FlushD2D": {
+          "name": "public: long __cdecl CDrawingContext::FlushD2D(void) __ptr64",
+          "rva": "0x1B1048"
+        },
+        "CDrawingContext::GetClipBoundsWorld": {
+          "name": "public: void __cdecl CDrawingContext::GetClipBoundsWorld(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64",
+          "rva": "0xD4884"
+        },
+        "CDrawingContext::GetUnOccludedWorldShape": {
+          "name": "private: long __cdecl CDrawingContext::GetUnOccludedWorldShape(class CShape const & __ptr64,int,class CShape * __ptr64 * __ptr64) __ptr64",
+          "rva": "0x6DCB8"
+        },
+        "CGeometry::GetShapeData": {
+          "name": "public: long __cdecl CGeometry::GetShapeData(struct D2D_SIZE_F const * __ptr64,class CShapePtr * __ptr64) __ptr64",
+          "rva": "0x57940"
+        },
+        "CImageLegacyMilBrush::`vftable'": {
+          "name": "const CImageLegacyMilBrush::`vftable'",
+          "rva": "0x2B3C38"
+        },
+        "CMILMatrix::Identity": {
+          "name": "public: static class CMILMatrix_IdentityType const CMILMatrix::Identity",
+          "rva": "0x3CE620"
+        },
+        "CMatrixStack::GetTopByReference": {
+          "name": "public: class CMILMatrix const * __ptr64 __cdecl CMatrixStack::GetTopByReference(void)const __ptr64",
+          "rva": "0x47970"
+        },
+        "COcclusionContext::CheckAndRecordOverlayCandidate.19041": {
+          "name": "public: long __cdecl COcclusionContext::CheckAndRecordOverlayCandidate(class CVisual * __ptr64,class CCompositionSurfaceInfo * __ptr64,class CMILMatrix const * __ptr64,class CShape const * __ptr64,struct TMILFlagsEnum<enum MilSourceModification::FlagsEnum>) __ptr64",
+          "rva": "0x8AD8"
+        },
+        "COcclusionContext::CollectRectangleForOcclusion.20348": {
+          "name": "private: void __cdecl COcclusionContext::CollectRectangleForOcclusion(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const * __ptr64,bool,bool,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64) __ptr64",
+          "rva": "0x74328"
+        },
+        "COcclusionContext::Compute.19041": {
+          "name": "protected: long __cdecl COcclusionContext::Compute(class CVisualTree const * __ptr64,class gsl::span<class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const ,-1> const & __ptr64,float,class gsl::span<class COverlayContext * __ptr64,-1> const & __ptr64) __ptr64",
+          "rva": "0x487C8"
+        },
+        "COcclusionContext::IsOccluded.22000": {
+          "name": "public: bool __cdecl COcclusionContext::IsOccluded(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
+          "rva": "0xDAE00"
+        },
+        "COcclusionContext::PageInPixelsRectToDeviceRect": {
+          "name": "private: bool __cdecl COcclusionContext::PageInPixelsRectToDeviceRect(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64",
+          "rva": "0x1BEE08"
+        },
+        "COcclusionContext::SetDeviceTransform": {
+          "name": "public: long __cdecl COcclusionContext::SetDeviceTransform(class CMILMatrix const * __ptr64)const __ptr64",
+          "rva": "0x4859C"
+        },
+        "COcclusionContext::~COcclusionContext": {
+          "name": "public: __cdecl COcclusionContext::~COcclusionContext(void) __ptr64",
+          "rva": "0x902B8"
+        },
+        "CRectangleGeometry::`vftable'": {
+          "name": "const CRectangleGeometry::`vftable'",
+          "rva": "0x2B11D0"
+        },
+        "CRenderData::DrawImageResource_FillMode.22000": {
+          "name": "private: long __cdecl CRenderData::DrawImageResource_FillMode(class CDrawingContext * __ptr64,class CDrawListEntryBuilder * __ptr64,class CImageSource * __ptr64,struct D2D_RECT_F const * __ptr64,struct D2D_RECT_F const * __ptr64,float) __ptr64",
+          "rva": "0xB4194"
+        },
+        "CRenderData::TryDrawCommandAsDrawList.22000": {
+          "name": "private: long __cdecl CRenderData::TryDrawCommandAsDrawList(class CDrawingContext * __ptr64,class CDrawListCache * __ptr64,class CDrawListEntryBuilder * __ptr64,unsigned int,class gsl::span<unsigned char const ,-1>,bool * __ptr64) __ptr64",
+          "rva": "0xB5FD0"
+        },
+        "CRenderDataBuilder::DrawGeometry": {
+          "name": "public: virtual long __cdecl CRenderDataBuilder::DrawGeometry(unsigned int,unsigned int) __ptr64",
+          "rva": "0xE4E30"
+        },
+        "CShape::CopyShape": {
+          "name": "public: long __cdecl CShape::CopyShape(class CMILMatrix const * __ptr64,class CShape * __ptr64 * __ptr64)const __ptr64",
+          "rva": "0x57F00"
+        },
+        "CSolidColorLegacyMilBrush::`vftable'": {
+          "name": "const CSolidColorLegacyMilBrush::`vftable'",
+          "rva": "0x2B3CF8"
+        },
+        "GetCurrentFrameId": {
+          "name": "unsigned __int64 __cdecl GetCurrentFrameId(void)",
+          "rva": "0x4F9C0"
+        }
+      }
+    },
+    {
+      "revision": 918,
+      "image": {
+        "time_date_stamp": 500870560,
+        "size_of_image": 4194304,
+        "sha256": "9a606ff9e4f86c84eb887ca32b0e408ce76c589ae9709bacd0bbce66913b9908"
+      },
+      "pdb": {
+        "name": "dwmcore.pdb",
+        "guid": "9d558a6a-1b7f-eb52-45e2-857b83151582",
+        "age": 1,
+        "sha256": "80b842182e1da3c315f90b12dd5f17c7c4a992712e08cc78c74556768ace7a36"
+      },
+      "resolution_contract": "6c475f8e07f62904eb48cc2b0bd642eba575020100eace5dbccdb027ce821a96",
+      "symbols": {
+        "CArrayBasedCoverageSet::IsCovered.pre26100": {
+          "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
+          "rva": "0xBB4F0"
+        },
+        "CChannel::MatrixTransformUpdate": {
+          "name": "public: virtual long __cdecl CChannel::MatrixTransformUpdate(unsigned int,struct _MilMatrix3x2D const & __ptr64) __ptr64",
+          "rva": "0x2D380"
+        },
+        "CD2DContext::DestroyDeviceResources": {
+          "name": "protected: long __cdecl CD2DContext::DestroyDeviceResources(void) __ptr64",
+          "rva": "0x81F3C"
+        },
+        "CD2DContext::EnsureBeginDraw": {
+          "name": "private: void __cdecl CD2DContext::EnsureBeginDraw(void) __ptr64",
+          "rva": "0x3CF58"
+        },
+        "CDirtyRegion::GetOptimizedRect": {
+          "name": "public: class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> __cdecl CDirtyRegion::GetOptimizedRect(unsigned int,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class CRegion * __ptr64,class CMILMatrix const * __ptr64,bool,class gsl::span<class CVisual const * __ptr64,-1> const & __ptr64,class COcclusionContext const * __ptr64)const __ptr64",
+          "rva": "0x74F08"
+        },
+        "CDrawingContext::ApplyRenderStateInternal": {
+          "name": "private: long __cdecl CDrawingContext::ApplyRenderStateInternal(bool) __ptr64",
+          "rva": "0x57270"
+        },
+        "CDrawingContext::DrawVisualTree.20348": {
+          "name": "public: long __cdecl CDrawingContext::DrawVisualTree(class CVisualTree const * __ptr64,class TMil3DRect<float,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded>,struct Mil3DRectF,struct RectUniqueness::NotNeeded> const & __ptr64,class COcclusionContext const * __ptr64,enum ClearMode::Enum,bool,class CVisual * __ptr64) __ptr64",
+          "rva": "0x44D68"
+        },
+        "CDrawingContext::FillShapeWithBrush": {
+          "name": "public: long __cdecl CDrawingContext::FillShapeWithBrush(class CShape const & __ptr64,struct ID2D1Brush * __ptr64) __ptr64",
+          "rva": "0x50DD0"
+        },
+        "CDrawingContext::FlushD2D": {
+          "name": "public: long __cdecl CDrawingContext::FlushD2D(void) __ptr64",
+          "rva": "0x1B0D58"
+        },
+        "CDrawingContext::GetClipBoundsWorld": {
+          "name": "public: void __cdecl CDrawingContext::GetClipBoundsWorld(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64",
+          "rva": "0xD4804"
+        },
+        "CDrawingContext::GetUnOccludedWorldShape": {
+          "name": "private: long __cdecl CDrawingContext::GetUnOccludedWorldShape(class CShape const & __ptr64,int,class CShape * __ptr64 * __ptr64) __ptr64",
+          "rva": "0x6DBC8"
+        },
+        "CGeometry::GetShapeData": {
+          "name": "public: long __cdecl CGeometry::GetShapeData(struct D2D_SIZE_F const * __ptr64,class CShapePtr * __ptr64) __ptr64",
+          "rva": "0x57850"
+        },
+        "CImageLegacyMilBrush::`vftable'": {
+          "name": "const CImageLegacyMilBrush::`vftable'",
+          "rva": "0x2B2C38"
+        },
+        "CMILMatrix::Identity": {
+          "name": "public: static class CMILMatrix_IdentityType const CMILMatrix::Identity",
+          "rva": "0x3CD620"
+        },
+        "CMatrixStack::GetTopByReference": {
+          "name": "public: class CMILMatrix const * __ptr64 __cdecl CMatrixStack::GetTopByReference(void)const __ptr64",
+          "rva": "0x47880"
+        },
+        "COcclusionContext::CheckAndRecordOverlayCandidate.19041": {
+          "name": "public: long __cdecl COcclusionContext::CheckAndRecordOverlayCandidate(class CVisual * __ptr64,class CCompositionSurfaceInfo * __ptr64,class CMILMatrix const * __ptr64,class CShape const * __ptr64,struct TMILFlagsEnum<enum MilSourceModification::FlagsEnum>) __ptr64",
+          "rva": "0x8AD8"
+        },
+        "COcclusionContext::CollectRectangleForOcclusion.20348": {
+          "name": "private: void __cdecl COcclusionContext::CollectRectangleForOcclusion(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const * __ptr64,bool,bool,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64) __ptr64",
+          "rva": "0x74238"
+        },
+        "COcclusionContext::Compute.19041": {
+          "name": "protected: long __cdecl COcclusionContext::Compute(class CVisualTree const * __ptr64,class gsl::span<class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const ,-1> const & __ptr64,float,class gsl::span<class COverlayContext * __ptr64,-1> const & __ptr64) __ptr64",
+          "rva": "0x486D8"
+        },
+        "COcclusionContext::IsOccluded.22000": {
+          "name": "public: bool __cdecl COcclusionContext::IsOccluded(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
+          "rva": "0xDAD60"
+        },
+        "COcclusionContext::PageInPixelsRectToDeviceRect": {
+          "name": "private: bool __cdecl COcclusionContext::PageInPixelsRectToDeviceRect(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64",
+          "rva": "0x1BEB18"
+        },
+        "COcclusionContext::SetDeviceTransform": {
+          "name": "public: long __cdecl COcclusionContext::SetDeviceTransform(class CMILMatrix const * __ptr64)const __ptr64",
+          "rva": "0x484AC"
+        },
+        "COcclusionContext::~COcclusionContext": {
+          "name": "public: __cdecl COcclusionContext::~COcclusionContext(void) __ptr64",
+          "rva": "0x901C8"
+        },
+        "CRectangleGeometry::`vftable'": {
+          "name": "const CRectangleGeometry::`vftable'",
+          "rva": "0x2B01D0"
+        },
+        "CRenderData::DrawImageResource_FillMode.22000": {
+          "name": "private: long __cdecl CRenderData::DrawImageResource_FillMode(class CDrawingContext * __ptr64,class CDrawListEntryBuilder * __ptr64,class CImageSource * __ptr64,struct D2D_RECT_F const * __ptr64,struct D2D_RECT_F const * __ptr64,float) __ptr64",
+          "rva": "0xB4044"
+        },
+        "CRenderData::TryDrawCommandAsDrawList.22000": {
+          "name": "private: long __cdecl CRenderData::TryDrawCommandAsDrawList(class CDrawingContext * __ptr64,class CDrawListCache * __ptr64,class CDrawListEntryBuilder * __ptr64,unsigned int,class gsl::span<unsigned char const ,-1>,bool * __ptr64) __ptr64",
+          "rva": "0xB5E80"
+        },
+        "CRenderDataBuilder::DrawGeometry": {
+          "name": "public: virtual long __cdecl CRenderDataBuilder::DrawGeometry(unsigned int,unsigned int) __ptr64",
+          "rva": "0xE4D90"
+        },
+        "CShape::CopyShape": {
+          "name": "public: long __cdecl CShape::CopyShape(class CMILMatrix const * __ptr64,class CShape * __ptr64 * __ptr64)const __ptr64",
+          "rva": "0x57E10"
+        },
+        "CSolidColorLegacyMilBrush::`vftable'": {
+          "name": "const CSolidColorLegacyMilBrush::`vftable'",
+          "rva": "0x2B2CF8"
+        },
+        "GetCurrentFrameId": {
+          "name": "unsigned __int64 __cdecl GetCurrentFrameId(void)",
+          "rva": "0x4F8D0"
+        }
+      }
+    },
+    {
+      "revision": 1042,
+      "image": {
+        "time_date_stamp": 1190750779,
+        "size_of_image": 4194304,
+        "sha256": "02f7ae4152f3d620bfef1affe0422583af92743530b5aef264c285a17a6a4cee"
+      },
+      "pdb": {
+        "name": "dwmcore.pdb",
+        "guid": "6cc597c9-bcd0-b8ba-4e2f-5d294082df2b",
+        "age": 1,
+        "sha256": "cf54ea387c0b125ba39ca233b26809b9f11ae7ad09daf8ff80afad852388133c"
+      },
+      "resolution_contract": "6c475f8e07f62904eb48cc2b0bd642eba575020100eace5dbccdb027ce821a96",
+      "symbols": {
+        "CArrayBasedCoverageSet::IsCovered.pre26100": {
+          "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
+          "rva": "0xBB4F0"
+        },
+        "CChannel::MatrixTransformUpdate": {
+          "name": "public: virtual long __cdecl CChannel::MatrixTransformUpdate(unsigned int,struct _MilMatrix3x2D const & __ptr64) __ptr64",
+          "rva": "0x2D380"
+        },
+        "CD2DContext::DestroyDeviceResources": {
+          "name": "protected: long __cdecl CD2DContext::DestroyDeviceResources(void) __ptr64",
+          "rva": "0x81F3C"
+        },
+        "CD2DContext::EnsureBeginDraw": {
+          "name": "private: void __cdecl CD2DContext::EnsureBeginDraw(void) __ptr64",
+          "rva": "0x3CF58"
+        },
+        "CDirtyRegion::GetOptimizedRect": {
+          "name": "public: class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> __cdecl CDirtyRegion::GetOptimizedRect(unsigned int,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class CRegion * __ptr64,class CMILMatrix const * __ptr64,bool,class gsl::span<class CVisual const * __ptr64,-1> const & __ptr64,class COcclusionContext const * __ptr64)const __ptr64",
+          "rva": "0x74F08"
+        },
+        "CDrawingContext::ApplyRenderStateInternal": {
+          "name": "private: long __cdecl CDrawingContext::ApplyRenderStateInternal(bool) __ptr64",
+          "rva": "0x57270"
+        },
+        "CDrawingContext::DrawVisualTree.20348": {
+          "name": "public: long __cdecl CDrawingContext::DrawVisualTree(class CVisualTree const * __ptr64,class TMil3DRect<float,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded>,struct Mil3DRectF,struct RectUniqueness::NotNeeded> const & __ptr64,class COcclusionContext const * __ptr64,enum ClearMode::Enum,bool,class CVisual * __ptr64) __ptr64",
+          "rva": "0x44D68"
+        },
+        "CDrawingContext::FillShapeWithBrush": {
+          "name": "public: long __cdecl CDrawingContext::FillShapeWithBrush(class CShape const & __ptr64,struct ID2D1Brush * __ptr64) __ptr64",
+          "rva": "0x50DD0"
+        },
+        "CDrawingContext::FlushD2D": {
+          "name": "public: long __cdecl CDrawingContext::FlushD2D(void) __ptr64",
+          "rva": "0x1B0AF8"
+        },
+        "CDrawingContext::GetClipBoundsWorld": {
+          "name": "public: void __cdecl CDrawingContext::GetClipBoundsWorld(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64",
+          "rva": "0xD4804"
+        },
+        "CDrawingContext::GetUnOccludedWorldShape": {
+          "name": "private: long __cdecl CDrawingContext::GetUnOccludedWorldShape(class CShape const & __ptr64,int,class CShape * __ptr64 * __ptr64) __ptr64",
+          "rva": "0x6DBC8"
+        },
+        "CGeometry::GetShapeData": {
+          "name": "public: long __cdecl CGeometry::GetShapeData(struct D2D_SIZE_F const * __ptr64,class CShapePtr * __ptr64) __ptr64",
+          "rva": "0x57850"
+        },
+        "CImageLegacyMilBrush::`vftable'": {
+          "name": "const CImageLegacyMilBrush::`vftable'",
+          "rva": "0x2B2C38"
+        },
+        "CMILMatrix::Identity": {
+          "name": "public: static class CMILMatrix_IdentityType const CMILMatrix::Identity",
+          "rva": "0x3CD620"
+        },
+        "CMatrixStack::GetTopByReference": {
+          "name": "public: class CMILMatrix const * __ptr64 __cdecl CMatrixStack::GetTopByReference(void)const __ptr64",
+          "rva": "0x47880"
+        },
+        "COcclusionContext::CheckAndRecordOverlayCandidate.19041": {
+          "name": "public: long __cdecl COcclusionContext::CheckAndRecordOverlayCandidate(class CVisual * __ptr64,class CCompositionSurfaceInfo * __ptr64,class CMILMatrix const * __ptr64,class CShape const * __ptr64,struct TMILFlagsEnum<enum MilSourceModification::FlagsEnum>) __ptr64",
+          "rva": "0x8AD8"
+        },
+        "COcclusionContext::CollectRectangleForOcclusion.20348": {
+          "name": "private: void __cdecl COcclusionContext::CollectRectangleForOcclusion(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const * __ptr64,bool,bool,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64) __ptr64",
+          "rva": "0x74238"
+        },
+        "COcclusionContext::Compute.19041": {
+          "name": "protected: long __cdecl COcclusionContext::Compute(class CVisualTree const * __ptr64,class gsl::span<class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const ,-1> const & __ptr64,float,class gsl::span<class COverlayContext * __ptr64,-1> const & __ptr64) __ptr64",
+          "rva": "0x486D8"
+        },
+        "COcclusionContext::IsOccluded.22000": {
+          "name": "public: bool __cdecl COcclusionContext::IsOccluded(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
+          "rva": "0xDAD60"
+        },
+        "COcclusionContext::PageInPixelsRectToDeviceRect": {
+          "name": "private: bool __cdecl COcclusionContext::PageInPixelsRectToDeviceRect(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64",
+          "rva": "0x1BE8B8"
+        },
+        "COcclusionContext::SetDeviceTransform": {
+          "name": "public: long __cdecl COcclusionContext::SetDeviceTransform(class CMILMatrix const * __ptr64)const __ptr64",
+          "rva": "0x484AC"
+        },
+        "COcclusionContext::~COcclusionContext": {
+          "name": "public: __cdecl COcclusionContext::~COcclusionContext(void) __ptr64",
+          "rva": "0x901C8"
+        },
+        "CRectangleGeometry::`vftable'": {
+          "name": "const CRectangleGeometry::`vftable'",
+          "rva": "0x2B01D0"
+        },
+        "CRenderData::DrawImageResource_FillMode.22000": {
+          "name": "private: long __cdecl CRenderData::DrawImageResource_FillMode(class CDrawingContext * __ptr64,class CDrawListEntryBuilder * __ptr64,class CImageSource * __ptr64,struct D2D_RECT_F const * __ptr64,struct D2D_RECT_F const * __ptr64,float) __ptr64",
+          "rva": "0xB4044"
+        },
+        "CRenderData::TryDrawCommandAsDrawList.22000": {
+          "name": "private: long __cdecl CRenderData::TryDrawCommandAsDrawList(class CDrawingContext * __ptr64,class CDrawListCache * __ptr64,class CDrawListEntryBuilder * __ptr64,unsigned int,class gsl::span<unsigned char const ,-1>,bool * __ptr64) __ptr64",
+          "rva": "0xB5E80"
+        },
+        "CRenderDataBuilder::DrawGeometry": {
+          "name": "public: virtual long __cdecl CRenderDataBuilder::DrawGeometry(unsigned int,unsigned int) __ptr64",
+          "rva": "0xE4D90"
+        },
+        "CShape::CopyShape": {
+          "name": "public: long __cdecl CShape::CopyShape(class CMILMatrix const * __ptr64,class CShape * __ptr64 * __ptr64)const __ptr64",
+          "rva": "0x57E10"
+        },
+        "CSolidColorLegacyMilBrush::`vftable'": {
+          "name": "const CSolidColorLegacyMilBrush::`vftable'",
+          "rva": "0x2B2CF8"
+        },
+        "GetCurrentFrameId": {
+          "name": "unsigned __int64 __cdecl GetCurrentFrameId(void)",
+          "rva": "0x4F8D0"
+        }
+      }
+    },
+    {
+      "revision": 1098,
+      "image": {
+        "time_date_stamp": 288377682,
+        "size_of_image": 4194304,
+        "sha256": "e6541169ebd137a9082a9223a2487ad6aa0978d661364e02b4dcbc9741e9d8b5"
+      },
+      "pdb": {
+        "name": "dwmcore.pdb",
+        "guid": "95cf8b5e-1297-b0e1-8e8c-a8fa38db9494",
+        "age": 1,
+        "sha256": "cacb6b99d73513f5b3d8dabe195d77b4372d3aab16a77d88050bc86b9abd9691"
+      },
+      "resolution_contract": "6c475f8e07f62904eb48cc2b0bd642eba575020100eace5dbccdb027ce821a96",
+      "symbols": {
+        "CArrayBasedCoverageSet::IsCovered.pre26100": {
+          "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
+          "rva": "0xBB4F0"
+        },
+        "CChannel::MatrixTransformUpdate": {
+          "name": "public: virtual long __cdecl CChannel::MatrixTransformUpdate(unsigned int,struct _MilMatrix3x2D const & __ptr64) __ptr64",
+          "rva": "0x2D380"
+        },
+        "CD2DContext::DestroyDeviceResources": {
+          "name": "protected: long __cdecl CD2DContext::DestroyDeviceResources(void) __ptr64",
+          "rva": "0x81F3C"
+        },
+        "CD2DContext::EnsureBeginDraw": {
+          "name": "private: void __cdecl CD2DContext::EnsureBeginDraw(void) __ptr64",
+          "rva": "0x3CF58"
+        },
+        "CDirtyRegion::GetOptimizedRect": {
+          "name": "public: class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> __cdecl CDirtyRegion::GetOptimizedRect(unsigned int,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class CRegion * __ptr64,class CMILMatrix const * __ptr64,bool,class gsl::span<class CVisual const * __ptr64,-1> const & __ptr64,class COcclusionContext const * __ptr64)const __ptr64",
+          "rva": "0x74F08"
+        },
+        "CDrawingContext::ApplyRenderStateInternal": {
+          "name": "private: long __cdecl CDrawingContext::ApplyRenderStateInternal(bool) __ptr64",
+          "rva": "0x57270"
+        },
+        "CDrawingContext::DrawVisualTree.20348": {
+          "name": "public: long __cdecl CDrawingContext::DrawVisualTree(class CVisualTree const * __ptr64,class TMil3DRect<float,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded>,struct Mil3DRectF,struct RectUniqueness::NotNeeded> const & __ptr64,class COcclusionContext const * __ptr64,enum ClearMode::Enum,bool,class CVisual * __ptr64) __ptr64",
+          "rva": "0x44D68"
+        },
+        "CDrawingContext::FillShapeWithBrush": {
+          "name": "public: long __cdecl CDrawingContext::FillShapeWithBrush(class CShape const & __ptr64,struct ID2D1Brush * __ptr64) __ptr64",
+          "rva": "0x50DD0"
+        },
+        "CDrawingContext::FlushD2D": {
+          "name": "public: long __cdecl CDrawingContext::FlushD2D(void) __ptr64",
+          "rva": "0x1B0BD8"
+        },
+        "CDrawingContext::GetClipBoundsWorld": {
+          "name": "public: void __cdecl CDrawingContext::GetClipBoundsWorld(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64",
+          "rva": "0xD4804"
+        },
+        "CDrawingContext::GetUnOccludedWorldShape": {
+          "name": "private: long __cdecl CDrawingContext::GetUnOccludedWorldShape(class CShape const & __ptr64,int,class CShape * __ptr64 * __ptr64) __ptr64",
+          "rva": "0x6DBC8"
+        },
+        "CGeometry::GetShapeData": {
+          "name": "public: long __cdecl CGeometry::GetShapeData(struct D2D_SIZE_F const * __ptr64,class CShapePtr * __ptr64) __ptr64",
+          "rva": "0x57850"
+        },
+        "CImageLegacyMilBrush::`vftable'": {
+          "name": "const CImageLegacyMilBrush::`vftable'",
+          "rva": "0x2B2C38"
+        },
+        "CMILMatrix::Identity": {
+          "name": "public: static class CMILMatrix_IdentityType const CMILMatrix::Identity",
+          "rva": "0x3CD620"
+        },
+        "CMatrixStack::GetTopByReference": {
+          "name": "public: class CMILMatrix const * __ptr64 __cdecl CMatrixStack::GetTopByReference(void)const __ptr64",
+          "rva": "0x47880"
+        },
+        "COcclusionContext::CheckAndRecordOverlayCandidate.19041": {
+          "name": "public: long __cdecl COcclusionContext::CheckAndRecordOverlayCandidate(class CVisual * __ptr64,class CCompositionSurfaceInfo * __ptr64,class CMILMatrix const * __ptr64,class CShape const * __ptr64,struct TMILFlagsEnum<enum MilSourceModification::FlagsEnum>) __ptr64",
+          "rva": "0x8AD8"
+        },
+        "COcclusionContext::CollectRectangleForOcclusion.20348": {
+          "name": "private: void __cdecl COcclusionContext::CollectRectangleForOcclusion(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const * __ptr64,bool,bool,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64) __ptr64",
+          "rva": "0x74238"
+        },
+        "COcclusionContext::Compute.19041": {
+          "name": "protected: long __cdecl COcclusionContext::Compute(class CVisualTree const * __ptr64,class gsl::span<class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const ,-1> const & __ptr64,float,class gsl::span<class COverlayContext * __ptr64,-1> const & __ptr64) __ptr64",
+          "rva": "0x486D8"
+        },
+        "COcclusionContext::IsOccluded.22000": {
+          "name": "public: bool __cdecl COcclusionContext::IsOccluded(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
+          "rva": "0xDAD60"
+        },
+        "COcclusionContext::PageInPixelsRectToDeviceRect": {
+          "name": "private: bool __cdecl COcclusionContext::PageInPixelsRectToDeviceRect(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64",
+          "rva": "0x1BE998"
+        },
+        "COcclusionContext::SetDeviceTransform": {
+          "name": "public: long __cdecl COcclusionContext::SetDeviceTransform(class CMILMatrix const * __ptr64)const __ptr64",
+          "rva": "0x484AC"
+        },
+        "COcclusionContext::~COcclusionContext": {
+          "name": "public: __cdecl COcclusionContext::~COcclusionContext(void) __ptr64",
+          "rva": "0x901C8"
+        },
+        "CRectangleGeometry::`vftable'": {
+          "name": "const CRectangleGeometry::`vftable'",
+          "rva": "0x2B01D0"
+        },
+        "CRenderData::DrawImageResource_FillMode.22000": {
+          "name": "private: long __cdecl CRenderData::DrawImageResource_FillMode(class CDrawingContext * __ptr64,class CDrawListEntryBuilder * __ptr64,class CImageSource * __ptr64,struct D2D_RECT_F const * __ptr64,struct D2D_RECT_F const * __ptr64,float) __ptr64",
+          "rva": "0xB4044"
+        },
+        "CRenderData::TryDrawCommandAsDrawList.22000": {
+          "name": "private: long __cdecl CRenderData::TryDrawCommandAsDrawList(class CDrawingContext * __ptr64,class CDrawListCache * __ptr64,class CDrawListEntryBuilder * __ptr64,unsigned int,class gsl::span<unsigned char const ,-1>,bool * __ptr64) __ptr64",
+          "rva": "0xB5E80"
+        },
+        "CRenderDataBuilder::DrawGeometry": {
+          "name": "public: virtual long __cdecl CRenderDataBuilder::DrawGeometry(unsigned int,unsigned int) __ptr64",
+          "rva": "0xE4D90"
+        },
+        "CShape::CopyShape": {
+          "name": "public: long __cdecl CShape::CopyShape(class CMILMatrix const * __ptr64,class CShape * __ptr64 * __ptr64)const __ptr64",
+          "rva": "0x57E10"
+        },
+        "CSolidColorLegacyMilBrush::`vftable'": {
+          "name": "const CSolidColorLegacyMilBrush::`vftable'",
+          "rva": "0x2B2CF8"
+        },
+        "GetCurrentFrameId": {
+          "name": "unsigned __int64 __cdecl GetCurrentFrameId(void)",
+          "rva": "0x4F8D0"
+        }
+      }
+    },
+    {
+      "revision": 1219,
+      "image": {
+        "time_date_stamp": 439699660,
+        "size_of_image": 4194304,
+        "sha256": "bf26e8fecbf4ee417a5333fa1b755ccd6857ac975dd982f021e6a907b6ff57db"
+      },
+      "pdb": {
+        "name": "dwmcore.pdb",
+        "guid": "c965ec17-772f-65a5-cb1e-d090439ec82e",
+        "age": 1,
+        "sha256": "3b537575dcf8544d95c285d2d75f1d97fdcf3db586fce1f0cd894351f99e418c"
+      },
+      "resolution_contract": "6c475f8e07f62904eb48cc2b0bd642eba575020100eace5dbccdb027ce821a96",
+      "symbols": {
+        "CArrayBasedCoverageSet::IsCovered.pre26100": {
+          "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
+          "rva": "0xBB4F0"
+        },
+        "CChannel::MatrixTransformUpdate": {
+          "name": "public: virtual long __cdecl CChannel::MatrixTransformUpdate(unsigned int,struct _MilMatrix3x2D const & __ptr64) __ptr64",
+          "rva": "0x2D380"
+        },
+        "CD2DContext::DestroyDeviceResources": {
+          "name": "protected: long __cdecl CD2DContext::DestroyDeviceResources(void) __ptr64",
+          "rva": "0x81F3C"
+        },
+        "CD2DContext::EnsureBeginDraw": {
+          "name": "private: void __cdecl CD2DContext::EnsureBeginDraw(void) __ptr64",
+          "rva": "0x3CF58"
+        },
+        "CDirtyRegion::GetOptimizedRect": {
+          "name": "public: class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> __cdecl CDirtyRegion::GetOptimizedRect(unsigned int,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class CRegion * __ptr64,class CMILMatrix const * __ptr64,bool,class gsl::span<class CVisual const * __ptr64,-1> const & __ptr64,class COcclusionContext const * __ptr64)const __ptr64",
+          "rva": "0x74F08"
+        },
+        "CDrawingContext::ApplyRenderStateInternal": {
+          "name": "private: long __cdecl CDrawingContext::ApplyRenderStateInternal(bool) __ptr64",
+          "rva": "0x57270"
+        },
+        "CDrawingContext::DrawVisualTree.20348": {
+          "name": "public: long __cdecl CDrawingContext::DrawVisualTree(class CVisualTree const * __ptr64,class TMil3DRect<float,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded>,struct Mil3DRectF,struct RectUniqueness::NotNeeded> const & __ptr64,class COcclusionContext const * __ptr64,enum ClearMode::Enum,bool,class CVisual * __ptr64) __ptr64",
+          "rva": "0x44D68"
+        },
+        "CDrawingContext::FillShapeWithBrush": {
+          "name": "public: long __cdecl CDrawingContext::FillShapeWithBrush(class CShape const & __ptr64,struct ID2D1Brush * __ptr64) __ptr64",
+          "rva": "0x50DD0"
+        },
+        "CDrawingContext::FlushD2D": {
+          "name": "public: long __cdecl CDrawingContext::FlushD2D(void) __ptr64",
+          "rva": "0x1B0BD8"
+        },
+        "CDrawingContext::GetClipBoundsWorld": {
+          "name": "public: void __cdecl CDrawingContext::GetClipBoundsWorld(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64",
+          "rva": "0xD4804"
+        },
+        "CDrawingContext::GetUnOccludedWorldShape": {
+          "name": "private: long __cdecl CDrawingContext::GetUnOccludedWorldShape(class CShape const & __ptr64,int,class CShape * __ptr64 * __ptr64) __ptr64",
+          "rva": "0x6DBC8"
+        },
+        "CGeometry::GetShapeData": {
+          "name": "public: long __cdecl CGeometry::GetShapeData(struct D2D_SIZE_F const * __ptr64,class CShapePtr * __ptr64) __ptr64",
+          "rva": "0x57850"
+        },
+        "CImageLegacyMilBrush::`vftable'": {
+          "name": "const CImageLegacyMilBrush::`vftable'",
+          "rva": "0x2B2C38"
+        },
+        "CMILMatrix::Identity": {
+          "name": "public: static class CMILMatrix_IdentityType const CMILMatrix::Identity",
+          "rva": "0x3CD620"
+        },
+        "CMatrixStack::GetTopByReference": {
+          "name": "public: class CMILMatrix const * __ptr64 __cdecl CMatrixStack::GetTopByReference(void)const __ptr64",
+          "rva": "0x47880"
+        },
+        "COcclusionContext::CheckAndRecordOverlayCandidate.19041": {
+          "name": "public: long __cdecl COcclusionContext::CheckAndRecordOverlayCandidate(class CVisual * __ptr64,class CCompositionSurfaceInfo * __ptr64,class CMILMatrix const * __ptr64,class CShape const * __ptr64,struct TMILFlagsEnum<enum MilSourceModification::FlagsEnum>) __ptr64",
+          "rva": "0x8AD8"
+        },
+        "COcclusionContext::CollectRectangleForOcclusion.20348": {
+          "name": "private: void __cdecl COcclusionContext::CollectRectangleForOcclusion(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const * __ptr64,bool,bool,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64) __ptr64",
+          "rva": "0x74238"
+        },
+        "COcclusionContext::Compute.19041": {
+          "name": "protected: long __cdecl COcclusionContext::Compute(class CVisualTree const * __ptr64,class gsl::span<class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const ,-1> const & __ptr64,float,class gsl::span<class COverlayContext * __ptr64,-1> const & __ptr64) __ptr64",
+          "rva": "0x486D8"
+        },
+        "COcclusionContext::IsOccluded.22000": {
+          "name": "public: bool __cdecl COcclusionContext::IsOccluded(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
+          "rva": "0xDAD60"
+        },
+        "COcclusionContext::PageInPixelsRectToDeviceRect": {
+          "name": "private: bool __cdecl COcclusionContext::PageInPixelsRectToDeviceRect(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64",
+          "rva": "0x1BE998"
+        },
+        "COcclusionContext::SetDeviceTransform": {
+          "name": "public: long __cdecl COcclusionContext::SetDeviceTransform(class CMILMatrix const * __ptr64)const __ptr64",
+          "rva": "0x484AC"
+        },
+        "COcclusionContext::~COcclusionContext": {
+          "name": "public: __cdecl COcclusionContext::~COcclusionContext(void) __ptr64",
+          "rva": "0x901C8"
+        },
+        "CRectangleGeometry::`vftable'": {
+          "name": "const CRectangleGeometry::`vftable'",
+          "rva": "0x2B01D0"
+        },
+        "CRenderData::DrawImageResource_FillMode.22000": {
+          "name": "private: long __cdecl CRenderData::DrawImageResource_FillMode(class CDrawingContext * __ptr64,class CDrawListEntryBuilder * __ptr64,class CImageSource * __ptr64,struct D2D_RECT_F const * __ptr64,struct D2D_RECT_F const * __ptr64,float) __ptr64",
+          "rva": "0xB4044"
+        },
+        "CRenderData::TryDrawCommandAsDrawList.22000": {
+          "name": "private: long __cdecl CRenderData::TryDrawCommandAsDrawList(class CDrawingContext * __ptr64,class CDrawListCache * __ptr64,class CDrawListEntryBuilder * __ptr64,unsigned int,class gsl::span<unsigned char const ,-1>,bool * __ptr64) __ptr64",
+          "rva": "0xB5E80"
+        },
+        "CRenderDataBuilder::DrawGeometry": {
+          "name": "public: virtual long __cdecl CRenderDataBuilder::DrawGeometry(unsigned int,unsigned int) __ptr64",
+          "rva": "0xE4D90"
+        },
+        "CShape::CopyShape": {
+          "name": "public: long __cdecl CShape::CopyShape(class CMILMatrix const * __ptr64,class CShape * __ptr64 * __ptr64)const __ptr64",
+          "rva": "0x57E10"
+        },
+        "CSolidColorLegacyMilBrush::`vftable'": {
+          "name": "const CSolidColorLegacyMilBrush::`vftable'",
+          "rva": "0x2B2CF8"
+        },
+        "GetCurrentFrameId": {
+          "name": "unsigned __int64 __cdecl GetCurrentFrameId(void)",
+          "rva": "0x4F8D0"
+        }
+      }
+    },
+    {
+      "revision": 1281,
+      "image": {
+        "time_date_stamp": 1880991653,
+        "size_of_image": 4194304,
+        "sha256": "872090092fc57c7e621acf8d437b8f4e2bc7785c58e2292b22f408807a3d62f4"
+      },
+      "pdb": {
+        "name": "dwmcore.pdb",
+        "guid": "87a2b69c-2df8-ca94-da27-440a582decb4",
+        "age": 1,
+        "sha256": "57413e8497e345579260c6f11b5d09be2e3db6c30f8496515cc20c232df6ed27"
+      },
+      "resolution_contract": "6c475f8e07f62904eb48cc2b0bd642eba575020100eace5dbccdb027ce821a96",
+      "symbols": {
+        "CArrayBasedCoverageSet::IsCovered.pre26100": {
+          "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
+          "rva": "0x423D0"
+        },
+        "CChannel::MatrixTransformUpdate": {
+          "name": "public: virtual long __cdecl CChannel::MatrixTransformUpdate(unsigned int,struct _MilMatrix3x2D const & __ptr64) __ptr64",
+          "rva": "0xA1F30"
+        },
+        "CD2DContext::DestroyDeviceResources": {
+          "name": "protected: long __cdecl CD2DContext::DestroyDeviceResources(void) __ptr64",
+          "rva": "0x3C8B8"
+        },
+        "CD2DContext::EnsureBeginDraw": {
+          "name": "private: void __cdecl CD2DContext::EnsureBeginDraw(void) __ptr64",
+          "rva": "0xB1A48"
+        },
+        "CDirtyRegion::GetOptimizedRect": {
+          "name": "public: class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> __cdecl CDirtyRegion::GetOptimizedRect(unsigned int,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class CRegion * __ptr64,class CMILMatrix const * __ptr64,bool,class gsl::span<class CVisual const * __ptr64,-1> const & __ptr64,class COcclusionContext const * __ptr64)const __ptr64",
+          "rva": "0xE9718"
+        },
+        "CDrawingContext::ApplyRenderStateInternal": {
+          "name": "private: long __cdecl CDrawingContext::ApplyRenderStateInternal(bool) __ptr64",
+          "rva": "0xCBB50"
+        },
+        "CDrawingContext::DrawVisualTree.20348": {
+          "name": "public: long __cdecl CDrawingContext::DrawVisualTree(class CVisualTree const * __ptr64,class TMil3DRect<float,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded>,struct Mil3DRectF,struct RectUniqueness::NotNeeded> const & __ptr64,class COcclusionContext const * __ptr64,enum ClearMode::Enum,bool,class CVisual * __ptr64) __ptr64",
+          "rva": "0xB972C"
+        },
+        "CDrawingContext::FillShapeWithBrush": {
+          "name": "public: long __cdecl CDrawingContext::FillShapeWithBrush(class CShape const & __ptr64,struct ID2D1Brush * __ptr64) __ptr64",
+          "rva": "0xC55D0"
+        },
+        "CDrawingContext::FlushD2D": {
+          "name": "public: long __cdecl CDrawingContext::FlushD2D(void) __ptr64",
+          "rva": "0x1B0918"
+        },
+        "CDrawingContext::GetClipBoundsWorld": {
+          "name": "public: void __cdecl CDrawingContext::GetClipBoundsWorld(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64",
+          "rva": "0x501F4"
+        },
+        "CDrawingContext::GetUnOccludedWorldShape": {
+          "name": "private: long __cdecl CDrawingContext::GetUnOccludedWorldShape(class CShape const & __ptr64,int,class CShape * __ptr64 * __ptr64) __ptr64",
+          "rva": "0xE2478"
+        },
+        "CGeometry::GetShapeData": {
+          "name": "public: long __cdecl CGeometry::GetShapeData(struct D2D_SIZE_F const * __ptr64,class CShapePtr * __ptr64) __ptr64",
+          "rva": "0xCC130"
+        },
+        "CImageLegacyMilBrush::`vftable'": {
+          "name": "const CImageLegacyMilBrush::`vftable'",
+          "rva": "0x2B48F8"
+        },
+        "CMILMatrix::Identity": {
+          "name": "public: static class CMILMatrix_IdentityType const CMILMatrix::Identity",
+          "rva": "0x3CD620"
+        },
+        "CMatrixStack::GetTopByReference": {
+          "name": "public: class CMILMatrix const * __ptr64 __cdecl CMatrixStack::GetTopByReference(void)const __ptr64",
+          "rva": "0xBC140"
+        },
+        "COcclusionContext::CheckAndRecordOverlayCandidate.19041": {
+          "name": "public: long __cdecl COcclusionContext::CheckAndRecordOverlayCandidate(class CVisual * __ptr64,class CCompositionSurfaceInfo * __ptr64,class CMILMatrix const * __ptr64,class CShape const * __ptr64,struct TMILFlagsEnum<enum MilSourceModification::FlagsEnum>) __ptr64",
+          "rva": "0x6318"
+        },
+        "COcclusionContext::CollectRectangleForOcclusion.20348": {
+          "name": "private: void __cdecl COcclusionContext::CollectRectangleForOcclusion(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const * __ptr64,bool,bool,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64) __ptr64",
+          "rva": "0xE8A54"
+        },
+        "COcclusionContext::Compute.19041": {
+          "name": "protected: long __cdecl COcclusionContext::Compute(class CVisualTree const * __ptr64,class gsl::span<class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const ,-1> const & __ptr64,float,class gsl::span<class COverlayContext * __ptr64,-1> const & __ptr64) __ptr64",
+          "rva": "0xBCF74"
+        },
+        "COcclusionContext::IsOccluded.22000": {
+          "name": "public: bool __cdecl COcclusionContext::IsOccluded(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
+          "rva": "0x57520"
+        },
+        "COcclusionContext::PageInPixelsRectToDeviceRect": {
+          "name": "private: bool __cdecl COcclusionContext::PageInPixelsRectToDeviceRect(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64",
+          "rva": "0x1BE6D8"
+        },
+        "COcclusionContext::SetDeviceTransform": {
+          "name": "public: long __cdecl COcclusionContext::SetDeviceTransform(class CMILMatrix const * __ptr64)const __ptr64",
+          "rva": "0xBCD48"
+        },
+        "COcclusionContext::~COcclusionContext": {
+          "name": "public: __cdecl COcclusionContext::~COcclusionContext(void) __ptr64",
+          "rva": "0x96D08"
+        },
+        "CRectangleGeometry::`vftable'": {
+          "name": "const CRectangleGeometry::`vftable'",
+          "rva": "0x2B0428"
+        },
+        "CRenderData::DrawImageResource_FillMode.22000": {
+          "name": "private: long __cdecl CRenderData::DrawImageResource_FillMode(class CDrawingContext * __ptr64,class CDrawListEntryBuilder * __ptr64,class CImageSource * __ptr64,struct D2D_RECT_F const * __ptr64,struct D2D_RECT_F const * __ptr64,float) __ptr64",
+          "rva": "0x8BE64"
+        },
+        "CRenderData::TryDrawCommandAsDrawList.22000": {
+          "name": "private: long __cdecl CRenderData::TryDrawCommandAsDrawList(class CDrawingContext * __ptr64,class CDrawListCache * __ptr64,class CDrawListEntryBuilder * __ptr64,unsigned int,class gsl::span<unsigned char const ,-1>,bool * __ptr64) __ptr64",
+          "rva": "0x8DCA0"
+        },
+        "CRenderDataBuilder::DrawGeometry": {
+          "name": "public: virtual long __cdecl CRenderDataBuilder::DrawGeometry(unsigned int,unsigned int) __ptr64",
+          "rva": "0x618A0"
+        },
+        "CShape::CopyShape": {
+          "name": "public: long __cdecl CShape::CopyShape(class CMILMatrix const * __ptr64,class CShape * __ptr64 * __ptr64)const __ptr64",
+          "rva": "0xCC6F0"
+        },
+        "CSolidColorLegacyMilBrush::`vftable'": {
+          "name": "const CSolidColorLegacyMilBrush::`vftable'",
+          "rva": "0x2B49B8"
+        },
+        "GetCurrentFrameId": {
+          "name": "unsigned __int64 __cdecl GetCurrentFrameId(void)",
+          "rva": "0xC40D0"
+        }
+      }
+    },
+    {
+      "revision": 2538,
+      "image": {
+        "time_date_stamp": 572184655,
+        "size_of_image": 4194304,
+        "sha256": "b3eabb118635e4b9b3945bc122c1c983544f125f48d9bd9bb599680e4caee30f"
+      },
+      "pdb": {
+        "name": "dwmcore.pdb",
+        "guid": "4daf49a1-8010-849e-b854-01956aeb5fbf",
+        "age": 1,
+        "sha256": "4d2f8748a2fb623780ed6e309954c8ddabc9fe8cef868c769334cab08539d0a2"
+      },
+      "resolution_contract": "6c475f8e07f62904eb48cc2b0bd642eba575020100eace5dbccdb027ce821a96",
+      "symbols": {
+        "CArrayBasedCoverageSet::IsCovered.pre26100": {
+          "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
+          "rva": "0x65360"
+        },
+        "CChannel::MatrixTransformUpdate": {
+          "name": "public: virtual long __cdecl CChannel::MatrixTransformUpdate(unsigned int,struct _MilMatrix3x2D const & __ptr64) __ptr64",
+          "rva": "0xA1180"
+        },
+        "CD2DContext::DestroyDeviceResources": {
+          "name": "protected: long __cdecl CD2DContext::DestroyDeviceResources(void) __ptr64",
+          "rva": "0x5E6B4"
+        },
+        "CD2DContext::EnsureBeginDraw": {
+          "name": "private: void __cdecl CD2DContext::EnsureBeginDraw(void) __ptr64",
+          "rva": "0xB15C8"
+        },
+        "CDirtyRegion::GetOptimizedRect": {
+          "name": "public: class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> __cdecl CDirtyRegion::GetOptimizedRect(unsigned int,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class CRegion * __ptr64,class CMILMatrix const * __ptr64,bool,class gsl::span<class CVisual const * __ptr64,-1> const & __ptr64,class COcclusionContext const * __ptr64)const __ptr64",
+          "rva": "0xE9308"
+        },
+        "CDrawingContext::ApplyRenderStateInternal": {
+          "name": "private: long __cdecl CDrawingContext::ApplyRenderStateInternal(bool) __ptr64",
+          "rva": "0xCB720"
+        },
+        "CDrawingContext::DrawVisualTree.20348": {
+          "name": "public: long __cdecl CDrawingContext::DrawVisualTree(class CVisualTree const * __ptr64,class TMil3DRect<float,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded>,struct Mil3DRectF,struct RectUniqueness::NotNeeded> const & __ptr64,class COcclusionContext const * __ptr64,enum ClearMode::Enum,bool,class CVisual * __ptr64) __ptr64",
+          "rva": "0xB93D8"
+        },
+        "CDrawingContext::FillShapeWithBrush": {
+          "name": "public: long __cdecl CDrawingContext::FillShapeWithBrush(class CShape const & __ptr64,struct ID2D1Brush * __ptr64) __ptr64",
+          "rva": "0xC5280"
+        },
+        "CDrawingContext::FlushD2D": {
+          "name": "public: long __cdecl CDrawingContext::FlushD2D(void) __ptr64",
+          "rva": "0x1AFE28"
+        },
+        "CDrawingContext::GetClipBoundsWorld": {
+          "name": "public: void __cdecl CDrawingContext::GetClipBoundsWorld(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64",
+          "rva": "0x74AE4"
+        },
+        "CDrawingContext::GetUnOccludedWorldShape": {
+          "name": "private: long __cdecl CDrawingContext::GetUnOccludedWorldShape(class CShape const & __ptr64,int,class CShape * __ptr64 * __ptr64) __ptr64",
+          "rva": "0xE2068"
+        },
+        "CGeometry::GetShapeData": {
+          "name": "public: long __cdecl CGeometry::GetShapeData(struct D2D_SIZE_F const * __ptr64,class CShapePtr * __ptr64) __ptr64",
+          "rva": "0xCBD00"
+        },
+        "CImageLegacyMilBrush::`vftable'": {
+          "name": "const CImageLegacyMilBrush::`vftable'",
+          "rva": "0x2B0CF8"
+        },
+        "CMILMatrix::Identity": {
+          "name": "public: static class CMILMatrix_IdentityType const CMILMatrix::Identity",
+          "rva": "0x3CD620"
+        },
+        "CMatrixStack::GetTopByReference": {
+          "name": "public: class CMILMatrix const * __ptr64 __cdecl CMatrixStack::GetTopByReference(void)const __ptr64",
+          "rva": "0xBBDE0"
+        },
+        "COcclusionContext::CheckAndRecordOverlayCandidate.19041": {
+          "name": "public: long __cdecl COcclusionContext::CheckAndRecordOverlayCandidate(class CVisual * __ptr64,class CCompositionSurfaceInfo * __ptr64,class CMILMatrix const * __ptr64,class CShape const * __ptr64,struct TMILFlagsEnum<enum MilSourceModification::FlagsEnum>) __ptr64",
+          "rva": "0x68C8"
+        },
+        "COcclusionContext::CollectRectangleForOcclusion.20348": {
+          "name": "private: void __cdecl COcclusionContext::CollectRectangleForOcclusion(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const * __ptr64,bool,bool,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64) __ptr64",
+          "rva": "0xE8644"
+        },
+        "COcclusionContext::Compute.19041": {
+          "name": "protected: long __cdecl COcclusionContext::Compute(class CVisualTree const * __ptr64,class gsl::span<class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const ,-1> const & __ptr64,float,class gsl::span<class COverlayContext * __ptr64,-1> const & __ptr64) __ptr64",
+          "rva": "0xBCC14"
+        },
+        "COcclusionContext::IsOccluded.22000": {
+          "name": "public: bool __cdecl COcclusionContext::IsOccluded(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
+          "rva": "0x7AD50"
+        },
+        "COcclusionContext::PageInPixelsRectToDeviceRect": {
+          "name": "private: bool __cdecl COcclusionContext::PageInPixelsRectToDeviceRect(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64",
+          "rva": "0x1BDC58"
+        },
+        "COcclusionContext::SetDeviceTransform": {
+          "name": "public: long __cdecl COcclusionContext::SetDeviceTransform(class CMILMatrix const * __ptr64)const __ptr64",
+          "rva": "0xBC9E8"
+        },
+        "COcclusionContext::~COcclusionContext": {
+          "name": "public: __cdecl COcclusionContext::~COcclusionContext(void) __ptr64",
+          "rva": "0x2F798"
+        },
+        "CRectangleGeometry::`vftable'": {
+          "name": "const CRectangleGeometry::`vftable'",
+          "rva": "0x2B9348"
+        },
+        "CRenderData::DrawImageResource_FillMode.22000": {
+          "name": "private: long __cdecl CRenderData::DrawImageResource_FillMode(class CDrawingContext * __ptr64,class CDrawListEntryBuilder * __ptr64,class CImageSource * __ptr64,struct D2D_RECT_F const * __ptr64,struct D2D_RECT_F const * __ptr64,float) __ptr64",
+          "rva": "0x47E74"
+        },
+        "CRenderData::TryDrawCommandAsDrawList.22000": {
+          "name": "private: long __cdecl CRenderData::TryDrawCommandAsDrawList(class CDrawingContext * __ptr64,class CDrawListCache * __ptr64,class CDrawListEntryBuilder * __ptr64,unsigned int,class gsl::span<unsigned char const ,-1>,bool * __ptr64) __ptr64",
+          "rva": "0x49CB0"
+        },
+        "CRenderDataBuilder::DrawGeometry": {
+          "name": "public: virtual long __cdecl CRenderDataBuilder::DrawGeometry(unsigned int,unsigned int) __ptr64",
+          "rva": "0x850E0"
+        },
+        "CShape::CopyShape": {
+          "name": "public: long __cdecl CShape::CopyShape(class CMILMatrix const * __ptr64,class CShape * __ptr64 * __ptr64)const __ptr64",
+          "rva": "0xCC2C0"
+        },
+        "CSolidColorLegacyMilBrush::`vftable'": {
+          "name": "const CSolidColorLegacyMilBrush::`vftable'",
+          "rva": "0x2B0B70"
+        },
+        "GetCurrentFrameId": {
+          "name": "unsigned __int64 __cdecl GetCurrentFrameId(void)",
+          "rva": "0xC3D80"
+        }
+      }
+    },
+    {
+      "revision": 2899,
+      "image": {
+        "time_date_stamp": 3977242571,
+        "size_of_image": 4206592,
+        "sha256": "215a3dd83d6dc374fc78c9658cf4b6af6c691f2d12490fe94b7415c515f6347d"
+      },
+      "pdb": {
+        "name": "dwmcore.pdb",
+        "guid": "d8e1c962-1302-f723-3a6f-7f4ae9652346",
+        "age": 1,
+        "sha256": "4f48c0e5ac60a536e75de97677ff1d0cdd97f47ab796937baf9fa9a9921c7eb3"
+      },
+      "resolution_contract": "6c475f8e07f62904eb48cc2b0bd642eba575020100eace5dbccdb027ce821a96",
+      "symbols": {
+        "CArrayBasedCoverageSet::IsCovered.pre26100": {
+          "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
+          "rva": "0xBFA90"
+        },
+        "CChannel::MatrixTransformUpdate": {
+          "name": "public: virtual long __cdecl CChannel::MatrixTransformUpdate(unsigned int,struct _MilMatrix3x2D const & __ptr64) __ptr64",
+          "rva": "0x2DF80"
+        },
+        "CD2DContext::DestroyDeviceResources": {
+          "name": "protected: long __cdecl CD2DContext::DestroyDeviceResources(void) __ptr64",
+          "rva": "0x2873C"
+        },
+        "CD2DContext::EnsureBeginDraw": {
+          "name": "private: void __cdecl CD2DContext::EnsureBeginDraw(void) __ptr64",
+          "rva": "0x76F88"
+        },
+        "CDirtyRegion::GetOptimizedRect": {
+          "name": "public: class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> __cdecl CDirtyRegion::GetOptimizedRect(unsigned int,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class CRegion * __ptr64,class CMILMatrix const * __ptr64,bool,class gsl::span<class CVisual const * __ptr64,-1> const & __ptr64,class COcclusionContext const * __ptr64)const __ptr64",
+          "rva": "0xAEE48"
+        },
+        "CDrawingContext::ApplyRenderStateInternal": {
+          "name": "private: long __cdecl CDrawingContext::ApplyRenderStateInternal(bool) __ptr64",
+          "rva": "0x91210"
+        },
+        "CDrawingContext::DrawVisualTree.20348": {
+          "name": "public: long __cdecl CDrawingContext::DrawVisualTree(class CVisualTree const * __ptr64,class TMil3DRect<float,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded>,struct Mil3DRectF,struct RectUniqueness::NotNeeded> const & __ptr64,class COcclusionContext const * __ptr64,enum ClearMode::Enum,bool,class CVisual * __ptr64) __ptr64",
+          "rva": "0x7ED98"
+        },
+        "CDrawingContext::FillShapeWithBrush": {
+          "name": "public: long __cdecl CDrawingContext::FillShapeWithBrush(class CShape const & __ptr64,struct ID2D1Brush * __ptr64) __ptr64",
+          "rva": "0x8AD70"
+        },
+        "CDrawingContext::FlushD2D": {
+          "name": "public: long __cdecl CDrawingContext::FlushD2D(void) __ptr64",
+          "rva": "0x1B13D8"
+        },
+        "CDrawingContext::GetClipBoundsWorld": {
+          "name": "public: void __cdecl CDrawingContext::GetClipBoundsWorld(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64",
+          "rva": "0xD6474"
+        },
+        "CDrawingContext::GetUnOccludedWorldShape": {
+          "name": "private: long __cdecl CDrawingContext::GetUnOccludedWorldShape(class CShape const & __ptr64,int,class CShape * __ptr64 * __ptr64) __ptr64",
+          "rva": "0xA7B58"
+        },
+        "CGeometry::GetShapeData": {
+          "name": "public: long __cdecl CGeometry::GetShapeData(struct D2D_SIZE_F const * __ptr64,class CShapePtr * __ptr64) __ptr64",
+          "rva": "0x917F0"
+        },
+        "CImageLegacyMilBrush::`vftable'": {
+          "name": "const CImageLegacyMilBrush::`vftable'",
+          "rva": "0x2B4CF0"
+        },
+        "CMILMatrix::Identity": {
+          "name": "public: static class CMILMatrix_IdentityType const CMILMatrix::Identity",
+          "rva": "0x3CF620"
+        },
+        "CMatrixStack::GetTopByReference": {
+          "name": "public: class CMILMatrix const * __ptr64 __cdecl CMatrixStack::GetTopByReference(void)const __ptr64",
+          "rva": "0x81810"
+        },
+        "COcclusionContext::CheckAndRecordOverlayCandidate.19041": {
+          "name": "public: long __cdecl COcclusionContext::CheckAndRecordOverlayCandidate(class CVisual * __ptr64,class CCompositionSurfaceInfo * __ptr64,class CMILMatrix const * __ptr64,class CShape const * __ptr64,struct TMILFlagsEnum<enum MilSourceModification::FlagsEnum>) __ptr64",
+          "rva": "0x8B18"
+        },
+        "COcclusionContext::CollectRectangleForOcclusion.20348": {
+          "name": "private: void __cdecl COcclusionContext::CollectRectangleForOcclusion(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const * __ptr64,bool,bool,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64) __ptr64",
+          "rva": "0xAE17C"
+        },
+        "COcclusionContext::Compute.19041": {
+          "name": "protected: long __cdecl COcclusionContext::Compute(class CVisualTree const * __ptr64,class gsl::span<class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const ,-1> const & __ptr64,float,class gsl::span<class COverlayContext * __ptr64,-1> const & __ptr64) __ptr64",
+          "rva": "0x82668"
+        },
+        "COcclusionContext::IsOccluded.22000": {
+          "name": "public: bool __cdecl COcclusionContext::IsOccluded(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
+          "rva": "0xDD950"
+        },
+        "COcclusionContext::PageInPixelsRectToDeviceRect": {
+          "name": "private: bool __cdecl COcclusionContext::PageInPixelsRectToDeviceRect(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64",
+          "rva": "0x1BFDA8"
+        },
+        "COcclusionContext::SetDeviceTransform": {
+          "name": "public: long __cdecl COcclusionContext::SetDeviceTransform(class CMILMatrix const * __ptr64)const __ptr64",
+          "rva": "0x8243C"
+        },
+        "COcclusionContext::~COcclusionContext": {
+          "name": "public: __cdecl COcclusionContext::~COcclusionContext(void) __ptr64",
+          "rva": "0x540C8"
+        },
+        "CRectangleGeometry::`vftable'": {
+          "name": "const CRectangleGeometry::`vftable'",
+          "rva": "0x2BB208"
+        },
+        "CRenderData::DrawImageResource_FillMode.22000": {
+          "name": "private: long __cdecl CRenderData::DrawImageResource_FillMode(class CDrawingContext * __ptr64,class CDrawListEntryBuilder * __ptr64,class CImageSource * __ptr64,struct D2D_RECT_F const * __ptr64,struct D2D_RECT_F const * __ptr64,float) __ptr64",
+          "rva": "0xBEA6C"
+        },
+        "CRenderData::TryDrawCommandAsDrawList.22000": {
+          "name": "private: long __cdecl CRenderData::TryDrawCommandAsDrawList(class CDrawingContext * __ptr64,class CDrawListCache * __ptr64,class CDrawListEntryBuilder * __ptr64,unsigned int,class gsl::span<unsigned char const ,-1>,bool * __ptr64) __ptr64",
+          "rva": "0xBDFF0"
+        },
+        "CRenderDataBuilder::DrawGeometry": {
+          "name": "public: virtual long __cdecl CRenderDataBuilder::DrawGeometry(unsigned int,unsigned int) __ptr64",
+          "rva": "0xE7CB0"
+        },
+        "CShape::CopyShape": {
+          "name": "public: long __cdecl CShape::CopyShape(class CMILMatrix const * __ptr64,class CShape * __ptr64 * __ptr64)const __ptr64",
+          "rva": "0x91DB0"
+        },
+        "CSolidColorLegacyMilBrush::`vftable'": {
+          "name": "const CSolidColorLegacyMilBrush::`vftable'",
+          "rva": "0x2B4DB0"
+        },
+        "GetCurrentFrameId": {
+          "name": "unsigned __int64 __cdecl GetCurrentFrameId(void)",
+          "rva": "0x89870"
+        }
+      }
+    },
+    {
+      "revision": 2960,
+      "image": {
+        "time_date_stamp": 3233089292,
+        "size_of_image": 4218880,
+        "sha256": "0ff4707a6f88169d794f53327db975a843e665d4095190bd5adf3814261604ab"
+      },
+      "pdb": {
+        "name": "dwmcore.pdb",
+        "guid": "dc2f1aec-4bcd-d008-a12f-274b5893ec83",
+        "age": 1,
+        "sha256": "cc87ee6d65a314eef7f05bc4ec270d61e698895f6d5720f80ec9b5be0898b997"
+      },
+      "resolution_contract": "6c475f8e07f62904eb48cc2b0bd642eba575020100eace5dbccdb027ce821a96",
+      "symbols": {
+        "CArrayBasedCoverageSet::IsCovered.pre26100": {
+          "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
+          "rva": "0xC1310"
+        },
+        "CChannel::MatrixTransformUpdate": {
+          "name": "public: virtual long __cdecl CChannel::MatrixTransformUpdate(unsigned int,struct _MilMatrix3x2D const & __ptr64) __ptr64",
+          "rva": "0x2E430"
+        },
+        "CD2DContext::DestroyDeviceResources": {
+          "name": "protected: long __cdecl CD2DContext::DestroyDeviceResources(void) __ptr64",
+          "rva": "0x2911C"
+        },
+        "CD2DContext::EnsureBeginDraw": {
+          "name": "private: void __cdecl CD2DContext::EnsureBeginDraw(void) __ptr64",
+          "rva": "0x78808"
+        },
+        "CDirtyRegion::GetOptimizedRect": {
+          "name": "public: class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> __cdecl CDirtyRegion::GetOptimizedRect(unsigned int,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class CRegion * __ptr64,class CMILMatrix const * __ptr64,bool,class gsl::span<class CVisual const * __ptr64,-1> const & __ptr64,class COcclusionContext const * __ptr64)const __ptr64",
+          "rva": "0xB06C8"
+        },
+        "CDrawingContext::ApplyRenderStateInternal": {
+          "name": "private: long __cdecl CDrawingContext::ApplyRenderStateInternal(bool) __ptr64",
+          "rva": "0x92A90"
+        },
+        "CDrawingContext::DrawVisualTree.20348": {
+          "name": "public: long __cdecl CDrawingContext::DrawVisualTree(class CVisualTree const * __ptr64,class TMil3DRect<float,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded>,struct Mil3DRectF,struct RectUniqueness::NotNeeded> const & __ptr64,class COcclusionContext const * __ptr64,enum ClearMode::Enum,bool,class CVisual * __ptr64) __ptr64",
+          "rva": "0x80618"
+        },
+        "CDrawingContext::FillShapeWithBrush": {
+          "name": "public: long __cdecl CDrawingContext::FillShapeWithBrush(class CShape const & __ptr64,struct ID2D1Brush * __ptr64) __ptr64",
+          "rva": "0x8C5F0"
+        },
+        "CDrawingContext::FlushD2D": {
+          "name": "public: long __cdecl CDrawingContext::FlushD2D(void) __ptr64",
+          "rva": "0x1B2B98"
+        },
+        "CDrawingContext::GetClipBoundsWorld": {
+          "name": "public: void __cdecl CDrawingContext::GetClipBoundsWorld(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64",
+          "rva": "0xD7D14"
+        },
+        "CDrawingContext::GetUnOccludedWorldShape": {
+          "name": "private: long __cdecl CDrawingContext::GetUnOccludedWorldShape(class CShape const & __ptr64,int,class CShape * __ptr64 * __ptr64) __ptr64",
+          "rva": "0xA93D8"
+        },
+        "CGeometry::GetShapeData": {
+          "name": "public: long __cdecl CGeometry::GetShapeData(struct D2D_SIZE_F const * __ptr64,class CShapePtr * __ptr64) __ptr64",
+          "rva": "0x93070"
+        },
+        "CImageLegacyMilBrush::`vftable'": {
+          "name": "const CImageLegacyMilBrush::`vftable'",
+          "rva": "0x2B8B70"
+        },
+        "CMILMatrix::Identity": {
+          "name": "public: static class CMILMatrix_IdentityType const CMILMatrix::Identity",
+          "rva": "0x3D3620"
+        },
+        "CMatrixStack::GetTopByReference": {
+          "name": "public: class CMILMatrix const * __ptr64 __cdecl CMatrixStack::GetTopByReference(void)const __ptr64",
+          "rva": "0x83090"
+        },
+        "COcclusionContext::CheckAndRecordOverlayCandidate.19041": {
+          "name": "public: long __cdecl COcclusionContext::CheckAndRecordOverlayCandidate(class CVisual * __ptr64,class CCompositionSurfaceInfo * __ptr64,class CMILMatrix const * __ptr64,class CShape const * __ptr64,struct TMILFlagsEnum<enum MilSourceModification::FlagsEnum>) __ptr64",
+          "rva": "0x8C68"
+        },
+        "COcclusionContext::CollectRectangleForOcclusion.20348": {
+          "name": "private: void __cdecl COcclusionContext::CollectRectangleForOcclusion(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const * __ptr64,bool,bool,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64) __ptr64",
+          "rva": "0xAF9FC"
+        },
+        "COcclusionContext::Compute.19041": {
+          "name": "protected: long __cdecl COcclusionContext::Compute(class CVisualTree const * __ptr64,class gsl::span<class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const ,-1> const & __ptr64,float,class gsl::span<class COverlayContext * __ptr64,-1> const & __ptr64) __ptr64",
+          "rva": "0x83EE8"
+        },
+        "COcclusionContext::IsOccluded.22000": {
+          "name": "public: bool __cdecl COcclusionContext::IsOccluded(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
+          "rva": "0xDF90C"
+        },
+        "COcclusionContext::PageInPixelsRectToDeviceRect": {
+          "name": "private: bool __cdecl COcclusionContext::PageInPixelsRectToDeviceRect(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64",
+          "rva": "0x1C1568"
+        },
+        "COcclusionContext::SetDeviceTransform": {
+          "name": "public: long __cdecl COcclusionContext::SetDeviceTransform(class CMILMatrix const * __ptr64)const __ptr64",
+          "rva": "0x83CBC"
+        },
+        "COcclusionContext::~COcclusionContext": {
+          "name": "public: __cdecl COcclusionContext::~COcclusionContext(void) __ptr64",
+          "rva": "0x553F8"
+        },
+        "CRectangleGeometry::`vftable'": {
+          "name": "const CRectangleGeometry::`vftable'",
+          "rva": "0x2BF208"
+        },
+        "CRenderData::DrawImageResource_FillMode.22000": {
+          "name": "private: long __cdecl CRenderData::DrawImageResource_FillMode(class CDrawingContext * __ptr64,class CDrawListEntryBuilder * __ptr64,class CImageSource * __ptr64,struct D2D_RECT_F const * __ptr64,struct D2D_RECT_F const * __ptr64,float) __ptr64",
+          "rva": "0xC02EC"
+        },
+        "CRenderData::TryDrawCommandAsDrawList.22000": {
+          "name": "private: long __cdecl CRenderData::TryDrawCommandAsDrawList(class CDrawingContext * __ptr64,class CDrawListCache * __ptr64,class CDrawListEntryBuilder * __ptr64,unsigned int,class gsl::span<unsigned char const ,-1>,bool * __ptr64) __ptr64",
+          "rva": "0xBF870"
+        },
+        "CRenderDataBuilder::DrawGeometry": {
+          "name": "public: virtual long __cdecl CRenderDataBuilder::DrawGeometry(unsigned int,unsigned int) __ptr64",
+          "rva": "0xE9E70"
+        },
+        "CShape::CopyShape": {
+          "name": "public: long __cdecl CShape::CopyShape(class CMILMatrix const * __ptr64,class CShape * __ptr64 * __ptr64)const __ptr64",
+          "rva": "0x93630"
+        },
+        "CSolidColorLegacyMilBrush::`vftable'": {
+          "name": "const CSolidColorLegacyMilBrush::`vftable'",
+          "rva": "0x2B8C30"
+        },
+        "GetCurrentFrameId": {
+          "name": "unsigned __int64 __cdecl GetCurrentFrameId(void)",
+          "rva": "0x8B0F0"
+        }
+      }
+    },
+    {
+      "revision": 3019,
+      "image": {
+        "time_date_stamp": 2409086991,
+        "size_of_image": 4214784,
+        "sha256": "80efa9db0688b73a7a08eb6d8cbf020f05c200b3d27c6816198c72b3e151cfcb"
+      },
+      "pdb": {
+        "name": "dwmcore.pdb",
+        "guid": "63d8a48e-c2a3-f1fd-154c-e2f726fe9bd3",
+        "age": 1,
+        "sha256": "1b24e3e388b441b0d9dc0525f5b06fb301e07aa13663cbc38b3c322e15e9bdba"
+      },
+      "resolution_contract": "6c475f8e07f62904eb48cc2b0bd642eba575020100eace5dbccdb027ce821a96",
+      "symbols": {
+        "CArrayBasedCoverageSet::IsCovered.pre26100": {
+          "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
+          "rva": "0xC9230"
+        },
+        "CChannel::MatrixTransformUpdate": {
+          "name": "public: virtual long __cdecl CChannel::MatrixTransformUpdate(unsigned int,struct _MilMatrix3x2D const & __ptr64) __ptr64",
+          "rva": "0x73F80"
+        },
+        "CD2DContext::DestroyDeviceResources": {
+          "name": "protected: long __cdecl CD2DContext::DestroyDeviceResources(void) __ptr64",
+          "rva": "0x225BC"
+        },
+        "CD2DContext::EnsureBeginDraw": {
+          "name": "private: void __cdecl CD2DContext::EnsureBeginDraw(void) __ptr64",
+          "rva": "0x80698"
+        },
+        "CDirtyRegion::GetOptimizedRect": {
+          "name": "public: class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> __cdecl CDirtyRegion::GetOptimizedRect(unsigned int,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class CRegion * __ptr64,class CMILMatrix const * __ptr64,bool,class gsl::span<class CVisual const * __ptr64,-1> const & __ptr64,class COcclusionContext const * __ptr64)const __ptr64",
+          "rva": "0xB8558"
+        },
+        "CDrawingContext::ApplyRenderStateInternal": {
+          "name": "private: long __cdecl CDrawingContext::ApplyRenderStateInternal(bool) __ptr64",
+          "rva": "0x9A920"
+        },
+        "CDrawingContext::DrawVisualTree.20348": {
+          "name": "public: long __cdecl CDrawingContext::DrawVisualTree(class CVisualTree const * __ptr64,class TMil3DRect<float,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded>,struct Mil3DRectF,struct RectUniqueness::NotNeeded> const & __ptr64,class COcclusionContext const * __ptr64,enum ClearMode::Enum,bool,class CVisual * __ptr64) __ptr64",
+          "rva": "0x884A8"
+        },
+        "CDrawingContext::FillShapeWithBrush": {
+          "name": "public: long __cdecl CDrawingContext::FillShapeWithBrush(class CShape const & __ptr64,struct ID2D1Brush * __ptr64) __ptr64",
+          "rva": "0x94480"
+        },
+        "CDrawingContext::FlushD2D": {
+          "name": "public: long __cdecl CDrawingContext::FlushD2D(void) __ptr64",
+          "rva": "0x1B21B8"
+        },
+        "CDrawingContext::GetClipBoundsWorld": {
+          "name": "public: void __cdecl CDrawingContext::GetClipBoundsWorld(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64",
+          "rva": "0xD8514"
+        },
+        "CDrawingContext::GetUnOccludedWorldShape": {
+          "name": "private: long __cdecl CDrawingContext::GetUnOccludedWorldShape(class CShape const & __ptr64,int,class CShape * __ptr64 * __ptr64) __ptr64",
+          "rva": "0xB1268"
+        },
+        "CGeometry::GetShapeData": {
+          "name": "public: long __cdecl CGeometry::GetShapeData(struct D2D_SIZE_F const * __ptr64,class CShapePtr * __ptr64) __ptr64",
+          "rva": "0x9AF00"
+        },
+        "CImageLegacyMilBrush::`vftable'": {
+          "name": "const CImageLegacyMilBrush::`vftable'",
+          "rva": "0x2BAE78"
+        },
+        "CMILMatrix::Identity": {
+          "name": "public: static class CMILMatrix_IdentityType const CMILMatrix::Identity",
+          "rva": "0x3D2620"
+        },
+        "CMatrixStack::GetTopByReference": {
+          "name": "public: class CMILMatrix const * __ptr64 __cdecl CMatrixStack::GetTopByReference(void)const __ptr64",
+          "rva": "0x8AF20"
+        },
+        "COcclusionContext::CheckAndRecordOverlayCandidate.19041": {
+          "name": "public: long __cdecl COcclusionContext::CheckAndRecordOverlayCandidate(class CVisual * __ptr64,class CCompositionSurfaceInfo * __ptr64,class CMILMatrix const * __ptr64,class CShape const * __ptr64,struct TMILFlagsEnum<enum MilSourceModification::FlagsEnum>) __ptr64",
+          "rva": "0x6A08"
+        },
+        "COcclusionContext::CollectRectangleForOcclusion.20348": {
+          "name": "private: void __cdecl COcclusionContext::CollectRectangleForOcclusion(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const * __ptr64,bool,bool,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64) __ptr64",
+          "rva": "0xB788C"
+        },
+        "COcclusionContext::Compute.19041": {
+          "name": "protected: long __cdecl COcclusionContext::Compute(class CVisualTree const * __ptr64,class gsl::span<class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const ,-1> const & __ptr64,float,class gsl::span<class COverlayContext * __ptr64,-1> const & __ptr64) __ptr64",
+          "rva": "0x8BD78"
+        },
+        "COcclusionContext::IsOccluded.22000": {
+          "name": "public: bool __cdecl COcclusionContext::IsOccluded(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
+          "rva": "0xDF6AC"
+        },
+        "COcclusionContext::PageInPixelsRectToDeviceRect": {
+          "name": "private: bool __cdecl COcclusionContext::PageInPixelsRectToDeviceRect(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64",
+          "rva": "0x1C0588"
+        },
+        "COcclusionContext::SetDeviceTransform": {
+          "name": "public: long __cdecl COcclusionContext::SetDeviceTransform(class CMILMatrix const * __ptr64)const __ptr64",
+          "rva": "0x8BB4C"
+        },
+        "COcclusionContext::~COcclusionContext": {
+          "name": "public: __cdecl COcclusionContext::~COcclusionContext(void) __ptr64",
+          "rva": "0x644D8"
+        },
+        "CRectangleGeometry::`vftable'": {
+          "name": "const CRectangleGeometry::`vftable'",
+          "rva": "0x2BE210"
+        },
+        "CRenderData::DrawImageResource_FillMode.22000": {
+          "name": "private: long __cdecl CRenderData::DrawImageResource_FillMode(class CDrawingContext * __ptr64,class CDrawListEntryBuilder * __ptr64,class CImageSource * __ptr64,struct D2D_RECT_F const * __ptr64,struct D2D_RECT_F const * __ptr64,float) __ptr64",
+          "rva": "0x59634"
+        },
+        "CRenderData::TryDrawCommandAsDrawList.22000": {
+          "name": "private: long __cdecl CRenderData::TryDrawCommandAsDrawList(class CDrawingContext * __ptr64,class CDrawListCache * __ptr64,class CDrawListEntryBuilder * __ptr64,unsigned int,class gsl::span<unsigned char const ,-1>,bool * __ptr64) __ptr64",
+          "rva": "0x5B470"
+        },
+        "CRenderDataBuilder::DrawGeometry": {
+          "name": "public: virtual long __cdecl CRenderDataBuilder::DrawGeometry(unsigned int,unsigned int) __ptr64",
+          "rva": "0xE9D70"
+        },
+        "CShape::CopyShape": {
+          "name": "public: long __cdecl CShape::CopyShape(class CMILMatrix const * __ptr64,class CShape * __ptr64 * __ptr64)const __ptr64",
+          "rva": "0x9B4C0"
+        },
+        "CSolidColorLegacyMilBrush::`vftable'": {
+          "name": "const CSolidColorLegacyMilBrush::`vftable'",
+          "rva": "0x2BAF38"
+        },
+        "GetCurrentFrameId": {
+          "name": "unsigned __int64 __cdecl GetCurrentFrameId(void)",
+          "rva": "0x92F80"
+        }
+      }
+    }
+  ]
+}

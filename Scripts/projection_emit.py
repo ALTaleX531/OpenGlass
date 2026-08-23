@@ -177,7 +177,12 @@ def generate_registry_inc(schemas: Sequence[ProjectionSchema]) -> str:
         for index, symbol in enumerate(schema["symbols"]):
             id_offset = pool.add(symbol["id"])
             requirement = f"Projection::Requirement::{requirement_cpp(symbol['requirement'])}"
-            flags = "Projection::SymbolFlags::DebugOnly" if symbol.get("condition") == "debug" else "Projection::SymbolFlags::None"
+            flag_values = []
+            if symbol.get("condition") == "debug":
+                flag_values.append("Projection::SymbolFlags::DebugOnly")
+            if symbol["kind"] == "projected_variable":
+                flag_values.append("Projection::SymbolFlags::Data")
+            flags = " | ".join(flag_values) if flag_values else "Projection::SymbolFlags::None"
             for binding in symbol["bindings"]:
                 first_name_index = len(symbol_name_offsets)
                 symbol_name_offsets.extend(pool.add(candidate) for candidate in binding["symbol_names"])

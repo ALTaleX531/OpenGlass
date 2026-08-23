@@ -1,4 +1,7 @@
 #include "pch.h"
 #include "uDwmProjection.hpp"
 #include "dwmcoreProjection.hpp"
+#include "SymbolCatalog.hpp"
+#include "SymbolCatalog.generated.hpp"
 #include "ProjectionRegistry.generated.inc"
+#include "SymbolCatalog.generated.inc"

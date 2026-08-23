@@ -52,6 +52,9 @@
 	<ClCompile Include="..\Common\PngAssetValidation.cpp">
 	  <PrecompiledHeader>NotUsing</PrecompiledHeader>
 	</ClCompile>
+	<ClCompile Include="..\Common\PeCodeViewIdentity.cpp">
+	  <PrecompiledHeader>NotUsing</PrecompiledHeader>
+	</ClCompile>
 	<ClCompile Include="..\Common\ThemeAtlasLayout.cpp">
 	  <PrecompiledHeader>NotUsing</PrecompiledHeader>
 	</ClCompile>
@@ -61,6 +64,9 @@
 	  <PrecompiledHeader>NotUsing</PrecompiledHeader>
 	</ClCompile>
     <ClCompile Include="..\OpenGlass\ProjectionRuntime.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\OpenGlass\SymbolCatalog.cpp">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\OpenGlassGUI\PresetPackage.cpp">
