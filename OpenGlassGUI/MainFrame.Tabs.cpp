@@ -215,13 +215,53 @@ namespace OpenGlass
 		transparencyGroup->Add(transparencyButtonRow, 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 8);
 
 		wxStaticBoxSizer* downloadGroup = new wxStaticBoxSizer(wxVERTICAL, panel, L"Symbols");
-		const wxString descriptionText = L"Download the public PDB files required for the current Windows build. The default runtime cache is %ProgramData%\\OpenGlass\\symbols; another folder may be selected for manual use.";
+		const wxString descriptionText =
+			L"Use this only when OpenGlass reports that it could not download symbols automatically for the current uDWM.dll or dwmcore.dll. "
+			L"It prefetches the exact public PDB files into a cache; it does not repair DWM crashes, change rendering, or perform any other repair.";
 		wxStaticText* description = new wxStaticText(
 			panel,
 			wxID_ANY,
 			descriptionText
 		);
 		downloadGroup->Add(description, 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, 8);
+
+		auto* symbolNoticePanel = new wxPanel(panel);
+		symbolNoticePanel->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_INFOBK));
+		auto* symbolNoticeSizer = new wxBoxSizer(wxHORIZONTAL);
+		auto* symbolNoticeIcon = new wxStaticBitmap(
+			symbolNoticePanel,
+			wxID_ANY,
+			wxArtProvider::GetBitmap(wxART_WARNING, wxART_MESSAGE_BOX, wxSize(16, 16))
+		);
+		symbolNoticeSizer->Add(symbolNoticeIcon, 0, wxALIGN_TOP | wxRIGHT, 8);
+		auto* symbolNoticeContent = new wxBoxSizer(wxVERTICAL);
+		const wxString symbolNoticeText =
+			L"If you experience a DWM crash, open a GitHub issue promptly with the exact Windows build and revision and a full dump. "
+			L"Reddit, Discord, and other third-party posts are not tracked as OpenGlass bug reports.";
+		auto* symbolNoticeLabel = new wxStaticText(symbolNoticePanel, wxID_ANY, symbolNoticeText);
+		symbolNoticeLabel->SetForegroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_INFOTEXT));
+		symbolNoticeContent->Add(symbolNoticeLabel, 0, wxEXPAND | wxBOTTOM, 4);
+		auto* symbolIssueLink = new wxHyperlinkCtrl(
+			symbolNoticePanel,
+			wxID_ANY,
+			L"Open a GitHub issue",
+			L"https://github.com/ALTaleX531/OpenGlass/issues/new"
+		);
+		symbolIssueLink->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_INFOBK));
+		symbolNoticeContent->Add(symbolIssueLink, 0);
+		symbolNoticeSizer->Add(symbolNoticeContent, 1, wxEXPAND);
+		symbolNoticePanel->SetSizer(symbolNoticeSizer);
+		symbolNoticePanel->Bind(wxEVT_SIZE, [symbolNoticeLabel, symbolNoticeText](wxSizeEvent& event)
+		{
+			WrapStaticTextToParentWidth(symbolNoticeLabel, symbolNoticeText);
+			event.Skip();
+		});
+		symbolNoticePanel->CallAfter([symbolNoticePanel, symbolNoticeLabel, symbolNoticeText]
+		{
+			symbolNoticePanel->Layout();
+			WrapStaticTextToParentWidth(symbolNoticeLabel, symbolNoticeText);
+		});
+		downloadGroup->Add(symbolNoticePanel, 0, wxEXPAND | wxALL, 8);
 
 		wxFlexGridSizer* infoGrid = new wxFlexGridSizer(2, 8, 12);
 		infoGrid->AddGrowableCol(1, 1);

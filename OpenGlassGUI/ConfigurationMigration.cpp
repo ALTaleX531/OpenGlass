@@ -55,11 +55,12 @@ namespace OpenGlass::ConfigurationMigration
 
 		bool ConfirmMigration(std::size_t moveCount)
 		{
-			wxDialog dialog(nullptr, wxID_ANY, L"OpenGlass configuration migration", wxDefaultPosition, wxSize(620, 420), wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER);
+			wxDialog dialog(nullptr, wxID_ANY, L"OpenGlass configuration migration", wxDefaultPosition, wxSize(680, 500), wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER);
 			auto* root = new wxBoxSizer(wxVERTICAL);
 			const auto message = wxString::Format(
-				L"OpenGlass now stores Windows colorization values for the original interactive user and all other OpenGlass settings system-wide.\n\n"
-				L"%zu value(s) need to be moved or removed. Existing effective values will be preserved, but non-color settings will become shared by every user of this computer.\n\n"
+				L"The official OpenGlass GUI now stores the five Windows colorization values and their Override forms for the original interactive user. It stores the other OpenGlass settings it manages system-wide.\n\n"
+				L"OpenGlass itself still reads every supported setting from HKCU before HKLM. Per-user registry configurations and transformation packs remain supported; this migration changes only the locations managed by the official GUI and preset packages.\n\n"
+				L"%zu value(s) are outside those recommended locations and need to be moved or removed. Existing effective values will be preserved. Choosing Exit and migrate later leaves the current configuration unchanged.\n\n"
 				L"Migration is transactional. If any registry operation fails, both hives are restored and the editor will not open.",
 				moveCount
 			);

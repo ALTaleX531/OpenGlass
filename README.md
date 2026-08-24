@@ -16,9 +16,6 @@ OpenGlass restores the full glass effect to window frames, with control over blu
 | Windows 11 build 28000 and later | Experimental |
 | Windows Server 2022 | Supported |
 
-> [!IMPORTANT]
-> `OpenGlassSetup.exe` automatically installs the correct DWM implementation for the detected Windows build. There is no architecture choice to make.
-
 Only General Availability Windows builds are supported. Insider and preview builds, and Windows Server versions other than 2022, are unsupported and may crash DWM. Compatibility depends on the exact build, revision, and verified compositor capabilities.
 
 See [Compatibility and DWM architectures](https://github.com/ALTaleX531/OpenGlass/wiki/Compatibility-and-DWM-architectures) for the complete support policy and explanation of parallel Windows build trains.
@@ -29,7 +26,9 @@ See [Compatibility and DWM architectures](https://github.com/ALTaleX531/OpenGlas
 2. Install OpenGlass and open its GUI. The GUI requests administrator elevation because it manages both per-user Windows colorization and system-wide OpenGlass settings. The [configuration reference](https://github.com/ALTaleX531/OpenGlass/wiki/Configuration-and-registry-reference) documents the corresponding registry values.
 3. Adjust the appearance. Changes apply immediately; **Save** accepts the current state and **Revert** restores the state captured before editing.
 
-The **Glass colors** page includes Windows Vista and Windows 7 presets. The **Preset packs** page can import, create, apply, and remove immutable [preset ZIPs](https://github.com/ALTaleX531/OpenGlass/wiki/Preset-packages). OpenGlass intentionally uses one system-wide configuration for effects and themes; only the five Windows colorization values and their Override forms remain per-user.
+Current releases use one unified `OpenGlassSetup.exe`. Older OpenGlass releases required users to choose a build-specific installer for their Windows version; that manual selection is no longer needed. The unified installer detects the Windows build and installs only the matching DWM implementation.
+
+The **Glass colors** page includes Windows Vista and Windows 7 presets. The **Preset packs** page can import, create, apply, and remove immutable [preset ZIPs](https://github.com/ALTaleX531/OpenGlass/wiki/Preset-packages). The official GUI and preset packages manage one system-wide configuration for effects and themes; only the five Windows colorization values and their Override forms are written per-user. The OpenGlass runtime remains compatible with manual and transformation-pack settings in either HKCU or HKLM.
 
 > [!TIP]
 > **Emergency Exit:** Long-press <kbd>Ctrl</kbd>+<kbd>Win</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd> to terminate DWM if the system becomes unresponsive.
@@ -38,7 +37,7 @@ OpenGlass is intended for advanced users who are comfortable troubleshooting DWM
 
 ## Reporting issues
 
-For unexpectedly opaque glass, first check the GUI's **Diagnostics** tab, which reports the Windows transparency setting, opaque-blend setting, effective power mode, and battery-saver policy. For a DWM crash or hang, enable full DWM dumps there and reproduce the problem once. Include the exact Windows build and revision, OpenGlass version, registry settings, reproduction steps, screenshots or recordings, and a dump when a crash occurred. See [Troubleshooting and crash dumps](https://github.com/ALTaleX531/OpenGlass/wiki/Troubleshooting-and-crash-dumps).
+A DWM crash is a bug report, not a symbol-download problem. Open a [GitHub issue](https://github.com/ALTaleX531/OpenGlass/issues/new) promptly; posts on Reddit, Discord, or other third-party communities are not tracked as OpenGlass bug reports. For unexpectedly opaque glass, first check the GUI's **Diagnostics** tab, which reports the Windows transparency setting, opaque-blend setting, effective power mode, and battery-saver policy. For a DWM crash or hang, enable full DWM dumps there and reproduce the problem once. Include the exact Windows build and revision, OpenGlass version, registry settings, reproduction steps, screenshots or recordings, and a dump when a crash occurred. See [Troubleshooting and crash dumps](https://github.com/ALTaleX531/OpenGlass/wiki/Troubleshooting-and-crash-dumps).
 
 ## Building
 

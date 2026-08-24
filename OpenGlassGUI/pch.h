@@ -22,6 +22,7 @@
 #include <wx/snglinst.h>
 #include <wx/tglbtn.h>
 #include <wx/wrapsizer.h>
+#include <wx/hyperlink.h>
 #include <wx/wfstream.h>
 #include <wx/zipstrm.h>
 #include <wx/mstream.h>
