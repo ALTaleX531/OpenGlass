@@ -17,6 +17,21 @@ struct ServiceHandlerContext
 	OpenGlass::GlassService::ThreadControl serverControl{};
 	OpenGlass::GlassService::ThreadControl injectionControl{};
 };
+HRESULT GetExitedThreadResult(HANDLE threadHandle)
+{
+	DWORD exitCode{};
+	RETURN_IF_WIN32_BOOL_FALSE(GetExitCodeThread(threadHandle, &exitCode));
+	const auto result = static_cast<HRESULT>(exitCode);
+	// Publishing ready is part of the worker contract. A successful exit before
+	// that point is therefore a startup failure, not a successful initialization.
+	return FAILED(result) ? result : E_UNEXPECTED;
+}
+DWORD GetServiceExitCode(HRESULT result) noexcept
+{
+	return HRESULT_FACILITY(result) == FACILITY_WIN32 ?
+		HRESULT_CODE(result) :
+		ERROR_GEN_FAILURE;
+}
 HRESULT WaitForThreadReady(
 	HANDLE threadHandle,
 	HANDLE readyEvent,
@@ -45,10 +60,7 @@ HRESULT WaitForThreadReady(
 		return S_OK;
 	}
 
-	DWORD exitCode{};
-	RETURN_IF_WIN32_BOOL_FALSE(GetExitCodeThread(waitHandles[signaledIndex], &exitCode));
-	const auto result = static_cast<HRESULT>(exitCode);
-	return FAILED(result) ? result : E_UNEXPECTED;
+	return GetExitedThreadResult(waitHandles[signaledIndex]);
 }
 
 void ReportServiceStatus(
@@ -230,7 +242,7 @@ EXTERN_C VOID WINAPI ServiceMain(
 	if (const auto result = initializeControls(); FAILED(result))
 	{
 		LOG_HR(result);
-		ReportServiceStatus(context.statusHandle, SERVICE_STOPPED, HRESULT_CODE(result), 0);
+		ReportServiceStatus(context.statusHandle, SERVICE_STOPPED, GetServiceExitCode(result), 0);
 		return;
 	}
 
@@ -257,7 +269,7 @@ EXTERN_C VOID WINAPI ServiceMain(
 		LOG_HR(result);
 		LOG_IF_FAILED(GlassService::ControlThread(context.serverControl, GlassService::ThreadStatus::Stopped));
 		LOG_LAST_ERROR_IF(WaitForSingleObject(context.serverThreadHandle.get(), INFINITE) == WAIT_FAILED);
-		ReportServiceStatus(context.statusHandle, SERVICE_STOPPED, HRESULT_CODE(result), 0);
+		ReportServiceStatus(context.statusHandle, SERVICE_STOPPED, GetServiceExitCode(result), 0);
 		return;
 	}
 
@@ -296,14 +308,44 @@ EXTERN_C VOID WINAPI ServiceMain(
 		LOG_LAST_ERROR_IF(WaitForSingleObject(context.injectionThreadHandle.get(), INFINITE) == WAIT_FAILED);
 		LOG_IF_FAILED(GlassService::ControlThread(context.serverControl, GlassService::ThreadStatus::Stopped));
 		LOG_LAST_ERROR_IF(WaitForSingleObject(context.serverThreadHandle.get(), INFINITE) == WAIT_FAILED);
-		ReportServiceStatus(context.statusHandle, SERVICE_STOPPED, HRESULT_CODE(result), 0);
+		ReportServiceStatus(context.statusHandle, SERVICE_STOPPED, GetServiceExitCode(result), 0);
 		return;
 	}
 
-	// Both workers have published their control state.
-	ReportServiceStatus(context.statusHandle, SERVICE_RUNNING);
+	// A worker exit is also a service-level state transition. In particular, do
+	// not leave the service reported as running after the pipe server has died.
+	const HANDLE workerHandles[]
+	{
+		context.injectionThreadHandle.get(),
+		context.serverThreadHandle.get()
+	};
+	const auto waitResult = WaitForMultipleObjects(
+		static_cast<DWORD>(std::size(workerHandles)),
+		workerHandles,
+		FALSE,
+		INFINITE
+	);
+	if (waitResult != WAIT_OBJECT_0)
+	{
+		HRESULT result{ E_UNEXPECTED };
+		if (waitResult == WAIT_FAILED)
+		{
+			result = HRESULT_FROM_WIN32(GetLastError());
+		}
+		else if (waitResult == WAIT_OBJECT_0 + 1)
+		{
+			result = GetExitedThreadResult(context.serverThreadHandle.get());
+		}
+		LOG_HR(result);
 
-	LOG_LAST_ERROR_IF(WaitForSingleObject(context.injectionThreadHandle.get(), INFINITE) == WAIT_FAILED);
+		ReportServiceStatus(context.statusHandle, SERVICE_STOP_PENDING, NO_ERROR, 10);
+		LOG_IF_FAILED(GlassService::ControlThread(context.injectionControl, GlassService::ThreadStatus::Stopped));
+		LOG_IF_FAILED(GlassService::ControlThread(context.serverControl, GlassService::ThreadStatus::Stopped));
+		LOG_LAST_ERROR_IF(WaitForSingleObject(context.injectionThreadHandle.get(), INFINITE) == WAIT_FAILED);
+		LOG_LAST_ERROR_IF(WaitForSingleObject(context.serverThreadHandle.get(), INFINITE) == WAIT_FAILED);
+		ReportServiceStatus(context.statusHandle, SERVICE_STOPPED, GetServiceExitCode(result));
+		return;
+	}
 
 	LOG_IF_FAILED(GlassService::ControlThread(context.serverControl, GlassService::ThreadStatus::Stopped));
 	LOG_LAST_ERROR_IF(WaitForSingleObject(context.serverThreadHandle.get(), INFINITE) == WAIT_FAILED);

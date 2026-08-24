@@ -693,10 +693,24 @@ HRESULT GlassService::RunServerThread(const ThreadControl& control)
 			THROW_IF_FAILED(TransferPipeMessage(pipe.get(), &content, sizeof(content), true, control.stopEvent));
 			THROW_IF_WIN32_BOOL_FALSE(FlushFileBuffers(pipe.get()));
 		}
-		catch(...) {}
+		catch (...)
+		{
+			const auto result = wil::ResultFromCaughtException();
+			if (result != HRESULT_FROM_WIN32(ERROR_CANCELLED))
+			{
+				LOG_HR(result);
+			}
+		}
 
 	on_named_pipe_disconnected:
-		RETURN_IF_WIN32_BOOL_FALSE(DisconnectNamedPipe(pipe.get()));
+		if (!DisconnectNamedPipe(pipe.get()))
+		{
+			const auto error = GetLastError();
+			RETURN_HR_IF(
+				HRESULT_FROM_WIN32(error),
+				error != ERROR_PIPE_NOT_CONNECTED
+			);
+		}
 	}
 
 	return S_OK;
