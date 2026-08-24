@@ -23,6 +23,8 @@ namespace OpenGlass::ButtonGlowHandler
 	Projection::Detour<uDWM::Symbol_CButton_UpdateCrossfade, &MyCButton_UpdateCrossfade> g_CButton_UpdateCrossfade_Org{};
 
 	HRESULT CreateButtonGlowsFromAtlas(HTHEME hTheme);
+	void AssignBitmapSource(uDWM::CBitmapSource*& target, uDWM::CBitmapSource* value) noexcept;
+	void ClearWin10State() noexcept;
 	HRESULT WINAPI MyCTopLevelWindow_CreateGlyphsFromAtlas(HTHEME hTheme);
 	Projection::Detour<uDWM::Symbol_CTopLevelWindow_CreateGlyphsFromAtlas, &MyCTopLevelWindow_CreateGlyphsFromAtlas> g_CTopLevelWindow_CreateGlyphsFromAtlas_Org{};
 
@@ -105,34 +107,104 @@ void ButtonGlowHandler::MyCVisual_SetDirtyFlags(uDWM::CVisual* This, int flags)
 	g_CVisual_SetDirtyFlags_Org(This, flags);
 }
 
+// Every WindowFrame slot owns one reference. CButton::SetVisualStates takes
+// additional references for live buttons, while native atlas teardown releases
+// each frame slot independently. Sharing one CreateBitmapFromAtlas reference
+// across several slots leaves buttons holding freed bitmap sources on unload.
+void ButtonGlowHandler::AssignBitmapSource(
+	uDWM::CBitmapSource*& target,
+	uDWM::CBitmapSource* value
+) noexcept
+{
+	if (target == value)
+	{
+		return;
+	}
+	if (value)
+	{
+		value->AddRef();
+	}
+	const auto previous = std::exchange(target, value);
+	if (previous)
+	{
+		previous->Release();
+	}
+}
+
+void ButtonGlowHandler::ClearWin10State() noexcept
+{
+	const auto frames = uDWM::CTopLevelWindow::GetWindowFrames();
+	if (!frames)
+	{
+		return;
+	}
+	for (int i = 0; i < 6; ++i)
+	{
+		const auto frame = frames[i];
+		if (!frame)
+		{
+			continue;
+		}
+		AssignBitmapSource(frame->GetMinMaxButtonGlowImage(), nullptr);
+		AssignBitmapSource(frame->GetCloseButtonGlowImage(), nullptr);
+	}
+}
+
 // This is not identical to the Windows 7 uDWM implementation, but it produces the same result.
 HRESULT ButtonGlowHandler::CreateButtonGlowsFromAtlas(HTHEME hTheme)
 {
-	MARGINS margins{};
-	uDWM::CBitmapSource* minMaxBitmapSource{ nullptr };
-	uDWM::CBitmapSource* closeBitmapSource{ nullptr };
-	uDWM::CBitmapSource* toolCloseBitmapSource{ nullptr };
+	winrt::com_ptr<uDWM::CBitmapSource> minMaxBitmapSource;
+	winrt::com_ptr<uDWM::CBitmapSource> closeBitmapSource;
+	winrt::com_ptr<uDWM::CBitmapSource> toolCloseBitmapSource;
 
-	RETURN_IF_FAILED_EXPECTED(uDWM::CTopLevelWindow::CreateBitmapFromAtlas(hTheme, g_minMaxButtonGlowId, &margins, &minMaxBitmapSource));
+	MARGINS margins{};
+	RETURN_IF_FAILED_EXPECTED(
+		uDWM::CTopLevelWindow::CreateBitmapFromAtlas(
+			hTheme,
+			g_minMaxButtonGlowId,
+			&margins,
+			minMaxBitmapSource.put()
+		)
+	);
 	minMaxBitmapSource->GetNineGridMargins() = margins;
 
-	RETURN_IF_FAILED_EXPECTED(uDWM::CTopLevelWindow::CreateBitmapFromAtlas(hTheme, g_closeButtonGlowId, &margins, &closeBitmapSource));
+	RETURN_IF_FAILED_EXPECTED(
+		uDWM::CTopLevelWindow::CreateBitmapFromAtlas(
+			hTheme,
+			g_closeButtonGlowId,
+			&margins,
+			closeBitmapSource.put()
+		)
+	);
 	closeBitmapSource->GetNineGridMargins() = margins;
 
-	RETURN_IF_FAILED(uDWM::CTopLevelWindow::CreateBitmapFromAtlas(hTheme, g_toolCloseButtonGlowId, &margins, &toolCloseBitmapSource));
+	RETURN_IF_FAILED(
+		uDWM::CTopLevelWindow::CreateBitmapFromAtlas(
+			hTheme,
+			g_toolCloseButtonGlowId,
+			&margins,
+			toolCloseBitmapSource.put()
+		)
+	);
 	toolCloseBitmapSource->GetNineGridMargins() = margins;
 
+	const auto frames = uDWM::CTopLevelWindow::GetWindowFrames();
+	RETURN_HR_IF_NULL(E_UNEXPECTED, frames);
+	for (int i = 0; i < 6; ++i)
+	{
+		RETURN_HR_IF_NULL(E_UNEXPECTED, frames[i]);
+	}
 	for (int i = 0; i < 4; ++i)
 	{
-		const auto frame = uDWM::CTopLevelWindow::GetWindowFrames()[i];
-		frame->GetMinMaxButtonGlowImage() = minMaxBitmapSource;
-		frame->GetCloseButtonGlowImage() = closeBitmapSource;
+		const auto frame = frames[i];
+		AssignBitmapSource(frame->GetMinMaxButtonGlowImage(), minMaxBitmapSource.get());
+		AssignBitmapSource(frame->GetCloseButtonGlowImage(), closeBitmapSource.get());
 	}
 	for (int i = 4; i < 6; ++i)
 	{
-		const auto frame = uDWM::CTopLevelWindow::GetWindowFrames()[i];
-		frame->GetMinMaxButtonGlowImage() = toolCloseBitmapSource;
-		frame->GetCloseButtonGlowImage() = toolCloseBitmapSource;
+		const auto frame = frames[i];
+		AssignBitmapSource(frame->GetMinMaxButtonGlowImage(), toolCloseBitmapSource.get());
+		AssignBitmapSource(frame->GetCloseButtonGlowImage(), toolCloseBitmapSource.get());
 	}
 	return S_OK;
 }
@@ -510,5 +582,12 @@ void ButtonGlowHandler::Shutdown()
 
 void ButtonGlowHandler::Cleanup()
 {
-	ClearWin11State();
+	if (uDWM::g_versionInfo.build < os::build_w11_21h2)
+	{
+		ClearWin10State();
+	}
+	else
+	{
+		ClearWin11State();
+	}
 }

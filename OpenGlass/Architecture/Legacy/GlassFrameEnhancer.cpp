@@ -127,13 +127,13 @@ HRESULT GlassFrameEnhancer::MyCTopLevelWindow_CloneVisualTreeForLivePreview_Win1
 HRESULT GlassFrameEnhancer::MyCButton_CloneVisualTree(uDWM::CButton* This, uDWM::CButton** clonedVisual, UINT cloneOption)
 {
 	auto cleanup = wil::scope_exit([clonedVisual]
+	{
+		if (clonedVisual && *clonedVisual)
 		{
-			if (clonedVisual)
-			{
-				(*clonedVisual)->Release();
-				*clonedVisual = nullptr;
-			}
-		});
+			(*clonedVisual)->Release();
+			*clonedVisual = nullptr;
+		}
+	});
 
 	// CButton::CancelCrossfade
 	if (This->GetTimeline())
@@ -147,8 +147,8 @@ HRESULT GlassFrameEnhancer::MyCButton_CloneVisualTree(uDWM::CButton* This, uDWM:
 	RETURN_IF_FAILED(This->InitializeVisualTreeClone(*clonedVisual, cloneOption));
 	RETURN_IF_FAILED(
 		(*clonedVisual)->SetVisualStates(
-			This->GetGlyphBitmapArray(),
 			This->GetButtonBitmapArray(),
+			This->GetGlyphBitmapArray(),
 			This->GetGlyphOpacity()
 		)
 	);

@@ -2246,26 +2246,6 @@
       "type": "CBitmapSourceArray",
       "cases": [
         {
-          "offset": "304",
-          "until": {
-            "build": "os::build_w11_21h2",
-            "revision": "0"
-          }
-        },
-        {
-          "offset": "312",
-          "otherwise": true
-        }
-      ],
-      "notes": "CButton::SetVisualStates"
-    },
-    {
-      "name": "CButton_GetButtonBitmapArray",
-      "id": "CButton_GetButtonBitmapArray",
-      "kind": "field",
-      "type": "CBitmapSourceArray",
-      "cases": [
-        {
           "offset": "336",
           "until": {
             "build": "os::build_w11_21h2",
@@ -2277,7 +2257,27 @@
           "otherwise": true
         }
       ],
-      "notes": "CButton::SetVisualStates"
+      "notes": "CButton::SetVisualStates second parameter rgpbsGlyphStates is compared/copied against this field. Win7 full symbols and uDWM 19041.6456 disassembly independently preserve the same parameter order."
+    },
+    {
+      "name": "CButton_GetButtonBitmapArray",
+      "id": "CButton_GetButtonBitmapArray",
+      "kind": "field",
+      "type": "CBitmapSourceArray",
+      "cases": [
+        {
+          "offset": "304",
+          "until": {
+            "build": "os::build_w11_21h2",
+            "revision": "0"
+          }
+        },
+        {
+          "offset": "312",
+          "otherwise": true
+        }
+      ],
+      "notes": "CButton::SetVisualStates first parameter rgpBitmapSourceStates is compared/copied against this field. Win7 full symbols and uDWM 19041.6456 disassembly independently preserve the same parameter order."
     },
     {
       "name": "CButton_GetVisualState",
@@ -2785,7 +2785,7 @@
           }
         }
       ],
-      "notes": "CTopLevelWindow::UpdateButtonVisuals passes this WindowFrame image to CButton::SetVisualStates for the close button on pre-Windows 11 builds. Audit status: inherited from ButtonGlowHandler's existing pre-21H2 path; independent semantic confirmation remains required."
+      "notes": "uDWM 19041.6456 CTopLevelWindow::UpdateButtonVisuals passes WindowFrame+0xC8 to CButton::SetVisualStates for the close button. Win7 full symbols independently name the field pbsButtonCloseGlow; WindowFrame::~WindowFrame releases it, and native CreateButtonGlowsFromAtlas AddRefs every frame slot before releasing its local reference."
     },
     {
       "name": "CTopLevelWindow_WindowFrame_GetMinMaxButtonGlowImage",
@@ -2801,7 +2801,7 @@
           }
         }
       ],
-      "notes": "CTopLevelWindow::UpdateButtonVisuals passes this WindowFrame image to CButton::SetVisualStates for minimize/maximize buttons on pre-Windows 11 builds. Audit status: inherited from ButtonGlowHandler's existing pre-21H2 path; independent semantic confirmation remains required."
+      "notes": "uDWM 19041.6456 CTopLevelWindow::UpdateButtonVisuals passes WindowFrame+0xD0 to CButton::SetVisualStates for minimize/maximize buttons. Win7 full symbols independently name the field pbsButtonNormalGlow; WindowFrame::~WindowFrame releases it, and native CreateButtonGlowsFromAtlas AddRefs every frame slot before releasing its local reference."
     },
     {
       "name": "CTopLevelWindow_GetNCAreaAtlasImage1",
