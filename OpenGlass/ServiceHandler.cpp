@@ -312,6 +312,9 @@ EXTERN_C VOID WINAPI ServiceMain(
 		return;
 	}
 
+	// Both workers have published their control state.
+	ReportServiceStatus(context.statusHandle, SERVICE_RUNNING);
+
 	// A worker exit is also a service-level state transition. In particular, do
 	// not leave the service reported as running after the pipe server has died.
 	const HANDLE workerHandles[]
