@@ -20,17 +20,12 @@ namespace OpenGlass::GlassService
 	std::unordered_map<DWORD, CDwmProcessInfo> g_dwmInjectionMap{};
 	std::unordered_set<DWORD> g_dwmInjectionBlackList{};
 
-	ThreadStatus g_injectionThreadStatus{ ThreadStatus::Stopped };
-	ThreadStatus g_serverThreadStatus{ ThreadStatus::Stopped };
-	DWORD g_injectionThreadId{};
-	DWORD g_serverThreadId{};
-	HANDLE g_serverNamedPipeHandle{};
 
 	bool IsOpenGlassAlreadyLoaded(DWORD processId);
 	HRESULT InjectOpenGlassDLL(DWORD processId, bool inject);
 	HRESULT OpenUserRegistryForDwm(RequestBuffer& content, DWORD processId);
-	HRESULT RunInjectionThread();
-	HRESULT RunServerThread();
+	HRESULT RunInjectionThread(const ThreadControl& control);
+	HRESULT RunServerThread(const ThreadControl& control);
 }
 
 HRESULT GlassService::OpenUserRegistryForDwm(RequestBuffer& content, DWORD processId) try
@@ -234,66 +229,80 @@ HRESULT GlassService::InjectOpenGlassDLL(DWORD processId, bool inject)
 }
 
 HRESULT GlassService::ControlThread(
-	HANDLE threadHandle,
+	const ThreadControl& control,
 	ThreadStatus newStatus
 )
 {
-	const auto threadId = GetThreadId(threadHandle);
-	if (threadId == g_injectionThreadId)
-	{
-		RETURN_LAST_ERROR_IF(
-			QueueUserAPC(
-				[](ULONG_PTR status) static
-				{
-					g_injectionThreadStatus = static_cast<ThreadStatus>(status);
-				},
-				threadHandle,
-				static_cast<ULONG_PTR>(newStatus)
-			) == 0
-		);
-	}
-	else if (threadId == g_serverThreadId)
-	{
-		if (newStatus != ThreadStatus::Stopped)
-		{
-			return HRESULT_FROM_WIN32(ERROR_BAD_DRIVER_LEVEL);
-		}
+	RETURN_HR_IF(E_INVALIDARG, !control.stopEvent);
 
-		g_serverThreadStatus = newStatus;
-		CancelIoEx(
-			g_serverNamedPipeHandle,
-			nullptr
-		);
-	}
-	else
+	switch (newStatus)
 	{
-		return E_ACCESSDENIED;
+	case ThreadStatus::Stopped:
+		RETURN_IF_WIN32_BOOL_FALSE(SetEvent(control.stopEvent));
+		if (control.wakeEvent)
+		{
+			RETURN_IF_WIN32_BOOL_FALSE(SetEvent(control.wakeEvent));
+		}
+		break;
+
+	case ThreadStatus::Paused:
+		RETURN_HR_IF(HRESULT_FROM_WIN32(ERROR_BAD_DRIVER_LEVEL), !control.runEvent || !control.wakeEvent);
+		RETURN_IF_WIN32_BOOL_FALSE(ResetEvent(control.runEvent));
+		RETURN_IF_WIN32_BOOL_FALSE(SetEvent(control.wakeEvent));
+		break;
+
+	case ThreadStatus::Running:
+		RETURN_HR_IF(HRESULT_FROM_WIN32(ERROR_BAD_DRIVER_LEVEL), !control.runEvent || !control.wakeEvent);
+		RETURN_IF_WIN32_BOOL_FALSE(SetEvent(control.runEvent));
+		RETURN_IF_WIN32_BOOL_FALSE(SetEvent(control.wakeEvent));
+		break;
+
+	default:
+		return E_INVALIDARG;
 	}
 
 	return S_OK;
 }
 
-HRESULT GlassService::RunInjectionThread()
+HRESULT GlassService::RunInjectionThread(const ThreadControl& control)
 {
+	RETURN_HR_IF(
+		E_INVALIDARG,
+		!control.readyEvent ||
+		!control.stopEvent ||
+		!control.runEvent ||
+		!control.wakeEvent ||
+		!control.dependencyReadyEvent
+	);
 	RETURN_IF_FAILED(SetThreadDescription(GetCurrentThread(), L"OpenGlass Injection Thread"));
 
 	RETURN_IF_FAILED(RoInitialize(RO_INIT_MULTITHREADED));
 	const wil::unique_rouninitialize_call wrtScope{};
 
+	const HANDLE startupEvents[]{ control.stopEvent, control.dependencyReadyEvent };
+	const auto startupWait = WaitForMultipleObjects(
+		static_cast<DWORD>(std::size(startupEvents)),
+		startupEvents,
+		FALSE,
+		INFINITE
+	);
+	RETURN_LAST_ERROR_IF(startupWait == WAIT_FAILED);
+	RETURN_HR_IF(HRESULT_FROM_WIN32(ERROR_CANCELLED), startupWait == WAIT_OBJECT_0);
+	RETURN_HR_IF(E_UNEXPECTED, startupWait != WAIT_OBJECT_0 + 1);
+
 	g_dwmInjectionMap.clear();
-	g_injectionThreadStatus = ThreadStatus::Running;
-	g_injectionThreadId = GetCurrentThreadId();
-	const auto injectionThreadScope = wil::scope_exit([]
-	{
-		g_injectionThreadId = 0;
-		g_injectionThreadStatus = ThreadStatus::Stopped;
-	});
+	RETURN_IF_WIN32_BOOL_FALSE(SetEvent(control.readyEvent));
 
-	while (!WaitNamedPipeW(c_pipeName, NMPWAIT_NOWAIT))
+	const auto GetThreadStatus = [&control]() -> ThreadStatus
 	{
-		Sleep(1);
-	}
-
+		if (WaitForSingleObject(control.stopEvent, 0) == WAIT_OBJECT_0)
+		{
+			return ThreadStatus::Stopped;
+		}
+		return WaitForSingleObject(control.runEvent, 0) == WAIT_OBJECT_0 ?
+			ThreadStatus::Running :
+			ThreadStatus::Paused;
+	};
 	auto WalkDwmProcesses = [](std::function<bool(DWORD)>&& callback) static
 	{
 		wil::unique_handle snapshot{ CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0) };
@@ -331,14 +340,14 @@ HRESULT GlassService::RunInjectionThread()
 				it++;
 			}
 		}
-		if (g_injectionThreadStatus == ThreadStatus::Paused)
+		if (GetThreadStatus() != ThreadStatus::Running)
 		{
 			goto wait_until_next_cycle;
 		}
 
-		WalkDwmProcesses([&hr](DWORD processId) -> bool
+		WalkDwmProcesses([&](DWORD processId) -> bool
 		{
-			if (g_injectionThreadStatus == ThreadStatus::Paused)
+			if (GetThreadStatus() != ThreadStatus::Running)
 			{
 				return false;
 			}
@@ -415,10 +424,9 @@ HRESULT GlassService::RunInjectionThread()
 							&response,
 							TRUE
 						);
-						g_injectionThreadStatus = response == IDABORT ? ThreadStatus::Stopped : ThreadStatus::Running;
-
-						if (g_injectionThreadStatus == ThreadStatus::Stopped)
+						if (response == IDABORT)
 						{
+							LOG_IF_WIN32_BOOL_FALSE(SetEvent(control.stopEvent));
 							hr = E_ABORT;
 							return false;
 						}
@@ -441,9 +449,39 @@ HRESULT GlassService::RunInjectionThread()
 		});
 
 	wait_until_next_cycle:
-		SleepEx(g_injectionThreadStatus == ThreadStatus::Paused ? INFINITE : 2000ul, TRUE);
+		const auto status = GetThreadStatus();
+		if (status == ThreadStatus::Paused)
+		{
+			const HANDLE waitEvents[]{ control.stopEvent, control.runEvent };
+			const auto waitResult = WaitForMultipleObjects(
+				static_cast<DWORD>(std::size(waitEvents)),
+				waitEvents,
+				FALSE,
+				INFINITE
+			);
+			if (waitResult == WAIT_FAILED)
+			{
+				hr = HRESULT_FROM_WIN32(GetLastError());
+				break;
+			}
+		}
+		else if (status == ThreadStatus::Running)
+		{
+			const HANDLE waitEvents[]{ control.stopEvent, control.wakeEvent };
+			const auto waitResult = WaitForMultipleObjects(
+				static_cast<DWORD>(std::size(waitEvents)),
+				waitEvents,
+				FALSE,
+				2000ul
+			);
+			if (waitResult == WAIT_FAILED)
+			{
+				hr = HRESULT_FROM_WIN32(GetLastError());
+				break;
+			}
+		}
 	}
-	while (g_injectionThreadStatus != ThreadStatus::Stopped);
+	while (GetThreadStatus() != ThreadStatus::Stopped);
 
 	WalkDwmProcesses([](DWORD processId) static -> bool
 	{
@@ -458,22 +496,92 @@ HRESULT GlassService::RunInjectionThread()
 	return hr;
 }
 
-HRESULT GlassService::RunServerThread()
+static HRESULT WaitForPipeOperation(
+	HANDLE pipe,
+	OVERLAPPED& overlapped,
+	HANDLE stopEvent,
+	DWORD* bytesTransferred
+)
 {
+	const HANDLE waitHandles[]{ stopEvent, overlapped.hEvent };
+	const auto waitResult = WaitForMultipleObjects(
+		static_cast<DWORD>(std::size(waitHandles)),
+		waitHandles,
+		FALSE,
+		INFINITE
+	);
+	RETURN_LAST_ERROR_IF(waitResult == WAIT_FAILED);
+	if (waitResult == WAIT_OBJECT_0)
+	{
+		CancelIoEx(pipe, &overlapped);
+		DWORD ignored{};
+		GetOverlappedResult(pipe, &overlapped, &ignored, TRUE);
+		return HRESULT_FROM_WIN32(ERROR_CANCELLED);
+	}
+	RETURN_HR_IF(E_UNEXPECTED, waitResult != WAIT_OBJECT_0 + 1);
+
+	DWORD transferred{};
+	RETURN_IF_WIN32_BOOL_FALSE(GetOverlappedResult(pipe, &overlapped, &transferred, FALSE));
+	if (bytesTransferred)
+	{
+		*bytesTransferred = transferred;
+	}
+	return S_OK;
+}
+
+static HRESULT ConnectPipeClient(HANDLE pipe, HANDLE stopEvent)
+{
+	wil::unique_handle operationEvent{ CreateEventW(nullptr, TRUE, FALSE, nullptr) };
+	RETURN_LAST_ERROR_IF_NULL(operationEvent);
+	OVERLAPPED overlapped{ .hEvent = operationEvent.get() };
+
+	if (ConnectNamedPipe(pipe, &overlapped))
+	{
+		return S_OK;
+	}
+	const auto error = GetLastError();
+	if (error == ERROR_PIPE_CONNECTED)
+	{
+		return S_OK;
+	}
+	RETURN_HR_IF(HRESULT_FROM_WIN32(error), error != ERROR_IO_PENDING);
+	return WaitForPipeOperation(pipe, overlapped, stopEvent, nullptr);
+}
+
+static HRESULT TransferPipeMessage(
+	HANDLE pipe,
+	void* buffer,
+	DWORD bufferSize,
+	bool write,
+	HANDLE stopEvent
+)
+{
+	wil::unique_handle operationEvent{ CreateEventW(nullptr, TRUE, FALSE, nullptr) };
+	RETURN_LAST_ERROR_IF_NULL(operationEvent);
+	OVERLAPPED overlapped{ .hEvent = operationEvent.get() };
+
+	const auto started = write ?
+		WriteFile(pipe, buffer, bufferSize, nullptr, &overlapped) :
+		ReadFile(pipe, buffer, bufferSize, nullptr, &overlapped);
+	if (!started)
+	{
+		const auto error = GetLastError();
+		RETURN_HR_IF(HRESULT_FROM_WIN32(error), error != ERROR_IO_PENDING);
+	}
+
+	DWORD transferred{};
+	RETURN_IF_FAILED(WaitForPipeOperation(pipe, overlapped, stopEvent, &transferred));
+	RETURN_HR_IF(HRESULT_FROM_WIN32(ERROR_BAD_LENGTH), transferred != bufferSize);
+	return S_OK;
+}
+HRESULT GlassService::RunServerThread(const ThreadControl& control)
+{
+	RETURN_HR_IF(E_INVALIDARG, !control.readyEvent || !control.stopEvent);
 	RETURN_IF_FAILED(SetThreadDescription(GetCurrentThread(), L"OpenGlass Server Thread"));
 	RETURN_IF_WIN32_BOOL_FALSE(SetPriorityClass(GetCurrentProcess(), IDLE_PRIORITY_CLASS));
 
 	RETURN_IF_FAILED(RoInitialize(RO_INIT_MULTITHREADED));
 	const wil::unique_rouninitialize_call wrtScope{};
-
-	g_serverThreadStatus = ThreadStatus::Running;
-	g_serverThreadId = GetCurrentThreadId();
-	const auto serverThreadScope = wil::scope_exit([]
-	{
-		g_serverThreadId = 0;
-		g_serverThreadStatus = ThreadStatus::Stopped;
-		g_serverNamedPipeHandle = nullptr;
-	});
 
 	wil::unique_hfile pipe{ INVALID_HANDLE_VALUE };
 	{
@@ -538,7 +646,7 @@ HRESULT GlassService::RunServerThread()
 		pipe.reset(
 			CreateNamedPipeW(
 				c_pipeName,
-				PIPE_ACCESS_DUPLEX | FILE_FLAG_FIRST_PIPE_INSTANCE,
+				PIPE_ACCESS_DUPLEX | FILE_FLAG_FIRST_PIPE_INSTANCE | FILE_FLAG_OVERLAPPED,
 				PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_WAIT,
 				PIPE_UNLIMITED_INSTANCES,
 				1024ul,
@@ -549,51 +657,55 @@ HRESULT GlassService::RunServerThread()
 		);
 		RETURN_LAST_ERROR_IF(!pipe);
 	}
-	g_serverNamedPipeHandle = pipe.get();
+	RETURN_IF_WIN32_BOOL_FALSE(SetEvent(control.readyEvent));
 
-	do
+	while (WaitForSingleObject(control.stopEvent, 0) != WAIT_OBJECT_0)
 	{
-		DWORD error{ 0ul };
-		if (ConnectNamedPipe(pipe.get(), nullptr) || (error = GetLastError()) == ERROR_PIPE_CONNECTED)
+		const auto connectResult = ConnectPipeClient(pipe.get(), control.stopEvent);
+		if (connectResult == HRESULT_FROM_WIN32(ERROR_CANCELLED))
 		{
-			try
-			{
-				ULONG clientProcessId{};
-				THROW_IF_WIN32_BOOL_FALSE(GetNamedPipeClientProcessId(pipe.get(), &clientProcessId));
-
-				{
-					wil::unique_handle processHandle{ OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, clientProcessId) };
-					if (!processHandle)
-					{
-						goto on_named_pipe_disconnected;
-					}
-					if (!IsDwmProcess(processHandle.get()))
-					{
-						// If the client process is not a verified DWM process, ignore request.
-						goto on_named_pipe_disconnected;
-					}
-				}
-
-				RequestBuffer content{};
-				THROW_IF_WIN32_BOOL_FALSE(ReadFile(pipe.get(), &content, sizeof(content), nullptr, nullptr));
-				THROW_IF_FAILED(OpenUserRegistryForDwm(content, clientProcessId));
-				THROW_IF_WIN32_BOOL_FALSE(WriteFile(pipe.get(), &content, sizeof(content), nullptr, nullptr));
-				THROW_IF_WIN32_BOOL_FALSE(FlushFileBuffers(pipe.get()));
-			}
-			catch(...) {}
-
-on_named_pipe_disconnected:
-			RETURN_IF_WIN32_BOOL_FALSE(DisconnectNamedPipe(pipe.get()));
+			break;
 		}
-		SwitchToThread();
+		RETURN_IF_FAILED(connectResult);
+
+		try
+		{
+			ULONG clientProcessId{};
+			THROW_IF_WIN32_BOOL_FALSE(GetNamedPipeClientProcessId(pipe.get(), &clientProcessId));
+
+			{
+				wil::unique_handle processHandle{ OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, clientProcessId) };
+				if (!processHandle)
+				{
+					goto on_named_pipe_disconnected;
+				}
+				if (!IsDwmProcess(processHandle.get()))
+				{
+					// If the client process is not a verified DWM process, ignore request.
+					goto on_named_pipe_disconnected;
+				}
+			}
+
+			RequestBuffer content{};
+			THROW_IF_FAILED(TransferPipeMessage(pipe.get(), &content, sizeof(content), false, control.stopEvent));
+			THROW_HR_IF(HRESULT_FROM_WIN32(ERROR_INVALID_DATA), content.type != RequestType::OpenUserRegistry);
+			THROW_IF_FAILED(OpenUserRegistryForDwm(content, clientProcessId));
+			THROW_IF_FAILED(TransferPipeMessage(pipe.get(), &content, sizeof(content), true, control.stopEvent));
+			THROW_IF_WIN32_BOOL_FALSE(FlushFileBuffers(pipe.get()));
+		}
+		catch(...) {}
+
+	on_named_pipe_disconnected:
+		RETURN_IF_WIN32_BOOL_FALSE(DisconnectNamedPipe(pipe.get()));
 	}
-	while (g_serverThreadStatus != ThreadStatus::Stopped);
 
 	return S_OK;
 }
 
 HRESULT GlassService::SendRequest(RequestBuffer& content)
 {
+	RETURN_HR_IF(E_INVALIDARG, content.type != RequestType::OpenUserRegistry);
+
 	wil::unique_hfile pipe
 	{
 		CreateFile2(
@@ -628,8 +740,12 @@ HRESULT GlassService::SendRequest(RequestBuffer& content)
 		);
 	}
 
-	RETURN_IF_WIN32_BOOL_FALSE(WriteFile(pipe.get(), &content, sizeof(content), nullptr, nullptr));
-	RETURN_IF_WIN32_BOOL_FALSE(ReadFile(pipe.get(), &content, sizeof(content), nullptr, nullptr));
+	DWORD bytesTransferred{};
+	RETURN_IF_WIN32_BOOL_FALSE(WriteFile(pipe.get(), &content, sizeof(content), &bytesTransferred, nullptr));
+	RETURN_HR_IF(HRESULT_FROM_WIN32(ERROR_BAD_LENGTH), bytesTransferred != sizeof(content));
+	RETURN_IF_WIN32_BOOL_FALSE(ReadFile(pipe.get(), &content, sizeof(content), &bytesTransferred, nullptr));
+	RETURN_HR_IF(HRESULT_FROM_WIN32(ERROR_BAD_LENGTH), bytesTransferred != sizeof(content));
+	RETURN_HR_IF(HRESULT_FROM_WIN32(ERROR_INVALID_DATA), content.type != RequestType::OpenUserRegistry);
 
 	return S_OK;
 }
@@ -639,12 +755,20 @@ bool GlassService::IsActive()
 	return static_cast<bool>(WaitNamedPipeW(c_pipeName, NMPWAIT_NOWAIT));
 }
 
-DWORD GlassService::InjectionThreadEntryPoint(LPVOID)
+DWORD GlassService::InjectionThreadEntryPoint(LPVOID parameter)
 {
-	return RunInjectionThread();
+	if (!parameter)
+	{
+		return static_cast<DWORD>(E_INVALIDARG);
+	}
+	return RunInjectionThread(*static_cast<ThreadControl*>(parameter));
 }
 
-DWORD WINAPI GlassService::ServerThreadEntryPoint(PVOID)
+DWORD WINAPI GlassService::ServerThreadEntryPoint(PVOID parameter)
 {
-	return RunServerThread();
+	if (!parameter)
+	{
+		return static_cast<DWORD>(E_INVALIDARG);
+	}
+	return RunServerThread(*static_cast<ThreadControl*>(parameter));
 }

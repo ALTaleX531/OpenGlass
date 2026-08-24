@@ -26,8 +26,16 @@ namespace OpenGlass::GlassService
 		Running,
 		Stopped
 	};
+	struct ThreadControl
+	{
+		HANDLE readyEvent{};
+		HANDLE stopEvent{};
+		HANDLE runEvent{};
+		HANDLE wakeEvent{};
+		HANDLE dependencyReadyEvent{};
+	};
 	HRESULT ControlThread(
-		HANDLE threadHandle,
+		const ThreadControl& control,
 		ThreadStatus newStatus
 	);
 
