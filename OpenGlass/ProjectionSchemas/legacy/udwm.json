@@ -3172,10 +3172,17 @@
         },
         {
           "offset": "832",
+          "until": {
+            "build": "os::build_w11_24h2",
+            "revision": "9549"
+          }
+        },
+        {
+          "offset": "852",
           "otherwise": true
         }
       ],
-      "notes": "CTopLevelWindow::SetSuppressBorderUpdates (could be inlined)\nCTopLevelWindow::UpdateWindowVisuals\nif ( this[x] )\n    goto y;"
+      "notes": "CTopLevelWindow::SetSuppressBorderUpdates (could be inlined)\nCTopLevelWindow::UpdateWindowVisuals\nif ( this[x] )\n    goto y;\nIn uDWM 26100.9549, cross-check the setter with the branch that skips CWindowBorder::SetBorderParameters/EnableBorder. The former flag location is now a DWORD initialized to 3 and consumed by UpdateRemoteAppRenderTargetOpacity; do not treat it as the suppression flag."
     },
     {
       "name": "CTopLevelWindow_StateDwordIndex",
