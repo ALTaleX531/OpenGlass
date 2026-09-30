@@ -33,7 +33,7 @@ Each schema `until: { build, revision }` case ends at an exclusive right boundar
 - Multiple boundaries for the same build must have increasing revisions.
 - The schema's `offset` string is C++ source text. Linters and agents preserve it verbatim and never evaluate it.
 
-Read `OpenGlass/ProjectionSchemas/README.md`, `OpenGlass/OSHelper.hpp`, and the target schema item before proposing a change.
+Read `OpenGlass/ProjectionSchemas/<architecture>/README.md`, `OpenGlass/OSHelper.hpp`, `OpenGlass/ProjectionHelper.hpp`, and the target schema item before proposing a change.
 
 ## Cross-validation rules
 
@@ -60,7 +60,7 @@ For each inline projected hook on the selected exact binary:
 
 Common false positives include path-insensitive CFG merges; `sbb reg,reg`, whose result is independent of the old destination value; an argument register cleared or overwritten immediately in the next callee; and scalar `movss`/`movsd` writes whose preserved lanes are never consumed. Record how each plausible candidate was eliminated.
 
-The uDWM 26100.8972 `SetMargin` case is the reference example: `UpdateMarginsDependentOnStyle` calls a three-argument `SetMargin` wrapper; that wrapper calls the hooked six-argument helper and propagates the helper's preservation of `RCX`; the outer caller then reuses the original `RCX`. The declared six-argument prototype remains correct, but a normal C++ dispatcher can clobber the private live-through value. This evidence justifies the version-specific `CustomDispatchDetour` assembly shim and does not imply that other `SetMargin` revisions or DWM hooks share the contract.
+The uDWM 26100.8972 `SetMargin` case is the reference example: `UpdateMarginsDependentOnStyle` calls a three-argument `SetMargin` wrapper; that wrapper calls the hooked six-argument helper and propagates the helper's preservation of `RCX`; the outer caller then reuses the original `RCX`. The declared six-argument prototype remains correct, but a normal C++ dispatcher can clobber this value. The `CustomDispatchDetour` assembly shim preserves `RCX` on all supported Legacy versions because doing so is ABI-compatible. The observed dependency is evidence only for the audited binary, not other revisions or hooks.
 
 ## Audit record
 
@@ -76,4 +76,4 @@ For every item, record:
 | Status | verified, provisional, removed, absent, ICF, or unverified |
 | Suggested interval | `until` right boundary, `otherwise`, or none |
 
-An audit is complete only when every projection consumed by the checked-out implementation has a record. A count copied from an older skill or generated manifest is not a completion criterion.
+An audit is complete only when every consumed projection within the selected scope has a record. A count copied from an older skill or generated manifest is not a completion criterion.

@@ -29,9 +29,9 @@ Requirements are Visual Studio/MSBuild with the v145 C++ toolset, Windows SDK 10
 msbuild OpenGlass.slnx /m /restore /p:Configuration=Release /p:Platform=x64
 ```
 
-Use `Release` for normal local verification. `ReleaseSigned` requires the shared signing environment and is not a general developer build. A Release or ReleaseSigned solution build packages one installer containing both architecture DLLs when Inno Setup is available, and creates one `OpenGlassSymbols.zip` containing the two architecture-specific OpenGlass DLL PDBs plus the common Host and GUI PDBs. The installer selects and writes only the DLL matching the detected OS build. Packaging reports a skip without failing when `ISCC.exe` is absent. Set `OpenGlassInstallerEnabled=false` to suppress packaging explicitly.
+Use `Release` for normal local verification. `ReleaseSigned` requires the shared signing environment and is not a general developer build. When Inno Setup is available, the solution packages `OpenGlassSetup.exe`; `ReleaseSigned` also produces `OpenGlassSetup.Signed.exe`. Each installer contains both architecture DLLs and installs only the one matching the detected OS build. Packaging also creates `OpenGlassSymbols.zip` with both DLL PDBs and the common Host and GUI PDBs. The solution skips packaging, including the symbol archive, without failing when `ISCC.exe` is absent. Set `OpenGlassInstallerEnabled=false` to suppress packaging explicitly.
 
-The solution builds Host and GUI once into `Build\x64\<Configuration>\common\`, the two DLLs into `legacy\` and `milcomp\`, and uses one explicit Utility project to package them without coupling installer generation to the GUI. To package the unified installer directly, use:
+The solution builds Host and GUI once into `Build\x64\<Configuration>\common\`, the two DLLs into `legacy\` and `milcomp\`, and uses one explicit Utility project to package them without coupling installer generation to the GUI. Direct packaging requires `ISCC.exe` and fails if it is unavailable:
 
 ```powershell
 msbuild Scripts/OpenGlass.Packaging.proj /m /p:Configuration=Release
@@ -96,6 +96,7 @@ python -m unittest discover -s .agents/skills/maintain-dwm-offsets/tests -p "tes
 python Scripts/test_audit_symbol_resolution.py
 python Scripts/test_projection_codegen.py
 msbuild OpenGlassTests/OpenGlassTests.vcxproj /m /p:Configuration=Release /p:Platform=x64
+.\Build\x64\Release\common\OpenGlassTests.exe
 msbuild OpenGlass/OpenGlass.Legacy.vcxproj /m /p:Configuration=Release /p:Platform=x64
 msbuild OpenGlass/OpenGlass.MILComp.vcxproj /m /p:Configuration=Release /p:Platform=x64
 ```

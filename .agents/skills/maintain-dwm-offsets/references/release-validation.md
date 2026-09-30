@@ -26,13 +26,13 @@ Do not perform first injection through the machine's only remote connection or i
 | RV-01 | Clean install, cold symbol cache, first start | Inject only a valid DWM target; fail safely on symbol/projection errors; no restart loop |
 | RV-02 | Reboot, sign-in/out, session switch | Correct per-session injection and HKCU isolation |
 | RV-03 | Visual and occlusion stress | Overlap, move, resize, minimize, Snap, maximize, Task View, activation, multiple displays and DPI without DWM instability or repeatable corruption |
-| RV-04 | GUI transaction behavior | Immediate writes work; Save commits; Revert and unsaved close restore; HKCU/HKLM precedence is correct |
+| RV-04 | GUI transaction behavior | Immediate writes work; Save accepts current state; Revert and unsaved close restore; HKCU/HKLM precedence is correct |
 | RV-05 | Service lifecycle | Pause prevents new injection, Continue resumes, Stop unloads without reinjection, Start recovers |
 | RV-06 | Recovery | Emergency shortcut and service stop recover DWM and prevent a crash loop |
 | RV-07 | Upgrade and signing | Host and DLL are from the same build and use a compatible signing policy; no stale-file mixture |
-| RV-08 | Uninstall | Service and injection are removed; both retain-config and delete-config paths behave as selected |
+| RV-08 | Uninstall | Service and injection are removed; configuration and preset packages follow their separate cleanup choices; other users' settings and custom dump folders remain intact |
 | RV-09 | GPU residency | Interactive effects and normal desktop use remain stable for the declared test duration |
-| RV-10 | Unsupported or damaged input | Mismatched versions, symbols, or artifact pairs are rejected without injection or DWM failure |
+| RV-10 | Unsupported or damaged input | Invalid artifact pairs are rejected; unsupported module ranges or unresolved Required symbols leave OpenGlass inert before hook publication, without DWM failure |
 
 For a new right boundary, run the relevant scenarios on a supported version immediately before the boundary, the first available version at or after it, and the newest version included in the support claim. A screenshot of an idle desktop is not runtime coverage. `OpenGlassRenderTest.exe` is an interactive GPU exercise, not an automated test.
 
