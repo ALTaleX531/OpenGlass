@@ -2254,7 +2254,10 @@
         },
         {
           "offset": "344",
-          "otherwise": true
+          "until": {
+            "build": "22622",
+            "revision": "0"
+          }
         }
       ],
       "notes": "CButton::SetVisualStates second parameter rgpbsGlyphStates is compared/copied against this field. Win7 full symbols and uDWM 19041.6456 disassembly independently preserve the same parameter order."
@@ -2274,7 +2277,10 @@
         },
         {
           "offset": "312",
-          "otherwise": true
+          "until": {
+            "build": "22622",
+            "revision": "0"
+          }
         }
       ],
       "notes": "CButton::SetVisualStates first parameter rgpBitmapSourceStates is compared/copied against this field. Win7 full symbols and uDWM 19041.6456 disassembly independently preserve the same parameter order."

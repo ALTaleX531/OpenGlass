@@ -625,10 +625,18 @@ namespace OpenGlass::uDWM
 		}
 		inline CBitmapSourceArray* GetGlyphBitmapArray()
 		{
+			if (!CButton_GetGlyphBitmapArray.is_supported())
+			{
+				Projection::ProjectedFailFastCommon();
+			}
 			return CButton_GetGlyphBitmapArray.address(this);
 		}
 		inline CBitmapSourceArray* GetButtonBitmapArray()
 		{
+			if (!CButton_GetButtonBitmapArray.is_supported())
+			{
+				Projection::ProjectedFailFastCommon();
+			}
 			return CButton_GetButtonBitmapArray.address(this);
 		}
 		inline void UpdateCrossfade()
