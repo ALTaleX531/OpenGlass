@@ -9,35 +9,42 @@ OpenGlass restores the full glass effect to window frames, with control over blu
 
 ## Supported Windows versions
 
-| Windows build | Status |
+| Windows version (OS build) | Status |
 | --- | --- |
-| Windows 10 build 17763 through 19045 | Stable |
-| Windows 11 builds below 28000, including build 26200 | Stable |
-| Windows 11 build 28000 and later | Experimental |
-| Windows Server 2022 | Supported |
+| Windows 10 1809–22H2 (17763–19045) | Stable |
+| Windows 11 21H2–25H2 (22000–26200) | Stable |
+| Windows 11 26H2 (26300) | Stable |
+| Windows 11 26H1 (28000) | Experimental |
+| Windows Server 2022 (20348) | Supported |
 
-Only General Availability Windows builds are supported. Insider and preview builds, and Windows Server versions other than 2022, are unsupported and may crash DWM. Compatibility depends on the exact build, revision, and verified compositor capabilities.
+OpenGlass 3.0.2.3749 adds support for Windows 11 26H2 and fixes the inactive window border regression that followed KB5124010 ([#367](https://github.com/ALTaleX531/OpenGlass/issues/367)).
 
-See [Compatibility and DWM architectures](https://github.com/ALTaleX531/OpenGlass/wiki/Compatibility-and-DWM-architectures) for the complete support policy and explanation of parallel Windows build trains.
+Windows 11 26H1 uses the MILComp implementation, which is still experimental because some features are not yet implemented.
+
+Only the General Availability releases listed above are supported. Insider builds, other prerelease versions, and Windows Server versions other than 2022 are unsupported and may crash DWM. Compatibility depends on the exact build, revision, and compositor capabilities.
+
+See [Compatibility and DWM architectures](https://github.com/ALTaleX531/OpenGlass/wiki/Compatibility-and-DWM-architectures) for the support policy and how OpenGlass selects its DWM implementation.
 
 ## Quick start
 
 1. Download `OpenGlassSetup.exe` from [Releases](https://github.com/ALTaleX531/OpenGlass/releases).
-2. Install OpenGlass and open its GUI. The GUI requests administrator elevation because it manages both per-user Windows colorization and system-wide OpenGlass settings. The [configuration reference](https://github.com/ALTaleX531/OpenGlass/wiki/Configuration-and-registry-reference) documents the corresponding registry values.
-3. Adjust the appearance. Changes apply immediately; **Save** accepts the current state and **Revert** restores the state captured before editing.
+2. Run the installer and open the OpenGlass GUI. It asks for administrator rights because it edits both per-user Windows colorization and system-wide OpenGlass settings. The [configuration reference](https://github.com/ALTaleX531/OpenGlass/wiki/Configuration-and-registry-reference) lists the registry values involved.
+3. Adjust the appearance. Changes apply immediately. **Save** keeps the current state, and **Revert** restores the state from before you started editing.
 
-Current releases use one unified `OpenGlassSetup.exe`. Older OpenGlass releases required users to choose a build-specific installer for their Windows version; that manual selection is no longer needed. The unified installer detects the Windows build and installs only the matching DWM implementation.
+The installer detects your Windows build and installs the matching DWM implementation automatically.
 
-The **Glass colors** page includes Windows Vista and Windows 7 presets. The **Preset packs** page can import, create, apply, and remove immutable [preset ZIPs](https://github.com/ALTaleX531/OpenGlass/wiki/Preset-packages). The official GUI and preset packages manage one system-wide configuration for effects and themes; only the five Windows colorization values and their Override forms are written per-user. The OpenGlass runtime remains compatible with manual and transformation-pack settings in either HKCU or HKLM.
+The **Glass colors** page includes Windows Vista and Windows 7 presets. The **Preset packs** page can import, create, apply, and remove immutable [preset ZIPs](https://github.com/ALTaleX531/OpenGlass/wiki/Preset-packages). The official GUI and preset packages manage one system-wide configuration for effects and themes; only the five Windows colorization values and their Override forms are written per user. OpenGlass itself still reads manual and transformation-pack settings from either HKCU or HKLM.
 
 > [!TIP]
-> **Emergency Exit:** Long-press <kbd>Ctrl</kbd>+<kbd>Win</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd> to terminate DWM if the system becomes unresponsive.
+> **Emergency Exit:** Hold <kbd>Ctrl</kbd>+<kbd>Win</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd> to terminate DWM if the system becomes unresponsive.
 
-OpenGlass is intended for advanced users who are comfortable troubleshooting DWM. For a simpler alternative, consider [DWMBlurGlass](https://github.com/Maplespe/DWMBlurGlass).
+OpenGlass is aimed at advanced users who are comfortable troubleshooting DWM. For a simpler alternative, consider [DWMBlurGlass](https://github.com/Maplespe/DWMBlurGlass).
 
 ## Reporting issues
 
-A DWM crash is a bug report, not a symbol-download problem. Open a [GitHub issue](https://github.com/ALTaleX531/OpenGlass/issues/new) promptly; posts on Reddit, Discord, or other third-party communities are not tracked as OpenGlass bug reports. For unexpectedly opaque glass, first check the GUI's **Diagnostics** tab, which reports the Windows transparency setting, opaque-blend setting, effective power mode, and battery-saver policy. For a DWM crash or hang, enable full DWM dumps there and reproduce the problem once. Include the exact Windows build and revision, OpenGlass version, registry settings, reproduction steps, screenshots or recordings, and a dump when a crash occurred. See [Troubleshooting and crash dumps](https://github.com/ALTaleX531/OpenGlass/wiki/Troubleshooting-and-crash-dumps).
+Report DWM crashes and other bugs in [GitHub Issues](https://github.com/ALTaleX531/OpenGlass/issues/new); reports posted in third-party communities are not tracked. Include the exact Windows build and revision, the OpenGlass version, relevant settings, reproduction steps, and screenshots or recordings.
+
+If glass is unexpectedly opaque, check the GUI's **Diagnostics** tab. For a crash, enable full DWM dumps there and reproduce the problem once. A hang requires a dump captured manually. See [Troubleshooting and crash dumps](https://github.com/ALTaleX531/OpenGlass/wiki/Troubleshooting-and-crash-dumps) for how to collect dumps and what to include in a report.
 
 ## Building
 
@@ -45,7 +52,7 @@ A DWM crash is a bug report, not a symbol-download problem. Open a [GitHub issue
 msbuild OpenGlass.slnx /m /restore /p:Configuration=Release /p:Platform=x64
 ```
 
-The `main` branch is also built and tested by GitHub Actions. Its downloadable `v<version>-unsigned` artifact is an unsigned validation build, not a release or Git tag. See [Building OpenGlass](https://github.com/ALTaleX531/OpenGlass/wiki/Building-OpenGlass) for prerequisites, output paths, packaging, tests, CI behavior, and signing requirements.
+GitHub Actions also builds and tests `main`. Its downloadable `v<version>-unsigned` artifact is an unsigned validation build, not a release or Git tag. See [Building OpenGlass](https://github.com/ALTaleX531/OpenGlass/wiki/Building-OpenGlass) for prerequisites, output paths, packaging, tests, CI behavior, and signing requirements.
 
 ## Credits
 
@@ -59,8 +66,8 @@ The `main` branch is also built and tested by GitHub Actions. Its downloadable `
 
 ## Support
 
-OpenGlass is developed in free time and distributed under the GPLv3 license. DWM does not officially support extensibility, so future Windows updates may cause breakage and continuous support cannot be guaranteed.
+OpenGlass is developed in spare time and released under the GPLv3. DWM offers no official extension mechanism, so future Windows updates may break OpenGlass, and ongoing support cannot be guaranteed.
 
-If you find OpenGlass valuable, please consider supporting the project via Ko-fi. Donations are voluntary, carry no expectation of consideration, and must be made as a natural person.
+If you find OpenGlass valuable, please consider supporting it on Ko-fi. Donations are voluntary, come with no expectation of anything in return, and must be made as a natural person.
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/altalex531)
