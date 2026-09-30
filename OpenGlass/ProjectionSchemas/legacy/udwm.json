@@ -1700,11 +1700,11 @@
       "type": "D2D1_COLOR_F",
       "cases": [
         {
-          "offset": "sizeof(float)",
+          "offset": "16",
           "otherwise": true
         }
       ],
-      "notes": "Color consumed together with Balance by CGlassColorizationResources::getArgbcolor."
+      "notes": "Update writes GetColor_scRGB output at +16; SetColor and SetClearColor independently write the same RGBA storage. UpdateNCAreaBackground multiplies RGB at +16/+20/+24 by Balance at +32 and reads alpha at +28."
     },
     {
       "name": "CGlassColorizationResources_Balance",
