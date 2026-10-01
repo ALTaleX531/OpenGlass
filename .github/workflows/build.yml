@@ -37,6 +37,8 @@ jobs:
       VCPKG_ROOT: C:\vcpkg
       VCPKG_DEFAULT_TRIPLET: x64-windows-static
       VCPKG_INSTALLED_DIR: ${{ github.workspace }}\vcpkg_installed
+      VCPKG_OVERLAY_TRIPLETS: ${{ github.workspace }}\.github\vcpkg-triplets
+      VCPKG_DOWNLOADS: ${{ github.workspace }}\.ci-cache\vcpkg-downloads
       VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}\.ci-cache\vcpkg-binary-cache
       VCPKG_BINARY_SOURCES: clear;files,${{ github.workspace }}\.ci-cache\vcpkg-binary-cache,readwrite
 
@@ -91,17 +93,33 @@ jobs:
           }
           "value=$identity" >> $env:GITHUB_OUTPUT
 
-      - name: Cache vcpkg binary packages
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      # Keep a fresh writable key per image, but let vcpkg's ABI hashes decide
+      # which packages from older images or manifests are still reusable.
+      - name: Restore vcpkg binary packages
+        id: vcpkg_cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
-          path: ${{ github.workspace }}\.ci-cache\vcpkg-binary-cache
-          key: ${{ runner.os }}-${{ runner.arch }}-${{ steps.vcpkg_cache_identity.outputs.value }}-v145-x64-windows-static-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json', 'ports/**') }}
+          path: ${{ env.VCPKG_DEFAULT_BINARY_CACHE }}
+          key: ${{ runner.os }}-${{ runner.arch }}-vcpkg-release-v1-v145-${{ env.VCPKG_DEFAULT_TRIPLET }}-${{ steps.vcpkg_cache_identity.outputs.value }}-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json', 'ports/**', '.github/vcpkg-triplets/**') }}
           restore-keys: |
-            ${{ runner.os }}-${{ runner.arch }}-${{ steps.vcpkg_cache_identity.outputs.value }}-v145-x64-windows-static-
+            ${{ runner.os }}-${{ runner.arch }}-vcpkg-release-v1-v145-${{ env.VCPKG_DEFAULT_TRIPLET }}-${{ steps.vcpkg_cache_identity.outputs.value }}-
+            ${{ runner.os }}-${{ runner.arch }}-vcpkg-release-v1-v145-${{ env.VCPKG_DEFAULT_TRIPLET }}-
+
+      # Sources and build tools remain useful when a compiler update requires
+      # rebuilding binary packages. vcpkg verifies downloaded archive hashes.
+      - name: Restore vcpkg downloads
+        id: vcpkg_downloads
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ env.VCPKG_DOWNLOADS }}
+          key: ${{ runner.os }}-${{ runner.arch }}-vcpkg-downloads-v1-${{ steps.vcpkg_cache_identity.outputs.value }}-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json', 'ports/**', '.github/vcpkg-triplets/**') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-vcpkg-downloads-v1-${{ steps.vcpkg_cache_identity.outputs.value }}-
+            ${{ runner.os }}-${{ runner.arch }}-vcpkg-downloads-v1-
 
       - name: Initialize cache directories
         run: |
-          New-Item -ItemType Directory -Force -Path $env:VCPKG_DEFAULT_BINARY_CACHE | Out-Null
+          New-Item -ItemType Directory -Force -Path $env:VCPKG_DEFAULT_BINARY_CACHE, $env:VCPKG_DOWNLOADS | Out-Null
 
       - name: Run Python unit tests
         run: |
@@ -134,10 +152,36 @@ jobs:
       - name: Install vcpkg dependencies
         run: |
           $PSNativeCommandUseErrorActionPreference = $true
+          $timer = [Diagnostics.Stopwatch]::StartNew()
           & "$env:VCPKG_ROOT\vcpkg.exe" install `
             "--triplet=$env:VCPKG_DEFAULT_TRIPLET" `
             "--x-manifest-root=$env:GITHUB_WORKSPACE" `
             "--x-install-root=$env:VCPKG_INSTALLED_DIR"
+          $timer.Stop()
+          @"
+
+          ### Dependencies
+
+          - Configuration: Release only (static libraries and CRT)
+          - Binary cache: ``${{ steps.vcpkg_cache.outputs.cache-matched-key }}``
+          - Download cache: ``${{ steps.vcpkg_downloads.outputs.cache-matched-key }}``
+          - Install time: $([Math]::Round($timer.Elapsed.TotalSeconds, 1)) seconds
+          "@ >> $env:GITHUB_STEP_SUMMARY
+
+      # Persist expensive dependency work before compilation or tests can fail.
+      - name: Save vcpkg binary packages
+        if: steps.vcpkg_cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ env.VCPKG_DEFAULT_BINARY_CACHE }}
+          key: ${{ steps.vcpkg_cache.outputs.cache-primary-key }}
+
+      - name: Save vcpkg downloads
+        if: steps.vcpkg_downloads.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ env.VCPKG_DOWNLOADS }}
+          key: ${{ steps.vcpkg_downloads.outputs.cache-primary-key }}
 
       - name: Build solution
         run: |
@@ -301,6 +345,7 @@ jobs:
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: ${{ steps.version.outputs.artifact_name }}
+          compression-level: 0 # The installer and symbol ZIP are already compressed.
           path: |
             Build/x64/Release/OpenGlassSetup.exe
             Build/x64/Release/OpenGlassSymbols.zip
