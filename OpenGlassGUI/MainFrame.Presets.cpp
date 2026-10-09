@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "MainFrame.hpp"
-#include "ColorSwatchButton.hpp"
+#include "ColorPresetList.hpp"
 #include "EffectiveConfiguration.hpp"
 #include <wx/imagpng.h>
 #include <wx/dcbuffer.h>

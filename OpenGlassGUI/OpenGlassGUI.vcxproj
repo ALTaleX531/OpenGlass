@@ -50,7 +50,7 @@
 	<ClInclude Include="ColorPreference.hpp" />
 	<ClInclude Include="ColorPolicy.hpp" />
 	<ClInclude Include="ShellColorRefresh.hpp" />
-	<ClInclude Include="ColorSwatchButton.hpp" />
+	<ClInclude Include="ColorPresetList.hpp" />
     <ClInclude Include="ConfigurationMigration.hpp" />
     <ClInclude Include="Elevation.hpp" />
     <ClInclude Include="Diagnostics.hpp" />
@@ -77,7 +77,7 @@
 	<ClCompile Include="..\Common\ThemeAtlasLayout.cpp">
 	  <PrecompiledHeader>NotUsing</PrecompiledHeader>
 	</ClCompile>
-	<ClCompile Include="ColorSwatchButton.cpp" />
+	<ClCompile Include="ColorPresetList.cpp" />
 	<ClCompile Include="ColorPreference.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
     <ClCompile Include="ConfigurationMigration.cpp" />
     <ClCompile Include="Elevation.cpp" />

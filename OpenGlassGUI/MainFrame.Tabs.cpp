@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "MainFrame.hpp"
 #include "WrappingLayout.hpp"
-#include "ColorSwatchButton.hpp"
+#include "ColorPresetList.hpp"
 #include "Symbols.hpp"
 #include "UiControls.hpp"
 #include "BlurSettings.hpp"
@@ -717,6 +717,7 @@ namespace OpenGlass
 	{
 		// Use ScrolledWindow for large content
 		wxScrolledWindow* panel = new wxScrolledWindow(m_notebook);
+		panel->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
 		panel->SetScrollRate(5, 5);
 		wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 		m_glassColorsPanel = panel;
@@ -733,72 +734,9 @@ namespace OpenGlass
 			sizer->Add(row, 0, wxALL, 5);
 		}
 
-		// Built-in Vista and Windows 7 color presets. Both groups are created once;
-		// UpdateUIVisibility shows only the family selected above.
 		m_colorPresetsGroupSizer = new wxStaticBoxSizer(wxVERTICAL, panel, L"Color presets");
-		m_vistaPresetSizer = new wxWrapSizer(wxHORIZONTAL, wxREMOVE_LEADING_SPACES);
-		m_windows7PresetSizer = new wxWrapSizer(wxHORIZONTAL, wxREMOVE_LEADING_SPACES);
-
-		auto addPresetButtons = [this, panel](
-			wxWrapSizer* presetSizer,
-			std::span<const ColorizationPresets::Preset> presets
-		) {
-			auto* automatic = new ColorSwatchButton(panel, wxID_ANY, L"Automatic", 0, true);
-			auto* automaticCaption = new wxStaticText(panel, wxID_ANY, L"Automatic",
-				wxDefaultPosition, FromDIP(wxSize(64, -1)), wxALIGN_CENTER_HORIZONTAL);
-			auto* automaticCell = new wxBoxSizer(wxVERTICAL);
-			automaticCell->Add(automatic, 0, wxALIGN_CENTER_HORIZONTAL);
-			automaticCell->Add(automaticCaption, 0, wxEXPAND | wxTOP, 2);
-			presetSizer->Add(automaticCell, 0, wxALL, 1);
-			m_automaticColorButtons.push_back(automatic);
-			for (const auto& preset : presets)
-			{
-				const wxString label{ preset.name.data(), preset.name.size() };
-				auto* button = new ColorSwatchButton(
-					panel,
-					wxID_ANY,
-					label,
-					preset.argb
-				);
-				auto* caption = new wxStaticText(
-					panel,
-					wxID_ANY,
-					label,
-					wxDefaultPosition,
-					FromDIP(wxSize(64, -1)),
-					wxALIGN_CENTER_HORIZONTAL
-				);
-				auto* cell = new wxBoxSizer(wxVERTICAL);
-				cell->Add(button, 0, wxALIGN_CENTER_HORIZONTAL);
-				cell->Add(caption, 0, wxEXPAND | wxTOP, 2);
-				presetSizer->Add(cell, 0, wxALL, 1);
-				m_presetButtons.emplace_back(&preset, button);
-			}
-		};
-
-		addPresetButtons(m_vistaPresetSizer, ColorizationPresets::Get(ColorizationPresets::Family::Vista));
-		addPresetButtons(m_windows7PresetSizer, ColorizationPresets::Get(ColorizationPresets::Family::Windows7));
-		auto addCustomColorButton = [this, panel](wxWrapSizer* presetSizer) {
-			constexpr DWORD InitialColor = 0xFF000000;
-			auto* button = new ColorSwatchButton(panel, wxID_ANY, L"Custom", InitialColor);
-			auto* caption = new wxStaticText(
-				panel,
-				wxID_ANY,
-				L"Custom",
-				wxDefaultPosition,
-				FromDIP(wxSize(64, -1)),
-				wxALIGN_CENTER_HORIZONTAL
-			);
-			auto* cell = new wxBoxSizer(wxVERTICAL);
-			cell->Add(button, 0, wxALIGN_CENTER_HORIZONTAL);
-			cell->Add(caption, 0, wxEXPAND | wxTOP, 2);
-			presetSizer->Add(cell, 0, wxALL, 1);
-			m_customColorButtons.push_back(button);
-		};
-		addCustomColorButton(m_vistaPresetSizer);
-		addCustomColorButton(m_windows7PresetSizer);
-		m_colorPresetsGroupSizer->Add(m_vistaPresetSizer, 0, wxEXPAND | wxALL, 2);
-		m_colorPresetsGroupSizer->Add(m_windows7PresetSizer, 0, wxEXPAND | wxALL, 2);
+		m_colorPresetList = new ColorPresetList(panel);
+		m_colorPresetsGroupSizer->Add(m_colorPresetList, 0, wxEXPAND | wxALL, 2);
 		sizer->Add(m_colorPresetsGroupSizer, 0, wxEXPAND | wxALL, 2);
 
 		// Keep the frequently used controls visible, matching the original
@@ -920,7 +858,6 @@ namespace OpenGlass
 		advancedPanel->SetSizer(advancedSizer);
 
 		panel->SetSizer(sizer);
-		panel->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW)); 
 		BindWrappingPageLayout(panel);
 		m_notebook->AddPage(panel, L"Glass colors");
 	}

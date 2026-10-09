@@ -12,7 +12,7 @@
 
 namespace OpenGlass
 {
-	class ColorSwatchButton;
+	class ColorPresetList;
 
 
 	class MainFrame : public wxFrame
@@ -216,11 +216,7 @@ namespace OpenGlass
 		wxScrolledWindow* m_glassColorsPanel{ nullptr };
 		wxRadioBox* m_rbGlassType{ nullptr };
 		wxStaticBoxSizer* m_colorPresetsGroupSizer{ nullptr };
-		wxWrapSizer* m_vistaPresetSizer{ nullptr };
-		wxWrapSizer* m_windows7PresetSizer{ nullptr };
-		std::vector<std::pair<const ColorizationPresets::Preset*, ColorSwatchButton*>> m_presetButtons;
-		std::vector<ColorSwatchButton*> m_customColorButtons;
-		std::vector<ColorSwatchButton*> m_automaticColorButtons;
+		ColorPresetList* m_colorPresetList{ nullptr };
 		bool m_customColorsInitialized{ false };
 		wxCheckBox* m_chkEnableTransparency{ nullptr };
 		wxSlider* m_slColorIntensity{ nullptr };

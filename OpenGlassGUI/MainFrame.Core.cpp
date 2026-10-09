@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "MainFrame.hpp"
 #include "WrappingLayout.hpp"
-#include "ColorSwatchButton.hpp"
+#include "ColorPresetList.hpp"
 #include "Symbols.hpp"
 #include "BlurSettings.hpp"
 #include "ConfigurationMigration.hpp"
@@ -1642,51 +1642,42 @@ namespace OpenGlass
 			LoadSettings();
 		});
 
-		for (const auto& [preset, button] : m_presetButtons)
-		{
-			button->Bind(wxEVT_TOGGLEBUTTON, [this, preset](wxCommandEvent& event) {
+		m_colorPresetList->Bind(wxEVT_COLOR_PRESET_INVOKED, [this](wxCommandEvent& event) {
+			const auto index = event.GetInt();
+			const auto family = m_rbGlassType->GetSelection() == 0
+				? ColorizationPresets::Family::Vista
+				: ColorizationPresets::Family::Windows7;
+			if (index == 0)
+			{
+				ApplyColorizationColor(std::nullopt, family);
+			}
+			else if (const auto* preset = m_colorPresetList->GetPreset(index))
+			{
 				ApplyColorizationPreset(*preset);
-				event.Skip();
-			});
-		}
+			}
+			else if (index == m_colorPresetList->GetCustomIndex())
+			{
+				ApplyColorizationColor(m_colorPresetList->GetCustomColor(), family);
+			}
+			UpdateColorizationPresetSelection();
+		});
 
-		for (auto* button : m_automaticColorButtons)
-		{
-			button->Bind(wxEVT_TOGGLEBUTTON, [this](wxCommandEvent&) {
-				ApplyColorizationColor(std::nullopt, ColorizationPresets::Family::Windows7);
-			});
-		}
+		m_colorPresetList->Bind(wxEVT_CUSTOM_COLOR_EDIT_REQUESTED, [this](wxCommandEvent&) {
+			wxColourData colorData;
+			colorData.SetChooseFull(true);
+			colorData.SetChooseAlpha(false);
+			const DWORD currentValue = m_colorPresetList->GetCustomColor();
+			colorData.SetColour(wxColour(
+				(currentValue >> 16) & 0xFF,
+				(currentValue >> 8) & 0xFF,
+				currentValue & 0xFF
+			));
 
-		for (auto* button : m_customColorButtons)
-		{
-			button->Bind(wxEVT_TOGGLEBUTTON, [this, button](wxCommandEvent&) {
-				const auto family = m_rbGlassType->GetSelection() == 0
-					? ColorizationPresets::Family::Vista
-					: ColorizationPresets::Family::Windows7;
-				ApplyColorizationColor(button->GetColor(), family);
-			});
-			button->Bind(wxEVT_LEFT_DCLICK, [this, button](wxMouseEvent&) {
-				wxColourData colorData;
-				colorData.SetChooseFull(true);
-				colorData.SetChooseAlpha(false);
-				const DWORD currentValue = button->GetColor();
-				colorData.SetColour(wxColour(
-					(currentValue >> 16) & 0xFF,
-					(currentValue >> 8) & 0xFF,
-					currentValue & 0xFF
-				));
-
-				wxColourDialog dialog(this, &colorData);
-				if (dialog.ShowModal() != wxID_OK)
-				{
-					UpdateColorizationPresetSelection();
-					return;
-				}
-
+			wxColourDialog dialog(this, &colorData);
+			if (dialog.ShowModal() == wxID_OK)
+			{
 				const wxColour selected = dialog.GetColourData().GetColour();
-				const DWORD alpha = ColorizationPresets::CalculateIntensityAlpha(
-					m_slColorIntensity->GetValue()
-				) << 24;
+				const DWORD alpha = ColorizationPresets::CalculateIntensityAlpha(m_slColorIntensity->GetValue()) << 24;
 				const DWORD argb = alpha
 					| (static_cast<DWORD>(selected.Red()) << 16)
 					| (static_cast<DWORD>(selected.Green()) << 8)
@@ -1694,10 +1685,12 @@ namespace OpenGlass
 				const auto family = m_rbGlassType->GetSelection() == 0
 					? ColorizationPresets::Family::Vista
 					: ColorizationPresets::Family::Windows7;
-				button->SetColor(argb);
+				m_colorPresetList->SetCustomColor(argb);
 				ApplyColorizationColor(argb, family);
-			});
-		}
+			}
+			// Cancellation and failed operations restore the actual configuration's selection.
+			UpdateColorizationPresetSelection();
+		});
 
 		m_chkEnableTransparency->Bind(wxEVT_CHECKBOX, [this](wxCommandEvent& e) {
 			RunPreview([&]

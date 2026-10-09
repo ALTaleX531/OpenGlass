@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "MainFrame.hpp"
-#include "ColorSwatchButton.hpp"
+#include "ColorPresetList.hpp"
 #include "EffectiveConfiguration.hpp"
 
 namespace OpenGlass
@@ -151,12 +151,8 @@ namespace OpenGlass
 		bool automatic{};
 		const auto modeResult = m_colorPreference.ReadAutoColorization(m_targetUserSid.ToStdWstring(), automatic);
 		const bool manual = SUCCEEDED(modeResult) && !automatic;
-		for (auto* button : m_automaticColorButtons)
-		{
-			button->SetValue(SUCCEEDED(modeResult) && automatic);
-			button->SetToolTip(SUCCEEDED(modeResult) ? wxString(L"Automatic accent color from the wallpaper")
-				: wxString::Format(L"Could not read the automatic accent color setting (0x%08lX).", modeResult));
-		}
+		m_colorPresetList->SetAutomaticDescription(SUCCEEDED(modeResult) ? wxString(L"Automatic accent color from the wallpaper")
+			: wxString::Format(L"Could not read the automatic accent color setting (0x%08lX).", modeResult));
 		const ColorizationPresets::Preset* selectedPreset = nullptr;
 		if (m_rbGlassType->GetSelection() == 0)
 		{
@@ -180,15 +176,6 @@ namespace OpenGlass
 				m_chkEnableTransparency && !m_chkEnableTransparency->IsChecked()
 			);
 		}
-
-		for (const auto& [preset, button] : m_presetButtons)
-		{
-			if (button)
-			{
-				button->SetValue(manual && preset == selectedPreset);
-			}
-		}
-
 		DWORD color = m_userConfig->GetDword(L"ColorizationColor", 0xFF000000);
 		bool colorAvailable = true;
 		if (SUCCEEDED(modeResult) && automatic)
@@ -196,18 +183,26 @@ namespace OpenGlass
 			// Read the original user's current accent, never the elevated account or message payload.
 			colorAvailable = SUCCEEDED(m_colorPreference.ReadRgb(m_targetUserSid.ToStdWstring(), color));
 		}
-		for (auto* button : m_customColorButtons)
+		if (colorAvailable && (!m_customColorsInitialized || automatic || selectedPreset == nullptr))
 		{
-			if (button)
+			m_colorPresetList->SetCustomColor((color & 0xFFFFFF) | (ColorizationPresets::CalculateIntensityAlpha(
+				std::min<DWORD>(m_config->GetDword(L"GlassOpacity", 63), 100)) << 24));
+		}
+		long selection = -1;
+		if (SUCCEEDED(modeResult) && automatic) selection = 0;
+		else if (manual)
+		{
+			selection = m_colorPresetList->GetCustomIndex();
+			for (long index = 1; index < m_colorPresetList->GetCustomIndex(); ++index)
 			{
-				if (colorAvailable && (!m_customColorsInitialized || automatic || selectedPreset == nullptr))
+				if (m_colorPresetList->GetPreset(index) == selectedPreset)
 				{
-					button->SetColor((color & 0xFFFFFF) | (ColorizationPresets::CalculateIntensityAlpha(
-						std::min<DWORD>(m_config->GetDword(L"GlassOpacity", 63), 100)) << 24));
+					selection = index;
+					break;
 				}
-				button->SetValue(manual && selectedPreset == nullptr);
 			}
 		}
+		m_colorPresetList->SetCurrentSelection(selection);
 		m_customColorsInitialized = true;
 	}
 }

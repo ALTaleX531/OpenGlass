@@ -30,7 +30,7 @@
 		<ClInclude Include="PresetPackage.hpp">
 			<Filter>Header Files</Filter>
 		</ClInclude>
-		<ClInclude Include="ColorSwatchButton.hpp">
+		<ClInclude Include="ColorPresetList.hpp">
 			<Filter>Header Files</Filter>
 		</ClInclude>
 		<ClInclude Include="Diagnostics.hpp">
@@ -59,7 +59,7 @@
 		</ClInclude>
 	</ItemGroup>
 	<ItemGroup>
-		<ClCompile Include="ColorSwatchButton.cpp">
+		<ClCompile Include="ColorPresetList.cpp">
 			<Filter>Source Files</Filter>
 		</ClCompile>
 		<ClCompile Include="Elevation.cpp">

@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "MainFrame.hpp"
 #include "WrappingLayout.hpp"
+#include "ColorPresetList.hpp"
 #include "BlurSettings.hpp"
 
 namespace OpenGlass
@@ -260,16 +261,9 @@ namespace OpenGlass
 		// 0 = Vista blur, 1 = Win7 blur
 		bool isVista = (m_rbGlassType->GetSelection() == 0);
 
-		if (m_colorPresetsGroupSizer)
+		if (m_colorPresetList)
 		{
-			if (m_vistaPresetSizer)
-			{
-				m_colorPresetsGroupSizer->Show(m_vistaPresetSizer, isVista, true);
-			}
-			if (m_windows7PresetSizer)
-			{
-				m_colorPresetsGroupSizer->Show(m_windows7PresetSizer, !isVista, true);
-			}
+			m_colorPresetList->SetFamily(isVista ? ColorizationPresets::Family::Vista : ColorizationPresets::Family::Windows7);
 		}
 
 		// IMPORTANT: m_rbGlassType->GetContainingSizer() is the *row* that hosts the radiobox,
