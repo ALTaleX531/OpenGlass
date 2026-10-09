@@ -34,6 +34,8 @@ namespace OpenGlass
 
 		void BindEvents();
 		void LoadSettings();
+		bool CanSyncExternalChanges() const;
+		void SyncExternalChanges();
 		bool RevertSettings();
 		void SaveSettings();
 

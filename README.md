@@ -25,6 +25,8 @@ Only the General Availability releases listed above are supported. Insider build
 2. Run the installer, which selects the matching DWM implementation, then open the GUI. It requests administrator rights.
 3. Adjust the appearance. Settings are written immediately; **Save** accepts the changes, while **Revert** or closing the GUI undoes pending changes.
 
+To display changes made outside the GUI, hold <kbd>Shift</kbd> while opening **More**, then choose **Sync**. Save or Revert any pending changes first. Sync reloads settings, the preset library and diagnostics; it never saves or reverts implicitly.
+
 See the [configuration guide](https://github.com/ALTaleX531/OpenGlass/wiki/Configuration-and-registry-reference) and [preset library guide](https://github.com/ALTaleX531/OpenGlass/wiki/Preset-packages) for editing scopes, color options, presets and recovery behavior.
 
 > [!TIP]

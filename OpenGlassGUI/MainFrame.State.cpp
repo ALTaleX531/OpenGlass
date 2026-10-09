@@ -68,6 +68,23 @@ namespace OpenGlass
 		}
 	}
 
+	bool MainFrame::CanSyncExternalChanges() const
+	{
+		return !m_isDirty && !m_preview.IsDirty() && !m_colorPreference.IsDirty() && !m_resources.IsDirty()
+			&& !m_preview.IsAttemptActive() && !m_closeWhenSymbolDownloadStops && !IsBeingDeleted();
+	}
+
+	void MainFrame::SyncExternalChanges()
+	{
+		if (!CanSyncExternalChanges()) return;
+		// Read current state without accepting or replacing the preview checkpoint.
+		// RegistryConfig opens each read afresh, so no registry cache needs clearing.
+		LoadSettings();
+		RefreshTransparencyDiagnostics();
+		RefreshDwmCrashDumpConfiguration();
+		RefreshPresetPackages();
+	}
+
 	void MainFrame::LoadSettings()
 	{
 		// System

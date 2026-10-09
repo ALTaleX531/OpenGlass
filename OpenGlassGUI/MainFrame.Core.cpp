@@ -124,9 +124,13 @@ namespace OpenGlass
 					: L"Remove this scope's custom settings. Values from the other scope may still apply. Revert can undo this preview.");
 			restore->Enable(allowed);
 			wxMenuItem* switchView{};
+			wxMenuItem* sync{};
 			if (wxGetKeyState(WXK_SHIFT))
 			{
 				menu.AppendSeparator();
+				sync = menu.Append(wxID_ANY, L"Sync",
+					L"Save or Revert pending changes before reloading external changes into the GUI.");
+				sync->Enable(CanSyncExternalChanges());
 				switchView = menu.Append(wxID_ANY,
 					m_editScope == Settings::Scope::User ? L"Switch to HKLM view" : L"Switch to HKCU view",
 					L"Switch editing scope after saving or reverting pending changes and finishing symbol downloads.");
@@ -135,6 +139,7 @@ namespace OpenGlass
 			const auto selected = more->GetPopupMenuSelectionFromUser(menu, wxPoint(0, 0));
 			if (selected == merge->GetId()) MergeConfiguration();
 			else if (selected == restore->GetId()) RestoreDefaults();
+			else if (sync && selected == sync->GetId()) SyncExternalChanges();
 			else if (switchView && selected == switchView->GetId()) SwitchEditingScope();
 		});
 
