@@ -4,7 +4,7 @@
 
 namespace OpenGlass
 {
-	void DrawAutomaticColorSwatch(wxGraphicsContext& context, const wxRect2DDouble& bounds, bool compact = false);
+	void DrawAutomaticColorSwatch(wxGraphicsContext& context, const wxRect2DDouble& bounds);
 
 	class ColorSwatchButton final : public wxToggleButton
 	{

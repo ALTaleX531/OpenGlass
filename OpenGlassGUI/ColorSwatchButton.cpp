@@ -22,50 +22,66 @@ namespace OpenGlass
 				: wxSystemSettings::GetColour(wxSYS_COLOUR_HIGHLIGHT);
 		}
 
-	}
-
-	void DrawAutomaticColorSwatch(wxGraphicsContext& context, const wxRect2DDouble& bounds, bool compact)
-	{
-		const bool dark = wxSystemSettings::GetAppearance().IsDark();
-		context.PushState();
-		if (!compact)
+		void DrawColorCardFan(wxGraphicsContext& context, const wxRect2DDouble& bounds)
 		{
-			context.SetPen(*wxTRANSPARENT_PEN);
-			context.SetBrush(wxBrush(dark ? wxColour(53, 53, 53) : wxColour(241, 241, 241)));
-			context.DrawRectangle(bounds.m_x, bounds.m_y, bounds.m_width, bounds.m_height);
-		}
-
-		// A fixed color-card fan denotes the mode, not the current accent color.
-		context.Translate(bounds.m_x, bounds.m_y);
-		context.Scale(bounds.m_width / 40, bounds.m_height / 40);
-		const wxColour colors[] = {
-			wxColour(83, 145, 213), wxColour(154, 112, 190), wxColour(223, 105, 111),
-			wxColour(236, 187, 80), wxColour(100, 177, 135)
-		};
-		const size_t count = compact ? 3 : std::size(colors);
-		for (size_t index = 0; index < count; ++index)
-		{
+			const bool dark = wxSystemSettings::GetAppearance().IsDark();
 			context.PushState();
-			context.Translate(20, compact ? 29 : 28);
-			context.Rotate(compact
-				? (static_cast<double>(index) - 1) * 0.6981317007977318 // 40 degrees
-				: (static_cast<double>(index) - 2) * 0.4363323129985824); // 25 degrees
-			context.SetPen(wxPen(dark ? wxColour(53, 53, 53) : wxColour(255, 255, 255), 1));
-			const size_t colorIndex = compact ? (index == 0 ? 0 : index + 1) : index;
-			context.SetBrush(wxBrush(colors[colorIndex]));
-			if (compact) context.DrawRoundedRectangle(-4.5, -25, 9, 28, 1.2);
-			else context.DrawRoundedRectangle(-3.5, -21, 7, 24, 1.2);
-			context.PopState();
-		}
-		if (!compact)
-		{
+			context.Translate(bounds.m_x, bounds.m_y);
+			context.Scale(bounds.m_width / 40, bounds.m_height / 40);
+			const wxColour colors[] = {
+				wxColour(83, 145, 213), wxColour(154, 112, 190), wxColour(223, 105, 111),
+				wxColour(236, 187, 80), wxColour(100, 177, 135)
+			};
+			for (size_t index = 0; index < std::size(colors); ++index)
+			{
+				context.PushState();
+				context.Translate(20, 28);
+				context.Rotate((static_cast<double>(index) - 2) * 0.4363323129985824); // 25 degrees
+				context.SetPen(wxPen(wxColour(255, 255, 255), 1));
+				context.SetBrush(wxBrush(colors[index]));
+				context.DrawRoundedRectangle(-3.5, -21, 7, 24, 1.2);
+				context.PopState();
+			}
 			context.SetPen(*wxTRANSPARENT_PEN);
 			context.SetBrush(wxBrush(dark ? wxColour(221, 221, 221) : wxColour(255, 255, 255)));
 			context.DrawEllipse(18, 26, 4, 4);
 			context.SetBrush(wxBrush(wxColour(120, 120, 120)));
 			context.DrawEllipse(19.2, 27.2, 1.6, 1.6);
+			context.PopState();
 		}
-		context.PopState();
+
+	}
+
+	void DrawAutomaticColorSwatch(wxGraphicsContext& context, const wxRect2DDouble& bounds)
+	{
+		// Cache the fixed mode graphic for both buttons and preset thumbnails.
+		static const wxImage image = [] {
+			constexpr int size = 256;
+			wxImage result(size, size, false);
+			if (!result.IsOk()) return result;
+
+			auto* pixels = result.GetData();
+			for (int y = 0; y < size; ++y)
+			{
+				for (int x = 0; x < size; ++x)
+				{
+					const double horizontal = static_cast<double>(x) / (size - 1);
+					const double vertical = static_cast<double>(y) / (size - 1);
+					// Red -> (0, 178, 255), top-left to bottom-right;
+					// blue -> green, bottom-left to top-right. Screen: 1 - (1 - F)(1 - B).
+					const double foreground = (horizontal + vertical) / 2;
+					const double background = (horizontal + 1 - vertical) / 2;
+					*pixels++ = static_cast<unsigned char>(255 * (1 - foreground) + 0.5);
+					*pixels++ = static_cast<unsigned char>(255 * (1 - (1 - foreground * 178 / 255) * (1 - background)) + 0.5);
+					*pixels++ = static_cast<unsigned char>(255 * (1 - (1 - foreground) * background) + 0.5);
+				}
+			}
+			return result;
+		}();
+		if (!image.IsOk()) return;
+
+		context.DrawBitmap(context.CreateBitmapFromImage(image),
+			bounds.m_x, bounds.m_y, bounds.m_width, bounds.m_height);
 	}
 
 	ColorSwatchButton::ColorSwatchButton(wxWindow* parent, wxWindowID id, const wxString& label, DWORD argb, bool automatic)
@@ -203,6 +219,7 @@ namespace OpenGlass
 					if (m_automatic)
 					{
 						DrawAutomaticColorSwatch(*context, bounds);
+						DrawColorCardFan(*context, bounds);
 					}
 					else
 					{

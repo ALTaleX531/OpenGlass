@@ -403,17 +403,15 @@ namespace OpenGlass
 				const auto swatchHeight = size.GetHeight() - 2 * inset;
 				const wxRect2DDouble bounds(inset + borderWidth, inset + borderWidth,
 					swatchWidth - 2 * borderWidth, swatchHeight - 2 * borderWidth);
+				context->SetPen(*wxTRANSPARENT_PEN);
+				context->SetBrush(wxBrush(border));
+				context->DrawRectangle(inset, inset, swatchWidth, swatchHeight);
 				if (!package.accentColor)
 				{
-					const auto iconInset = window->FromDIP(2);
-					DrawAutomaticColorSwatch(*context, wxRect2DDouble(iconInset, iconInset,
-						size.GetWidth() - 2 * iconInset, size.GetHeight() - 2 * iconInset), true);
+					DrawAutomaticColorSwatch(*context, bounds);
 				}
 				else
 				{
-					context->SetPen(*wxTRANSPARENT_PEN);
-					context->SetBrush(wxBrush(border));
-					context->DrawRectangle(inset, inset, swatchWidth, swatchHeight);
 					context->SetBrush(context->CreateLinearGradientBrush(inset, inset,
 						inset + swatchWidth, inset + swatchHeight, gradient));
 					context->DrawRectangle(bounds.m_x, bounds.m_y, bounds.m_width, bounds.m_height);
