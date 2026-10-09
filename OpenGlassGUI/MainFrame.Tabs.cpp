@@ -10,6 +10,9 @@ namespace OpenGlass
 {
 	namespace
 	{
+		constexpr auto AdvancedSettingsWarning = L"These settings usually do not need to be changed. "
+			L"Modify them only if you fully understand how they work.";
+
 		wxCollapsiblePane* AddCollapsibleSection(
 			wxScrolledWindow* panel,
 			wxSizer* parentSizer,
@@ -45,7 +48,7 @@ namespace OpenGlass
 			return pane;
 		}
 
-		void AddPermissionNotice(wxPanel* panel, wxBoxSizer* sizer, const wxString& message)
+		void AddWarningNotice(wxWindow* panel, wxBoxSizer* sizer, const wxString& message)
 		{
 			if (!panel || !sizer)
 			{
@@ -128,7 +131,7 @@ namespace OpenGlass
 			m_chkDisableGlassOnBattery->Enable(false);
 			m_chkGlassSafetyZone->Enable(false);
 			m_clDisabledHooks->Enable(false);
-			AddPermissionNotice(panel, sizer, L"Requires administrator privileges to edit HKLM settings.");
+			AddWarningNotice(panel, sizer, L"Requires administrator privileges to edit HKLM settings.");
 		}
 
 		panel->SetSizer(sizer);
@@ -363,8 +366,8 @@ namespace OpenGlass
 		sizer->AddStretchSpacer();
 		if (!m_isAdmin)
 		{
-			AddPermissionNotice(panel, downloadGroup, L"Administrator privileges are required to download symbols into the shared cache.");
-			AddPermissionNotice(panel, dumpGroup, L"Administrator privileges are required to change WER crash dump settings. Reading status does not require elevation.");
+			AddWarningNotice(panel, downloadGroup, L"Administrator privileges are required to download symbols into the shared cache.");
+			AddWarningNotice(panel, dumpGroup, L"Administrator privileges are required to change WER crash dump settings. Reading status does not require elevation.");
 		}
 
 		panel->SetSizer(sizer);
@@ -473,6 +476,7 @@ namespace OpenGlass
 		);
 		wxWindow* reflectionOpacityPanel = reflectionOpacityPane->GetPane();
 		auto* reflectionOpacitySizer = new wxBoxSizer(wxVERTICAL);
+		AddWarningNotice(reflectionOpacityPanel, reflectionOpacitySizer, AdvancedSettingsWarning);
 
 		auto addRefOpacity = [&](const wxString& label, wxChoice*& ch, wxSlider*& sl) {
 			wxBoxSizer* row = new wxBoxSizer(wxHORIZONTAL);
@@ -779,6 +783,7 @@ namespace OpenGlass
 		);
 		wxWindow* advancedPanel = advancedColorizationPane->GetPane();
 		auto* advancedSizer = new wxBoxSizer(wxVERTICAL);
+		AddWarningNotice(advancedPanel, advancedSizer, AdvancedSettingsWarning);
 		
 		auto addBlurBase = [&](wxChoice*& ch, wxColourPickerCtrl*& cp, wxSpinCtrl*& sc, const wxString& label) {
 			wxBoxSizer* row = new wxBoxSizer(wxHORIZONTAL);
