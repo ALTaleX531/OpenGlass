@@ -62,7 +62,7 @@ namespace OpenGlass
 			auto* icon = new wxStaticBitmap(
 				tipPanel,
 				wxID_ANY,
-				wxArtProvider::GetBitmap(wxART_WARNING, wxART_MESSAGE_BOX, wxSize(16, 16))
+				wxArtProvider::GetBitmapBundle(wxART_WARNING, wxART_MESSAGE_BOX, wxSize(24, 24))
 			);
 			tipSizer->Add(icon, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 8);
 
@@ -175,7 +175,7 @@ namespace OpenGlass
 		m_bmpEffectiveTransparencyWarning = new wxStaticBitmap(
 			panel,
 			wxID_ANY,
-			wxArtProvider::GetBitmap(wxART_WARNING, wxART_MESSAGE_BOX, wxSize(16, 16))
+			wxArtProvider::GetBitmapBundle(wxART_WARNING, wxART_MESSAGE_BOX, wxSize(16, 16))
 		);
 		m_bmpEffectiveTransparencyWarning->Hide();
 		transparencyResultRow->Add(m_bmpEffectiveTransparencyWarning, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
@@ -203,7 +203,7 @@ namespace OpenGlass
 		auto* symbolNoticeIcon = new wxStaticBitmap(
 			symbolNoticePanel,
 			wxID_ANY,
-			wxArtProvider::GetBitmap(wxART_WARNING, wxART_MESSAGE_BOX, wxSize(16, 16))
+			wxArtProvider::GetBitmapBundle(wxART_WARNING, wxART_MESSAGE_BOX, wxSize(24, 24))
 		);
 		symbolNoticeSizer->Add(symbolNoticeIcon, 0, wxALIGN_TOP | wxRIGHT, 8);
 		auto* symbolNoticeContent = new wxBoxSizer(wxVERTICAL);
@@ -306,9 +306,8 @@ namespace OpenGlass
 		m_bmpSymbolDownloadResult = new wxStaticBitmap(
 			m_pnlSymbolDownloadResult,
 			wxID_ANY,
-			wxArtProvider::GetBitmap(wxART_INFORMATION, wxART_MESSAGE_BOX, wxSize(16, 16))
+			wxArtProvider::GetBitmapBundle(wxART_INFORMATION, wxART_MESSAGE_BOX, wxSize(16, 16))
 		);
-		m_bmpSymbolDownloadResult->SetMinSize(wxSize(16, 16));
 		resultRow->Add(m_bmpSymbolDownloadResult, 0, wxALIGN_TOP | wxRIGHT, 8);
 
 		m_lblSymbolDownloadResult = CreateWrappingLabel(m_pnlSymbolDownloadResult, wxEmptyString);

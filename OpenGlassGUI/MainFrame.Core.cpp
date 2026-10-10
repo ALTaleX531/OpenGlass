@@ -472,7 +472,7 @@ namespace OpenGlass
 		}
 
 		m_bmpSymbolDownloadResult->SetBitmap(
-			wxArtProvider::GetBitmap(iconId, wxART_MESSAGE_BOX, wxSize(16, 16))
+			wxArtProvider::GetBitmapBundle(iconId, wxART_MESSAGE_BOX, wxSize(16, 16))
 		);
 
 		m_symbolDownloadResultText = details;
@@ -976,9 +976,9 @@ namespace OpenGlass
 		}
 
 		const wxSize iconSize(16, 16);
-		const wxBitmap infoBmp = wxArtProvider::GetBitmap(wxART_INFORMATION, wxART_MESSAGE_BOX, iconSize);
+		// Bundle dimensions are DIPs; wxStaticBitmap selects native pixels for its current DPI.
+		const auto infoBmp = wxArtProvider::GetBitmapBundle(wxART_INFORMATION, wxART_MESSAGE_BOX, iconSize);
 		auto* info = new wxStaticBitmap(parent, wxID_ANY, infoBmp);
-		info->SetMinSize(iconSize);
 		info->Hide();
 		row->Add(info, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT | wxLEFT, 2);
 
@@ -994,8 +994,8 @@ namespace OpenGlass
 
 		bool needLayout = false;
 
-		const auto information = wxArtProvider::GetBitmap(wxART_INFORMATION, wxART_MESSAGE_BOX, wxSize(16, 16));
-		const auto warning = wxArtProvider::GetBitmap(wxART_WARNING, wxART_MESSAGE_BOX, wxSize(16, 16));
+		const auto information = wxArtProvider::GetBitmapBundle(wxART_INFORMATION, wxART_MESSAGE_BOX, wxSize(16, 16));
+		const auto warning = wxArtProvider::GetBitmapBundle(wxART_WARNING, wxART_MESSAGE_BOX, wxSize(16, 16));
 		for (auto& item : m_optionStatus)
 		{
 			const auto& spec = Settings::Get(item.setting);
@@ -1044,9 +1044,8 @@ namespace OpenGlass
 		}
 
 		const wxSize iconSize(16, 16);
-		const wxBitmap warnBmp = wxArtProvider::GetBitmap(wxART_WARNING, wxART_MESSAGE_BOX, iconSize);
+		const auto warnBmp = wxArtProvider::GetBitmapBundle(wxART_WARNING, wxART_MESSAGE_BOX, iconSize);
 		auto* warn = new wxStaticBitmap(parent, wxID_ANY, warnBmp);
-		warn->SetMinSize(iconSize);
 		warn->SetToolTip(title + L" path does not exist. The value will still be saved.");
 		warn->Hide();
 
