@@ -1,10 +1,25 @@
 #pragma once
-#include "framework.hpp"
-#include "cpprt.hpp"
-#include "wil.hpp"
+
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#pragma warning(push)
+#pragma warning(disable : 4201 4324 4471)
+#include <KNSoft/NDK/NDK.h>
+#pragma warning(pop)
+#include <wil/resource.h>
+#include <wil/result.h>
+#include <array>
 #include <atomic>
 #include <chrono>
+#include <cstdint>
+#include <functional>
 #include <source_location>
+#include <span>
+#include <string_view>
+#include <type_traits>
+#include <utility>
+#include <vector>
 
 namespace OpenGlass::HookHelper
 {

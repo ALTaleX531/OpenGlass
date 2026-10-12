@@ -1,6 +1,7 @@
 #pragma once
-#include "cpprt.hpp"
 #include "RenderingEffect.hpp"
+#include <winrt/base.h>
+#include <d2d1effects.h>
 
 // this is actually a full mirror implementation of dwmcore!CCustomBlur, 
 // in order to produce a high performance blur effect than raw direct2d gaussian blur effect

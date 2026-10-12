@@ -6,6 +6,7 @@
 #include "BlurSettings.hpp"
 #include "ConfigurationMigration.hpp"
 #include "EffectiveConfiguration.hpp"
+#include "RegistryValueResolver.hpp"
 #include "Elevation.hpp"
 #include "resource.h"
 #include <wx/iconbndl.h>
@@ -338,7 +339,7 @@ namespace OpenGlass
 
 	void MainFrame::RefreshTransparencyDiagnostics()
 	{
-		if (!m_lblWindowsTransparencyStatus || !m_lblOpaqueBlendStatus || !m_lblPowerModeStatus || !m_lblDisableOnBatteryStatus || !m_bmpEffectiveTransparencyWarning || !m_lblEffectiveTransparencyStatus)
+		if (!m_lblWindowsTransparencyStatus || !m_lblOpaqueBlendStatus || !m_lblEnergySaverStatus || !m_lblDisableOnBatteryStatus || !m_bmpEffectiveTransparencyWarning || !m_lblEffectiveTransparencyStatus)
 		{
 			return;
 		}
@@ -350,7 +351,7 @@ namespace OpenGlass
 			const wxString error = wxString::Format(L"Unavailable (HRESULT 0x%08lX)", static_cast<unsigned long>(result));
 			m_lblWindowsTransparencyStatus->SetLabel(error);
 			m_lblOpaqueBlendStatus->SetLabel(error);
-			m_lblPowerModeStatus->SetLabel(error);
+			m_lblEnergySaverStatus->SetLabel(error);
 			m_lblDisableOnBatteryStatus->SetLabel(error);
 			m_bmpEffectiveTransparencyWarning->Hide();
 			m_lblEffectiveTransparencyStatus->SetLabel(error);
@@ -358,27 +359,13 @@ namespace OpenGlass
 			return;
 		}
 
-		auto sourceName = [](DiagnosticRegistrySource source)
+		auto sourceName = [](DwmSettings::ValueSource source)
 		{
 			switch (source)
 			{
-			case DiagnosticRegistrySource::User: return L"HKCU";
-			case DiagnosticRegistrySource::Machine: return L"HKLM";
+			case DwmSettings::ValueSource::User: return L"HKCU";
+			case DwmSettings::ValueSource::Machine: return L"HKLM";
 			default: return L"default";
-			}
-		};
-		auto powerModeName = [](EFFECTIVE_POWER_MODE mode)
-		{
-			switch (mode)
-			{
-			case EffectivePowerModeBatterySaver: return L"Battery saver / high savings";
-			case EffectivePowerModeBetterBattery: return L"Better battery / standard savings";
-			case EffectivePowerModeBalanced: return L"Balanced";
-			case EffectivePowerModeHighPerformance: return L"High performance";
-			case EffectivePowerModeMaxPerformance: return L"Maximum performance";
-			case EffectivePowerModeGameMode: return L"Game mode";
-			case EffectivePowerModeMixedReality: return L"Mixed reality";
-			default: return L"Unknown";
 			}
 		};
 
@@ -389,20 +376,19 @@ namespace OpenGlass
 			sourceName(diagnostics.colorizationOpaqueBlendSource),
 			diagnostics.colorizationOpaqueBlend ? L"opaque" : L"transparent"
 		));
-		m_lblPowerModeStatus->SetLabel(wxString::Format(
-			L"%ls (%ls)",
-			powerModeName(diagnostics.effectivePowerMode),
-			diagnostics.powerSaverActive ? L"saver" : L"normal"
-		));
+		m_lblEnergySaverStatus->SetLabel(diagnostics.powerSaverActive ? L"On" : L"Off");
 		m_lblDisableOnBatteryStatus->SetLabel(wxString::Format(
 			L"%ls (%ls)",
 			diagnostics.disableGlassOnBattery ? L"On" : L"Off",
 			sourceName(diagnostics.disableGlassOnBatterySource)
 		));
 
-		const bool isOpaque = diagnostics.colorizationOpaqueBlend
-			|| (diagnostics.powerSaverActive && diagnostics.disableGlassOnBattery)
-			|| !diagnostics.windowsTransparencyEnabled;
+		const bool isOpaque = DwmSettings::IsTransparencyDisabled(
+			diagnostics.colorizationOpaqueBlend != 0,
+			diagnostics.windowsTransparencyEnabled,
+			diagnostics.powerSaverActive,
+			diagnostics.disableGlassOnBattery
+		);
 		wxString resultText = L"Transparent";
 		if (diagnostics.colorizationOpaqueBlend)
 		{

@@ -1,7 +1,18 @@
-#include "pch.h"
 #include "HookHelper.hpp"
-#include "KNSoft/SlimDetours/SlimDetours.h"
+#include <KNSoft/SlimDetours/SlimDetours.h>
+#include <DbgHelp.h>
+#include <Psapi.h>
+#include <TlHelp32.h>
+#include <algorithm>
+#include <cstring>
+#include <cwchar>
+#include <iterator>
+#include <string>
+#define FORMAT_IMPORT_FUNCTION(function) (IS_INTRESOURCE(function) ? ("#" + std::to_string(reinterpret_cast<ULONG_PTR>(function))).c_str() : function)
 #pragma comment(lib, "KNSoft.SlimDetours.lib")
+#pragma comment(lib, "DbgHelp.lib")
+#pragma comment(lib, "Psapi.lib")
+#pragma comment(lib, "onecore.lib")
 
 using namespace OpenGlass;
 
@@ -133,7 +144,7 @@ void HookHelper::ImportHook::Prepare(HMODULE module, std::span<const ImportDllDe
 			{
 				continue;
 			}
-			FAIL_FAST_IF_FAILED_MSG(function.original && function.detour ? S_OK : E_INVALIDARG, "Incomplete requested import hook %hs!%hs", dll.importDllName, function.importFunction);
+			FAIL_FAST_IF_FAILED_MSG(function.original && function.detour ? S_OK : E_INVALIDARG, "Incomplete requested import hook %hs!%hs", dll.importDllName, FORMAT_IMPORT_FUNCTION(function.importFunction));
 			requestedImports.push_back({ dll.importDllName, &function });
 		}
 	}
@@ -169,7 +180,7 @@ void HookHelper::ImportHook::Prepare(HMODULE module, std::span<const ImportDllDe
 			for (const auto& function : dllSpec->functionsToDetour)
 			{
 				const bool matches = byName ?
-					(function.importFunction && !strcmp(function.importFunction, importName)) :
+					(!IS_INTRESOURCE(function.importFunction) && !strcmp(function.importFunction, importName)) :
 					(function.importFunction == importName);
 				if (matches)
 				{
@@ -180,7 +191,7 @@ void HookHelper::ImportHook::Prepare(HMODULE module, std::span<const ImportDllDe
 					);
 					FAIL_FAST_IF_FAILED_MSG(requested != requestedImports.end() ? S_OK : E_UNEXPECTED, "Matched an unregistered import hook");
 					++requested->matchCount;
-					FAIL_FAST_IF_FAILED_MSG(requested->matchCount == 1 ? S_OK : E_UNEXPECTED, "Import hook %hs!%hs matched multiple slots", requested->dllName, requested->function->importFunction);
+					FAIL_FAST_IF_FAILED_MSG(requested->matchCount == 1 ? S_OK : E_UNEXPECTED, "Import hook %hs!%hs matched multiple slots", requested->dllName, FORMAT_IMPORT_FUNCTION(requested->function->importFunction));
 					const auto target = reinterpret_cast<PVOID*>(&thunk->u1.Function);
 					FAIL_FAST_IF_FAILED_MSG(
 						std::none_of(m_entries.begin(), m_entries.end(), [target](const Entry& entry) { return entry.target == target; }) ? S_OK : E_UNEXPECTED,
@@ -220,7 +231,7 @@ void HookHelper::ImportHook::Prepare(HMODULE module, std::span<const ImportDllDe
 	}
 	for (const auto& requested : requestedImports)
 	{
-		FAIL_FAST_IF_FAILED_MSG(requested.matchCount == 1 ? S_OK : E_NOINTERFACE, "Requested import hook %hs!%hs was not found in %p", requested.dllName, requested.function->importFunction, module);
+		FAIL_FAST_IF_FAILED_MSG(requested.matchCount == 1 ? S_OK : E_NOINTERFACE, "Requested import hook %hs!%hs was not found in %p", requested.dllName, FORMAT_IMPORT_FUNCTION(requested.function->importFunction), module);
 	}
 }
 

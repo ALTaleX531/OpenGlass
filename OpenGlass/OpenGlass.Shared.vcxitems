@@ -23,9 +23,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)CaptionMetricsTweaker.hpp"><Link>Header Files\CaptionMetricsTweaker.hpp</Link></ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CaptionTextHandler.hpp"><Link>Header Files\CaptionTextHandler.hpp</Link></ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)cpprt.hpp"><Link>Header Files\cpprt.hpp</Link></ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomBlurEffect.hpp"><Link>Header Files\CustomBlurEffect.hpp</Link></ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomThemeAtlasLoader.hpp"><Link>Header Files\CustomThemeAtlasLoader.hpp</Link></ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)D2DPrivates.hpp"><Link>Header Files\D2DPrivates.hpp</Link></ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)D3DGlassRealizer.hpp"><Link>Header Files\D3DGlassRealizer.hpp</Link></ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)DxgiPrivates.hpp"><Link>Header Files\DxgiPrivates.hpp</Link></ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)framework.hpp"><Link>Header Files\framework.hpp</Link></ClInclude>
@@ -38,7 +36,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)GlassRenderer.hpp"><Link>Header Files\GlassRenderer.hpp</Link></ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)GlassSafetyZoneLayer.hpp"><Link>Header Files\GlassSafetyZoneLayer.hpp</Link></ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)GlassService.hpp"><Link>Header Files\GlassService.hpp</Link></ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)HookHelper.hpp"><Link>Header Files\HookHelper.hpp</Link></ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)MaterialRealizer.hpp"><Link>Header Files\MaterialRealizer.hpp</Link></ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)module.hpp"><Link>Header Files\module.hpp</Link></ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)MsstyleInternals.hpp"><Link>Header Files\MsstyleInternals.hpp</Link></ClInclude>
@@ -46,7 +43,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)OSHelper.hpp"><Link>Header Files\OSHelper.hpp</Link></ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)pch.h"><Link>Header Files\pch.h</Link></ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)ProjectionHelper.hpp"><Link>Header Files\ProjectionHelper.hpp</Link></ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)RenderingEffect.hpp"><Link>Header Files\RenderingEffect.hpp</Link></ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)resource.h"><Link>Header Files\resource.h</Link></ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)Shared.hpp"><Link>Header Files\Shared.hpp</Link></ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)SymbolDownloader.hpp"><Link>Header Files\SymbolDownloader.hpp</Link></ClInclude>
@@ -63,15 +59,14 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)AeroEffect.cpp"><Link>Source Files\AeroEffect.cpp</Link></ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)BlurEffect.cpp"><Link>Source Files\BlurEffect.cpp</Link></ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)BuiltInSymbolCatalog.cpp"><Link>Source Files\BuiltInSymbolCatalog.cpp</Link></ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)CustomBlurEffect.cpp"><Link>Source Files\CustomBlurEffect.cpp</Link></ClCompile>
+	<ClCompile Include="$(MSBuildThisFileDirectory)..\Common\CustomBlurEffect.cpp"><Link>Source Files\Common\CustomBlurEffect.cpp</Link><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)CustomThemeAtlasLoader.cpp"><Link>Source Files\CustomThemeAtlasLoader.cpp</Link></ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)D3DGlassRealizer.cpp"><Link>Source Files\D3DGlassRealizer.cpp</Link></ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)dllmain.cpp"><Link>Source Files\dllmain.cpp</Link></ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)GlassEngine.Registry.cpp"><Link>Source Files\GlassEngine.Registry.cpp</Link></ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)GlassRealizer.cpp"><Link>Source Files\GlassRealizer.cpp</Link></ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)GlassSafetyZoneLayer.cpp"><Link>Source Files\GlassSafetyZoneLayer.cpp</Link></ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)GlassService.cpp"><Link>Source Files\GlassService.cpp</Link></ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)HookHelper.cpp"><Link>Source Files\HookHelper.cpp</Link></ClCompile>
+	<ClCompile Include="$(MSBuildThisFileDirectory)..\Common\HookHelper.cpp"><Link>Source Files\Common\HookHelper.cpp</Link><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)MaterialRealizer.cpp"><Link>Source Files\MaterialRealizer.cpp</Link></ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)module.cpp"><Link>Source Files\module.cpp</Link></ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)pch.cpp"><Link>Source Files\pch.cpp</Link><PrecompiledHeader>Create</PrecompiledHeader></ClCompile>

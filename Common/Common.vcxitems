@@ -16,14 +16,18 @@
   </ItemGroup>
   <ItemGroup>
 	<ClInclude Include="$(MSBuildThisFileDirectory)ApplicationPaths.hpp" />
+	<ClInclude Include="$(MSBuildThisFileDirectory)SystemSettings.hpp" />
+	<ClInclude Include="$(MSBuildThisFileDirectory)DwmSettings.hpp"><Link>Header Files\Common\DwmSettings.hpp</Link></ClInclude>
+	<ClInclude Include="$(MSBuildThisFileDirectory)CustomBlurEffect.hpp"><Link>Header Files\Common\CustomBlurEffect.hpp</Link></ClInclude>
+	<ClInclude Include="$(MSBuildThisFileDirectory)RenderingEffect.hpp"><Link>Header Files\Common\RenderingEffect.hpp</Link></ClInclude>
+	<ClInclude Include="$(MSBuildThisFileDirectory)D2DPrivates.hpp"><Link>Header Files\Common\D2DPrivates.hpp</Link></ClInclude>
+	<ClInclude Include="$(MSBuildThisFileDirectory)RectF.hpp"><Link>Header Files\Common\RectF.hpp</Link></ClInclude>
 	<ClInclude Include="$(MSBuildThisFileDirectory)BlurSettings.hpp" />
+	<ClInclude Include="$(MSBuildThisFileDirectory)HookHelper.hpp"><Link>Header Files\Common\HookHelper.hpp</Link></ClInclude>
 	<ClInclude Include="$(MSBuildThisFileDirectory)PngAssetValidation.hpp" />
 	<ClInclude Include="$(MSBuildThisFileDirectory)PeCodeViewIdentity.hpp" />
 	<ClInclude Include="$(MSBuildThisFileDirectory)ThemeAtlasLayout.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)RegistryValueResolver.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)SettingsCatalog.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)EditorScope.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)PreviewJournal.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)ServiceHandler.h" />
   </ItemGroup>
 </Project>

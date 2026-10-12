@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "ColorPreference.hpp"
+#include "DwmSettings.hpp"
 #include "ColorPolicy.hpp"
 #include "PreviewJournal.hpp"
 #include "ShellColorRefresh.hpp"
@@ -10,7 +11,6 @@ namespace OpenGlass
 	{
 		constexpr auto AccentKey = LR"(Software\Microsoft\Windows\CurrentVersion\Explorer\Accent)";
 		constexpr auto DesktopKey = LR"(Control Panel\Desktop)";
-		constexpr auto DwmKey = LR"(Software\Microsoft\Windows\DWM)";
 		RegistryConfig::RawValue ReadRaw(HKEY user, const wchar_t* path, const wchar_t* name)
 		{
 			wil::unique_hkey key;
@@ -73,7 +73,7 @@ namespace OpenGlass
 		}
 		DWORD ReadColor(HKEY user)
 		{
-			const auto color = ReadDword(user, DwmKey, L"ColorizationColor");
+			const auto color = ReadDword(user, DwmSettings::g_keyPath, L"ColorizationColor");
 			THROW_HR_IF(HRESULT_FROM_WIN32(ERROR_INVALID_DATA), !color);
 			return *color & 0xFFFFFF;
 		}
@@ -152,7 +152,7 @@ namespace OpenGlass
 				ColorPreference::Snapshot captured;
 				if (!ColorPolicy::IsAccentSyncBlocked(RegGetValueW))
 					captured.accent = ReadRaw(userKey.get(), AccentKey, L"AccentColorMenu");
-				captured.dwmAccent = ReadRaw(userKey.get(), DwmKey, L"AccentColor");
+				captured.dwmAccent = ReadRaw(userKey.get(), DwmSettings::g_keyPath, L"AccentColor");
 				captured.automatic = ReadDword(userKey.get(), DesktopKey, L"AutoColorization").value_or(0);
 				if (!captured.IsAutomatic()) captured.rgb = ReadColor(userKey.get());
 				snapshot = captured;
@@ -170,7 +170,7 @@ namespace OpenGlass
 					RETURN_IF_WIN32_ERROR(RegOpenKeyExW(userKey.get(), AccentKey, 0, KEY_SET_VALUE, accentKey.put()));
 				if (choice.dwmAccent || choice.applyChoice)
 				{
-					RETURN_IF_WIN32_ERROR(RegOpenKeyExW(userKey.get(), DwmKey, 0, KEY_QUERY_VALUE | KEY_SET_VALUE, dwmKey.put()));
+					RETURN_IF_WIN32_ERROR(RegOpenKeyExW(userKey.get(), DwmSettings::g_keyPath, 0, KEY_QUERY_VALUE | KEY_SET_VALUE, dwmKey.put()));
 				}
 				if (!choice.applyChoice) return S_OK;
 				// Existing Desktop key and access are required before any state mutation.
@@ -239,7 +239,7 @@ namespace OpenGlass
 							reinterpret_cast<const BYTE*>(&color), sizeof(color)));
 					}
 				}
-				if (result.dwmAccent && ReadRaw(userKey.get(), DwmKey, L"AccentColor") != *result.dwmAccent)
+				if (result.dwmAccent && ReadRaw(userKey.get(), DwmSettings::g_keyPath, L"AccentColor") != *result.dwmAccent)
 					WriteRaw(dwmKey.get(), L"AccentColor", *result.dwmAccent);
 				if (applied) *applied = std::move(result);
 				return S_OK;

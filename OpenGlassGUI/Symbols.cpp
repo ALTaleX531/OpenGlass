@@ -209,35 +209,12 @@ namespace OpenGlass
 			info = {};
 			info.moduleName = moduleName;
 			info.modulePath = modulePath;
-			info.url = symbolServerBase;
 
 			PeCodeViewIdentity identity{};
 			RETURN_IF_FAILED(ReadFilePeCodeViewIdentity(modulePath.c_str(), identity));
 			info.pdbFileName = identity.pdbName;
 
-			WCHAR identifier[48]{};
-			swprintf_s(
-				identifier,
-				L"%08lX%04hX%04hX%02hhX%02hhX%02hhX%02hhX%02hhX%02hhX%02hhX%02hhX%x",
-				identity.pdbGuid.Data1,
-				identity.pdbGuid.Data2,
-				identity.pdbGuid.Data3,
-				identity.pdbGuid.Data4[0],
-				identity.pdbGuid.Data4[1],
-				identity.pdbGuid.Data4[2],
-				identity.pdbGuid.Data4[3],
-				identity.pdbGuid.Data4[4],
-				identity.pdbGuid.Data4[5],
-				identity.pdbGuid.Data4[6],
-				identity.pdbGuid.Data4[7],
-				identity.pdbAge
-			);
-
-			info.url += info.pdbFileName;
-			info.url += L"/";
-			info.url += identifier;
-			info.url += L"/";
-			info.url += info.pdbFileName;
+			info.url = BuildSymbolServerUrl(symbolServerBase, identity);
 			return S_OK;
 		}
 

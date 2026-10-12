@@ -1,7 +1,9 @@
-#include "pch.h"
 #include "CustomBlurEffect.hpp"
 #include "D2DPrivates.hpp"
-#include "Util.hpp"
+#include <wil/result.h>
+#include <wil/win32_helpers.h>
+#include <algorithm>
+#include <cstring>
 
 using namespace OpenGlass;
 const float CCustomBlurEffect::k_optimizations[16]
@@ -20,9 +22,9 @@ float CCustomBlurEffect::DetermineOutputScale(
 	if (size > 1.0)
 	{
 		const auto k = m_blurAmount <= k_optimizations[5 * static_cast<int>(m_optimization) + 2] ? 1.f : 0.5f;
-		outputScale = k * std::max(
+		outputScale = k * (std::max)(
 			0.1f,
-			std::min(
+			(std::min)(
 				1.f,
 				k_optimizations[5 * static_cast<int>(m_optimization)] / (m_blurAmount + k_optimizations[5 * static_cast<int>(m_optimization) + 1])
 			)

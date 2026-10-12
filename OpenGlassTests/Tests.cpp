@@ -2,8 +2,9 @@
 #include "ConfigurationResources.hpp"
 #include "ProjectionFixture.hpp"
 #include "RegistryValueResolver.hpp"
-#include "../Common/EditorScope.hpp"
-#include "../Common/PreviewJournal.hpp"
+#include "DwmSettings.hpp"
+#include "../OpenGlassGUI/EditorScope.hpp"
+#include "../OpenGlassGUI/PreviewJournal.hpp"
 #include "../OpenGlassGUI/EffectiveConfiguration.hpp"
 #include "BlurSettings.hpp"
 #include "PngAssetValidation.hpp"
@@ -13,7 +14,7 @@
 #include "../OpenGlassGUI/ColorPolicy.hpp"
 #include "../OpenGlassGUI/ShellColorRefresh.hpp"
 #include <future>
-#include "../Common/SettingsCatalog.hpp"
+#include "../OpenGlassGUI/SettingsCatalog.hpp"
 #include "../OpenGlassGUI/ConfigurationMigration.hpp"
 #include "../OpenGlassGUI/PresetPackage.hpp"
 #include "HookHelper.hpp"
@@ -327,6 +328,84 @@ namespace
 		}
 		Check(callFirst(1) == 3);
 		Check(callSecond(1) == 4);
+	}
+
+	void TestImportHooks()
+	{
+		// A private mapped PE fixture keeps the mixed-name/ordinal test independent of system DLLs.
+		struct ImportImage
+		{
+			IMAGE_DOS_HEADER dos;
+			IMAGE_NT_HEADERS64 nt;
+			IMAGE_IMPORT_DESCRIPTOR imports[2];
+			IMAGE_DELAYLOAD_DESCRIPTOR delays[2];
+			char dllName[16];
+			struct ImportName { WORD hint; char name[16]; } names[2];
+			IMAGE_THUNK_DATA nameThunks[4];
+			IMAGE_THUNK_DATA thunks[4];
+		};
+		wil::unique_virtualalloc_ptr<ImportImage> image{
+			static_cast<ImportImage*>(VirtualAlloc(nullptr, sizeof(ImportImage), MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE))
+		};
+		THROW_LAST_ERROR_IF(!image);
+		std::construct_at(image.get());
+		image->dos.e_magic = IMAGE_DOS_SIGNATURE;
+		image->dos.e_lfanew = offsetof(ImportImage, nt);
+		image->nt.Signature = IMAGE_NT_SIGNATURE;
+		image->nt.FileHeader.Machine = IMAGE_FILE_MACHINE_AMD64;
+		image->nt.FileHeader.SizeOfOptionalHeader = sizeof(IMAGE_OPTIONAL_HEADER64);
+		image->nt.OptionalHeader.Magic = IMAGE_NT_OPTIONAL_HDR64_MAGIC;
+		image->nt.OptionalHeader.SizeOfHeaders = sizeof(ImportImage);
+		image->nt.OptionalHeader.SizeOfImage = 4096;
+		image->nt.OptionalHeader.NumberOfRvaAndSizes = IMAGE_NUMBEROF_DIRECTORY_ENTRIES;
+		image->nt.OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT] = { offsetof(ImportImage, imports), sizeof(image->imports) };
+		image->nt.OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT] = { offsetof(ImportImage, delays), sizeof(image->delays) };
+		image->imports[0].Name = offsetof(ImportImage, dllName);
+		image->imports[0].OriginalFirstThunk = offsetof(ImportImage, nameThunks);
+		image->imports[0].FirstThunk = offsetof(ImportImage, thunks);
+		image->delays[0].Attributes.RvaBased = 1;
+		image->delays[0].DllNameRVA = offsetof(ImportImage, dllName);
+		image->delays[0].ImportNameTableRVA = offsetof(ImportImage, nameThunks);
+		image->delays[0].ImportAddressTableRVA = offsetof(ImportImage, thunks);
+		strcpy_s(image->dllName, "fixture.dll");
+		strcpy_s(image->names[0].name, "Unchanged");
+		strcpy_s(image->names[1].name, "ImportTest");
+		image->nameThunks[0].u1.AddressOfData = offsetof(ImportImage, names);
+		image->nameThunks[1].u1.Ordinal = IMAGE_ORDINAL_FLAG64 | 131;
+		image->nameThunks[2].u1.AddressOfData = offsetof(ImportImage, names) + sizeof(ImportImage::ImportName);
+		const auto original = reinterpret_cast<ULONG_PTR>(&PointerTestOriginal);
+		for (size_t index = 0; index < 3; ++index) image->thunks[index].u1.Function = original;
+		const HookHelper::ImportFunctionDetourInfo functions[]
+		{
+			HookHelper::MakeImportDetour<&ImportTestReplacement>(MAKEINTRESOURCEA(131), &g_importTestOriginal),
+			HookHelper::MakeImportDetour<&PointerTestReplacement>("ImportTest", &g_pointerTestOriginal)
+		};
+		const HookHelper::ImportDllDetourInfo imports[]{ { "FIXTURE.dll", functions } };
+		for (const bool delayLoad : { false, true })
+		{
+			HookHelper::ImportHook hook;
+			HookHelper::GetHookRundown().Open();
+			{
+				HookHelper::HookTransaction transaction{ HookHelper::HookMode::Install };
+				hook.Prepare(reinterpret_cast<HMODULE>(image.get()), imports, delayLoad);
+				for (size_t index = 0; index < 3; ++index) Check(image->thunks[index].u1.Function == original);
+				transaction.Apply(hook);
+				transaction.Commit();
+			}
+			Check(image->thunks[0].u1.Function == original);
+			Check(reinterpret_cast<PointerTestFunction>(image->thunks[1].u1.Function)(1) == 102);
+			Check(reinterpret_cast<PointerTestFunction>(image->thunks[2].u1.Function)(1) == 12);
+			HookHelper::GetHookRundown().BeginShutdown();
+			Check(reinterpret_cast<PointerTestFunction>(image->thunks[1].u1.Function)(1) == 2);
+			Check(reinterpret_cast<PointerTestFunction>(image->thunks[2].u1.Function)(1) == 2);
+			{
+				HookHelper::HookTransaction transaction{ HookHelper::HookMode::Remove };
+				transaction.Apply(hook);
+				transaction.Commit();
+			}
+			HookHelper::GetHookRundown().WaitForDrain(std::chrono::seconds{ 1 });
+			for (size_t index = 0; index < 3; ++index) Check(image->thunks[index].u1.Function == original);
+		}
 	}
 
 	template <size_t SymbolCount, size_t BindingCount, size_t LayoutCount, size_t CaseCount, size_t SymbolSpecCount = SymbolCount>
@@ -827,6 +906,61 @@ namespace
 		}}};
 		Check(!overlappingBindings.registry.Freeze({150, 0}));
 		Check(overlappingBindings.registry.descriptor_error());
+	}
+
+	void TestDwmSettings()
+	{
+		GUID id{};
+		THROW_IF_FAILED(CoCreateGuid(&id));
+		WCHAR guidString[40]{};
+		THROW_HR_IF(E_UNEXPECTED, !StringFromGUID2(id, guidString, ARRAYSIZE(guidString)));
+		const auto path = std::wstring(L"Software\\OpenGlassTests\\DwmSettings\\") + guidString;
+		const auto cleanup = wil::scope_exit([&] { RegDeleteTreeW(HKEY_CURRENT_USER, path.c_str()); });
+		const auto user = wil::reg::create_unique_key(HKEY_CURRENT_USER, path.c_str(), wil::reg::key_access::readwrite);
+		const auto machine = wil::reg::create_unique_key(user.get(), L"Machine", wil::reg::key_access::readwrite);
+
+		// Explicit zero is a user value; an invalid type falls through to HKLM.
+		DwmSettings::ValueSource source{};
+		wil::reg::set_value_dword(machine.get(), L"Value", 1);
+		wil::reg::set_value_dword(user.get(), L"Value", 0);
+		Check(DwmSettings::GetDword(user.get(), machine.get(), L"Value", 1, &source) == 0);
+		Check(source == DwmSettings::ValueSource::User);
+		wil::reg::set_value_string(user.get(), L"Value", L"invalid DWORD");
+		Check(DwmSettings::GetDword(user.get(), machine.get(), L"Value", 0, &source) == 1);
+		Check(source == DwmSettings::ValueSource::Machine);
+		Check(DwmSettings::GetDword(user.get(), nullptr, L"Value", 7, &source) == 7);
+		Check(source == DwmSettings::ValueSource::Default);
+		Check(DwmSettings::GetDword(nullptr, machine.get(), L"Value") == 1);
+		wil::reg::set_value_dword(user.get(), L"Value", 2);
+		wil::reg::set_value_dword(machine.get(), L"Override", 3);
+		Check(DwmSettings::GetOverridableDword(user.get(), machine.get(), L"Value", L"Override") == 3);
+		wil::reg::set_value_dword(user.get(), L"Override", 4);
+		Check(DwmSettings::GetOverridableDword(user.get(), machine.get(), L"Value", L"Override") == 4);
+
+		WCHAR value[16]{};
+		wil::reg::set_value_string(machine.get(), L"Path", L"machine.png");
+		DwmSettings::GetString(user.get(), machine.get(), L"Path", value);
+		Check(std::wstring_view(value) == L"machine.png");
+		// An empty string masks HKLM, and REG_EXPAND_SZ remains unexpanded.
+		wil::reg::set_value_string(user.get(), L"Path", L"");
+		DwmSettings::GetString(user.get(), machine.get(), L"Path", value);
+		Check(value[0] == L'\0');
+		wil::reg::set_value_expanded_string(user.get(), L"Path", L"%TEMP%\\x.png");
+		DwmSettings::GetString(user.get(), machine.get(), L"Path", value);
+		Check(std::wstring_view(value) == L"%TEMP%\\x.png");
+		wil::reg::set_value_dword(user.get(), L"Path", 0);
+		DwmSettings::GetString(user.get(), machine.get(), L"Path", value);
+		Check(std::wstring_view(value) == L"machine.png");
+		// A too-small buffer falls through; failure in both layers clears it.
+		wil::reg::set_value_string(user.get(), L"Path", L"a path longer than the buffer");
+		DwmSettings::GetString(user.get(), machine.get(), L"Path", value);
+		Check(std::wstring_view(value) == L"machine.png");
+		DwmSettings::GetString(user.get(), nullptr, L"Path", value);
+		Check(value[0] == L'\0');
+		DwmSettings::GetString(nullptr, machine.get(), L"Path", value);
+		Check(std::wstring_view(value) == L"machine.png");
+		DwmSettings::GetString(nullptr, nullptr, L"Path", value);
+		Check(value[0] == L'\0');
 	}
 
 	void TestOverridableRegistryValueResolution()
@@ -2902,6 +3036,7 @@ int main()
 	TestPixelAlign();
 	TestTransform2DBounds();
 	TestHookRundown();
+	TestImportHooks();
 	TestVersionsAndFields();
 	TestCompleteNameResolutionAndFallback();
 	TestSymbolCatalogCollection();
@@ -2911,6 +3046,7 @@ int main()
 	TestInvalidMetadata();
 	TestPngAssetValidation();
 	TestThemeAtlasLayoutParser();
+	TestDwmSettings();
 	TestOverridableRegistryValueResolution();
 	TestColorizationPresets();
 	TestBlurSettings();

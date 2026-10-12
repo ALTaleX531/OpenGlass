@@ -37,6 +37,9 @@
 		<ClCompile Include="Tests.cpp">
 			<Filter>Source Files</Filter>
 		</ClCompile>
+		<ClCompile Include="WrappingTextTests.cpp">
+			<Filter>Source Files</Filter>
+		</ClCompile>
 		<ClCompile Include="pch.cpp">
 			<Filter>Source Files</Filter>
 		</ClCompile>
@@ -49,8 +52,8 @@
 		<ClCompile Include="..\Common\ThemeAtlasLayout.cpp">
 			<Filter>Shared Sources\Common</Filter>
 		</ClCompile>
-		<ClCompile Include="..\OpenGlass\HookHelper.cpp">
-			<Filter>Shared Sources\OpenGlass</Filter>
+		<ClCompile Include="..\Common\HookHelper.cpp">
+			<Filter>Shared Sources\Common</Filter>
 		</ClCompile>
 		<ClCompile Include="..\OpenGlass\ProjectionRuntime.cpp">
 			<Filter>Shared Sources\OpenGlass</Filter>
@@ -59,6 +62,18 @@
 			<Filter>Shared Sources\OpenGlass</Filter>
 		</ClCompile>
 		<ClCompile Include="..\OpenGlassGUI\PresetPackage.cpp">
+			<Filter>Shared Sources\OpenGlassGUI</Filter>
+		</ClCompile>
+		<ClCompile Include="..\OpenGlassGUI\ColorPreference.cpp">
+			<Filter>Shared Sources\OpenGlassGUI</Filter>
+		</ClCompile>
+		<ClCompile Include="..\OpenGlassGUI\RegistryConfig.cpp">
+			<Filter>Shared Sources\OpenGlassGUI</Filter>
+		</ClCompile>
+		<ClCompile Include="..\OpenGlassGUI\ConfigurationMigration.cpp">
+			<Filter>Shared Sources\OpenGlassGUI</Filter>
+		</ClCompile>
+		<ClCompile Include="..\OpenGlassGUI\ConfigurationResources.cpp">
 			<Filter>Shared Sources\OpenGlassGUI</Filter>
 		</ClCompile>
 	</ItemGroup>

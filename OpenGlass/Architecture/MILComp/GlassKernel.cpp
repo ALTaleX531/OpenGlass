@@ -11,6 +11,7 @@
 #include "GlassRealizer.hpp"
 #include "D3DGlassRealizer.hpp"
 #include "BlurSettings.hpp"
+#include "SystemSettings.hpp"
 
 using namespace OpenGlass;
 namespace OpenGlass::GlassKernel
@@ -344,6 +345,7 @@ void GlassKernel::Update(GlassEngine::UpdateType type)
 				1
 			)
 		);
+		Shared::g_energySaverActive = Util::IsEnergySaverEnabled();
 	}
 	if (type & GlassEngine::UpdateType::Backdrop)
 	{

@@ -1,7 +1,7 @@
 #pragma once
 #include "framework.hpp"
 #include "cpprt.hpp"
-#include "RegistryValueResolver.hpp"
+#include "DwmSettings.hpp"
 #include "uDWMProjection.hpp"
 
 namespace OpenGlass::GlassEngine
@@ -17,48 +17,27 @@ namespace OpenGlass::GlassEngine
 	};
 
 	HKEY GetDwmKey();
+	HKEY GetMachineDwmKey();
 	HKEY GetPersonalizeKey();
 
-	// Both architectures use the same scope-independent inheritance contract.
-	FORCEINLINE std::optional<DWORD> TryGetDwordFromRegistry(PCWSTR keyName)
+	inline DWORD GetDwordFromRegistry(PCWSTR keyName, DWORD defaultValue = 0) noexcept
 	{
-		DWORD value{};
-		if (SUCCEEDED(wil::reg::get_value_dword_nothrow(GetDwmKey(), keyName, &value))) return value;
-		if (SUCCEEDED(wil::reg::get_value_dword_nothrow(HKEY_LOCAL_MACHINE,
-			L"Software\\Microsoft\\Windows\\DWM", keyName, &value))) return value;
-		return std::nullopt;
+		return DwmSettings::GetDword(GetDwmKey(), GetMachineDwmKey(), keyName, defaultValue);
 	}
 
-	FORCEINLINE DWORD GetDwordFromRegistry(PCWSTR keyName, DWORD defaultValue = 0)
-	{
-		return TryGetDwordFromRegistry(keyName).value_or(defaultValue);
-	}
-
-	DWORD GetOverridableDwordFromRegistry(
+	inline DWORD GetOverridableDwordFromRegistry(
 		PCWSTR baseKeyName,
 		PCWSTR overrideKeyName,
 		DWORD defaultValue = 0
-	);
+	) noexcept
+	{
+		return DwmSettings::GetOverridableDword(GetDwmKey(), GetMachineDwmKey(), baseKeyName, overrideKeyName, defaultValue);
+	}
 
 	template <size_t Length>
-	FORCEINLINE void GetStringFromRegistry(PCWSTR keyName, WCHAR(&returnValue)[Length])
+	inline void GetStringFromRegistry(PCWSTR keyName, WCHAR(&value)[Length]) noexcept
 	{
-		HRESULT hr{ S_OK };
-		hr = wil::reg::get_value_string_nothrow(
-			GetDwmKey(),
-			keyName,
-			returnValue
-		);
-		if (FAILED(hr))
-		{
-			hr = wil::reg::get_value_string_nothrow(
-				HKEY_LOCAL_MACHINE,
-				L"Software\\Microsoft\\Windows\\DWM",
-				keyName,
-				returnValue
-			);
-		}
-		if (FAILED(hr)) returnValue[0] = L'\0';
+		DwmSettings::GetString(GetDwmKey(), GetMachineDwmKey(), keyName, value);
 	}
 
 	void LoadRegistry(bool redrawNow = true);

@@ -164,7 +164,7 @@ namespace OpenGlass
 		};
 		addTransparencyRow(L"Windows transparency", m_lblWindowsTransparencyStatus);
 		addTransparencyRow(L"Opaque blend", m_lblOpaqueBlendStatus);
-		addTransparencyRow(L"Power mode", m_lblPowerModeStatus);
+		addTransparencyRow(L"Energy saver", m_lblEnergySaverStatus);
 		addTransparencyRow(L"Opaque on saver", m_lblDisableOnBatteryStatus);
 		wxStaticText* resultKey = new wxStaticText(panel, wxID_ANY, L"Result");
 		wxFont resultKeyFont = resultKey->GetFont();

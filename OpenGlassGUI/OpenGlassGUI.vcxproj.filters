@@ -21,6 +21,18 @@
 		<ClInclude Include="ColorizationPresets.hpp">
 			<Filter>Header Files</Filter>
 		</ClInclude>
+		<ClInclude Include="..\Common\Colorization.hpp">
+			<Filter>Header Files</Filter>
+		</ClInclude>
+		<ClInclude Include="EditorScope.hpp">
+			<Filter>Header Files</Filter>
+		</ClInclude>
+		<ClInclude Include="PreviewJournal.hpp">
+			<Filter>Header Files</Filter>
+		</ClInclude>
+		<ClInclude Include="SettingsCatalog.hpp">
+			<Filter>Header Files</Filter>
+		</ClInclude>
 		<ClInclude Include="Elevation.hpp">
 			<Filter>Header Files</Filter>
 		</ClInclude>

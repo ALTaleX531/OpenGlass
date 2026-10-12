@@ -3,7 +3,6 @@
 #include "Diagnostics.hpp"
 #include "ColorizationPresets.hpp"
 #include "ColorPreference.hpp"
-#include "RegistryValueResolver.hpp"
 #include "RegistryConfig.hpp"
 #include "PreviewJournal.hpp"
 #include "Symbols.hpp"
@@ -138,7 +137,7 @@ namespace OpenGlass
 		// Diagnostics Tab
 		wxStaticText* m_lblWindowsTransparencyStatus{ nullptr };
 		wxStaticText* m_lblOpaqueBlendStatus{ nullptr };
-		wxStaticText* m_lblPowerModeStatus{ nullptr };
+		wxStaticText* m_lblEnergySaverStatus{ nullptr };
 		wxStaticText* m_lblDisableOnBatteryStatus{ nullptr };
 		wxStaticBitmap* m_bmpEffectiveTransparencyWarning{ nullptr };
 		wxStaticText* m_lblEffectiveTransparencyStatus{ nullptr };

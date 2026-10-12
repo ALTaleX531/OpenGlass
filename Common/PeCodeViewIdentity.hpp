@@ -16,6 +16,8 @@ namespace OpenGlass
 		std::wstring pdbName;
 	};
 
+	[[nodiscard]] std::wstring BuildSymbolServerUrl(PCWSTR symbolServerBase, const PeCodeViewIdentity& identity);
+
 	[[nodiscard]] HRESULT ReadLoadedPeCodeViewIdentity(
 		HMODULE module,
 		PeCodeViewIdentity& identity

@@ -64,7 +64,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
     </ClCompile>
-	<ClCompile Include="..\OpenGlass\HookHelper.cpp">
+	<ClCompile Include="..\Common\HookHelper.cpp">
 	  <PrecompiledHeader>NotUsing</PrecompiledHeader>
 	</ClCompile>
     <ClCompile Include="..\OpenGlass\ProjectionRuntime.cpp">

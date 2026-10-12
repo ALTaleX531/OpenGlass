@@ -1,28 +1,19 @@
 #pragma once
 
-#include <Windows.h>
-#include <powersetting.h>
+#include "DwmSettings.hpp"
 
 #include <string>
 #include <string_view>
 
 namespace OpenGlass
 {
-	enum class DiagnosticRegistrySource
-	{
-		Default,
-		User,
-		Machine
-	};
-
 	struct TransparencyDiagnostics
 	{
 		bool windowsTransparencyEnabled{ false };
 		DWORD colorizationOpaqueBlend{ 0 };
-		DiagnosticRegistrySource colorizationOpaqueBlendSource{ DiagnosticRegistrySource::Default };
+		DwmSettings::ValueSource colorizationOpaqueBlendSource{ DwmSettings::ValueSource::Default };
 		bool disableGlassOnBattery{ true };
-		DiagnosticRegistrySource disableGlassOnBatterySource{ DiagnosticRegistrySource::Default };
-		EFFECTIVE_POWER_MODE effectivePowerMode{ EffectivePowerModeBalanced };
+		DwmSettings::ValueSource disableGlassOnBatterySource{ DwmSettings::ValueSource::Default };
 		bool powerSaverActive{ false };
 	};
 

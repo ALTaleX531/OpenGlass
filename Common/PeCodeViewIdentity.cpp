@@ -10,10 +10,32 @@
 #include <new>
 #include <span>
 
-#include <wil/resource.h>
+#include <wil/stl.h>
 
 namespace OpenGlass
 {
+	std::wstring BuildSymbolServerUrl(PCWSTR symbolServerBase, const PeCodeViewIdentity& identity)
+	{
+		return wil::str_printf<std::wstring>(
+			L"%ls%ls/%08lX%04hX%04hX%02hhX%02hhX%02hhX%02hhX%02hhX%02hhX%02hhX%02hhX%x/%ls",
+			symbolServerBase,
+			identity.pdbName.c_str(),
+			identity.pdbGuid.Data1,
+			identity.pdbGuid.Data2,
+			identity.pdbGuid.Data3,
+			identity.pdbGuid.Data4[0],
+			identity.pdbGuid.Data4[1],
+			identity.pdbGuid.Data4[2],
+			identity.pdbGuid.Data4[3],
+			identity.pdbGuid.Data4[4],
+			identity.pdbGuid.Data4[5],
+			identity.pdbGuid.Data4[6],
+			identity.pdbGuid.Data4[7],
+			identity.pdbAge,
+			identity.pdbName.c_str()
+		);
+	}
+
 	namespace
 	{
 		struct RsdsHeader

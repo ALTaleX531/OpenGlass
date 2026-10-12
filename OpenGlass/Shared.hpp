@@ -1,10 +1,11 @@
 #pragma once
 #include "framework.hpp"
 #include "cpprt.hpp"
+#include "DwmSettings.hpp"
 
 namespace OpenGlass::Shared
 {
-	inline bool g_xxSaver{ false };
+	inline bool g_energySaverActive{ false };
 	inline bool g_transparencyEnabled{ true };
 
 	inline enum class GlassType : UINT
@@ -98,20 +99,7 @@ namespace OpenGlass::Shared
 
 	FORCEINLINE bool IsTransparencyDisabled()
 	{
-		if (g_opaqueBlend)
-		{
-			return true;
-		}
-		if (g_xxSaver && g_disableOnBattery)
-		{
-			return true;
-		}
-		if (!g_transparencyEnabled)
-		{
-			return true;
-		}
-
-		return false;
+		return DwmSettings::IsTransparencyDisabled(g_opaqueBlend, g_transparencyEnabled, g_energySaverActive, g_disableOnBattery);
 	}
 	FORCEINLINE bool IsGlassFullyOpaque(
 		float alpha,

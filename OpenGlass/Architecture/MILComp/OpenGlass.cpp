@@ -2,7 +2,6 @@
 #include "ApplicationPaths.hpp"
 #include "resource.h"
 #include "Util.hpp"
-#include "Shared.hpp"
 #include "OpenGlass.hpp"
 #include "HookHelper.hpp"
 #include "SymbolParser.hpp"
@@ -27,13 +26,8 @@ namespace OpenGlass
 	};
 	std::atomic<LifecycleState> g_lifecycleState{ LifecycleState::Inert };
 
-	_Function_class_(EFFECTIVE_POWER_MODE_CALLBACK)
-	VOID CALLBACK EffectivePowerModeCallback(
-		EFFECTIVE_POWER_MODE mode,
-		PVOID context
-	);
 	LRESULT CALLBACK DwmNotificationWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	PVOID g_powerNotify{ nullptr };
+	wil::unique_hpowernotify g_powerNotify[2]{};
 	WNDPROC g_oldWndProc{ nullptr };
 
 	DWORD SymbolLoaderUIThreadEntryPoint(PVOID);
@@ -61,27 +55,6 @@ namespace OpenGlass
 	bool g_symbolRequiresDownloading{ false };
 	bool g_symbolDownloadCompleted{ false };
 	std::wstring g_detailsInfo{};
-}
-
-_Function_class_(EFFECTIVE_POWER_MODE_CALLBACK)
-VOID CALLBACK OpenGlass::EffectivePowerModeCallback(
-	EFFECTIVE_POWER_MODE mode,
-	[[maybe_unused]] PVOID context
-)
-{
-	if (g_lifecycleState.load(std::memory_order_acquire) != LifecycleState::Active)
-	{
-		return;
-	}
-	if (mode < (os::buildNumber < os::build_w11_24h2 ? EffectivePowerModeBetterBattery : EffectivePowerModeBalanced))
-	{
-		Shared::g_xxSaver = true;
-	}
-	else
-	{
-		Shared::g_xxSaver = false;
-	}
-	GlassEngine::Update(GlassEngine::UpdateType::Framework);
 }
 
 LRESULT CALLBACK OpenGlass::DwmNotificationWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -113,6 +86,14 @@ LRESULT CALLBACK OpenGlass::DwmNotificationWndProc(HWND hWnd, UINT uMsg, WPARAM 
 		case WM_THEMECHANGED: // theme switched, we can handle this to load our custom theme atlas
 		{
 			GlassEngine::Update(GlassEngine::UpdateType::Theme);
+			break;
+		}
+		case WM_POWERBROADCAST:
+		{
+			if (wParam == PBT_POWERSETTINGCHANGE || wParam == PBT_APMPOWERSTATUSCHANGE)
+			{
+				GlassEngine::Update(GlassEngine::UpdateType::Framework);
+			}
 			break;
 		}
 		case WM_WTSSESSION_CHANGE: // session changed, user has just logged in/off
@@ -722,15 +703,20 @@ void OpenGlass::Startup()
 	);
 	FAIL_FAST_LAST_ERROR_IF_MSG(g_oldWndProc == 0, "Unable to subclass the DWM notification window");
 
-	FAIL_FAST_IF_FAILED_MSG(
-		PowerRegisterForEffectivePowerModeNotifications(
-			EFFECTIVE_POWER_MODE_V1,
-			EffectivePowerModeCallback,
-			nullptr,
-			&g_powerNotify
-		),
-		"Unable to register effective power mode notifications"
-	);
+	// Register both: an unsupported setting GUID can still register successfully.
+	const GUID* powerSettings[]{ &GUID_ENERGY_SAVER_STATUS, &GUID_POWER_SAVING_STATUS };
+	for (size_t index{}; index < ARRAYSIZE(powerSettings); ++index)
+	{
+		g_powerNotify[index].reset(
+			RegisterPowerSettingNotification(
+				GlassEngine::GetDwmNotificationWindow(),
+				powerSettings[index],
+				DEVICE_NOTIFY_WINDOW_HANDLE
+			)
+		);
+		FAIL_FAST_LAST_ERROR_IF_NULL_MSG(g_powerNotify[index].get(), "Unable to register power setting notifications");
+	}
+	FAIL_FAST_IF_WIN32_BOOL_FALSE_MSG(ChangeWindowMessageFilterEx(GlassEngine::GetDwmNotificationWindow(), WM_POWERBROADCAST, MSGFLT_ALLOW, nullptr), "Unable to allow the DWM power notification");
 
 	g_lifecycleState.store(LifecycleState::Active, std::memory_order_release);
 	GlassEngine::Activate();
@@ -768,11 +754,11 @@ void OpenGlass::Shutdown()
 
 		FAIL_FAST_IF_WIN32_BOOL_FALSE_MSG(ChangeWindowMessageFilterEx(GlassEngine::GetDwmNotificationWindow(), WM_DWMCOLORIZATIONCOLORCHANGED, MSGFLT_DISALLOW, nullptr), "Unable to remove the DWM colorization message filter");
 
-		FAIL_FAST_IF_FAILED_MSG(
-			PowerUnregisterFromEffectivePowerModeNotifications(g_powerNotify),
-			"Unable to unregister effective power mode notifications"
-		);
-		g_powerNotify = nullptr;
+		FAIL_FAST_IF_WIN32_BOOL_FALSE_MSG(ChangeWindowMessageFilterEx(GlassEngine::GetDwmNotificationWindow(), WM_POWERBROADCAST, MSGFLT_DISALLOW, nullptr), "Unable to remove the DWM power message filter");
+		for (auto& notification : g_powerNotify)
+		{
+			notification.reset();
+		}
 
 		GlassEngine::Shutdown();
 		GlassEngine::UnloadRegistry();

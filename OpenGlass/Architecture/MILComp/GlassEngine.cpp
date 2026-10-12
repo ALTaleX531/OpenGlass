@@ -14,11 +14,13 @@
 #include "GlassIntegrity.hpp"
 #include "CustomThemeAtlasLoader.hpp"
 #include "GlassService.hpp"
+#include "SystemSettings.hpp"
 
 using namespace OpenGlass;
 namespace OpenGlass::GlassEngine
 {
 	wil::unique_hkey g_dwmKey{ nullptr };
+	wil::unique_hkey g_machineDwmKey{ nullptr };
 	wil::unique_hkey g_personalizeKey{ nullptr };
 	HWND g_notificationWindow{ nullptr };
 }
@@ -26,6 +28,11 @@ namespace OpenGlass::GlassEngine
 HKEY GlassEngine::GetDwmKey()
 {
 	return g_dwmKey.get();
+}
+
+HKEY GlassEngine::GetMachineDwmKey()
+{
+	return g_machineDwmKey.get();
 }
 
 HKEY GlassEngine::GetPersonalizeKey()
@@ -54,8 +61,9 @@ void GlassEngine::LoadRegistry(bool redrawNow)
 }
 void GlassEngine::UnloadRegistry()
 {
-	wil::reg::open_unique_key_nothrow(HKEY_LOCAL_MACHINE, L"Software\\Microsoft\\Windows\\DWM", g_dwmKey);
-	wil::reg::open_unique_key_nothrow(HKEY_LOCAL_MACHINE, L"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", g_personalizeKey);
+	g_dwmKey.reset();
+	LOG_IF_FAILED(wil::reg::open_unique_key_nothrow(HKEY_LOCAL_MACHINE, DwmSettings::g_keyPath, g_machineDwmKey));
+	LOG_IF_FAILED(wil::reg::open_unique_key_nothrow(HKEY_LOCAL_MACHINE, Util::g_personalizeKeyPath, g_personalizeKey));
 }
 
 void GlassEngine::SetDwmNotificationWindow(HWND hWnd)

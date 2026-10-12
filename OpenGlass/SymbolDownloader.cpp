@@ -108,29 +108,8 @@ winrt::Windows::Foundation::IAsyncOperation<int> OpenGlass::DownloadSymbolForMod
 	PeCodeViewIdentity identity{};
 	THROW_IF_FAILED(ReadLoadedPeCodeViewIdentity(moduleHandle, identity));
 
-	WCHAR url[MAX_PATH]{};
-	CDownloadContext context{ url };
-	wcscpy_s(url, symbolServerBase);
-	wcscat_s(url, identity.pdbName.c_str());
-	wcscat_s(url, L"/");
-	swprintf_s(
-		url + wcslen(url),
-		33,
-		L"%08lX%04hX%04hX%02hhX%02hhX%02hhX%02hhX%02hhX%02hhX%02hhX%02hhX",
-		identity.pdbGuid.Data1,
-		identity.pdbGuid.Data2,
-		identity.pdbGuid.Data3,
-		identity.pdbGuid.Data4[0],
-		identity.pdbGuid.Data4[1],
-		identity.pdbGuid.Data4[2],
-		identity.pdbGuid.Data4[3],
-		identity.pdbGuid.Data4[4],
-		identity.pdbGuid.Data4[5],
-		identity.pdbGuid.Data4[6],
-		identity.pdbGuid.Data4[7]
-	);
-	swprintf_s(url + wcslen(url), 16, L"%x/", identity.pdbAge);
-	wcscat_s(url, identity.pdbName.c_str());
+	const auto url = BuildSymbolServerUrl(symbolServerBase, identity);
+	CDownloadContext context{ identity.pdbName.c_str(), url.c_str() };
 
 	WCHAR pdbFilePath[MAX_PATH]{};
 	THROW_IF_FAILED(
@@ -151,11 +130,9 @@ winrt::Windows::Foundation::IAsyncOperation<int> OpenGlass::DownloadSymbolForMod
 	});
 	if (contextReceiver)
 	{
-		context.pdbFileName = identity.pdbName.c_str();
-		context.url = url;
 		*contextReceiver = &context;
 	}
-	const HRESULT hr = co_await downloader.DownloadAsync(url, pdbFilePath, progressCallback);
+	const HRESULT hr = co_await downloader.DownloadAsync(url.c_str(), pdbFilePath, progressCallback);
 	co_return hr;
 }
 catch (...)

@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CustomBlurEffect.hpp"
 #include "D2DPrivates.hpp"
+#include "RectF.hpp"
 
 using namespace OpenGlass;
 
@@ -27,42 +28,6 @@ namespace
 		GetCurrentDirectoryW(length + 1, workingDir.data());
 		PathCchAppend(workingDir.data(), workingDir.size(), kImageFileName);
 		return workingDir;
-	}
-
-	namespace RectF
-	{
-		D2D1_RECT_F TransformRect(const D2D1_RECT_F& rectangle, const D2D1_MATRIX_3X2_F& matrix)
-		{
-			const auto matrixHelper = D2D1::Matrix3x2F::ReinterpretBaseType(&matrix);
-			const auto topLeft = matrixHelper->TransformPoint(D2D1::Point2F(rectangle.left, rectangle.top));
-			const auto topRight = matrixHelper->TransformPoint(D2D1::Point2F(rectangle.right, rectangle.top));
-			const auto bottomLeft = matrixHelper->TransformPoint(D2D1::Point2F(rectangle.left, rectangle.bottom));
-			const auto bottomRight = matrixHelper->TransformPoint(D2D1::Point2F(rectangle.right, rectangle.bottom));
-
-			D2D1_RECT_F transformedRect{};
-			transformedRect.left = std::min({ topLeft.x, topRight.x, bottomLeft.x, bottomRight.x });
-			transformedRect.top = std::min({ topLeft.y, topRight.y, bottomLeft.y, bottomRight.y });
-			transformedRect.right = std::max({ topLeft.x, topRight.x, bottomLeft.x, bottomRight.x });
-			transformedRect.bottom = std::max({ topLeft.y, topRight.y, bottomLeft.y, bottomRight.y });
-
-			return transformedRect;
-		}
-
-		bool IntersectUnsafe(D2D1_RECT_F& dst, const D2D1_RECT_F& src)
-		{
-			dst.left = std::max(dst.left, src.left);
-			dst.top = std::max(dst.top, src.top);
-			dst.right = std::min(dst.right, src.right);
-			dst.bottom = std::min(dst.bottom, src.bottom);
-
-			if (!wil::rect_is_empty(dst))
-			{
-				return true;
-			}
-
-			dst.left = dst.top = dst.right = dst.bottom = 0.f;
-			return false;
-		}
 	}
 }
 

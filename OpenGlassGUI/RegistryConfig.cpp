@@ -1,13 +1,9 @@
 #include "pch.h"
 #include "RegistryConfig.hpp"
+#include "DwmSettings.hpp"
 
 namespace OpenGlass
 {
-	namespace
-	{
-		constexpr auto DwmSubKey = L"SOFTWARE\\Microsoft\\Windows\\DWM";
-	}
-
 	RegistryConfig::RegistryConfig(Mode mode, std::wstring userSid)
 		: m_mode(mode)
 		, m_userSid(std::move(userSid))
@@ -61,13 +57,13 @@ namespace OpenGlass
 	{
 		if (m_mode == Mode::Machine)
 		{
-			return { HKEY_LOCAL_MACHINE, DwmSubKey };
+			return { HKEY_LOCAL_MACHINE, DwmSettings::g_keyPath };
 		}
 		if (m_userSid.empty())
 		{
-			return { HKEY_CURRENT_USER, DwmSubKey };
+			return { HKEY_CURRENT_USER, DwmSettings::g_keyPath };
 		}
-		return { HKEY_USERS, m_userSid + L"\\" + DwmSubKey };
+		return { HKEY_USERS, m_userSid + L"\\" + DwmSettings::g_keyPath };
 	}
 
 	wil::unique_hkey RegistryConfig::OpenKey(bool readOnly) const

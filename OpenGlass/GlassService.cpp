@@ -2,6 +2,8 @@
 #include "resource.h"
 #include "Util.hpp"
 #include "GlassService.hpp"
+#include "SystemSettings.hpp"
+#include "DwmSettings.hpp"
 #include "HookHelper.hpp"
 #include "OpenGlass.hpp"
 
@@ -54,7 +56,7 @@ HRESULT GlassService::OpenUserRegistryForDwm(RequestBuffer& content, DWORD proce
 		THROW_IF_FAILED(HRESULT_FROM_WIN32(RegOpenCurrentUser(KEY_READ, &userKey)));
 	}
 	wil::unique_hkey key{ nullptr };
-	THROW_IF_FAILED(wil::reg::open_unique_key_nothrow(userKey.get(), L"Software\\Microsoft\\Windows\\DWM", key));
+	THROW_IF_FAILED(wil::reg::open_unique_key_nothrow(userKey.get(), DwmSettings::g_keyPath, key));
 	THROW_IF_WIN32_BOOL_FALSE(
 		DuplicateHandle(
 			GetCurrentProcess(),
@@ -66,7 +68,7 @@ HRESULT GlassService::OpenUserRegistryForDwm(RequestBuffer& content, DWORD proce
 			DUPLICATE_SAME_ACCESS | DUPLICATE_CLOSE_SOURCE
 		)
 	);
-	THROW_IF_FAILED(wil::reg::open_unique_key_nothrow(userKey.get(), L"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", key));
+	THROW_IF_FAILED(wil::reg::open_unique_key_nothrow(userKey.get(), Util::g_personalizeKeyPath, key));
 	THROW_IF_WIN32_BOOL_FALSE(
 		DuplicateHandle(
 			GetCurrentProcess(),

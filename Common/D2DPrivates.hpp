@@ -1,5 +1,7 @@
 #pragma once
-#include "framework.hpp"
+#include <d2d1_1.h>
+#include <d3d11_4.h>
+#include <dxgi1_5.h>
 
 namespace OpenGlass
 {

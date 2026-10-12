@@ -1,49 +1,15 @@
-#include "pch.h"
+#include "SystemSettings.hpp"
 #include "ApplicationPaths.hpp"
 #include "Diagnostics.hpp"
 
 #include <filesystem>
-#include <atomic>
-
-#pragma comment(lib, "powrprof.lib")
+#include <vector>
 
 namespace OpenGlass
 {
 	namespace
 	{
 		constexpr PCWSTR DwmCrashDumpKey = LR"(SOFTWARE\Microsoft\Windows\Windows Error Reporting\LocalDumps\dwm.exe)";
-		constexpr PCWSTR DwmConfigurationKey = LR"(SOFTWARE\Microsoft\Windows\DWM)";
-		constexpr PCWSTR PersonalizeKey = LR"(SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize)";
-		constexpr DWORD Windows11_24H2Build = 26100;
-
-		struct PowerModeCapture
-		{
-			std::atomic<EFFECTIVE_POWER_MODE> mode{ EffectivePowerModeBalanced };
-			HANDLE receivedEvent{ nullptr };
-		};
-
-		_Function_class_(EFFECTIVE_POWER_MODE_CALLBACK)
-		VOID CALLBACK CaptureEffectivePowerMode(EFFECTIVE_POWER_MODE mode, PVOID context)
-		{
-			auto* capture = static_cast<PowerModeCapture*>(context);
-			capture->mode.store(mode, std::memory_order_release);
-			SetEvent(capture->receivedEvent);
-		}
-
-		DWORD GetWindowsBuildNumber() noexcept
-		{
-			using RtlGetVersionFn = NTSTATUS(WINAPI*)(PRTL_OSVERSIONINFOW);
-			const auto rtlGetVersion = reinterpret_cast<RtlGetVersionFn>(
-				GetProcAddress(GetModuleHandleW(L"ntdll.dll"), "RtlGetVersion")
-			);
-			if (!rtlGetVersion)
-			{
-				return 0;
-			}
-
-			RTL_OSVERSIONINFOW version{ sizeof(version) };
-			return rtlGetVersion(&version) >= 0 ? version.dwBuildNumber : 0;
-		}
 
 		HRESULT ResultFromStatus(LSTATUS status) noexcept
 		{
@@ -130,51 +96,6 @@ namespace OpenGlass
 			return S_OK;
 		}
 
-		HRESULT QueryDwordValue(HKEY root, const std::wstring& subKey, PCWSTR valueName, DWORD& value) noexcept
-		{
-			wil::unique_hkey key;
-			const HRESULT openResult = wil::reg::open_unique_key_nothrow(root, subKey.c_str(), key, wil::reg::key_access::read);
-			if (FAILED(openResult))
-			{
-				return openResult;
-			}
-			return wil::reg::get_value_dword_nothrow(key.get(), valueName, &value);
-		}
-
-		void ResolveRuntimeDword(
-			std::wstring_view userSid,
-			PCWSTR valueName,
-			DWORD defaultValue,
-			DWORD& value,
-			DiagnosticRegistrySource& source
-		) noexcept
-		{
-			const std::wstring userKey = std::wstring(userSid) + L"\\" + DwmConfigurationKey;
-			const HRESULT userResult = userSid.empty()
-				? HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND)
-				: QueryDwordValue(HKEY_USERS, userKey, valueName, value);
-			if (SUCCEEDED(userResult))
-			{
-				source = DiagnosticRegistrySource::User;
-				return;
-			}
-			if (userResult != HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND)
-				&& userResult != HRESULT_FROM_WIN32(ERROR_PATH_NOT_FOUND))
-			{
-				value = defaultValue;
-				source = DiagnosticRegistrySource::Default;
-				return;
-			}
-			if (SUCCEEDED(QueryDwordValue(HKEY_LOCAL_MACHINE, DwmConfigurationKey, valueName, value)))
-			{
-				source = DiagnosticRegistrySource::Machine;
-				return;
-			}
-
-			value = defaultValue;
-			source = DiagnosticRegistrySource::Default;
-		}
-
 		HRESULT ResolveDumpFolder(std::wstring_view requestedFolder, std::filesystem::path& resolvedFolder) noexcept
 		try
 		{
@@ -223,65 +144,32 @@ namespace OpenGlass
 	{
 		diagnostics = {};
 
-		DWORD transparencyEnabled{};
-		const std::wstring personalizeKey = std::wstring(userSid) + L"\\" + PersonalizeKey;
+		const std::wstring personalizeKey = std::wstring(userSid) + L"\\" + Util::g_personalizeKeyPath;
 		wil::unique_hkey personalize;
 		const HRESULT personalizeResult = wil::reg::open_unique_key_nothrow(
 			userSid.empty() ? HKEY_CURRENT_USER : HKEY_USERS,
-			userSid.empty() ? PersonalizeKey : personalizeKey.c_str(),
+			userSid.empty() ? Util::g_personalizeKeyPath : personalizeKey.c_str(),
 			personalize,
 			wil::reg::key_access::read
 		);
-		if (SUCCEEDED(personalizeResult))
-		{
-			wil::reg::get_value_dword_nothrow(personalize.get(), L"EnableTransparency", &transparencyEnabled);
-		}
-		diagnostics.windowsTransparencyEnabled = FAILED(personalizeResult) || transparencyEnabled != 0;
+		diagnostics.windowsTransparencyEnabled = FAILED(personalizeResult) || Util::IsTransparencyEnabled(personalize.get());
 
-		ResolveRuntimeDword(
-			userSid,
-			L"ColorizationOpaqueBlend",
-			0,
-			diagnostics.colorizationOpaqueBlend,
-			diagnostics.colorizationOpaqueBlendSource
+		wil::unique_hkey userDwm, machineDwm;
+		if (!userSid.empty())
+		{
+			const auto userKey = std::wstring(userSid) + L"\\" + DwmSettings::g_keyPath;
+			wil::reg::open_unique_key_nothrow(HKEY_USERS, userKey.c_str(), userDwm);
+		}
+		wil::reg::open_unique_key_nothrow(HKEY_LOCAL_MACHINE, DwmSettings::g_keyPath, machineDwm);
+		diagnostics.colorizationOpaqueBlend = DwmSettings::GetDword(
+			userDwm.get(), machineDwm.get(), L"ColorizationOpaqueBlend", 0, &diagnostics.colorizationOpaqueBlendSource
 		);
-		DWORD disableGlassOnBattery{};
-		ResolveRuntimeDword(
-			userSid,
-			L"DisableGlassOnBattery",
-			1,
-			disableGlassOnBattery,
-			diagnostics.disableGlassOnBatterySource
+		const auto disableGlassOnBattery = DwmSettings::GetDword(
+			userDwm.get(), machineDwm.get(), L"DisableGlassOnBattery", 1, &diagnostics.disableGlassOnBatterySource
 		);
 		diagnostics.disableGlassOnBattery = disableGlassOnBattery != 0;
 
-		wil::unique_handle receivedEvent{ CreateEventW(nullptr, TRUE, FALSE, nullptr) };
-		RETURN_LAST_ERROR_IF_NULL(receivedEvent);
-		PowerModeCapture capture;
-		capture.receivedEvent = receivedEvent.get();
-		PVOID registration{};
-		RETURN_IF_FAILED(PowerRegisterForEffectivePowerModeNotifications(
-			EFFECTIVE_POWER_MODE_V1,
-			CaptureEffectivePowerMode,
-			&capture,
-			&registration
-		));
-		const DWORD waitResult = WaitForSingleObject(receivedEvent.get(), 1000);
-		const HRESULT unregisterResult = PowerUnregisterFromEffectivePowerModeNotifications(registration);
-		if (waitResult == WAIT_FAILED)
-		{
-			return HRESULT_FROM_WIN32(GetLastError());
-		}
-		if (waitResult == WAIT_TIMEOUT)
-		{
-			return HRESULT_FROM_WIN32(ERROR_TIMEOUT);
-		}
-		RETURN_IF_FAILED(unregisterResult);
-		diagnostics.effectivePowerMode = capture.mode.load(std::memory_order_acquire);
-		const EFFECTIVE_POWER_MODE saverThreshold = GetWindowsBuildNumber() < Windows11_24H2Build
-			? EffectivePowerModeBetterBattery
-			: EffectivePowerModeBalanced;
-		diagnostics.powerSaverActive = diagnostics.effectivePowerMode < saverThreshold;
+		diagnostics.powerSaverActive = Util::IsEnergySaverEnabled();
 		return S_OK;
 	}
 	catch (...)

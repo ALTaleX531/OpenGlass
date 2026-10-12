@@ -35,7 +35,7 @@
   </ImportGroup>
   <ItemDefinitionGroup>
     <Link>
-      <AdditionalDependencies>comctl32.lib;rpcrt4.lib;winmm.lib;advapi32.lib;wsock32.lib;uxtheme.lib;powrprof.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>comctl32.lib;rpcrt4.lib;winmm.lib;advapi32.lib;wsock32.lib;uxtheme.lib;ntdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <UACExecutionLevel>AsInvoker</UACExecutionLevel>
     </Link>
     <ClCompile>
@@ -47,6 +47,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
 	<ClInclude Include="ColorizationPresets.hpp" />
+	<ClInclude Include="..\Common\Colorization.hpp" />
+	<ClInclude Include="EditorScope.hpp" />
+	<ClInclude Include="PreviewJournal.hpp" />
+	<ClInclude Include="SettingsCatalog.hpp" />
 	<ClInclude Include="ColorPreference.hpp" />
 	<ClInclude Include="ColorPolicy.hpp" />
 	<ClInclude Include="ShellColorRefresh.hpp" />
@@ -81,7 +85,7 @@
 	<ClCompile Include="ColorPreference.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
     <ClCompile Include="ConfigurationMigration.cpp" />
     <ClCompile Include="Elevation.cpp" />
-    <ClCompile Include="Diagnostics.cpp" />
+    <ClCompile Include="Diagnostics.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
     <ClCompile Include="OpenGlassGUI.cpp" />
 	<ClCompile Include="MainFrame.ColorPresets.cpp" />
     <ClCompile Include="MainFrame.Presets.cpp" />

@@ -13,6 +13,7 @@
 #include "GlassRealizer.hpp"
 #include "D3DGlassRealizer.hpp"
 #include "BlurSettings.hpp"
+#include "SystemSettings.hpp"
 #include "DetourChains.hpp"
 
 using namespace OpenGlass;
@@ -560,6 +561,7 @@ void GlassKernel::Update(GlassEngine::UpdateType type)
 				1
 			)
 		);
+		Shared::g_energySaverActive = Util::IsEnergySaverEnabled();
 	}
 	if (type & GlassEngine::UpdateType::Backdrop)
 	{
