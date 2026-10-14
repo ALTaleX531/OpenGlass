@@ -31,6 +31,7 @@
 #include <wrl/client.h>
 
 int TestWrappingTextLayout();
+int TestThemeColorization();
 
 using namespace OpenGlass;
 using namespace OpenGlassTests;
@@ -3210,6 +3211,7 @@ int main()
 	TestConfigurationStrings();
 	TestConfigurationReset();
 	g_failures += TestWrappingTextLayout();
+	g_failures += TestThemeColorization();
 	TestPresetProvenance();
 	try { TestPresetPackageRoundTrip(); }
 	catch (const std::exception& error) { fprintf(stderr, "Preset test exception: %s\n", error.what()); ++g_failures; }

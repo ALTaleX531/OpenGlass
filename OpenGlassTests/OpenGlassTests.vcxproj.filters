@@ -21,6 +21,9 @@
 		<Filter Include="Shared Sources\OpenGlassGUI">
 			<UniqueIdentifier>{3854B816-4410-4ED0-933B-BA8E6EB8BC3A}</UniqueIdentifier>
 		</Filter>
+		<Filter Include="Shared Sources\OpenGlassThemeExtension">
+			<UniqueIdentifier>{F07BDCE3-6062-4472-8F1F-8C165624BFCB}</UniqueIdentifier>
+		</Filter>
 	</ItemGroup>
 	<ItemGroup>
 		<ClInclude Include="pch.h">
@@ -38,6 +41,9 @@
 			<Filter>Source Files</Filter>
 		</ClCompile>
 		<ClCompile Include="WrappingTextTests.cpp">
+			<Filter>Source Files</Filter>
+		</ClCompile>
+		<ClCompile Include="ThemeColorizationTests.cpp">
 			<Filter>Source Files</Filter>
 		</ClCompile>
 		<ClCompile Include="pch.cpp">
@@ -75,6 +81,9 @@
 		</ClCompile>
 		<ClCompile Include="..\OpenGlassGUI\ConfigurationResources.cpp">
 			<Filter>Shared Sources\OpenGlassGUI</Filter>
+		</ClCompile>
+		<ClCompile Include="..\OpenGlassThemeExtension\Colorization.cpp">
+			<Filter>Shared Sources\OpenGlassThemeExtension</Filter>
 		</ClCompile>
 	</ItemGroup>
 </Project>

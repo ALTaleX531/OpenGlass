@@ -34,6 +34,10 @@ See the [configuration guide](https://github.com/ALTaleX531/OpenGlass/wiki/Confi
 
 OpenGlass is aimed at advanced users who are comfortable troubleshooting DWM. For a simpler alternative, consider [DWMBlurGlass](https://github.com/Maplespe/DWMBlurGlass).
 
+## Windows theme integration for developers
+
+The theme extension connects Windows theme application and the classic color panel to OpenGlass. It is intended for developers who build and customize it from source. The installer does not include or manage it. See [Windows theme integration](https://github.com/ALTaleX531/OpenGlass/wiki/Windows-theme-integration) for building, manual installation and behavior.
+
 ## Reporting issues
 
 Report bugs in [GitHub Issues](https://github.com/ALTaleX531/OpenGlass/issues/new), with your exact Windows build, OpenGlass version and reproduction steps. For crashes or opaque glass, start with **Diagnostics** and the [troubleshooting guide](https://github.com/ALTaleX531/OpenGlass/wiki/Troubleshooting-and-crash-dumps).

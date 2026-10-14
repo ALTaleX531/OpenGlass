@@ -60,6 +60,14 @@
 	</ClCompile>
 	<ClCompile Include="CrossTu.cpp" />
     <ClCompile Include="Tests.cpp" />
+    <ClCompile Include="ThemeColorizationTests.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <ExceptionHandling>Sync</ExceptionHandling>
+    </ClCompile>
+    <ClCompile Include="..\OpenGlassThemeExtension\Colorization.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <ExceptionHandling>Sync</ExceptionHandling>
+    </ClCompile>
     <ClCompile Include="WrappingTextTests.cpp">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>

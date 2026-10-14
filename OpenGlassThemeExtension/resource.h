@@ -1,0 +1,12 @@
+#pragma once
+
+#define IDR_COLOR_PAGE 1002
+
+// Also referenced by number in ColorPage.xml.
+#define IDS_COLOR_LABEL 101
+#define IDS_CUSTOM_COLOR 102
+#define IDS_ENABLE_TRANSPARENCY 103
+#define IDS_TRANSPARENCY_DESCRIPTION 104
+#define IDS_COLOR_SELECTOR_DESCRIPTION 105
+#define IDS_ACTION_CLICK 106
+#define IDS_ACTION_PRESS 107
