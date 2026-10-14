@@ -9,6 +9,43 @@ namespace OpenGlass::DwmSettings
 {
 	inline constexpr PCWSTR g_keyPath = L"SOFTWARE\\Microsoft\\Windows\\DWM";
 
+	enum UpdateType : UCHAR
+	{
+		None = 0,
+		Framework = 1 << 0,
+		Backdrop = 1 << 1,
+		Theme = 1 << 2,
+		RestartRequired = 1 << 3,
+		// Registry reload; theme resources are refreshed separately.
+		All = Backdrop | Framework
+	};
+
+	constexpr UpdateType operator|(UpdateType left, UpdateType right) noexcept
+	{
+		return static_cast<UpdateType>(static_cast<unsigned>(left) | static_cast<unsigned>(right));
+	}
+
+	inline void NotifyChange(HWND window, UpdateType type) noexcept
+	{
+		// Notification delivery is best-effort, including without OpenGlass loaded.
+		if (!window) return;
+		if (type & UpdateType::Backdrop)
+		{
+			// WM_SETTINGCHANGE carries a string, so SendNotifyMessageW rejects it
+			// across processes. Use a bounded synchronous send.
+			SetLastError(ERROR_SUCCESS);
+			LOG_IF_WIN32_BOOL_FALSE(static_cast<BOOL>(SendMessageTimeoutW(
+				window, WM_SETTINGCHANGE, 0,
+				reinterpret_cast<LPARAM>(L"ImmersiveColorSet"),
+				SMTO_ABORTIFHUNG | SMTO_ERRORONEXIT, 1000, nullptr
+			) != 0));
+		}
+		if (type & UpdateType::Theme)
+		{
+			LOG_IF_WIN32_BOOL_FALSE(SendNotifyMessageW(window, WM_THEMECHANGED, 0, 0));
+		}
+	}
+
 	enum class ValueSource
 	{
 		Default,

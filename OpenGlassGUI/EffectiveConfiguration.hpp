@@ -6,17 +6,19 @@
 
 namespace OpenGlass::EffectiveConfiguration
 {
-	// monostate removes customization in the target scope; it does not block inheritance.
+	// monostate removes ordinary customization; system transparency instead writes its enabled default.
 	using Value = std::variant<std::monostate, DWORD, std::wstring>;
 	using Model = std::map<Settings::Id, Value>;
 	struct Layer
 	{
 		std::map<Settings::Id, RegistryConfig::RawValue> values;
 	};
-	inline Layer Read(const RegistryConfig& config)
+	inline Layer Read(const RegistryConfig& config, bool systemTransparency = true)
 	{
 		Layer layer;
-		for (const auto& spec : Settings::Catalog) layer.values.emplace(spec.id, config.ReadRaw(std::wstring(spec.name)));
+		for (const auto& spec : Settings::Catalog)
+			if (spec.id != Settings::Id::EnableTransparency || (systemTransparency && config.GetMode() == RegistryConfig::Mode::User))
+				layer.values.emplace(spec.id, config.ReadRaw(std::wstring(spec.name)));
 		return layer;
 	}
 	inline Value Decode(const RegistryConfig::RawValue& raw, const Settings::Spec& spec)
@@ -65,14 +67,26 @@ namespace OpenGlass::EffectiveConfiguration
 		if (!std::holds_alternative<std::monostate>(value)) return value;
 		return Decode(Raw(machine, id), spec);
 	}
-	inline Model Capture(const Layer& user, const Layer& machine, unsigned version = Settings::CatalogVersion)
+	inline Model Capture(const Layer& user, const Layer& machine, unsigned version = Settings::CatalogVersion, bool systemTransparency = true)
 	{
 		Model result;
 		for (const auto& spec : Settings::Catalog)
+		{
 			// Windows base colors/balances are not preset customization. In particular,
 			// do not freeze a Windows-generated balance into an OpenGlass Override.
-			if (Settings::IsPresetPackSetting(spec, version) && !Settings::IsWindowsColorBase(spec.id))
-				result.emplace(spec.id, Resolve(user, machine, spec.id));
+			if (!Settings::IsPresetPackSetting(spec, version) || Settings::IsWindowsColorBase(spec.id)) continue;
+			const bool transparency = systemTransparency && spec.id == Settings::Id::ColorizationOpaqueBlend;
+			auto value = transparency
+				? Decode(Raw(user, Settings::Id::EnableTransparency), Settings::Get(Settings::Id::EnableTransparency))
+				: Resolve(user, machine, spec.id);
+			if (transparency)
+			{
+				const auto number = std::get_if<DWORD>(&value);
+				// Match the runtime's disabled fallback for an absent/invalid Windows value.
+				value = DWORD{ !number || !*number };
+			}
+			result.emplace(spec.id, std::move(value));
+		}
 		return result;
 	}
 	struct Change
@@ -101,24 +115,34 @@ namespace OpenGlass::EffectiveConfiguration
 		for (const auto& spec : Settings::Catalog)
 		{
 			// Reset all known OpenGlass settings, including those outside the preset format.
-			if (Settings::IsWindowsColorBase(spec.id)) continue;
+			if (Settings::IsWindowsColorBase(spec.id) || spec.id == Settings::Id::EnableTransparency) continue;
 			const auto before = Raw(layer, spec.id);
 			if (before.present) changes.push_back({ target, spec.id, before, {} });
 		}
 		return changes;
 	}
-	inline std::vector<Change> Plan(const Layer& user, const Layer& machine, const Model& model, Settings::Scope target, unsigned version = Settings::CatalogVersion)
+	inline std::vector<Change> Plan(const Layer& user, const Layer& machine, const Model& model, Settings::Scope target, unsigned version = Settings::CatalogVersion, bool systemTransparency = true)
 	{
 		auto changes = PlanColorCleanup(user, machine);
-		const auto& local = target == Settings::Scope::User ? user : machine;
 		for (const auto& [id, value] : model)
 		{
 			const auto& spec = Settings::Get(id);
 			if (!Settings::IsPresetPackSetting(spec, version) || Settings::IsWindowsColorBase(id)) continue;
-			const auto before = Raw(local, id), after = Encode(value);
-			if (before != after) changes.push_back({ target, id, before, after });
+			// Resolve the physical destination before planning writes and recovery.
+			const bool transparency = systemTransparency && id == Settings::Id::ColorizationOpaqueBlend;
+			const auto writeId = transparency ? Settings::Id::EnableTransparency : id;
+			const auto writeScope = transparency ? Settings::Scope::User : target;
+			auto mapped = value;
+			if (transparency)
+			{
+				const auto number = std::get_if<DWORD>(&value);
+				// Preset Default enables transparency explicitly; never delete the Windows preference.
+				mapped = DWORD{ !number || !*number };
+			}
+			const auto before = Raw(writeScope == Settings::Scope::User ? user : machine, writeId), after = Encode(mapped);
+			if (before != after) changes.push_back({ writeScope, writeId, before, after });
 			// Default deliberately leaves other scopes alone, including on HKLM apply.
-			if (target != Settings::Scope::Machine || std::holds_alternative<std::monostate>(value)) continue;
+			if (writeScope != Settings::Scope::Machine || std::holds_alternative<std::monostate>(value)) continue;
 			const auto userRaw = Raw(user, id);
 			const auto userValue = Decode(userRaw, spec);
 			// Invalid values and harmless same-value overrides do not block the intent.

@@ -17,7 +17,7 @@ namespace OpenGlass
 	class MainFrame : public wxFrame
 	{
 	public:
-		MainFrame(std::wstring userSid, Settings::Scope scope);
+		MainFrame(std::wstring userSid, Settings::Scope scope, bool systemTransparency);
 
 	private:
 		void CreateControls();
@@ -55,7 +55,7 @@ namespace OpenGlass
 		void UpdateOptionStatusIcons();
 		void AddPathWarningIcon(wxWindow* parent, wxBoxSizer* row, wxFilePickerCtrl* picker, wxCheckBox* checkbox, const wxString& title);
 		void UpdatePathWarningIcons();
-		void ApplyColorizationBalances(DWORD intensity);
+		void ApplyColorizationBalances(DWORD argb);
 		void ApplyColorizationColor(std::optional<DWORD> argb, ColorizationPresets::Family family);
 		void ApplyColorizationPreset(const ColorizationPresets::Preset& preset);
 		[[nodiscard]] const ColorizationPresets::Preset* FindMatchingWindows7Preset(bool opaque) const;
@@ -64,7 +64,7 @@ namespace OpenGlass
 		WXLRESULT MSWWindowProc(WXUINT message, WXWPARAM wParam, WXLPARAM lParam) override;
 		bool m_colorizationRefreshPending{};
 		bool m_systemColorChangePending{};
-		void NotifySettingsChange(Settings::UpdateImpact impact = Settings::UpdateImpact::Colorization | Settings::UpdateImpact::Theme);
+		void NotifySettingsChange(Settings::UpdateType impact = Settings::UpdateType::Backdrop | Settings::UpdateType::Theme);
 		void UpdateUIVisibility();
 		void OnClose(wxCloseEvent& event);
 		[[nodiscard]] RegistryConfig* GetConfigForScope(Settings::Scope scope) const;
@@ -113,13 +113,14 @@ namespace OpenGlass
 		};
 		PreviewJournal<TrackedSetting, RegistryConfig::RawValue> m_preview;
 		bool RunPreview(const std::function<void()>& operation,
-			Settings::UpdateImpact impact = Settings::UpdateImpact::Colorization | Settings::UpdateImpact::Theme);
+			Settings::UpdateType impact = Settings::UpdateType::Backdrop | Settings::UpdateType::Theme);
 		ColorPreference m_colorPreference;
 		void ApplyAccentColor(std::optional<DWORD> argb);
 		ConfigurationResources m_resources;
 		wil::unique_hfile m_previewWriter;
 		void EnsurePreviewWriter();
 		Settings::Scope m_editScope{ Settings::Scope::Machine };
+		bool m_systemTransparency{ true };
 		void MergeConfiguration();
 		void RestoreDefaults();
 
@@ -289,7 +290,6 @@ namespace OpenGlass
 		bool m_isDirty{ false };
 		wxString m_baseTitle;
 		wxString m_targetUserSid;
-		HWND m_dwmWindow{ nullptr };
 		bool m_symbolDownloadRunning{ false };
 		bool m_closeWhenSymbolDownloadStops{ false };
 		std::jthread m_symbolDownloadThread{};

@@ -20,7 +20,7 @@ namespace OpenGlass
 			DWORD automatic{};
 			std::optional<DWORD> rgb; // Manual RGB only; Automatic never captures derived RGB.
 			bool applyChoice{ true }; // Raw-value recovery must not change the coloring mode.
-			std::optional<RegistryConfig::RawValue> accent; // Engaged only when AccentColorMenu participates.
+			std::optional<RegistryConfig::RawValue> accent; // Save writes and Automatic Shell side effects.
 			std::optional<RegistryConfig::RawValue> dwmAccent; // Independent DWM AccentColor, not an editor setting.
 			bool IsAutomatic() const noexcept { return automatic != 0; }
 			bool RestoresAutomatic() const noexcept { return applyChoice && IsAutomatic(); }
@@ -44,8 +44,11 @@ namespace OpenGlass
 		std::optional<Snapshot> Baseline(bool attempt = false) const;
 		void CommitAttempt() noexcept;
 		HRESULT ReadRgb(const std::wstring& userSid, DWORD& rgb) noexcept;
+		HRESULT ComputeWallpaperColor(const std::wstring& userSid, DWORD& argb) noexcept;
 		HRESULT ReadAutoColorization(const std::wstring& userSid, bool& enabled) noexcept;
 		HRESULT Apply(const std::wstring& userSid, std::optional<DWORD> argb,
+			const std::function<void(const Snapshot&)>& beforeWrite = {}) noexcept;
+		HRESULT SaveAccent(const std::wstring& userSid, DWORD rgb,
 			const std::function<void(const Snapshot&)>& beforeWrite = {}) noexcept;
 		HRESULT Revert() noexcept;
 		void Accept() noexcept;

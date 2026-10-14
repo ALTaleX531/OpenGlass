@@ -6,15 +6,7 @@
 
 namespace OpenGlass::GlassEngine
 {
-	enum UpdateType : UCHAR
-	{
-		None = 0,
-		Framework = 1 << 0,
-		Backdrop = 1 << 1,
-		Theme = 1 << 2,
-		Hook = 1 << 3,
-		All = Backdrop | Framework
-	};
+	using DwmSettings::UpdateType;
 
 	HKEY GetDwmKey();
 	HKEY GetMachineDwmKey();

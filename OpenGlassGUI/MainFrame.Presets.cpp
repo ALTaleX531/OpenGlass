@@ -173,7 +173,7 @@ namespace OpenGlass
 			wxWindow* parent,
 			const PresetPackages::Package& package,
 			const RegistryConfig& config,
-			bool importing, const RegistryConfig& user, const RegistryConfig& machine
+			bool importing, const RegistryConfig& user, const RegistryConfig& machine, bool systemTransparency
 		)
 		{
 			wxDialog dialog(parent, wxID_ANY, importing ? L"Import preset" : L"Preset properties", wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER);
@@ -255,7 +255,7 @@ namespace OpenGlass
 
 			ConfigurationResources resources; resources.Initialize(PresetPackages::GetPresetRoot().parent_path() / L"Configuration", user.UserSid());
 			const auto scope = config.GetMode() == RegistryConfig::Mode::User ? Settings::Scope::User : Settings::Scope::Machine;
-			const auto plan = EffectiveConfiguration::Plan(EffectiveConfiguration::Read(user), EffectiveConfiguration::Read(machine), PackageModel(package, resources, scope), scope, package.catalogVersion);
+			const auto plan = EffectiveConfiguration::Plan(EffectiveConfiguration::Read(user, systemTransparency), EffectiveConfiguration::Read(machine), PackageModel(package, resources, scope), scope, package.catalogVersion, systemTransparency);
 			std::wstring changes = scope == Settings::Scope::User
 				? L"Applies to HKCU; HKLM configuration is preserved.\r\n"
 				: L"Applies to HKLM; conflicting HKCU values for customized settings are removed.\r\n";
@@ -263,7 +263,8 @@ namespace OpenGlass
 			changes += package.accentColor ? std::format(L"\r\nSet the original user's accent color to #{:06X}.\r\n", *package.accentColor)
 				: L"\r\nEnable automatic accent coloring from the original user's wallpaper.\r\n";
 			changes += L"Both layers' color Overrides are removed. Balance Overrides follow the editing scope.\r\n";
-			const bool restartRequired = std::ranges::any_of(plan, [](const auto& change) { return Settings::Get(change.id).impact == Settings::UpdateImpact::RestartRequired; });
+			if (systemTransparency) changes += L"Transparency applies to the original user's Windows transparency effects. Default enables transparency.\r\n";
+			const bool restartRequired = std::ranges::any_of(plan, [](const auto& change) { return Settings::Get(change.id).impact == Settings::UpdateType::RestartRequired; });
 			if (restartRequired) changes += L"Some settings take effect after restarting DWM or signing out; applying does not restart DWM.\r\n";
 			changes += L"\r\nRegistry changes:\r\n" + (plan.empty() ? std::wstring(L"None.\r\n") : PlanSummary(plan));
 			for (const auto& conversion : package.conversions) changes += L"\r\nConverted: " + conversion + L"\r\n";
@@ -299,7 +300,7 @@ namespace OpenGlass
 			return dialog.ShowModal() == wxID_OK && importing ? PresetPreviewAction::ImportOnly : PresetPreviewAction::Cancel;
 		}
 
-		bool ShowBatchImportPreview(wxWindow* parent, std::span<const PresetPackages::Package> packages, const RegistryConfig& config, const RegistryConfig& user, const RegistryConfig& machine)
+		bool ShowBatchImportPreview(wxWindow* parent, std::span<const PresetPackages::Package> packages, const RegistryConfig& config, const RegistryConfig& user, const RegistryConfig& machine, bool systemTransparency)
 		{
 			wxDialog dialog(parent, wxID_ANY, L"Import presets", wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER);
 			dialog.SetClientSize(dialog.FromDIP(wxSize(740, 440)));
@@ -330,7 +331,7 @@ namespace OpenGlass
 				{
 					const auto package = PresetPackages::LoadArchive(packages[row].source);
 					THROW_HR_IF(HRESULT_FROM_WIN32(ERROR_FILE_INVALID), package.digest != packages[row].digest);
-					ShowPresetPreview(&dialog, package, config, false, user, machine);
+					ShowPresetPreview(&dialog, package, config, false, user, machine, systemTransparency);
 				}
 				catch (...)
 				{
@@ -801,7 +802,7 @@ namespace OpenGlass
 			THROW_HR_IF(HRESULT_FROM_WIN32(ERROR_RETRY), package.digest != selected.digest);
 
 			if (!package.loadError.empty()) { wxMessageBox(package.loadError, L"Preset properties", wxOK | wxICON_ERROR, this); return; }
-			const auto action = ShowPresetPreview(this, package, *m_config, !package.trusted, *m_userConfig, *m_systemConfig);
+			const auto action = ShowPresetPreview(this, package, *m_config, !package.trusted, *m_userConfig, *m_systemConfig, m_systemTransparency);
 			if (!package.trusted && action == PresetPreviewAction::ImportOnly)
 			{
 				const auto verified = PresetPackages::LoadLibraryEntry(package);
@@ -863,7 +864,7 @@ namespace OpenGlass
 				package.assets.clear(); // Load one package's images on demand during review.
 				packages.push_back(std::move(package));
 			}
-			if (!ShowBatchImportPreview(this, packages, *m_config, *m_userConfig, *m_systemConfig)) return;
+			if (!ShowBatchImportPreview(this, packages, *m_config, *m_userConfig, *m_systemConfig, m_systemTransparency)) return;
 			for (const auto& package : packages)
 			{
 				auto verified = PresetPackages::LoadArchive(package.source);
@@ -885,7 +886,7 @@ namespace OpenGlass
 		try
 		{
 			const auto reviewed = PresetPackages::LoadArchive(path);
-			const auto action = ShowPresetPreview(this, reviewed, *m_config, true, *m_userConfig, *m_systemConfig);
+			const auto action = ShowPresetPreview(this, reviewed, *m_config, true, *m_userConfig, *m_systemConfig, m_systemTransparency);
 			if (action == PresetPreviewAction::Cancel) return;
 			const auto verified = PresetPackages::LoadArchive(path);
 			THROW_HR_IF(HRESULT_FROM_WIN32(ERROR_FILE_INVALID), verified.digest != reviewed.digest);
@@ -921,10 +922,10 @@ namespace OpenGlass
 			auto package = PresetPackages::LoadTrusted(inputPackage);
 			const auto prepared = m_resources.Prepare(package, m_editScope);
 			const auto model = PackageModel(package, m_resources, m_editScope);
-			const auto plan = EffectiveConfiguration::Plan(EffectiveConfiguration::Read(*m_userConfig), EffectiveConfiguration::Read(*m_systemConfig), model, m_editScope, package.catalogVersion);
+			const auto plan = EffectiveConfiguration::Plan(EffectiveConfiguration::Read(*m_userConfig, m_systemTransparency), EffectiveConfiguration::Read(*m_systemConfig), model, m_editScope, package.catalogVersion, m_systemTransparency);
 			bool restartRequired{};
 			for (const auto& change : plan)
-				restartRequired |= Settings::Get(change.id).impact == Settings::UpdateImpact::RestartRequired;
+				restartRequired |= Settings::Get(change.id).impact == Settings::UpdateType::RestartRequired;
 			const bool applied = RunPreview([&]
 			{
 				for (const auto& change : plan)
@@ -959,7 +960,7 @@ namespace OpenGlass
 
 	void MainFrame::CaptureEffectivePreset(PresetPackages::CreateRequest& request, bool accentColor, const PresetPackages::Package* localSource)
 	{
-		const auto model = EffectiveConfiguration::Capture(EffectiveConfiguration::Read(*m_userConfig), EffectiveConfiguration::Read(*m_systemConfig));
+		const auto model = EffectiveConfiguration::Capture(EffectiveConfiguration::Read(*m_userConfig, m_systemTransparency), EffectiveConfiguration::Read(*m_systemConfig), Settings::CatalogVersion, m_systemTransparency);
 		for (const auto& [id, value] : model)
 		{
 			const auto& spec = Settings::Get(id);

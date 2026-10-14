@@ -6,13 +6,7 @@ namespace OpenGlass::ConfigurationMigration
 {
 	std::vector<Change> Prepare(const RegistryConfig& user, const RegistryConfig& machine, Settings::Scope target)
 	{
-		Values users, machines;
-		for (const auto& spec : Settings::Catalog)
-		{
-			users[spec.id] = user.ReadRaw(std::wstring(spec.name));
-			machines[spec.id] = machine.ReadRaw(std::wstring(spec.name));
-		}
-		return Prepare(std::move(users), std::move(machines), target);
+		return Prepare(EffectiveConfiguration::Read(user, false).values, EffectiveConfiguration::Read(machine, false).values, target);
 	}
 
 	std::vector<Change> Prepare(Values users, Values machines, Settings::Scope target)
@@ -26,7 +20,7 @@ namespace OpenGlass::ConfigurationMigration
 		};
 		for (const auto& spec : Settings::Catalog)
 		{
-			if ((Settings::IsWindowsColorBase(spec.id) || Settings::IsColorOverride(spec.id))) continue;
+			if (Settings::IsWindowsColorBase(spec.id) || Settings::IsColorOverride(spec.id) || spec.id == Settings::Id::EnableTransparency) continue;
 			if (valid(spec, users[spec.id])) { targets[spec.id] = users[spec.id]; origins[spec.id] = L"HKCU " + std::wstring(spec.name); }
 			else if (valid(spec, machines[spec.id])) { targets[spec.id] = machines[spec.id]; origins[spec.id] = L"HKLM " + std::wstring(spec.name); }
 		}
@@ -72,7 +66,8 @@ namespace OpenGlass::ConfigurationMigration
 		// Malformed values are preserved for manual diagnosis, never destroyed.
 		for (const auto& spec : Settings::Catalog)
 		{
-			if ((Settings::IsWindowsColorBase(spec.id) || Settings::IsColorOverride(spec.id)) || !valid(spec, users[spec.id])) continue;
+			if (Settings::IsWindowsColorBase(spec.id) || Settings::IsColorOverride(spec.id)
+				|| spec.id == Settings::Id::EnableTransparency || !valid(spec, users[spec.id])) continue;
 			changes.push_back({ Settings::Scope::User, spec.id, users[spec.id], {},
 				L"HKCU -> HKLM: " + std::wstring(spec.name) + L" (delete HKCU after copying)" });
 		}

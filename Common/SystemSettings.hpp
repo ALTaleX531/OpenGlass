@@ -62,13 +62,11 @@ namespace OpenGlass::Util
 	FORCEINLINE bool WINAPI IsTransparencyEnabled()
 	{
 		DWORD value{ 0 };
-		wil::reg::get_value_dword_nothrow(HKEY_CURRENT_USER, g_personalizeKeyPath, L"EnableTransparency", &value);
-		return static_cast<bool>(value);
+		return SUCCEEDED(wil::reg::get_value_dword_nothrow(HKEY_CURRENT_USER, g_personalizeKeyPath, L"EnableTransparency", &value)) && value != 0;
 	}
 	FORCEINLINE bool WINAPI IsTransparencyEnabled(HKEY key)
 	{
 		DWORD value{ 0 };
-		wil::reg::get_value_dword_nothrow(key, L"EnableTransparency", &value);
-		return static_cast<bool>(value);
+		return SUCCEEDED(wil::reg::get_value_dword_nothrow(key, L"EnableTransparency", &value)) && value != 0;
 	}
 }

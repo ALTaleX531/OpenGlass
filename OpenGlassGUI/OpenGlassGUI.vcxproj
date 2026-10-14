@@ -52,8 +52,6 @@
 	<ClInclude Include="PreviewJournal.hpp" />
 	<ClInclude Include="SettingsCatalog.hpp" />
 	<ClInclude Include="ColorPreference.hpp" />
-	<ClInclude Include="ColorPolicy.hpp" />
-	<ClInclude Include="ShellColorRefresh.hpp" />
 	<ClInclude Include="ColorPresetList.hpp" />
     <ClInclude Include="ConfigurationMigration.hpp" />
     <ClInclude Include="Elevation.hpp" />

@@ -149,12 +149,6 @@
 		<ClInclude Include="ColorPreference.hpp">
 			<Filter>Header Files</Filter>
 		</ClInclude>
-		<ClInclude Include="ColorPolicy.hpp">
-			<Filter>Header Files</Filter>
-		</ClInclude>
-		<ClInclude Include="ShellColorRefresh.hpp">
-			<Filter>Header Files</Filter>
-		</ClInclude>
 		<ClInclude Include="ManagedFiles.hpp">
 			<Filter>Header Files</Filter>
 		</ClInclude>

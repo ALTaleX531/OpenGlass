@@ -10,6 +10,6 @@ namespace OpenGlass::Elevation
 		std::wstring userSid;
 	};
 
-	[[nodiscard]] StartupResult PrepareElevatedStartup(Settings::Scope scope);
+	[[nodiscard]] StartupResult PrepareElevatedStartup(Settings::Scope scope, bool systemTransparency);
 	[[nodiscard]] bool IsProcessElevated() noexcept;
 }

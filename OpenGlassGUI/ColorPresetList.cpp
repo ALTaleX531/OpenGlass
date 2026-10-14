@@ -179,7 +179,9 @@ namespace OpenGlass
 
 	void ColorPresetList::SetAutomaticDescription(const wxString& description)
 	{
-		SetToolTip(description + L"\nClick or press Enter/Space to apply a color. On selected Custom, Enter/Space opens the editor; double-click also edits. Arrow keys move focus.");
+		const auto tooltip = description + L"\nClick or press Enter/Space to apply a color. On selected Custom, Enter/Space opens the editor; double-click also edits. Arrow keys move focus.";
+		// Resetting unchanged text can show the tooltip again during selection refreshes.
+		if (GetToolTipText() != tooltip) SetToolTip(tooltip);
 	}
 
 	wxBitmap ColorPresetList::CreateSwatch(DWORD argb, bool automatic) const

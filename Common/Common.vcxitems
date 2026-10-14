@@ -17,6 +17,8 @@
   <ItemGroup>
 	<ClInclude Include="$(MSBuildThisFileDirectory)ApplicationPaths.hpp" />
 	<ClInclude Include="$(MSBuildThisFileDirectory)SystemSettings.hpp" />
+	<ClInclude Include="$(MSBuildThisFileDirectory)ShellColorRefresh.hpp" />
+	<ClInclude Include="$(MSBuildThisFileDirectory)DesktopWallpaper.hpp" />
 	<ClInclude Include="$(MSBuildThisFileDirectory)DwmSettings.hpp"><Link>Header Files\Common\DwmSettings.hpp</Link></ClInclude>
 	<ClInclude Include="$(MSBuildThisFileDirectory)CustomBlurEffect.hpp"><Link>Header Files\Common\CustomBlurEffect.hpp</Link></ClInclude>
 	<ClInclude Include="$(MSBuildThisFileDirectory)RenderingEffect.hpp"><Link>Header Files\Common\RenderingEffect.hpp</Link></ClInclude>

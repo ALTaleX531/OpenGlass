@@ -7,6 +7,7 @@
 #include "ConfigurationMigration.hpp"
 #include "EffectiveConfiguration.hpp"
 #include "RegistryValueResolver.hpp"
+#include "DwmSettings.hpp"
 #include "Elevation.hpp"
 #include "resource.h"
 #include <wx/iconbndl.h>
@@ -51,12 +52,13 @@ namespace OpenGlass
 		return !includeDomain || domain.empty() ? name : domain + L"\\" + name;
 	}
 
-	MainFrame::MainFrame(std::wstring userSid, Settings::Scope scope)
+	MainFrame::MainFrame(std::wstring userSid, Settings::Scope scope, bool systemTransparency)
 		: wxFrame(nullptr, wxID_ANY, L"Aero Glass for Win10+", wxDefaultPosition, wxSize(900, 750))
 	{
 		SetIcons(wxIconBundle(wxString::Format(L"#%d", IDI_OPENGLASS), reinterpret_cast<WXHINSTANCE>(GetModuleHandleW(nullptr))));
 		m_isAdmin = Elevation::IsProcessElevated();
 		m_editScope = scope;
+		m_systemTransparency = systemTransparency;
 		if (scope == Settings::Scope::User)
 		{
 			const auto accountName = ResolveAccountName(userSid, true);
@@ -177,7 +179,7 @@ namespace OpenGlass
 			const auto scope = m_editScope == Settings::Scope::User ? Settings::Scope::Machine : Settings::Scope::User;
 			WINDOWPLACEMENT placement{ sizeof(WINDOWPLACEMENT) };
 			THROW_IF_WIN32_BOOL_FALSE(GetWindowPlacement(reinterpret_cast<HWND>(GetHandle()), &placement));
-			replacement = new MainFrame(m_targetUserSid.ToStdWstring(), scope);
+			replacement = new MainFrame(m_targetUserSid.ToStdWstring(), scope, m_systemTransparency);
 			// Copy the restore rectangle too, while keeping the new window hidden.
 			placement.showCmd = SW_HIDE;
 			THROW_IF_WIN32_BOOL_FALSE(SetWindowPlacement(reinterpret_cast<HWND>(replacement->GetHandle()), &placement));
@@ -202,30 +204,9 @@ namespace OpenGlass
 		replacement->Show();
 	}
 
-	void MainFrame::NotifySettingsChange(Settings::UpdateImpact impact)
+	void MainFrame::NotifySettingsChange(Settings::UpdateType impact)
 	{
-		const auto flags = static_cast<unsigned>(impact);
-		if (!(flags & static_cast<unsigned>(Settings::UpdateImpact::Colorization | Settings::UpdateImpact::Theme))) return;
-		if (!m_dwmWindow || !IsWindow(m_dwmWindow))
-		{
-			m_dwmWindow = FindWindowW(L"Dwm", nullptr);
-		}
-		HWND notificationWindow = m_dwmWindow;
-		if (!notificationWindow) return;
-		// Configuration editing and recovery also work without OpenGlass loaded;
-		// notification delivery is best-effort.
-		if (flags & static_cast<unsigned>(Settings::UpdateImpact::Colorization))
-		{
-			// DWM reloads its Accent cache only for the ImmersiveColorSet category.
-			SetLastError(ERROR_SUCCESS);
-			LOG_IF_WIN32_BOOL_FALSE(static_cast<BOOL>(SendMessageTimeoutW(
-				notificationWindow, WM_SETTINGCHANGE, 0, reinterpret_cast<LPARAM>(L"ImmersiveColorSet"),
-				SMTO_ABORTIFHUNG | SMTO_ERRORONEXIT, 1000, nullptr
-			) != 0));
-		}
-
-		if (flags & static_cast<unsigned>(Settings::UpdateImpact::Theme))
-			LOG_IF_WIN32_BOOL_FALSE(SendNotifyMessageW(notificationWindow, WM_THEMECHANGED, 0, 0));
+		DwmSettings::NotifyChange(FindWindowW(L"Dwm", nullptr), impact);
 	}
 
 	void MainFrame::SetDirty(bool dirty)
@@ -694,11 +675,11 @@ namespace OpenGlass
 		bool restartRequired{};
 		const bool applied = RunPreview([this, &restartRequired]
 		{
-			const auto plan = EffectiveConfiguration::PlanReset(EffectiveConfiguration::Read(*m_config), m_editScope);
+			const auto plan = EffectiveConfiguration::PlanReset(EffectiveConfiguration::Read(*m_config, false), m_editScope);
 			for (const auto& change : plan)
 			{
 				THROW_HR_IF(HRESULT_FROM_WIN32(ERROR_RETRY), m_config->ReadRaw(change.Name()) != change.before);
-				restartRequired |= Settings::Get(change.id).impact == Settings::UpdateImpact::RestartRequired;
+				restartRequired |= Settings::Get(change.id).impact == Settings::UpdateType::RestartRequired;
 				TrackSettingChange(change.id);
 				THROW_IF_FAILED(m_config->WriteRaw(change.Name(), change.after));
 			}
@@ -722,7 +703,7 @@ namespace OpenGlass
 			auto prepareChanges = [&]
 			{
 				auto changes = ConfigurationMigration::Prepare(*m_userConfig, *m_systemConfig, m_editScope);
-				const auto effective = EffectiveConfiguration::Capture(EffectiveConfiguration::Read(*m_userConfig), EffectiveConfiguration::Read(*m_systemConfig));
+				const auto effective = EffectiveConfiguration::Capture(EffectiveConfiguration::Read(*m_userConfig, false), EffectiveConfiguration::Read(*m_systemConfig), Settings::CatalogVersion, false);
 				for (const auto& [id, value] : effective)
 				{
 					if (Settings::Get(id).assetRole == Settings::AssetRole::None) continue;
@@ -786,7 +767,7 @@ namespace OpenGlass
 		}
 	}
 
-	bool MainFrame::RunPreview(const std::function<void()>& operation, Settings::UpdateImpact impact)
+	bool MainFrame::RunPreview(const std::function<void()>& operation, Settings::UpdateType impact)
 	{
 		const bool wasDirty = m_isDirty;
 		const bool colorWasDirty = m_colorPreference.IsDirty();
@@ -864,6 +845,16 @@ namespace OpenGlass
 		{
 			return;
 		}
+		if (!RunPreview([&]
+		{
+			const auto sid = m_targetUserSid.ToStdWstring();
+			DWORD rgb{};
+			THROW_IF_FAILED(m_colorPreference.ReadRgb(sid, rgb));
+			THROW_IF_FAILED(m_colorPreference.SaveAccent(sid, rgb, [this](const auto& before)
+			{
+				m_resources.TrackColor(before);
+			}));
+		}, Settings::UpdateType::Backdrop)) return;
 		try { m_resources.Accept(); }
 		catch (...) { wxMessageBox(L"The recovery record could not be completed. Retry Save or Revert.", L"Configuration recovery", wxOK | wxICON_ERROR, this); return; }
 		if (m_resources.TakeCleanupWarning()) wxMessageBox(L"The configuration checkpoint is complete. Temporary-file cleanup will be retried on the next operation.", L"Configuration cleanup", wxOK | wxICON_INFORMATION, this);
@@ -1685,11 +1676,23 @@ namespace OpenGlass
 		m_chkEnableTransparency->Bind(wxEVT_CHECKBOX, [this](wxCommandEvent& e) {
 			RunPreview([&]
 			{
-				TrackSettingChange(Settings::Id::ColorizationOpaqueBlend);
-				if (e.IsChecked()) THROW_IF_FAILED(m_config->DeleteValue(L"ColorizationOpaqueBlend"));
-				else THROW_IF_FAILED(m_config->SetDword(L"ColorizationOpaqueBlend", 1));
-				if (m_rbGlassType->GetSelection() == 1) ApplyColorizationBalances(m_slColorIntensity->GetValue());
-			}, Settings::UpdateImpact::Colorization);
+				if (m_systemTransparency)
+				{
+					if ((m_userConfig->GetDword(L"EnableTransparency", 0) != 0) != e.IsChecked())
+					{
+						TrackSettingChange(Settings::Scope::User, Settings::Id::EnableTransparency);
+						THROW_IF_FAILED(m_userConfig->SetDword(L"EnableTransparency", e.IsChecked()));
+					}
+				}
+				else
+				{
+					TrackSettingChange(Settings::Id::ColorizationOpaqueBlend);
+					if (e.IsChecked()) THROW_IF_FAILED(m_config->DeleteValue(L"ColorizationOpaqueBlend"));
+					else THROW_IF_FAILED(m_config->SetDword(L"ColorizationOpaqueBlend", 1));
+				}
+				if (m_rbGlassType->GetSelection() == 1)
+					ApplyColorizationBalances(ColorizationPresets::CalculateIntensityAlpha(m_slColorIntensity->GetValue()) << 24);
+			}, Settings::UpdateType::Backdrop);
 		});
 
 		m_slColorIntensity->Bind(wxEVT_SLIDER, [this](wxCommandEvent& e) {
@@ -1698,8 +1701,9 @@ namespace OpenGlass
 				const DWORD intensity = static_cast<DWORD>(e.GetInt());
 				TrackSettingChange(Settings::Id::GlassOpacity);
 				THROW_IF_FAILED(m_config->SetDword(L"GlassOpacity", intensity));
-				if (m_rbGlassType->GetSelection() == 1) ApplyColorizationBalances(intensity);
-			}, Settings::UpdateImpact::Colorization);
+				if (m_rbGlassType->GetSelection() == 1)
+					ApplyColorizationBalances(ColorizationPresets::CalculateIntensityAlpha(intensity) << 24);
+			}, Settings::UpdateType::Backdrop);
 			m_slColorIntensity->SetToolTip(wxString::Format(L"%d", m_slColorIntensity->GetValue()));
 		});
 

@@ -42,8 +42,8 @@ namespace OpenGlass
 		[[nodiscard]] Mode GetMode() const noexcept { return m_mode; }
 
 	private:
-		wil::unique_hkey OpenKey(bool readOnly) const;
-		[[nodiscard]] std::pair<HKEY, std::wstring> GetLocation() const;
+		wil::unique_hkey OpenKey(bool readOnly, PCWSTR valueName) const;
+		[[nodiscard]] std::pair<HKEY, std::wstring> GetLocation(PCWSTR valueName = nullptr) const;
 
 		Mode m_mode;
 		std::wstring m_userSid;

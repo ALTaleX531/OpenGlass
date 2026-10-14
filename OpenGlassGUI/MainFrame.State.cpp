@@ -199,7 +199,9 @@ namespace OpenGlass
 		};
 
 		m_rbGlassType->SetSelection(std::clamp<int>(m_config->GetDword(L"GlassType", 0), 0, 1));
-		m_chkEnableTransparency->SetValue(m_config->GetDword(L"ColorizationOpaqueBlend", 0) == 0);
+		m_chkEnableTransparency->SetValue(m_systemTransparency
+			? m_userConfig->GetDword(L"EnableTransparency", 0) != 0
+			: m_config->GetDword(L"ColorizationOpaqueBlend", 0) == 0);
 
 		m_slColorIntensity->SetRange(
 			ColorizationPresets::ClassicIntensityMinimum,

@@ -12,7 +12,7 @@ namespace OpenGlass
 
 	RegistryConfig::RawValue RegistryConfig::ReadRaw(const std::wstring& name) const
 	{
-		const auto [root, path] = GetLocation();
+		const auto [root, path] = GetLocation(name.c_str());
 		wil::unique_hkey key;
 		auto error = RegOpenKeyExW(root, path.c_str(), 0, KEY_QUERY_VALUE, key.put());
 		if (error == ERROR_FILE_NOT_FOUND) return {};
@@ -39,7 +39,7 @@ namespace OpenGlass
 	HRESULT RegistryConfig::WriteRaw(const std::wstring& name, const RawValue& value)
 	{
 		if (!value.present) return DeleteValue(name);
-		auto key = OpenKey(false);
+		auto key = OpenKey(false, name.c_str());
 		RETURN_HR_IF(E_ACCESSDENIED, !key);
 		return HRESULT_FROM_WIN32(RegSetValueExW(key.get(), name.c_str(), 0, value.type,
 			value.bytes.data(), static_cast<DWORD>(value.bytes.size())));
@@ -53,40 +53,35 @@ namespace OpenGlass
 		return status == ERROR_FILE_NOT_FOUND || status == ERROR_PATH_NOT_FOUND ? S_OK : HRESULT_FROM_WIN32(status);
 	}
 
-	std::pair<HKEY, std::wstring> RegistryConfig::GetLocation() const
+	std::pair<HKEY, std::wstring> RegistryConfig::GetLocation(PCWSTR valueName) const
 	{
-		if (m_mode == Mode::Machine)
+		const bool transparency = valueName && !_wcsicmp(valueName, L"EnableTransparency");
+		const auto subKey = transparency
+			? L"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize"
+			: DwmSettings::g_keyPath;
+		if (m_mode == Mode::Machine && !transparency)
 		{
-			return { HKEY_LOCAL_MACHINE, DwmSettings::g_keyPath };
+			return { HKEY_LOCAL_MACHINE, subKey };
 		}
 		if (m_userSid.empty())
 		{
-			return { HKEY_CURRENT_USER, DwmSettings::g_keyPath };
+			return { HKEY_CURRENT_USER, subKey };
 		}
-		return { HKEY_USERS, m_userSid + L"\\" + DwmSettings::g_keyPath };
+		return { HKEY_USERS, m_userSid + L"\\" + subKey };
 	}
 
-	wil::unique_hkey RegistryConfig::OpenKey(bool readOnly) const
+	wil::unique_hkey RegistryConfig::OpenKey(bool readOnly, PCWSTR valueName) const
 	{
-		const auto [root, subKey] = GetLocation();
+		const auto [root, subKey] = GetLocation(valueName);
 		wil::unique_hkey key;
-		
-		wil::reg::key_access access = wil::reg::key_access::read;
-		if (!readOnly)
+		if (readOnly)
 		{
-			access = wil::reg::key_access::readwrite;
+			(void)wil::reg::open_unique_key_nothrow(root, subKey.c_str(), key, wil::reg::key_access::read);
 		}
-
-		// Try to open existing key
-		if (FAILED(wil::reg::open_unique_key_nothrow(root, subKey.c_str(), key, access)))
+		else
 		{
-			// If writing, try to create it
-			if (!readOnly)
-			{
-				(void)wil::reg::create_unique_key_nothrow(root, subKey.c_str(), key, access);
-			}
+			(void)wil::reg::create_unique_key_nothrow(root, subKey.c_str(), key, wil::reg::key_access::readwrite);
 		}
-
 		return key;
 	}
 
@@ -99,7 +94,7 @@ namespace OpenGlass
 
 	HRESULT RegistryConfig::SetDword(const std::wstring& valueName, DWORD value)
 	{
-		auto key = OpenKey(false);
+		auto key = OpenKey(false, valueName.c_str());
 		RETURN_HR_IF(HRESULT_FROM_WIN32(ERROR_ACCESS_DENIED), !key);
 
 		return wil::reg::set_value_dword_nothrow(key.get(), valueName.c_str(), value);
@@ -107,7 +102,7 @@ namespace OpenGlass
 
 	bool RegistryConfig::TryGetDword(const std::wstring& valueName, DWORD& value) const
 	{
-		auto key = OpenKey(true);
+		auto key = OpenKey(true, valueName.c_str());
 		if (!key) return false;
 
 		return SUCCEEDED(wil::reg::get_value_dword_nothrow(key.get(), valueName.c_str(), &value));
@@ -122,7 +117,7 @@ namespace OpenGlass
 
 	HRESULT RegistryConfig::SetString(const std::wstring& valueName, const std::wstring& value)
 	{
-		auto key = OpenKey(false);
+		auto key = OpenKey(false, valueName.c_str());
 		RETURN_HR_IF(HRESULT_FROM_WIN32(ERROR_ACCESS_DENIED), !key);
 
 		return wil::reg::set_value_string_nothrow(key.get(), valueName.c_str(), value.c_str());
@@ -130,7 +125,7 @@ namespace OpenGlass
 
 	bool RegistryConfig::TryGetString(const std::wstring& valueName, std::wstring& value) const
 	{
-		auto key = OpenKey(true);
+		auto key = OpenKey(true, valueName.c_str());
 		if (!key) return false;
 
 		wil::unique_cotaskmem_string result;
@@ -144,7 +139,9 @@ namespace OpenGlass
 
 	HRESULT RegistryConfig::DeleteValue(const std::wstring& valueName)
 	{
-		const auto [root, subKey] = GetLocation();
+		// Recovery of an absent Windows preference keeps its disabled effect without deleting it.
+		if (!_wcsicmp(valueName.c_str(), L"EnableTransparency")) return SetDword(valueName, 0);
+		const auto [root, subKey] = GetLocation(valueName.c_str());
 		wil::unique_hkey key;
 		const auto openResult = wil::reg::open_unique_key_nothrow(root, subKey.c_str(), key, wil::reg::key_access::readwrite);
 		if (openResult == HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND)) return S_OK;

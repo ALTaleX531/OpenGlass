@@ -3,6 +3,7 @@
 #include "ProjectionFixture.hpp"
 #include "RegistryValueResolver.hpp"
 #include "DwmSettings.hpp"
+#include "SystemSettings.hpp"
 #include "../OpenGlassGUI/EditorScope.hpp"
 #include "../OpenGlassGUI/PreviewJournal.hpp"
 #include "../OpenGlassGUI/EffectiveConfiguration.hpp"
@@ -11,8 +12,7 @@
 #include "ThemeAtlasLayout.hpp"
 #include "../OpenGlassGUI/ColorizationPresets.hpp"
 #include "../OpenGlassGUI/ColorPreference.hpp"
-#include "../OpenGlassGUI/ColorPolicy.hpp"
-#include "../OpenGlassGUI/ShellColorRefresh.hpp"
+#include "../Common/ShellColorRefresh.hpp"
 #include <future>
 #include "../OpenGlassGUI/SettingsCatalog.hpp"
 #include "../OpenGlassGUI/ConfigurationMigration.hpp"
@@ -1247,6 +1247,8 @@ namespace
 	void TestColorizationPresets()
 	{
 		using namespace ColorizationPresets;
+		Check(CalculateVistaOpacity(0xC4000000) == 77);
+		Check(CalculateIntensityAlpha(77) == 0xC4);
 
 		constexpr std::array expectedVista
 		{
@@ -1390,33 +1392,6 @@ namespace
 		Check(BlurSettings::Direct3DStandardDeviation == 3.f);
 	}
 
-	void TestColorPolicy()
-	{
-		const LSTATUS statuses[]{ ERROR_SUCCESS, ERROR_FILE_NOT_FOUND, ERROR_PATH_NOT_FOUND,
-			ERROR_UNSUPPORTED_TYPE, ERROR_MORE_DATA, ERROR_ACCESS_DENIED };
-		for (const auto backgroundStatus : statuses)
-		{
-			unsigned calls{};
-			const auto read = [&](HKEY root, const wchar_t* path, const wchar_t* name,
-				DWORD flags, DWORD* type, void*, DWORD* size) -> LSTATUS
-			{
-				++calls;
-				Check(root == HKEY_LOCAL_MACHINE && std::wstring_view(path) == LR"(Software\Policies\Microsoft\Windows\Personalization)");
-				Check(type == nullptr);
-				Check(std::wstring_view(name) == L"PersonalColors_Background" && flags == RRF_RT_REG_SZ && *size == 16);
-				return backgroundStatus;
-			};
-			HRESULT result = S_OK;
-			bool blocked{};
-			try { blocked = ColorPolicy::IsAccentSyncBlocked(read); }
-			catch (...) { result = wil::ResultFromCaughtException(); }
-			const bool inaccessible = backgroundStatus == ERROR_ACCESS_DENIED;
-			// NoChangingStartMenuBackground is deliberately not read, regardless of its value/type.
-			Check(calls == 1 && result == (inaccessible ? E_ACCESSDENIED : S_OK));
-			if (!inaccessible) Check(blocked == (backgroundStatus == ERROR_SUCCESS));
-		}
-	}
-
 	void TestSettingsCatalog()
 	{
 		std::vector<std::wstring_view> names;
@@ -1436,14 +1411,130 @@ namespace
 			}
 		}
 		Check(Settings::PresetPackSettingCount(1) == Settings::PresetPackSettingCount() + 5);
-		Check(Settings::Get(Settings::Id::GlassOverrideAccent).impact == Settings::UpdateImpact::Colorization);
-		Check(Settings::Get(Settings::Id::GlassSafetyZoneMode).impact == Settings::UpdateImpact::Colorization);
-		Check(Settings::Get(Settings::Id::UseDirect3DRendering).impact == Settings::UpdateImpact::Colorization);
+		Check(Settings::Get(Settings::Id::GlassOverrideAccent).impact == Settings::UpdateType::Backdrop);
+		Check(Settings::Get(Settings::Id::GlassSafetyZoneMode).impact == Settings::UpdateType::Backdrop);
+		Check(Settings::Get(Settings::Id::UseDirect3DRendering).impact == Settings::UpdateType::Backdrop);
 		Check(!Settings::Get(Settings::Id::MinMaxButtonGlowId).includeInPresetPacks);
 		Check(!Settings::Get(Settings::Id::CloseButtonGlowId).includeInPresetPacks);
 		Check(!Settings::Get(Settings::Id::ToolCloseButtonGlowId).includeInPresetPacks);
-		Check(Settings::PresetPackSettingCount() + 10 == Settings::Catalog.size());
+		Check(!Settings::IsPresetPackSetting(Settings::Get(Settings::Id::EnableTransparency)));
+		Check(Settings::PresetPackSettingCount() + 11 == Settings::Catalog.size());
 		Check(Settings::Find(L"NotAnOpenGlassSetting") == nullptr);
+	}
+
+	void TestTransparencyRegistry()
+	{
+		using namespace EffectiveConfiguration;
+		using enum Settings::Id;
+		const auto path = L"Software\\OpenGlassTests\\" + std::to_wstring(GetCurrentProcessId()) + L"-Transparency";
+		auto root = wil::reg::create_unique_key(HKEY_CURRENT_USER, path.c_str(), wil::reg::key_access::readwrite);
+		const auto cleanup = wil::scope_exit([&]
+		{
+			RegDeleteTreeW(root.get(), nullptr);
+			root.reset();
+			RegDeleteKeyW(HKEY_CURRENT_USER, path.c_str());
+		});
+		const auto users = wil::reg::create_unique_key(root.get(), L"Users", wil::reg::key_access::readwrite);
+		const auto elevated = wil::reg::create_unique_key(root.get(), L"ElevatedUser", wil::reg::key_access::readwrite);
+		const auto machine = wil::reg::create_unique_key(root.get(), L"Machine", wil::reg::key_access::readwrite);
+		const auto restoreRoots = wil::scope_exit([&]
+		{
+			RegOverridePredefKey(HKEY_USERS, nullptr);
+			RegOverridePredefKey(HKEY_CURRENT_USER, nullptr);
+			RegOverridePredefKey(HKEY_LOCAL_MACHINE, nullptr);
+		});
+		THROW_IF_WIN32_ERROR(RegOverridePredefKey(HKEY_USERS, users.get()));
+		THROW_IF_WIN32_ERROR(RegOverridePredefKey(HKEY_CURRENT_USER, elevated.get()));
+		THROW_IF_WIN32_ERROR(RegOverridePredefKey(HKEY_LOCAL_MACHINE, machine.get()));
+
+		constexpr PCWSTR sid = L"S-1-5-21-100-200-300-1001";
+		constexpr PCWSTR personalize = L"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize";
+		const auto personalKey = wil::reg::create_unique_key(users.get(), (std::wstring(sid) + L"\\" + personalize).c_str(), wil::reg::key_access::readwrite);
+		const auto dwmKey = wil::reg::create_unique_key(users.get(), (std::wstring(sid) + L"\\" + DwmSettings::g_keyPath).c_str(), wil::reg::key_access::readwrite);
+		wil::reg::set_value_dword(dwmKey.get(), L"EnableTransparency", 99);
+		RegistryConfig userConfig(RegistryConfig::Mode::User, sid);
+		RegistryConfig machineConfig(RegistryConfig::Mode::Machine, sid);
+		THROW_IF_FAILED(machineConfig.SetDword(L"ColorizationOpaqueBlend", 1));
+		THROW_IF_FAILED(userConfig.SetDword(L"ColorizationOpaqueBlend", 0));
+		for (const auto& before : { RegistryConfig::RawValue{}, RegistryConfig::RawValue{ true, REG_BINARY, { 7, 8 } },
+			Encode(Value{ DWORD{0} }), Encode(Value{ DWORD{1} }), Encode(Value{ DWORD{2} }) })
+		{
+			const auto restored = before.present ? before : Encode(Value{ DWORD{0} });
+			const auto SetInitialValue = [&]
+			{
+				if (before.present) THROW_IF_FAILED(userConfig.WriteRaw(L"EnableTransparency", before));
+				else
+				{
+					// Only the isolated fixture may create an absent starting value.
+					const auto error = RegDeleteValueW(personalKey.get(), L"EnableTransparency");
+					THROW_HR_IF(HRESULT_FROM_WIN32(error), error != ERROR_SUCCESS && error != ERROR_FILE_NOT_FOUND);
+				}
+			};
+			SetInitialValue();
+			Check(userConfig.ReadRaw(L"EnableTransparency") == before);
+			Check((userConfig.GetDword(L"EnableTransparency", 0) != 0) == Util::IsTransparencyEnabled(personalKey.get()));
+			PreviewJournal<Settings::Id, RegistryConfig::RawValue> preview;
+			preview.Begin();
+			preview.Touch(Settings::Id::EnableTransparency, [&](auto) { return userConfig.ReadRaw(L"EnableTransparency"); });
+			THROW_IF_FAILED(machineConfig.SetDword(L"EnableTransparency", 0));
+			Check(wil::reg::get_value_dword(personalKey.get(), L"EnableTransparency") == 0);
+			Check(userConfig.GetDword(L"enabletransparency", 1) == 0);
+			preview.CommitAttempt();
+			Check(preview.Revert([&](auto, const auto& value) { return SUCCEEDED(userConfig.WriteRaw(L"EnableTransparency", value)); }));
+			Check(userConfig.ReadRaw(L"EnableTransparency") == restored);
+
+			SetInitialValue();
+			const auto userLayer = Read(userConfig), machineLayer = Read(machineConfig);
+			const auto legacyUserLayer = Read(userConfig, false);
+			Check(Raw(userLayer, EnableTransparency) == before);
+			Check(!machineLayer.values.contains(EnableTransparency));
+			Check(!legacyUserLayer.values.contains(EnableTransparency));
+			const auto captured = Capture(userLayer, machineLayer);
+			const auto enabled = Decode(before, Settings::Get(EnableTransparency));
+			Check(captured.at(ColorizationOpaqueBlend) == (std::holds_alternative<DWORD>(enabled)
+				? Value{ DWORD{std::get<DWORD>(enabled) == 0} } : Value{ DWORD{1} }));
+			Check(!captured.contains(EnableTransparency));
+			Check(Capture(legacyUserLayer, machineLayer, Settings::CatalogVersion, false).at(ColorizationOpaqueBlend) == Value{ DWORD{0} });
+			for (const auto scope : { Settings::Scope::User, Settings::Scope::Machine })
+				for (const auto version : { 1u, Settings::CatalogVersion })
+					for (const auto& opaque : { Value{}, Value{ DWORD{0} }, Value{ DWORD{1} }, Value{ DWORD{2} } })
+					{
+						SetInitialValue();
+						const Model model{ { ColorizationOpaqueBlend, opaque } };
+						const auto after = std::holds_alternative<DWORD>(opaque)
+							? Encode(Value{ DWORD{std::get<DWORD>(opaque) == 0} }) : Encode(Value{ DWORD{1} });
+						const auto plan = Plan(userLayer, machineLayer, model, scope, version);
+						Check(plan.size() == (before != after ? 1u : 0u));
+						preview.Begin();
+						for (const auto& change : plan)
+						{
+							Check(change.scope == Settings::Scope::User && change.id == EnableTransparency && change.before == before);
+							Check(change.after.present && change.after.type == REG_DWORD);
+							preview.Touch(change.id, [&](auto) { return userConfig.ReadRaw(change.Name()); });
+							THROW_IF_FAILED(userConfig.WriteRaw(change.Name(), change.after));
+						}
+						preview.CommitAttempt();
+						Check(userConfig.ReadRaw(L"EnableTransparency") == after);
+						Check(Plan(Read(userConfig), Read(machineConfig), model, scope, version).empty());
+						Check(preview.Revert([&](auto, const auto& value) { return SUCCEEDED(userConfig.WriteRaw(L"EnableTransparency", value)); }));
+						Check(userConfig.ReadRaw(L"EnableTransparency") == restored);
+						Check(userConfig.GetDword(L"ColorizationOpaqueBlend", 7) == 0);
+						Check(machineConfig.GetDword(L"ColorizationOpaqueBlend", 7) == 1);
+						for (const auto& change : Plan(legacyUserLayer, machineLayer, model, scope, version, false))
+							Check(change.id == ColorizationOpaqueBlend);
+					}
+		}
+		// Both direct deletion and an old absent-value recovery record must retain a DWORD.
+		THROW_IF_FAILED(userConfig.SetDword(L"EnableTransparency", 1));
+		THROW_IF_FAILED(machineConfig.DeleteValue(L"enabletransparency"));
+		Check(userConfig.ReadRaw(L"EnableTransparency") == Encode(Value{ DWORD{0} }));
+		THROW_IF_FAILED(userConfig.SetDword(L"EnableTransparency", 1));
+		THROW_IF_FAILED(machineConfig.WriteRaw(L"EnableTransparency", {}));
+		Check(userConfig.ReadRaw(L"EnableTransparency") == Encode(Value{ DWORD{0} }));
+		Check(wil::reg::get_value_dword(dwmKey.get(), L"EnableTransparency") == 99);
+		wil::unique_hkey missing;
+		Check(wil::reg::open_unique_key_nothrow(elevated.get(), personalize, missing) == HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND));
+		Check(wil::reg::open_unique_key_nothrow(machine.get(), personalize, missing) == HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND));
 	}
 
 	void TestPreviewJournal()
@@ -1687,17 +1778,20 @@ namespace
 		{
 			Check(PlanReset({}, target).empty());
 			const auto plan = PlanReset(target == Settings::Scope::User ? user : machine, target);
-			Check(plan.size() == Settings::Catalog.size() - 5);
+			Check(plan.size() == Settings::Catalog.size() - 6);
 			for (const auto id : { Settings::Id::MinMaxButtonGlowId, Settings::Id::CloseButtonGlowId, Settings::Id::ToolCloseButtonGlowId })
 				Check(std::ranges::any_of(plan, [&](const auto& change) { return change.id == id; }));
 			for (const auto& change : plan)
-				Check(change.scope == target && !Settings::IsWindowsColorBase(change.id) && change.id != unknown && !change.after.present);
+				Check(change.scope == target && !Settings::IsWindowsColorBase(change.id)
+					&& change.id != Settings::Id::EnableTransparency && change.id != unknown && !change.after.present);
 			auto users = user, machines = machine;
 			auto& reset = target == Settings::Scope::User ? users : machines;
 			for (const auto& change : plan) reset.values.erase(change.id);
 			Check(PlanReset(reset, target).empty());
 			Check((target == Settings::Scope::User ? machines.values : users.values) == (target == Settings::Scope::User ? machine.values : user.values));
 			Check(reset.values.at(unknown) == user.values.at(unknown));
+			Check(reset.values.at(Settings::Id::EnableTransparency) == Raw(target == Settings::Scope::User ? user : machine, Settings::Id::EnableTransparency));
+			Check(!Capture(users, machines).contains(Settings::Id::EnableTransparency));
 			for (const auto& spec : Settings::Catalog) if (Settings::IsWindowsColorBase(spec.id))
 				Check(reset.values.at(spec.id) == Raw(target == Settings::Scope::User ? user : machine, spec.id));
 			Check(Resolve(users, machines, Settings::Id::GlassOpacity) == Value{ DWORD{target == Settings::Scope::User ? 31u : 17u} });
@@ -1813,7 +1907,7 @@ namespace
 		{
 			Snapshot live;
 			DWORD wallpaper{ 0x123456 }, derived{};
-			bool reject{}, fail{}, failAfterAccent{}, failAfterDwmAccent{};
+			bool reject{}, fail{}, failAfterAccent{}, failAfterDwmAccent{}, shellWritesAccent{ true };
 			unsigned writes{}, refreshes{};
 			HRESULT Capture(const std::wstring&, Snapshot& value) noexcept override { value = live; return S_OK; }
 			HRESULT Prepare(const Snapshot&) noexcept override { return reject ? E_NOINTERFACE : S_OK; }
@@ -1829,7 +1923,7 @@ namespace
 					if (value.IsAutomatic()) { ++refreshes; derived = wallpaper; }
 					else derived = *value.rgb;
 				}
-				if (value.RestoresAutomatic() && live.accent)
+				if (value.RestoresAutomatic() && live.accent && shellWritesAccent)
 					live.accent = RegistryConfig::RawValue{ true, REG_DWORD,
 						{ static_cast<BYTE>(wallpaper >> 16), static_cast<BYTE>(wallpaper >> 8), static_cast<BYTE>(wallpaper), 0xFF } };
 				if (failAfterAccent) return E_FAIL;
@@ -1875,35 +1969,38 @@ namespace
 			Check(SUCCEEDED(preview.RecoverSnapshot(persisted)) && live->live.IsAutomatic() && live->refreshes == 1
 				&& live->live.accent == RegistryConfig::RawValue{ true, REG_DWORD, { 0x12, 0x34, 0x56, 0xFF } });
 		}
+		for (const auto& raw : { RegistryConfig::RawValue{}, RegistryConfig::RawValue{ true, REG_BINARY, { 1, 2, 3 } } })
 		{
 			auto backend = std::make_unique<Backend>(); auto* live = backend.get();
-			Snapshot original{ 0u, 0x112233u };
-			// Restore raw Accent independently of the original DWM RGB, including its type.
-			original.accent = RegistryConfig::RawValue{ true, REG_BINARY, { 1, 2, 3 } };
+			Snapshot original{ 0u, 0x112233u }; original.accent = raw;
 			live->live = original;
 			ColorPreference preview(std::move(backend));
-			Check(SUCCEEDED(preview.Apply(L"user", 0x445566)) && live->live.accent->type == REG_DWORD);
+			Check(SUCCEEDED(preview.Apply(L"user", 0x445566)) && live->live.accent == raw);
 			preview.CommitAttempt();
-			live->live.accent.reset(); // Policy now prevents forward accent synchronization.
-			Check(SUCCEEDED(preview.Apply(L"user", 0x778899)) && !live->live.accent);
+			Check(!preview.Baseline()->accent); // Manual preview never owns AccentColorMenu.
+			Snapshot recovery;
+			Check(SUCCEEDED(preview.SaveAccent(L"user", 0x445566, [&](const Snapshot& before) { recovery = before; })));
+			Check(!recovery.applyChoice && recovery.accent == raw && !recovery.dwmAccent);
+			Check(live->live.accent == RegistryConfig::RawValue{ true, REG_DWORD, { 0x44, 0x55, 0x66, 0xFF } });
 			preview.CommitAttempt();
-			const auto baseline = preview.Baseline();
-			Check(baseline && baseline->accent == original.accent);
+			Check(SUCCEEDED(preview.RecoverSnapshot(recovery)) && live->live.accent == raw && live->live.rgb == DWORD{0x445566});
 			Check(SUCCEEDED(preview.Revert()) && live->live == original);
-			live->live.accent.reset();
-			Check(SUCCEEDED(preview.RecoverSnapshot(*baseline)) && live->live == original);
-		}
-		{
-			auto backend = std::make_unique<Backend>(); auto* live = backend.get();
-			live->live = Snapshot{ 0u, 0x112233u };
-			ColorPreference preview(std::move(backend));
-			Check(SUCCEEDED(preview.Apply(L"user", 0x445566))); preview.CommitAttempt();
-			// Accent first becomes writable after an earlier DWM-only preview.
-			live->live.accent = RegistryConfig::RawValue{};
+			preview.Accept();
 			Check(SUCCEEDED(preview.Apply(L"user", 0x778899))); preview.CommitAttempt();
-			Check(preview.Baseline()->accent && !preview.Baseline()->accent->present);
-			Check(SUCCEEDED(preview.Revert()) && live->live.rgb == DWORD{0x112233}
-				&& live->live.accent && !live->live.accent->present);
+			const auto manualPreview = live->live;
+			live->reject = true;
+			Check(FAILED(preview.SaveAccent(L"user", 0x778899)) && live->live == manualPreview);
+			live->reject = false;
+			live->failAfterAccent = true;
+			Check(FAILED(preview.SaveAccent(L"user", 0x778899)) && live->live.accent != raw);
+			live->failAfterAccent = false;
+			Check(SUCCEEDED(preview.RollbackAttempt()) && live->live == manualPreview && preview.IsDirty());
+			Check(SUCCEEDED(preview.SaveAccent(L"user", 0x778899))); preview.CommitAttempt();
+			preview.Accept();
+			Check(!preview.IsDirty() && live->live.rgb == DWORD{0x778899});
+			const auto writes = live->writes;
+			Check(SUCCEEDED(preview.SaveAccent(L"user", 0x778899, [](const Snapshot&) { Check(false); })));
+			Check(live->writes == writes && !preview.IsDirty() && !preview.IsAttemptActive());
 		}
 
 		{
@@ -1913,7 +2010,7 @@ namespace
 			ColorPreference preview(std::move(backend));
 			bool recordedAccent{};
 			Check(SUCCEEDED(preview.Apply(L"user", 0x112233, [&](const Snapshot& before) { recordedAccent = before.accent.has_value(); })));
-			Check(!recordedAccent && !preview.Baseline()->accent); // Equal Accent produces no write or backup.
+			Check(!recordedAccent && !preview.Baseline()->accent); // Manual preview never writes or backs up Accent.
 			preview.CommitAttempt();
 			const RegistryConfig::RawValue external{ true, REG_DWORD, { 7, 8, 9, 0xFF } };
 			live->live.accent = external;
@@ -1924,7 +2021,8 @@ namespace
 			live->live = Snapshot{ 0u, 0x112233u };
 			live->live.accent = RegistryConfig::RawValue{};
 			ColorPreference preview(std::move(backend));
-			Check(SUCCEEDED(preview.Apply(L"user", 0x112233))); preview.CommitAttempt();
+			Check(SUCCEEDED(preview.Apply(L"user", 0x112233)) && !preview.IsDirty()); preview.CommitAttempt();
+			Check(SUCCEEDED(preview.SaveAccent(L"user", 0x112233))); preview.CommitAttempt();
 			Check(preview.IsDirty() && !preview.Baseline()->applyChoice && preview.Baseline()->accent);
 			live->live.automatic = 1; // Untouched mode changed externally during an Accent-only preview.
 			Check(SUCCEEDED(preview.Revert()) && live->live.automatic == 1 && !live->live.accent->present);
@@ -1934,7 +2032,7 @@ namespace
 		{
 			auto backend = std::make_unique<Backend>(); auto* live = backend.get();
 			Snapshot original{ 0u, 0x112233u }; original.dwmAccent = raw;
-			live->live = original; // Forced-color policy may exclude AccentColorMenu, never DWM AccentColor.
+			live->live = original; // DWM AccentColor has its own preview and recovery identity.
 			ColorPreference preview(std::move(backend));
 			Snapshot persisted;
 			Check(SUCCEEDED(preview.Apply(L"user", 0x445566, [&](const Snapshot& before) { persisted = before; })));
@@ -2070,6 +2168,18 @@ namespace
 				&& live->live.accent == RegistryConfig::RawValue{ true, REG_DWORD, { 0x77, 0x88, 0x99, 0xFF } }
 				&& live->live.dwmAccent == live->live.accent);
 		}
+		{
+			auto backend = std::make_unique<Backend>(); auto* live = backend.get();
+			const RegistryConfig::RawValue original{ true, REG_BINARY, { 1, 2, 3 } };
+			live->live = Snapshot{ 0u, 0x445566u }; live->live.accent = original;
+			live->shellWritesAccent = false;
+			ColorPreference preview(std::move(backend));
+			Check(SUCCEEDED(preview.Apply(L"user", std::nullopt))); preview.CommitAttempt();
+			Check(live->live.accent == original && !preview.Baseline()->accent);
+			Check(SUCCEEDED(preview.SaveAccent(L"user", live->derived))); preview.CommitAttempt();
+			Check(live->live.IsAutomatic() && live->live.accent == RegistryConfig::RawValue{ true, REG_DWORD, { 0x12, 0x34, 0x56, 0xFF } });
+			Check(SUCCEEDED(preview.Revert()) && live->live.accent == original && live->live.rgb == DWORD{0x445566});
+		}
 		for (const DWORD mode : { 0u, 1u, 2u })
 		{
 			auto backend = std::make_unique<Backend>();
@@ -2185,10 +2295,12 @@ namespace
 		for (const auto target : { Settings::Scope::User, Settings::Scope::Machine })
 		{
 			auto withUserOverrides = user, withMachineOverrides = machine;
+			withUserOverrides[EnableTransparency] = raw(0);
+			withMachineOverrides[EnableTransparency] = raw(1);
 			withUserOverrides[ColorizationColorOverride] = raw(0xAA123456);
 			withMachineOverrides[ColorizationAfterglowOverride] = raw(0xBB112233);
 			const auto ignored = ConfigurationMigration::Prepare(withUserOverrides, withMachineOverrides, target);
-			for (const auto& change : ignored) Check(!Settings::IsColorOverride(change.id));
+			for (const auto& change : ignored) Check(!Settings::IsColorOverride(change.id) && change.id != EnableTransparency);
 			apply(withUserOverrides, withMachineOverrides, ignored);
 			Check(withUserOverrides.at(ColorizationColorOverride) == raw(0xAA123456));
 			Check(withMachineOverrides.at(ColorizationAfterglowOverride) == raw(0xBB112233));
@@ -2391,6 +2503,8 @@ namespace
 
 		const auto loaded = PresetPackages::LoadArchive(first);
 		Check(nlohmann::json::parse(loaded.manifestText).at("schema_version") == 3);
+		const auto settings = nlohmann::json::parse(loaded.manifestText).at("settings");
+		Check(settings.contains("ColorizationOpaqueBlend") && !settings.contains("EnableTransparency"));
 		Check(!loaded.legacyLicense);
 		auto noHomepage = request; noHomepage.metadata.authorHomepage.clear();
 		Check(PresetPackages::CreateSnapshot(noHomepage).metadata.authorHomepage.empty());
@@ -3086,7 +3200,7 @@ int main()
 	TestColorizationPresets();
 	TestBlurSettings();
 	TestSettingsCatalog();
-	TestColorPolicy();
+	TestTransparencyRegistry();
 	TestConfigurationMergePolicy();
 	TestPreviewJournal();
 	TestNetPreviewJournal();

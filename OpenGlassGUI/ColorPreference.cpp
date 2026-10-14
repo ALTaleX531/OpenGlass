@@ -1,9 +1,10 @@
 #include "pch.h"
 #include "ColorPreference.hpp"
 #include "DwmSettings.hpp"
-#include "ColorPolicy.hpp"
 #include "PreviewJournal.hpp"
 #include "ShellColorRefresh.hpp"
+#include "DesktopWallpaper.hpp"
+#include <wil/token_helpers.h>
 
 namespace OpenGlass
 {
@@ -80,12 +81,9 @@ namespace OpenGlass
 		// Check the actual token identity, including alternate-credential elevation.
 		bool TokenMatches(HANDLE token, const std::wstring& sid)
 		{
-			DWORD size{};
-			GetTokenInformation(token, TokenUser, nullptr, 0, &size);
-			std::vector<BYTE> buffer(size);
-			THROW_IF_WIN32_BOOL_FALSE(GetTokenInformation(token, TokenUser, buffer.data(), size, &size));
+			const auto user = wil::get_token_information<TOKEN_USER>(token);
 			wil::unique_hlocal_string text;
-			THROW_IF_WIN32_BOOL_FALSE(ConvertSidToStringSidW(static_cast<PSID>(reinterpret_cast<TOKEN_USER*>(buffer.data())->User.Sid), text.put()));
+			THROW_IF_WIN32_BOOL_FALSE(ConvertSidToStringSidW(user->User.Sid, text.put()));
 			return !_wcsicmp(text.get(), sid.c_str());
 		}
 
@@ -112,23 +110,6 @@ namespace OpenGlass
 			return duplicate;
 		}
 
-		struct UserScope
-		{
-			wil::unique_handle previous;
-			explicit UserScope(HANDLE token)
-			{
-				if (!OpenThreadToken(GetCurrentThread(), TOKEN_IMPERSONATE | TOKEN_QUERY, TRUE, previous.put()))
-				{
-					THROW_LAST_ERROR_IF(GetLastError() != ERROR_NO_TOKEN);
-				}
-				THROW_IF_WIN32_BOOL_FALSE(SetThreadToken(nullptr, token));
-			}
-			~UserScope()
-			{
-				FAIL_FAST_IF_WIN32_BOOL_FALSE(SetThreadToken(nullptr, previous.get()));
-			}
-		};
-
 		class WindowsColorBackend final : public ColorPreference::Backend
 		{
 			wil::unique_hmodule shell;
@@ -136,7 +117,6 @@ namespace OpenGlass
 			wil::unique_handle token;
 			std::wstring userSid;
 			HWND shellWindow{};
-			bool synchronizeAutomaticAccent{};
 		public:
 			HRESULT Capture(const std::wstring& sid, ColorPreference::Snapshot& snapshot) noexcept override
 			try
@@ -150,8 +130,7 @@ namespace OpenGlass
 				RETURN_HR_IF(E_ACCESSDENIED, userSid != sid);
 				if (!userKey) RETURN_IF_WIN32_ERROR(RegOpenKeyExW(HKEY_USERS, sid.c_str(), 0, KEY_READ, userKey.put()));
 				ColorPreference::Snapshot captured;
-				if (!ColorPolicy::IsAccentSyncBlocked(RegGetValueW))
-					captured.accent = ReadRaw(userKey.get(), AccentKey, L"AccentColorMenu");
+				captured.accent = ReadRaw(userKey.get(), AccentKey, L"AccentColorMenu");
 				captured.dwmAccent = ReadRaw(userKey.get(), DwmSettings::g_keyPath, L"AccentColor");
 				captured.automatic = ReadDword(userKey.get(), DesktopKey, L"AutoColorization").value_or(0);
 				if (!captured.IsAutomatic()) captured.rgb = ReadColor(userKey.get());
@@ -164,9 +143,7 @@ namespace OpenGlass
 			try
 			{
 				RETURN_HR_IF(E_UNEXPECTED, !token || !userKey);
-				synchronizeAutomaticAccent = choice.RestoresAutomatic() && !ColorPolicy::IsAccentSyncBlocked(RegGetValueW);
-				// Recovery uses recorded write targets, independent of current policy.
-				if (choice.accent || synchronizeAutomaticAccent)
+				if (choice.accent)
 					RETURN_IF_WIN32_ERROR(RegOpenKeyExW(userKey.get(), AccentKey, 0, KEY_SET_VALUE, accentKey.put()));
 				if (choice.dwmAccent || choice.applyChoice)
 				{
@@ -206,7 +183,7 @@ namespace OpenGlass
 			try
 			{
 				RETURN_IF_FAILED(Prepare(choice));
-				UserScope scope(token.get());
+				const auto scope = wil::impersonate_token(token.get());
 				auto result = choice;
 				if (choice.applyChoice)
 				{
@@ -217,16 +194,13 @@ namespace OpenGlass
 				if (choice.RestoresAutomatic())
 				{
 					RETURN_IF_FAILED(ShellColorRefresh::Request(shellWindow));
-					// The shell may update glass RGB while its same-preference shortcut
-					// leaves both Accent values stale. Use the completed result, not old RGB.
-					const auto accent = EncodeAccent(ReadColor(userKey.get()));
 					result = ChoiceOnly(choice);
-					if (synchronizeAutomaticAccent) result.accent = accent;
-					result.dwmAccent = accent;
+					// Observe Shell side effects for rollback; GUI synchronization waits for Save.
+					result.accent = ReadRaw(userKey.get(), AccentKey, L"AccentColorMenu");
+					result.dwmAccent = EncodeAccent(ReadColor(userKey.get()));
 				}
-				if (result.accent && ReadRaw(userKey.get(), AccentKey, L"AccentColorMenu") != *result.accent)
+				else if (result.accent && ReadRaw(userKey.get(), AccentKey, L"AccentColorMenu") != *result.accent)
 					WriteRaw(accentKey.get(), L"AccentColorMenu", *result.accent);
-				// Publish AccentColorMenu first, then the persistent colors consumed by DWM/OpenGlass.
 				// The caller journals both base values independently before this operation.
 				if (choice.applyChoice && !choice.IsAutomatic())
 				{
@@ -283,6 +257,32 @@ namespace OpenGlass
 	}
 	CATCH_RETURN()
 
+	HRESULT ColorPreference::ComputeWallpaperColor(const std::wstring& userSid, DWORD& argb) noexcept
+	try
+	{
+		const auto token = GetUserToken(userSid);
+		const auto scope = wil::impersonate_token(token.get());
+		const auto wallpaper = wil::CoCreateInstance<IDesktopWallpaperPrivate>(
+			__uuidof(DesktopWallpaper),
+			CLSCTX_LOCAL_SERVER | CLSCTX_ENABLE_CLOAKING
+		);
+		// Preserve the original user's identity for activation and the RPC call.
+		RETURN_IF_FAILED(
+			CoSetProxyBlanket(
+				wallpaper.get(),
+				RPC_C_AUTHN_DEFAULT,
+				RPC_C_AUTHZ_DEFAULT,
+				COLE_DEFAULT_PRINCIPAL,
+				RPC_C_AUTHN_LEVEL_DEFAULT,
+				RPC_C_IMP_LEVEL_IMPERSONATE,
+				nullptr,
+				EOAC_DYNAMIC_CLOAKING
+			)
+		);
+		return wallpaper->ComputeImageColorizationColor(&argb);
+	}
+	CATCH_RETURN()
+
 	HRESULT ColorPreference::Apply(const std::wstring& userSid, std::optional<DWORD> argb,
 		const std::function<void(const Snapshot&)>& beforeWrite) noexcept
 	try
@@ -290,8 +290,7 @@ namespace OpenGlass
 		Snapshot before;
 		RETURN_IF_FAILED(Capture(userSid, before));
 		Snapshot desired{ argb ? 0u : 1u, argb ? std::optional<DWORD>(*argb & 0xFFFFFF) : std::nullopt };
-		if (argb && before.accent && *before.accent != EncodeAccent(*argb)) desired.accent = EncodeAccent(*argb);
-		if (argb && !desired.accent) before.accent.reset();
+		if (argb) before.accent.reset(); // Manual preview does not write the Windows accent preference.
 		if (argb && before.dwmAccent && *before.dwmAccent != EncodeAccent(*argb)) desired.dwmAccent = EncodeAccent(*argb);
 		// Automatic may replace a Manual AccentColor through the shell. An existing
 		// Automatic value is derived state and is recovered by recomputation instead.
@@ -333,6 +332,27 @@ namespace OpenGlass
 			journal.DiscardBaseline(1);
 			journal.DiscardBaseline(2);
 		}
+		return S_OK;
+	}
+	CATCH_RETURN()
+
+	HRESULT ColorPreference::SaveAccent(const std::wstring& userSid, DWORD rgb,
+		const std::function<void(const Snapshot&)>& beforeWrite) noexcept
+	try
+	{
+		Snapshot before;
+		RETURN_IF_FAILED(Capture(userSid, before));
+		before = AccentOnly(before);
+		auto desired = before;
+		desired.accent = EncodeAccent(rgb);
+		if (before == desired) return S_OK;
+		RETURN_IF_FAILED(m_state->backend->Prepare(desired));
+		if (beforeWrite) beforeWrite(before);
+		auto& journal = m_state->journal;
+		journal.Begin();
+		journal.Touch(1, [&](int) { return before; });
+		RETURN_IF_FAILED(m_state->backend->Apply(desired));
+		journal.Reconcile([&](int) { return desired; });
 		return S_OK;
 	}
 	CATCH_RETURN()

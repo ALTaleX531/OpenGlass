@@ -5,10 +5,10 @@
 
 namespace OpenGlass
 {
-	void MainFrame::ApplyColorizationBalances(DWORD intensity)
+	void MainFrame::ApplyColorizationBalances(DWORD argb)
 	{
 		const auto parameters = ColorizationPresets::CalculateWindows7Parameters(
-			ColorizationPresets::CalculateIntensityAlpha(intensity) << 24,
+			argb,
 			!m_chkEnableTransparency->IsChecked());
 		const std::pair<Settings::Id, DWORD> values[]
 		{
@@ -56,7 +56,7 @@ namespace OpenGlass
 				THROW_IF_FAILED(m_config->SetDword(name, value));
 			};
 
-			const auto cleanup = EffectiveConfiguration::PlanColorCleanup(EffectiveConfiguration::Read(*m_userConfig), EffectiveConfiguration::Read(*m_systemConfig));
+			const auto cleanup = EffectiveConfiguration::PlanColorCleanup(EffectiveConfiguration::Read(*m_userConfig, false), EffectiveConfiguration::Read(*m_systemConfig));
 			THROW_IF_FAILED(m_userConfig->CheckDeleteAccess());
 			THROW_IF_FAILED(m_systemConfig->CheckDeleteAccess());
 			ApplyAccentColor(argb);
@@ -66,11 +66,13 @@ namespace OpenGlass
 				TrackSettingChange(change.scope, change.id);
 				THROW_IF_FAILED(GetConfigForScope(change.scope)->WriteRaw(change.Name(), change.after));
 			}
-			if (!argb) return; // Automatic selection retains the configured intensity.
-			const auto intensity = ColorizationPresets::CalculateVistaOpacity(*argb);
-			setDword(Settings::Id::GlassOpacity, intensity);
-			if (family == ColorizationPresets::Family::Windows7) ApplyColorizationBalances(intensity);
-		}, Settings::UpdateImpact::Colorization)) LoadSettings();
+			DWORD color = argb.value_or(0);
+			// Native image calculation requires Automatic to be enabled. Its alpha
+			// is independent of the Shell's final ColorizationColor alpha.
+			if (!argb) THROW_IF_FAILED(m_colorPreference.ComputeWallpaperColor(m_targetUserSid.ToStdWstring(), color));
+			setDword(Settings::Id::GlassOpacity, ColorizationPresets::CalculateVistaOpacity(color));
+			if (family == ColorizationPresets::Family::Windows7) ApplyColorizationBalances(color);
+		}, Settings::UpdateType::Backdrop)) LoadSettings();
 	}
 
 	void MainFrame::ApplyColorizationPreset(const ColorizationPresets::Preset& preset)

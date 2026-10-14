@@ -14,6 +14,7 @@ namespace OpenGlass
 	{
 		wxApp::OnInitCmdLine(parser);
 		parser.AddLongOption(L"scope", L"Configuration target: hkcu or hklm", wxCMD_LINE_VAL_STRING);
+		parser.AddLongSwitch(L"no-system-transparency", L"Use the editing layer's ColorizationOpaqueBlend instead of Windows transparency");
 		parser.AddLongOption(
 			L"elevated-pipe",
 			L"internal elevation handshake pipe",
@@ -37,7 +38,8 @@ namespace OpenGlass
 			wxMessageBox(L"Use --scope=hkcu or --scope=hklm. Conflicting scopes are not allowed.", L"Invalid scope", wxOK | wxICON_ERROR);
 			return false;
 		}
-		const auto startup = Elevation::PrepareElevatedStartup(*scope);
+		const bool systemTransparency = std::ranges::find(arguments, L"--no-system-transparency") == arguments.end();
+		const auto startup = Elevation::PrepareElevatedStartup(*scope, systemTransparency);
 		if (!startup.continueStartup)
 		{
 			return false;
@@ -52,7 +54,7 @@ namespace OpenGlass
 		if (m_singleInstanceChecker.IsAnotherRunning())
 			return false;
 
-		MainFrame* frame = new MainFrame(startup.userSid, *scope);
+		MainFrame* frame = new MainFrame(startup.userSid, *scope, systemTransparency);
 		frame->Show(true);
 		return true;
 	}
