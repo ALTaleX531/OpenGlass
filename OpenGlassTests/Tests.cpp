@@ -377,6 +377,7 @@ namespace
 		for (size_t index = 0; index < 3; ++index) image->thunks[index].u1.Function = original;
 		const HookHelper::ImportFunctionDetourInfo functions[]
 		{
+			HookHelper::MakeImportDetour<&PointerTestReplacement>("Disabled", nullptr, false),
 			HookHelper::MakeImportDetour<&ImportTestReplacement>(MAKEINTRESOURCEA(131), &g_importTestOriginal),
 			HookHelper::MakeImportDetour<&PointerTestReplacement>("ImportTest", &g_pointerTestOriginal)
 		};
@@ -384,10 +385,44 @@ namespace
 		for (const bool delayLoad : { false, true })
 		{
 			HookHelper::ImportHook hook;
+			const auto module = reinterpret_cast<HMODULE>(image.get());
+			const auto originalImportStorage = g_importTestOriginal;
+			const auto originalPointerStorage = g_pointerTestOriginal;
+			Check(hook.Prepare(nullptr, imports, delayLoad) == HRESULT_FROM_WIN32(ERROR_MOD_NOT_FOUND));
+			auto& directory = image->nt.OptionalHeader.DataDirectory[delayLoad ? IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT : IMAGE_DIRECTORY_ENTRY_IMPORT];
+			const auto savedDirectory = directory;
+			directory = {};
+			Check(hook.Prepare(module, imports, delayLoad) == E_NOINTERFACE);
+			directory = savedDirectory;
+			auto& nameTable = delayLoad ? image->delays[0].ImportNameTableRVA : image->imports[0].OriginalFirstThunk;
+			nameTable = 0;
+			Check(hook.Prepare(module, imports, delayLoad) == E_NOINTERFACE);
+			nameTable = offsetof(ImportImage, nameThunks);
+			auto& addressTable = delayLoad ? image->delays[0].ImportAddressTableRVA : image->imports[0].FirstThunk;
+			addressTable = 0;
+			Check(hook.Prepare(module, imports, delayLoad) == E_NOINTERFACE);
+			addressTable = offsetof(ImportImage, thunks);
+			image->nameThunks[1].u1.Ordinal = IMAGE_ORDINAL_FLAG64 | 132;
+			Check(hook.Prepare(module, imports, delayLoad) == E_NOINTERFACE);
+			image->nameThunks[1].u1.Ordinal = IMAGE_ORDINAL_FLAG64 | 131;
+			strcpy_s(image->names[1].name, "Missing");
+			Check(hook.Prepare(module, imports, delayLoad) == E_NOINTERFACE);
+			strcpy_s(image->names[1].name, "ImportTest");
+			image->nameThunks[0].u1.Ordinal = IMAGE_ORDINAL_FLAG64 | 131;
+			Check(hook.Prepare(module, imports, delayLoad) == E_NOINTERFACE);
+			image->nameThunks[0].u1.AddressOfData = offsetof(ImportImage, names);
+			if (delayLoad)
+			{
+				image->delays[0].Attributes.RvaBased = 0;
+				Check(hook.Prepare(module, imports, delayLoad) == E_NOINTERFACE);
+				image->delays[0].Attributes.RvaBased = 1;
+			}
+			for (size_t index = 0; index < 3; ++index) Check(image->thunks[index].u1.Function == original);
+			Check(g_importTestOriginal == originalImportStorage && g_pointerTestOriginal == originalPointerStorage);
 			HookHelper::GetHookRundown().Open();
 			{
 				HookHelper::HookTransaction transaction{ HookHelper::HookMode::Install };
-				hook.Prepare(reinterpret_cast<HMODULE>(image.get()), imports, delayLoad);
+				THROW_IF_FAILED(hook.Prepare(module, imports, delayLoad));
 				for (size_t index = 0; index < 3; ++index) Check(image->thunks[index].u1.Function == original);
 				transaction.Apply(hook);
 				transaction.Commit();

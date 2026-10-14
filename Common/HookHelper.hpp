@@ -9,7 +9,6 @@
 #pragma warning(pop)
 #include <wil/resource.h>
 #include <wil/result.h>
-#include <array>
 #include <atomic>
 #include <chrono>
 #include <cstdint>
@@ -71,185 +70,25 @@ namespace OpenGlass::HookHelper
 	class PointerHookBase
 	{
 		friend class HookTransaction;
+	protected:
 		PVOID* m_target{};
+
+	private:
 		PVOID m_replacement{};
-		PVOID m_original{};
 		PVOID* m_originalStorage{};
 		std::atomic_bool m_installed{};
 
-	protected:
+	public:
 		void Prepare(PVOID* target, PVOID replacement, PVOID* originalStorage) noexcept;
-
-	public:
 		[[nodiscard]] bool IsInstalled() const noexcept { return m_installed.load(std::memory_order_acquire); }
-	};
-
-	template <typename Owner, typename T> struct PointerHookRundownThunk;
-
-	template <typename Owner, typename R, typename... Args>
-	struct PointerHookRundownThunk<Owner, R (*)(Args...)>
-	{
-		static R Invoke(Args... args)
-		{
-			auto& rundown = GetHookRundown();
-			if (!rundown.TryAcquire())
-			{
-				return std::invoke(Owner::Original(), std::forward<Args>(args)...);
-			}
-			const auto release = wil::scope_exit([&rundown]
-			{
-				rundown.Release();
-			});
-			return std::invoke(Owner::ReplacementFunction(), std::forward<Args>(args)...);
-		}
-	};
-
-	template <auto Replacement>
-	requires function_pointer<decltype(Replacement)>
-	class PointerHook final : public PointerHookBase
-	{
-		using T = decltype(Replacement);
-		inline static T* s_originalStorage{};
-		inline static T* s_target{};
-
-	public:
-		static T Original() noexcept { return *s_originalStorage; }
-		static constexpr T ReplacementFunction() noexcept { return Replacement; }
-
-		void Prepare(T* target, T* originalStorage) noexcept
-		{
-			FAIL_FAST_IF_FAILED_MSG(!s_target || s_target == target ? S_OK : E_UNEXPECTED, "Lazy hook discovered a different slot");
-			s_target = target;
-			s_originalStorage = originalStorage;
-			PointerHookBase::Prepare(
-				reinterpret_cast<PVOID*>(target),
-				reinterpret_cast<PVOID>(&PointerHookRundownThunk<PointerHook, T>::Invoke),
-				reinterpret_cast<PVOID*>(originalStorage)
-			);
-		}
-
-		void AttachOnce(T* target, T* originalStorage) noexcept;
-	};
-
-	class ImportHook final
-	{
-		friend class HookTransaction;
-		struct Entry
-		{
-			PVOID* target;
-			PVOID replacement;
-			PVOID* originalStorage;
-		};
-		std::vector<Entry> m_entries;
-		bool m_installed{};
-
-	public:
-		void Prepare(HMODULE module, std::span<const ImportDllDetourInfo> imports, bool delayLoad = false) noexcept;
-	};
-
-	class InstructionPatch final
-	{
-		friend class HookTransaction;
-		uint8_t* m_address{};
-		std::vector<uint8_t> m_replacement;
-		std::vector<uint8_t> m_original;
-		bool m_installed{};
-
-	public:
-		void Prepare(uint8_t* address, std::span<const uint8_t> expected, std::span<const uint8_t> replacement) noexcept;
-	};
-
-	class HookTransaction final
-	{
-		HookMode m_mode;
-		bool m_committed{};
-		std::array<DetourInfo, 256> m_inlineHooks{};
-		std::array<std::string_view, 256> m_inlineGroups{};
-		size_t m_inlineHookCount{};
-		std::array<PointerHookBase*, 64> m_pointerHooks{};
-		size_t m_pointerHookCount{};
-		std::array<ImportHook*, 16> m_importHooks{};
-		size_t m_importHookCount{};
-		std::array<InstructionPatch*, 32> m_instructionPatches{};
-		size_t m_instructionPatchCount{};
-
-		void ApplyPointer(PointerHookBase& hook) noexcept;
-		void ApplyImport(ImportHook& hook) noexcept;
-		void ApplyInstruction(InstructionPatch& patch) noexcept;
-
-	public:
-		explicit HookTransaction(HookMode mode) noexcept;
-		~HookTransaction() noexcept;
-		HookTransaction(const HookTransaction&) = delete;
-		HookTransaction& operator=(const HookTransaction&) = delete;
-
-		[[nodiscard]] HookMode Mode() const noexcept { return m_mode; }
-		void ApplyInline(std::string_view group, std::span<const DetourInfo> hooks) noexcept;
-		void Apply(PointerHookBase& hook) noexcept;
-		void Apply(ImportHook& hook) noexcept;
-		void Apply(InstructionPatch& patch) noexcept;
-		void Commit() noexcept;
-	};
-
-	template <auto Replacement>
-	requires function_pointer<decltype(Replacement)>
-	void PointerHook<Replacement>::AttachOnce(decltype(Replacement)* target, decltype(Replacement)* originalStorage) noexcept
-	{
-		if (IsInstalled())
-		{
-			FAIL_FAST_IF_FAILED_MSG(s_target == target ? S_OK : E_UNEXPECTED, "Lazy hook discovered a different slot");
-			return;
-		}
-
-		auto& rundown = GetHookRundown();
-		if (!rundown.TryAcquire())
-		{
-			return;
-		}
-		const auto release = wil::scope_exit([&rundown]
-		{
-			rundown.Release();
-		});
-
-		// Serializing the transaction closes the race with BeginShutdown(): an
-		// install that wins the transaction lock is visible to the subsequent
-		// remove inventory, while a losing install observes closing and retires.
-		HookTransaction transaction{ HookMode::Install };
-		if (rundown.IsClosing())
-		{
-			transaction.Commit();
-			return;
-		}
-		if (IsInstalled())
-		{
-			FAIL_FAST_IF_FAILED_MSG(s_target == target ? S_OK : E_UNEXPECTED, "Lazy hook discovered a different slot");
-			transaction.Commit();
-			return;
-		}
-		Prepare(target, originalStorage);
-		transaction.Apply(*this);
-		transaction.Commit();
-	}
-
-	struct ImportFunctionDetourInfo : DetourInfo
-	{
-		LPCSTR importFunction;
-
-		ImportFunctionDetourInfo(LPCSTR function, LPVOID* original, LPVOID detour, bool condition) noexcept :
-			DetourInfo{},
-			importFunction(condition ? function : nullptr)
-		{
-			this->original = condition ? original : nullptr;
-			this->detour = condition ? detour : nullptr;
-		}
 	};
 
 	template <auto Replacement, typename T = decltype(Replacement)>
 	requires function_pointer<T>
-	struct ImportHookRundownThunk;
+	struct HookRundownThunk;
 
 	template <auto Replacement, typename R, typename... Args>
-	struct ImportHookRundownThunk<Replacement, R (*)(Args...)>
+	struct HookRundownThunk<Replacement, R (*)(Args...)>
 	{
 		using T = R (*)(Args...);
 		inline static T* s_originalStorage{};
@@ -272,11 +111,139 @@ namespace OpenGlass::HookHelper
 		{
 			FAIL_FAST_IF_FAILED_MSG(
 				!s_originalStorage || s_originalStorage == originalStorage ? S_OK : E_UNEXPECTED,
-				"Import replacement is bound to multiple original-function stores"
+				"Hook replacement is bound to multiple original-function stores"
 			);
 			s_originalStorage = originalStorage;
 			return &Invoke;
 		}
+	};
+
+	template <auto Replacement>
+	requires function_pointer<decltype(Replacement)>
+	class PointerHook final : public PointerHookBase
+	{
+		using T = decltype(Replacement);
+
+	public:
+		void Prepare(T* target, T* originalStorage) noexcept
+		{
+			const auto slot = reinterpret_cast<PVOID*>(target);
+			FAIL_FAST_IF_FAILED_MSG(!m_target || m_target == slot ? S_OK : E_UNEXPECTED, "Lazy hook discovered a different slot");
+			PointerHookBase::Prepare(
+				slot,
+				reinterpret_cast<PVOID>(HookRundownThunk<Replacement>::Bind(originalStorage)),
+				reinterpret_cast<PVOID*>(originalStorage)
+			);
+		}
+
+		void AttachOnce(T* target, T* originalStorage) noexcept;
+	};
+
+	class ImportHook final
+	{
+		friend class HookTransaction;
+		struct Entry
+		{
+			PVOID* target;
+			PVOID replacement;
+			PVOID* originalStorage;
+		};
+		std::vector<Entry> m_entries;
+		bool m_installed{};
+
+	public:
+		// Unsupported imports return failure without modifying the IAT; apply only after successful preparation.
+		[[nodiscard]] HRESULT Prepare(HMODULE module, std::span<const ImportDllDetourInfo> imports, bool delayLoad = false) noexcept;
+		[[nodiscard]] bool IsInstalled() const noexcept { return m_installed; }
+	};
+
+	class InstructionPatch final
+	{
+		friend class HookTransaction;
+		uint8_t* m_address{};
+		std::vector<uint8_t> m_replacement;
+		std::vector<uint8_t> m_original;
+		bool m_installed{};
+
+	public:
+		void Prepare(uint8_t* address, std::span<const uint8_t> expected, std::span<const uint8_t> replacement) noexcept;
+	};
+
+	class HookTransaction final
+	{
+		struct InlineEntry
+		{
+			DetourInfo m_detour;
+			std::string_view m_group;
+		};
+
+		HookMode m_mode;
+		bool m_committed{};
+		std::vector<InlineEntry> m_inlineHooks;
+		std::vector<PointerHookBase*> m_pointerHooks;
+		std::vector<ImportHook*> m_importHooks;
+		std::vector<InstructionPatch*> m_instructionPatches;
+
+		void ApplyPointer(PointerHookBase& hook) noexcept;
+		void ApplyImport(ImportHook& hook) noexcept;
+		void ApplyInstruction(InstructionPatch& patch) noexcept;
+
+	public:
+		explicit HookTransaction(HookMode mode) noexcept;
+		~HookTransaction() noexcept;
+		HookTransaction(const HookTransaction&) = delete;
+		HookTransaction& operator=(const HookTransaction&) = delete;
+
+		void ApplyInline(std::string_view group, std::span<const DetourInfo> hooks) noexcept;
+		void Apply(PointerHookBase& hook) noexcept;
+		void Apply(ImportHook& hook) noexcept;
+		void Apply(InstructionPatch& patch) noexcept;
+		void Commit() noexcept;
+	};
+
+	template <auto Replacement>
+	requires function_pointer<decltype(Replacement)>
+	void PointerHook<Replacement>::AttachOnce(decltype(Replacement)* target, decltype(Replacement)* originalStorage) noexcept
+	{
+		if (IsInstalled())
+		{
+			FAIL_FAST_IF_FAILED_MSG(m_target == reinterpret_cast<PVOID*>(target) ? S_OK : E_UNEXPECTED, "Lazy hook discovered a different slot");
+			return;
+		}
+
+		auto& rundown = GetHookRundown();
+		if (!rundown.TryAcquire())
+		{
+			return;
+		}
+		const auto release = wil::scope_exit([&rundown]
+		{
+			rundown.Release();
+		});
+
+		// Serializing the transaction closes the race with BeginShutdown(): an
+		// install that wins the transaction lock is visible to the subsequent
+		// remove inventory, while a losing install observes closing and retires.
+		HookTransaction transaction{ HookMode::Install };
+		if (rundown.IsClosing())
+		{
+			return;
+		}
+		if (IsInstalled())
+		{
+			FAIL_FAST_IF_FAILED_MSG(m_target == reinterpret_cast<PVOID*>(target) ? S_OK : E_UNEXPECTED, "Lazy hook discovered a different slot");
+			return;
+		}
+		Prepare(target, originalStorage);
+		transaction.Apply(*this);
+		transaction.Commit();
+	}
+
+	struct ImportFunctionDetourInfo
+	{
+		LPCSTR importFunction{};
+		LPVOID* original{};
+		LPVOID detour{};
 	};
 
 	template <auto Replacement>
@@ -287,13 +254,15 @@ namespace OpenGlass::HookHelper
 		bool condition = true
 	) noexcept
 	{
-		using T = decltype(Replacement);
+		if (!condition)
+		{
+			return {};
+		}
 		return ImportFunctionDetourInfo
 		{
 			function,
 			reinterpret_cast<LPVOID*>(originalStorage),
-			condition ? reinterpret_cast<LPVOID>(ImportHookRundownThunk<Replacement, T>::Bind(originalStorage)) : nullptr,
-			condition
+			reinterpret_cast<LPVOID>(HookRundownThunk<Replacement>::Bind(originalStorage))
 		};
 	}
 
@@ -339,7 +308,6 @@ namespace OpenGlass::HookHelper
 	const uint8_t* FindPattern(std::span<const uint8_t> base, std::span<const uint16_t> pat);
 	void ApplyInlineHooks(
 		std::span<const DetourInfo> functionsToDetour,
-		bool enable,
 		const std::source_location& location = std::source_location::current()
 	);
 

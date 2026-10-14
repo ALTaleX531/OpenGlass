@@ -1079,8 +1079,7 @@ void GlassIntegrity::Startup()
 			{ &g_COcclusionContext_IsOccluded_Org },
 			{ &g_CTreeDirty_GetOptimizedRect_Org },
 			{ &g_CDrawingContext_DrawVisualTree_Org },
-		},
-		true
+		}
 	);
 }
 
@@ -1112,8 +1111,7 @@ void GlassIntegrity::Shutdown()
 			{ &g_COcclusionContext_IsOccluded_Org },
 			{ &g_CTreeDirty_GetOptimizedRect_Org },
 			{ &g_CDrawingContext_DrawVisualTree_Org },
-		},
-		false
+		}
 	);
 
 	if (g_CColorBrush_AddOcclusionInformation_Org)

@@ -38,8 +38,7 @@ void GlassFrameEnhancer::Startup()
 		std::initializer_list<HookHelper::DetourInfo>
 		{
 			{ &g_CThemePartPrimitive_ShouldClone_Org }
-		},
-		true
+		}
 	);
 }
 
@@ -49,8 +48,7 @@ void GlassFrameEnhancer::Shutdown()
 		std::initializer_list<HookHelper::DetourInfo>
 		{
 			{ &g_CThemePartPrimitive_ShouldClone_Org }
-		},
-		false
+		}
 	);
 }
 

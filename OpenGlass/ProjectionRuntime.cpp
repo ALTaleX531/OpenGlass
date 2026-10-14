@@ -288,12 +288,6 @@ bool Projection::CommitModules(ModuleRegistry& first, ModuleRegistry& second) no
 	return true;
 }
 
-[[noreturn]] void Projection::ProjectedFailFastCommon() noexcept
-{
-	FAIL_FAST_HR(E_UNEXPECTED);
-	__assume(0);
-}
-
 __declspec(noinline) PVOID* Projection::PrepareDetourStorage(PVOID* storage, ModuleRegistry& registry, size_t index)
 {
 	if (!*storage)

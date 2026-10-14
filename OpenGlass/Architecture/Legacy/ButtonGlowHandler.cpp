@@ -518,8 +518,7 @@ void ButtonGlowHandler::Startup()
 
 				{ &g_CVisual_SetDirtyFlags_Org },
 				{ &g_CButton_UpdateCrossfade_Org }
-			},
-			true
+			}
 		);
 	}
 	else
@@ -537,8 +536,7 @@ void ButtonGlowHandler::Startup()
 
 				{ &g_CVisual_SetDirtyFlags_Org },
 				{ &g_CButton_UpdateCrossfade_Org }
-			},
-			true
+			}
 		);
 	}
 }
@@ -554,8 +552,7 @@ void ButtonGlowHandler::Shutdown()
 
 				{ &g_CVisual_SetDirtyFlags_Org },
 				{ &g_CButton_UpdateCrossfade_Org }
-			},
-			false
+			}
 		);
 
 	}
@@ -573,8 +570,7 @@ void ButtonGlowHandler::Shutdown()
 
 				{ &g_CVisual_SetDirtyFlags_Org },
 				{ &g_CButton_UpdateCrossfade_Org }
-			},
-			false
+			}
 		);
 
 	}

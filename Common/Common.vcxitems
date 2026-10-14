@@ -24,6 +24,7 @@
 	<ClInclude Include="$(MSBuildThisFileDirectory)RectF.hpp"><Link>Header Files\Common\RectF.hpp</Link></ClInclude>
 	<ClInclude Include="$(MSBuildThisFileDirectory)BlurSettings.hpp" />
 	<ClInclude Include="$(MSBuildThisFileDirectory)HookHelper.hpp"><Link>Header Files\Common\HookHelper.hpp</Link></ClInclude>
+	<ClInclude Include="$(MSBuildThisFileDirectory)ProjectionInvoke.hpp"><Link>Header Files\Common\ProjectionInvoke.hpp</Link></ClInclude>
 	<ClInclude Include="$(MSBuildThisFileDirectory)PngAssetValidation.hpp" />
 	<ClInclude Include="$(MSBuildThisFileDirectory)PeCodeViewIdentity.hpp" />
 	<ClInclude Include="$(MSBuildThisFileDirectory)ThemeAtlasLayout.hpp" />

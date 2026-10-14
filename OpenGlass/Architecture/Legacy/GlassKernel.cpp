@@ -686,7 +686,7 @@ void GlassKernel::Startup()
 	const auto build_before_w11_24h2 = uDWM::g_versionInfo.build < os::build_w11_24h2;
 	const auto build_before_server_2022 = uDWM::g_versionInfo.build < os::build_server_2022;
 	g_CreateRoundRectRgn_Org = CreateRoundRectRgn;
-	g_gdiImportHooks.Prepare(
+	FAIL_FAST_IF_FAILED(g_gdiImportHooks.Prepare(
 		uDWM::g_moduleHandle,
 		std::initializer_list<HookHelper::ImportDllDetourInfo>
 		{
@@ -700,7 +700,7 @@ void GlassKernel::Startup()
 				}
 			}
 		}
-	);
+	));
 	HookHelper::GetCurrentHookTransaction().Apply(g_gdiImportHooks);
 
 	const auto build_before_w10_1903 = uDWM::g_versionInfo.build < os::build_w10_1903;
@@ -714,8 +714,7 @@ void GlassKernel::Startup()
 			{ &g_CGraphicsDeviceManager_ReleaseGraphicsDevice_Org, !build_before_server_2022 },
 			{ &g_CTopLevelWindow_EnsureImages_Pre_W10_1903_Org, build_before_w10_1903 },
 			{ &g_CTopLevelWindow_EnsureImages_At_Least_W10_1903_Org, build_before_w11_24h2 && !build_before_w10_1903 }
-		},
-		true
+		}
 	);
 }
 
@@ -734,8 +733,7 @@ void GlassKernel::Shutdown()
 			{ &g_CGraphicsDeviceManager_ReleaseGraphicsDevice_Org, !build_before_server_2022 },
 			{ &g_CTopLevelWindow_EnsureImages_Pre_W10_1903_Org, build_before_w10_1903 },
 			{ &g_CTopLevelWindow_EnsureImages_At_Least_W10_1903_Org, build_before_w11_24h2 && !build_before_w10_1903 }
-		},
-		false
+		}
 	);
 
 	HookHelper::GetCurrentHookTransaction().Apply(g_gdiImportHooks);

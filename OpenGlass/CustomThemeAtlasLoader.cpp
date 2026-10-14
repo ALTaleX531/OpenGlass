@@ -718,7 +718,7 @@ void CustomThemeAtlasLoader::Update(GlassEngine::UpdateType type)
 void CustomThemeAtlasLoader::Startup()
 {
 	const auto build_before_w10_2004 = uDWM::g_versionInfo.build < os::build_w10_2004;
-	g_themeImportHook.Prepare(
+	FAIL_FAST_IF_FAILED(g_themeImportHook.Prepare(
 		uDWM::g_moduleHandle,
 		std::initializer_list<HookHelper::ImportDllDetourInfo>
 		{
@@ -741,7 +741,7 @@ void CustomThemeAtlasLoader::Startup()
 			}
 		},
 		true
-	);
+	));
 	HookHelper::GetCurrentHookTransaction().Apply(g_themeImportHook);
 }
 void CustomThemeAtlasLoader::Activate()

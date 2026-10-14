@@ -1203,7 +1203,7 @@ void CaptionTextHandler::Startup()
 		g_IWICImagingFactory2_CreateBitmapFromHBITMAP_Org_Address = reinterpret_cast<decltype(g_IWICImagingFactory2_CreateBitmapFromHBITMAP_Org_Address)>(&HookHelper::get_vftable_from(wicFactory.get())[21]);
 		g_IWICImagingFactory2_CreateBitmapFromHBITMAP_Hook.Prepare(g_IWICImagingFactory2_CreateBitmapFromHBITMAP_Org_Address, &g_IWICImagingFactory2_CreateBitmapFromHBITMAP_Org);
 		HookHelper::GetCurrentHookTransaction().Apply(g_IWICImagingFactory2_CreateBitmapFromHBITMAP_Hook);
-		g_textImportHooks.Prepare(
+		FAIL_FAST_IF_FAILED(g_textImportHooks.Prepare(
 			uDWM::g_moduleHandle,
 			std::initializer_list<HookHelper::ImportDllDetourInfo>
 			{
@@ -1222,7 +1222,7 @@ void CaptionTextHandler::Startup()
 					}
 				}
 			}
-		);
+		));
 		HookHelper::GetCurrentHookTransaction().Apply(g_textImportHooks);
 
 		const auto build_before_w10_2004 = dwmcore::g_versionInfo.build < os::build_w10_2004;
@@ -1233,8 +1233,7 @@ void CaptionTextHandler::Startup()
 				{ &g_CText_ValidateResources_Org },
 				{ &g_CText_InitializeVisualTreeClone_Org, !build_before_w10_2004 },
 				{ &g_CText_CloneVisualTree_Org, build_before_w10_2004 }
-			},
-			true
+			}
 		);
 	}
 	else
@@ -1287,8 +1286,7 @@ void CaptionTextHandler::Startup()
 			{
 				{ &g_CDWriteText_ValidateVisual_Org },
 				{ &g_CDWriteText_InitializeVisualTreeClone_Org }
-			},
-			true
+			}
 		);
 	}
 }
@@ -1314,8 +1312,7 @@ void CaptionTextHandler::Shutdown()
 				{ &g_CText_ValidateResources_Org },
 				{ &g_CText_InitializeVisualTreeClone_Org, !build_before_w10_2004 },
 				{ &g_CText_CloneVisualTree_Org, build_before_w10_2004 }
-			},
-			false
+			}
 		);
 
 		HookHelper::GetCurrentHookTransaction().Apply(g_IWICImagingFactory2_CreateBitmapFromHBITMAP_Hook);
@@ -1342,8 +1339,7 @@ void CaptionTextHandler::Shutdown()
 			{
 				{ &g_CDWriteText_ValidateVisual_Org },
 				{ &g_CDWriteText_InitializeVisualTreeClone_Org }
-			},
-			false
+			}
 		);
 
 		HookHelper::GetCurrentHookTransaction().Apply(g_ID2D1DeviceContext_DrawTextLayout_Hook);

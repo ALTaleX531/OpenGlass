@@ -837,8 +837,7 @@ void CaptionTextHandler::Startup()
 		{
 			{ &g_CDWriteText_ValidateVisual_Org },
 			{ &g_CDWriteText_InitializeVisualTreeClone_Org }
-		},
-		true
+		}
 	);
 }
 void CaptionTextHandler::Shutdown()
@@ -866,8 +865,7 @@ void CaptionTextHandler::Shutdown()
 		{
 			{ &g_CDWriteText_ValidateVisual_Org },
 			{ &g_CDWriteText_InitializeVisualTreeClone_Org }
-		},
-		false
+		}
 	);
 
 	HookHelper::GetCurrentHookTransaction().Apply(g_ID2D1DeviceContext_DrawTextLayout_Hook);

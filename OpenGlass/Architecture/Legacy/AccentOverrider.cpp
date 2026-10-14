@@ -359,8 +359,7 @@ void AccentOverrider::Startup()
 			{ &g_CAccent__UpdateSolidFill_Org },
 			{ &g_CAccent_SetClipRegion_Org },
 			{ &g_CAccent_Destructor_Org },
-		},
-		true
+		}
 	);
 }
 
@@ -378,8 +377,7 @@ void AccentOverrider::Shutdown()
 			{ &g_CAccent__UpdateSolidFill_Org },
 			{ &g_CAccent_SetClipRegion_Org },
 			{ &g_CAccent_Destructor_Org },
-		},
-		false
+		}
 	);
 
 }

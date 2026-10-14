@@ -1916,8 +1916,7 @@ void GlassIntegrity::Startup()
 			{ &g_CDrawingContext_DrawVisualTree_Win10_1903_Org, !build_before_w10_1903 && build_before_w10_2004 },
 			{ &g_CDrawingContext_DrawVisualTree_Win10_Org, !build_before_w10_2004 && build_before_server_2022 },
 			{ &g_CDrawingContext_DrawVisualTree_Win11_Org, !build_before_server_2022 }
-		},
-		true
+		}
 	);
 }
 
@@ -1982,8 +1981,7 @@ void GlassIntegrity::Shutdown()
 			{ &g_CDrawingContext_DrawVisualTree_Win10_1903_Org, !build_before_w10_1903 && build_before_w10_2004 },
 			{ &g_CDrawingContext_DrawVisualTree_Win10_Org, !build_before_w10_2004 && build_before_server_2022 },
 			{ &g_CDrawingContext_DrawVisualTree_Win11_Org, !build_before_server_2022 }
-		},
-		false
+		}
 	);
 
 	if (g_COcclusionContext_DrawGeometry_Org)

@@ -392,8 +392,7 @@ void GlassKernel::Startup()
 		{
 			{ &g_CD2DContext_DestroyDeviceResources_Org },
 			{ &g_CGraphicsDeviceManager_ReleaseGraphicsDevice_Org }
-		},
-		true
+		}
 	);
 }
 
@@ -404,8 +403,7 @@ void GlassKernel::Shutdown()
 		{
 			{ &g_CD2DContext_DestroyDeviceResources_Org },
 			{ &g_CGraphicsDeviceManager_ReleaseGraphicsDevice_Org }
-		},
-		false
+		}
 	);
 
 }

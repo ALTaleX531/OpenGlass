@@ -190,8 +190,7 @@ void GlassFrameEnhancer::Startup()
 			{&g_CTopLevelAtlasedRectsVisual_ShouldCloneAtlasImage_At_Least_W10_2004_Org, !build_before_w10_2004},
 
 			{&g_CTopLevelWindow_CloneVisualTreeForLivePreview_Win10_Org, build_before_or_at_w11_21h2},
-			{&g_CTopLevelWindow_CloneVisualTreeForLivePreview_Win11_Org, !build_before_or_at_w11_21h2}},
-		true);
+			{&g_CTopLevelWindow_CloneVisualTreeForLivePreview_Win11_Org, !build_before_or_at_w11_21h2}});
 }
 
 void GlassFrameEnhancer::Shutdown()
@@ -204,8 +203,7 @@ void GlassFrameEnhancer::Shutdown()
 			{&g_CTopLevelAtlasedRectsVisual_ShouldCloneAtlasImage_At_Least_W10_2004_Org, !build_before_w10_2004},
 
 			{&g_CTopLevelWindow_CloneVisualTreeForLivePreview_Win10_Org, build_before_or_at_w11_21h2},
-			{&g_CTopLevelWindow_CloneVisualTreeForLivePreview_Win11_Org, !build_before_or_at_w11_21h2}},
-		false);
+			{&g_CTopLevelWindow_CloneVisualTreeForLivePreview_Win11_Org, !build_before_or_at_w11_21h2}});
 
 	if (g_CButton_CloneVisualTree_Org)
 	{

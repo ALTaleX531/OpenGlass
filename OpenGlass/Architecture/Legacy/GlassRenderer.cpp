@@ -772,8 +772,7 @@ void GlassRenderer::Startup()
 		{
 			{ &g_CRenderData_TryDrawCommandAsDrawList_Win10_Org, build_before_w11_21h2 },
 			{ &g_CRenderData_TryDrawCommandAsDrawList_Win11_Org, !build_before_w11_21h2 },
-		},
-		true
+		}
 	);
 }
 
@@ -785,8 +784,7 @@ void GlassRenderer::Shutdown()
 		{
 			{ &g_CRenderData_TryDrawCommandAsDrawList_Win10_Org, build_before_w11_21h2 },
 			{ &g_CRenderData_TryDrawCommandAsDrawList_Win11_Org, !build_before_w11_21h2 },
-		},
-		false
+		}
 	);
 
 	if (g_ID2D1DeviceContext_FillGeometry_Org)

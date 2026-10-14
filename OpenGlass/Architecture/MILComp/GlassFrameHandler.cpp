@@ -646,8 +646,7 @@ void GlassFrameHandler::Startup()
 
 			{ &g_CTopLevelWindow_ValidateVisual_Org },
 			{ &g_CTopLevelWindow_Destructor_Org },
-		},
-		true
+		}
 	);
 }
 
@@ -678,8 +677,7 @@ void GlassFrameHandler::Shutdown()
 
 			{ &g_CTopLevelWindow_ValidateVisual_Org },
 			{ &g_CTopLevelWindow_Destructor_Org },
-		},
-		false
+		}
 	);
 
 }

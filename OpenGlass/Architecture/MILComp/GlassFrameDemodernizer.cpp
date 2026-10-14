@@ -305,8 +305,7 @@ void GlassFrameDemodernizer::Startup()
 			{ &g_CTopLevelWindow_ValidateVisual_Org },
 			{ &g_CTopLevelWindow_UpdateNCAreaBackground_Org },
 			{ &g_SetMargin_Org },
-		},
-		true
+		}
 	);
 }
 
@@ -318,8 +317,7 @@ void GlassFrameDemodernizer::Shutdown()
 			{ &g_CTopLevelWindow_ValidateVisual_Org },
 			{ &g_CTopLevelWindow_UpdateNCAreaBackground_Org },
 			{ &g_SetMargin_Org },
-		},
-		false
+		}
 	);
 
 	for (auto& patch : g_instructionPatches)

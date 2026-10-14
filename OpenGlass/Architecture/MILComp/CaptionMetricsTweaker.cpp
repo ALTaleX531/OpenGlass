@@ -222,8 +222,7 @@ void CaptionMetricsTweaker::Startup()
 		std::initializer_list<HookHelper::DetourInfo>
 		{
 			{ &g_CTopLevelWindow_UpdateNCAreaPositionsAndSizes_Org },
-		},
-		true
+		}
 	);
 }
 
@@ -238,8 +237,7 @@ void CaptionMetricsTweaker::Shutdown()
 		std::initializer_list<HookHelper::DetourInfo>
 		{
 			{ &g_CTopLevelWindow_UpdateNCAreaPositionsAndSizes_Org },
-		},
-		false
+		}
 	);
 
 	if (g_CButton_SendSetSize_Org)

@@ -1,17 +1,14 @@
 #include "HookHelper.hpp"
 #include <KNSoft/SlimDetours/SlimDetours.h>
 #include <DbgHelp.h>
-#include <Psapi.h>
 #include <TlHelp32.h>
 #include <algorithm>
 #include <cstring>
 #include <cwchar>
-#include <iterator>
 #include <string>
 #define FORMAT_IMPORT_FUNCTION(function) (IS_INTRESOURCE(function) ? ("#" + std::to_string(reinterpret_cast<ULONG_PTR>(function))).c_str() : function)
 #pragma comment(lib, "KNSoft.SlimDetours.lib")
 #pragma comment(lib, "DbgHelp.lib")
-#pragma comment(lib, "Psapi.lib")
 #pragma comment(lib, "onecore.lib")
 
 using namespace OpenGlass;
@@ -22,14 +19,10 @@ namespace
 	SRWLOCK g_transactionLock{ SRWLOCK_INIT };
 	thread_local HookHelper::HookTransaction* g_currentTransaction{};
 
-	void ApplyPointerMutation(PVOID* target, PVOID replacement, PVOID* originalStorage = nullptr) noexcept
+	PVOID ApplyPointerMutation(PVOID* target, PVOID replacement) noexcept
 	{
 		const auto unprotectedScope = HookHelper::Unprotect({ reinterpret_cast<uint8_t*>(target), sizeof(*target) });
-		const auto original = InterlockedExchangePointer(target, replacement);
-		if (originalStorage)
-		{
-			*originalStorage = original;
-		}
+		return InterlockedExchangePointer(target, replacement);
 	}
 
 	void ApplyInstructionMutation(uint8_t* address, std::span<const uint8_t> bytes) noexcept
@@ -122,7 +115,7 @@ void HookHelper::PointerHookBase::Prepare(PVOID* target, PVOID replacement, PVOI
 	m_originalStorage = originalStorage;
 }
 
-void HookHelper::ImportHook::Prepare(HMODULE module, std::span<const ImportDllDetourInfo> imports, bool delayLoad) noexcept
+HRESULT HookHelper::ImportHook::Prepare(HMODULE module, std::span<const ImportDllDetourInfo> imports, bool delayLoad) noexcept
 {
 	struct RequestedImport
 	{
@@ -131,9 +124,9 @@ void HookHelper::ImportHook::Prepare(HMODULE module, std::span<const ImportDllDe
 		size_t matchCount{};
 	};
 
-	FAIL_FAST_IF_FAILED_MSG(module && !imports.empty() ? S_OK : E_INVALIDARG, "Invalid import hook inventory");
 	FAIL_FAST_IF_FAILED_MSG(!m_installed ? S_OK : E_UNEXPECTED, "Cannot prepare installed import hooks");
 	m_entries.clear();
+	RETURN_HR_IF_MSG(HRESULT_FROM_WIN32(ERROR_MOD_NOT_FOUND), !module, "Import hook module is not loaded");
 	std::vector<RequestedImport> requestedImports;
 	for (const auto& dll : imports)
 	{
@@ -153,45 +146,38 @@ void HookHelper::ImportHook::Prepare(HMODULE module, std::span<const ImportDllDe
 	ULONG size{};
 	const auto directory = delayLoad ? IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT : IMAGE_DIRECTORY_ENTRY_IMPORT;
 	auto directoryData = ImageDirectoryEntryToDataEx(module, TRUE, static_cast<USHORT>(directory), &size, nullptr);
-	FAIL_FAST_IF_NULL_MSG(directoryData, "Unable to read import directory %lu for %p", directory, module);
+	RETURN_HR_IF_MSG(E_NOINTERFACE, !directoryData, "Unable to read import directory %lu for %p", directory, module);
 
-	auto appendMatches = [&](LPCSTR dllName, PIMAGE_THUNK_DATA thunk, PIMAGE_THUNK_DATA nameThunk)
+	auto appendMatches = [&](LPCSTR dllName, DWORD thunkRva, DWORD nameThunkRva) -> HRESULT
 	{
-		const ImportDllDetourInfo* dllSpec{};
-		for (const auto& candidate : imports)
+		if (std::none_of(requestedImports.begin(), requestedImports.end(), [dllName](const RequestedImport& entry) { return !_stricmp(entry.dllName, dllName); }))
 		{
-			if (!_stricmp(candidate.importDllName, dllName))
-			{
-				dllSpec = &candidate;
-				break;
-			}
-		}
-		if (!dllSpec)
-		{
-			return;
+			return S_OK;
 		}
 
+		RETURN_HR_IF_MSG(E_NOINTERFACE, !thunkRva || !nameThunkRva, "Missing import table for %hs in %p", dllName, module);
+		auto thunk = reinterpret_cast<PIMAGE_THUNK_DATA>(RVA_TO_ADDR(module, thunkRva));
+		auto nameThunk = reinterpret_cast<PIMAGE_THUNK_DATA>(RVA_TO_ADDR(module, nameThunkRva));
 		while (thunk->u1.Function)
 		{
 			const bool byName = !IMAGE_SNAP_BY_ORDINAL(nameThunk->u1.Ordinal);
 			const auto importName = byName ?
 				reinterpret_cast<PIMAGE_IMPORT_BY_NAME>(RVA_TO_ADDR(module, nameThunk->u1.AddressOfData))->Name :
 				MAKEINTRESOURCEA(IMAGE_ORDINAL(nameThunk->u1.Ordinal));
-			for (const auto& function : dllSpec->functionsToDetour)
+			for (auto& requested : requestedImports)
 			{
+				if (_stricmp(requested.dllName, dllName))
+				{
+					continue;
+				}
+				const auto& function = *requested.function;
 				const bool matches = byName ?
 					(!IS_INTRESOURCE(function.importFunction) && !strcmp(function.importFunction, importName)) :
 					(function.importFunction == importName);
 				if (matches)
 				{
-					auto requested = std::find_if(
-						requestedImports.begin(),
-						requestedImports.end(),
-						[&function](const RequestedImport& entry) { return entry.function == &function; }
-					);
-					FAIL_FAST_IF_FAILED_MSG(requested != requestedImports.end() ? S_OK : E_UNEXPECTED, "Matched an unregistered import hook");
-					++requested->matchCount;
-					FAIL_FAST_IF_FAILED_MSG(requested->matchCount == 1 ? S_OK : E_UNEXPECTED, "Import hook %hs!%hs matched multiple slots", requested->dllName, FORMAT_IMPORT_FUNCTION(requested->function->importFunction));
+					++requested.matchCount;
+					RETURN_HR_IF_MSG(E_NOINTERFACE, requested.matchCount != 1, "Import hook %hs!%hs matched multiple slots", requested.dllName, FORMAT_IMPORT_FUNCTION(function.importFunction));
 					const auto target = reinterpret_cast<PVOID*>(&thunk->u1.Function);
 					FAIL_FAST_IF_FAILED_MSG(
 						std::none_of(m_entries.begin(), m_entries.end(), [target](const Entry& entry) { return entry.target == target; }) ? S_OK : E_UNEXPECTED,
@@ -204,35 +190,44 @@ void HookHelper::ImportHook::Prepare(HMODULE module, std::span<const ImportDllDe
 			++thunk;
 			++nameThunk;
 		}
+		return S_OK;
 	};
 
 	if (delayLoad)
 	{
+		// Known defect: delay imports are not resolved before patching, so the
+		// saved original may still be a delay thunk. Calling that thunk after
+		// installation can recurse into the hook via ResolveDelayLoadedAPI.
+		// Current callers happen to avoid this: DWM hooks rely on imports being
+		// resolved before installation; the theme extension never calls saved
+		// delay-IAT originals (its normal-IAT CoCreateInstance hook does forward).
+		// This is a caller assumption, not a guarantee provided by ImportHook.
 		for (auto descriptor = static_cast<PIMAGE_DELAYLOAD_DESCRIPTOR>(directoryData); descriptor->DllNameRVA; ++descriptor)
 		{
-			FAIL_FAST_IF_FAILED_MSG(descriptor->Attributes.RvaBased == 1 ? S_OK : E_NOINTERFACE, "Unsupported VA-based delay import directory in %p", module);
-			appendMatches(
+			RETURN_HR_IF_MSG(E_NOINTERFACE, descriptor->Attributes.RvaBased != 1, "Unsupported VA-based delay import directory in %p", module);
+			RETURN_IF_FAILED(appendMatches(
 				reinterpret_cast<LPCSTR>(RVA_TO_ADDR(module, descriptor->DllNameRVA)),
-				reinterpret_cast<PIMAGE_THUNK_DATA>(RVA_TO_ADDR(module, descriptor->ImportAddressTableRVA)),
-				reinterpret_cast<PIMAGE_THUNK_DATA>(RVA_TO_ADDR(module, descriptor->ImportNameTableRVA))
-			);
+				descriptor->ImportAddressTableRVA,
+				descriptor->ImportNameTableRVA
+			));
 		}
 	}
 	else
 	{
 		for (auto descriptor = static_cast<PIMAGE_IMPORT_DESCRIPTOR>(directoryData); descriptor->Name; ++descriptor)
 		{
-			appendMatches(
+			RETURN_IF_FAILED(appendMatches(
 				reinterpret_cast<LPCSTR>(RVA_TO_ADDR(module, descriptor->Name)),
-				reinterpret_cast<PIMAGE_THUNK_DATA>(RVA_TO_ADDR(module, descriptor->FirstThunk)),
-				reinterpret_cast<PIMAGE_THUNK_DATA>(RVA_TO_ADDR(module, descriptor->OriginalFirstThunk))
-			);
+				descriptor->FirstThunk,
+				descriptor->OriginalFirstThunk
+			));
 		}
 	}
 	for (const auto& requested : requestedImports)
 	{
-		FAIL_FAST_IF_FAILED_MSG(requested.matchCount == 1 ? S_OK : E_NOINTERFACE, "Requested import hook %hs!%hs was not found in %p", requested.dllName, FORMAT_IMPORT_FUNCTION(requested.function->importFunction), module);
+		RETURN_HR_IF_MSG(E_NOINTERFACE, requested.matchCount != 1, "Requested import hook %hs!%hs was not found in %p", requested.dllName, FORMAT_IMPORT_FUNCTION(requested.function->importFunction), module);
 	}
+	return S_OK;
 }
 
 void HookHelper::InstructionPatch::Prepare(
@@ -261,7 +256,11 @@ HookHelper::HookTransaction::HookTransaction(HookMode mode) noexcept : m_mode(mo
 
 HookHelper::HookTransaction::~HookTransaction() noexcept
 {
-	FAIL_FAST_IF_FAILED_MSG(m_committed ? S_OK : E_UNEXPECTED, "Hook transaction left without Commit");
+	FAIL_FAST_IF_FAILED_MSG(
+		m_committed ||
+		(m_inlineHooks.empty() && m_pointerHooks.empty() && m_importHooks.empty() && m_instructionPatches.empty()) ? S_OK : E_UNEXPECTED,
+		"Non-empty hook transaction left without Commit"
+	);
 	g_currentTransaction = nullptr;
 	ReleaseSRWLockExclusive(&g_transactionLock);
 }
@@ -278,50 +277,42 @@ void HookHelper::HookTransaction::ApplyInline(std::string_view group, std::span<
 		FAIL_FAST_IF_FAILED_MSG(hook.original && hook.detour ? S_OK : E_INVALIDARG, "Incomplete hook %.*hs", static_cast<int>(group.size()), group.data());
 		const auto duplicate = std::find_if(
 			m_inlineHooks.begin(),
-			m_inlineHooks.begin() + m_inlineHookCount,
-			[&hook](const DetourInfo& queued) { return queued.original == hook.original; }
+			m_inlineHooks.end(),
+			[&hook](const InlineEntry& queued) { return queued.m_detour.original == hook.original; }
 		);
-		if (duplicate != m_inlineHooks.begin() + m_inlineHookCount)
+		if (duplicate != m_inlineHooks.end())
 		{
-			FAIL_FAST_IF_FAILED_MSG(duplicate->detour == hook.detour ? S_OK : E_UNEXPECTED, "Conflicting inline hooks target the same storage in %.*hs", static_cast<int>(group.size()), group.data());
+			FAIL_FAST_IF_FAILED_MSG(duplicate->m_detour.detour == hook.detour ? S_OK : E_UNEXPECTED, "Conflicting inline hooks target the same storage in %.*hs", static_cast<int>(group.size()), group.data());
 			continue;
 		}
-		FAIL_FAST_IF_FAILED_MSG(m_inlineHookCount < m_inlineHooks.size() ? S_OK : E_OUTOFMEMORY, "Inline hook transaction capacity exceeded");
-		m_inlineHooks[m_inlineHookCount] = hook;
-		m_inlineGroups[m_inlineHookCount] = group;
-		++m_inlineHookCount;
+		m_inlineHooks.push_back({ hook, group });
 	}
 }
 
 void HookHelper::HookTransaction::ApplyPointer(PointerHookBase& hook) noexcept
 {
 	FAIL_FAST_IF_FAILED_MSG(hook.m_target && hook.m_replacement ? S_OK : E_UNEXPECTED, "Pointer hook was not prepared");
+	FAIL_FAST_IF_FAILED_MSG(hook.IsInstalled() != (m_mode == HookMode::Install) ? S_OK : E_UNEXPECTED, "Pointer hook state does not match transaction mode");
 	if (m_mode == HookMode::Install)
 	{
-		FAIL_FAST_IF_FAILED_MSG(!hook.m_installed.load(std::memory_order_acquire) ? S_OK : E_UNEXPECTED, "Pointer hook is already installed");
-		ApplyPointerMutation(hook.m_target, hook.m_replacement, &hook.m_original);
-		*hook.m_originalStorage = hook.m_original;
-		hook.m_installed.store(true, std::memory_order_release);
+		*hook.m_originalStorage = ApplyPointerMutation(hook.m_target, hook.m_replacement);
 	}
 	else
 	{
-		FAIL_FAST_IF_FAILED_MSG(hook.m_installed.load(std::memory_order_acquire) ? S_OK : E_UNEXPECTED, "Pointer hook is not installed");
 		FAIL_FAST_IF_FAILED_MSG(*hook.m_target == hook.m_replacement ? S_OK : E_UNEXPECTED, "Pointer hook ownership conflict at %p", hook.m_target);
-		ApplyPointerMutation(hook.m_target, hook.m_original);
-		hook.m_installed.store(false, std::memory_order_release);
+		ApplyPointerMutation(hook.m_target, *hook.m_originalStorage);
 	}
+	hook.m_installed.store(m_mode == HookMode::Install, std::memory_order_release);
 }
 
 void HookHelper::HookTransaction::Apply(PointerHookBase& hook) noexcept
 {
-	FAIL_FAST_IF_FAILED_MSG(m_pointerHookCount < m_pointerHooks.size() ? S_OK : E_OUTOFMEMORY, "Pointer hook transaction capacity exceeded");
-	m_pointerHooks[m_pointerHookCount++] = &hook;
+	m_pointerHooks.push_back(&hook);
 }
 
 void HookHelper::HookTransaction::Apply(ImportHook& hook) noexcept
 {
-	FAIL_FAST_IF_FAILED_MSG(m_importHookCount < m_importHooks.size() ? S_OK : E_OUTOFMEMORY, "Import hook transaction capacity exceeded");
-	m_importHooks[m_importHookCount++] = &hook;
+	m_importHooks.push_back(&hook);
 }
 
 void HookHelper::HookTransaction::ApplyImport(ImportHook& hook) noexcept
@@ -331,8 +322,7 @@ void HookHelper::HookTransaction::ApplyImport(ImportHook& hook) noexcept
 	{
 		if (m_mode == HookMode::Install)
 		{
-			FAIL_FAST_IF_FAILED_MSG(entry.target && entry.replacement && entry.originalStorage ? S_OK : E_INVALIDARG, "Incomplete import hook at %p", entry.target);
-			ApplyPointerMutation(entry.target, entry.replacement, entry.originalStorage);
+			*entry.originalStorage = ApplyPointerMutation(entry.target, entry.replacement);
 		}
 		else
 		{
@@ -345,8 +335,7 @@ void HookHelper::HookTransaction::ApplyImport(ImportHook& hook) noexcept
 
 void HookHelper::HookTransaction::Apply(InstructionPatch& patch) noexcept
 {
-	FAIL_FAST_IF_FAILED_MSG(m_instructionPatchCount < m_instructionPatches.size() ? S_OK : E_OUTOFMEMORY, "Instruction patch transaction capacity exceeded");
-	m_instructionPatches[m_instructionPatchCount++] = &patch;
+	m_instructionPatches.push_back(&patch);
 }
 
 void HookHelper::HookTransaction::ApplyInstruction(InstructionPatch& patch) noexcept
@@ -364,24 +353,23 @@ void HookHelper::HookTransaction::Commit() noexcept
 {
 	FAIL_FAST_IF_FAILED_MSG(!m_committed ? S_OK : E_UNEXPECTED, "Hook transaction was committed twice");
 	FAIL_FAST_IF_FAILED_MSG(SlimDetoursTransactionBegin(), "Unable to begin the %hs hook transaction", m_mode == HookMode::Install ? "install" : "remove");
-	for (size_t index = 0; index < m_inlineHookCount; ++index)
+	for (size_t index = 0; index < m_inlineHooks.size(); ++index)
 	{
-		const auto& hook = m_inlineHooks[index];
-		const auto group = m_inlineGroups[index];
+		const auto& [hook, group] = m_inlineHooks[index];
 		const auto hr = m_mode == HookMode::Install ? SlimDetoursAttach(hook.original, hook.detour) : SlimDetoursDetach(hook.original, hook.detour);
 		FAIL_FAST_IF_FAILED_MSG(hr, "Unable to %hs hook %.*hs[%zu] at %p", m_mode == HookMode::Install ? "install" : "remove", static_cast<int>(group.size()), group.data(), index, *hook.original);
 	}
-	for (size_t index = 0; index < m_pointerHookCount; ++index)
+	for (auto hook : m_pointerHooks)
 	{
-		ApplyPointer(*m_pointerHooks[index]);
+		ApplyPointer(*hook);
 	}
-	for (size_t index = 0; index < m_importHookCount; ++index)
+	for (auto hook : m_importHooks)
 	{
-		ApplyImport(*m_importHooks[index]);
+		ApplyImport(*hook);
 	}
-	for (size_t index = 0; index < m_instructionPatchCount; ++index)
+	for (auto patch : m_instructionPatches)
 	{
-		ApplyInstruction(*m_instructionPatches[index]);
+		ApplyInstruction(*patch);
 	}
 	FAIL_FAST_IF_FAILED_MSG(SlimDetoursTransactionCommit(), "Unable to commit the %hs hook transaction", m_mode == HookMode::Install ? "install" : "remove");
 	m_committed = true;
@@ -389,7 +377,6 @@ void HookHelper::HookTransaction::Commit() noexcept
 
 HMODULE HookHelper::GetRemoteModuleBase(DWORD processId, LPCWSTR moduleName)
 {
-	HMODULE result{ nullptr };
 	wil::unique_hfile snapshot{};
 	for (;;)
 	{
@@ -403,43 +390,27 @@ HMODULE HookHelper::GetRemoteModuleBase(DWORD processId, LPCWSTR moduleName)
 		if (error != ERROR_BAD_LENGTH)
 		{
 			LOG_WIN32(error);
-			return result;
+			return nullptr;
 		}
 		Sleep(5);
-	}
-
-	wil::unique_handle processHandle{ OpenProcess(PROCESS_VM_READ | PROCESS_QUERY_INFORMATION, FALSE, processId) };
-	if (!processHandle)
-	{
-		return result;
 	}
 
 	MODULEENTRY32W me{ sizeof(me) };
 	if (!Module32FirstW(snapshot.get(), &me))
 	{
 		LOG_WIN32(GetLastError());
-		return result;
+		return nullptr;
 	}
 
 	do
 	{
-		if (!_wcsicmp(me.szModule, moduleName))
+		if (!_wcsicmp(me.szModule, moduleName) || !_wcsicmp(me.szExePath, moduleName))
 		{
-			result = me.hModule;
-			break;
-		}
-		WCHAR modulePath[MAX_PATH]{};
-		if (GetModuleFileNameExW(processHandle.get(), me.hModule, modulePath, std::size(modulePath)))
-		{
-			if (!_wcsicmp(modulePath, moduleName))
-			{
-				result = me.hModule;
-				break;
-			}
+			return me.hModule;
 		}
 	} while (Module32NextW(snapshot.get(), &me));
 
-	return result;
+	return nullptr;
 }
 
 const uint8_t* HookHelper::FindPattern(std::span<const uint8_t> base, std::span<const uint16_t> pat)
@@ -462,11 +433,8 @@ const uint8_t* HookHelper::FindPattern(std::span<const uint8_t> base, std::span<
 
 void HookHelper::ApplyInlineHooks(
 	std::span<const DetourInfo> functionsToDetour,
-	bool enable,
 	const std::source_location& location
 )
 {
-	auto& transaction = GetCurrentHookTransaction();
-	FAIL_FAST_IF_FAILED_MSG((transaction.Mode() == HookMode::Install) == enable ? S_OK : E_INVALIDARG, "Hook operation does not match the active transaction mode");
-	transaction.ApplyInline(location.function_name(), functionsToDetour);
+	GetCurrentHookTransaction().ApplyInline(location.function_name(), functionsToDetour);
 }

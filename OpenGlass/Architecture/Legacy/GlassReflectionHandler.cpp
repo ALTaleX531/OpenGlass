@@ -655,8 +655,7 @@ void GlassReflectionHandler::Startup()
 			{ &g_CLivePreview__UpdateResourcesForMonitorHelper_Org, uDWM::g_versionInfo.build >= os::build_w11_24h2 },
 
 			{ &g_CLivePreview__FadeOutToGlass_Org, !udwm_build_before_w11_21h2 }
-		},
-		true
+		}
 	);
 }
 
@@ -687,8 +686,7 @@ void GlassReflectionHandler::Shutdown()
 			{ &g_CLivePreview__UpdateResourcesForMonitorHelper_Org, uDWM::g_versionInfo.build >= os::build_w11_24h2 },
 
 			{ &g_CLivePreview__FadeOutToGlass_Org, !udwm_build_before_w11_21h2 }
-		},
-		false
+		}
 	);
 
 }
