@@ -48,7 +48,7 @@ Report bugs in [GitHub Issues](https://github.com/ALTaleX531/OpenGlass/issues/ne
 msbuild OpenGlass.slnx /m /restore /p:Configuration=Release /p:Platform=x64
 ```
 
-See [Building OpenGlass](https://github.com/ALTaleX531/OpenGlass/wiki/Building-OpenGlass) for prerequisites, tests and packaging, and the [Changelog](https://github.com/ALTaleX531/OpenGlass/wiki/Changelog) for technical version changes. CI artifacts are unsigned validation builds, not releases.
+See [Building OpenGlass](https://github.com/ALTaleX531/OpenGlass/wiki/Building-OpenGlass) for prerequisites, tests and packaging, and the [Changelog](https://github.com/ALTaleX531/OpenGlass/wiki/Changelog) for technical version changes. CI artifacts are unsigned validation builds, not releases; the developer theme extension DLL and PDB are uploaded separately.
 
 ## Credits
 

@@ -26,22 +26,93 @@ defaults:
   run:
     shell: pwsh
 
+env:
+  BUILD_CONFIGURATION: Release
+  BUILD_PLATFORM: x64
+  VCPKG_ROOT: C:\vcpkg
+  VCPKG_COMMIT: 617ef1c0c422737d117eda00a471ea1be5bad088
+  VCPKG_DEFAULT_TRIPLET: x64-windows-static
+  VCPKG_FORCE_DOWNLOADED_BINARIES: "1"
+  VCPKG_INSTALLED_DIR: ${{ github.workspace }}\vcpkg_installed
+  VCPKG_OVERLAY_TRIPLETS: ${{ github.workspace }}\.github\vcpkg-triplets
+  VCPKG_DOWNLOADS: ${{ github.workspace }}\.ci-cache\vcpkg-downloads
+  VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}\.ci-cache\vcpkg-binary-cache
+  VCPKG_BINARY_SOURCES: clear;files,${{ github.workspace }}\.ci-cache\vcpkg-binary-cache,readwrite
+
 jobs:
   verify:
     name: verify
     runs-on: windows-2025-vs2026
     timeout-minutes: 60
-    env:
-      BUILD_CONFIGURATION: Release
-      BUILD_PLATFORM: x64
-      VCPKG_ROOT: C:\vcpkg
-      VCPKG_DEFAULT_TRIPLET: x64-windows-static
-      VCPKG_INSTALLED_DIR: ${{ github.workspace }}\vcpkg_installed
-      VCPKG_OVERLAY_TRIPLETS: ${{ github.workspace }}\.github\vcpkg-triplets
-      VCPKG_DOWNLOADS: ${{ github.workspace }}\.ci-cache\vcpkg-downloads
-      VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}\.ci-cache\vcpkg-binary-cache
-      VCPKG_BINARY_SOURCES: clear;files,${{ github.workspace }}\.ci-cache\vcpkg-binary-cache,readwrite
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
 
+      - name: Run Python unit tests
+        run: |
+          $PSNativeCommandUseErrorActionPreference = $true
+          python -m unittest discover -s Scripts -p "test_*.py"
+          python -m unittest discover -s .agents/skills/maintain-dwm-offsets/tests -p "test_*.py"
+
+      - name: Validate projection symbols
+        run: |
+          $PSNativeCommandUseErrorActionPreference = $true
+          python .agents/skills/maintain-dwm-offsets/scripts/validate_projection_symbols.py . --architecture legacy
+          python .agents/skills/maintain-dwm-offsets/scripts/validate_projection_symbols.py . --architecture milcomp
+
+      - name: Prepare Windows build
+        uses: ./.github/actions/prepare-build
+
+      - name: Build OpenGlass unit tests
+        run: |
+          $PSNativeCommandUseErrorActionPreference = $true
+          New-Item -ItemType Directory -Force -Path "MSBuild_Logs" | Out-Null
+          msbuild OpenGlassTests/OpenGlassTests.vcxproj /m /restore `
+            /p:Configuration=$env:BUILD_CONFIGURATION `
+            /p:Platform=$env:BUILD_PLATFORM `
+            /p:RestorePackagesConfig=true `
+            /p:VcpkgEnableManifest=true `
+            /p:VcpkgManifestInstall=false `
+            /p:VcpkgRoot=$env:VCPKG_ROOT `
+            /p:VcpkgInstalledDir=$env:VCPKG_INSTALLED_DIR `
+            /p:VcpkgTriplet=$env:VCPKG_DEFAULT_TRIPLET `
+            /p:ForceImportBeforeCppProps=$env:VCPKG_ROOT\scripts\buildsystems\msbuild\vcpkg.props `
+            /p:ForceImportAfterCppTargets=$env:VCPKG_ROOT\scripts\buildsystems\msbuild\vcpkg.targets `
+            /p:OpenGlassInstallerEnabled=false `
+            /bl:MSBuild_Logs/verify.binlog
+
+      - name: Run OpenGlass unit tests
+        run: |
+          $testExecutable = "Build\x64\Release\common\OpenGlassTests.exe"
+          if (-not (Test-Path -LiteralPath $testExecutable -PathType Leaf)) {
+              throw "Test executable was not built: $testExecutable"
+          }
+          & $testExecutable
+          if ($LASTEXITCODE -ne 0) {
+              throw "OpenGlassTests failed with exit code $LASTEXITCODE."
+          }
+
+      - name: Verify source tree remains unchanged
+        run: |
+          $PSNativeCommandUseErrorActionPreference = $true
+          git diff --exit-code
+
+      - name: Upload MSBuild binary log on failure
+        if: failure() && hashFiles('MSBuild_Logs/verify.binlog') != ''
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: msbuild-verify-${{ github.run_id }}
+          path: MSBuild_Logs/verify.binlog
+          if-no-files-found: ignore
+          retention-days: 7
+
+  build:
+    name: build
+    needs: verify
+    runs-on: windows-2025-vs2026
+    timeout-minutes: 60
     steps:
       - name: Checkout source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -61,127 +132,21 @@ jobs:
               throw "OpenGlassProductVersion has an invalid format: $version"
           }
           $artifactName = "v$version-unsigned"
+          $themeExtensionArtifactName = "v$version-theme-extension-unsigned"
           "version=$version" >> $env:GITHUB_OUTPUT
           "artifact_name=$artifactName" >> $env:GITHUB_OUTPUT
+          "theme_extension_artifact_name=$themeExtensionArtifactName" >> $env:GITHUB_OUTPUT
           @"
           ## OpenGlass CI
 
           - Version: ``$version``
-          - Artifact: ``$artifactName``
+          - Installer artifact (when enabled): ``$artifactName``
+          - Theme extension artifact: ``$themeExtensionArtifactName``
           - Signing: unsigned validation build
           "@ >> $env:GITHUB_STEP_SUMMARY
 
-      - name: Set up MSBuild
-        uses: microsoft/setup-msbuild@30375c66a4eea26614e0d39710365f22f8b0af57 # v3.0.0
-
-      - name: Cache NuGet packages
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: |
-            ~\.nuget\packages
-            ${{ github.workspace }}\packages
-          key: ${{ runner.os }}-${{ runner.arch }}-nuget-${{ hashFiles('**/packages.config', '**/NuGet.config', 'Common/NuGet.props', 'Common/NuGet.targets') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ runner.arch }}-nuget-
-
-      - name: Determine vcpkg cache identity
-        id: vcpkg_cache_identity
-        run: |
-          $identity = "$env:ImageOS-$env:ImageVersion"
-          if ($identity -notmatch '^[A-Za-z0-9._-]+$') {
-              throw "Invalid runner image identity: $identity"
-          }
-          "value=$identity" >> $env:GITHUB_OUTPUT
-
-      # Keep a fresh writable key per image, but let vcpkg's ABI hashes decide
-      # which packages from older images or manifests are still reusable.
-      - name: Restore vcpkg binary packages
-        id: vcpkg_cache
-        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ${{ env.VCPKG_DEFAULT_BINARY_CACHE }}
-          key: ${{ runner.os }}-${{ runner.arch }}-vcpkg-release-v1-v145-${{ env.VCPKG_DEFAULT_TRIPLET }}-${{ steps.vcpkg_cache_identity.outputs.value }}-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json', 'ports/**', '.github/vcpkg-triplets/**') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ runner.arch }}-vcpkg-release-v1-v145-${{ env.VCPKG_DEFAULT_TRIPLET }}-${{ steps.vcpkg_cache_identity.outputs.value }}-
-            ${{ runner.os }}-${{ runner.arch }}-vcpkg-release-v1-v145-${{ env.VCPKG_DEFAULT_TRIPLET }}-
-
-      # Sources and build tools remain useful when a compiler update requires
-      # rebuilding binary packages. vcpkg verifies downloaded archive hashes.
-      - name: Restore vcpkg downloads
-        id: vcpkg_downloads
-        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ${{ env.VCPKG_DOWNLOADS }}
-          key: ${{ runner.os }}-${{ runner.arch }}-vcpkg-downloads-v1-${{ steps.vcpkg_cache_identity.outputs.value }}-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json', 'ports/**', '.github/vcpkg-triplets/**') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ runner.arch }}-vcpkg-downloads-v1-${{ steps.vcpkg_cache_identity.outputs.value }}-
-            ${{ runner.os }}-${{ runner.arch }}-vcpkg-downloads-v1-
-
-      - name: Initialize cache directories
-        run: |
-          New-Item -ItemType Directory -Force -Path $env:VCPKG_DEFAULT_BINARY_CACHE, $env:VCPKG_DOWNLOADS | Out-Null
-
-      - name: Run Python unit tests
-        run: |
-          $PSNativeCommandUseErrorActionPreference = $true
-          python -m unittest discover -s Scripts -p "test_*.py"
-          python -m unittest discover -s .agents/skills/maintain-dwm-offsets/tests -p "test_*.py"
-
-      - name: Validate projection symbols
-        run: |
-          $PSNativeCommandUseErrorActionPreference = $true
-          python .agents/skills/maintain-dwm-offsets/scripts/validate_projection_symbols.py . --architecture legacy
-          python .agents/skills/maintain-dwm-offsets/scripts/validate_projection_symbols.py . --architecture milcomp
-
-      - name: Record toolchain versions
-        run: |
-          $PSNativeCommandUseErrorActionPreference = $true
-          $msbuildVersion = (msbuild -version -nologo | Select-Object -Last 1).Trim()
-          $pythonVersion = (python --version 2>&1 | Out-String).Trim()
-          $vcpkgVersion = (& "$env:VCPKG_ROOT\vcpkg.exe" version | Select-Object -First 1).Trim()
-          @"
-
-          ### Toolchain
-
-          - Runner image: ``$env:ImageOS $env:ImageVersion``
-          - MSBuild: ``$msbuildVersion``
-          - Python: ``$pythonVersion``
-          - vcpkg: ``$vcpkgVersion``
-          "@ >> $env:GITHUB_STEP_SUMMARY
-
-      - name: Install vcpkg dependencies
-        run: |
-          $PSNativeCommandUseErrorActionPreference = $true
-          $timer = [Diagnostics.Stopwatch]::StartNew()
-          & "$env:VCPKG_ROOT\vcpkg.exe" install `
-            "--triplet=$env:VCPKG_DEFAULT_TRIPLET" `
-            "--x-manifest-root=$env:GITHUB_WORKSPACE" `
-            "--x-install-root=$env:VCPKG_INSTALLED_DIR"
-          $timer.Stop()
-          @"
-
-          ### Dependencies
-
-          - Configuration: Release only (static libraries and CRT)
-          - Binary cache: ``${{ steps.vcpkg_cache.outputs.cache-matched-key }}``
-          - Download cache: ``${{ steps.vcpkg_downloads.outputs.cache-matched-key }}``
-          - Install time: $([Math]::Round($timer.Elapsed.TotalSeconds, 1)) seconds
-          "@ >> $env:GITHUB_STEP_SUMMARY
-
-      # Persist expensive dependency work before compilation or tests can fail.
-      - name: Save vcpkg binary packages
-        if: steps.vcpkg_cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ${{ env.VCPKG_DEFAULT_BINARY_CACHE }}
-          key: ${{ steps.vcpkg_cache.outputs.cache-primary-key }}
-
-      - name: Save vcpkg downloads
-        if: steps.vcpkg_downloads.outputs.cache-hit != 'true'
-        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ${{ env.VCPKG_DOWNLOADS }}
-          key: ${{ steps.vcpkg_downloads.outputs.cache-primary-key }}
+      - name: Prepare Windows build
+        uses: ./.github/actions/prepare-build
 
       - name: Build solution
         run: |
@@ -199,18 +164,7 @@ jobs:
             /p:ForceImportBeforeCppProps=$env:VCPKG_ROOT\scripts\buildsystems\msbuild\vcpkg.props `
             /p:ForceImportAfterCppTargets=$env:VCPKG_ROOT\scripts\buildsystems\msbuild\vcpkg.targets `
             /p:OpenGlassInstallerEnabled=false `
-            /bl:MSBuild_Logs/ci.binlog
-
-      - name: Run OpenGlass unit tests
-        run: |
-          $testExecutable = "Build\x64\Release\common\OpenGlassTests.exe"
-          if (-not (Test-Path -LiteralPath $testExecutable -PathType Leaf)) {
-              throw "Test executable was not built: $testExecutable"
-          }
-          & $testExecutable
-          if ($LASTEXITCODE -ne 0) {
-              throw "OpenGlassTests failed with exit code $LASTEXITCODE."
-          }
+            /bl:MSBuild_Logs/build.binlog
 
       - name: Verify build outputs
         run: |
@@ -220,6 +174,7 @@ jobs:
               "Build\x64\Release\common\OpenGlassHost.exe",
               "Build\x64\Release\common\OpenGlassGUI.exe",
               "Build\x64\Release\common\OpenGlassThemeExtension.dll",
+              "Build\x64\Release\common\OpenGlassThemeExtension.pdb",
               "Build\x64\Release\common\OpenGlassTests.exe",
               "Build\x64\Release\common\OpenGlassRenderTest.exe"
           )
@@ -228,6 +183,12 @@ jobs:
               if ($item.Length -eq 0) {
                   throw "Build output is empty: $path"
               }
+          }
+
+          $extension = "Build\x64\Release\common\OpenGlassThemeExtension.dll"
+          $signature = Get-AuthenticodeSignature -LiteralPath $extension
+          if ($signature.Status -ne [System.Management.Automation.SignatureStatus]::NotSigned) {
+              throw "Expected an unsigned theme extension, but $extension has signature status $($signature.Status)."
           }
 
       - name: Locate packaging tools
@@ -341,6 +302,16 @@ jobs:
           $PSNativeCommandUseErrorActionPreference = $true
           git diff --exit-code
 
+      - name: Upload unsigned theme extension
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: ${{ steps.version.outputs.theme_extension_artifact_name }}
+          path: |
+            Build/x64/Release/common/OpenGlassThemeExtension.dll
+            Build/x64/Release/common/OpenGlassThemeExtension.pdb
+          if-no-files-found: error
+          retention-days: 7
+
       - name: Upload unsigned packages
         if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.package_artifacts == true)
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -354,10 +325,10 @@ jobs:
           retention-days: 7
 
       - name: Upload MSBuild binary log on failure
-        if: failure() && hashFiles('MSBuild_Logs/ci.binlog') != ''
+        if: failure() && hashFiles('MSBuild_Logs/build.binlog') != ''
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: msbuild-binlog-${{ github.run_id }}
-          path: MSBuild_Logs/ci.binlog
+          name: msbuild-build-${{ github.run_id }}
+          path: MSBuild_Logs/build.binlog
           if-no-files-found: ignore
           retention-days: 7

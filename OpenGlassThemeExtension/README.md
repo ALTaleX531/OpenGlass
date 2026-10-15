@@ -1,8 +1,11 @@
 # OpenGlass theme extension
 
 This developer extension connects Windows theme application and the classic color
-panel to OpenGlass. Developers build and customize it from source. It remains
-part of solution and CI builds; its DLL and PDB are not uploaded as CI artifacts.
+panel to OpenGlass. Developers can build and customize it from source or use the
+separate unsigned CI artifact containing the DLL and matching PDB. It remains
+part of solution and CI builds and is not included in formal Release assets.
+See [CI builds](https://github.com/ALTaleX531/OpenGlass/wiki/Building-OpenGlass#automated-ci)
+for artifact names and retention.
 It requires OpenGlass for the glass effects.
 The main installer does not include, activate, update or remove this extension.
 

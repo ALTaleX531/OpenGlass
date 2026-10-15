@@ -1,0 +1,127 @@
+name: Prepare Windows build
+description: Set up MSBuild and restore the shared NuGet and vcpkg dependencies.
+runs:
+  using: composite
+  steps:
+    - name: Set up MSBuild
+      uses: microsoft/setup-msbuild@30375c66a4eea26614e0d39710365f22f8b0af57 # v3.0.0
+
+    # Runner images can carry different vcpkg helper scripts as well as tools.
+    - name: Set up pinned vcpkg
+      shell: pwsh
+      run: |
+        $PSNativeCommandUseErrorActionPreference = $true
+        git -C $env:VCPKG_ROOT fetch --depth 1 origin $env:VCPKG_COMMIT
+        git -C $env:VCPKG_ROOT checkout --detach $env:VCPKG_COMMIT
+        & "$env:VCPKG_ROOT\bootstrap-vcpkg.bat" -disableMetrics
+
+    - name: Cache NuGet packages
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: |
+          ~\.nuget\packages
+          ${{ github.workspace }}\packages
+        key: ${{ runner.os }}-${{ runner.arch }}-nuget-${{ hashFiles('**/packages.config', '**/NuGet.config', 'Common/NuGet.props', 'Common/NuGet.targets') }}
+        restore-keys: |
+          ${{ runner.os }}-${{ runner.arch }}-nuget-
+
+    # Restore shared imports before building the standalone test project.
+    - name: Restore NuGet packages
+      shell: pwsh
+      run: |
+        $PSNativeCommandUseErrorActionPreference = $true
+        msbuild OpenGlass.slnx /m /t:Restore `
+          /p:Configuration=$env:BUILD_CONFIGURATION `
+          /p:Platform=$env:BUILD_PLATFORM `
+          /p:RestorePackagesConfig=true
+
+    - name: Determine vcpkg cache identity
+      id: vcpkg_cache_identity
+      shell: pwsh
+      run: |
+        $identity = "$env:ImageOS-$env:ImageVersion-$env:VCPKG_COMMIT-downloaded-tools"
+        if ($identity -notmatch '^[A-Za-z0-9._-]+$') {
+            throw "Invalid runner image identity: $identity"
+        }
+        "value=$identity" >> $env:GITHUB_OUTPUT
+
+    # Pin vcpkg tool versions in both jobs; system CMake versions affect package ABIs.
+    # Keep a writable key for this setup; vcpkg ABI hashes validate restored packages.
+    - name: Restore vcpkg binary packages
+      id: vcpkg_cache
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ${{ env.VCPKG_DEFAULT_BINARY_CACHE }}
+        key: ${{ runner.os }}-${{ runner.arch }}-vcpkg-release-v1-v145-${{ env.VCPKG_DEFAULT_TRIPLET }}-${{ steps.vcpkg_cache_identity.outputs.value }}-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json', 'ports/**', '.github/vcpkg-triplets/**') }}
+        restore-keys: |
+          ${{ runner.os }}-${{ runner.arch }}-vcpkg-release-v1-v145-${{ env.VCPKG_DEFAULT_TRIPLET }}-${{ steps.vcpkg_cache_identity.outputs.value }}-
+          ${{ runner.os }}-${{ runner.arch }}-vcpkg-release-v1-v145-${{ env.VCPKG_DEFAULT_TRIPLET }}-
+
+    # Source archives and tools survive compiler updates; vcpkg checks hashes.
+    - name: Restore vcpkg downloads
+      id: vcpkg_downloads
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ${{ env.VCPKG_DOWNLOADS }}
+        key: ${{ runner.os }}-${{ runner.arch }}-vcpkg-downloads-v1-${{ steps.vcpkg_cache_identity.outputs.value }}-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json', 'ports/**', '.github/vcpkg-triplets/**') }}
+        restore-keys: |
+          ${{ runner.os }}-${{ runner.arch }}-vcpkg-downloads-v1-${{ steps.vcpkg_cache_identity.outputs.value }}-
+          ${{ runner.os }}-${{ runner.arch }}-vcpkg-downloads-v1-
+
+    - name: Initialize cache directories
+      shell: pwsh
+      run: |
+        New-Item -ItemType Directory -Force -Path $env:VCPKG_DEFAULT_BINARY_CACHE, $env:VCPKG_DOWNLOADS | Out-Null
+
+    - name: Record toolchain versions
+      shell: pwsh
+      run: |
+        $PSNativeCommandUseErrorActionPreference = $true
+        $msbuildVersion = (msbuild -version -nologo | Select-Object -Last 1).Trim()
+        $pythonVersion = (python --version 2>&1 | Out-String).Trim()
+        $vcpkgVersion = (& "$env:VCPKG_ROOT\vcpkg.exe" version | Select-Object -First 1).Trim()
+        @"
+
+        ### Toolchain
+
+        - Runner image: ``$env:ImageOS $env:ImageVersion``
+        - MSBuild: ``$msbuildVersion``
+        - Python: ``$pythonVersion``
+        - vcpkg: ``$vcpkgVersion``
+        - vcpkg commit: ``$env:VCPKG_COMMIT``
+        "@ >> $env:GITHUB_STEP_SUMMARY
+
+    - name: Install vcpkg dependencies
+      shell: pwsh
+      run: |
+        $PSNativeCommandUseErrorActionPreference = $true
+        $timer = [Diagnostics.Stopwatch]::StartNew()
+        & "$env:VCPKG_ROOT\vcpkg.exe" install `
+          "--triplet=$env:VCPKG_DEFAULT_TRIPLET" `
+          "--x-manifest-root=$env:GITHUB_WORKSPACE" `
+          "--x-install-root=$env:VCPKG_INSTALLED_DIR"
+        $timer.Stop()
+        @"
+
+        ### Dependencies
+
+        - Configuration: Release only (static libraries and CRT)
+        - Binary cache: ``${{ steps.vcpkg_cache.outputs.cache-matched-key }}``
+        - Download cache: ``${{ steps.vcpkg_downloads.outputs.cache-matched-key }}``
+        - Install time: $([Math]::Round($timer.Elapsed.TotalSeconds, 1)) seconds
+        "@ >> $env:GITHUB_STEP_SUMMARY
+
+    # Save dependency work before compilation or tests can fail.
+    - name: Save vcpkg binary packages
+      if: steps.vcpkg_cache.outputs.cache-hit != 'true'
+      uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ${{ env.VCPKG_DEFAULT_BINARY_CACHE }}
+        key: ${{ steps.vcpkg_cache.outputs.cache-primary-key }}
+
+    - name: Save vcpkg downloads
+      if: steps.vcpkg_downloads.outputs.cache-hit != 'true'
+      uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ${{ env.VCPKG_DOWNLOADS }}
+        key: ${{ steps.vcpkg_downloads.outputs.cache-primary-key }}
