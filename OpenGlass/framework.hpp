@@ -54,7 +54,6 @@
 #include <dwrite_3.h>
 #include <d3dcompiler.h>
 
-#pragma comment(lib, "powrprof.lib")
 #pragma comment(lib, "version.lib")
 
 #pragma comment(lib, "delayimp.lib")

@@ -91,6 +91,7 @@ namespace OpenGlass::HookHelper
 	struct HookRundownThunk<Replacement, R (*)(Args...)>
 	{
 		using T = R (*)(Args...);
+		// Each Replacement binds to one original-function storage across pointer and import hooks.
 		inline static T* s_originalStorage{};
 
 		static R Invoke(Args... args)

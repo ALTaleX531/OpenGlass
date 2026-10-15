@@ -219,6 +219,7 @@ jobs:
               "Build\x64\Release\milcomp\OpenGlass.dll",
               "Build\x64\Release\common\OpenGlassHost.exe",
               "Build\x64\Release\common\OpenGlassGUI.exe",
+              "Build\x64\Release\common\OpenGlassThemeExtension.dll",
               "Build\x64\Release\common\OpenGlassTests.exe",
               "Build\x64\Release\common\OpenGlassRenderTest.exe"
           )
