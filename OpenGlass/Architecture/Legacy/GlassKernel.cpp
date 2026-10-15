@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "MsstyleInternals.hpp"
 #include "GlassKernel.hpp"
-#include "uDWMProjection.hpp"
+#include "uDwmProjection.hpp"
 #include "Shared.hpp"
 #include "dwmcoreProjection.hpp"
 #include "GlassEffectBrush.hpp"

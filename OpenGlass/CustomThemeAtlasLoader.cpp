@@ -2,7 +2,7 @@
 #include "MsstyleInternals.hpp"
 #include "Shared.hpp"
 #include "HookHelper.hpp"
-#include "uDWMProjection.hpp"
+#include "uDwmProjection.hpp"
 #include "CustomThemeAtlasLoader.hpp"
 #include "PngAssetValidation.hpp"
 #include "ThemeAtlasLayout.hpp"

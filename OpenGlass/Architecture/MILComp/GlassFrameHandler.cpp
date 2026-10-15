@@ -2,7 +2,7 @@
 #include "Shared.hpp"
 #include "GlassFrameHandler.hpp"
 #include "GlassKernel.hpp"
-#include "uDWMProjection.hpp"
+#include "uDwmProjection.hpp"
 #include "dwmcoreProjection.hpp"
 #include "ReflectionVisual.hpp"
 #include "DetourChains.hpp"

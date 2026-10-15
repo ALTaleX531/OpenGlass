@@ -2,7 +2,7 @@
 #include "framework.hpp"
 #include "cpprt.hpp"
 #include "DwmSettings.hpp"
-#include "uDWMProjection.hpp"
+#include "uDwmProjection.hpp"
 
 namespace OpenGlass::GlassEngine
 {

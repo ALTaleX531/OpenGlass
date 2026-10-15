@@ -3,7 +3,7 @@
 #include "cpprt.hpp"
 #include "ProjectionHelper.hpp"
 #include "D2DPrivates.hpp"
-#include "DWM.hpp"
+#include "Dwm.hpp"
 #include "dwmcoreProjection.Offsets.hpp"
 
 namespace OpenGlass::dwmcore

@@ -2,7 +2,7 @@
 #include "Shared.hpp"
 #include "GlassFrameHandler.hpp"
 #include "GlassKernel.hpp"
-#include "uDWMProjection.hpp"
+#include "uDwmProjection.hpp"
 #include "dwmcoreProjection.hpp"
 #include "GlassEffectBrush.hpp"
 #include "GlassReflectionBrush.hpp"

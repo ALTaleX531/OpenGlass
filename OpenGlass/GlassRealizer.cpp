@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Util.hpp"
-#include "uDWMProjection.hpp"
+#include "uDwmProjection.hpp"
 #include "GlassRealizer.hpp"
 #include "AeroEffect.hpp"
 #include "BlurEffect.hpp"

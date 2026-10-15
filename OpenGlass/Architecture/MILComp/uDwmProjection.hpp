@@ -2,7 +2,7 @@
 #include "framework.hpp"
 #include "cpprt.hpp"
 #include "ProjectionHelper.hpp"
-#include "DWM.hpp"
+#include "Dwm.hpp"
 #include "DCompProjection.hpp"
 #include "uDwmProjection.Offsets.hpp"
 

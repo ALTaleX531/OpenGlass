@@ -25,7 +25,8 @@
 
   <!-- Resolve a stable root for paths (SolutionDir may be empty when building the project directly). -->
   <PropertyGroup>
-    <CppProjectBuildRoot Condition="'$(CppProjectBuildRoot)'==''">$(MSBuildThisFileDirectory)..\</CppProjectBuildRoot>
+    <CppProjectSourceRoot>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..'))</CppProjectSourceRoot>
+    <CppProjectBuildRoot Condition="'$(CppProjectBuildRoot)'==''">$(CppProjectSourceRoot)\</CppProjectBuildRoot>
   </PropertyGroup>
 
   <!-- Common output & analysis defaults (keeps repo layout consistent across projects). -->
@@ -55,7 +56,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdclatest</LanguageStandard_C>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
-      <AdditionalOptions>/utf-8 /Brepro /d1trimfile:"$(CppProjectBuildRoot)\" %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/utf-8 /Brepro %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>$(CppProjectConfigDefines)$(CppProjectDefines)RESULT_SUPPRESS_STATIC_INITIALIZERS;WIL_LOCK_EXCEPTION_MODE;WIL_USE_STL=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -94,6 +95,8 @@
 
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Release' or '$(Configuration)'=='ReleaseSigned'">
     <ClCompile>
+      <!-- Match canonical source paths; keep Debug paths intact for local source lookup. -->
+      <AdditionalOptions>%(AdditionalOptions) /d1trimfile:"$(CppProjectSourceRoot)" /d1trimfile:"$(WindowsSdkDir)\"</AdditionalOptions>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <!-- VC-LTL is designed to work with static CRT (/MT). -->

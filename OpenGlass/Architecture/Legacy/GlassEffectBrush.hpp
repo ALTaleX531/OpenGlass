@@ -1,5 +1,5 @@
 #pragma once
-#include "uDWMProjection.hpp"
+#include "uDwmProjection.hpp"
 
 namespace OpenGlass::GlassEffectBrush
 {

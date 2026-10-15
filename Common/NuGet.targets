@@ -18,6 +18,18 @@
   <Import Project="..\packages\YY.NuGet.Import.Helper.1.0.2\build\native\YY.NuGet.Import.Helper.targets"
           Condition="Exists('..\packages\YY.NuGet.Import.Helper.1.0.2\build\native\YY.NuGet.Import.Helper.targets')" />
 
+  <!-- /d1trimfile also trims PDB source paths, so Source Link must use the same prefix. -->
+  <Target Name="MapCppSourceLinkPaths"
+          Condition="'$(Configuration)'=='Release' or '$(Configuration)'=='ReleaseSigned'"
+          BeforeTargets="_GenerateSourceLinkFile"
+          DependsOnTargets="InitializeSourceControlInformation">
+    <ItemGroup>
+      <SourceRoot Update="@(SourceRoot)">
+        <MappedPath>$([System.String]::Copy('%(SourceRoot.Identity)').Replace('$(CppProjectSourceRoot)', ''))</MappedPath>
+      </SourceRoot>
+    </ItemGroup>
+  </Target>
+
   <PropertyGroup>
     <!-- If true, and NuGetPackageBuildImports is not set, we'll validate a default list for this repo. -->
     <NuGetEnableDefaultBuildImportValidation Condition="'$(NuGetEnableDefaultBuildImportValidation)'==''">true</NuGetEnableDefaultBuildImportValidation>

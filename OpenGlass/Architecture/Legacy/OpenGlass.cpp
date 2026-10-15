@@ -8,7 +8,7 @@
 #include "SymbolDownloader.hpp"
 #include "SymbolCatalog.hpp"
 #include "OSHelper.hpp"
-#include "uDWMProjection.hpp"
+#include "uDwmProjection.hpp"
 #include "dwmcoreProjection.hpp"
 #include "GlassEngine.hpp"
 

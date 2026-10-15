@@ -2,8 +2,8 @@
 #include "framework.hpp"
 #include "cpprt.hpp"
 #include "ProjectionHelper.hpp"
-#include "DWM.hpp"
-#include "DCompPrivates.hpp"
+#include "Dwm.hpp"
+#include "dcompPrivates.hpp"
 #include "uDwmProjection.Offsets.hpp"
 
 namespace OpenGlass::uDWM

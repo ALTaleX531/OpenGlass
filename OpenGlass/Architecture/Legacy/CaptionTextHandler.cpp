@@ -4,7 +4,7 @@
 #include "Shared.hpp"
 #include "GlassKernel.hpp"
 #include "Util.hpp"
-#include "uDWMProjection.hpp"
+#include "uDwmProjection.hpp"
 #include "dwmcoreProjection.hpp"
 #include "dcompPrivates.hpp"
 #include "CustomThemeAtlasLoader.hpp"

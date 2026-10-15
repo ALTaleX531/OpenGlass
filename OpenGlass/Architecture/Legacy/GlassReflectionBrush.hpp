@@ -1,6 +1,6 @@
 #pragma once
 #include "resource.h"
-#include "uDWMProjection.hpp"
+#include "uDwmProjection.hpp"
 #include "Shared.hpp"
 
 namespace OpenGlass::GlassReflectionBrush

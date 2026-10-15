@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "GlassReflectionHandler.hpp"
-#include "uDWMProjection.hpp"
+#include "uDwmProjection.hpp"
 #include "dwmcoreProjection.hpp"
 #include "Shared.hpp"
 #include "GlassKernel.hpp"
