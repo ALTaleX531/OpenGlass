@@ -1,20 +1,14 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "records": [
     {
       "revision": 168,
-      "image": {
-        "time_date_stamp": 609877894,
-        "size_of_image": 974848,
-        "sha256": "7c0f260df429e3fbaf318340ca30055c93705694d56ad7461fb4ad8f5b615935"
-      },
       "pdb": {
         "name": "uDWM.pdb",
         "guid": "a3424f8f-5689-6596-8628-042e2be17b6c",
         "age": 1,
         "sha256": "dfc8e9cc26796994ac0b1fdd7037eb75a4a30a359b150db7a0621bbf94221e61"
       },
-      "resolution_contract": "ba0ea9f93f6f22642b71ccac5b6aa6ab88709ecf15a7c3fa73d1d8f2228f48fa",
       "symbols": {
         "CAccent::SetClipRegion": {
           "name": "public: void __cdecl CAccent::SetClipRegion(class CResource * __ptr64) __ptr64",
@@ -212,18 +206,12 @@
     },
     {
       "revision": 404,
-      "image": {
-        "time_date_stamp": 3295955637,
-        "size_of_image": 983040,
-        "sha256": "f1a13585d9d86daf68329067dd337a15e4ae153e49d55170141747daf625162d"
-      },
       "pdb": {
         "name": "uDWM.pdb",
         "guid": "2bef3808-f4c1-8930-e6c5-22a60a55f467",
         "age": 1,
         "sha256": "6ad3fef9cf06b6e169d2dfcdb69c3edbc990696f01670e603b675febda737042"
       },
-      "resolution_contract": "ba0ea9f93f6f22642b71ccac5b6aa6ab88709ecf15a7c3fa73d1d8f2228f48fa",
       "symbols": {
         "CAccent::SetClipRegion": {
           "name": "public: void __cdecl CAccent::SetClipRegion(class CResource * __ptr64) __ptr64",
@@ -421,18 +409,12 @@
     },
     {
       "revision": 719,
-      "image": {
-        "time_date_stamp": 1002035632,
-        "size_of_image": 983040,
-        "sha256": "412c9971fd7bb55cc027bd0d2b663e503bcf6322afa09d3ef26fdb7ee703d575"
-      },
       "pdb": {
         "name": "uDWM.pdb",
         "guid": "2220b43f-a540-639b-4aa3-ad8d4b8f92e6",
         "age": 1,
         "sha256": "237f71ebfbb15af693bbbd5966de7ca98d649cf9171c4f607215392a22dfa89e"
       },
-      "resolution_contract": "ba0ea9f93f6f22642b71ccac5b6aa6ab88709ecf15a7c3fa73d1d8f2228f48fa",
       "symbols": {
         "CAccent::SetClipRegion": {
           "name": "public: void __cdecl CAccent::SetClipRegion(class CResource * __ptr64) __ptr64",
@@ -630,18 +612,12 @@
     },
     {
       "revision": 771,
-      "image": {
-        "time_date_stamp": 3396769767,
-        "size_of_image": 983040,
-        "sha256": "8eea5149042d0d9f42255d07ba0fca3c29e70bf33d9ec843fe7157b3ab8dda61"
-      },
       "pdb": {
         "name": "uDWM.pdb",
         "guid": "a11796da-44c2-3b9c-201e-76dd86f22999",
         "age": 1,
         "sha256": "9385e8975976eb0b9e0760898b5c04e6285b6251b167cb81fcdbe1b35d47b745"
       },
-      "resolution_contract": "ba0ea9f93f6f22642b71ccac5b6aa6ab88709ecf15a7c3fa73d1d8f2228f48fa",
       "symbols": {
         "CAccent::SetClipRegion": {
           "name": "public: void __cdecl CAccent::SetClipRegion(class CResource * __ptr64) __ptr64",
@@ -839,18 +815,12 @@
     },
     {
       "revision": 831,
-      "image": {
-        "time_date_stamp": 588480810,
-        "size_of_image": 983040,
-        "sha256": "9564ac960f90f3c7d6b53a68463e760d022fd4b324f8ca0ce4327241a62f1405"
-      },
       "pdb": {
         "name": "uDWM.pdb",
         "guid": "02570abe-4f74-0f06-9267-d876629a0d30",
         "age": 1,
         "sha256": "bb7518f850bcee895d4b5295cc552f11f5145569abf1cd898b9c894822e5dd74"
       },
-      "resolution_contract": "ba0ea9f93f6f22642b71ccac5b6aa6ab88709ecf15a7c3fa73d1d8f2228f48fa",
       "symbols": {
         "CAccent::SetClipRegion": {
           "name": "public: void __cdecl CAccent::SetClipRegion(class CResource * __ptr64) __ptr64",
@@ -1048,18 +1018,12 @@
     },
     {
       "revision": 1131,
-      "image": {
-        "time_date_stamp": 2084792335,
-        "size_of_image": 978944,
-        "sha256": "95c1f983ef1450a5b7d1cb8a3ac8baac948ef0ae1ce4c59fc68014ea7c2d578d"
-      },
       "pdb": {
         "name": "uDWM.pdb",
         "guid": "e3b02426-6530-ee96-f021-bd0da9f039c4",
         "age": 1,
         "sha256": "1b186e3a412ebdf3d9e0fc6fe4e3edd0ef1b56eb0b23805625a436c65e0e4cae"
       },
-      "resolution_contract": "ba0ea9f93f6f22642b71ccac5b6aa6ab88709ecf15a7c3fa73d1d8f2228f48fa",
       "symbols": {
         "CAccent::SetClipRegion": {
           "name": "public: void __cdecl CAccent::SetClipRegion(class CResource * __ptr64) __ptr64",
@@ -1257,18 +1221,12 @@
     },
     {
       "revision": 1457,
-      "image": {
-        "time_date_stamp": 3561387042,
-        "size_of_image": 974848,
-        "sha256": "833658f47cbd789cc44ac9e2c2464297af58640d2e39a907e43e467aad2040fc"
-      },
       "pdb": {
         "name": "uDWM.pdb",
         "guid": "7f63b15b-14b4-ae65-14a6-00a2f9058f36",
         "age": 1,
         "sha256": "61433312f2977fd800758da6bc27cf51190f00848fa39cea4625d429fe219d25"
       },
-      "resolution_contract": "ba0ea9f93f6f22642b71ccac5b6aa6ab88709ecf15a7c3fa73d1d8f2228f48fa",
       "symbols": {
         "CAccent::SetClipRegion": {
           "name": "public: void __cdecl CAccent::SetClipRegion(class CResource * __ptr64) __ptr64",
@@ -1466,18 +1424,12 @@
     },
     {
       "revision": 1490,
-      "image": {
-        "time_date_stamp": 2645606735,
-        "size_of_image": 974848,
-        "sha256": "ff744ed18b77a6c575f58684ad06319f26f9090338f2a9364ef6c7506b56a642"
-      },
       "pdb": {
         "name": "uDWM.pdb",
         "guid": "3466e448-1d3a-1863-15cb-ceea489d1512",
         "age": 1,
         "sha256": "a385648904f28ffa3c1b723b59cde14364062465c3478d42f358928d9f859586"
       },
-      "resolution_contract": "ba0ea9f93f6f22642b71ccac5b6aa6ab88709ecf15a7c3fa73d1d8f2228f48fa",
       "symbols": {
         "CAccent::SetClipRegion": {
           "name": "public: void __cdecl CAccent::SetClipRegion(class CResource * __ptr64) __ptr64",
@@ -1675,18 +1627,12 @@
     },
     {
       "revision": 1697,
-      "image": {
-        "time_date_stamp": 1281444411,
-        "size_of_image": 978944,
-        "sha256": "0810a8a017f6201bd31348c1152aa10363b375c493f414e0e7e4edede38114b8"
-      },
       "pdb": {
         "name": "uDWM.pdb",
         "guid": "852e2bbe-4908-12a2-45e6-18e4210cdee7",
         "age": 1,
         "sha256": "ce96f305834ab146c62487f297916f32f4173cc02e9b7ba4d88662bca38aee5b"
       },
-      "resolution_contract": "ba0ea9f93f6f22642b71ccac5b6aa6ab88709ecf15a7c3fa73d1d8f2228f48fa",
       "symbols": {
         "CAccent::SetClipRegion": {
           "name": "public: void __cdecl CAccent::SetClipRegion(class CResource * __ptr64) __ptr64",
@@ -1884,18 +1830,12 @@
     },
     {
       "revision": 1852,
-      "image": {
-        "time_date_stamp": 1866219357,
-        "size_of_image": 974848,
-        "sha256": "21ffd264983a0a12a4854ae8af8c020a19b869b760a62afbe06e78c0c3d80e21"
-      },
       "pdb": {
         "name": "uDWM.pdb",
         "guid": "f5eabf0d-aee0-fadf-1f06-14103c488496",
         "age": 1,
         "sha256": "e24ff21a04f724d3cf8ac5df6e87cec09e6fbe113617803e473e8c0b51f1f248"
       },
-      "resolution_contract": "ba0ea9f93f6f22642b71ccac5b6aa6ab88709ecf15a7c3fa73d1d8f2228f48fa",
       "symbols": {
         "CAccent::SetClipRegion": {
           "name": "public: void __cdecl CAccent::SetClipRegion(class CResource * __ptr64) __ptr64",
@@ -2093,18 +2033,12 @@
     },
     {
       "revision": 2989,
-      "image": {
-        "time_date_stamp": 2822905686,
-        "size_of_image": 974848,
-        "sha256": "1738e43d85cf68d70996e0bcd7096e4d5e2e2a96059cb67c9b7d8e9a73f6dc3d"
-      },
       "pdb": {
         "name": "uDWM.pdb",
         "guid": "c6d70bd5-425c-e829-37c5-8d7169ebc14f",
         "age": 1,
         "sha256": "de8e37288ae189fc80157102c639e5ebfa384d48a763baa17ea9f313d1da6645"
       },
-      "resolution_contract": "ba0ea9f93f6f22642b71ccac5b6aa6ab88709ecf15a7c3fa73d1d8f2228f48fa",
       "symbols": {
         "CAccent::SetClipRegion": {
           "name": "public: void __cdecl CAccent::SetClipRegion(class CResource * __ptr64) __ptr64",
@@ -2302,18 +2236,12 @@
     },
     {
       "revision": 7309,
-      "image": {
-        "time_date_stamp": 3114825223,
-        "size_of_image": 974848,
-        "sha256": "cc1766479357e064bc7c5905d748652eaf97d7f2daf61b83bf4f8274b76aa3a1"
-      },
       "pdb": {
         "name": "uDWM.pdb",
         "guid": "3bce148c-432a-d871-de60-a2a750bb72fd",
         "age": 1,
         "sha256": "e3dbc8e81f1119e4dafdc1ac6ccd1fe95f196942d60a3b83594bd49d70c87b29"
       },
-      "resolution_contract": "ba0ea9f93f6f22642b71ccac5b6aa6ab88709ecf15a7c3fa73d1d8f2228f48fa",
       "symbols": {
         "CAccent::SetClipRegion": {
           "name": "public: void __cdecl CAccent::SetClipRegion(class CResource * __ptr64) __ptr64",
@@ -2511,18 +2439,12 @@
     },
     {
       "revision": 7434,
-      "image": {
-        "time_date_stamp": 1282286326,
-        "size_of_image": 974848,
-        "sha256": "5687b7b11986efca9b9a3c7c42be68fc62660c15453078025513b7bf1fae82e0"
-      },
       "pdb": {
         "name": "uDWM.pdb",
         "guid": "ba9cdefb-360f-950a-3ff7-aa30095d6c43",
         "age": 1,
         "sha256": "2fbb16f4b3afa5cc142d11a448455430e8bc605742bb57e5554f3d616ec1673a"
       },
-      "resolution_contract": "ba0ea9f93f6f22642b71ccac5b6aa6ab88709ecf15a7c3fa73d1d8f2228f48fa",
       "symbols": {
         "CAccent::SetClipRegion": {
           "name": "public: void __cdecl CAccent::SetClipRegion(class CResource * __ptr64) __ptr64",
@@ -2720,18 +2642,12 @@
     },
     {
       "revision": 8641,
-      "image": {
-        "time_date_stamp": 3753183238,
-        "size_of_image": 974848,
-        "sha256": "4a5de7f3614976dd999a6bb1720ec45c47cf6f4e6402b1d45a7893dcfad8e62f"
-      },
       "pdb": {
         "name": "uDWM.pdb",
         "guid": "a60660cc-8ca7-644e-8663-c9c0999adc0b",
         "age": 1,
         "sha256": "74121a44b183fd2ba4ee2642e87ae3f1e295b4aaccf310497f6715887a2d9f77"
       },
-      "resolution_contract": "ba0ea9f93f6f22642b71ccac5b6aa6ab88709ecf15a7c3fa73d1d8f2228f48fa",
       "symbols": {
         "CAccent::SetClipRegion": {
           "name": "public: void __cdecl CAccent::SetClipRegion(class CResource * __ptr64) __ptr64",
@@ -2929,18 +2845,12 @@
     },
     {
       "revision": 8880,
-      "image": {
-        "time_date_stamp": 3530422082,
-        "size_of_image": 974848,
-        "sha256": "62c9cc1ca0dfeb3c4916e780fdf436e2bedb9127b482afa521200b14863a2016"
-      },
       "pdb": {
         "name": "uDWM.pdb",
         "guid": "fe824736-385a-320f-94b6-fc0c257c3e52",
         "age": 1,
         "sha256": "b69176f56aa90521168278c84a58c3124d2b8391fe12da13dcf48a039dfb412f"
       },
-      "resolution_contract": "ba0ea9f93f6f22642b71ccac5b6aa6ab88709ecf15a7c3fa73d1d8f2228f48fa",
       "symbols": {
         "CAccent::SetClipRegion": {
           "name": "public: void __cdecl CAccent::SetClipRegion(class CResource * __ptr64) __ptr64",
@@ -3138,18 +3048,12 @@
     },
     {
       "revision": 9020,
-      "image": {
-        "time_date_stamp": 3398323337,
-        "size_of_image": 974848,
-        "sha256": "556d8a48232f477f56d0fc3e61f96f5508f3598644e586025c5e28ce0a4572da"
-      },
       "pdb": {
         "name": "uDWM.pdb",
         "guid": "918f35ef-b4b9-857c-c047-2163e297f501",
         "age": 1,
         "sha256": "b768a8f83aa79559005a63f37e43ab0515160f54331b33c8f7f146b35a34bfd7"
       },
-      "resolution_contract": "ba0ea9f93f6f22642b71ccac5b6aa6ab88709ecf15a7c3fa73d1d8f2228f48fa",
       "symbols": {
         "CAccent::SetClipRegion": {
           "name": "public: void __cdecl CAccent::SetClipRegion(class CResource * __ptr64) __ptr64",
@@ -3347,18 +3251,12 @@
     },
     {
       "revision": 9121,
-      "image": {
-        "time_date_stamp": 4265632256,
-        "size_of_image": 974848,
-        "sha256": "056451f46cc5177defcdede3567ce09af096545061cd70f83ae86d460d22f0ad"
-      },
       "pdb": {
         "name": "uDWM.pdb",
         "guid": "fb195dd2-0c3b-df46-138c-bd48eb2389b7",
         "age": 1,
         "sha256": "096d3ee50c171d70632b9ce9666afea6e004b2b51b726f86d4694b6151cd4def"
       },
-      "resolution_contract": "ba0ea9f93f6f22642b71ccac5b6aa6ab88709ecf15a7c3fa73d1d8f2228f48fa",
       "symbols": {
         "CAccent::SetClipRegion": {
           "name": "public: void __cdecl CAccent::SetClipRegion(class CResource * __ptr64) __ptr64",

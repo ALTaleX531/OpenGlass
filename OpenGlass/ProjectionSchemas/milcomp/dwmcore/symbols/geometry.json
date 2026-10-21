@@ -1,0 +1,174 @@
+{
+  "symbols": [
+    {
+      "name": "Symbol_CMatrixStack_GetTopByReference",
+      "id": "CMatrixStack::GetTopByReference",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CMatrixStack::GetTopByReference",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: class CMILMatrix const * __ptr64 __cdecl CMatrixStack::GetTopByReference(void)const __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CZOrderedRect_UpdateDeviceRect",
+      "id": "CZOrderedRect::UpdateDeviceRect",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CZOrderedRect::UpdateDeviceRect",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: void __cdecl CZOrderedRect::UpdateDeviceRect(class CMILMatrix const * __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CShape_CopyShape",
+      "id": "CShape::CopyShape",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CShape::CopyShape",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CShape::CopyShape(class CMILMatrix const * __ptr64,class CShape * __ptr64 * __ptr64)const __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CShape_AllowsOcclusion",
+      "id": "CShape::AllowsOcclusion",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "CShape_AllowsOcclusion_t",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: virtual bool __cdecl CShape::AllowsOcclusion(void)const __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CGeometry_GetShapeData",
+      "id": "CGeometry::GetShapeData",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CGeometry::GetShapeData",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CGeometry::GetShapeData(struct D2D_SIZE_F const * __ptr64,class CShapePtr * __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CGeometry_CGeometry",
+      "id": "CGeometry::~CGeometry",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "CGeometry_Destructor_t",
+          "ranges": [
+            {
+              "symbol_names": [
+                "protected: virtual __cdecl CGeometry::~CGeometry(void) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw",
+      "notes": "Select the destructor variant whose explicit-this signature matches the hook; do not substitute a deleting destructor with the same base name."
+    },
+    {
+      "name": "Symbol_CCombinedGeometry_vftable",
+      "id": "CCombinedGeometry::vftable",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CCombinedGeometry::vftable",
+          "ranges": [
+            {
+              "symbol_names": [
+                "const CCombinedGeometry::`vftable'{for `CGeometry'}"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_variable",
+      "notes": "Use the CGeometry subobject vtable assigned at offset 0 by CCombinedGeometry::CCombinedGeometry. The separate CCyclicResourceListEntry vtable belongs to the secondary subobject and is not the CGeometry pointer consumed by SetClip and occlusion checks."
+    },
+    {
+      "name": "Symbol_CCombinedGeometry_ProcessUpdate",
+      "id": "CCombinedGeometry::ProcessUpdate",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "CCombinedGeometry_ProcessUpdate_t",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CCombinedGeometry::ProcessUpdate(class CResourceTable * __ptr64,struct tagMILCMD_COMBINEDGEOMETRY const * __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    }
+  ]
+}

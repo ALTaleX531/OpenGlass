@@ -1,0 +1,22 @@
+{
+  "layouts": [
+    {
+      "name": "CVisualProxy_DCompVisualProxy",
+      "id": "CVisualProxy.DCompVisualProxy",
+      "kind": "field",
+      "type": "IUnknown*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 32,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CVisualProxy constructor stores the DirectComposition visual proxy returned by channel vtable slot 13; the object exposes IDCompositionVisualRestricted."
+    }
+  ]
+}

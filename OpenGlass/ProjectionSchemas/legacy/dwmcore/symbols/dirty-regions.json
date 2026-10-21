@@ -1,0 +1,168 @@
+{
+  "symbols": [
+    {
+      "name": "Symbol_CDirtyRegion_GetUnOccludedDirtyRegion",
+      "id": "CDirtyRegion::GetUnOccludedDirtyRegion",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "D2D1_RECT_F* (*)(CDirtyRegion*, D2D1_RECT_F*, COcclusionContext*, const CVisualTree*, bool, UINT, const D2D1_RECT_F&)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64 __cdecl CDirtyRegion::GetUnOccludedDirtyRegion(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64,class COcclusionContext * __ptr64,class CVisualTree const * __ptr64,bool,unsigned int,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64)const __ptr64",
+                "public: class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> __cdecl CDirtyRegion::GetUnOccludedDirtyRegion(class COcclusionContext * __ptr64,class CVisualTree const * __ptr64,bool,unsigned int,class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64)const __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": {
+                "build": 19041,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw",
+      "notes": "Win64 lowers the returned rectangle through the hidden storage parameter used by the pre-19041 detour."
+    },
+    {
+      "name": "Symbol_CDirtyRegion_GetUnOccludedDirtyRect",
+      "id": "CDirtyRegion::GetUnOccludedDirtyRect",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "D2D1_RECT_F* (*)(CDirtyRegion*, D2D1_RECT_F*, UINT, const D2D1_RECT_F&, bool, const DWM::span<const CVisual*>&, const COcclusionContext*)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> __cdecl CDirtyRegion::GetUnOccludedDirtyRect(unsigned int,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,bool,class gsl::span<class CVisual const * __ptr64,-1> const & __ptr64,class COcclusionContext const * __ptr64)const __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 19041,
+                "revision": 0
+              },
+              "max_exclusive": {
+                "build": 20348,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CDirtyRegion_GetOptimizedRect_Server_2022",
+      "id": "CDirtyRegion::GetOptimizedRect.server2022",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "D2D1_RECT_F* (*)(CDirtyRegion*, D2D1_RECT_F*, UINT, const D2D1_RECT_F&, const D2D1_SIZE_U&, bool, const CMILMatrix*, const DWM::span<const CVisual*>&, CRegion*, const COcclusionContext*)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> __cdecl CDirtyRegion::GetOptimizedRect(unsigned int,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,struct D2D_SIZE_U const & __ptr64,bool,class CMILMatrix const * __ptr64,class gsl::span<class CVisual const * __ptr64,-1> const & __ptr64,class CRegion * __ptr64,class COcclusionContext const * __ptr64)const __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 20348,
+                "revision": 0
+              },
+              "max_exclusive": {
+                "build": 22000,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw",
+      "notes": "Server 2022 inserts D2D_SIZE_U and a transform flag before the matrix, then passes the visual span before the region; keep its detour ABI separate from Windows 11."
+    },
+    {
+      "name": "Symbol_CDirtyRegion_GetOptimizedRect",
+      "id": "CDirtyRegion::GetOptimizedRect",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "D2D1_RECT_F* (*)(CDirtyRegion*, D2D1_RECT_F*, UINT, const D2D1_RECT_F&, CRegion*, const CMILMatrix*, bool, const DWM::span<const CVisual*>&, const COcclusionContext*)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> __cdecl CDirtyRegion::GetOptimizedRect(unsigned int,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class CRegion * __ptr64,class CMILMatrix const * __ptr64,bool,class gsl::span<class CVisual const * __ptr64,-1> const & __ptr64,class COcclusionContext const * __ptr64)const __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 22000,
+                "revision": 0
+              },
+              "max_exclusive": {
+                "build": 26100,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CDirtyRegion_GetOptimizedRect_26100_Pre_1000",
+      "id": "CDirtyRegion::GetOptimizedRect.26100.pre1000",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "D2D1_RECT_F* (*)(CDirtyRegion*, D2D1_RECT_F*, UINT, const D2D1_RECT_F&, const COcclusionContext&, CRegion*, const CMILMatrix*, bool, const DWM::span<const CVisual*>&)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> __cdecl CDirtyRegion::GetOptimizedRect(unsigned int,class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const & __ptr64,class COcclusionContext const & __ptr64,class CRegion * __ptr64,class CMILMatrix const * __ptr64,bool,class gsl::span<class CVisual const * __ptr64,-1> const & __ptr64)const __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 26100,
+                "revision": 0
+              },
+              "max_exclusive": {
+                "build": 26100,
+                "revision": 1000
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw",
+      "notes": "This monolithic implementation already has the later context-reference ABI. At the right boundary CTreeDirty becomes the public feature dispatcher for NCEDR2_On::CTreeDirty and NCEDR2_Off::CDirtyRegion."
+    },
+    {
+      "name": "Symbol_CTreeDirty_GetOptimizedRect",
+      "id": "CTreeDirty::GetOptimizedRect",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "D2D1_RECT_F* (*)(CTreeDirty*, D2D1_RECT_F*, UINT, const D2D1_RECT_F&, const COcclusionContext&, CRegion*, const CMILMatrix*, bool, const DWM::span<const CVisual*>&)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> __cdecl CTreeDirty::GetOptimizedRect(unsigned int,class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const & __ptr64,class COcclusionContext const & __ptr64,class CRegion * __ptr64,class CMILMatrix const * __ptr64,bool,class gsl::span<class CVisual const * __ptr64,-1> const & __ptr64)const __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 26100,
+                "revision": 1000
+              },
+              "max_exclusive": {
+                "build": 28000,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw",
+      "notes": "The first emitted implementation is a feature dispatcher selecting NCEDR2_On::CTreeDirty or NCEDR2_Off::CDirtyRegion while preserving this public ABI."
+    }
+  ]
+}

@@ -27,7 +27,6 @@
     <OpenGlassDwmArchitecture>MILComp</OpenGlassDwmArchitecture>
     <OutDir>$(CppProjectBuildRoot)Build\$(PlatformShortName)\$(Configuration)\milcomp\</OutDir>
     <ProjectionGeneratedDir>$(IntDir)Generated\Projection</ProjectionGeneratedDir>
-    <ProjectionSchemaDir>$(ProjectDir)ProjectionSchemas\milcomp</ProjectionSchemaDir>
     <ProjectionPython Condition="'$(ProjectionPython)'==''">python</ProjectionPython>
   </PropertyGroup>
   <ImportGroup Label="PropertySheets">
@@ -85,11 +84,53 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ProjectionSchemas\milcomp\dwmcore.json" />
+    <None Include="ProjectionSchemas\milcomp\dwmcore\symbols\device-targets.json" />
+    <None Include="ProjectionSchemas\milcomp\dwmcore\symbols\dirty-regions.json" />
+    <None Include="ProjectionSchemas\milcomp\dwmcore\symbols\drawing-context.json" />
+    <None Include="ProjectionSchemas\milcomp\dwmcore\symbols\geometry.json" />
+    <None Include="ProjectionSchemas\milcomp\dwmcore\symbols\occlusion.json" />
+    <None Include="ProjectionSchemas\milcomp\dwmcore\symbols\resources.json" />
+    <None Include="ProjectionSchemas\milcomp\dwmcore\layouts\CArrayBasedCoverageSet.json" />
+    <None Include="ProjectionSchemas\milcomp\dwmcore\layouts\CColorBrush.json" />
+    <None Include="ProjectionSchemas\milcomp\dwmcore\layouts\CD2DContext.json" />
+    <None Include="ProjectionSchemas\milcomp\dwmcore\layouts\CD3DDevice.json" />
+    <None Include="ProjectionSchemas\milcomp\dwmcore\layouts\CDrawingContext.json" />
+    <None Include="ProjectionSchemas\milcomp\dwmcore\layouts\COcclusionContext.json" />
+    <None Include="ProjectionSchemas\milcomp\dwmcore\layouts\ID2DContextOwner.json" />
+    <None Include="ProjectionSchemas\milcomp\dwmcore\layouts\IDeviceTarget.json" />
+    <None Include="ProjectionSchemas\milcomp\dwmcore\layouts\IDeviceTexture.json" />
+    <None Include="ProjectionSchemas\milcomp\dwmcore\layouts\RenderTargetInfo.json" />
     <None Include="ProjectionSchemas\milcomp\README.md" />
     <None Include="ProjectionSchemas\milcomp\udwm.json" />
-    <SymbolCatalogSource Include="SymbolCatalogs\milcomp\index.json" />
-    <SymbolCatalogSource Include="SymbolCatalogs\milcomp\udwm\28000.json" />
-    <SymbolCatalogSource Include="SymbolCatalogs\milcomp\dwmcore\28000.json" />
+    <None Include="ProjectionSchemas\milcomp\udwm\symbols\caption.json" />
+    <None Include="ProjectionSchemas\milcomp\udwm\symbols\colorization.json" />
+    <None Include="ProjectionSchemas\milcomp\udwm\symbols\desktop.json" />
+    <None Include="ProjectionSchemas\milcomp\udwm\symbols\nonclient.json" />
+    <None Include="ProjectionSchemas\milcomp\udwm\symbols\resources.json" />
+    <None Include="ProjectionSchemas\milcomp\udwm\symbols\top-level-window.json" />
+    <None Include="ProjectionSchemas\milcomp\udwm\symbols\visuals.json" />
+    <None Include="ProjectionSchemas\milcomp\udwm\symbols\window-frame.json" />
+    <None Include="ProjectionSchemas\milcomp\udwm\layouts\CBaseObject.json" />
+    <None Include="ProjectionSchemas\milcomp\udwm\layouts\CButton.json" />
+    <None Include="ProjectionSchemas\milcomp\udwm\layouts\CCompositor.json" />
+    <None Include="ProjectionSchemas\milcomp\udwm\layouts\CDWriteText.json" />
+    <None Include="ProjectionSchemas\milcomp\udwm\layouts\CDesktopManager.json" />
+    <None Include="ProjectionSchemas\milcomp\udwm\layouts\CGlassColorizationResources.json" />
+    <None Include="ProjectionSchemas\milcomp\udwm\layouts\CGraphicsDeviceManager.json" />
+    <None Include="ProjectionSchemas\milcomp\udwm\layouts\CLegacyNonClientBackground.json" />
+    <None Include="ProjectionSchemas\milcomp\udwm\layouts\CRectangleVisual.json" />
+    <None Include="ProjectionSchemas\milcomp\udwm\layouts\CResource.json" />
+    <None Include="ProjectionSchemas\milcomp\udwm\layouts\CResourceProxy.json" />
+    <None Include="ProjectionSchemas\milcomp\udwm\layouts\CSpriteVisualProxy.json" />
+    <None Include="ProjectionSchemas\milcomp\udwm\layouts\CThemePartPrimitive.json" />
+    <None Include="ProjectionSchemas\milcomp\udwm\layouts\CTopLevelWindow.json" />
+    <None Include="ProjectionSchemas\milcomp\udwm\layouts\CVisual.json" />
+    <None Include="ProjectionSchemas\milcomp\udwm\layouts\CVisualProxy.json" />
+    <None Include="ProjectionSchemas\milcomp\udwm\layouts\CWindowData.json" />
+    <None Include="ProjectionSchemas\milcomp\udwm\layouts\IText.json" />
+    <None Include="SymbolCatalogs\milcomp\index.json" />
+    <None Include="SymbolCatalogs\milcomp\udwm\28000.json" />
+    <None Include="SymbolCatalogs\milcomp\dwmcore\28000.json" />
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='ReleaseSigned'">
     <ClCompile><PreprocessorDefinitions>OPENGLASS_ENFORCE_SIGNING=1;%(PreprocessorDefinitions)</PreprocessorDefinitions></ClCompile>
@@ -97,12 +138,12 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <Target Name="GenerateProjectionMetadata"
           BeforeTargets="ClCompile"
-          Inputs="$(ProjectionSchemaDir)\udwm.json;$(ProjectionSchemaDir)\dwmcore.json;@(SymbolCatalogSource);$(ProjectDir)..\Scripts\projection_codegen.py;$(ProjectDir)..\Scripts\projection_schema.py;$(ProjectDir)..\Scripts\projection_emit.py;$(ProjectDir)..\Scripts\projection_source_check.py;$(ProjectDir)..\Scripts\symbol_catalog.py;$(ProjectDir)OSHelper.hpp;@(ClCompile);@(ClInclude)"
+          Inputs="$(ProjectDir)..\requirements.txt;$(ProjectDir)..\tools\__init__.py;@(None->WithMetadataValue('Extension', '.json'));$(ProjectDir)..\tools\projection_target.py;$(ProjectDir)..\tools\projection_codegen.py;$(ProjectDir)..\tools\file_io.py;$(ProjectDir)..\tools\projection_schema.py;$(ProjectDir)..\tools\projection_emit.py;$(ProjectDir)..\tools\projection_source_check.py;$(ProjectDir)..\tools\symbol_catalog.py;$(ProjectDir)OSHelper.hpp;@(ClCompile);@(ClInclude)"
           Outputs="$(ProjectionGeneratedDir)\udwm.Layouts.generated.hpp;$(ProjectionGeneratedDir)\udwm.Symbols.generated.hpp;$(ProjectionGeneratedDir)\dwmcore.Layouts.generated.hpp;$(ProjectionGeneratedDir)\dwmcore.Symbols.generated.hpp;$(ProjectionGeneratedDir)\ProjectionRegistry.generated.inc;$(ProjectionGeneratedDir)\SymbolCatalog.generated.hpp;$(ProjectionGeneratedDir)\SymbolCatalog.generated.inc">
     <MakeDir Directories="$(ProjectionGeneratedDir)" />
     <Exec Command="&quot;$(ProjectionPython)&quot; --version" IgnoreExitCode="true" ConsoleToMSBuild="true"><Output TaskParameter="ExitCode" PropertyName="ProjectionPythonExitCode" /></Exec>
-    <Error Condition="'$(ProjectionPythonExitCode)'!='0'" Text="OpenGlass projection generation requires Python 3. Set ProjectionPython to a working python.exe." />
-    <Exec Command="&quot;$(ProjectionPython)&quot; &quot;$(ProjectDir)..\Scripts\projection_codegen.py&quot; --repo &quot;$(ProjectDir)..&quot; --architecture milcomp --output &quot;$(ProjectionGeneratedDir)&quot;" />
+    <Error Condition="'$(ProjectionPythonExitCode)'!='0'" Text="OpenGlass projection generation requires Python 3.11+. Set ProjectionPython to its python.exe and install requirements.txt with that interpreter." />
+    <Exec WorkingDirectory="$(ProjectDir).." Command="&quot;$(ProjectionPython)&quot; -m tools.projection_codegen --repo &quot;$(ProjectDir)..&quot; --architecture milcomp --platform &quot;$(Platform)&quot; --output &quot;$(ProjectionGeneratedDir)&quot;" />
   </Target>
   <Target Name="CleanProjectionMetadata" AfterTargets="Clean"><RemoveDir Directories="$(ProjectionGeneratedDir)" /></Target>
   <ImportGroup Label="ExtensionTargets">

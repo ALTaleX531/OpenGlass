@@ -1,0 +1,29 @@
+{
+  "layouts": [
+    {
+      "name": "CText_RTL_FlagByteOffset",
+      "id": "CText_RTL_FlagByteOffset",
+      "kind": "field",
+      "type": "BYTE",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 280,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 288,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CText::SetRTLReading"
+    }
+  ]
+}

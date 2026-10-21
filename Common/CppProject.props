@@ -49,6 +49,7 @@
 
   <ItemDefinitionGroup>
     <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
       <WarningLevel>Level4</WarningLevel>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -122,8 +123,14 @@
   <!-- Optional signing is project-local. Packaging is an explicit repository target. -->
   <Import Project="$(MSBuildThisFileDirectory)CppProject.Signing.props" Condition="Exists('$(MSBuildThisFileDirectory)CppProject.Signing.props')" />
 
-  <!-- Automatically import Common.vcxitems for shared headers and items -->
-  <ImportGroup Label="Shared">
-    <Import Project="$(MSBuildThisFileDirectory)Common.vcxitems" Label="Shared" Condition="Exists('$(MSBuildThisFileDirectory)Common.vcxitems')" />
-  </ImportGroup>
+  <!-- External sources participate in builds and IntelliSense, not project file nodes.
+       Keep them out of evaluated ClCompile items so the IDE does not show loose files. -->
+  <PropertyGroup>
+    <ComputeCompileInputsTargets>AddExternalCompileInputs;$(ComputeCompileInputsTargets)</ComputeCompileInputsTargets>
+  </PropertyGroup>
+  <Target Name="AddExternalCompileInputs" AfterTargets="BuildGenerateSources">
+    <ItemGroup>
+      <ClCompile Include="@(_ExternalClCompile)" />
+    </ItemGroup>
+  </Target>
 </Project>

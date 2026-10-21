@@ -1,0 +1,173 @@
+{
+  "symbols": [
+    {
+      "name": "Symbol_CLegacyNonClientBackground_ClearAll",
+      "id": "CLegacyNonClientBackground::ClearAll",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CLegacyNonClientBackground::ClearAll",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: void __cdecl CLegacyNonClientBackground::ClearAll(void) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CLegacyNonClientBackground_HasSomethingToRender",
+      "id": "CLegacyNonClientBackground::HasSomethingToRender",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "CLegacyNonClientBackground_HasSomethingToRender_t",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: bool __cdecl CLegacyNonClientBackground::HasSomethingToRender(void)const __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CLegacyNonClientBackground_SetCaptionRect",
+      "id": "CLegacyNonClientBackground::SetCaptionRect",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "CLegacyNonClientBackground_SetCaptionRect_t",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CLegacyNonClientBackground::SetCaptionRect(struct tagRECT const & __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CLegacyNonClientBackground_SetBorderRects",
+      "id": "CLegacyNonClientBackground::SetBorderRects",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "CLegacyNonClientBackground_SetBorderRects_t",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CLegacyNonClientBackground::SetBorderRects(struct tagRECT const & __ptr64,struct tagRECT const & __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CLegacyNonClientBackground_SetCaptionColor",
+      "id": "CLegacyNonClientBackground::SetCaptionColor",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "CLegacyNonClientBackground_SetCaptionColor_t",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CLegacyNonClientBackground::SetCaptionColor(struct _D3DCOLORVALUE const & __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CLegacyNonClientBackground_CLegacyNonClientBackground",
+      "id": "CLegacyNonClientBackground::~CLegacyNonClientBackground",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "CLegacyNonClientBackground_Destructor_t",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: virtual __cdecl CLegacyNonClientBackground::~CLegacyNonClientBackground(void) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CWindowBorder_EnableBorder",
+      "id": "CWindowBorder::EnableBorder",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CWindowBorder::EnableBorder",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CWindowBorder::EnableBorder(bool) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_SetMargin",
+      "id": "SetMargin",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "SetMargin_t",
+          "ranges": [
+            {
+              "symbol_names": [
+                "bool __cdecl SetMargin(struct _MARGINS * __ptr64,int,int,int,int,struct _MARGINS const * __ptr64)"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw",
+      "notes": "Paired IDA audits on 28000.1, 28000.2525, and 28000.2704 show UpdateMargins consumes only AL after its two direct calls, but UpdateMarginsDependentOnStyle privately reuses RCX after the three-argument wrapper returns: cmovz selects the preserved destination pointer as the later SetClipMargins argument. Use the RCX-preserving physical dispatcher and keep replacement dispatch, the original call, and HookRundown release inside the preserved region."
+    }
+  ]
+}

@@ -1,0 +1,130 @@
+{
+  "symbols": [
+    {
+      "name": "Symbol_CWindowList_GetWindowListForDesktop",
+      "id": "CWindowList::GetWindowListForDesktop",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CWindowList::GetWindowListForDesktop",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: struct _LIST_ENTRY * __ptr64 __cdecl CWindowList::GetWindowListForDesktop(unsigned __int64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CCompositor_ForceRender",
+      "id": "CCompositor::ForceRender",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CCompositor::ForceRender",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CCompositor::ForceRender(void) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CDesktopManager_s_pDesktopManagerInstance",
+      "id": "CDesktopManager::s_pDesktopManagerInstance",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CDesktopManager::s_pDesktopManagerInstance",
+          "ranges": [
+            {
+              "symbol_names": [
+                "private: static class CDesktopManager * __ptr64 __ptr64 CDesktopManager::s_pDesktopManagerInstance"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_variable"
+    },
+    {
+      "name": "Symbol_CDesktopManager_s_csDwmInstance",
+      "id": "CDesktopManager::s_csDwmInstance",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CDesktopManager::s_csDwmInstance",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: static class CDwmCS CDesktopManager::s_csDwmInstance"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_variable"
+    },
+    {
+      "name": "Symbol_CDesktopManager_IsHighContrastMode",
+      "id": "CDesktopManager::IsHighContrastMode",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "CDesktopManager_IsHighContrastMode_t",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: static bool __cdecl CDesktopManager::IsHighContrastMode(void)"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CGraphicsDeviceManager_ReleaseGraphicsDevice",
+      "id": "CGraphicsDeviceManager::ReleaseGraphicsDevice",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "CGraphicsDeviceManager_ReleaseGraphicsDevice_t",
+          "ranges": [
+            {
+              "symbol_names": [
+                "protected: long __cdecl CGraphicsDeviceManager::ReleaseGraphicsDevice(void) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    }
+  ]
+}

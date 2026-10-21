@@ -1,0 +1,124 @@
+{
+  "symbols": [
+    {
+      "name": "Symbol_CResource_Create",
+      "id": "CResource::Create",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CResource::Create",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: static long __cdecl CResource::Create(enum DwmResourceType::Enum,struct IDwmChannel * __ptr64,class CResource * __ptr64 * __ptr64)"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": {
+                "build": 18362,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CSolidColorLegacyMilBrushProxy_Update",
+      "id": "CSolidColorLegacyMilBrushProxy::Update",
+      "bindings": [
+        {
+          "platform": null,
+          "fallback": "&Fallback_CSolidColorLegacyMilBrushProxy_Update",
+          "target": "&CSolidColorLegacyMilBrushProxy::Update",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CSolidColorLegacyMilBrushProxy::Update(double,struct _D3DCOLORVALUE const & __ptr64) __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 18362,
+                "revision": 0
+              },
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CImageLegacyMilBrushProxy_Update",
+      "id": "CImageLegacyMilBrushProxy::Update",
+      "bindings": [
+        {
+          "platform": null,
+          "fallback": "&Fallback_CImageLegacyMilBrushProxy_Update",
+          "target": "&CImageLegacyMilBrushProxy::Update",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CImageLegacyMilBrushProxy::Update(double,struct MilRectF const & __ptr64,struct MilRectF const & __ptr64,class CDoubleResourceProxy const * __ptr64,enum MilBrushMappingMode::Enum,enum MilBrushMappingMode::Enum,class CRectResourceProxy const * __ptr64,class CRectResourceProxy const * __ptr64,enum MilStretch::Enum,enum MilTileMode::Enum,enum MilHorizontalAlignment::Enum,enum MilVerticalAlignment::Enum,class CBaseImageProxy const * __ptr64) __ptr64",
+                "public: long __cdecl CImageLegacyMilBrushProxy::Update(double,struct D2D_RECT_F const & __ptr64,struct D2D_RECT_F const & __ptr64,class CDoubleResourceProxy const * __ptr64,enum MilBrushMappingMode::Enum,enum MilBrushMappingMode::Enum,class CRectResourceProxy const * __ptr64,class CRectResourceProxy const * __ptr64,enum MilStretch::Enum,enum MilTileMode::Enum,enum MilHorizontalAlignment::Enum,enum MilVerticalAlignment::Enum,class CBaseImageProxy const * __ptr64) __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 19041,
+                "revision": 0
+              },
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function",
+      "notes": "Before build 19041, CImageLegacyMilBrushProxy::Update takes resource handle IDs rather than resource-proxy pointers. Keep the public typed wrapper on the ABI-compatible CChannel::ImageLegacyMilBrushUpdate fallback for that range; the pointer-form uDWM symbol becomes active at build 19041."
+    },
+    {
+      "name": "Symbol_ResourceHelper_CreateGeometryFromHRGN",
+      "id": "ResourceHelper::CreateGeometryFromHRGN",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&ResourceHelper::CreateGeometryFromHRGN",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: static long __cdecl ResourceHelper::CreateGeometryFromHRGN(struct HRGN__ * __ptr64,class CRgnGeometryProxy * __ptr64 * __ptr64)",
+                "public: static long __cdecl ResourceHelper::CreateGeometryFromHRGN(struct HRGN__ * __ptr64,class CResource * __ptr64 * __ptr64)"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_ResourceHelper_CreateCombinedGeometry",
+      "id": "ResourceHelper::CreateCombinedGeometry",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&ResourceHelper::CreateCombinedGeometry",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: static long __cdecl ResourceHelper::CreateCombinedGeometry(class CBaseGeometryProxy const * __ptr64,class CBaseGeometryProxy const * __ptr64,enum MilCombineMode::Enum,class CCombinedGeometryProxy * __ptr64 * __ptr64)",
+                "public: static long __cdecl ResourceHelper::CreateCombinedGeometry(class CResource const * __ptr64,class CResource const * __ptr64,enum MilCombineMode::Enum,class CResource * __ptr64 * __ptr64)"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    }
+  ]
+}

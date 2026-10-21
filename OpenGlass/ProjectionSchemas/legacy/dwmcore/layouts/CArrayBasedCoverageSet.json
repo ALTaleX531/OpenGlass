@@ -1,0 +1,57 @@
+{
+  "layouts": [
+    {
+      "name": "CArrayBasedCoverageSet_GetAntiOccluderArray",
+      "id": "CArrayBasedCoverageSet_GetAntiOccluderArray",
+      "kind": "field",
+      "type": "DynArray<CZOrderedRect>",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 416,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 392,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "notes": "Win10 only — absent in later builds"
+    },
+    {
+      "name": "CArrayBasedCoverageSet_GetOccluderArray",
+      "id": "CArrayBasedCoverageSet_GetOccluderArray",
+      "kind": "field",
+      "type": "DynArray<CZOrderedRect>",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 24,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 0,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CArrayBasedCoverageSet::CalcVisibleArea\n*(QWORD *)this → base pointer; *(DWORD *)(this + 24) → count\nAlways at offset 0 within CArrayBasedCoverageSet"
+    }
+  ]
+}

@@ -27,18 +27,6 @@ namespace OpenGlass::Projection
 		Ambiguous
 	};
 
-	enum class SymbolFlags : UCHAR
-	{
-		None = 0,
-		DebugOnly = 1,
-		Data = 2
-	};
-	constexpr SymbolFlags operator|(SymbolFlags left, SymbolFlags right) noexcept
-	{
-		return static_cast<SymbolFlags>(std::to_underlying(left) | std::to_underlying(right));
-	}
-
-
 	struct Version
 	{
 		ULONG build;
@@ -84,12 +72,12 @@ namespace OpenGlass::Projection
 		size_t minVersionIndex;
 		size_t maxVersionIndex;
 		Requirement requirement;
-		SymbolFlags flags;
+		bool debugOnly;
 	};
 
 	struct BindingSpec
 	{
-		size_t symbolIndex;
+		std::span<const size_t> symbolIndices;
 		PVOID* storage;
 		PVOID fallback;
 	};
@@ -106,6 +94,7 @@ namespace OpenGlass::Projection
 		size_t boundaryVersionIndex;
 	};
 
+	// Descriptor indices, non-overlapping ranges and physical slot groups are established by codegen.
 	class ModuleRegistry
 	{
 		LPCSTR m_name;
@@ -125,34 +114,20 @@ namespace OpenGlass::Projection
 		VersionRange m_supportedRange;
 		Version m_version{};
 		ULONG m_undecorationFailureCount{};
-		size_t m_layoutCaseCount{};
-		size_t m_symbolNameCount{};
-		size_t m_versionCount{};
 		size_t m_symbolSpecCount{};
 		size_t m_symbolCount{};
 		size_t m_knownBuildCount{};
 		size_t m_bindingCount{};
 		size_t m_layoutCount{};
-		bool m_descriptorError{};
 
 		constexpr LPCSTR String(size_t offset) const noexcept
 		{
 			return m_strings + offset;
 		}
 
-		constexpr Version VersionAt(size_t index) const noexcept
-		{
-			return index < m_versionCount ? m_versions[index] : Version{};
-		}
-
 		constexpr VersionRange RangeOf(const SymbolSpec& spec) const noexcept
 		{
-			return {VersionAt(spec.minVersionIndex), VersionAt(spec.maxVersionIndex)};
-		}
-
-		static constexpr bool HasFlag(SymbolFlags value, SymbolFlags flag) noexcept
-		{
-			return (std::to_underlying(value) & std::to_underlying(flag)) != 0;
+			return {m_versions[spec.minVersionIndex], m_versions[spec.maxVersionIndex]};
 		}
 
 		static constexpr bool IsEnabled([[maybe_unused]] const SymbolSpec& spec) noexcept
@@ -160,7 +135,7 @@ namespace OpenGlass::Projection
 #ifdef _DEBUG
 			return true;
 #else
-			return !HasFlag(spec.flags, SymbolFlags::DebugOnly);
+			return !spec.debugOnly;
 #endif
 		}
 
@@ -171,7 +146,7 @@ namespace OpenGlass::Projection
 
 		bool Matches(const SymbolSpec& spec, LPCSTR completeSymbolName) const noexcept;
 		void PublishBindings() noexcept;
-		bool CollectAddress(size_t symbolIndex, PVOID address) noexcept;
+		void CollectAddress(size_t symbolIndex, PVOID address) noexcept;
 
 	public:
 		constexpr ModuleRegistry(
@@ -195,8 +170,7 @@ namespace OpenGlass::Projection
 			  m_knownBuilds{knownBuilds.data()}, m_symbolSpecs{symbolSpecs.data()}, m_candidates{candidates.data()}, m_resolved{resolved.data()},
 			  m_resolutionStates{resolutionStates.data()}, m_bindings{bindings.data()}, m_layoutSpecs{layoutSpecs.data()},
 			  m_layoutCases{layoutCases.data()}, m_selectedOffsets{selectedOffsets.data()}, m_layoutSupported{layoutSupported.data()},
-			  m_supportedRange{supportedRange}, m_layoutCaseCount{layoutCases.size()}, m_symbolNameCount{symbolNameOffsets.size()},
-			  m_versionCount{versions.size()}, m_symbolSpecCount{symbolSpecs.size()}, m_symbolCount{candidates.size()},
+			  m_supportedRange{supportedRange}, m_symbolSpecCount{symbolSpecs.size()}, m_symbolCount{candidates.size()},
 			  m_knownBuildCount{knownBuilds.size()}, m_bindingCount{bindings.size()}, m_layoutCount{layoutSpecs.size()}
 		{
 		}
@@ -204,8 +178,8 @@ namespace OpenGlass::Projection
 		bool Freeze(Version version) noexcept;
 		void ResetSymbols() noexcept;
 		void Collect(LPCSTR completeSymbolName, PVOID address) noexcept;
-		bool CollectResolvedAddress(size_t symbolIndex, PVOID address) noexcept;
-		bool SymbolIsData(size_t symbolIndex, bool& isData) const noexcept;
+		// One prevalidated RVA per slot; collection only stages candidates for CommitModules.
+		void CollectCatalog(HMODULE module, std::span<const UINT32> rvas) noexcept;
 		void RecordUndecorationFailure() noexcept;
 		bool ValidateSymbols() const noexcept;
 		void CommitSymbols() noexcept;
@@ -216,7 +190,7 @@ namespace OpenGlass::Projection
 
 		bool LayoutSupported(size_t index) const noexcept
 		{
-			return index < m_layoutCount && m_layoutSupported[index];
+			return m_layoutSupported[index];
 		}
 		LPCSTR name() const noexcept
 		{
@@ -233,10 +207,6 @@ namespace OpenGlass::Projection
 		bool RecognizesBuild(ULONG build) const noexcept
 		{
 			return std::ranges::binary_search(std::span<const ULONG>{m_knownBuilds, m_knownBuildCount}, build);
-		}
-		bool descriptor_error() const noexcept
-		{
-			return m_descriptorError;
 		}
 		size_t descriptor_count() const noexcept
 		{

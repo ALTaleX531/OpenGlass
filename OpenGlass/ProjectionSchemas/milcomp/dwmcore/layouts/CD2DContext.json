@@ -1,0 +1,22 @@
+{
+  "layouts": [
+    {
+      "name": "CD2DContext_GetDeviceContext",
+      "id": "CD2DContext_GetDeviceContext",
+      "kind": "field",
+      "type": "ID2D1DeviceContext*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 200,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CD2DContext::GetDeviceContext / CD3DDevice structure\nD2D1 device context embedded at CD3DDevice + N (via D2D1 API calls)"
+    }
+  ]
+}

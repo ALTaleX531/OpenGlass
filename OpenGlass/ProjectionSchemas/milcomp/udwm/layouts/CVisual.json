@@ -1,0 +1,148 @@
+{
+  "layouts": [
+    {
+      "name": "CVisual_GetDirtyFlags",
+      "id": "CVisual_GetDirtyFlags",
+      "kind": "field",
+      "type": "DWORD",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 32,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CVisual::SetDirtyFlags"
+    },
+    {
+      "name": "CVisual_GetOffset",
+      "id": "CVisual_GetOffset",
+      "kind": "field",
+      "type": "POINT",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 56,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CVisual::SetOffset"
+    },
+    {
+      "name": "CVisual_GetScale",
+      "id": "CVisual_GetScale",
+      "kind": "field",
+      "type": "D2D1_SIZE_F",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 104,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CVisual::SetScale"
+    },
+    {
+      "name": "CVisual_GetSize",
+      "id": "CVisual_GetSize",
+      "kind": "field",
+      "type": "SIZE",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 64,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CVisual::SetSize"
+    },
+    {
+      "name": "CVisual_GetTransformParent",
+      "id": "CVisual_GetTransformParent",
+      "kind": "vtable_slot",
+      "type": "CVisual_GetTransformParent_t",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 64,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "xrefs to CVisual::`vftable'"
+    },
+    {
+      "name": "CVisual_GetVisualCollection",
+      "id": "CVisual_GetVisualCollection",
+      "kind": "field",
+      "type": "VisualCollection",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 136,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "xref to VisualCollection::VisualCollection, find CContainerVisual::CContainerVisual:\nVisualCollection::VisualCollection((VisualCollection *)(this + 17));"
+    },
+    {
+      "name": "CVisual_GetVisualProxy",
+      "id": "CVisual_GetVisualProxy",
+      "kind": "field",
+      "type": "CVisualProxy*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 16,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CVisual::SendSetOffset"
+    },
+    {
+      "name": "CVisual_IsRTLMirrored_ByteOffset",
+      "id": "CVisual_IsRTLMirrored_ByteOffset",
+      "kind": "field",
+      "type": "BYTE",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 36,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CVisual::SetRTLMirror"
+    }
+  ]
+}

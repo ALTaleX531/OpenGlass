@@ -1,0 +1,293 @@
+{
+  "symbols": [
+    {
+      "name": "Symbol_CChannel_MatrixTransformUpdate",
+      "id": "CChannel::MatrixTransformUpdate",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CChannel::MatrixTransformUpdate",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: virtual long __cdecl CChannel::MatrixTransformUpdate(unsigned int,struct _MilMatrix3x2D const & __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": {
+                "build": 22621,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CChannel_SolidColorLegacyMilBrushUpdate",
+      "id": "CChannel::SolidColorLegacyMilBrushUpdate",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CChannel::SolidColorLegacyMilBrushUpdate",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: virtual long __cdecl CChannel::SolidColorLegacyMilBrushUpdate(unsigned int,double,struct _D3DCOLORVALUE const & __ptr64,unsigned int,unsigned int,unsigned int) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": {
+                "build": 18362,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CChannel_ImageLegacyMilBrushUpdate",
+      "id": "CChannel::ImageLegacyMilBrushUpdate",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CChannel::ImageLegacyMilBrushUpdate",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: virtual long __cdecl CChannel::ImageLegacyMilBrushUpdate(unsigned int,double,struct MilRectF const & __ptr64,struct MilRectF const & __ptr64,unsigned int,unsigned int,unsigned int,enum MilBrushMappingMode::Enum,enum MilBrushMappingMode::Enum,unsigned int,unsigned int,enum MilStretch::Enum,enum MilTileMode::Enum,enum MilHorizontalAlignment::Enum,enum MilVerticalAlignment::Enum,unsigned int) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": {
+                "build": 19041,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function",
+      "notes": "This handle-based channel method remains the CImageLegacyMilBrushProxy::Update fallback through build 18362. The pointer-form uDWM proxy method is not ABI-compatible and becomes active at build 19041."
+    },
+    {
+      "name": "Symbol_CRenderDataBuilder_DrawGeometry",
+      "id": "CRenderDataBuilder::DrawGeometry",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "BYTE*",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: virtual long __cdecl CRenderDataBuilder::DrawGeometry(unsigned int,unsigned int) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw",
+      "usage": "code_address"
+    },
+    {
+      "name": "Symbol_CRenderData_TryDrawCommandAsDrawList_Pre_22000",
+      "id": "CRenderData::TryDrawCommandAsDrawList.pre22000",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "HRESULT (*)(CRenderData*, CDrawingContext*, CDrawListCache*, CDrawListEntryBuilder*, bool, UINT, DWM::span<const BYTE>*, bool*)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "private: long __cdecl CRenderData::TryDrawCommandAsDrawList(class CDrawingContext * __ptr64,class CDrawListCache * __ptr64,class CDrawListEntryBuilder * __ptr64,bool,unsigned int,class gsl::span<unsigned char const ,-1>,bool * __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": {
+                "build": 22000,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw",
+      "notes": "The PDB exposes gsl::span<const BYTE> by value. Win64 passes this 16-byte aggregate indirectly, so the detour models the lowered pointer while retaining the semantic element type."
+    },
+    {
+      "name": "Symbol_CRenderData_TryDrawCommandAsDrawList_22000",
+      "id": "CRenderData::TryDrawCommandAsDrawList.22000",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "HRESULT (*)(CRenderData*, CDrawingContext*, CDrawListCache*, CDrawListEntryBuilder*, UINT, DWM::span<const BYTE>*, bool*)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "private: long __cdecl CRenderData::TryDrawCommandAsDrawList(class CDrawingContext * __ptr64,class CDrawListCache * __ptr64,class CDrawListEntryBuilder * __ptr64,unsigned int,class gsl::span<unsigned char const ,-1>,bool * __ptr64) __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 22000,
+                "revision": 0
+              },
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw",
+      "notes": "The PDB exposes gsl::span<const BYTE> by value. Win64 passes this 16-byte aggregate indirectly, so the detour models the lowered pointer while retaining the semantic element type."
+    },
+    {
+      "name": "Symbol_CRenderData_DrawImageResource_FillMode_Pre_19041",
+      "id": "CRenderData::DrawImageResource_FillMode.pre19041",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "HRESULT (*)(CRenderData*, CDrawingContext*, CDrawListEntryBuilder*, bool, CImageSource*, const D2D1_RECT_F*, const D2D1_RECT_F*, float, const D2D1_RECT_F*)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "private: long __cdecl CRenderData::DrawImageResource_FillMode(class CDrawingContext * __ptr64,class CDrawListEntryBuilder * __ptr64,bool,class CImageSource * __ptr64,struct D2D_RECT_F const * __ptr64,struct D2D_RECT_F const * __ptr64,float,struct D2D_RECT_F const * __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": {
+                "build": 19041,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CRenderData_DrawImageResource_FillMode_19041",
+      "id": "CRenderData::DrawImageResource_FillMode.19041",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "HRESULT (*)(CRenderData*, CDrawingContext*, CDrawListEntryBuilder*, bool, CImageSource*, const D2D1_RECT_F*, const D2D1_RECT_F*, float)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "private: long __cdecl CRenderData::DrawImageResource_FillMode(class CDrawingContext * __ptr64,class CDrawListEntryBuilder * __ptr64,bool,class CImageSource * __ptr64,struct D2D_RECT_F const * __ptr64,struct D2D_RECT_F const * __ptr64,float) __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 19041,
+                "revision": 0
+              },
+              "max_exclusive": {
+                "build": 22000,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CRenderData_DrawImageResource_FillMode_22000",
+      "id": "CRenderData::DrawImageResource_FillMode.22000",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "HRESULT (*)(CRenderData*, CDrawingContext*, CDrawListEntryBuilder*, CImageSource*, const D2D1_RECT_F*, const D2D1_RECT_F*, float)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "private: long __cdecl CRenderData::DrawImageResource_FillMode(class CDrawingContext * __ptr64,class CDrawListEntryBuilder * __ptr64,class CImageSource * __ptr64,struct D2D_RECT_F const * __ptr64,struct D2D_RECT_F const * __ptr64,float) __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 22000,
+                "revision": 0
+              },
+              "max_exclusive": {
+                "build": 26100,
+                "revision": 2454
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CRenderData_DrawImageResource_FillMode_26100_2454",
+      "id": "CRenderData::DrawImageResource_FillMode.26100.2454",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "HRESULT (*)(CDrawingContext*, CDrawListEntryBuilder*, CImageSource*, const D2D1_RECT_F*, const D2D1_RECT_F*, float)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "private: static long __cdecl CRenderData::DrawImageResource_FillMode(class CDrawingContext * __ptr64,class CDrawListEntryBuilder * __ptr64,class CImageSource * __ptr64,struct D2D_RECT_F const * __ptr64,struct D2D_RECT_F const * __ptr64,float)"
+              ],
+              "min_inclusive": {
+                "build": 26100,
+                "revision": 2454
+              },
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CSolidColorLegacyMilBrush_vftable",
+      "id": "CSolidColorLegacyMilBrush::`vftable'",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CSolidColorLegacyMilBrush::vftable",
+          "ranges": [
+            {
+              "symbol_names": [
+                "const CSolidColorLegacyMilBrush::`vftable'"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_variable"
+    },
+    {
+      "name": "Symbol_CImageLegacyMilBrush_vftable",
+      "id": "CImageLegacyMilBrush::`vftable'",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CImageLegacyMilBrush::vftable",
+          "ranges": [
+            {
+              "symbol_names": [
+                "const CImageLegacyMilBrush::`vftable'"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_variable"
+    }
+  ]
+}

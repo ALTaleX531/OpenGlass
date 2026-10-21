@@ -2,7 +2,7 @@
 #include "SymbolCatalog.hpp"
 #include "SymbolCatalog.generated.hpp"
 
-OpenGlass::Projection::SymbolCatalogResult OpenGlass::Projection::CollectBuiltInSymbols(
+bool OpenGlass::Projection::CollectBuiltInSymbols(
 	HMODULE module,
 	ModuleId moduleId,
 	ModuleRegistry& registry

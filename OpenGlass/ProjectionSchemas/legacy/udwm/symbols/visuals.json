@@ -1,0 +1,413 @@
+{
+  "symbols": [
+    {
+      "name": "Symbol_CVisual_UpdateOffset",
+      "id": "CVisual::UpdateOffset",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "BYTE*",
+          "ranges": [
+            {
+              "symbol_names": [
+                "protected: virtual long __cdecl CVisual::UpdateOffset(void) __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 22621,
+                "revision": 0
+              },
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw",
+      "usage": "code_address"
+    },
+    {
+      "name": "Symbol_CVisual_SetSize_Pre26100",
+      "id": "CVisual::SetSize",
+      "bindings": [
+        {
+          "platform": null,
+          "abi_compatibility": "discard_return",
+          "target": "&CVisual::SetSize",
+          "type": "HRESULT (*)(CVisual*, const SIZE*)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: virtual long __cdecl CVisual::SetSize(struct tagSIZE const * __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": {
+                "build": 26100,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function",
+      "notes": "The pre-26100 PDB ABI returns long, while every OpenGlass consumer intentionally discards that result. Keep this explicit compatibility variant separate from the void-returning 26100+ ABI."
+    },
+    {
+      "name": "Symbol_CVisual_SetSize",
+      "id": "CVisual::SetSize",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CVisual::SetSize",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: virtual void __cdecl CVisual::SetSize(struct tagSIZE const * __ptr64) __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 26100,
+                "revision": 0
+              },
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CVisual_SetInsetFromParent",
+      "id": "CVisual::SetInsetFromParent",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CVisual::SetInsetFromParent",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: void __cdecl CVisual::SetInsetFromParent(struct _MARGINS const & __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CVisual_SetInsetFromParentLeft",
+      "id": "CVisual::SetInsetFromParentLeft",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CVisual::SetInsetFromParentLeft",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: void __cdecl CVisual::SetInsetFromParentLeft(int) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CVisual_SetDirtyFlags",
+      "id": "CVisual::SetDirtyFlags",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CVisual::SetDirtyFlags",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: virtual void __cdecl CVisual::SetDirtyFlags(unsigned long) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CVisual_RenderRecursive",
+      "id": "CVisual::RenderRecursive",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CVisual::RenderRecursive",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: virtual long __cdecl CVisual::RenderRecursive(void) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CVisualProxy_SetSize",
+      "id": "CVisualProxy::SetSize",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CVisualProxy::SetSize",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CVisualProxy::SetSize(double,double) __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 22621,
+                "revision": 0
+              },
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_VisualCollection_Remove",
+      "id": "VisualCollection::Remove",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&VisualCollection::Remove",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_VisualCollection_InsertRelative",
+      "id": "VisualCollection::InsertRelative",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&VisualCollection::InsertRelative",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl VisualCollection::InsertRelative(class CVisual * __ptr64,class CVisual * __ptr64,bool,bool) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CSpriteVisual_SetSize",
+      "id": "CSpriteVisual::SetSize",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "BYTE*",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: virtual long __cdecl CSpriteVisual::SetSize(struct tagSIZE const * __ptr64) __ptr64",
+                "public: virtual void __cdecl CSpriteVisual::SetSize(struct tagSIZE const * __ptr64) __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 22621,
+                "revision": 0
+              },
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw",
+      "usage": "code_address"
+    },
+    {
+      "name": "Symbol_CVisual_MoveToFront",
+      "id": "CVisual::MoveToFront",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CVisual::MoveToFront",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CVisual::MoveToFront(bool) __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 22000,
+                "revision": 0
+              },
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CDrawGeometryInstruction_Create",
+      "id": "CDrawGeometryInstruction::Create",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CDrawGeometryInstruction::Create",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: static long __cdecl CDrawGeometryInstruction::Create(class CBaseLegacyMilBrushProxy * __ptr64,class CBaseGeometryProxy * __ptr64,class CDrawGeometryInstruction * __ptr64 * __ptr64)",
+                "public: static long __cdecl CDrawGeometryInstruction::Create(class CResource * __ptr64,class CResource * __ptr64,class CDrawGeometryInstruction * __ptr64 * __ptr64)"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CRenderDataVisual_Create_Pre_W10_1903",
+      "id": "CRenderDataVisual::Create",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CRenderDataVisual::Create_Pre_W10_1903",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: static long __cdecl CRenderDataVisual::Create(struct IDwmChannel * __ptr64,class CRenderDataVisual * __ptr64 * __ptr64)"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": {
+                "build": 18362,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CRenderDataVisual_Create_At_Least_W10_1903",
+      "id": "CRenderDataVisual::Create",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CRenderDataVisual::Create_At_Least_W10_1903",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: static long __cdecl CRenderDataVisual::Create(class CRenderDataVisual * __ptr64 * __ptr64)"
+              ],
+              "min_inclusive": {
+                "build": 18362,
+                "revision": 0
+              },
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CRenderDataVisual_AddInstruction",
+      "id": "CRenderDataVisual::AddInstruction",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CRenderDataVisual::AddInstruction",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CRenderDataVisual::AddInstruction(class CRenderDataInstruction * __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CRenderDataVisual_ClearInstructions",
+      "id": "CRenderDataVisual::ClearInstructions",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CRenderDataVisual::ClearInstructions",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CRenderDataVisual::ClearInstructions(void) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CRenderDataVisual_UpdateRenderData",
+      "id": "CRenderDataVisual::UpdateRenderData",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CRenderDataVisual::UpdateRenderData",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: virtual long __cdecl CRenderDataVisual::UpdateRenderData(void) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    }
+  ]
+}

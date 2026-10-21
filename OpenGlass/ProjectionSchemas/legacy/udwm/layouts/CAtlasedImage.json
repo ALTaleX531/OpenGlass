@@ -1,0 +1,68 @@
+{
+  "layouts": [
+    {
+      "name": "CAtlasedImage_GetParent",
+      "id": "CAtlasedImage_GetParent",
+      "kind": "field",
+      "type": "CAtlasedRectsVisual*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 80,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CAtlasedRectsVisual::InsertAtlasImageAtIndex writes the owning CAtlasedRectsVisual pointer to CAtlasedImage +80 and RemoveAtlasImage clears it; CButton::RedrawVisual reads the same link while moving atlas images. Verified on uDWM 22000.194, 22621.6630, and 26100.7705. On 26100.7705, DisconnectFromParent reads +80, InsertAtlasImageAtIndex writes +80, and CButton::RedrawVisual routes movement through DisconnectFromParent and AddAtlasImage. ButtonGlowHandler follows the owner to restore the hot glow's atlas-array z-order. The open range remains runtime behavior rather than proof for unanalyzed future builds."
+    },
+    {
+      "name": "CAtlasedImage_GetPartId",
+      "id": "CAtlasedImage_GetPartId",
+      "kind": "field",
+      "type": "DWORD",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 132,
+              "until": {
+                "build": 18362,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 120,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CTopLevelAtlasedRectsVisual::ShouldCloneAtlasImage\nCTopLevelAtlasedRectsVisual::ShouldDrawAtlasImage\nWARNING: The PartId range check is (value - 9) > 8. Use ShouldDrawAtlasImage\nor ShouldCloneAtlasImage, NOT CAtlasedImage::SetDirtyFlags (different DWORD)."
+    },
+    {
+      "name": "CAtlasedImage_GetSize",
+      "id": "CAtlasedImage_GetSize",
+      "kind": "field",
+      "type": "DWORD",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 24,
+              "until": {
+                "build": 22000,
+                "revision": 195
+              }
+            }
+          ]
+        }
+      ],
+      "notes": "CTopLevelWindow::UpdateNCAreaBackground on build 22000.194 dereferences this size while processing the three NCArea atlas-image pointers. The descriptor exists only for the exact workaround range; later builds are unsupported. Audit status: inherited from the existing workaround; independent semantic confirmation remains required."
+    }
+  ]
+}

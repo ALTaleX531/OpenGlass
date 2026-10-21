@@ -1,0 +1,107 @@
+{
+  "layouts": [
+    {
+      "name": "CD3DDevice_GetD2DContext",
+      "id": "CD3DDevice_GetD2DContext",
+      "kind": "field",
+      "type": "CD2DContext",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 0,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 16,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CD2DContext::GetDevice\nreturn (CD3DDevice *)(this - N) → N is the CD2DContext offset within\nCD3DDevice"
+    },
+    {
+      "name": "CD3DDevice_GetDevice",
+      "id": "CD3DDevice_GetDevice",
+      "kind": "field",
+      "type": "ID3D11Device*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 632,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 592,
+              "until": {
+                "build": 20348,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 552,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 552,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CD3DDevice — historically frozen across all Win11 builds\nDecompile CD3DDevice::CreateTexture → trace the ID3D11Device::CreateTexture2D\ncall, the ID3D11Device* is loaded from *(QWORD *)(this + N)"
+    },
+    {
+      "name": "CD3DDevice_GetImmediateContext",
+      "id": "CD3DDevice_GetImmediateContext",
+      "kind": "field",
+      "type": "ID3D11DeviceContext*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 640,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 600,
+              "until": {
+                "build": 20348,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 560,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 560,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CD3DDevice — adjacent pointer to GetDevice\nGetImmediateContext = GetDevice + 1×PTR"
+    }
+  ]
+}

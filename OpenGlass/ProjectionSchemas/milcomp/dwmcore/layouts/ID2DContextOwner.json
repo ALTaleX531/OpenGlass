@@ -1,0 +1,40 @@
+{
+  "layouts": [
+    {
+      "name": "ID2DContextOwner_GetCurrentRenderTargetInfo",
+      "id": "ID2DContextOwner_GetCurrentRenderTargetInfo",
+      "kind": "vtable_slot",
+      "type": "ID2DContextOwner_GetCurrentRenderTargetInfo_t",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 16,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "Locate the ID2DContextOwner subobject through CDrawingContext::Create and confirm the returned RenderTargetInfo in an independent SDR-boost consumer before accepting this slot."
+    },
+    {
+      "name": "ID2DContextOwner_GetCurrentZ",
+      "id": "ID2DContextOwner_GetCurrentZ",
+      "kind": "vtable_slot",
+      "type": "ID2DContextOwner_GetCurrentZ_t",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 8,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "Locate the ID2DContextOwner subobject through CDrawingContext::Create and confirm the adjusted-this vtable dispatch in an independent caller before accepting this slot."
+    }
+  ]
+}

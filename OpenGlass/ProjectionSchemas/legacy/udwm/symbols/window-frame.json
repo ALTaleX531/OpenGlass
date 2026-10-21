@@ -1,0 +1,116 @@
+{
+  "symbols": [
+    {
+      "name": "Symbol_CTopLevelWindow_UpdateButtonVisuals",
+      "id": "CTopLevelWindow::UpdateButtonVisuals",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CTopLevelWindow::UpdateButtonVisuals",
+          "ranges": [
+            {
+              "symbol_names": [
+                "private: long __cdecl CTopLevelWindow::UpdateButtonVisuals(struct CTopLevelWindow::WindowFrame const * __ptr64) __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 22000,
+                "revision": 0
+              },
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_s_rgpwfWindowFrames",
+      "id": "CTopLevelWindow::s_rgpwfWindowFrames",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CTopLevelWindow::s_rgpwfWindowFrames",
+          "ranges": [
+            {
+              "symbol_names": [
+                "private: static class DynArray<struct CTopLevelWindow::WindowFrame * __ptr64,0> CTopLevelWindow::s_rgpwfWindowFrames"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_variable"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_UpdateNCAreaBackground",
+      "id": "CTopLevelWindow::UpdateNCAreaBackground",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "HRESULT (*)(CTopLevelWindow*)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "private: long __cdecl CTopLevelWindow::UpdateNCAreaBackground(void) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_UpdateNCAreaPositionsAndSizes",
+      "id": "CTopLevelWindow::UpdateNCAreaPositionsAndSizes",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "HRESULT (*)(CTopLevelWindow*)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "private: long __cdecl CTopLevelWindow::UpdateNCAreaPositionsAndSizes(void) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_IsShadowNCAreaPart",
+      "id": "CTopLevelWindow::IsShadowNCAreaPart",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "BYTE*",
+          "ranges": [
+            {
+              "symbol_names": [
+                "private: static bool __cdecl CTopLevelWindow::IsShadowNCAreaPart(unsigned int)"
+              ],
+              "min_inclusive": {
+                "build": 26100,
+                "revision": 0
+              },
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw",
+      "usage": "code_address"
+    }
+  ]
+}

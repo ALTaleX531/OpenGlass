@@ -1,0 +1,22 @@
+{
+  "layouts": [
+    {
+      "name": "RenderTargetInfo_GetSDRBoost",
+      "id": "RenderTargetInfo_GetSDRBoost",
+      "kind": "field",
+      "type": "float",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 16,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "Resolve from the render-target-info value returned by ID2DContextOwner::GetCurrentRenderTargetInfo and cross-check the SDR boost consumer."
+    }
+  ]
+}

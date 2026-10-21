@@ -1,0 +1,25 @@
+{
+  "layouts": [
+    {
+      "name": "CDirtyRegion_GetOcclusionContext",
+      "id": "CDirtyRegion_GetOcclusionContext",
+      "kind": "field",
+      "type": "COcclusionContext",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 16,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "notes": "Removed in 24H2+ — OcclusionContext now passed as parameter to\nGetOptimizedRect Pre-24H2: CDirtyRegion + 16 stored the COcclusionContext\npointer"
+    }
+  ]
+}

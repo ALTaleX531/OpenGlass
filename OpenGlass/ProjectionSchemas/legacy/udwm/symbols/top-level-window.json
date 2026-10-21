@@ -1,0 +1,340 @@
+{
+  "symbols": [
+    {
+      "name": "Symbol_CTopLevelWindow_vftable",
+      "id": "CTopLevelWindow::`vftable'",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CTopLevelWindow::vftable",
+          "ranges": [
+            {
+              "symbol_names": [
+                "const CTopLevelWindow::`vftable'"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_variable"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_CloneVisualTreeForLivePreview_Win10",
+      "id": "CTopLevelWindow::CloneVisualTreeForLivePreview",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CTopLevelWindow::CloneVisualTreeForLivePreview_Win10",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CTopLevelWindow::CloneVisualTreeForLivePreview(bool,bool,bool,class CTopLevelWindow * __ptr64 * __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": {
+                "build": 22621,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_CloneVisualTreeForLivePreview_Win11",
+      "id": "CTopLevelWindow::CloneVisualTreeForLivePreview",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CTopLevelWindow::CloneVisualTreeForLivePreview_Win11",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CTopLevelWindow::CloneVisualTreeForLivePreview(bool,class CTopLevelWindow * __ptr64 * __ptr64) __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 22621,
+                "revision": 0
+              },
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_GetActualWindowRect",
+      "id": "CTopLevelWindow::GetActualWindowRect",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CTopLevelWindow::GetActualWindowRect",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: struct tagRECT __cdecl CTopLevelWindow::GetActualWindowRect(bool,bool,bool)const __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_TreatAsActiveWindow",
+      "id": "CTopLevelWindow::TreatAsActiveWindow",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CTopLevelWindow::TreatAsActiveWindow",
+          "ranges": [
+            {
+              "symbol_names": [
+                "private: bool __cdecl CTopLevelWindow::TreatAsActiveWindow(void) __ptr64",
+                "private: bool __cdecl CTopLevelWindow::TreatAsActiveWindow(void)const __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_OnBlurBehindUpdated",
+      "id": "CTopLevelWindow::OnBlurBehindUpdated",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CTopLevelWindow::OnBlurBehindUpdated",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: void __cdecl CTopLevelWindow::OnBlurBehindUpdated(void) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_OnAccentPolicyUpdated",
+      "id": "CTopLevelWindow::OnAccentPolicyUpdated",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CTopLevelWindow::OnAccentPolicyUpdated",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: void __cdecl CTopLevelWindow::OnAccentPolicyUpdated(void) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_UpdateClientBlur",
+      "id": "CTopLevelWindow::UpdateClientBlur",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "HRESULT (*)(CTopLevelWindow*)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "private: long __cdecl CTopLevelWindow::UpdateClientBlur(void) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_ValidateVisual",
+      "id": "CTopLevelWindow::ValidateVisual",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "HRESULT (*)(CTopLevelWindow*)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: virtual long __cdecl CTopLevelWindow::ValidateVisual(void) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_UpdateWindowVisuals",
+      "id": "CTopLevelWindow::UpdateWindowVisuals",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "BYTE*",
+          "ranges": [
+            {
+              "symbol_names": [
+                "private: long __cdecl CTopLevelWindow::UpdateWindowVisuals(void) __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 22000,
+                "revision": 0
+              },
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw",
+      "usage": "code_address"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow__CTopLevelWindow",
+      "id": "CTopLevelWindow::~CTopLevelWindow",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "void (*)(CTopLevelWindow*)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "protected: virtual __cdecl CTopLevelWindow::~CTopLevelWindow(void) __ptr64",
+                "private: virtual __cdecl CTopLevelWindow::~CTopLevelWindow(void) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_CreateBitmapFromAtlas",
+      "id": "CTopLevelWindow::CreateBitmapFromAtlas",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CTopLevelWindow::CreateBitmapFromAtlas",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: static long __cdecl CTopLevelWindow::CreateBitmapFromAtlas(void * __ptr64 const,int,struct _MARGINS * __ptr64,class CBitmapSource * __ptr64 * __ptr64)"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_CreateGlyphsFromAtlas",
+      "id": "CTopLevelWindow::CreateGlyphsFromAtlas",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CTopLevelWindow::CreateGlyphsFromAtlas",
+          "ranges": [
+            {
+              "symbol_names": [
+                "private: static long __cdecl CTopLevelWindow::CreateGlyphsFromAtlas(void * __ptr64 const)"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_EnsureImages_Pre_18362",
+      "id": "CTopLevelWindow::EnsureImages",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "HRESULT (*)(IDwmChannel*)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: static long __cdecl CTopLevelWindow::EnsureImages(struct IDwmChannel * __ptr64)"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": {
+                "build": 18362,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_EnsureImages_18362",
+      "id": "CTopLevelWindow::EnsureImages",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "HRESULT (*)()",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: static long __cdecl CTopLevelWindow::EnsureImages(void)"
+              ],
+              "min_inclusive": {
+                "build": 18362,
+                "revision": 0
+              },
+              "max_exclusive": {
+                "build": 26100,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    }
+  ]
+}

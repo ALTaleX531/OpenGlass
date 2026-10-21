@@ -1,0 +1,40 @@
+{
+  "layouts": [
+    {
+      "name": "CResourceProxy_Channel",
+      "id": "CResourceProxy.Channel",
+      "kind": "field",
+      "type": "IDwmChannel*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 16,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CResourceProxy channel pointer consumed by legacy MIL brush fallbacks."
+    },
+    {
+      "name": "CResourceProxy_HandleId",
+      "id": "CResourceProxy.HandleId",
+      "kind": "field",
+      "type": "UINT",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 24,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CResourceProxy channel resource handle consumed by legacy MIL brush fallbacks."
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "layouts": [
+    {
+      "name": "CBitmapSource_GetNineGridMargins",
+      "id": "CBitmapSource_GetNineGridMargins",
+      "kind": "field",
+      "type": "MARGINS",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 48,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CBitmapSource::Create stores the caller-supplied MARGINS at +0x20, while CAtlasedImage::AppendAtlasNineGrid and CDrawNineGridInstruction::Initialize independently read a second MARGINS at +0x30. Verified on uDWM 17763.719, 19041.3758, 22000.194, and 22621.6630. ButtonGlowHandler writes the theme-atlas destination margins here for the native nine-grid path; its separate size calculation uses OpenGlass-owned storage."
+    }
+  ]
+}

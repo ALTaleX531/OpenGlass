@@ -1,0 +1,54 @@
+{
+  "layouts": [
+    {
+      "name": "IDeviceTarget_GetDeviceTexture",
+      "id": "IDeviceTarget_GetDeviceTexture",
+      "kind": "field",
+      "type": "IDeviceTexture",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": -24,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": -16,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CDeviceTextureTarget constructor — IDeviceTarget at +256, IDeviceTexture at\n+240 Negative offset = IDeviceTexture_offset - IDeviceTarget_offset"
+    },
+    {
+      "name": "IDeviceTarget_GetRenderTargetView",
+      "id": "IDeviceTarget_GetRenderTargetView",
+      "kind": "vtable_slot",
+      "type": "ID3D11RenderTargetView* (*)(const IDeviceTarget*)",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 56,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 176,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "IDeviceTarget vtable — known systemic ICF, unresolvable\nThis function slot has been merged with CPassthroughEffect/CKernelTransport\nsymbols across builds slot_index × sizeof(ULONG_PTR)"
+    }
+  ]
+}

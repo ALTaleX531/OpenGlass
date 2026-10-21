@@ -1,0 +1,46 @@
+{
+  "symbols": [
+    {
+      "name": "Symbol_CD2DContext_DestroyDeviceResources",
+      "id": "CD2DContext::DestroyDeviceResources",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "CD2DContext_DestroyDeviceResources_t",
+          "ranges": [
+            {
+              "symbol_names": [
+                "protected: long __cdecl CD2DContext::DestroyDeviceResources(void) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CD2DContext_EnsureBeginDraw",
+      "id": "CD2DContext::EnsureBeginDraw",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CD2DContext::EnsureBeginDraw",
+          "ranges": [
+            {
+              "symbol_names": [
+                "private: void __cdecl CD2DContext::EnsureBeginDraw(void) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    }
+  ]
+}

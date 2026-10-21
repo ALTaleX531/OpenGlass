@@ -1,0 +1,328 @@
+{
+  "layouts": [
+    {
+      "name": "CWindowData_GetAccentPolicy",
+      "id": "CWindowData_GetAccentPolicy",
+      "kind": "field",
+      "type": "ACCENT_POLICY",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 152,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 168,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CTopLevelWindow::UpdateAccent"
+    },
+    {
+      "name": "CWindowData_GetClientBlurAttribute",
+      "id": "CWindowData_GetClientBlurAttribute",
+      "kind": "field",
+      "type": "BYTE",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 597,
+              "until": {
+                "build": 18362,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 605,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 609,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 665,
+              "until": {
+                "build": 22621,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 673,
+              "until": {
+                "build": 26100,
+                "revision": 7019
+              }
+            },
+            {
+              "offset": 737,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CWindowList::ForceIconicRepresentationChange\nCWindowList::AlphaChange\ndata[x] & y"
+    },
+    {
+      "name": "CWindowData_GetClientMargins",
+      "id": "CWindowData_GetClientMargins",
+      "kind": "field",
+      "type": "MARGINS",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 64,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CTopLevelWindow::CalculateOutsideMargins\nif (data[x1] >= y1 && datap[x2] >= y2 && data[x3] >= y3 && data[x4] >= y4)"
+    },
+    {
+      "name": "CWindowData_GetExtendedFrameMargins",
+      "id": "CWindowData_GetExtendedFrameMargins",
+      "kind": "field",
+      "type": "MARGINS",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 80,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 96,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CTopLevelWindow::IsSheetOfGlass"
+    },
+    {
+      "name": "CWindowData_GetFrameThickness",
+      "id": "CWindowData_GetFrameThickness",
+      "kind": "field",
+      "type": "DWORD",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 96,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 112,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CTopLevelWindow::GetBorderMargins/CTopLevelWindow::_GetRightFrameThickness\nif ( y <= 0 )\n    y = data[x]"
+    },
+    {
+      "name": "CWindowData_GetHwnd",
+      "id": "CWindowData_GetHwnd",
+      "kind": "field",
+      "type": "HWND",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 40,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CWindowData::IsGhostWindow\nxrefs to GetPropW — first parameter is the HWND, trace back to the\nCWindowData offset"
+    },
+    {
+      "name": "CWindowData_GetNonClientAttribute",
+      "id": "CWindowData_GetNonClientAttribute",
+      "kind": "field",
+      "type": "BYTE",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 596,
+              "until": {
+                "build": 18362,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 604,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 608,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 664,
+              "until": {
+                "build": 22621,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 672,
+              "until": {
+                "build": 26100,
+                "revision": 7019
+              }
+            },
+            {
+              "offset": 736,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CWindowList::BlurBehindChange\ndata[x] & y"
+    },
+    {
+      "name": "CWindowData_GetSystemBackdropType_Index",
+      "id": "CWindowData_GetSystemBackdropType_Index",
+      "kind": "field",
+      "type": "DWM_SYSTEMBACKDROP_TYPE",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 204,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CWindowList::SetSystemBackdropType"
+    },
+    {
+      "name": "CWindowData_GetWindowDPI",
+      "id": "CWindowData_GetWindowDPI",
+      "kind": "field",
+      "type": "UINT",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 324,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 348,
+              "until": {
+                "build": 22621,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 348,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CTopLevelWindow::CalculateOutsideMargins\nxrefs to GetSystemMetricsForDpi"
+    },
+    {
+      "name": "CWindowData_GetWindowRect",
+      "id": "CWindowData_GetWindowRect",
+      "kind": "field",
+      "type": "RECT",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 48,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CTopLevelWindow::GetActualWindowRect\nxrefs to OffsetRect"
+    },
+    {
+      "name": "CWindowData_GetWindow_Index",
+      "id": "CWindowData_GetWindow_Index",
+      "kind": "field",
+      "type": "CTopLevelWindow*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 392,
+              "until": {
+                "build": 18362,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 400,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 384,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 440,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CWindowList::EnsureTopLevelWindow"
+    }
+  ]
+}

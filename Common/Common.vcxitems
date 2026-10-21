@@ -12,25 +12,30 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ProjectCapability Include="SourceItemsFromImports" />
+	<ClCompile Include="$(MSBuildThisFileDirectory)CustomBlurEffect.cpp"><Link>Source Files\CustomBlurEffect.cpp</Link></ClCompile>
+	<ClCompile Include="$(MSBuildThisFileDirectory)HookHelper.cpp"><Link>Source Files\HookHelper.cpp</Link></ClCompile>
+	<ClCompile Include="$(MSBuildThisFileDirectory)PeCodeViewIdentity.cpp"><Link>Source Files\PeCodeViewIdentity.cpp</Link></ClCompile>
+	<ClCompile Include="$(MSBuildThisFileDirectory)PngAssetValidation.cpp"><Link>Source Files\PngAssetValidation.cpp</Link></ClCompile>
+	<ClCompile Include="$(MSBuildThisFileDirectory)ThemeAtlasLayout.cpp"><Link>Source Files\ThemeAtlasLayout.cpp</Link></ClCompile>
   </ItemGroup>
   <ItemGroup>
-	<ClInclude Include="$(MSBuildThisFileDirectory)ApplicationPaths.hpp" />
-	<ClInclude Include="$(MSBuildThisFileDirectory)SystemSettings.hpp" />
-	<ClInclude Include="$(MSBuildThisFileDirectory)ShellColorRefresh.hpp" />
-	<ClInclude Include="$(MSBuildThisFileDirectory)DesktopWallpaper.hpp" />
-	<ClInclude Include="$(MSBuildThisFileDirectory)DwmSettings.hpp"><Link>Header Files\Common\DwmSettings.hpp</Link></ClInclude>
-	<ClInclude Include="$(MSBuildThisFileDirectory)CustomBlurEffect.hpp"><Link>Header Files\Common\CustomBlurEffect.hpp</Link></ClInclude>
-	<ClInclude Include="$(MSBuildThisFileDirectory)RenderingEffect.hpp"><Link>Header Files\Common\RenderingEffect.hpp</Link></ClInclude>
-	<ClInclude Include="$(MSBuildThisFileDirectory)D2DPrivates.hpp"><Link>Header Files\Common\D2DPrivates.hpp</Link></ClInclude>
-	<ClInclude Include="$(MSBuildThisFileDirectory)RectF.hpp"><Link>Header Files\Common\RectF.hpp</Link></ClInclude>
-	<ClInclude Include="$(MSBuildThisFileDirectory)BlurSettings.hpp" />
-	<ClInclude Include="$(MSBuildThisFileDirectory)HookHelper.hpp"><Link>Header Files\Common\HookHelper.hpp</Link></ClInclude>
-	<ClInclude Include="$(MSBuildThisFileDirectory)ProjectionInvoke.hpp"><Link>Header Files\Common\ProjectionInvoke.hpp</Link></ClInclude>
-	<ClInclude Include="$(MSBuildThisFileDirectory)PngAssetValidation.hpp" />
-	<ClInclude Include="$(MSBuildThisFileDirectory)PeCodeViewIdentity.hpp" />
-	<ClInclude Include="$(MSBuildThisFileDirectory)ThemeAtlasLayout.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)RegistryValueResolver.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)ServiceHandler.h" />
+	<ClInclude Include="$(MSBuildThisFileDirectory)ApplicationPaths.hpp"><Link>Header Files\ApplicationPaths.hpp</Link></ClInclude>
+	<ClInclude Include="$(MSBuildThisFileDirectory)SystemSettings.hpp"><Link>Header Files\SystemSettings.hpp</Link></ClInclude>
+	<ClInclude Include="$(MSBuildThisFileDirectory)ShellColorRefresh.hpp"><Link>Header Files\ShellColorRefresh.hpp</Link></ClInclude>
+	<ClInclude Include="$(MSBuildThisFileDirectory)DesktopWallpaper.hpp"><Link>Header Files\DesktopWallpaper.hpp</Link></ClInclude>
+	<ClInclude Include="$(MSBuildThisFileDirectory)DwmSettings.hpp"><Link>Header Files\DwmSettings.hpp</Link></ClInclude>
+	<ClInclude Include="$(MSBuildThisFileDirectory)CustomBlurEffect.hpp"><Link>Header Files\CustomBlurEffect.hpp</Link></ClInclude>
+	<ClInclude Include="$(MSBuildThisFileDirectory)RenderingEffect.hpp"><Link>Header Files\RenderingEffect.hpp</Link></ClInclude>
+	<ClInclude Include="$(MSBuildThisFileDirectory)D2DPrivates.hpp"><Link>Header Files\D2DPrivates.hpp</Link></ClInclude>
+	<ClInclude Include="$(MSBuildThisFileDirectory)RectF.hpp"><Link>Header Files\RectF.hpp</Link></ClInclude>
+	<ClInclude Include="$(MSBuildThisFileDirectory)BlurSettings.hpp"><Link>Header Files\BlurSettings.hpp</Link></ClInclude>
+	<ClInclude Include="$(MSBuildThisFileDirectory)HookHelper.hpp"><Link>Header Files\HookHelper.hpp</Link></ClInclude>
+	<ClInclude Include="$(MSBuildThisFileDirectory)ProjectionInvoke.hpp"><Link>Header Files\ProjectionInvoke.hpp</Link></ClInclude>
+	<ClInclude Include="$(MSBuildThisFileDirectory)PngAssetValidation.hpp"><Link>Header Files\PngAssetValidation.hpp</Link></ClInclude>
+	<ClInclude Include="$(MSBuildThisFileDirectory)PeCodeViewIdentity.hpp"><Link>Header Files\PeCodeViewIdentity.hpp</Link></ClInclude>
+	<ClInclude Include="$(MSBuildThisFileDirectory)ThemeAtlasLayout.hpp"><Link>Header Files\ThemeAtlasLayout.hpp</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)RegistryValueResolver.hpp"><Link>Header Files\RegistryValueResolver.hpp</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ServiceHandler.h"><Link>Header Files\ServiceHandler.h</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Colorization.hpp"><Link>Header Files\Colorization.hpp</Link></ClInclude>
   </ItemGroup>
 </Project>

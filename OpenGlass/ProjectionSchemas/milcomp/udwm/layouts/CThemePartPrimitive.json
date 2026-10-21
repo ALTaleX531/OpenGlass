@@ -1,0 +1,22 @@
+{
+  "layouts": [
+    {
+      "name": "CThemePartPrimitive_GetPartId",
+      "id": "CThemePartPrimitive_GetPartId",
+      "kind": "field",
+      "type": "DWORD",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 72,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CThemePartPrimitive::ShouldClone\nCThemePartPrimitive::ShouldDraw"
+    }
+  ]
+}

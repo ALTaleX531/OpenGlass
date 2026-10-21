@@ -1,0 +1,203 @@
+{
+  "layouts": [
+    {
+      "name": "CButton_GetButtonBitmapArray",
+      "id": "CButton_GetButtonBitmapArray",
+      "kind": "field",
+      "type": "CBitmapSourceArray",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 304,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 312,
+              "until": {
+                "build": 22622,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "notes": "CButton::SetVisualStates first parameter rgpBitmapSourceStates is compared/copied against this field. Win7 full symbols and uDWM 19041.6456 disassembly independently preserve the same parameter order."
+    },
+    {
+      "name": "CButton_GetButtonState",
+      "id": "CButton_GetButtonState",
+      "kind": "field",
+      "type": "BYTE",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 280,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 288,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CButton::RedrawVisual\nCButton::DrawStateW\nthis[x] & y"
+    },
+    {
+      "name": "CButton_GetFirstAtlasImage",
+      "id": "CButton_GetFirstAtlasImage",
+      "kind": "field",
+      "type": "CAtlasButton*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 296,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 248,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CButton glow — see PR #287\nCButton::AppendAtlas — first atlas image (glow nine-grid)"
+    },
+    {
+      "name": "CButton_GetGlyphBitmapArray",
+      "id": "CButton_GetGlyphBitmapArray",
+      "kind": "field",
+      "type": "CBitmapSourceArray",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 336,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 344,
+              "until": {
+                "build": 22622,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "notes": "CButton::SetVisualStates second parameter rgpbsGlyphStates is compared/copied against this field. Win7 full symbols and uDWM 19041.6456 disassembly independently preserve the same parameter order."
+    },
+    {
+      "name": "CButton_GetGlyphOpacity",
+      "id": "CButton_GetGlyphOpacity",
+      "kind": "field",
+      "type": "float",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 404,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 356,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CButton::SetVisualStates\nWARNING: Use SetVisualStates (base/default glyph opacity), NOT\nUpdateCurrentGlyphOpacity (runtime/current opacity, different DWORD offset)."
+    },
+    {
+      "name": "CButton_GetSecondAtlasImage",
+      "id": "CButton_GetSecondAtlasImage",
+      "kind": "field",
+      "type": "CAtlasButton*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 304,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 256,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CButton glow — see PR #287\nCButton::AppendAtlas — second atlas image"
+    },
+    {
+      "name": "CButton_GetTimeline",
+      "id": "CButton_GetTimeline",
+      "kind": "field",
+      "type": "CTimeline*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 392,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CButton::RedrawVisual\nxrefs to CButton::ActivateTimeline"
+    },
+    {
+      "name": "CButton_GetVisualState",
+      "id": "CButton_GetVisualState",
+      "kind": "field",
+      "type": "DWORD",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 376,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 328,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CButton glow — see PR #287\nCButton::DrawStateW — visual state flags for hover/press detection"
+    }
+  ]
+}

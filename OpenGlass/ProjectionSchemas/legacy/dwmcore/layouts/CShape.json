@@ -1,0 +1,79 @@
+{
+  "layouts": [
+    {
+      "name": "CShape_GetRectangles",
+      "id": "CShape_GetRectangles",
+      "kind": "vtable_slot",
+      "type": "bool (*)(const CShape*, D2D1_RECT_F*, UINT)",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 48,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 80,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CShape vtable: CRectanglesShape::GetRectangles in vtable slot 10 (current) /\nslot 6 (pre-21H2) slot_index × sizeof(ULONG_PTR)"
+    },
+    {
+      "name": "CShape_GetTightBounds",
+      "id": "CShape_GetTightBounds",
+      "kind": "vtable_slot",
+      "type": "HRESULT (*)(const CShape*, D2D1_RECT_F*, const CMILMatrix*)",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 32,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 48,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CShape vtable: CRectanglesShape::GetTightBounds in vtable slot 6 (current) /\nslot 4 (pre-21H2) slot_index × sizeof(ULONG_PTR)"
+    },
+    {
+      "name": "CShape_IsRectangles",
+      "id": "CShape_IsRectangles",
+      "kind": "vtable_slot",
+      "type": "bool (*)(const CShape*, UINT*)",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 40,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 64,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CShape vtable: CRectanglesShape::IsRectangles in vtable slot 8 (current) /\nslot 5 (pre-21H2) slot_index × sizeof(ULONG_PTR)"
+    }
+  ]
+}

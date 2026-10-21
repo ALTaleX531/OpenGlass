@@ -1,0 +1,36 @@
+{
+  "layouts": [
+    {
+      "name": "CSolidColorLegacyMilBrush_GetRealizedColor",
+      "id": "CSolidColorLegacyMilBrush_GetRealizedColor",
+      "kind": "field",
+      "type": "D2D1_COLOR_F",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 88,
+              "until": {
+                "build": 20348,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 96,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 104,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CSolidColorLegacyMilBrush::GetRealizedColor (~63B)\n*(D3DCOLORVALUE *)((char *)this + N) — solid color stored inline"
+    }
+  ]
+}

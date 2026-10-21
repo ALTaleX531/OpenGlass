@@ -405,17 +405,11 @@ bool OpenGlass::InitializeProjectionBySymbols()
 			g_symbolDownloadCompleted = false;
 			g_symbolRequiresDownloading = false;
 			g_detailsInfo.clear();
-			const auto udwmCatalogResult = Projection::CollectBuiltInSymbols(
+			if (Projection::CollectBuiltInSymbols(
 				udwmModuleHandle,
 				Projection::ModuleId::uDWM,
 				uDWM::g_registry
-			);
-			LOG_HR_IF_MSG(
-				HRESULT_FROM_WIN32(ERROR_INVALID_DATA),
-				udwmCatalogResult == Projection::SymbolCatalogResult::Rejected,
-				"Rejected built-in uDWM symbol catalog record; falling back to PDB resolution"
-			);
-			if (udwmCatalogResult == Projection::SymbolCatalogResult::Collected)
+			))
 			{
 				hr = S_OK;
 			}
@@ -489,17 +483,11 @@ bool OpenGlass::InitializeProjectionBySymbols()
 			g_symbolDownloadCompleted = false;
 			g_symbolRequiresDownloading = false;
 			g_detailsInfo.clear();
-			const auto dwmcoreCatalogResult = Projection::CollectBuiltInSymbols(
+			if (Projection::CollectBuiltInSymbols(
 				dwmcoreModuleHandle,
 				Projection::ModuleId::DwmCore,
 				dwmcore::g_registry
-			);
-			LOG_HR_IF_MSG(
-				HRESULT_FROM_WIN32(ERROR_INVALID_DATA),
-				dwmcoreCatalogResult == Projection::SymbolCatalogResult::Rejected,
-				"Rejected built-in dwmcore symbol catalog record; falling back to PDB resolution"
-			);
-			if (dwmcoreCatalogResult == Projection::SymbolCatalogResult::Collected)
+			))
 			{
 				hr = S_OK;
 			}
@@ -568,16 +556,11 @@ bool OpenGlass::InitializeProjectionBySymbols()
 		}
 	}
 
-	std::string missingFunctionsOrVariables{};
-	uDWM::g_registry.ReportUnresolved(missingFunctionsOrVariables, "uDWM.dll!");
-	dwmcore::g_registry.ReportUnresolved(missingFunctionsOrVariables, "dwmcore.dll!");
-	const auto projectionsReady = Projection::CommitModules(uDWM::g_registry, dwmcore::g_registry);
-	if (!projectionsReady || !missingFunctionsOrVariables.empty())
+	if (!Projection::CommitModules(uDWM::g_registry, dwmcore::g_registry))
 	{
-		if (missingFunctionsOrVariables.empty())
-		{
-			missingFunctionsOrVariables = "Projection metadata validation failed.\n";
-		}
+		std::string missingFunctionsOrVariables;
+		uDWM::g_registry.ReportUnresolved(missingFunctionsOrVariables, "uDWM.dll!");
+		dwmcore::g_registry.ReportUnresolved(missingFunctionsOrVariables, "dwmcore.dll!");
 		missingFunctionsOrVariables.pop_back();
 		missingFunctionsOrVariables.append(std::string_view{ "\0", 1 });
 		const auto content = Util::GetResourceStringView<IDS_STRING108>();

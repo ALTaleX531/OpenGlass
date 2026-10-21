@@ -1,0 +1,403 @@
+{
+  "symbols": [
+    {
+      "name": "Symbol_CVisual_UpdateOffset",
+      "id": "CVisual::UpdateOffset",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "CVisual_UpdateOffset_t",
+          "ranges": [
+            {
+              "symbol_names": [
+                "protected: virtual long __cdecl CVisual::UpdateOffset(void) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CVisual_SendSetOffset",
+      "id": "CVisual::SendSetOffset",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "CVisual_SendSetOffset_t",
+          "ranges": [
+            {
+              "symbol_names": [
+                "protected: virtual long __cdecl CVisual::SendSetOffset(struct tagPOINT const & __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CVisual_SetSize",
+      "id": "CVisual::SetSize",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CVisual::SetSize",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: void __cdecl CVisual::SetSize(struct tagSIZE const * __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CVisual_SetInsetFromParent",
+      "id": "CVisual::SetInsetFromParent",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CVisual::SetInsetFromParent",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: void __cdecl CVisual::SetInsetFromParent(struct _MARGINS const & __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CVisual_SetInsetFromParentLeft",
+      "id": "CVisual::SetInsetFromParentLeft",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CVisual::SetInsetFromParentLeft",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: void __cdecl CVisual::SetInsetFromParentLeft(int) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CVisual_SetDirtyFlags",
+      "id": "CVisual::SetDirtyFlags",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CVisual::SetDirtyFlags",
+          "ranges": [
+            {
+              "symbol_names": [
+                "protected: virtual void __cdecl CVisual::SetDirtyFlags(class DirtyFlags) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CVisualProxy_SetSize",
+      "id": "CVisualProxy::SetSize",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CVisualProxy::SetSize",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CVisualProxy::SetSize(double,double) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_VisualCollection_Remove",
+      "id": "VisualCollection::Remove",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&VisualCollection::Remove",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_VisualCollection_InsertRelative",
+      "id": "VisualCollection::InsertRelative",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&VisualCollection::InsertRelative",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl VisualCollection::InsertRelative(class CVisual * __ptr64,class CVisual * __ptr64,bool,bool) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CContainerVisual_InitializeVisualTreeClone",
+      "id": "CContainerVisual::InitializeVisualTreeClone",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CContainerVisual::InitializeVisualTreeClone",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CContainerVisual::InitializeVisualTreeClone(class CContainerVisual * __ptr64,enum CloneOptions) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CRectangleVisual_SetRect",
+      "id": "CRectangleVisual::SetRect",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CRectangleVisual::SetRect",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: void __cdecl CRectangleVisual::SetRect(class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const & __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CRectangleVisual_UpdateClip",
+      "id": "CRectangleVisual::UpdateClip",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CRectangleVisual::UpdateClip",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CRectangleVisual::UpdateClip(class CBaseGeometryProxy * __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CSolidRectangleVisual_UpdateColor",
+      "id": "CSolidRectangleVisual::UpdateColor",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CSolidRectangleVisual::UpdateColor",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CSolidRectangleVisual::UpdateColor(struct _D3DCOLORVALUE const & __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CSolidRectangleVisual_Create",
+      "id": "CSolidRectangleVisual::Create",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CSolidRectangleVisual::Create",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: static long __cdecl CSolidRectangleVisual::Create(class CSolidRectangleVisual * __ptr64 * __ptr64)"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CSpriteVisual_SendSetSize",
+      "id": "CSpriteVisual::SendSetSize",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "CSpriteVisual_SendSetSize_t",
+          "ranges": [
+            {
+              "symbol_names": [
+                "protected: virtual long __cdecl CSpriteVisual::SendSetSize(struct tagSIZE const & __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CSpriteVisual_CloneVisualTree",
+      "id": "CSpriteVisual::CloneVisualTree",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "CSpriteVisual_CloneVisualTree_t",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: virtual long __cdecl CSpriteVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,enum CloneOptions) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CSpriteVisual_Create",
+      "id": "CSpriteVisual::Create",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CSpriteVisual::Create",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: static long __cdecl CSpriteVisual::Create(class CSpriteVisual * __ptr64 * __ptr64)"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CSpriteVisual_GetBrush",
+      "id": "CSpriteVisual::GetBrush",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CSpriteVisual::GetBrush",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CSpriteVisual::GetBrush<struct Windows::UI::Composition::ICompositionBrush>(struct Windows::UI::Composition::ICompositionBrush * __ptr64 * __ptr64)const __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CSpriteVisual_SetBrush",
+      "id": "CSpriteVisual::SetBrush",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CSpriteVisual::SetBrush",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CSpriteVisual::SetBrush<struct Windows::UI::Composition::ICompositionBrush * __ptr64>(struct Windows::UI::Composition::ICompositionBrush * __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    }
+  ]
+}

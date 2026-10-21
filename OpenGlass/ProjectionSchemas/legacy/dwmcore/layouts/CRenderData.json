@@ -1,0 +1,43 @@
+{
+  "layouts": [
+    {
+      "name": "CRenderData_GetResources",
+      "id": "CRenderData_GetResources",
+      "kind": "field",
+      "type": "CRenderDataResourceArray",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 104,
+              "until": {
+                "build": 18362,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 120,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 128,
+              "until": {
+                "build": 20348,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 136,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CRenderData::TryDrawCommandAsDrawList\n*(QWORD *)(renderData + 136) → resource array base pointer"
+    }
+  ]
+}

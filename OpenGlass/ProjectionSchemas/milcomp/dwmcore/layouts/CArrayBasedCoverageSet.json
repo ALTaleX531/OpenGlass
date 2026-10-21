@@ -1,0 +1,22 @@
+{
+  "layouts": [
+    {
+      "name": "CArrayBasedCoverageSet_GetOccluderArray",
+      "id": "CArrayBasedCoverageSet_GetOccluderArray",
+      "kind": "field",
+      "type": "DynArray<CZOrderedRect>",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 0,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CArrayBasedCoverageSet::CalcVisibleArea\n*(QWORD *)this → base pointer; *(DWORD *)(this + 24) → count\nAlways at offset 0 within CArrayBasedCoverageSet"
+    }
+  ]
+}

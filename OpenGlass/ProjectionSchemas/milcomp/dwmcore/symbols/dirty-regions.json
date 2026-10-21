@@ -1,0 +1,25 @@
+{
+  "symbols": [
+    {
+      "name": "Symbol_CTreeDirty_GetOptimizedRect",
+      "id": "CTreeDirty::GetOptimizedRect",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "CTreeDirty_GetOptimizedRect_t",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> __cdecl CTreeDirty::GetOptimizedRect(unsigned int,class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const & __ptr64,class COcclusionContext const & __ptr64,class CRegion * __ptr64,class CMILMatrix const * __ptr64,class gsl::span<class CVisual const * __ptr64,-1> const & __ptr64)const __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    }
+  ]
+}

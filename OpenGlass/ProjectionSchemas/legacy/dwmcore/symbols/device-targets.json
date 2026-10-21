@@ -1,0 +1,74 @@
+{
+  "symbols": [
+    {
+      "name": "Symbol_CD2DContext_DestroyDeviceResources",
+      "id": "CD2DContext::DestroyDeviceResources",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "HRESULT (*)(CD2DContext*)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "protected: long __cdecl CD2DContext::DestroyDeviceResources(void) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CD2DContext_EnsureBeginDraw",
+      "id": "CD2DContext::EnsureBeginDraw",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CD2DContext::EnsureBeginDraw",
+          "ranges": [
+            {
+              "symbol_names": [
+                "private: void __cdecl CD2DContext::EnsureBeginDraw(void) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CHwndRenderTarget_RenderDirtyRegion",
+      "id": "CHwndRenderTarget::RenderDirtyRegion",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "HRESULT (*)(CHwndRenderTarget*, CDrawingContext*, CComposeTop*)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "private: long __cdecl CHwndRenderTarget::RenderDirtyRegion(class CDrawingContext * __ptr64,class CComposeTop * __ptr64) __ptr64",
+                "protected: long __cdecl CHwndRenderTarget::RenderDirtyRegion(class CDrawingContext * __ptr64,class CComposeTop * __ptr64) __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 18362,
+                "revision": 0
+              },
+              "max_exclusive": {
+                "build": 19041,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    }
+  ]
+}

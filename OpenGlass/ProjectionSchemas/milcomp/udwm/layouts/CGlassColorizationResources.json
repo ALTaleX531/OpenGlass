@@ -1,0 +1,40 @@
+{
+  "layouts": [
+    {
+      "name": "CGlassColorizationResources_Balance",
+      "id": "CGlassColorizationResources.Balance",
+      "kind": "field",
+      "type": "float",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 32,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "Balance consumed together with Color by CGlassColorizationResources::getArgbcolor."
+    },
+    {
+      "name": "CGlassColorizationResources_Color",
+      "id": "CGlassColorizationResources.Color",
+      "kind": "field",
+      "type": "D2D1_COLOR_F",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 4,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "Color consumed together with Balance by CGlassColorizationResources::getArgbcolor."
+    }
+  ]
+}

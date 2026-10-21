@@ -1,0 +1,177 @@
+{
+  "symbols": [
+    {
+      "name": "Symbol_COcclusionContext_CheckAndRecordOverlayCandidate",
+      "id": "COcclusionContext::CheckAndRecordOverlayCandidate",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "COcclusionContext_CheckAndRecordOverlayCandidate_t",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl COcclusionContext::CheckAndRecordOverlayCandidate(class CVisual * __ptr64,class CCompositionSurfaceInfo * __ptr64,class CMILMatrix const & __ptr64,class CShape const * __ptr64,struct TMILFlagsEnum<enum MilSourceModification::FlagsEnum>) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw",
+      "notes": "On paired 28000.2525 dwmcore.dll, all three direct callers pass the TMILFlagsEnum value in one 32-bit argument slot and the callee consumes and forwards that slot as a 32-bit value. Model the one-enum aggregate explicitly instead of substituting int."
+    },
+    {
+      "name": "Symbol_COcclusionContext_PreSubgraph",
+      "id": "COcclusionContext::PreSubgraph",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "BYTE*",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl COcclusionContext::PreSubgraph(class CVisualTree const * __ptr64,bool * __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw",
+      "usage": "code_address",
+      "notes": "The node-area comparison against the 75,000 px² cutoff is inlined here. Newer builds load the shared cutoff into an XMM register on two mutually exclusive feature paths and reuse it for the final occlusion-state write; GlassIntegrity must zero only these local loads so all three decisions remain consistent without changing the shared constant's other consumers."
+    },
+    {
+      "name": "Symbol_COcclusionContext_Compute",
+      "id": "COcclusionContext::Compute",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "COcclusionContext_Compute_t",
+          "ranges": [
+            {
+              "symbol_names": [
+                "protected: long __cdecl COcclusionContext::Compute(class CVisualTree const * __ptr64,class gsl::span<class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const ,-1> const & __ptr64,float,class gsl::span<class COverlayContext * __ptr64,-1> const & __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw",
+      "notes": "On paired 28000.2525 dwmcore.dll, Compute reads both span references as length at +0 followed by data at +8. Rectangle elements are read-only; overlay elements are COverlayContext pointers. DWM::span preserves this two-word gsl::span layout while retaining the rectangle element constness."
+    },
+    {
+      "name": "Symbol_COcclusionContext_COcclusionContext",
+      "id": "COcclusionContext::~COcclusionContext",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "COcclusionContext_Destructor_t",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: __cdecl COcclusionContext::~COcclusionContext(void) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_COcclusionContext_SetDeviceTransform",
+      "id": "COcclusionContext::SetDeviceTransform",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&COcclusionContext::SetDeviceTransform",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl COcclusionContext::SetDeviceTransform(class CMILMatrix const * __ptr64)const __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_COcclusionContext_IsOccluded",
+      "id": "COcclusionContext::IsOccluded",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&COcclusionContext::IsOccluded",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: bool __cdecl COcclusionContext::IsOccluded(class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_COcclusionContext_CollectRectangleForOcclusion",
+      "id": "COcclusionContext::CollectRectangleForOcclusion",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&COcclusionContext::CollectRectangleForOcclusion",
+          "ranges": [
+            {
+              "symbol_names": [
+                "private: void __cdecl COcclusionContext::CollectRectangleForOcclusion(class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const & __ptr64,bool) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_GetCurrentFrameId",
+      "id": "GetCurrentFrameId",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&GetCurrentFrameId",
+          "ranges": [
+            {
+              "symbol_names": [
+                "unsigned __int64 __cdecl GetCurrentFrameId(void)"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function",
+      "notes": "Global composition-frame accessor cross-checked against COcclusionContext_GetFrameId before dirty-rect and DrawVisualTree occlusion data is trusted."
+    }
+  ]
+}

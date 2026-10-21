@@ -1,0 +1,166 @@
+{
+  "layouts": [
+    {
+      "name": "LivePreviewResource_GetGlassBoundingGeometry",
+      "id": "LivePreviewResource_GetGlassBoundingGeometry",
+      "kind": "field",
+      "type": "CRectangleGeometryProxy*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 56,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CLivePreview::_UpdateResourcesForMonitor\nResourceHelper::CreateRectangleGeometry(..., (CRectangleGeometryProxy\n**)resource + 7)"
+    },
+    {
+      "name": "LivePreviewResource_GetGlassBoundingRect",
+      "id": "LivePreviewResource_GetGlassBoundingRect",
+      "kind": "field",
+      "type": "RECT",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 40,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CLivePreview::_UpdateResourcesForMonitor\nSetRectEmpty((LPRECT)((char *)resource + 40))"
+    },
+    {
+      "name": "LivePreviewResource_GetGlassVisualBrush",
+      "id": "LivePreviewResource_GetGlassVisualBrush",
+      "kind": "field",
+      "type": "CBaseLegacyMilBrushProxy*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 72,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CLivePreview::_UpdateResourcesForMonitor\nCImageLegacyMilBrushProxy::Update(resource[9], resource + 72, ...)"
+    },
+    {
+      "name": "LivePreviewResource_GetReflectionGeometry",
+      "id": "LivePreviewResource_GetReflectionGeometry",
+      "kind": "field",
+      "type": "CRgnGeometryProxy*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 104,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CLivePreview::_UpdateResourcesForMonitor\nResourceHelper::CreateGeometryFromHRGN(resource[12], (CRgnGeometryProxy\n**)resource + 13)"
+    },
+    {
+      "name": "LivePreviewResource_GetReflectionRegion",
+      "id": "LivePreviewResource_GetReflectionRegion",
+      "kind": "field",
+      "type": "HRGN",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 96,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CLivePreview::_UpdateResourcesForMonitor\n*((QWORD *)resource + 12) = CreateRectRgn(0, 0, 0, 0)"
+    },
+    {
+      "name": "LivePreviewResource_GetWindowBoundingGeometry",
+      "id": "LivePreviewResource_GetWindowBoundingGeometry",
+      "kind": "field",
+      "type": "CRectangleGeometryProxy*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 16,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CLivePreview::_UpdateResourcesForMonitor\nResourceHelper::CreateRectangleGeometry(..., (CRectangleGeometryProxy\n**)resource + 2)"
+    },
+    {
+      "name": "LivePreviewResource_GetWindowVisualBrush",
+      "id": "LivePreviewResource_GetWindowVisualBrush",
+      "kind": "field",
+      "type": "CBaseLegacyMilBrushProxy*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 32,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CLivePreview::_UpdateResourcesForMonitor\nCImageLegacyMilBrushProxy::Update(resource[4], resource + 32, ...)"
+    },
+    {
+      "name": "LivePreviewResource_IsGlassBoundingRectNotEmpty_Index",
+      "id": "LivePreviewResource_IsGlassBoundingRectNotEmpty_Index",
+      "kind": "field",
+      "type": "bool*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 129,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CLivePreview::_UpdateResourcesForMonitor\n*((BYTE *)resource + 129) = !IsRectEmpty((const RECT *)((char *)resource +\n40))"
+    },
+    {
+      "name": "LivePreviewResource_IsWindowBoundingRectNotEmpty_Index",
+      "id": "LivePreviewResource_IsWindowBoundingRectNotEmpty_Index",
+      "kind": "field",
+      "type": "bool*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 128,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CLivePreview::_UpdateResourcesForMonitor\n*((BYTE *)resource + 128) = !IsRectEmpty(resource)"
+    }
+  ]
+}

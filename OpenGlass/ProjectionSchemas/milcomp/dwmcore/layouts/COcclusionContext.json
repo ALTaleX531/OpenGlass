@@ -1,0 +1,154 @@
+{
+  "layouts": [
+    {
+      "name": "COcclusionContext_GetArrayBasedCoverageSet",
+      "id": "COcclusionContext_GetArrayBasedCoverageSet",
+      "kind": "field",
+      "type": "CArrayBasedCoverageSet",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 584,
+              "until": {
+                "build": 28000,
+                "revision": 2804
+              }
+            },
+            {
+              "offset": 568,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "COcclusionContext::FlushOcclusionRects / CollectRectangleForOcclusion\nCArrayBasedCoverageSet::Add((char *)this + N, ...) — DynArray at byte offset N. In 28000.2804, CollectRectangleForOcclusion and CalcVisibleArea pass this + 0x238; the constructor initializes data and initialAllocation to this + 0x258, and IsOccluded reads data at +0x238 and count at +0x250. The old +0x248 points at the two capacity DWORDs (10, 10), explaining issue #358's 0x0000000A0000000A invalid pointer."
+    },
+    {
+      "name": "COcclusionContext_GetCurrentZ",
+      "id": "COcclusionContext_GetCurrentZ",
+      "kind": "field",
+      "type": "UINT",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 1268,
+              "until": {
+                "build": 28000,
+                "revision": 2704
+              }
+            },
+            {
+              "offset": 1272,
+              "until": {
+                "build": 28000,
+                "revision": 2804
+              }
+            },
+            {
+              "offset": 1252,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "COcclusionContext::FlushOcclusionRects\n*(DWORD *)(this + N) read, then value += 2 written back — unique \"+2\" pattern\nAdjacent DWORD (+4) is the push-skip counter — do NOT confuse. Audit neighboring fields independently: build 28000.2704 shifts CurrentZ and the device-transform matrix by four bytes, while the device-transform flags and array-based coverage set remain at their previous offsets. In 28000.2804, FlushOcclusionRects increments +0x4E4; CollectRectangleForOcclusion passes that field as CArrayBasedCoverageSet::Add's depth, and Compute resets it."
+    },
+    {
+      "name": "COcclusionContext_GetDeviceTransform",
+      "id": "COcclusionContext_GetDeviceTransform",
+      "kind": "field",
+      "type": "CMILMatrix",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 1132,
+              "until": {
+                "build": 28000,
+                "revision": 2704
+              }
+            },
+            {
+              "offset": 1136,
+              "until": {
+                "build": 28000,
+                "revision": 2804
+              }
+            },
+            {
+              "offset": 1116,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "COcclusionContext::UpdateDeviceTransform\nCMILMatrix::Multiply((char *)this + N, a2, result) — device-space matrix embedded inline. Cross-check SetDeviceTransform's identity/nonidentity writes; CollectRectangleForOcclusion passes the same matrix to CArrayBasedCoverageSet::Add when the independently verified transform flag is set."
+    },
+    {
+      "name": "COcclusionContext_GetDeviceTransformFlag",
+      "id": "COcclusionContext_GetDeviceTransformFlag",
+      "kind": "field",
+      "type": "UINT",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 1124,
+              "until": {
+                "build": 28000,
+                "revision": 2804
+              }
+            },
+            {
+              "offset": 1108,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "COcclusionContext::FlushOcclusionRects / UpdateDeviceTransform\nif (*((BYTE *)this + N)) → use device transform, else use nullptr. Confirm this packed flag independently from the matrix offset; it remains at 1124 when the matrix moves from 1132 to 1136 in build 28000.2704. In 28000.2804, SetDeviceTransform writes the byte at +0x454; CollectRectangleForOcclusion and IsOccluded test it to select transformed coordinates."
+    },
+    {
+      "name": "COcclusionContext_GetFrameId",
+      "id": "COcclusionContext_GetFrameId",
+      "kind": "field",
+      "type": "ULONGLONG",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 16,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "COcclusionContext::IsCurrent (~30B)\n*((QWORD *)this + 2) == *((QWORD *)g_pComposition + 111) → global frame ID comparison"
+    },
+    {
+      "name": "COcclusionContext_GetWorldTransform",
+      "id": "COcclusionContext_GetWorldTransform",
+      "kind": "field",
+      "type": "CMatrixStack",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 24,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "COcclusionContext constructor / GetWorldTransform\n*(QWORD *)(this + N) → matrix stack data; *(DWORD *)(this + N + 8) → count"
+    }
+  ]
+}

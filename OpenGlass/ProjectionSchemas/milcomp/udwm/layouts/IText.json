@@ -1,0 +1,58 @@
+{
+  "layouts": [
+    {
+      "name": "IText_GetDWriteText_NegativeOffset",
+      "id": "IText_GetDWriteText_NegativeOffset",
+      "kind": "field",
+      "type": "CDWriteText",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": -184,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "xrefs to CDWriteText::`vftable'{for `IText'} → find CDWriteText constructor\nConstructor reveals the IText vtable subobject offset within CDWriteText.\nNegative offset = -(subobject offset) to go from IText* back to CDWriteText*."
+    },
+    {
+      "name": "IText_RTL_Index",
+      "id": "IText_RTL_Index",
+      "kind": "field",
+      "type": "bool",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 280,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "xrefs to CDWriteText::`vftable'{for `IText'} → decompile SetRTLReading on IText vtable\nLook for byte bit-test and conditional branch on the memory operand"
+    },
+    {
+      "name": "IText_Reverse_Index",
+      "id": "IText_Reverse_Index",
+      "kind": "field",
+      "type": "bool",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 281,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "xrefs to CDWriteText::`vftable'{for `IText'} → decompile SetReverseAlignment on IText vtable\nSame pattern: byte bit-test at an adjacent absolute offset"
+    }
+  ]
+}

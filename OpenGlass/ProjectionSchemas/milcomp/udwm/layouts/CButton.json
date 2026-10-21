@@ -1,0 +1,22 @@
+{
+  "layouts": [
+    {
+      "name": "CButton_GetGlyphOpacity",
+      "id": "CButton_GetGlyphOpacity",
+      "kind": "field",
+      "type": "float",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 300,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CButton::SetVisualStates\nWARNING: Use SetVisualStates (base/default glyph opacity), NOT\nUpdateCurrentGlyphOpacity (runtime/current opacity, different DWORD offset)."
+    }
+  ]
+}

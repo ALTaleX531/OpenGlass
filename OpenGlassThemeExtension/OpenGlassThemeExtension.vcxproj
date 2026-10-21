@@ -30,7 +30,7 @@
     <ClCompile Include="ColorHooks.Shell.cpp" />
     <ClCompile Include="DuiHooks.cpp" />
     <ClCompile Include="DuiProjection.cpp" />
-    <ClCompile Include="..\Common\HookHelper.cpp" />
+    <_ExternalClCompile Include="..\Common\HookHelper.cpp" />
     <ClInclude Include="Core.hpp" />
     <ClInclude Include="ColorHooks.hpp" />
     <ClInclude Include="ColorHooks.Shell.hpp" />
@@ -38,7 +38,6 @@
     <ClInclude Include="DuiHooks.hpp" />
     <ClInclude Include="DuiProjection.hpp" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="..\Common\Colorization.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="OpenGlassThemeExtension.def" />

@@ -25,13 +25,13 @@ Optimized identical-code folding can merge functions. A merged symbol can suppor
 
 ## Layout intervals
 
-Each schema `until: { build, revision }` case ends at an exclusive right boundary; the boundary is not the version where a feature first appeared. Cases are evaluated in schema order against the module's exact `(build, revision)`.
+Each schema `until: { build, revision }` uses the same JSON integer version fields as Symbol bindings: a nonzero unsigned 32-bit `build`, and an unsigned 32-bit `revision` defaulting to zero when omitted. Numeric strings and C++ constant names are unsupported. Each case ends at an exclusive right boundary; the boundary is not the version where a feature first appeared. Cases are evaluated in schema order against the module's exact `(build, revision)`.
 
 - A case with `until` covers supported versions before that boundary and after the preceding boundary.
 - A case with `otherwise: true` is the explicit open-ended runtime fallback and must be last. It is not proof that the value remains correct on unanalyzed future builds.
 - The absence of a terminal entry can be intentional when a member, class, or feature ceased to exist.
 - Multiple boundaries for the same build must have increasing revisions.
-- The schema's `offset` string is C++ source text. Linters and agents preserve it verbatim and never evaluate it.
+- The schema's `offset` is a signed 32-bit JSON integer measured in bytes, including negative adjusted-`this` displacements and vtable byte offsets. Numeric strings, `sizeof`, `offsetof`, and C++ arithmetic are not supported. Representation-only conversions must preserve the numerical values for the selected architecture.
 
 Read `OpenGlass/ProjectionSchemas/<architecture>/README.md`, `OpenGlass/OSHelper.hpp`, `OpenGlass/ProjectionHelper.hpp`, and the target schema item before proposing a change.
 

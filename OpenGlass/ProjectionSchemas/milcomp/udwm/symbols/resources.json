@@ -1,0 +1,46 @@
+{
+  "symbols": [
+    {
+      "name": "Symbol_ResourceHelper_CreateGeometryFromHRGN",
+      "id": "ResourceHelper::CreateGeometryFromHRGN",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&ResourceHelper::CreateGeometryFromHRGN",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: static long __cdecl ResourceHelper::CreateGeometryFromHRGN(struct HRGN__ * __ptr64,class CRgnGeometryProxy * __ptr64 * __ptr64)"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_ResourceHelper_CreateCombinedGeometry",
+      "id": "ResourceHelper::CreateCombinedGeometry",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&ResourceHelper::CreateCombinedGeometry",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: static long __cdecl ResourceHelper::CreateCombinedGeometry(class CBaseGeometryProxy const * __ptr64,class CBaseGeometryProxy const * __ptr64,enum MilCombineMode::Enum,class CCombinedGeometryProxy * __ptr64 * __ptr64)"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    }
+  ]
+}

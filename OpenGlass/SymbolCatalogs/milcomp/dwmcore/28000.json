@@ -1,20 +1,14 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "records": [
     {
       "revision": 1575,
-      "image": {
-        "time_date_stamp": 162189948,
-        "size_of_image": 4263936,
-        "sha256": "42fcce61541c7449232bc81bef191dca0f11eb1b9dd7ceaae39d3831de8dcbae"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "da09d1c2-5e66-b57d-b15d-97264a7d256e",
         "age": 1,
         "sha256": "d22910b7092d38fdf036eb01c91d47749de8f26431cb4d1b9597ecc7708a9411"
       },
-      "resolution_contract": "67aaefe0db9b03fc8060b994eae87a985cb85a2a01c5a73a9266e95b29472c8f",
       "symbols": {
         "CChannel::CombinedGeometryUpdate": {
           "name": "public: virtual long __cdecl CChannel::CombinedGeometryUpdate(unsigned int,enum MilCombineMode::Enum,unsigned int,unsigned int) __ptr64",
@@ -152,18 +146,12 @@
     },
     {
       "revision": 1643,
-      "image": {
-        "time_date_stamp": 3495896839,
-        "size_of_image": 4263936,
-        "sha256": "4a17378a625f8937886bea18ddc32a54ea1f56304db73af07488d655fecba969"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "a47e95d4-bf59-f6f5-fccc-35291cbafa13",
         "age": 1,
         "sha256": "dc1108b3c6ee88f959aea485bdfdf23dfe5674b0eb1e88294e2a270afa8fe0c0"
       },
-      "resolution_contract": "67aaefe0db9b03fc8060b994eae87a985cb85a2a01c5a73a9266e95b29472c8f",
       "symbols": {
         "CChannel::CombinedGeometryUpdate": {
           "name": "public: virtual long __cdecl CChannel::CombinedGeometryUpdate(unsigned int,enum MilCombineMode::Enum,unsigned int,unsigned int) __ptr64",
@@ -301,18 +289,12 @@
     },
     {
       "revision": 1761,
-      "image": {
-        "time_date_stamp": 2409426939,
-        "size_of_image": 4268032,
-        "sha256": "8c40f93083a1a9ae3e8292edfbcf69657a53f25540ce2995171963132db9aeb5"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "d1e9e74a-1345-39c5-09e4-2f6467cda965",
         "age": 1,
         "sha256": "6320f4b5323d6b305fc40beac54f20beb702a2992ed10b59c97659cb0dcfe202"
       },
-      "resolution_contract": "67aaefe0db9b03fc8060b994eae87a985cb85a2a01c5a73a9266e95b29472c8f",
       "symbols": {
         "CChannel::CombinedGeometryUpdate": {
           "name": "public: virtual long __cdecl CChannel::CombinedGeometryUpdate(unsigned int,enum MilCombineMode::Enum,unsigned int,unsigned int) __ptr64",
@@ -450,18 +432,12 @@
     },
     {
       "revision": 1830,
-      "image": {
-        "time_date_stamp": 1676483792,
-        "size_of_image": 4268032,
-        "sha256": "8f2fb988e7ca8d7008af03c0b3498ddf9f391874d13b6f68a863fa2688780b94"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "25441e80-5698-83c4-f11e-a2e0e91f1a9a",
         "age": 1,
         "sha256": "994e72e2f17178c8e2192f6459d26f63f212ed2647dc284025d0e80de9ae4ad0"
       },
-      "resolution_contract": "67aaefe0db9b03fc8060b994eae87a985cb85a2a01c5a73a9266e95b29472c8f",
       "symbols": {
         "CChannel::CombinedGeometryUpdate": {
           "name": "public: virtual long __cdecl CChannel::CombinedGeometryUpdate(unsigned int,enum MilCombineMode::Enum,unsigned int,unsigned int) __ptr64",
@@ -599,18 +575,12 @@
     },
     {
       "revision": 2113,
-      "image": {
-        "time_date_stamp": 48498886,
-        "size_of_image": 4284416,
-        "sha256": "aaa7bf7499aeb8cad6e0837828c335845cf237d9bff2fd7b5f4dfd6134ee5638"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "99e47ce2-5098-6bd1-fd57-db11c1e225ac",
         "age": 1,
         "sha256": "5944f5f33fa02588cc27aa60bab0f0147ee17e14faa2fec6d654e805168f2549"
       },
-      "resolution_contract": "67aaefe0db9b03fc8060b994eae87a985cb85a2a01c5a73a9266e95b29472c8f",
       "symbols": {
         "CChannel::CombinedGeometryUpdate": {
           "name": "public: virtual long __cdecl CChannel::CombinedGeometryUpdate(unsigned int,enum MilCombineMode::Enum,unsigned int,unsigned int) __ptr64",
@@ -748,18 +718,12 @@
     },
     {
       "revision": 2179,
-      "image": {
-        "time_date_stamp": 1324369432,
-        "size_of_image": 4296704,
-        "sha256": "d2400b22180581357ef45b88b160dc19ecc115b10bbcf572c3530563c4d3367a"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "c8a9c6de-91d9-e0af-c2b4-d6ad32f7132b",
         "age": 1,
         "sha256": "e9756ce913d32628d69a2ff4ce38a8bac588d54b7f64fc66c5033d4532378490"
       },
-      "resolution_contract": "67aaefe0db9b03fc8060b994eae87a985cb85a2a01c5a73a9266e95b29472c8f",
       "symbols": {
         "CChannel::CombinedGeometryUpdate": {
           "name": "public: virtual long __cdecl CChannel::CombinedGeometryUpdate(unsigned int,enum MilCombineMode::Enum,unsigned int,unsigned int) __ptr64",
@@ -897,18 +861,12 @@
     },
     {
       "revision": 2269,
-      "image": {
-        "time_date_stamp": 416268025,
-        "size_of_image": 4296704,
-        "sha256": "d632934df9563766890f20060152e6da444173fb6a73f5cc147b7172e1b136f4"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "650ae18f-ac05-335f-edba-609de2289c9a",
         "age": 1,
         "sha256": "42daa0c5ce01ca6b8469ea4d9087ac2cbba9a906d4beb5ce374296129cbf2c11"
       },
-      "resolution_contract": "67aaefe0db9b03fc8060b994eae87a985cb85a2a01c5a73a9266e95b29472c8f",
       "symbols": {
         "CChannel::CombinedGeometryUpdate": {
           "name": "public: virtual long __cdecl CChannel::CombinedGeometryUpdate(unsigned int,enum MilCombineMode::Enum,unsigned int,unsigned int) __ptr64",
@@ -1046,18 +1004,12 @@
     },
     {
       "revision": 2336,
-      "image": {
-        "time_date_stamp": 2297249043,
-        "size_of_image": 4288512,
-        "sha256": "4af977c8f6d1e96b01c9bf4342026c12a0b9286187993333cbc49aaafd4d0278"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "e16ed715-5d13-8bbb-c811-5ebc30c8a08e",
         "age": 1,
         "sha256": "713024b9c0341c8039042287d5c69694fe7709b6cd92837e7ef11913e8266f3b"
       },
-      "resolution_contract": "67aaefe0db9b03fc8060b994eae87a985cb85a2a01c5a73a9266e95b29472c8f",
       "symbols": {
         "CChannel::CombinedGeometryUpdate": {
           "name": "public: virtual long __cdecl CChannel::CombinedGeometryUpdate(unsigned int,enum MilCombineMode::Enum,unsigned int,unsigned int) __ptr64",
@@ -1195,18 +1147,12 @@
     },
     {
       "revision": 2525,
-      "image": {
-        "time_date_stamp": 2685879973,
-        "size_of_image": 4292608,
-        "sha256": "fc7e37f11818614e1d602152ab36d5e3b6032592fa11112f781b3fe4c8790d38"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "9f4b1310-5e52-1b1c-33bb-ec887abc0820",
         "age": 1,
         "sha256": "a2ff2dacc3d0e85fae03432bfd37b4f473e3c43da4d901eba5825c1070b4a919"
       },
-      "resolution_contract": "67aaefe0db9b03fc8060b994eae87a985cb85a2a01c5a73a9266e95b29472c8f",
       "symbols": {
         "CChannel::CombinedGeometryUpdate": {
           "name": "public: virtual long __cdecl CChannel::CombinedGeometryUpdate(unsigned int,enum MilCombineMode::Enum,unsigned int,unsigned int) __ptr64",
@@ -1344,18 +1290,12 @@
     },
     {
       "revision": 2605,
-      "image": {
-        "time_date_stamp": 348698581,
-        "size_of_image": 4280320,
-        "sha256": "2625071a1a3fa8b9f34bee1d9b19bc07b4615b6494a840523fd2ebec1153507b"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "baf994cf-4bf9-8f48-35b3-5088f46c38a6",
         "age": 1,
         "sha256": "a0f7eb6087a27500706d05910194369f54462e6395a7ab32ec99bf848852a5aa"
       },
-      "resolution_contract": "67aaefe0db9b03fc8060b994eae87a985cb85a2a01c5a73a9266e95b29472c8f",
       "symbols": {
         "CChannel::CombinedGeometryUpdate": {
           "name": "public: virtual long __cdecl CChannel::CombinedGeometryUpdate(unsigned int,enum MilCombineMode::Enum,unsigned int,unsigned int) __ptr64",
@@ -1493,18 +1433,12 @@
     },
     {
       "revision": 2704,
-      "image": {
-        "time_date_stamp": 2850404734,
-        "size_of_image": 4284416,
-        "sha256": "975eba81b1d1a48d61ecf2972f0cfea87cfa48ea207c54ee86cfcbade5644093"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "3a12e465-61f1-76a3-84a9-37fd5a9b491a",
         "age": 1,
         "sha256": "c6412a31b78a58ce097bc1fa95d4272231901662b1c0aa7d56fa52684423c8be"
       },
-      "resolution_contract": "67aaefe0db9b03fc8060b994eae87a985cb85a2a01c5a73a9266e95b29472c8f",
       "symbols": {
         "CChannel::CombinedGeometryUpdate": {
           "name": "public: virtual long __cdecl CChannel::CombinedGeometryUpdate(unsigned int,enum MilCombineMode::Enum,unsigned int,unsigned int) __ptr64",
@@ -1642,18 +1576,12 @@
     },
     {
       "revision": 2804,
-      "image": {
-        "time_date_stamp": 1640362259,
-        "size_of_image": 4280320,
-        "sha256": "c5397191db8e7fa929e1846cd2cebec51cc2a8ab36d2ab6ecfaf875522112ab1"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "e1aa62ca-1e13-a5e6-69f6-888a3aac0b1d",
         "age": 1,
         "sha256": "8f73983a9b6efdfd7a6dc93f256b779de83fda63e24b6fdcd8fa01d7b187f8f0"
       },
-      "resolution_contract": "67aaefe0db9b03fc8060b994eae87a985cb85a2a01c5a73a9266e95b29472c8f",
       "symbols": {
         "CChannel::CombinedGeometryUpdate": {
           "name": "public: virtual long __cdecl CChannel::CombinedGeometryUpdate(unsigned int,enum MilCombineMode::Enum,unsigned int,unsigned int) __ptr64",

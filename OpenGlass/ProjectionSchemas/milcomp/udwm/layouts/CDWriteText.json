@@ -1,0 +1,22 @@
+{
+  "layouts": [
+    {
+      "name": "CDWriteText_GetTextInterface",
+      "id": "CDWriteText_GetTextInterface",
+      "kind": "field",
+      "type": "IText",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 184,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CDWriteText::CDWriteText\nxrefs to CDWriteText::`vftable'{for `IText'}"
+    }
+  ]
+}

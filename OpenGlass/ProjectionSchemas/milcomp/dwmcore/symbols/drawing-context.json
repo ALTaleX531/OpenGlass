@@ -1,0 +1,152 @@
+{
+  "symbols": [
+    {
+      "name": "Symbol_CDrawingContext_GetOcclusion",
+      "id": "CDrawingContext::GetOcclusion",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CDrawingContext::GetOcclusion",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: class COcclusionContext const * __ptr64 __cdecl CDrawingContext::GetOcclusion(void)const __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CDrawingContext_GetClipBoundsWorld",
+      "id": "CDrawingContext::GetClipBoundsWorld",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CDrawingContext::GetClipBoundsWorld",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: void __cdecl CDrawingContext::GetClipBoundsWorld(class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> * __ptr64,bool)const __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CDrawingContext_FillShapeWithBrush",
+      "id": "CDrawingContext::FillShapeWithBrush",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CDrawingContext::FillShapeWithBrush",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CDrawingContext::FillShapeWithBrush(class CShape const & __ptr64,struct ID2D1Brush * __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CDrawingContext_FlushD2D",
+      "id": "CDrawingContext::FlushD2D",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CDrawingContext::FlushD2D",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CDrawingContext::FlushD2D(void) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function",
+      "notes": "GlassIntegrity and GlassKernel flush pending D2D work around injected state transitions; keep this distinct from EnsureBeginDraw, which refreshes the selected target afterward."
+    },
+    {
+      "name": "Symbol_CDrawingContext_ApplyRenderStateInternal",
+      "id": "CDrawingContext::ApplyRenderStateInternal",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CDrawingContext::ApplyRenderStateInternal",
+          "ranges": [
+            {
+              "symbol_names": [
+                "private: long __cdecl CDrawingContext::ApplyRenderStateInternal(bool) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CDrawingContext_GetCurrentVisual",
+      "id": "CDrawingContext::GetCurrentVisual",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CDrawingContext::GetCurrentVisual",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: class CVisual * __ptr64 __cdecl CDrawingContext::GetCurrentVisual(void)const __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CDrawingContext_DrawVisualTree",
+      "id": "CDrawingContext::DrawVisualTree",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "CDrawingContext_DrawVisualTree_t",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CDrawingContext::DrawVisualTree(class CVisualTree const * __ptr64,class TMil3DRect<float,class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded>,struct D3D_RECT_F,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class COcclusionContext const * __ptr64,enum ClearMode::Enum,float,class CVisual * __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    }
+  ]
+}

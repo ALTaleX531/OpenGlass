@@ -45,49 +45,70 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="TestHarness.hpp" />
+    <ClInclude Include="TestCases.hpp" />
+    <ClInclude Include="PngFixture.hpp" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="ProjectionFixture.hpp" />
   </ItemGroup>
   <ItemGroup>
-	<ClCompile Include="..\Common\PngAssetValidation.cpp">
+	<_ExternalClCompile Include="..\Common\PngAssetValidation.cpp">
 	  <PrecompiledHeader>NotUsing</PrecompiledHeader>
-	</ClCompile>
-	<ClCompile Include="..\Common\PeCodeViewIdentity.cpp">
+	</_ExternalClCompile>
+	<_ExternalClCompile Include="..\Common\PeCodeViewIdentity.cpp">
 	  <PrecompiledHeader>NotUsing</PrecompiledHeader>
-	</ClCompile>
-	<ClCompile Include="..\Common\ThemeAtlasLayout.cpp">
+	</_ExternalClCompile>
+	<_ExternalClCompile Include="..\Common\ThemeAtlasLayout.cpp">
 	  <PrecompiledHeader>NotUsing</PrecompiledHeader>
-	</ClCompile>
-	<ClCompile Include="CrossTu.cpp" />
-    <ClCompile Include="Tests.cpp" />
+	</_ExternalClCompile>
+    <ClCompile Include="RectFTests.cpp" />
+    <ClCompile Include="HookHelperTests.cpp" />
+    <ClCompile Include="ProjectionHelperTests.cpp" />
+    <ClCompile Include="ProjectionRuntimeTests.cpp" />
+    <ClCompile Include="SymbolCatalogTests.cpp" />
+    <ClCompile Include="DwmSettingsTests.cpp" />
+    <ClCompile Include="RegistryValueResolverTests.cpp" />
+    <ClCompile Include="PngAssetValidationTests.cpp" />
+    <ClCompile Include="ThemeAtlasLayoutTests.cpp" />
+    <ClCompile Include="ColorizationPresetsTests.cpp" />
+    <ClCompile Include="BlurSettingsTests.cpp" />
+    <ClCompile Include="SettingsCatalogTests.cpp" />
+    <ClCompile Include="RegistryConfigTests.cpp" />
+    <ClCompile Include="PreviewJournalTests.cpp" />
+    <ClCompile Include="EffectiveConfigurationTests.cpp" />
+    <ClCompile Include="ShellColorRefreshTests.cpp" />
+    <ClCompile Include="ColorPreferenceTests.cpp" />
+    <ClCompile Include="ConfigurationMigrationTests.cpp" />
+    <ClCompile Include="PresetPackageTests.cpp" />
+    <ClCompile Include="EditorScopeTests.cpp" />
+    <ClCompile Include="ConfigurationResourcesTests.cpp" />
+    <ClCompile Include="ProjectionInvokeTests.cpp" />
+    <ClCompile Include="ProjectionFixture.cpp" />
+    <ClCompile Include="Main.cpp" />
     <ClCompile Include="ThemeColorizationTests.cpp">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <ExceptionHandling>Sync</ExceptionHandling>
     </ClCompile>
-    <ClCompile Include="..\OpenGlassThemeExtension\Colorization.cpp">
+    <_ExternalClCompile Include="..\OpenGlassThemeExtension\Colorization.cpp">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <ExceptionHandling>Sync</ExceptionHandling>
-    </ClCompile>
-    <ClCompile Include="WrappingTextTests.cpp">
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <RuntimeTypeInfo>true</RuntimeTypeInfo>
-    </ClCompile>
-	<ClCompile Include="..\Common\HookHelper.cpp">
+    </_ExternalClCompile>
+	<_ExternalClCompile Include="..\Common\HookHelper.cpp">
 	  <PrecompiledHeader>NotUsing</PrecompiledHeader>
-	</ClCompile>
-    <ClCompile Include="..\OpenGlass\ProjectionRuntime.cpp">
+	</_ExternalClCompile>
+    <_ExternalClCompile Include="..\OpenGlass\ProjectionRuntime.cpp">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\OpenGlass\SymbolCatalog.cpp">
+    </_ExternalClCompile>
+    <_ExternalClCompile Include="..\OpenGlass\SymbolCatalog.cpp">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\OpenGlassGUI\ColorPreference.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
-    <ClCompile Include="..\OpenGlassGUI\RegistryConfig.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
-    <ClCompile Include="..\OpenGlassGUI\ConfigurationMigration.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
-    <ClCompile Include="..\OpenGlassGUI\ConfigurationResources.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
-    <ClCompile Include="..\OpenGlassGUI\PresetPackage.cpp">
+    </_ExternalClCompile>
+    <_ExternalClCompile Include="..\OpenGlassGUI\ColorPreference.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></_ExternalClCompile>
+    <_ExternalClCompile Include="..\OpenGlassGUI\RegistryConfig.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></_ExternalClCompile>
+    <_ExternalClCompile Include="..\OpenGlassGUI\ConfigurationMigration.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></_ExternalClCompile>
+    <_ExternalClCompile Include="..\OpenGlassGUI\ConfigurationResources.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></_ExternalClCompile>
+    <_ExternalClCompile Include="..\OpenGlassGUI\PresetPackage.cpp">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-    </ClCompile>
+    </_ExternalClCompile>
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>

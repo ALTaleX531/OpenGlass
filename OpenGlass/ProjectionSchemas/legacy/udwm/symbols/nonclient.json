@@ -1,0 +1,53 @@
+{
+  "symbols": [
+    {
+      "name": "Symbol_CWindowBorder_EnableBorder",
+      "id": "CWindowBorder::EnableBorder",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CWindowBorder::EnableBorder",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CWindowBorder::EnableBorder(bool) __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 22000,
+                "revision": 0
+              },
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_SetMargin",
+      "id": "SetMargin",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "bool (WINAPI*)(MARGINS*, int, int, int, int, const MARGINS*)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "bool __cdecl SetMargin(struct _MARGINS * __ptr64,int,int,int,int,struct _MARGINS const * __ptr64)"
+              ],
+              "min_inclusive": {
+                "build": 22000,
+                "revision": 0
+              },
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw",
+      "notes": "Paired IDA audits show no private RCX dependency after either direct SetMargin call on 22000.194 or 22621.1, so those builds use the ordinary C++ dispatcher. On 26100.1, 26100.7705, and 26100.8972, UpdateMarginsDependentOnStyle calls a three-argument wrapper whose third path consumes the preserved destination pointer from RCX through a later cmovz after the wrapper returns. Use the RCX-preserving physical dispatcher for build 26100 and later; keep replacement dispatch, the original call, and HookRundown release inside the preserved region."
+    }
+  ]
+}

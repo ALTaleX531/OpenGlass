@@ -1,0 +1,36 @@
+{
+  "layouts": [
+    {
+      "name": "CAccent_GetAccentPolicy",
+      "id": "CAccent_GetAccentPolicy",
+      "kind": "field",
+      "type": "ACCENT_POLICY",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 280,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 288,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 240,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CAccent::UpdateAccentPolicy"
+    }
+  ]
+}

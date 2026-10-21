@@ -1,51 +1,564 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Architecture"><UniqueIdentifier>{5B7F36E1-3DB9-4FB9-AE45-5AEE95DD1844}</UniqueIdentifier></Filter>
-    <Filter Include="Architecture\Legacy"><UniqueIdentifier>{6152F26A-C7CF-4755-9467-A44325993E3F}</UniqueIdentifier></Filter>
-    <Filter Include="Architecture\Legacy\Header Files"><UniqueIdentifier>{60DBB3A9-8A93-416F-9B50-C5CE113E92A0}</UniqueIdentifier></Filter>
-    <Filter Include="Architecture\Legacy\Source Files"><UniqueIdentifier>{89ECA3AC-C055-489C-A903-0595292342B4}</UniqueIdentifier></Filter>
-    <Filter Include="Projection Schemas"><UniqueIdentifier>{40AC6149-D527-48A0-89FC-7798866DBFC3}</UniqueIdentifier></Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{DA652667-D13A-5A67-8D3B-EB75DBE9C834}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;ipp;xsd;hlsli</Extensions>
+    </Filter>
+    <Filter Include="Projection Schemas">
+      <UniqueIdentifier>{40AC6149-D527-48A0-89FC-7798866DBFC3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{80315C3F-726D-5D98-A4B2-EE114A80553B}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx;hlsl</Extensions>
+    </Filter>
+    <Filter Include="Symbol Catalogs">
+      <UniqueIdentifier>{485C62EE-732A-5E17-931A-5FFF9273BE0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Misc Files">
+      <UniqueIdentifier>{B3B68122-88E4-5ECB-AEA0-97B6FB5FF78F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{93B6815D-E974-5AE4-94E3-BFF8C2F0ECC8}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;cso</Extensions>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Architecture\Legacy\dcompPrivates.hpp"><Filter>Architecture\Legacy\Header Files</Filter></ClInclude>
-    <ClInclude Include="Architecture\Legacy\Dwm.hpp"><Filter>Architecture\Legacy\Header Files</Filter></ClInclude>
-    <ClInclude Include="Architecture\Legacy\dwmcoreProjection.hpp"><Filter>Architecture\Legacy\Header Files</Filter></ClInclude>
-    <ClInclude Include="Architecture\Legacy\dwmcoreProjection.Offsets.hpp"><Filter>Architecture\Legacy\Header Files</Filter></ClInclude>
-    <ClInclude Include="Architecture\Legacy\GlassCoverageSet.hpp"><Filter>Architecture\Legacy\Header Files</Filter></ClInclude>
-    <ClInclude Include="Architecture\Legacy\GlassEffectBrush.hpp"><Filter>Architecture\Legacy\Header Files</Filter></ClInclude>
-    <ClInclude Include="Architecture\Legacy\GlassIntegrity.hpp"><Filter>Architecture\Legacy\Header Files</Filter></ClInclude>
-    <ClInclude Include="Architecture\Legacy\GlassKernel.hpp"><Filter>Architecture\Legacy\Header Files</Filter></ClInclude>
-    <ClInclude Include="Architecture\Legacy\GlassReflectionBrush.hpp"><Filter>Architecture\Legacy\Header Files</Filter></ClInclude>
-    <ClInclude Include="Architecture\Legacy\ReflectionRealizer.hpp"><Filter>Architecture\Legacy\Header Files</Filter></ClInclude>
-    <ClInclude Include="Architecture\Legacy\uDwmProjection.hpp"><Filter>Architecture\Legacy\Header Files</Filter></ClInclude>
-    <ClInclude Include="Architecture\Legacy\uDwmProjection.Offsets.hpp"><Filter>Architecture\Legacy\Header Files</Filter></ClInclude>
+    <ClCompile Include="Architecture\Legacy\AccentOverrider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Architecture\Legacy\ButtonGlowHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Architecture\Legacy\CaptionMetricsTweaker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Architecture\Legacy\CaptionTextHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Architecture\Legacy\GlassCoverageSet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Architecture\Legacy\GlassEffectBrush.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Architecture\Legacy\GlassEngine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Architecture\Legacy\GlassFrameDemodernizer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Architecture\Legacy\GlassFrameEnhancer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Architecture\Legacy\GlassFrameHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Architecture\Legacy\GlassIntegrity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Architecture\Legacy\GlassKernel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Architecture\Legacy\GlassReflectionBrush.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Architecture\Legacy\GlassReflectionHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Architecture\Legacy\GlassRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Architecture\Legacy\OpenGlass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Architecture\Legacy\ReflectionRealizer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Architecture\Legacy\AccentOverrider.cpp"><Filter>Architecture\Legacy\Source Files</Filter></ClCompile>
-    <ClCompile Include="Architecture\Legacy\ButtonGlowHandler.cpp"><Filter>Architecture\Legacy\Source Files</Filter></ClCompile>
-    <ClCompile Include="Architecture\Legacy\CaptionMetricsTweaker.cpp"><Filter>Architecture\Legacy\Source Files</Filter></ClCompile>
-    <ClCompile Include="Architecture\Legacy\CaptionTextHandler.cpp"><Filter>Architecture\Legacy\Source Files</Filter></ClCompile>
-    <ClCompile Include="Architecture\Legacy\GlassCoverageSet.cpp"><Filter>Architecture\Legacy\Source Files</Filter></ClCompile>
-    <ClCompile Include="Architecture\Legacy\GlassEffectBrush.cpp"><Filter>Architecture\Legacy\Source Files</Filter></ClCompile>
-    <ClCompile Include="Architecture\Legacy\GlassEngine.cpp"><Filter>Architecture\Legacy\Source Files</Filter></ClCompile>
-    <ClCompile Include="Architecture\Legacy\GlassFrameDemodernizer.cpp"><Filter>Architecture\Legacy\Source Files</Filter></ClCompile>
-    <ClCompile Include="Architecture\Legacy\GlassFrameEnhancer.cpp"><Filter>Architecture\Legacy\Source Files</Filter></ClCompile>
-    <ClCompile Include="Architecture\Legacy\GlassFrameHandler.cpp"><Filter>Architecture\Legacy\Source Files</Filter></ClCompile>
-    <ClCompile Include="Architecture\Legacy\GlassIntegrity.cpp"><Filter>Architecture\Legacy\Source Files</Filter></ClCompile>
-    <ClCompile Include="Architecture\Legacy\GlassKernel.cpp"><Filter>Architecture\Legacy\Source Files</Filter></ClCompile>
-    <ClCompile Include="Architecture\Legacy\GlassReflectionBrush.cpp"><Filter>Architecture\Legacy\Source Files</Filter></ClCompile>
-    <ClCompile Include="Architecture\Legacy\GlassReflectionHandler.cpp"><Filter>Architecture\Legacy\Source Files</Filter></ClCompile>
-    <ClCompile Include="Architecture\Legacy\GlassRenderer.cpp"><Filter>Architecture\Legacy\Source Files</Filter></ClCompile>
-    <ClCompile Include="Architecture\Legacy\OpenGlass.cpp"><Filter>Architecture\Legacy\Source Files</Filter></ClCompile>
-    <ClCompile Include="Architecture\Legacy\ReflectionRealizer.cpp"><Filter>Architecture\Legacy\Source Files</Filter></ClCompile>
+    <ClInclude Include="Architecture\Legacy\DetourChains.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Architecture\Legacy\Dwm.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Architecture\Legacy\GlassCoverageSet.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Architecture\Legacy\GlassEffectBrush.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Architecture\Legacy\GlassIntegrity.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Architecture\Legacy\GlassKernel.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Architecture\Legacy\GlassReflectionBrush.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Architecture\Legacy\ReflectionRealizer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Architecture\Legacy\dcompPrivates.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Architecture\Legacy\dwmcoreProjection.Offsets.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Architecture\Legacy\dwmcoreProjection.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Architecture\Legacy\uDwmProjection.Offsets.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Architecture\Legacy\uDwmProjection.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <MASM Include="Architecture\Legacy\GlassFrameDemodernizer.Shims.asm"><Filter>Architecture\Legacy\Source Files</Filter></MASM>
+    <MASM Include="Architecture\Legacy\GlassFrameDemodernizer.Shims.asm">
+      <Filter>Source Files</Filter>
+    </MASM>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ProjectionSchemas\legacy\dwmcore.json"><Filter>Projection Schemas</Filter></None>
-    <None Include="ProjectionSchemas\legacy\README.md"><Filter>Projection Schemas</Filter></None>
-    <None Include="ProjectionSchemas\legacy\udwm.json"><Filter>Projection Schemas</Filter></None>
+    <None Include="ProjectionSchemas\legacy\README.md">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\dwmcore.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\dwmcore\layouts\CArrayBasedCoverageSet.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\dwmcore\layouts\CD2DContext.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\dwmcore\layouts\CD3DDevice.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\dwmcore\layouts\CD3DSurface.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\dwmcore\layouts\CDirtyRegion.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\dwmcore\layouts\CDrawingContext.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\dwmcore\layouts\CImageLegacyMilBrush.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\dwmcore\layouts\COcclusionContext.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\dwmcore\layouts\CRenderData.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\dwmcore\layouts\CShape.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\dwmcore\layouts\CSolidColorLegacyMilBrush.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\dwmcore\layouts\CZOrderedRectBase.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\dwmcore\layouts\ID2DContextOwner.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\dwmcore\layouts\IDeviceTarget.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\dwmcore\layouts\IDeviceTexture.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\dwmcore\layouts\IDrawingContext.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\dwmcore\layouts\IRenderTarget.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\dwmcore\layouts\RenderTargetInfo.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\dwmcore\symbols\device-targets.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\dwmcore\symbols\dirty-regions.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\dwmcore\symbols\drawing-context.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\dwmcore\symbols\geometry.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\dwmcore\symbols\occlusion.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\dwmcore\symbols\resources.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\udwm.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\udwm\layouts\CAccent.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\udwm\layouts\CAnimatedGlassSheet.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\udwm\layouts\CAtlasedImage.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\udwm\layouts\CAtlasedRectsVisual.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\udwm\layouts\CBaseObject.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\udwm\layouts\CBitmapSource.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\udwm\layouts\CButton.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\udwm\layouts\CCompositor.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\udwm\layouts\CDWriteText.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\udwm\layouts\CDesktopManager.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\udwm\layouts\CDrawGeometryInstruction.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\udwm\layouts\CGlassColorizationResources.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\udwm\layouts\CGraphicsManager.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\udwm\layouts\CLivePreview.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\udwm\layouts\CRenderDataVisual.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\udwm\layouts\CResource.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\udwm\layouts\CResourceProxy.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\udwm\layouts\CText.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\udwm\layouts\CTopLevelWindow.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\udwm\layouts\CVisual.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\udwm\layouts\CWindowData.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\udwm\layouts\IText.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\udwm\layouts\LivePreviewResource.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\udwm\symbols\caption.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\udwm\symbols\colorization.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\udwm\symbols\desktop.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\udwm\symbols\live-preview.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\udwm\symbols\nonclient.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\udwm\symbols\resources.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\udwm\symbols\top-level-window.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\udwm\symbols\visuals.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\legacy\udwm\symbols\window-frame.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="SymbolCatalogs\legacy\dwmcore\17763.json">
+      <Filter>Symbol Catalogs</Filter>
+    </None>
+    <None Include="SymbolCatalogs\legacy\dwmcore\18362.json">
+      <Filter>Symbol Catalogs</Filter>
+    </None>
+    <None Include="SymbolCatalogs\legacy\dwmcore\19041.json">
+      <Filter>Symbol Catalogs</Filter>
+    </None>
+    <None Include="SymbolCatalogs\legacy\dwmcore\20348.json">
+      <Filter>Symbol Catalogs</Filter>
+    </None>
+    <None Include="SymbolCatalogs\legacy\dwmcore\22000.json">
+      <Filter>Symbol Catalogs</Filter>
+    </None>
+    <None Include="SymbolCatalogs\legacy\dwmcore\22621.json">
+      <Filter>Symbol Catalogs</Filter>
+    </None>
+    <None Include="SymbolCatalogs\legacy\dwmcore\26100.json">
+      <Filter>Symbol Catalogs</Filter>
+    </None>
+    <None Include="SymbolCatalogs\legacy\index.json">
+      <Filter>Symbol Catalogs</Filter>
+    </None>
+    <None Include="SymbolCatalogs\legacy\udwm\17763.json">
+      <Filter>Symbol Catalogs</Filter>
+    </None>
+    <None Include="SymbolCatalogs\legacy\udwm\18362.json">
+      <Filter>Symbol Catalogs</Filter>
+    </None>
+    <None Include="SymbolCatalogs\legacy\udwm\19041.json">
+      <Filter>Symbol Catalogs</Filter>
+    </None>
+    <None Include="SymbolCatalogs\legacy\udwm\20348.json">
+      <Filter>Symbol Catalogs</Filter>
+    </None>
+    <None Include="SymbolCatalogs\legacy\udwm\22000.json">
+      <Filter>Symbol Catalogs</Filter>
+    </None>
+    <None Include="SymbolCatalogs\legacy\udwm\22621.json">
+      <Filter>Symbol Catalogs</Filter>
+    </None>
+    <None Include="SymbolCatalogs\legacy\udwm\26100.json">
+      <Filter>Symbol Catalogs</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AeroColorizationEffect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AeroEffect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BlurEffect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BuiltInSymbolCatalog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomThemeAtlasLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D3DGlassRealizer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GlassRealizer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GlassSafetyZoneLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GlassService.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialRealizer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectionRegistry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectionRuntime.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ServiceHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SymbolCatalog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SymbolDownloader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SymbolParser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="module.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClInclude Include="AccentOverrider.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AeroColorizationEffect.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AeroEffect.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BlurEffect.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Buffer2D.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonGlowHandler.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CaptionMetricsTweaker.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CaptionTextHandler.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomThemeAtlasLoader.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D3DGlassRealizer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DxgiPrivates.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GlassEngine.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GlassFrameDemodernizer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GlassFrameEnhancer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GlassFrameHandler.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GlassRealizer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GlassReflectionHandler.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GlassRenderer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GlassSafetyZoneLayer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GlassService.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialRealizer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MsstyleInternals.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OSHelper.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGlass.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectionHelper.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SymbolCatalog.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SymbolDownloader.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SymbolParser.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Util.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cpprt.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="framework.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="module.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="wil.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <FxCompile Include="AeroColorizationEffect.hlsl">
+      <Filter>Source Files</Filter>
+    </FxCompile>
+    <FxCompile Include="Blur.PS_BlurH.hlsl">
+      <Filter>Source Files</Filter>
+    </FxCompile>
+    <FxCompile Include="Blur.PS_BlurV.hlsl">
+      <Filter>Source Files</Filter>
+    </FxCompile>
+    <FxCompile Include="Blur.PS_BlurV_Vista.hlsl">
+      <Filter>Source Files</Filter>
+    </FxCompile>
+    <FxCompile Include="Blur.VS.hlsl">
+      <Filter>Source Files</Filter>
+    </FxCompile>
+    <Image Include="reflection.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <None Include="AeroColorizationEffect.cso">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Blur.Common.hlsli">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="Blur.PS_BlurH.cso">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Blur.PS_BlurV.cso">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Blur.PS_BlurV_Vista.cso">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Blur.VS.cso">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Common.hlsli">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="module.def">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="packages.config">
+      <Filter>Misc Files</Filter>
+    </None>
+    <ResourceCompile Include="OpenGlass.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

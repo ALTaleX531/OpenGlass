@@ -1,0 +1,112 @@
+{
+  "layouts": [
+    {
+      "name": "CLegacyNonClientBackground_GetBorderColor",
+      "id": "CLegacyNonClientBackground_GetBorderColor",
+      "kind": "field",
+      "type": "D2D1_COLOR_F",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 224,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CLegacyNonClientBackground::SetBorderColor"
+    },
+    {
+      "name": "CLegacyNonClientBackground_GetBorderInnerBounds",
+      "id": "CLegacyNonClientBackground_GetBorderInnerBounds",
+      "kind": "field",
+      "type": "D2D1_RECT_F",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 240,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CLegacyNonClientBackground::SetBorderRects"
+    },
+    {
+      "name": "CLegacyNonClientBackground_GetBorderOuterBounds",
+      "id": "CLegacyNonClientBackground_GetBorderOuterBounds",
+      "kind": "field",
+      "type": "D2D1_RECT_F",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 256,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CLegacyNonClientBackground::SetBorderRects"
+    },
+    {
+      "name": "CLegacyNonClientBackground_GetBorderVisual",
+      "id": "CLegacyNonClientBackground_GetBorderVisual",
+      "kind": "field",
+      "type": "CNineGridVisual*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 200,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CLegacyNonClientBackground::EnsureBorderSprite"
+    },
+    {
+      "name": "CLegacyNonClientBackground_GetCaptionColor",
+      "id": "CLegacyNonClientBackground_GetCaptionColor",
+      "kind": "field",
+      "type": "D2D1_COLOR_F",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 208,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CLegacyNonClientBackground::SetCaptionColor"
+    },
+    {
+      "name": "CLegacyNonClientBackground_GetCaptionVisual",
+      "id": "CLegacyNonClientBackground_GetCaptionVisual",
+      "kind": "field",
+      "type": "CRectangleVisual*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 192,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CLegacyNonClientBackground::EnsureCaptionSprite"
+    }
+  ]
+}

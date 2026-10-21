@@ -17,29 +17,14 @@ bool Projection::ModuleRegistry::Matches(const SymbolSpec& spec, LPCSTR complete
 
 void Projection::ModuleRegistry::PublishBindings() noexcept
 {
-	const auto bindings = std::span{m_bindings, m_bindingCount};
-	for (size_t bindingIndex = 0; bindingIndex < bindings.size(); bindingIndex++)
+	for (const auto& binding : std::span{m_bindings, m_bindingCount})
 	{
-		const auto& binding = bindings[bindingIndex];
-		if (std::find_if(bindings.begin(), bindings.begin() + bindingIndex, [&](const BindingSpec& prior)
-		{
-			return prior.storage == binding.storage;
-		}) != bindings.begin() + bindingIndex)
-		{
-			continue;
-		}
-
 		PVOID value{binding.fallback};
-		for (const auto& candidateBinding : bindings)
+		for (const auto symbolIndex : binding.symbolIndices)
 		{
-			if (candidateBinding.storage != binding.storage || candidateBinding.symbolIndex >= m_symbolCount)
+			if (m_resolved[symbolIndex])
 			{
-				continue;
-			}
-			const auto symbolIndex = candidateBinding.symbolIndex;
-			if (m_resolutionStates[symbolIndex] == ResolutionState::Unique)
-			{
-				value = m_candidates[symbolIndex];
+				value = m_resolved[symbolIndex];
 				break;
 			}
 		}
@@ -50,8 +35,6 @@ void Projection::ModuleRegistry::PublishBindings() noexcept
 bool Projection::ModuleRegistry::Freeze(Version version) noexcept
 {
 	m_version = version;
-	m_descriptorError = false;
-
 	if (!SupportsVersion(version))
 	{
 		std::fill_n(m_layoutSupported, m_layoutCount, false);
@@ -59,52 +42,13 @@ bool Projection::ModuleRegistry::Freeze(Version version) noexcept
 		return false;
 	}
 
-	for (const auto& spec : std::span{m_symbolSpecs, m_symbolSpecCount})
-	{
-		if (spec.symbolIndex >= m_symbolCount || !spec.nameCount ||
-			static_cast<size_t>(spec.firstNameIndex) + spec.nameCount > m_symbolNameCount ||
-			spec.minVersionIndex >= m_versionCount || spec.maxVersionIndex >= m_versionCount)
-		{
-			m_descriptorError = true;
-		}
-	}
-
-	for (size_t symbolIndex = 0; symbolIndex < m_symbolCount; symbolIndex++)
-	{
-		bool activeBinding{};
-		for (const auto& spec : std::span{m_symbolSpecs, m_symbolSpecCount})
-		{
-			if (spec.symbolIndex != symbolIndex || !IsEnabled(spec) ||
-				!IsVersionInRange(version, RangeOf(spec)))
-			{
-				continue;
-			}
-			if (activeBinding)
-			{
-				m_descriptorError = true;
-				break;
-			}
-			activeBinding = true;
-		}
-	}
-
 	for (size_t index = 0; index < m_layoutCount; index++)
 	{
 		const auto& layout = m_layoutSpecs[index];
 		m_layoutSupported[index] = false;
-		if (static_cast<size_t>(layout.firstCase) + layout.caseCount > m_layoutCaseCount)
-		{
-			m_descriptorError = true;
-			continue;
-		}
 		for (const auto& item : std::span{m_layoutCases + layout.firstCase, layout.caseCount})
 		{
-			if (item.boundaryVersionIndex >= m_versionCount)
-			{
-				m_descriptorError = true;
-				break;
-			}
-			const auto boundary = VersionAt(item.boundaryVersionIndex);
+			const auto boundary = m_versions[item.boundaryVersionIndex];
 			if (!boundary.build || VersionBefore(version, boundary))
 			{
 				m_selectedOffsets[index] = item.offset;
@@ -114,7 +58,7 @@ bool Projection::ModuleRegistry::Freeze(Version version) noexcept
 		}
 	}
 	ResetSymbols();
-	return !m_descriptorError;
+	return true;
 }
 
 void Projection::ModuleRegistry::ResetSymbols() noexcept
@@ -126,11 +70,11 @@ void Projection::ModuleRegistry::ResetSymbols() noexcept
 	PublishBindings();
 }
 
-bool Projection::ModuleRegistry::CollectAddress(size_t symbolIndex, PVOID address) noexcept
+void Projection::ModuleRegistry::CollectAddress(size_t symbolIndex, PVOID address) noexcept
 {
-	if (symbolIndex >= m_symbolCount || !address)
+	if (!address)
 	{
-		return false;
+		return;
 	}
 	switch (m_resolutionStates[symbolIndex])
 	{
@@ -147,7 +91,6 @@ bool Projection::ModuleRegistry::CollectAddress(size_t symbolIndex, PVOID addres
 	case ResolutionState::Ambiguous:
 		break;
 	}
-	return true;
 }
 
 void Projection::ModuleRegistry::Collect(LPCSTR completeSymbolName, PVOID address) noexcept
@@ -164,43 +107,25 @@ void Projection::ModuleRegistry::Collect(LPCSTR completeSymbolName, PVOID addres
 	}
 }
 
-bool Projection::ModuleRegistry::CollectResolvedAddress(size_t symbolIndex, PVOID address) noexcept
+void Projection::ModuleRegistry::CollectCatalog(HMODULE module, std::span<const UINT32> rvas) noexcept
 {
-	return CollectAddress(symbolIndex, address);
-}
-bool Projection::ModuleRegistry::SymbolIsData(size_t symbolIndex, bool& isData) const noexcept
-{
-	if (symbolIndex >= m_symbolCount)
+	const auto base = reinterpret_cast<BYTE*>(module);
+	for (size_t index = 0; index < rvas.size(); index++)
 	{
-		return false;
+		const auto rva = rvas[index];
+		m_candidates[index] = rva ? base + rva : nullptr;
+		m_resolutionStates[index] = rva ? ResolutionState::Unique : ResolutionState::Missing;
 	}
-	for (size_t specIndex = 0; specIndex < m_symbolSpecCount; specIndex++)
-	{
-		const auto& spec = m_symbolSpecs[specIndex];
-		if (spec.symbolIndex == symbolIndex && IsEnabled(spec) && IsVersionInRange(m_version, RangeOf(spec)))
-		{
-			isData = HasFlag(spec.flags, SymbolFlags::Data);
-			return true;
-		}
-	}
-	return false;
+	m_undecorationFailureCount = 0;
 }
-
 
 void Projection::ModuleRegistry::RecordUndecorationFailure() noexcept
 {
-	if (m_undecorationFailureCount != ULONG_MAX)
-	{
-		m_undecorationFailureCount++;
-	}
+	m_undecorationFailureCount++;
 }
 
 bool Projection::ModuleRegistry::ValidateSymbols() const noexcept
 {
-	if (m_descriptorError)
-	{
-		return false;
-	}
 	for (size_t specIndex = 0; specIndex < m_symbolSpecCount; specIndex++)
 	{
 		const auto& spec = m_symbolSpecs[specIndex];
@@ -215,6 +140,7 @@ bool Projection::ModuleRegistry::ValidateSymbols() const noexcept
 
 void Projection::ModuleRegistry::CommitSymbols() noexcept
 {
+	std::fill_n(m_resolved, m_symbolCount, nullptr);
 	for (size_t specIndex = 0; specIndex < m_symbolSpecCount; specIndex++)
 	{
 		const auto& spec = m_symbolSpecs[specIndex];

@@ -1,0 +1,127 @@
+{
+  "layouts": [
+    {
+      "name": "CAnimatedGlassSheet_GetAdjustedDestinationRect",
+      "id": "CAnimatedGlassSheet_GetAdjustedDestinationRect",
+      "kind": "field",
+      "type": "RECT",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 416,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CAnimatedGlassSheet::AdjustTargetRect / UpdateRectAnimation\nthis->adjustedDestinationRect"
+    },
+    {
+      "name": "CAnimatedGlassSheet_GetAtlasPaddingBottom_Rect",
+      "id": "CAnimatedGlassSheet_GetAtlasPaddingBottom_Rect",
+      "kind": "field",
+      "type": "RECT",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 480,
+              "otherwise": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "CAnimatedGlassSheet_GetAtlasPaddingLeft_Rect",
+      "id": "CAnimatedGlassSheet_GetAtlasPaddingLeft_Rect",
+      "kind": "field",
+      "type": "RECT",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 464,
+              "otherwise": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "CAnimatedGlassSheet_GetAtlasPaddingRight_Rect",
+      "id": "CAnimatedGlassSheet_GetAtlasPaddingRight_Rect",
+      "kind": "field",
+      "type": "RECT",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 464,
+              "otherwise": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "CAnimatedGlassSheet_GetAtlasPaddingTop_Rect",
+      "id": "CAnimatedGlassSheet_GetAtlasPaddingTop_Rect",
+      "kind": "field",
+      "type": "RECT",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 480,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CAnimatedGlassSheet::Initialize\nAtlas padding insets for the glass sheet region"
+    },
+    {
+      "name": "CAnimatedGlassSheet_GetDestinationRect",
+      "id": "CAnimatedGlassSheet_GetDestinationRect",
+      "kind": "field",
+      "type": "RECT",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 400,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CAnimatedGlassSheet::Initialize / AdjustTargetRect / StartRectAnimation /\nUpdateRectAnimation this->destinationRect"
+    },
+    {
+      "name": "CAnimatedGlassSheet_GetSourceRect",
+      "id": "CAnimatedGlassSheet_GetSourceRect",
+      "kind": "field",
+      "type": "RECT",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 384,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CAnimatedGlassSheet::Initialize / AdjustTargetRect / StartRectAnimation /\nUpdateRectAnimation this->sourceRect"
+    }
+  ]
+}

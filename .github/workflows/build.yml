@@ -50,17 +50,19 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Prepare Python tools
+        uses: ./.github/actions/prepare-python
+
       - name: Run Python unit tests
         run: |
           $PSNativeCommandUseErrorActionPreference = $true
-          python -m unittest discover -s Scripts -p "test_*.py"
-          python -m unittest discover -s .agents/skills/maintain-dwm-offsets/tests -p "test_*.py"
+          python -m unittest discover -s tests -p "test_*.py"
 
       - name: Validate projection symbols
         run: |
           $PSNativeCommandUseErrorActionPreference = $true
-          python .agents/skills/maintain-dwm-offsets/scripts/validate_projection_symbols.py . --architecture legacy
-          python .agents/skills/maintain-dwm-offsets/scripts/validate_projection_symbols.py . --architecture milcomp
+          python -m tools.validate_projection_symbols . --architecture legacy
+          python -m tools.validate_projection_symbols . --architecture milcomp
 
       - name: Prepare Windows build
         uses: ./.github/actions/prepare-build
@@ -85,7 +87,7 @@ jobs:
 
       - name: Run OpenGlass unit tests
         run: |
-          $testExecutable = "Build\x64\Release\common\OpenGlassTests.exe"
+          $testExecutable = "Build\$env:BUILD_PLATFORM\$env:BUILD_CONFIGURATION\common\OpenGlassTests.exe"
           if (-not (Test-Path -LiteralPath $testExecutable -PathType Leaf)) {
               throw "Test executable was not built: $testExecutable"
           }
@@ -118,6 +120,9 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
+
+      - name: Prepare Python tools
+        uses: ./.github/actions/prepare-python
 
       - name: Read product version
         id: version

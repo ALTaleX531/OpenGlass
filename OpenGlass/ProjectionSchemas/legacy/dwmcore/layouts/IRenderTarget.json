@@ -1,0 +1,45 @@
+{
+  "layouts": [
+    {
+      "name": "IRenderTarget_GetSDRBoost",
+      "id": "IRenderTarget_GetSDRBoost",
+      "kind": "vtable_slot",
+      "type": "float (*)(const IRenderTarget*)",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 152,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "IRenderTarget_GetTargetSurfaceNoRef",
+      "id": "IRenderTarget_GetTargetSurfaceNoRef",
+      "kind": "vtable_slot",
+      "type": "CD3DSurface* (*)(const IRenderTarget*)",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 104,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "notes": "IRenderTarget vtable only used before Windows 10 2004, not present in Win11+\nslot_index × sizeof(ULONG_PTR)"
+    }
+  ]
+}

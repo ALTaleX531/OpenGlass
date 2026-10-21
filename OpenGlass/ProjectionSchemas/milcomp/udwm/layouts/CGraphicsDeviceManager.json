@@ -1,0 +1,22 @@
+{
+  "layouts": [
+    {
+      "name": "CGraphicsDeviceManager_GetD2DDevice_Index",
+      "id": "CGraphicsDeviceManager_GetD2DDevice_Index",
+      "kind": "field",
+      "type": "ID2D1Device*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 32,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CDesktopManager::EnsureDCompositionInteropDevice → D2D1CreateFactory → stores at this + N"
+    }
+  ]
+}

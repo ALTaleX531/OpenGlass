@@ -1,0 +1,22 @@
+{
+  "layouts": [
+    {
+      "name": "CResource_Proxy",
+      "id": "CResource.Proxy",
+      "kind": "field",
+      "type": "CResourceProxy*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 16,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CResource stores its CResourceProxy pointer after the base object state."
+    }
+  ]
+}

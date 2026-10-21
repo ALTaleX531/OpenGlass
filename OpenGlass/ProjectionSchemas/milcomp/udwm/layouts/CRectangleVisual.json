@@ -1,0 +1,22 @@
+{
+  "layouts": [
+    {
+      "name": "CRectangleVisual_GetRect",
+      "id": "CRectangleVisual_GetRect",
+      "kind": "field",
+      "type": "D2D1_RECT_F",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 192,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CRectangleVisual::SetRect"
+    }
+  ]
+}

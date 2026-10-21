@@ -1,0 +1,88 @@
+{
+  "symbols": [
+    {
+      "name": "Symbol_CDWriteText_ValidateVisual",
+      "id": "CDWriteText::ValidateVisual",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "CDWriteText_ValidateVisual_t",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: virtual long __cdecl CDWriteText::ValidateVisual(void) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CDWriteText_InitializeVisualTreeClone",
+      "id": "CDWriteText::InitializeVisualTreeClone",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "CDWriteText_InitializeVisualTreeClone_t",
+          "ranges": [
+            {
+              "symbol_names": [
+                "protected: long __cdecl CDWriteText::InitializeVisualTreeClone(class CDWriteText * __ptr64,enum CloneOptions) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CThemePartPrimitive_ShouldClone",
+      "id": "CThemePartPrimitive::ShouldClone",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "CThemePartPrimitive_ShouldClone_t",
+          "ranges": [
+            {
+              "symbol_names": [
+                "private: bool __cdecl CThemePartPrimitive::ShouldClone(enum CloneOptions)const __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CButton_vftable",
+      "id": "CButton::vftable",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CButton::vftable",
+          "ranges": [
+            {
+              "symbol_names": [
+                "const CButton::`vftable'"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_variable"
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "layouts": [
+    {
+      "name": "CRenderDataVisual_GetInstructions",
+      "id": "CRenderDataVisual_GetInstructions",
+      "kind": "field",
+      "type": "DynArray<CRenderDataInstruction*>",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 248,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 256,
+              "until": {
+                "build": 22631,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 256,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 208,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CRenderDataVisual::AddInstruction\nCRenderDataVisual::ClearInstructions\nxrefs to DynArrayImpl<0>::Grow\nWARNING: Look for DynArray base in AddInstruction/ClearInstructions, NOT\nWriteInstruction (iterates the array)"
+    }
+  ]
+}

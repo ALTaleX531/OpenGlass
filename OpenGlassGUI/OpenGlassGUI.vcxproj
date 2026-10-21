@@ -47,7 +47,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
 	<ClInclude Include="ColorizationPresets.hpp" />
-	<ClInclude Include="..\Common\Colorization.hpp" />
 	<ClInclude Include="EditorScope.hpp" />
 	<ClInclude Include="PreviewJournal.hpp" />
 	<ClInclude Include="SettingsCatalog.hpp" />
@@ -70,15 +69,15 @@
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
-	<ClCompile Include="..\Common\PngAssetValidation.cpp">
+	<_ExternalClCompile Include="..\Common\PngAssetValidation.cpp">
 	  <PrecompiledHeader>NotUsing</PrecompiledHeader>
-	</ClCompile>
-	<ClCompile Include="..\Common\PeCodeViewIdentity.cpp">
+	</_ExternalClCompile>
+	<_ExternalClCompile Include="..\Common\PeCodeViewIdentity.cpp">
 	  <PrecompiledHeader>NotUsing</PrecompiledHeader>
-	</ClCompile>
-	<ClCompile Include="..\Common\ThemeAtlasLayout.cpp">
+	</_ExternalClCompile>
+	<_ExternalClCompile Include="..\Common\ThemeAtlasLayout.cpp">
 	  <PrecompiledHeader>NotUsing</PrecompiledHeader>
-	</ClCompile>
+	</_ExternalClCompile>
 	<ClCompile Include="ColorPresetList.cpp" />
 	<ClCompile Include="ColorPreference.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
     <ClCompile Include="ConfigurationMigration.cpp" />

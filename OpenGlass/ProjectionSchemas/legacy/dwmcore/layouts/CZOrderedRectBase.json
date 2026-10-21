@@ -1,0 +1,29 @@
+{
+  "layouts": [
+    {
+      "name": "CZOrderedRectBase_OriginalRect",
+      "id": "CZOrderedRectBase.OriginalRect",
+      "kind": "field",
+      "type": "D2D1_RECT_F",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 20,
+              "until": {
+                "build": 26100,
+                "revision": 4484
+              }
+            },
+            {
+              "offset": 32,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CZOrderedRectBase::UpdateDeviceRectInternal consumes the original logical rectangle. The staged 25H2 code changes the derived object prefix while preserving the field semantics."
+    }
+  ]
+}

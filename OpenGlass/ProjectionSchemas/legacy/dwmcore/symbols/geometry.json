@@ -1,0 +1,206 @@
+{
+  "symbols": [
+    {
+      "name": "Symbol_CMILMatrix_Identity",
+      "id": "CMILMatrix::Identity",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CMILMatrix::Identity",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: static class CMILMatrix_IdentityType const CMILMatrix::Identity"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_variable"
+    },
+    {
+      "name": "Symbol_CMatrixStack_GetTopByReference",
+      "id": "CMatrixStack::GetTopByReference",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CMatrixStack::GetTopByReference",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: class CMILMatrix const * __ptr64 __cdecl CMatrixStack::GetTopByReference(void)const __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CShape_CopyShape",
+      "id": "CShape::CopyShape",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CShape::CopyShape",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CShape::CopyShape(class CMILMatrix const * __ptr64,class CShape * __ptr64 * __ptr64)const __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CShape_Combine",
+      "id": "CShape::Combine",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CShape::Combine",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: static long __cdecl CShape::Combine(class CShape const * __ptr64,class CMILMatrix const * __ptr64,class CShape const * __ptr64,class CMILMatrix const * __ptr64,enum MilCombineMode::Enum,class CShape * __ptr64 * __ptr64)"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": {
+                "build": 19041,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CRegionShape_BuildFromRects",
+      "id": "CRegionShape::BuildFromRects",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CRegionShape::BuildFromRects",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CRegionShape::BuildFromRects(class TMilRect_<int,struct tagRECT,struct MilPointAndSizeL,struct RectUniqueness::_CMilRectL_> const * __ptr64,unsigned int) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": {
+                "build": 19041,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function",
+      "notes": "The 19040 preview exposes an ABI-incompatible void return instead of HRESULT. Do not accept it as an alias; keep that unsupported preview inert rather than publishing a mismatched slot."
+    },
+    {
+      "name": "Symbol_CRegionShape_vftable",
+      "id": "CRegionShape::`vftable'",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CRegionShape::vftable",
+          "ranges": [
+            {
+              "symbol_names": [
+                "const CRegionShape::`vftable'"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": {
+                "build": 19041,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_variable"
+    },
+    {
+      "name": "Symbol_CRegionShape_dtor",
+      "id": "CRegionShape::~CRegionShape",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CRegionShape::dtor",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: virtual __cdecl CRegionShape::~CRegionShape(void) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": {
+                "build": 19041,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CGeometry_GetShapeData",
+      "id": "CGeometry::GetShapeData",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CGeometry::GetShapeData",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CGeometry::GetShapeData(struct D2D_SIZE_F const * __ptr64,class CShapePtr * __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CRectangleGeometry_vftable",
+      "id": "CRectangleGeometry::`vftable'",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CRectangleGeometry::vftable",
+          "ranges": [
+            {
+              "symbol_names": [
+                "const CRectangleGeometry::`vftable'"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_variable"
+    }
+  ]
+}

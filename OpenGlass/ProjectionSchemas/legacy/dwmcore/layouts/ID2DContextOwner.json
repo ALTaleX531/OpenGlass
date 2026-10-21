@@ -1,0 +1,68 @@
+{
+  "layouts": [
+    {
+      "name": "ID2DContextOwner_GetCurrentRenderTargetInfo",
+      "id": "ID2DContextOwner_GetCurrentRenderTargetInfo",
+      "kind": "vtable_slot",
+      "type": "const RenderTargetInfo& (*)(const ID2DContextOwner*)",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 80,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 40,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 16,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "Route the ID2DContextOwner vtable from CDrawingContext::Create at this + 24; confirm the selected slot by its GetCurrentRenderTargetInfo implementation."
+    },
+    {
+      "name": "ID2DContextOwner_GetCurrentZ",
+      "id": "ID2DContextOwner_GetCurrentZ",
+      "kind": "vtable_slot",
+      "type": "UINT (*)(const ID2DContextOwner*)",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 32,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 24,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 8,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "Route the ID2DContextOwner vtable from CDrawingContext::Create at this + 24; confirm the selected slot by its GetCurrentZ implementation."
+    }
+  ]
+}

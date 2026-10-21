@@ -1,0 +1,22 @@
+{
+  "layouts": [
+    {
+      "name": "RenderTargetInfo_GetSDRBoost",
+      "id": "RenderTargetInfo_GetSDRBoost",
+      "kind": "field",
+      "type": "float",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 16,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "xrefs to ConvertSDRBoostToSDRWhiteLevel\nChecked in IsHDRRenderTarget / GetRenderTargetInfo: *(float *)(this + 16)"
+    }
+  ]
+}

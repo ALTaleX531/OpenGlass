@@ -1,0 +1,154 @@
+{
+  "symbols": [
+    {
+      "name": "Symbol_CChannel_CombinedGeometryUpdate",
+      "id": "CChannel::CombinedGeometryUpdate",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CChannel::CombinedGeometryUpdate",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: virtual long __cdecl CChannel::CombinedGeometryUpdate(unsigned int,enum MilCombineMode::Enum,unsigned int,unsigned int) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CVisual_GetClipNoRef",
+      "id": "CVisual::GetClipNoRef",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CVisual::GetClipNoRef",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: class CGeometry * __ptr64 __cdecl CVisual::GetClipNoRef(void)const __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CVisual_SetClip",
+      "id": "CVisual::SetClip",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "CVisual_SetClip_t",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: void __cdecl CVisual::SetClip(class CGeometry * __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CVisual_CollectOcclusion",
+      "id": "CVisual::CollectOcclusion",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "CVisual_CollectOcclusion_t",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: virtual long __cdecl CVisual::CollectOcclusion(class COcclusionContext * __ptr64,class COcclusionInfo * __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CSpriteVisual_vftable",
+      "id": "CSpriteVisual::vftable",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CSpriteVisual::vftable",
+          "ranges": [
+            {
+              "symbol_names": [
+                "const CSpriteVisual::`vftable'"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_variable",
+      "notes": "Primary CSpriteVisual vtable used as an exact dynamic-type anchor by the CVisual::SetClip detour. Cross-check the constructor assignment if multiple interface vtables appear in a future PDB."
+    },
+    {
+      "name": "Symbol_CSpriteVisual_CSpriteVisual",
+      "id": "CSpriteVisual::~CSpriteVisual",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "CSpriteVisual_Destructor_t",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: virtual __cdecl CSpriteVisual::~CSpriteVisual(void) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw",
+      "notes": "Select the complete-object destructor compatible with the detour signature; do not substitute a deleting destructor with the same base name."
+    },
+    {
+      "name": "Symbol_CColorBrush_vftable",
+      "id": "CColorBrush::vftable",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CColorBrush::vftable",
+          "ranges": [
+            {
+              "symbol_names": [
+                "const CColorBrush::`vftable'{for `CContent'}"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_variable",
+      "notes": "Use the CContent subobject vtable assigned at offset 0 by CColorBrush::CColorBrush. Its slots 25 and 26 are CBrush::AddOcclusionInformation and CBrush::Draw; other same-name vtables belong to different interface subobjects."
+    }
+  ]
+}

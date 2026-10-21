@@ -1,0 +1,249 @@
+{
+  "layouts": [
+    {
+      "name": "CDrawingContext_DeviceTarget",
+      "id": "CDrawingContext.DeviceTarget",
+      "kind": "field",
+      "type": "IDeviceTarget*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 32,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "Build 19041 and later CDrawingContext rendering paths obtain the device target from this field."
+    },
+    {
+      "name": "CDrawingContext_RenderTarget",
+      "id": "CDrawingContext.RenderTarget",
+      "kind": "field",
+      "type": "IRenderTarget*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 352,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "notes": "Pre-19041 CDrawingContext rendering paths obtain the legacy render target from this field."
+    },
+    {
+      "name": "CDrawingContext_GetD2DContextOwner",
+      "id": "CDrawingContext_GetD2DContextOwner",
+      "kind": "field",
+      "type": "ID2DContextOwner",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 8,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 24,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CDrawingContext::Create / CDrawingContext::FlushD2D\nID2DContextOwner vtable at this + 24; this + N cast to ID2DContextOwner*"
+    },
+    {
+      "name": "CDrawingContext_GetD3DDevice",
+      "id": "CDrawingContext_GetD3DDevice",
+      "kind": "field",
+      "type": "CD3DDevice*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 384,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 40,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CDrawingContext::FlushD2D\n*((QWORD *)this + 5) → CD3DDevice* (non-virtual, raw this)"
+    },
+    {
+      "name": "CDrawingContext_GetDeviceTransform",
+      "id": "CDrawingContext_GetDeviceTransform",
+      "kind": "field",
+      "type": "CMILMatrix",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 3648,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 96,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CDrawingContext::UpdateDeviceTransform\nCMILMatrix::Multiply((char *)this + N, ...) — device transform matrix\nembedded inline Major recompile in 21H2 moved this from offset 3648 into\nearly object (offset 96)"
+    },
+    {
+      "name": "CDrawingContext_GetInterface",
+      "id": "CDrawingContext_GetInterface",
+      "kind": "field",
+      "type": "IDrawingContext",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 0,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 16,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CDrawingContext::Create\nIDrawingContext vtable assigned at this + 16 (pre-26H1; absorbed/removed in\n26H1+)"
+    },
+    {
+      "name": "CDrawingContext_GetOcclusionContext",
+      "id": "CDrawingContext_GetOcclusionContext",
+      "kind": "field",
+      "type": "COcclusionContext*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 6272,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 5936,
+              "until": {
+                "build": 20348,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 5896,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 7944,
+              "until": {
+                "build": 22621,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 8072,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 7960,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CDrawingContext::FlushD2D / UpdateDeviceTransform\n*((QWORD *)this + N/8) → COcclusionContext* — most volatile across builds"
+    },
+    {
+      "name": "CDrawingContext_GetWorldTransform",
+      "id": "CDrawingContext_GetWorldTransform",
+      "kind": "field",
+      "type": "CMatrixStack",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 480,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 408,
+              "until": {
+                "build": 20348,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 432,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 368,
+              "until": {
+                "build": 22621,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 400,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 288,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CDrawingContext::GetWorldTransform3x2 (virtual, slot 0 of ID2DContextOwner\nvtable) this adjusted to CDrawingContext + 24 (ID2DContextOwner subobject)\n*(QWORD *)(this + N/8) → matrix stack data pointer; *(DWORD *)(this + N/4) →\ncount Actual base offset = subobject_offset(24) + adjusted_offset"
+    }
+  ]
+}

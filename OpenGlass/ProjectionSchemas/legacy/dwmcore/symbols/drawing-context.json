@@ -1,0 +1,323 @@
+{
+  "symbols": [
+    {
+      "name": "Symbol_CDrawingContext_IsBounding",
+      "id": "CDrawingContext::IsBounding",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CDrawingContext::IsBounding",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: bool __cdecl CDrawingContext::IsBounding(void)const __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": {
+                "build": 19041,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CDrawingContext_CalcPartiallyVisibleRectangleSet",
+      "id": "CDrawingContext::CalcPartiallyVisibleRectangleSet",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CDrawingContext::CalcPartiallyVisibleRectangleSet",
+          "ranges": [
+            {
+              "symbol_names": [
+                "private: bool __cdecl CDrawingContext::CalcPartiallyVisibleRectangleSet(class CRectF<struct CoordinateSpace::LocalRenderingHPC> const & __ptr64,int,class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64 * __ptr64,unsigned int * __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": {
+                "build": 19041,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CDrawingContext_GetUnOccludedWorldShape",
+      "id": "CDrawingContext::GetUnOccludedWorldShape",
+      "bindings": [
+        {
+          "platform": null,
+          "fallback": "&Fallback_CDrawingContext_GetUnOccludedWorldShape",
+          "target": "&CDrawingContext::GetUnOccludedWorldShape",
+          "ranges": [
+            {
+              "symbol_names": [
+                "private: long __cdecl CDrawingContext::GetUnOccludedWorldShape(class CShape const & __ptr64,int,class CShape * __ptr64 * __ptr64) __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 19041,
+                "revision": 0
+              },
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CDrawingContext_CalcWorldSpaceClippedBounds",
+      "id": "CDrawingContext::CalcWorldSpaceClippedBounds",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CDrawingContext::CalcWorldSpaceClippedBounds",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: void __cdecl CDrawingContext::CalcWorldSpaceClippedBounds(class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": {
+                "build": 19041,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CDrawingContext_GetClipBoundsWorld_Pre26100",
+      "id": "CDrawingContext::GetClipBoundsWorld",
+      "bindings": [
+        {
+          "platform": null,
+          "abi_compatibility": "extra_trailing_argument",
+          "fallback": "&Fallback_CDrawingContext_GetClipBoundsWorld",
+          "target": "&CDrawingContext::GetClipBoundsWorld",
+          "type": "void (*)(const CDrawingContext*, D2D1_RECT_F&)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: void __cdecl CDrawingContext::GetClipBoundsWorld(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> * __ptr64)const __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 19041,
+                "revision": 0
+              },
+              "max_exclusive": {
+                "build": 26100,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function",
+      "notes": "The 19041-through-22621 PDB ABI has no trailing bool. The canonical wrapper passes an explicit false; Win64 ignores that extra register argument for this older callee, and codegen verifies the common argument prefix."
+    },
+    {
+      "name": "Symbol_CDrawingContext_GetClipBoundsWorld",
+      "id": "CDrawingContext::GetClipBoundsWorld",
+      "bindings": [
+        {
+          "platform": null,
+          "fallback": "&Fallback_CDrawingContext_GetClipBoundsWorld",
+          "target": "&CDrawingContext::GetClipBoundsWorld",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: void __cdecl CDrawingContext::GetClipBoundsWorld(class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> * __ptr64,bool)const __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 26100,
+                "revision": 0
+              },
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CDrawingContext_FillShapeWithBrush",
+      "id": "CDrawingContext::FillShapeWithBrush",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CDrawingContext::FillShapeWithBrush",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CDrawingContext::FillShapeWithBrush(class CShape const & __ptr64,struct ID2D1Brush * __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CDrawingContext_FlushD2D",
+      "id": "CDrawingContext::FlushD2D",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CDrawingContext::FlushD2D",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CDrawingContext::FlushD2D(void) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CDrawingContext_ApplyRenderStateInternal",
+      "id": "CDrawingContext::ApplyRenderStateInternal",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CDrawingContext::ApplyRenderStateInternal",
+          "ranges": [
+            {
+              "symbol_names": [
+                "private: long __cdecl CDrawingContext::ApplyRenderStateInternal(bool) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CDrawingContext_DrawVisualTree_17763",
+      "id": "CDrawingContext::DrawVisualTree.17763",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "HRESULT (*)(CDrawingContext*, const CVisualTree*, const D2D1_RECT_F&, COverlayContext*, int, bool, bool, bool, bool, bool, bool, bool)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CDrawingContext::DrawVisualTree(class CVisualTree const * __ptr64,class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class COverlayContext * __ptr64,int,bool,bool,bool,bool,bool,bool,bool) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": {
+                "build": 18362,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CDrawingContext_DrawVisualTree_18362",
+      "id": "CDrawingContext::DrawVisualTree.18362",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "HRESULT (*)(CDrawingContext*, const CVisualTree*, const D2D1_RECT_F&, COverlayContext*, int, bool, bool, bool, const D2D1_RECT_F*, bool, bool, bool)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CDrawingContext::DrawVisualTree(class CVisualTree const * __ptr64,class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class COverlayContext * __ptr64,int,bool,bool,bool,class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const * __ptr64,bool,bool,bool) __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 18362,
+                "revision": 0
+              },
+              "max_exclusive": {
+                "build": 19041,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CDrawingContext_DrawVisualTree_19041",
+      "id": "CDrawingContext::DrawVisualTree.19041",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "HRESULT (*)(CDrawingContext*, const CVisualTree*, const D2D1_RECT_F&, const COcclusionContext*, int, bool)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CDrawingContext::DrawVisualTree(class CVisualTree const * __ptr64,class TMil3DRect<float,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded>,struct Mil3DRectF,struct RectUniqueness::NotNeeded> const & __ptr64,class COcclusionContext const * __ptr64,enum ClearMode::Enum,bool) __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 19041,
+                "revision": 0
+              },
+              "max_exclusive": {
+                "build": 20348,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CDrawingContext_DrawVisualTree_20348",
+      "id": "CDrawingContext::DrawVisualTree.20348",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "HRESULT (*)(CDrawingContext*, const CVisualTree*, const D2D1_RECT_F&, const COcclusionContext*, int, bool, CVisual*)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CDrawingContext::DrawVisualTree(class CVisualTree const * __ptr64,class TMil3DRect<float,class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded>,struct Mil3DRectF,struct RectUniqueness::NotNeeded> const & __ptr64,class COcclusionContext const * __ptr64,enum ClearMode::Enum,bool,class CVisual * __ptr64) __ptr64",
+                "public: long __cdecl CDrawingContext::DrawVisualTree(class CVisualTree const * __ptr64,class TMil3DRect<float,class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded>,struct D3D_RECT_F,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,class COcclusionContext const * __ptr64,enum ClearMode::Enum,bool,class CVisual * __ptr64) __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 20348,
+                "revision": 0
+              },
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    }
+  ]
+}

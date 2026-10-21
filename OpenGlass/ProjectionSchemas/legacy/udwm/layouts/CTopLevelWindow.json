@@ -1,0 +1,1122 @@
+{
+  "layouts": [
+    {
+      "name": "CTopLevelWindow_GetAccent_Index",
+      "id": "CTopLevelWindow_GetAccent_Index",
+      "kind": "field",
+      "type": "CAccent*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 264,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 272,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 280,
+              "until": {
+                "build": 22621,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 296,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 256,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CTopLevelWindow::UpdateAccent\nxrefs to CAccent::Create"
+    },
+    {
+      "name": "CTopLevelWindow_GetBorderBrush_Index_OnLegacy",
+      "id": "CTopLevelWindow_GetBorderBrush_Index_OnLegacy",
+      "kind": "field",
+      "type": "CSolidColorLegacyMilBrushProxy*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 304,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 240,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CLegacyNonClientBackground::SetBorderColor"
+    },
+    {
+      "name": "CTopLevelWindow_GetBorderBrush_Index_OnThis",
+      "id": "CTopLevelWindow_GetBorderBrush_Index_OnThis",
+      "kind": "field",
+      "type": "CSolidColorLegacyMilBrushProxy*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 744,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 752,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 784,
+              "until": {
+                "build": 22621,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "notes": "CTopLevelWindow::UpdateNCAreaBackground\n...\nCSolidColorLegacyMilBrushProxy::Update({border brush}, {opacity}, {border\ncolor})"
+    },
+    {
+      "name": "CTopLevelWindow_GetBorderGeometry_Index_OnLegacy",
+      "id": "CTopLevelWindow_GetBorderGeometry_Index_OnLegacy",
+      "kind": "field",
+      "type": "CRgnGeometryProxy*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 320,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 272,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CLegacyNonClientBackground::SetBorderRegion"
+    },
+    {
+      "name": "CTopLevelWindow_GetBorderGeometry_Index_OnThis",
+      "id": "CTopLevelWindow_GetBorderGeometry_Index_OnThis",
+      "kind": "field",
+      "type": "CRgnGeometryProxy*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 544,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 552,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 568,
+              "until": {
+                "build": 22621,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 544,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CTopLevelWindow: indices that moved to LegacyVisual on >= 22H2\nCTopLevelWindow::UpdateNCAreaBackground\n...\nCDrawGeometryInstruction::Create({border brush}, {border geometry}, {border\ninstruction})\n...\nCDrawGeometryInstruction::Create({caption brush}, {caption geometry},\n{caption instruction})\n...\nCRenderDataVisual::AddInstruction({legacy visual}, {border instruction})\n...\nCRenderDataVisual::AddInstruction({legacy visual}, {caption instruction})"
+    },
+    {
+      "name": "CTopLevelWindow_GetBorderMargins",
+      "id": "CTopLevelWindow_GetBorderMargins",
+      "kind": "field",
+      "type": "MARGINS",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 588,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 596,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 612,
+              "until": {
+                "build": 22621,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 628,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 588,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CTopLevelWindow::GetBorderMargins\nmargins = (MARGINS)this[x]"
+    },
+    {
+      "name": "CTopLevelWindow_GetButton_BasePointerIndex",
+      "id": "CTopLevelWindow_GetButton_BasePointerIndex",
+      "kind": "field",
+      "type": "BYTE",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 480,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 488,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 504,
+              "until": {
+                "build": 22621,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 528,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 488,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "xrefs to CButton::Create"
+    },
+    {
+      "name": "CTopLevelWindow_GetCaptionBrush_Index_OnLegacy",
+      "id": "CTopLevelWindow_GetCaptionBrush_Index_OnLegacy",
+      "kind": "field",
+      "type": "CSolidColorLegacyMilBrushProxy*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 296,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 248,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CLegacyNonClientBackground::SetCaptionColor"
+    },
+    {
+      "name": "CTopLevelWindow_GetCaptionBrush_Index_OnThis",
+      "id": "CTopLevelWindow_GetCaptionBrush_Index_OnThis",
+      "kind": "field",
+      "type": "CSolidColorLegacyMilBrushProxy*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 752,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 760,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 792,
+              "until": {
+                "build": 22621,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "notes": "CTopLevelWindow::UpdateNCAreaBackground\n{caption color}.a = 1.f\n...\nCSolidColorLegacyMilBrushProxy::Update({caption brush}, 1.0, {caption color})"
+    },
+    {
+      "name": "CTopLevelWindow_GetCaptionColorizationParameters_Index",
+      "id": "CTopLevelWindow_GetCaptionColorizationParameters_Index",
+      "kind": "field",
+      "type": "CGlassColorizationResources*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 576,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 584,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 600,
+              "until": {
+                "build": 22621,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 616,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 568,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CTopLevelWindow::UpdateColorizationColor\nCTopLevelWindow::UpdateNCAreaBackground\nif ( y1 == 0x7FFFFFFF && y2 == 0x7FFFFFFF && y3 == 0x7FFFFFFF && y4 ==\n0x7FFFFFFF )\n z = this[x]\nelse\n z = this[w]"
+    },
+    {
+      "name": "CTopLevelWindow_GetCaptionGeometry_Index_OnLegacy",
+      "id": "CTopLevelWindow_GetCaptionGeometry_Index_OnLegacy",
+      "kind": "field",
+      "type": "CRgnGeometryProxy*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 312,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 264,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CLegacyNonClientBackground::SetCaptionRegion"
+    },
+    {
+      "name": "CTopLevelWindow_GetCaptionGeometry_Index_OnThis",
+      "id": "CTopLevelWindow_GetCaptionGeometry_Index_OnThis",
+      "kind": "field",
+      "type": "CRgnGeometryProxy*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 552,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 560,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 576,
+              "until": {
+                "build": 22621,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 552,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CTopLevelWindow::UpdateNCAreaBackground\n...\nCDrawGeometryInstruction::Create({border brush}, {border geometry}, {border\ninstruction})\n...\nCDrawGeometryInstruction::Create({caption brush}, {caption geometry},\n{caption instruction})\n...\nCRenderDataVisual::AddInstruction({legacy visual}, {border instruction})\n...\nCRenderDataVisual::AddInstruction({legacy visual}, {caption instruction})"
+    },
+    {
+      "name": "CTopLevelWindow_GetClientBlurBrush_Index_OnThis",
+      "id": "CTopLevelWindow_GetClientBlurBrush_Index_OnThis",
+      "kind": "field",
+      "type": "CSolidColorLegacyMilBrushProxy*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 760,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 768,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 800,
+              "until": {
+                "build": 22621,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 784,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 744,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CTopLevelWindow::UpdateClientBlur\nCSolidColorLegacyMilBrushProxy::Update({client blur brush}, 1.0, {client blur\ncolor});"
+    },
+    {
+      "name": "CTopLevelWindow_GetClientBlurVisual_Index",
+      "id": "CTopLevelWindow_GetClientBlurVisual_Index",
+      "kind": "field",
+      "type": "CCanvasVisual*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 288,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 296,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 312,
+              "until": {
+                "build": 22621,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 336,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 296,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CTopLevelWindow::UpdateClientBlur\nxrefs to CRenderDataVisual::AddInstruction"
+    },
+    {
+      "name": "CTopLevelWindow_GetDWriteTextVisual_Index",
+      "id": "CTopLevelWindow_GetDWriteTextVisual_Index",
+      "kind": "field",
+      "type": "CDWriteText*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 560,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 520,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "xrefs to CDWriteText::Create"
+    },
+    {
+      "name": "CTopLevelWindow_GetData_Index",
+      "id": "CTopLevelWindow_GetData_Index",
+      "kind": "field",
+      "type": "CWindowData*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 720,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 728,
+              "until": {
+                "build": 20348,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 736,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 752,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 712,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CWindowList::EnsureTopLevelWindow"
+    },
+    {
+      "name": "CTopLevelWindow_GetFrameInsideMargins",
+      "id": "CTopLevelWindow_GetFrameInsideMargins",
+      "kind": "field",
+      "type": "MARGINS",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 604,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 612,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 628,
+              "until": {
+                "build": 22621,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 644,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 604,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CTopLevelWindow::UpdateNCAreaBackground\nif ( this[x1] == 0x7FFFFFFF && this[x2] == 0x7FFFFFFF && this[x3] ==\n0x7FFFFFFF && this[x4] == 0x7FFFFFFF )\n z = this[y]\nelse\n z = this[w]\n\n(x = min(x1, x2, x3, x4))"
+    },
+    {
+      "name": "CTopLevelWindow_GetFrameOutsideMargins_Normal",
+      "id": "CTopLevelWindow_GetFrameOutsideMargins_Normal",
+      "kind": "field",
+      "type": "MARGINS",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 620,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 628,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 644,
+              "until": {
+                "build": 22621,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 660,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 620,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CTopLevelWindow::UpdateNCAreaPositionsAndSizes\nx = x1;\nif ( !zoomed )\n    x = x2;\ny = this[x]  (Normal path, same function as Zoomed)"
+    },
+    {
+      "name": "CTopLevelWindow_GetFrameOutsideMargins_Zoomed",
+      "id": "CTopLevelWindow_GetFrameOutsideMargins_Zoomed",
+      "kind": "field",
+      "type": "MARGINS",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 636,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 644,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 660,
+              "until": {
+                "build": 22621,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 676,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 636,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CTopLevelWindow::UpdateNCAreaPositionsAndSizes\nx = x1;\nif ( !zoomed )\n    x = x2;\ny = this[x]"
+    },
+    {
+      "name": "CTopLevelWindow_GetIconVisual_Index",
+      "id": "CTopLevelWindow_GetIconVisual_Index",
+      "kind": "field",
+      "type": "CImage*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 520,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 528,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 544,
+              "until": {
+                "build": 22621,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 576,
+              "until": {
+                "build": 22631,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 536,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CTopLevelWindow::UpdateIcon\n(CImage *)this[x];"
+    },
+    {
+      "name": "CTopLevelWindow_GetIsBorderUpdatesSuppressed_ByteIndex",
+      "id": "CTopLevelWindow_GetIsBorderUpdatesSuppressed_ByteIndex",
+      "kind": "field",
+      "type": "bool",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 888,
+              "until": {
+                "build": 22621,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 864,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 832,
+              "until": {
+                "build": 26100,
+                "revision": 9549
+              }
+            },
+            {
+              "offset": 852,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CTopLevelWindow::SetSuppressBorderUpdates (could be inlined)\nCTopLevelWindow::UpdateWindowVisuals\nif ( this[x] )\n    goto y;\nIn uDWM 26100.9549, cross-check the setter with the branch that skips CWindowBorder::SetBorderParameters/EnableBorder. The former flag location is now a DWORD initialized to 3 and consumed by UpdateRemoteAppRenderTargetOpacity; do not treat it as the suppression flag."
+    },
+    {
+      "name": "CTopLevelWindow_GetLegacyVisual_Index",
+      "id": "CTopLevelWindow_GetLegacyVisual_Index",
+      "kind": "field",
+      "type": "CCanvasVisual*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 280,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 288,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 296,
+              "until": {
+                "build": 22621,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 312,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 272,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CTopLevelWindow::UpdateNCAreaBackground\nxrefs to CLegacyNonClientBackground::Create (windows 11 22h2+)"
+    },
+    {
+      "name": "CTopLevelWindow_GetNCAreaAtlasImage1",
+      "id": "CTopLevelWindow_GetNCAreaAtlasImage1",
+      "kind": "field",
+      "type": "CAtlasedImage const*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 344,
+              "until": {
+                "build": 22000,
+                "revision": 195
+              }
+            }
+          ]
+        }
+      ],
+      "notes": "First CAtlasedImage pointer read by CTopLevelWindow::UpdateNCAreaBackground on build 22000.194. GlassFrameDemodernizer temporarily supplies a zero-size sentinel when the pointer is null. The descriptor exists only for the exact workaround range."
+    },
+    {
+      "name": "CTopLevelWindow_GetNCAreaAtlasImage2",
+      "id": "CTopLevelWindow_GetNCAreaAtlasImage2",
+      "kind": "field",
+      "type": "CAtlasedImage const*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 352,
+              "until": {
+                "build": 22000,
+                "revision": 195
+              }
+            }
+          ]
+        }
+      ],
+      "notes": "Second CAtlasedImage pointer read by CTopLevelWindow::UpdateNCAreaBackground on build 22000.194. GlassFrameDemodernizer temporarily supplies a zero-size sentinel when the pointer is null. The descriptor exists only for the exact workaround range."
+    },
+    {
+      "name": "CTopLevelWindow_GetNCAreaAtlasImage3",
+      "id": "CTopLevelWindow_GetNCAreaAtlasImage3",
+      "kind": "field",
+      "type": "CAtlasedImage const*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 368,
+              "until": {
+                "build": 22000,
+                "revision": 195
+              }
+            }
+          ]
+        }
+      ],
+      "notes": "Third CAtlasedImage pointer read by CTopLevelWindow::UpdateNCAreaBackground on build 22000.194. GlassFrameDemodernizer temporarily supplies a zero-size sentinel when the pointer is null. The descriptor exists only for the exact workaround range."
+    },
+    {
+      "name": "CTopLevelWindow_GetTextVisual_Index",
+      "id": "CTopLevelWindow_GetTextVisual_Index",
+      "kind": "field",
+      "type": "CText*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 512,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 520,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 536,
+              "until": {
+                "build": 22621,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 560,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 520,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "xrefs to CText::Create"
+    },
+    {
+      "name": "CTopLevelWindow_GetWindowBorder_Index",
+      "id": "CTopLevelWindow_GetWindowBorder_Index",
+      "kind": "field",
+      "type": "CWindowBorder*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 264,
+              "until": {
+                "build": 22621,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 272,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 224,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "xrefs to CWindowBorder::Create"
+    },
+    {
+      "name": "CTopLevelWindow_StateDwordIndex",
+      "id": "CTopLevelWindow_StateDwordIndex",
+      "kind": "field",
+      "type": "DWORD",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 584,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 592,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 608,
+              "until": {
+                "build": 22621,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 624,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 584,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "xrefs to CText::SetRTLReading/CVisual::SetRTLMirror"
+    },
+    {
+      "name": "CTopLevelWindow_WindowFrame_GetCloseButtonGlowImage",
+      "id": "CTopLevelWindow_WindowFrame_GetCloseButtonGlowImage",
+      "kind": "field",
+      "type": "CBitmapSource*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 200,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "notes": "uDWM 19041.6456 CTopLevelWindow::UpdateButtonVisuals passes WindowFrame+0xC8 to CButton::SetVisualStates for the close button. Win7 full symbols independently name the field pbsButtonCloseGlow; WindowFrame::~WindowFrame releases it, and native CreateButtonGlowsFromAtlas AddRefs every frame slot before releasing its local reference."
+    },
+    {
+      "name": "CTopLevelWindow_WindowFrame_GetCornerRadius",
+      "id": "CTopLevelWindow_WindowFrame_GetCornerRadius",
+      "kind": "field",
+      "type": "UINT32",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 1884,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 1864,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CTopLevelWindow::EnsureImages\ni = 6\nwhile ((--i) > 0)\n{\n    CTopLevelWindow::s_rgpwfWindowFrames[y][x] = 0\n}"
+    },
+    {
+      "name": "CTopLevelWindow_WindowFrame_GetMinMaxButtonGlowImage",
+      "id": "CTopLevelWindow_WindowFrame_GetMinMaxButtonGlowImage",
+      "kind": "field",
+      "type": "CBitmapSource*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 208,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "notes": "uDWM 19041.6456 CTopLevelWindow::UpdateButtonVisuals passes WindowFrame+0xD0 to CButton::SetVisualStates for minimize/maximize buttons. Win7 full symbols independently name the field pbsButtonNormalGlow; WindowFrame::~WindowFrame releases it, and native CreateButtonGlowsFromAtlas AddRefs every frame slot before releasing its local reference."
+    }
+  ]
+}

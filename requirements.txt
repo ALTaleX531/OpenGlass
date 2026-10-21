@@ -1,0 +1,4 @@
+construct==2.10.70
+pefile==2024.8.26
+pcpp==1.30
+Pygments==2.21.0

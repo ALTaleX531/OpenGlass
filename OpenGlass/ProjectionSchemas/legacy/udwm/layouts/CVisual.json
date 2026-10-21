@@ -1,0 +1,303 @@
+{
+  "layouts": [
+    {
+      "name": "CVisual_GetDirtyFlags",
+      "id": "CVisual_GetDirtyFlags",
+      "kind": "field",
+      "type": "DWORD",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 80,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 88,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 32,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CVisual::SetDirtyFlags"
+    },
+    {
+      "name": "CVisual_GetOffset",
+      "id": "CVisual_GetOffset",
+      "kind": "field",
+      "type": "POINT",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 112,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 120,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 64,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CVisual::SetOffset"
+    },
+    {
+      "name": "CVisual_GetScale_D2D1_SIZE_F",
+      "id": "CVisual_GetScale_D2D1_SIZE_F",
+      "kind": "field",
+      "type": "D2D1_SIZE_F",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 112,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CVisual::SetScale stores an inline D2D1_SIZE_F on 26100+ layouts; cross-check the representation change against CVisual_GetScale_MilSizeD."
+    },
+    {
+      "name": "CVisual_GetScale_MilSizeD",
+      "id": "CVisual_GetScale_MilSizeD",
+      "kind": "field",
+      "type": "MilSizeD",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 168,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 176,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "notes": "CVisual::SetScale stores an inline MilSizeD on pre-26100 layouts; cross-check the 26100 representation change against CVisual_GetScale_D2D1_SIZE_F."
+    },
+    {
+      "name": "CVisual_GetSize",
+      "id": "CVisual_GetSize",
+      "kind": "field",
+      "type": "SIZE",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 120,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 128,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 72,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CVisual::SetSize"
+    },
+    {
+      "name": "CVisual_GetTransformParent",
+      "id": "CVisual_GetTransformParent",
+      "kind": "vtable_slot",
+      "type": "CVisual* (*)(const CVisual*)",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 80,
+              "until": {
+                "build": 22621,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 88,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 64,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "xrefs to CVisual::`vftable'"
+    },
+    {
+      "name": "CVisual_GetVisualCollection",
+      "id": "CVisual_GetVisualCollection",
+      "kind": "field",
+      "type": "VisualCollection",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 32,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 144,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CVisual_GetVisualCollection\nPre-24H2: constructor assigns &VisualCollection::vftable → xrefs to find\noffset 24H2+: xref to VisualCollection::VisualCollection, find\nCContainerVisual::CContainerVisual:\n  VisualCollection::VisualCollection((VisualCollection *)(this + 18));"
+    },
+    {
+      "name": "CVisual_GetVisualProxy",
+      "id": "CVisual_GetVisualProxy",
+      "kind": "field",
+      "type": "CVisualProxy*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 16,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CVisual::ConnectToParent\nxref to CVisualProxy::InsertChildAt"
+    },
+    {
+      "name": "CVisual_IsRTLMirrored_ByteOffset",
+      "id": "CVisual_IsRTLMirrored_ByteOffset",
+      "kind": "field",
+      "type": "BYTE",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 84,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 92,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 36,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CVisual::SetRTLMirror"
+    },
+    {
+      "name": "CVisual_SetExcludeSubtree_ByteOffset",
+      "id": "CVisual_SetExcludeSubtree_ByteOffset",
+      "kind": "field",
+      "type": "BYTE",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 84,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 92,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CVisual::InitializeVisualTreeClone\nif ( (this[x] & 8) == 0 )"
+    },
+    {
+      "name": "CVisual__ValidateVisual",
+      "id": "CVisual__ValidateVisual",
+      "kind": "vtable_slot",
+      "type": "HRESULT (*)(CVisual*)",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 48,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 32,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "xrefs to CVisual::`vftable'"
+    }
+  ]
+}

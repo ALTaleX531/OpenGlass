@@ -1,0 +1,47 @@
+{
+  "layouts": [
+    {
+      "name": "CCompositor_GetChannel_Index",
+      "id": "CCompositor_GetChannel_Index",
+      "kind": "field",
+      "type": "IDwmChannel*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 16,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 24,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CCompositor::Initialize\n*((QWORD *)this + N) = MilConnection_CreateChannel(connection, &channel)\n>= 24H2 uses index 3; earlier uses index 2"
+    },
+    {
+      "name": "CCompositor_GetInteropCompositorDCompDevicePartner",
+      "id": "CCompositor_GetInteropCompositorDCompDevicePartner",
+      "kind": "field",
+      "type": "IDCompositionDesktopDevicePartner*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 32,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CDesktopManager::EnsureDCompositionInteropDevice/CCompositor::InitializeInteropCompositor\nxrefs to RoGetActivationFactory(\"Windows.UI.Composition.Compositor\")\nQueryInterface GUID_d14b6158_c3fa_4bce_9c1f_b61d8665eab0\nRetrieves IDCompositionDesktopDevicePartner from CCompositor's DComp device\nat index 4"
+    }
+  ]
+}

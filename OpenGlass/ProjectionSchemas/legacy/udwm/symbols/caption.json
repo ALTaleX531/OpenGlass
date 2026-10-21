@@ -1,0 +1,591 @@
+{
+  "symbols": [
+    {
+      "name": "Symbol_CText_ValidateResources",
+      "id": "CText::ValidateResources",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "HRESULT (*)(CText*)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "private: long __cdecl CText::ValidateResources(void) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": {
+                "build": 22621,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CText_CloneVisualTree",
+      "id": "CText::CloneVisualTree",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "HRESULT (*)(CText*, CText**, bool, bool, bool)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: virtual long __cdecl CText::CloneVisualTree(class CVisual * __ptr64 * __ptr64,enum CloneOptions) __ptr64",
+                "public: virtual long __cdecl CText::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": {
+                "build": 19041,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CText_InitializeVisualTreeClone",
+      "id": "CText::InitializeVisualTreeClone",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "HRESULT (*)(CText*, CText*, UINT)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "protected: long __cdecl CText::InitializeVisualTreeClone(class CText * __ptr64,enum CloneOptions) __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 19041,
+                "revision": 0
+              },
+              "max_exclusive": {
+                "build": 22621,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CDWriteText_ValidateVisual",
+      "id": "CDWriteText::ValidateVisual",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "HRESULT (*)(CDWriteText*)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: virtual long __cdecl CDWriteText::ValidateVisual(void) __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 22621,
+                "revision": 0
+              },
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CDWriteText_InitializeVisualTreeClone",
+      "id": "CDWriteText::InitializeVisualTreeClone",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "HRESULT (*)(CDWriteText*, CDWriteText*, UINT)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "protected: long __cdecl CDWriteText::InitializeVisualTreeClone(class CDWriteText * __ptr64,enum CloneOptions) __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 22621,
+                "revision": 0
+              },
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CAtlasedRectsVisual_CloneVisualTree",
+      "id": "CAtlasedRectsVisual::CloneVisualTree",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "BYTE*",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: virtual long __cdecl CAtlasedRectsVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,enum CloneOptions) __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 19041,
+                "revision": 0
+              },
+              "max_exclusive": {
+                "build": 22621,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw",
+      "usage": "code_address"
+    },
+    {
+      "name": "Symbol_CAtlasedRectsVisual_InitializeVisualTreeClone",
+      "id": "CAtlasedRectsVisual::InitializeVisualTreeClone",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CAtlasedRectsVisual::InitializeVisualTreeClone",
+          "ranges": [
+            {
+              "symbol_names": [
+                "protected: long __cdecl CAtlasedRectsVisual::InitializeVisualTreeClone(class CAtlasedRectsVisual * __ptr64,enum CloneOptions) __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 19041,
+                "revision": 0
+              },
+              "max_exclusive": {
+                "build": 22621,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CTopLevelAtlasedRectsVisual_ShouldCloneAtlasImage_Pre_19041",
+      "id": "CTopLevelAtlasedRectsVisual::ShouldCloneAtlasImage",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "bool (*)(CTopLevelAtlasedRectsVisual*, const CAtlasedImage*, bool, bool, bool)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "protected: virtual bool __cdecl CTopLevelAtlasedRectsVisual::ShouldCloneAtlasImage(class CAtlasedImage const * __ptr64,bool,bool,bool) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": {
+                "build": 19041,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CTopLevelAtlasedRectsVisual_ShouldCloneAtlasImage_19041",
+      "id": "CTopLevelAtlasedRectsVisual::ShouldCloneAtlasImage",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "bool (*)(CTopLevelAtlasedRectsVisual*, const CAtlasedImage*, UINT)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "protected: virtual bool __cdecl CTopLevelAtlasedRectsVisual::ShouldCloneAtlasImage(class CAtlasedImage const * __ptr64,enum CloneOptions) __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 19041,
+                "revision": 0
+              },
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CButton_vftable",
+      "id": "CButton::`vftable'",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CButton::vftable",
+          "ranges": [
+            {
+              "symbol_names": [
+                "const CButton::`vftable'"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_variable"
+    },
+    {
+      "name": "Symbol_CButton_Create",
+      "id": "CButton::Create",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CButton::Create",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: static long __cdecl CButton::Create(class CButton * __ptr64 * __ptr64)"
+              ],
+              "min_inclusive": {
+                "build": 19041,
+                "revision": 0
+              },
+              "max_exclusive": {
+                "build": 22621,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CButton_SetVisualStates_Win10",
+      "id": "CButton::SetVisualStates",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CButton::SetVisualStates_Win10",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CButton::SetVisualStates(class CBitmapSourceArray const & __ptr64,class CBitmapSourceArray const & __ptr64,class CBitmapSource * __ptr64,float) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": {
+                "build": 22000,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CButton_SetVisualStates_Win11",
+      "id": "CButton::SetVisualStates",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CButton::SetVisualStates_Win11",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CButton::SetVisualStates(class CBitmapSourceArray const & __ptr64,class CBitmapSourceArray const & __ptr64,float) __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 22000,
+                "revision": 0
+              },
+              "max_exclusive": {
+                "build": 22621,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CButton_UpdateCrossfade",
+      "id": "CButton::UpdateCrossfade",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CButton::UpdateCrossfade",
+          "ranges": [
+            {
+              "symbol_names": [
+                "private: void __cdecl CButton::UpdateCrossfade(void) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CButton_DrawStateW",
+      "id": "CButton::DrawStateW",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CButton::DrawStateW",
+          "ranges": [
+            {
+              "symbol_names": [
+                "private: void __cdecl CButton::DrawStateW(class CAtlasButton * __ptr64,enum CButton::ButtonStates) __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 22000,
+                "revision": 0
+              },
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CAtlasButton_AppendAtlas",
+      "id": "CAtlasButton::AppendAtlas",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CAtlasButton::AppendAtlas",
+          "ranges": [
+            {
+              "symbol_names": [
+                "protected: virtual long __cdecl CAtlasButton::AppendAtlas(struct AtlasedRects & __ptr64) __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 22000,
+                "revision": 0
+              },
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CAtlasButton_AddApproximateAtlasSize",
+      "id": "CAtlasButton::AddApproximateAtlasSize",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CAtlasButton::AddApproximateAtlasSize",
+          "ranges": [
+            {
+              "symbol_names": [
+                "protected: virtual void __cdecl CAtlasButton::AddApproximateAtlasSize(unsigned int * __ptr64) __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 22000,
+                "revision": 0
+              },
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CAtlasedImage_AppendAtlasNineGrid",
+      "id": "CAtlasedImage::AppendAtlasNineGrid",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CAtlasedImage::AppendAtlasNineGrid",
+          "ranges": [
+            {
+              "symbol_names": [
+                "protected: virtual long __cdecl CAtlasedImage::AppendAtlasNineGrid(struct AtlasedRects & __ptr64,class CBitmapSource * __ptr64) __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 22000,
+                "revision": 0
+              },
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CAtlasedImage_AddNineGridAtlasSize",
+      "id": "CAtlasedImage::AddNineGridAtlasSize",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CAtlasedImage::AddNineGridAtlasSize",
+          "ranges": [
+            {
+              "symbol_names": [
+                "protected: virtual void __cdecl CAtlasedImage::AddNineGridAtlasSize(struct _MARGINS const & __ptr64,unsigned int * __ptr64) __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 22000,
+                "revision": 0
+              },
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CAtlasedImage_SetDirtyFlags",
+      "id": "CAtlasedImage::SetDirtyFlags",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CAtlasedImage::SetDirtyFlags",
+          "ranges": [
+            {
+              "symbol_names": [
+                "protected: void __cdecl CAtlasedImage::SetDirtyFlags(unsigned long,unsigned long) __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 22000,
+                "revision": 0
+              },
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CButton_RedrawVisual",
+      "id": "CButton::RedrawVisual",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CButton::RedrawVisual",
+          "ranges": [
+            {
+              "symbol_names": [
+                "private: long __cdecl CButton::RedrawVisual(void) __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 22000,
+                "revision": 0
+              },
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CAtlasedRectsVisual_RemoveAtlasImage",
+      "id": "CAtlasedRectsVisual::RemoveAtlasImage",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CAtlasedRectsVisual::RemoveAtlasImage",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: void __cdecl CAtlasedRectsVisual::RemoveAtlasImage(class CAtlasedImage * __ptr64) __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 22000,
+                "revision": 0
+              },
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CAtlasedRectsVisual_AddAtlasImage",
+      "id": "CAtlasedRectsVisual::AddAtlasImage",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CAtlasedRectsVisual::AddAtlasImage",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CAtlasedRectsVisual::AddAtlasImage(class CAtlasedImage * __ptr64) __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 26100,
+                "revision": 0
+              },
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CAtlasedRectsVisual_InsertAtlasImageAtIndex",
+      "id": "CAtlasedRectsVisual::InsertAtlasImageAtIndex",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CAtlasedRectsVisual::InsertAtlasImageAtIndex",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CAtlasedRectsVisual::InsertAtlasImageAtIndex(class CAtlasedImage * __ptr64,unsigned int) __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 22000,
+                "revision": 0
+              },
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    }
+  ]
+}

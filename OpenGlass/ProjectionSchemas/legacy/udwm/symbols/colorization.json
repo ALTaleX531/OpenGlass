@@ -1,0 +1,112 @@
+{
+  "symbols": [
+    {
+      "name": "Symbol_CAccent_UpdateAccentPolicy",
+      "id": "CAccent::UpdateAccentPolicy",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "HRESULT (*)(CAccent*, LPCRECT, ACCENT_POLICY*, CBaseGeometryProxy*)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CAccent::UpdateAccentPolicy(struct tagRECT const * __ptr64,struct ACCENT_POLICY const * __ptr64,class CBaseGeometryProxy * __ptr64) __ptr64",
+                "public: long __cdecl CAccent::UpdateAccentPolicy(struct tagRECT const * __ptr64,struct ACCENT_POLICY const * __ptr64,class CResource * __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CAccent__UpdateSolidFill",
+      "id": "CAccent::_UpdateSolidFill",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "HRESULT (*)(CAccent*, CRenderDataVisual*, UINT, const D2D1_RECT_F&, float)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "protected: long __cdecl CAccent::_UpdateSolidFill(class CRenderDataVisual * __ptr64,unsigned long,class TMilRect_<float,struct MilRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const * __ptr64,float) __ptr64",
+                "protected: long __cdecl CAccent::_UpdateSolidFill(class CRenderDataVisual * __ptr64,unsigned long,class TMilRect_<float,struct D2D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const * __ptr64,float) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CAccent_SetClipRegion",
+      "id": "CAccent::SetClipRegion",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "void (*)(CAccent*, CBaseGeometryProxy*)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: void __cdecl CAccent::SetClipRegion(class CBaseGeometryProxy * __ptr64) __ptr64",
+                "public: void __cdecl CAccent::SetClipRegion(class CResource * __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CAccent__CAccent",
+      "id": "CAccent::~CAccent",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "void (*)(CAccent*)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "protected: virtual __cdecl CAccent::~CAccent(void) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CGlassColorizationParameters_AdjustWindowColorization",
+      "id": "CGlassColorizationParameters::AdjustWindowColorization",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "void (*)(CGlassColorizationParameters*, const GpCC*, float, UINT)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: void __cdecl CGlassColorizationParameters::AdjustWindowColorization(union GpCC const * __ptr64,float,struct TMILFlagsEnum<enum ColorizationFlags::FlagsEnum>) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    }
+  ]
+}

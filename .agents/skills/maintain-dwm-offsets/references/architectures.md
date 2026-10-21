@@ -2,6 +2,11 @@
 
 The unified tree builds two explicit DLL projects. Require the requested architecture before selecting schemas or consumers; do not infer it from the current Git branch.
 
+Here architecture means DWM backend. `--platform` selects the CPU independently,
+defaulting to x64. Projection JSON selects one platform range group per descriptor;
+catalogs select a complete platform/backend override or the common backend corpus. See
+[CPU target selection](../../../../tools/README.md#cpu-target-selection).
+
 ## legacy
 
 The Legacy DLL hooks the MIL compositor draw stream and carries multi-generation Layout and Symbol schemas in `OpenGlass/ProjectionSchemas/legacy/`. Its private consumers live in `OpenGlass/Architecture/Legacy/`. Generated declarations appear only under that project's `$(IntDir)\Generated\Projection`; the `*.Offsets.hpp` files are compatibility include points, not inventories.

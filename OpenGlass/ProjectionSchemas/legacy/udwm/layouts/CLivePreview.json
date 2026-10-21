@@ -1,0 +1,160 @@
+{
+  "layouts": [
+    {
+      "name": "CLivePreview_GetGlassVisual",
+      "id": "CLivePreview_GetGlassVisual",
+      "kind": "field",
+      "type": "CRenderDataVisual*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 528,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 512,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 520,
+              "until": {
+                "build": 22621,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 488,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 440,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CLivePreview::_UpdateInstructions\nxrefs to CRenderDataVisual::ClearInstructions"
+    },
+    {
+      "name": "CLivePreview_GetLivePreviewResourceArray",
+      "id": "CLivePreview_GetLivePreviewResourceArray",
+      "kind": "field",
+      "type": "DynArray<LivePreviewResource>",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 368,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 376,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 328,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CLivePreview::s_UpdateResourcesForMonitor\nxrefs to CLivePreview::s_UpdateResourcesForMonitor"
+    },
+    {
+      "name": "CLivePreview_GetLivePreviewVisualArray",
+      "id": "CLivePreview_GetLivePreviewVisualArray",
+      "kind": "field",
+      "type": "DynArray<LivePreviewVisual>",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 304,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 312,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 264,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CLivePreview::OnWindowShowHide\nxrefs to DynArray<LivePreviewVisual,0>::InsertAt"
+    },
+    {
+      "name": "CLivePreview_GetThumbnailVisual",
+      "id": "CLivePreview_GetThumbnailVisual",
+      "kind": "field",
+      "type": "CRenderDataVisual*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 512,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 496,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 504,
+              "until": {
+                "build": 22621,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 472,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 424,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CLivePreview\nCLivePreview::_FadeOutToGlass\nxrefs to VisualCollection::InsertRelative\nif ( *(DWORD *)this[x] + y) )\n    goto z;"
+    }
+  ]
+}

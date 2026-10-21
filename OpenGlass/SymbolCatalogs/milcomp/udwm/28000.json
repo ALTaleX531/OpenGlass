@@ -1,20 +1,14 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "records": [
     {
       "revision": 1516,
-      "image": {
-        "time_date_stamp": 397869906,
-        "size_of_image": 1245184,
-        "sha256": "64e7ca2631de16b4769996ed146850103662f84c6fc1cb2997da9cfbe52c0873"
-      },
       "pdb": {
         "name": "uDWM.pdb",
         "guid": "1fc7d852-689f-a474-3b3d-a7a7b68c6b6f",
         "age": 1,
         "sha256": "029e91346bd99ea1be3a7394c3ab30175568d83edfa57fc404fbb59c130a6eb9"
       },
-      "resolution_contract": "b29d67531b1a574d0c4ecb49ac01fd54ef6d18e419ea114479df748d7f39def1",
       "symbols": {
         "CButton::vftable": {
           "name": "const CButton::`vftable'",
@@ -232,18 +226,12 @@
     },
     {
       "revision": 1643,
-      "image": {
-        "time_date_stamp": 3088869104,
-        "size_of_image": 1253376,
-        "sha256": "1f482ade450f244952c50fa9ec9a8a49b3b32910d5065571ce0d231c38b89ab7"
-      },
       "pdb": {
         "name": "uDWM.pdb",
         "guid": "acc2f9be-feba-ee4c-1dc8-8fa1c00ae4af",
         "age": 1,
         "sha256": "277ed1597abceb1fbb185e0c695773a0eca0a23b76f5e4dd0d26830aba3db98f"
       },
-      "resolution_contract": "b29d67531b1a574d0c4ecb49ac01fd54ef6d18e419ea114479df748d7f39def1",
       "symbols": {
         "CButton::vftable": {
           "name": "const CButton::`vftable'",
@@ -461,18 +449,12 @@
     },
     {
       "revision": 1761,
-      "image": {
-        "time_date_stamp": 3418938383,
-        "size_of_image": 1249280,
-        "sha256": "b61497f1eb028a6e58b484d31b4e0acec0be417fca4917a9fb75a3840115d376"
-      },
       "pdb": {
         "name": "uDWM.pdb",
         "guid": "3cd51d96-dafd-cd72-a4eb-fcd048067ca8",
         "age": 1,
         "sha256": "0af5a7d567bfffc899e5cf3cc7fd0d54c1aa8f00a5260aaf16381005df3e91e4"
       },
-      "resolution_contract": "b29d67531b1a574d0c4ecb49ac01fd54ef6d18e419ea114479df748d7f39def1",
       "symbols": {
         "CButton::vftable": {
           "name": "const CButton::`vftable'",
@@ -690,18 +672,12 @@
     },
     {
       "revision": 1830,
-      "image": {
-        "time_date_stamp": 1122297838,
-        "size_of_image": 1253376,
-        "sha256": "2fd79860be0c2e3e7ed9e465ada4534f9031631fb14585953cd5e7b974bc39bf"
-      },
       "pdb": {
         "name": "uDWM.pdb",
         "guid": "6877208b-4341-d93c-531a-36756f5078bd",
         "age": 1,
         "sha256": "f006304cd993693dfac6f60da197db382a1fe93b14f5844daa65f18085da7776"
       },
-      "resolution_contract": "b29d67531b1a574d0c4ecb49ac01fd54ef6d18e419ea114479df748d7f39def1",
       "symbols": {
         "CButton::vftable": {
           "name": "const CButton::`vftable'",
@@ -919,18 +895,12 @@
     },
     {
       "revision": 2179,
-      "image": {
-        "time_date_stamp": 3670034437,
-        "size_of_image": 1261568,
-        "sha256": "647a127e84b8f0f4846af985f1db6c32d97fe128c9cc56cb5315d11d9e10fb04"
-      },
       "pdb": {
         "name": "uDWM.pdb",
         "guid": "a552a058-fc03-fa88-38ac-d46546afaac9",
         "age": 1,
         "sha256": "f755a3c93ad71f344722941e08283c112993af07e2b59499b340302698639020"
       },
-      "resolution_contract": "b29d67531b1a574d0c4ecb49ac01fd54ef6d18e419ea114479df748d7f39def1",
       "symbols": {
         "CButton::vftable": {
           "name": "const CButton::`vftable'",
@@ -1148,18 +1118,12 @@
     },
     {
       "revision": 2336,
-      "image": {
-        "time_date_stamp": 2153333620,
-        "size_of_image": 1265664,
-        "sha256": "4129601c1aa5a8f4a4490acdfc7a1fbc9e88c6b561824aafff6f1c8de87f658d"
-      },
       "pdb": {
         "name": "uDWM.pdb",
         "guid": "69ee870f-5c1a-15b1-e78f-7721422cf022",
         "age": 1,
         "sha256": "0ebb5b554b052d4ca031f83152b11dd0979921fc4c58a2d5806335f950332e3a"
       },
-      "resolution_contract": "b29d67531b1a574d0c4ecb49ac01fd54ef6d18e419ea114479df748d7f39def1",
       "symbols": {
         "CButton::vftable": {
           "name": "const CButton::`vftable'",
@@ -1377,18 +1341,12 @@
     },
     {
       "revision": 2525,
-      "image": {
-        "time_date_stamp": 1779362147,
-        "size_of_image": 1265664,
-        "sha256": "88ca6cd72ce95fcea2e405a95685cb03ded7d032224ec6910bb65e802e81bd06"
-      },
       "pdb": {
         "name": "uDWM.pdb",
         "guid": "3c7f65a2-cfc3-cde6-db2a-3afb958c6ae8",
         "age": 1,
         "sha256": "b0b6d2a03731fa67cb116ba826e80a5cdf86918668e585cc826d86372b214c0d"
       },
-      "resolution_contract": "b29d67531b1a574d0c4ecb49ac01fd54ef6d18e419ea114479df748d7f39def1",
       "symbols": {
         "CButton::vftable": {
           "name": "const CButton::`vftable'",
@@ -1606,18 +1564,12 @@
     },
     {
       "revision": 2605,
-      "image": {
-        "time_date_stamp": 1415948320,
-        "size_of_image": 1269760,
-        "sha256": "d4492dda5e557626564a92d295a975da1e6a981eb9a21064ad6c45c0d7b86c6c"
-      },
       "pdb": {
         "name": "uDWM.pdb",
         "guid": "bc10bcb0-9495-4eac-3b68-9a06cc70390f",
         "age": 1,
         "sha256": "668b5f3df7544f3b8c6960de844b7b8f264f3f7fb5c1cfcde7caff7ee0750c47"
       },
-      "resolution_contract": "b29d67531b1a574d0c4ecb49ac01fd54ef6d18e419ea114479df748d7f39def1",
       "symbols": {
         "CButton::vftable": {
           "name": "const CButton::`vftable'",
@@ -1835,18 +1787,12 @@
     },
     {
       "revision": 2704,
-      "image": {
-        "time_date_stamp": 2870208604,
-        "size_of_image": 1277952,
-        "sha256": "2693a539e0c73d94208ba040353ddcfe8c3bf91f8f4f4979fda956d048f06d94"
-      },
       "pdb": {
         "name": "uDWM.pdb",
         "guid": "8c9445a1-5509-3f0c-ae7d-32afc083a015",
         "age": 1,
         "sha256": "d4719b6859990f3f34496782dace66fb6a57c7e3e6108699372d9ae10366cbe8"
       },
-      "resolution_contract": "b29d67531b1a574d0c4ecb49ac01fd54ef6d18e419ea114479df748d7f39def1",
       "symbols": {
         "CButton::vftable": {
           "name": "const CButton::`vftable'",
@@ -2064,18 +2010,12 @@
     },
     {
       "revision": 2804,
-      "image": {
-        "time_date_stamp": 2627298729,
-        "size_of_image": 1277952,
-        "sha256": "413488f5c5e34c401ccee64e091b53e43fc633bf44f0885c688e2b081bec670d"
-      },
       "pdb": {
         "name": "uDWM.pdb",
         "guid": "3ff80073-81ba-c40a-94a8-8ba8d769c12c",
         "age": 1,
         "sha256": "364fbe4ce217883984b771f980b4087a4431354d1e6912bea986426eabae9df8"
       },
-      "resolution_contract": "b29d67531b1a574d0c4ecb49ac01fd54ef6d18e419ea114479df748d7f39def1",
       "symbols": {
         "CButton::vftable": {
           "name": "const CButton::`vftable'",

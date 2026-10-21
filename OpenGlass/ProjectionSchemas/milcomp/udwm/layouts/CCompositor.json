@@ -1,0 +1,22 @@
+{
+  "layouts": [
+    {
+      "name": "CCompositor_GetInteropCompositorDCompDevicePartner",
+      "id": "CCompositor_GetInteropCompositorDCompDevicePartner",
+      "kind": "field",
+      "type": "IDCompositionDesktopDevicePartner6*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 32,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CDesktopManager::EnsureDCompositionInteropDevice/CCompositor::InitializeInteropCompositor\nxrefs to RoGetActivationFactory(\"Windows.UI.Composition.Compositor\")\nQueryInterface GUID_d14b6158_c3fa_4bce_9c1f_b61d8665eab0\nRetrieves IDCompositionDesktopDevicePartner from CCompositor's DComp device at index 4"
+    }
+  ]
+}

@@ -1,20 +1,14 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "records": [
     {
       "revision": 423,
-      "image": {
-        "time_date_stamp": 694926011,
-        "size_of_image": 3624960,
-        "sha256": "617b7b4283e5b0a49da3dc645437410bfbb8c5c3611d994c345e130f8ea39762"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "dcd8142d-6624-a6b5-d018-d342c9920155",
         "age": 1,
         "sha256": "ea64d15f29c2664e04523b2ae53b6350f8182959b908b6516328741444cf9555"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -136,18 +130,12 @@
     },
     {
       "revision": 488,
-      "image": {
-        "time_date_stamp": 1589075666,
-        "size_of_image": 3620864,
-        "sha256": "abcc281844d3c9ff7b2545745f078a9f1384bc075c0a91351af5cd3724712c30"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "f71eac11-8801-09ff-0a2d-6c1e6dd8d52e",
         "age": 1,
         "sha256": "96204e8a92ca1ea3449b020439139ed854d67e626982826e5d72dad8458c6650"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -269,18 +257,12 @@
     },
     {
       "revision": 546,
-      "image": {
-        "time_date_stamp": 4024726140,
-        "size_of_image": 3620864,
-        "sha256": "6dc41bcb98c331c703eb3aba6e3c8e2043067b63dd9be3504d9c763b3f55fb9a"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "72191440-1311-8ef8-23f5-9db06c5404e8",
         "age": 1,
         "sha256": "b3e7caf43e5ea139520127f89056043b1349975dd36ee8498cd559019fabe52e"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -402,18 +384,12 @@
     },
     {
       "revision": 746,
-      "image": {
-        "time_date_stamp": 2370157866,
-        "size_of_image": 3620864,
-        "sha256": "3d40c32d6974cfd41dfb73e5295e61bd9cd7b45d482bbf59db2ac2077b2037c9"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "32c03f15-a288-62ea-350b-3c98fb7f08c8",
         "age": 1,
         "sha256": "b3da188c491316f5baedc23c379b8f40963f16928849ee884672f6d5dd5dae9c"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -535,18 +511,12 @@
     },
     {
       "revision": 789,
-      "image": {
-        "time_date_stamp": 3817500027,
-        "size_of_image": 3624960,
-        "sha256": "7a862ef629f828711cc5f53d1054c0aeb59260abe3aec43fb5f04f8380e5cfa6"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "47e4ad6a-46a9-36fc-8733-79e0d86e94fc",
         "age": 1,
         "sha256": "887a2cef1d925798f82a6d7f8c5d367ef81733347c6ad3b2ac2839064c0ca6a5"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -668,18 +638,12 @@
     },
     {
       "revision": 844,
-      "image": {
-        "time_date_stamp": 1897462204,
-        "size_of_image": 3629056,
-        "sha256": "299309ff351ccebf6c24bdd77b769cf808aeda481ccd53a6f3e5156b64d6ace9"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "4b420414-8e70-05fc-abe7-4be918e1f6f6",
         "age": 1,
         "sha256": "813ff72182563c66cf348f370815f9e000b1dec385d819a4344471a54f824a81"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -801,18 +765,12 @@
     },
     {
       "revision": 906,
-      "image": {
-        "time_date_stamp": 2268439070,
-        "size_of_image": 3633152,
-        "sha256": "be634948a05fed449361f6d568c595fbc58194f079301b3ba2c24d17210029c5"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "a6d03a53-dc37-ab81-8fb2-ef9ef0fee79f",
         "age": 1,
         "sha256": "970582726cbda4ac5c03de9639ffed0a8c1fb6689e43fd37eb2d1ef221d2dcf4"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -934,18 +892,12 @@
     },
     {
       "revision": 928,
-      "image": {
-        "time_date_stamp": 448320866,
-        "size_of_image": 3633152,
-        "sha256": "844987f0230a6e8f4319f31a217ef1f6f6df4124e25b2c43b8dae78df7ecd102"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "09b70ff4-2ad8-e505-4eaf-84a823fd5519",
         "age": 1,
         "sha256": "cce3949c5495500eab3980e7366de697869c3a596f815746f07bc112f1da44ab"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -1067,18 +1019,12 @@
     },
     {
       "revision": 964,
-      "image": {
-        "time_date_stamp": 2277323568,
-        "size_of_image": 3633152,
-        "sha256": "99529aa27d0382aaec2793783ec6fb1f09d6d2508ef01490cdc2343749f8ecfc"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "a0602b00-ebdd-95a6-acfd-796fbbd578a6",
         "age": 1,
         "sha256": "8adfdbb8b5895f871990cbf710b8dca3f667d9f207c2b10942521b6085ca7fb9"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -1200,18 +1146,12 @@
     },
     {
       "revision": 1023,
-      "image": {
-        "time_date_stamp": 2467999163,
-        "size_of_image": 3633152,
-        "sha256": "595d9e9a4c7b98f61637673907d2be7c5cb875654c50bdfa028f024cc8601fae"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "010d7b59-391f-ec38-a7e5-5eb17a23fe5f",
         "age": 1,
         "sha256": "5f37ff443d69ca4458eb7b7bf99b48c5ce8875d633a086860dee0d3c77cc6720"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -1333,18 +1273,12 @@
     },
     {
       "revision": 1052,
-      "image": {
-        "time_date_stamp": 4110872732,
-        "size_of_image": 3633152,
-        "sha256": "ed0b058f35c858f2094ccbded8b5fb20f3dcc38911adf01dd8f291e7b2a5aab3"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "bb6602e8-7e68-913d-f0ea-5b2de95d8423",
         "age": 1,
         "sha256": "8fce50d12185061e0b4306c9f6b63d94fb0724e1c3e9d31e59735ecf8f29f153"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -1466,18 +1400,12 @@
     },
     {
       "revision": 1081,
-      "image": {
-        "time_date_stamp": 1969457967,
-        "size_of_image": 3629056,
-        "sha256": "9798692ec8faecf64e37c87f9e5cb49590429f86cff58f9dd2abaa3c821da996"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "7f138dff-8453-26f2-fa36-405593877b45",
         "age": 1,
         "sha256": "9e73e2b67a6b92c9f01c152a5b5ddfd1d42f0e60ddb82050d83b2c7b19ba0405"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -1599,18 +1527,12 @@
     },
     {
       "revision": 1202,
-      "image": {
-        "time_date_stamp": 3353786110,
-        "size_of_image": 3624960,
-        "sha256": "70525ab78a192af6f56ff57e04ef748033cd69b2022b6a1aae2f7531aa425305"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "1a433c66-07b7-e9e2-6c2e-fed78e554b55",
         "age": 1,
         "sha256": "a17ab777e2d73318ce76688b9e9e71c3d233a0c4763962a87956b1163d08fbdb"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -1732,18 +1654,12 @@
     },
     {
       "revision": 1237,
-      "image": {
-        "time_date_stamp": 4049827902,
-        "size_of_image": 3624960,
-        "sha256": "f1cf67cd08e14fab115fc873a486cd1525d371db9307fa76c88901ec7d68b008"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "3534513d-a3b0-0691-0503-b909a7e7129d",
         "age": 1,
         "sha256": "b1dc88c761121e5efa546ee853fe24bb96a68762f28719d1f16653b84b919970"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -1865,18 +1781,12 @@
     },
     {
       "revision": 1266,
-      "image": {
-        "time_date_stamp": 806169044,
-        "size_of_image": 3620864,
-        "sha256": "a3c5df16cac6ca53ad43fdb44c6724556e3c7f88dd1d42b675e2fc0b99c60656"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "28599a86-bc01-a1fb-66db-6fbf5399968b",
         "age": 1,
         "sha256": "9495f8a10a32a1517f64a99c7d4f73908a8e8b8c216c9eb4cca10bf94cbe0279"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -1998,18 +1908,12 @@
     },
     {
       "revision": 1288,
-      "image": {
-        "time_date_stamp": 552361616,
-        "size_of_image": 3620864,
-        "sha256": "445c1f96b4fc23558b9e07a50aab15bd4c7e297d11823f273673e13034cc7fe1"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "94e805fd-2e00-cd8c-e9e5-10e539edf69f",
         "age": 1,
         "sha256": "88f4111e0146d5f75134471308d7c03b31fa035643ace93a4015329e4ebf1826"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -2131,18 +2035,12 @@
     },
     {
       "revision": 1387,
-      "image": {
-        "time_date_stamp": 905096521,
-        "size_of_image": 3616768,
-        "sha256": "c843d140b7ddf98dae7de2267cbd94ad1d14865fe6345f2783ae794d7bb78c67"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "a68a5e63-6d7b-71a1-764b-908da1219ed5",
         "age": 1,
         "sha256": "a5b65e338b9fdaa343e9721fc61fda76a1d92579bfd3d01f5ecb4e77664de672"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -2264,18 +2162,12 @@
     },
     {
       "revision": 1503,
-      "image": {
-        "time_date_stamp": 2770274633,
-        "size_of_image": 3616768,
-        "sha256": "4d29427aa4bc35c81fbc507690dd4c25c93929a47ed6de51146d7a8e5e3f1105"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "9b66f969-094b-c31d-e74e-34e849d24331",
         "age": 1,
         "sha256": "eb65e5053af9be574d40ca3e8b80df5b037f3dc5ef9a3f734a0dc7714e79feb8"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -2397,18 +2289,12 @@
     },
     {
       "revision": 1526,
-      "image": {
-        "time_date_stamp": 2166510937,
-        "size_of_image": 3616768,
-        "sha256": "4eea0cbadf5464c6b9d874402a954b4d9dd4f24144d0889116a78c61d28d4c0e"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "ed8ef008-fcd5-8e2f-e4f3-1d51e351c341",
         "age": 1,
         "sha256": "6c77444183c9019b7a0b9d231ebf33d03228e91cfdb728704cd1f3daab4a19f4"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -2530,18 +2416,12 @@
     },
     {
       "revision": 1586,
-      "image": {
-        "time_date_stamp": 2785526524,
-        "size_of_image": 3616768,
-        "sha256": "197af9e8ef0a63153de3eedb1e95e75c67cedd88908f29ce7f35109a3e5227a9"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "71debe42-6654-15aa-8edc-a5ae39590daa",
         "age": 1,
         "sha256": "1c11b5d3a6b29087ce38ac3f6ffc8a8f23de4e47970d8440cb2e14c77b3bc800"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -2663,18 +2543,12 @@
     },
     {
       "revision": 1620,
-      "image": {
-        "time_date_stamp": 1930685143,
-        "size_of_image": 3616768,
-        "sha256": "0a4eac9096010fcffcd4a2e978b1b12f23e3dae2fedc8b2fb1d55f0b891079ed"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "d3adfa07-54d4-3453-2151-7e58041323f7",
         "age": 1,
         "sha256": "87b33c27914ed147b3f3c75e12aecb362f43cdeb6fef383ccc77c44435ffdba0"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -2796,18 +2670,12 @@
     },
     {
       "revision": 1645,
-      "image": {
-        "time_date_stamp": 316535540,
-        "size_of_image": 3616768,
-        "sha256": "f460a0fbda390f3ca243cc4128c3e266acd8bac38ee269bbe69a5cdcd04e336d"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "5d9df808-2f4d-ff3d-1a7a-2212ea00b31b",
         "age": 1,
         "sha256": "27ba84118519d5f6991e731e16f37092f15f949e00c51234771bbfc2affba4b3"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -2929,18 +2797,12 @@
     },
     {
       "revision": 1682,
-      "image": {
-        "time_date_stamp": 380758396,
-        "size_of_image": 3612672,
-        "sha256": "d0fabc1ddf5d9881e40d5e06c9dcf96382335ffba27d3600fe17a0f44ca07d79"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "3c2b6dd4-f8bb-4ee2-411f-b8ad9eb009fe",
         "age": 1,
         "sha256": "1a09b3a9adc34242da97f2fba5bedf8b280c12c1af8f7d1144c36788e9f127be"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -3062,18 +2924,12 @@
     },
     {
       "revision": 1806,
-      "image": {
-        "time_date_stamp": 1355351639,
-        "size_of_image": 3612672,
-        "sha256": "222b85d011ebf76f025895e418aa389ad4a0da2e18d338ea909620b7eadcae45"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "9a73a78a-de3f-9178-43df-5b4c7cea9a07",
         "age": 1,
         "sha256": "bf73864f36ba53c8c3b7f654979d3c7f1f4b79bba98af1382cbf1fb7dc34dd95"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -3195,18 +3051,12 @@
     },
     {
       "revision": 1949,
-      "image": {
-        "time_date_stamp": 2416445689,
-        "size_of_image": 3612672,
-        "sha256": "2efd2daecb7e8ba9853919344866f1ed18bf7c72124b82bd26f5eb9e90c36907"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "afa78782-e1b9-caf6-1718-80b9b07ecc65",
         "age": 1,
         "sha256": "1e108effd5811cac2ba10be8c2c423f54b51ecf85e75c808b7a28b92e5133309"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -3328,18 +3178,12 @@
     },
     {
       "revision": 2130,
-      "image": {
-        "time_date_stamp": 1077560978,
-        "size_of_image": 3612672,
-        "sha256": "3f8b9336b43ecd3a32205f10bb6898aed7778cc88e9aabcaf05da9e29824f0cb"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "504b67b0-0dae-19e0-f3ec-577f05a55d20",
         "age": 1,
         "sha256": "55cd03dfb63fc35e88756faca908d7cce9becb80ca4bcf2fbbb5a217a44fa17c"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -3461,18 +3305,12 @@
     },
     {
       "revision": 2251,
-      "image": {
-        "time_date_stamp": 405376103,
-        "size_of_image": 3612672,
-        "sha256": "14259a134cd027ef7d2a0ee423e13bcd14a860307bce030028d6b588d08e5d4b"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "efeb09b3-bfff-3e6e-f8e2-79338f3277b3",
         "age": 1,
         "sha256": "4c0fc03243d8b48cc1bbfd9e3d9fdfc7020788758e0242a02e1e6acfb34538ba"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -3594,18 +3432,12 @@
     },
     {
       "revision": 2311,
-      "image": {
-        "time_date_stamp": 447738597,
-        "size_of_image": 3612672,
-        "sha256": "1e8c11209908e9008017f048ca030b5c72e745b9fd9201dfd8856f2078a01a22"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "c824bde9-fcd3-6ae9-7e27-85a70d673fa1",
         "age": 1,
         "sha256": "cdbd0388466cef8cef74c9a8523e8ffdfea0455cc69dab8674f96664cd4d0801"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -3727,18 +3559,12 @@
     },
     {
       "revision": 2673,
-      "image": {
-        "time_date_stamp": 316949131,
-        "size_of_image": 3612672,
-        "sha256": "0964ee3d914dd9267fdc288483f71ae48f127956180611ae87e3206ed68ca59e"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "dd5793d2-471b-7dff-a703-4f0597a682c6",
         "age": 1,
         "sha256": "9751b6fbf7420be9eae3f0a077892eda76441610ade10f721462e8b9e7303eae"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -3860,18 +3686,12 @@
     },
     {
       "revision": 2913,
-      "image": {
-        "time_date_stamp": 2479412196,
-        "size_of_image": 3612672,
-        "sha256": "f269d8f2eef649de4276edfa08b9ee0a8e9c5587f464da0260b644d390742846"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "6842d891-601d-1f5d-0a76-3346b5734584",
         "age": 1,
         "sha256": "e36de7c05ffa32f5a0b4fc7d048c49430e575a4d18a78453d5aa2ff25ffc2dc9"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -3993,18 +3813,12 @@
     },
     {
       "revision": 3393,
-      "image": {
-        "time_date_stamp": 3877047296,
-        "size_of_image": 3612672,
-        "sha256": "6e4b973e615db3411069b897fd5bbf23e91412ea20d1a2d2c2f4a700a4c40de2"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "0d5e1610-a2a3-556a-873b-ae1d71966548",
         "age": 1,
         "sha256": "0b89eef24db005087f77ed9a21bc4ae6a932de28cebabdc4d9c33512d338e042"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -4126,18 +3940,12 @@
     },
     {
       "revision": 3570,
-      "image": {
-        "time_date_stamp": 1307705829,
-        "size_of_image": 3612672,
-        "sha256": "87ef8e9b26364e923bcf0e1588bfdd7304c114872dcd7f3a70dd795aac0a9a80"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "a3a31170-f696-9ddf-88f3-03546a90ec35",
         "age": 1,
         "sha256": "e6e715b9d0033ee3bc828d1de35e83bfa214bd807ccdb6a2c055c386f2dcddec"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -4259,18 +4067,12 @@
     },
     {
       "revision": 3636,
-      "image": {
-        "time_date_stamp": 901265297,
-        "size_of_image": 3612672,
-        "sha256": "122e00a501847a334c68ae5d9296a072d1c9989b568163a9fbf3e4475a4ca59f"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "c7268561-6cb9-0651-bb63-cb4189f357b3",
         "age": 1,
         "sha256": "9625b25ed33498adddfc33e8b4dc3adda129b0ab891fa165be1bb0db9345ca75"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -4392,18 +4194,12 @@
     },
     {
       "revision": 3693,
-      "image": {
-        "time_date_stamp": 3547492951,
-        "size_of_image": 3612672,
-        "sha256": "44a113c5f308f726de0a537607fc1ad5bca4f971280b34b5d830d80302437d31"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "18d355fe-b56c-7115-fd35-8d660fbb1b0e",
         "age": 1,
         "sha256": "be65c1e06148edbbcd3ec43c215ac7092ecf739b6eedd6037ecf8a23724873d0"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -4525,18 +4321,12 @@
     },
     {
       "revision": 4291,
-      "image": {
-        "time_date_stamp": 3760898315,
-        "size_of_image": 3616768,
-        "sha256": "90ea765c3cef640322e09598d18a65e71e484736601641053f81364a18cccc93"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "fe391e85-ad4d-2837-5dee-c10f0a430587",
         "age": 1,
         "sha256": "4651b83cd9da638c76c55f92211172292b2e89f37d0e579a262e5cbbba330e51"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -4658,18 +4448,12 @@
     },
     {
       "revision": 4355,
-      "image": {
-        "time_date_stamp": 1970742647,
-        "size_of_image": 3616768,
-        "sha256": "3c073f2ad8fb1f500e15fd4213f9d726a4259e82463efb2185fcfbb672b79f94"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "b62b88b8-797d-e4db-bdb0-8c553b72f4f8",
         "age": 1,
         "sha256": "259b89ee4259d0ba7ce855bc458182424488f0407678bb2c79fcf662df71eb54"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -4791,18 +4575,12 @@
     },
     {
       "revision": 4412,
-      "image": {
-        "time_date_stamp": 192079066,
-        "size_of_image": 3633152,
-        "sha256": "52fde710a4286e01411d0ec4623928442140f15cdca1985eaa2c3391b80fc58b"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "55838f60-39b7-92a7-3f3a-e81f04da9b5c",
         "age": 1,
         "sha256": "d6b976e7a98a6cc2dfa43d4c1a4ceedaf34d2150cf3a32ada1a7f4e07ae4c5be"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -4924,18 +4702,12 @@
     },
     {
       "revision": 4597,
-      "image": {
-        "time_date_stamp": 2868583531,
-        "size_of_image": 3629056,
-        "sha256": "0729ef1d187b59a55c6e3603140fa78325326a43346ee56778ac588deab1f580"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "fcbb74f3-5488-9652-5d1b-c197a35487ff",
         "age": 1,
         "sha256": "d819a61675ee589f4fd425b56481bb813243a8a54d57272f51e2713757092a82"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -5057,18 +4829,12 @@
     },
     {
       "revision": 4717,
-      "image": {
-        "time_date_stamp": 3928445770,
-        "size_of_image": 3624960,
-        "sha256": "1ea437b7fc645d5309c70bc15e2a5d8bf455fd1312a4d2f3b683349c23006e2c"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "353ef885-9318-0e4b-b041-9ef780dd9ca9",
         "age": 1,
         "sha256": "7ef309b473cd26def7b1a31fc56f8fbf5ba772d210941ce8dabe855ae0a3fafd"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -5190,18 +4956,12 @@
     },
     {
       "revision": 4780,
-      "image": {
-        "time_date_stamp": 771302265,
-        "size_of_image": 3624960,
-        "sha256": "5e7a4f07e33c6ae9c9339a8b1fe3af4007fd30c2eae58dea83a8d116abc14172"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "1edcd685-8239-6c76-15c2-281fd44bfe43",
         "age": 1,
         "sha256": "7b4657e8aea6a22bcb587dfa19a12da1db84e0ff2d2afe2a1a2ff21dbb4fa2df"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -5323,18 +5083,12 @@
     },
     {
       "revision": 5129,
-      "image": {
-        "time_date_stamp": 317395886,
-        "size_of_image": 3624960,
-        "sha256": "7b0e040ecf5a7f4d923a2691dbf204dc4a36fe59b9ed064a887f282384efb6ba"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "46ad2ad8-8e9c-36e3-a20c-93c8a54ef5ba",
         "age": 1,
         "sha256": "06994dbb0645f25c7e6e5fe7262ad5f638cf6f1e1933ff47cd0cd25c70f75418"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -5456,18 +5210,12 @@
     },
     {
       "revision": 5198,
-      "image": {
-        "time_date_stamp": 1677390471,
-        "size_of_image": 3624960,
-        "sha256": "17f7db3ca45547fd685e3b8048b1af581fe173b8847f60e903d6463e24e83e2f"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "3af98d2e-1e81-535a-27ec-4a56fc47429e",
         "age": 1,
         "sha256": "b295e4205a0d0d826c189e03953fb90527e23d51db521e23018a502b60b2043a"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -5589,18 +5337,12 @@
     },
     {
       "revision": 5553,
-      "image": {
-        "time_date_stamp": 2740451975,
-        "size_of_image": 3624960,
-        "sha256": "085d2ee7dead0d895e7a01dcfe4692afd55cbc8377eadba3b4ac185fbb3b07d7"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "be0b278b-9fdb-53fb-93fb-7ae94e6c59d3",
         "age": 1,
         "sha256": "1a6b7e79a7416b2141fdcc73c20cdfc8933fd11e4f036d49a1071626eb1cacf5"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -5722,18 +5464,12 @@
     },
     {
       "revision": 5737,
-      "image": {
-        "time_date_stamp": 2917590207,
-        "size_of_image": 3624960,
-        "sha256": "039234a8ac0ea0805d3351f5655b8e21a474f269305e2ddaa94431cd3f5817b6"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "b94bc168-6d86-374d-cb4d-b3b61542a28f",
         "age": 1,
         "sha256": "96387fd9be51806a8d993ca0573cbe830ab967a629a2e414c6a349dda7f9f7d0"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -5855,18 +5591,12 @@
     },
     {
       "revision": 5794,
-      "image": {
-        "time_date_stamp": 955269310,
-        "size_of_image": 3624960,
-        "sha256": "518695f1228d4083ec670f65c17028b60a961776f18947a440fd0202269bfed6"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "5d5311b4-ee43-2d11-6027-91f9a3f94b20",
         "age": 1,
         "sha256": "0214cb65ecb621d93815f460db6d28eedf90df94c3d3afb1e419f6e411d593b3"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -5988,18 +5718,12 @@
     },
     {
       "revision": 5856,
-      "image": {
-        "time_date_stamp": 2252325100,
-        "size_of_image": 3624960,
-        "sha256": "4b783f9b9dfe3430e57c72705da53472a575312cfccdcd784a8b9560c020e4a3"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "a827e159-cd44-af58-cec1-0c918343b92c",
         "age": 1,
         "sha256": "b50c1cbc74d320dcd4f53f6ecd7ab62f74ed74dc9a0f6b25fdc5538a187f026f"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -6121,18 +5845,12 @@
     },
     {
       "revision": 6157,
-      "image": {
-        "time_date_stamp": 1719257566,
-        "size_of_image": 3624960,
-        "sha256": "c7181e79aa66a5b9243d21512e01a4f65818e3312be01aaf328a275e5934d324"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "bd094274-7ded-ef6e-297a-9cec66fa40ee",
         "age": 1,
         "sha256": "c45f86f8d6a80d95c9ab0ef5b929edd72527a8c63daaaf29741b14baf3b490bb"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -6254,18 +5972,12 @@
     },
     {
       "revision": 6328,
-      "image": {
-        "time_date_stamp": 1021687797,
-        "size_of_image": 3624960,
-        "sha256": "6d16b359dad3d6913357ce95f6403f00a5d9b478715d998c9ac8ed324b4437b1"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "2a0cc37c-ecad-9c2e-3582-0c715be91066",
         "age": 1,
         "sha256": "9d354647838e22b425e865e379bd3b09c1f3db4b83279186b7cf30cdc36083ce"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -6387,18 +6099,12 @@
     },
     {
       "revision": 6456,
-      "image": {
-        "time_date_stamp": 119417812,
-        "size_of_image": 3629056,
-        "sha256": "203b28606997a36a15b57d542bc4b55c75b10036a2b33e87623f9c2b46795090"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "700657bf-6860-6db0-a1ae-369c1f83bc50",
         "age": 1,
         "sha256": "627533f87e0a6142b042379399343fd8fd2cabe9f664229327723b851a2658ba"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -6520,18 +6226,12 @@
     },
     {
       "revision": 6807,
-      "image": {
-        "time_date_stamp": 1922058801,
-        "size_of_image": 3629056,
-        "sha256": "a8ca3ed643845e882b9c46d384f33c6c006377659fe4c24d9773c7395b0e1ba4"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "be74f91e-2fd7-4f9e-6bd9-e7aebc3b0fda",
         "age": 1,
         "sha256": "d9eb77dc61bb69c51984c6eee44276dd020b89a50b869dc4ec9bb1eb6126dbcc"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -6653,18 +6353,12 @@
     },
     {
       "revision": 6937,
-      "image": {
-        "time_date_stamp": 1602601106,
-        "size_of_image": 3624960,
-        "sha256": "4ab70f8aa3a3fc02688f6c1d9da17031f5b5027ee4f39c23e5ef36e5032d0971"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "da0ae9c9-a347-439c-8dc7-a6e38c42bc59",
         "age": 1,
         "sha256": "b8de782c7c38936055260f12de2adb6e5304d47781fe450766f63cd99757e474"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -6786,18 +6480,12 @@
     },
     {
       "revision": 7058,
-      "image": {
-        "time_date_stamp": 776401262,
-        "size_of_image": 3624960,
-        "sha256": "7c30f4f25e2a58e2d4b40c37571460f19defd37150b91a619eb10e0049851c5a"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "3d794858-1e2c-dccd-6364-9f8f26085b59",
         "age": 1,
         "sha256": "d5ae31345e1248ac60441c6177d621046d11cfcce1f66fa8de6a3bf5d5002701"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -6919,18 +6607,12 @@
     },
     {
       "revision": 7181,
-      "image": {
-        "time_date_stamp": 1664675036,
-        "size_of_image": 3624960,
-        "sha256": "8e1a30090b346ec52d355cd5850a2301a0dd917025cea6a244691deff9f3bad8"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "4c09598b-bd04-3cb0-75e4-1b8faf8d1974",
         "age": 1,
         "sha256": "6cfaec3b924f88002f757a5443283b851afcb466b976f06b57380facbfc96324"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -7052,18 +6734,12 @@
     },
     {
       "revision": 7291,
-      "image": {
-        "time_date_stamp": 1246693660,
-        "size_of_image": 3629056,
-        "sha256": "7c37ef6a38b6efb25d021308673943fa89618224130c4de9ebd8c6140dd8e06c"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "60fdcb19-ff89-8773-d5e9-e250a0cc676c",
         "age": 1,
         "sha256": "b3593dc426882681e271a3992db5ad30ad1067801d6e3dd466dcb4ea28530f68"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -7185,18 +6861,12 @@
     },
     {
       "revision": 7417,
-      "image": {
-        "time_date_stamp": 1967120647,
-        "size_of_image": 3629056,
-        "sha256": "86affc5cdbfe3a8d3e304ebc72ab54515037f48eae9ed1639ecd65af9b7af801"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "2ed3703d-206c-95a3-b9c0-6b4edd708296",
         "age": 1,
         "sha256": "bf0893f733c3fe7457a5482102f151c9be9c5047d782e6a275ec2d398181f9ab"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -7318,18 +6988,12 @@
     },
     {
       "revision": 7548,
-      "image": {
-        "time_date_stamp": 411759261,
-        "size_of_image": 3629056,
-        "sha256": "0cb02444bd32660077f0fc9cb0a854099c9dc182890406c5de2c639c22d403ff"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "43f5deb4-defd-b155-f5bf-ee95339d7c1b",
         "age": 1,
         "sha256": "4b3ba2094c6550126d1770e8e8d6ed2bee18f0053195e0879890d571a37e9a07"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -7451,18 +7115,12 @@
     },
     {
       "revision": 7663,
-      "image": {
-        "time_date_stamp": 1870213636,
-        "size_of_image": 3629056,
-        "sha256": "1938e2972604abaa533fec371ac0e510fee9365729b7ab1230e29c46b7309356"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "03663aee-8908-66dd-aca8-50992b829951",
         "age": 1,
         "sha256": "1c26f32becef75ce839a722ea639ba7ddb584df3a14b416231df3c010904c5ef"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",
@@ -7584,18 +7242,12 @@
     },
     {
       "revision": 7725,
-      "image": {
-        "time_date_stamp": 4053850564,
-        "size_of_image": 3629056,
-        "sha256": "b7488eb96e3ad2a845fdf0cd03d2d729e970eca81e08c087ce7a6deea8d2cd9d"
-      },
       "pdb": {
         "name": "dwmcore.pdb",
         "guid": "72052572-e107-ec32-b9a5-29b7b7487e09",
         "age": 1,
         "sha256": "311e741b1450c9ae3341cea6ad28366407faf5949c9e7f555137d626b77e0940"
       },
-      "resolution_contract": "af1834a9826da8b52a4e7fbc7d9a33e3ffb531b14e6c5723f592314b786fabed",
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
           "name": "private: bool __cdecl CArrayBasedCoverageSet::IsCovered(class TMilRect_<float,struct MilRectF,struct Mil3DRectF,struct MilPointAndSizeF,struct RectUniqueness::NotNeeded> const & __ptr64,int,bool)const __ptr64",

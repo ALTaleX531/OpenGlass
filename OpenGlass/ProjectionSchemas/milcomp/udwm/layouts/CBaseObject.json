@@ -1,0 +1,22 @@
+{
+  "layouts": [
+    {
+      "name": "CBaseObject_ReferenceCount",
+      "id": "CBaseObject.ReferenceCount",
+      "kind": "field",
+      "type": "DWORD",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 8,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CBaseObject::AddRef and Release update the interlocked reference count stored immediately after the vtable pointer."
+    }
+  ]
+}

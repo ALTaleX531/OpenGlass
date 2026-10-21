@@ -1,0 +1,36 @@
+{
+  "layouts": [
+    {
+      "name": "CGraphicsManager_GetD2DDevice_Index",
+      "id": "CGraphicsManager_GetD2DDevice_Index",
+      "kind": "field",
+      "type": "ID2D1Device*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 16,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 24,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 32,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CGraphicsDeviceManager::InitializeGraphicsDevice\nD2D1CreateFactory → stores D2D device at this + N"
+    }
+  ]
+}

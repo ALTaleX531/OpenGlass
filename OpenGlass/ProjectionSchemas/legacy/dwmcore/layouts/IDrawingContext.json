@@ -1,0 +1,47 @@
+{
+  "layouts": [
+    {
+      "name": "IDrawingContext_DrawGeometry_VtableSlot",
+      "id": "IDrawingContext.DrawGeometry.vtable_slot",
+      "kind": "vtable_slot",
+      "type": "IDrawingContext_DrawGeometry_t",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 32,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "The IDrawingContext-compatible subobject used by COcclusionContext and CDrawingContext exposes DrawGeometry at vtable slot 4. Both hook sites must share this typed slot descriptor."
+    },
+    {
+      "name": "IDrawingContext_GetDrawingContext",
+      "id": "IDrawingContext_GetDrawingContext",
+      "kind": "field",
+      "type": "CDrawingContext",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 0,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": -16,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CDrawingContext::Create — IDrawingContext vtable at CDrawingContext + 16\nNegative offset: IDrawingContext → CDrawingContext base = -16\nPre-2004: IDrawingContext was at +0 (absorbed into base vtable)"
+    }
+  ]
+}

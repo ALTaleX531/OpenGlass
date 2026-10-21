@@ -1,0 +1,25 @@
+{
+  "symbols": [
+    {
+      "name": "Symbol_CGlassColorizationParameters_AdjustWindowColorization",
+      "id": "CGlassColorizationParameters::AdjustWindowColorization",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "CGlassColorizationParameters_AdjustWindowColorization_t",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: void __cdecl CGlassColorizationParameters::AdjustWindowColorization(union GpCC const * __ptr64,float,struct TMILFlagsEnum<enum ColorizationFlags::FlagsEnum>) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    }
+  ]
+}

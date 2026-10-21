@@ -1,0 +1,371 @@
+{
+  "layouts": [
+    {
+      "name": "COcclusionContext_GetArrayBasedCoverageSet",
+      "id": "COcclusionContext_GetArrayBasedCoverageSet",
+      "kind": "field",
+      "type": "CArrayBasedCoverageSet",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 392,
+              "until": {
+                "build": 18362,
+                "revision": 752
+              }
+            },
+            {
+              "offset": 400,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 408,
+              "until": {
+                "build": 20348,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 416,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 448,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 568,
+              "until": {
+                "build": 26100,
+                "revision": 4484
+              }
+            },
+            {
+              "offset": 616,
+              "until": {
+                "build": 26100,
+                "revision": 8328
+              }
+            },
+            {
+              "offset": 592,
+              "until": {
+                "build": 26100,
+                "revision": 8972
+              }
+            },
+            {
+              "offset": 576,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "COcclusionContext::FlushOcclusionRects\nCArrayBasedCoverageSet::Add((char *)this + N, ...) — DynArray at byte offset\nN Constructor initializes inline buffer at this + N + 16"
+    },
+    {
+      "name": "COcclusionContext_GetCurrentZ",
+      "id": "COcclusionContext_GetCurrentZ",
+      "kind": "field",
+      "type": "UINT",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 1032,
+              "until": {
+                "build": 18362,
+                "revision": 752
+              }
+            },
+            {
+              "offset": 1040,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 1456,
+              "until": {
+                "build": 20348,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 1396,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 1428,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 1316,
+              "until": {
+                "build": 26100,
+                "revision": 4484
+              }
+            },
+            {
+              "offset": 1708,
+              "until": {
+                "build": 26100,
+                "revision": 8328
+              }
+            },
+            {
+              "offset": 1684,
+              "until": {
+                "build": 26100,
+                "revision": 8972
+              }
+            },
+            {
+              "offset": 1668,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "COcclusionContext::FlushOcclusionRects\n*(DWORD *)(this + N) read, then value += 2 written back — unique \"+2\" pattern\nAdjacent DWORD (+4) is the push-skip counter — do NOT confuse\nNOTE: GetCurrentZ, GetDeviceTransform, GetDeviceTransformFlag, and\nGetArrayBasedCoverageSet tend to shift by the SAME byte delta across CUs.\nIf all four differ by the same amount, trust the data."
+    },
+    {
+      "name": "COcclusionContext_GetDeviceTransform",
+      "id": "COcclusionContext_GetDeviceTransform",
+      "kind": "field",
+      "type": "CMILMatrix",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 820,
+              "until": {
+                "build": 18362,
+                "revision": 752
+              }
+            },
+            {
+              "offset": 828,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 1248,
+              "until": {
+                "build": 20348,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 1176,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 1208,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 1180,
+              "until": {
+                "build": 26100,
+                "revision": 4484
+              }
+            },
+            {
+              "offset": 1572,
+              "until": {
+                "build": 26100,
+                "revision": 8328
+              }
+            },
+            {
+              "offset": 1548,
+              "until": {
+                "build": 26100,
+                "revision": 8972
+              }
+            },
+            {
+              "offset": 1532,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "COcclusionContext::UpdateDeviceTransform\nCMILMatrix::Multiply((char *)this + N, a2, result) — device-space matrix\nembedded inline"
+    },
+    {
+      "name": "COcclusionContext_GetDeviceTransformFlag",
+      "id": "COcclusionContext_GetDeviceTransformFlag",
+      "kind": "field",
+      "type": "UINT",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 816,
+              "until": {
+                "build": 18362,
+                "revision": 752
+              }
+            },
+            {
+              "offset": 824,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 1244,
+              "until": {
+                "build": 20348,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 1172,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 1204,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 1172,
+              "until": {
+                "build": 26100,
+                "revision": 4484
+              }
+            },
+            {
+              "offset": 1564,
+              "until": {
+                "build": 26100,
+                "revision": 8328
+              }
+            },
+            {
+              "offset": 1540,
+              "until": {
+                "build": 26100,
+                "revision": 8972
+              }
+            },
+            {
+              "offset": 1524,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "COcclusionContext::FlushOcclusionRects / UpdateDeviceTransform\nif (*((BYTE *)this + N)) → use device transform, else use nullptr\nInvariant: DeviceTransformFlag = DeviceTransform_Offset - 4 or -8"
+    },
+    {
+      "name": "COcclusionContext_GetFrameId",
+      "id": "COcclusionContext_GetFrameId",
+      "kind": "field",
+      "type": "ULONGLONG",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 16,
+              "until": {
+                "build": 20348,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 24,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "COcclusionContext::IsCurrent (~30B)\n*((QWORD *)this + 3) == *((QWORD *)g_pComposition + 111) → global frame ID\ncomparison"
+    },
+    {
+      "name": "COcclusionContext_GetWorldTransform",
+      "id": "COcclusionContext_GetWorldTransform",
+      "kind": "field",
+      "type": "CMatrixStack",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 8,
+              "until": {
+                "build": 18362,
+                "revision": 752
+              }
+            },
+            {
+              "offset": 16,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 24,
+              "until": {
+                "build": 20348,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 32,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 32,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "COcclusionContext constructor / GetWorldTransform\n*(QWORD *)(this + N) → matrix stack data; *(DWORD *)(this + N + 8) → count"
+    }
+  ]
+}

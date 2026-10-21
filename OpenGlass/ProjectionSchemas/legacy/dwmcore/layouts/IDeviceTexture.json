@@ -1,0 +1,54 @@
+{
+  "layouts": [
+    {
+      "name": "IDeviceTexture_GetShaderResourceView",
+      "id": "IDeviceTexture_GetShaderResourceView",
+      "kind": "vtable_slot",
+      "type": "ID3D11ShaderResourceView* (*)(const IDeviceTexture*)",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 8,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 128,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "Confirm this slot from the IDeviceTexture subobject of CDeviceTextureTarget; do not infer it from the adjacent GetTexture2D slot alone."
+    },
+    {
+      "name": "IDeviceTexture_GetTexture2D",
+      "id": "IDeviceTexture_GetTexture2D",
+      "kind": "vtable_slot",
+      "type": "ID3D11Texture2D* (*)(const IDeviceTexture*)",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 0,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 120,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CDeviceTextureTarget has complex inheritance (possible diamond):\n  CD2DBitmap → CDeviceResourceT → CMILCOMBaseT → ...\n  9+ vtable pointers: ID2DBitmapCacheSource, IPixelFormat, IBitmapUnlock,\n  IDeviceResource (standalone + embedded in combined vtables for\n  IDeviceTexture and IDeviceTarget).\nFocus on extracting the specific slot from the IDeviceTexture subobject, not the full inheritance graph."
+    }
+  ]
+}

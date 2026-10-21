@@ -43,7 +43,7 @@
     <Exec Command="&quot;$(OpenGlassPython)&quot; --version" IgnoreExitCode="true" ConsoleToMSBuild="true">
       <Output TaskParameter="ExitCode" PropertyName="OpenGlassPythonExitCode" />
     </Exec>
-    <Error Condition="'$(OpenGlassPythonExitCode)'!='0'" Text="Python was not found. Set OpenGlassPython to a Python 3 executable." />
+    <Error Condition="'$(OpenGlassPythonExitCode)'!='0'" Text="Python was not found. Set OpenGlassPython to a Python 3.11+ executable." />
   </Target>
 
   <Target Name="RestoreDependencies" DependsOnTargets="ValidatePackagingInputs" Condition="'$(BuildDependencies)'=='true'">
@@ -78,6 +78,6 @@
     <Exec Condition="'$(Configuration)'=='ReleaseSigned' and '$(OpenGlassSignArgs)'!=''"
           Command="&quot;$(OpenGlassSignTool)&quot; $(OpenGlassSignArgs) &quot;$(InstallerOutput)OpenGlassSetup.Signed.exe&quot;" />
     <Exec WorkingDirectory="$(OpenGlassRoot)"
-          Command="&quot;$(OpenGlassPython)&quot; &quot;$(OpenGlassRoot)Scripts\archive_pdbs.py&quot; --configuration $(Configuration) --output &quot;$(SymbolArchive)&quot;" />
+          Command="&quot;$(OpenGlassPython)&quot; -m tools.archive_pdbs --configuration $(Configuration) --output &quot;$(SymbolArchive)&quot;" />
   </Target>
 </Project>

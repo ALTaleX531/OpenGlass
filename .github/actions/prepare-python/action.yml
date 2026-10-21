@@ -1,0 +1,10 @@
+name: Prepare Python tools
+description: Install the pinned dependencies used by Python tools, tests, and projection generation.
+runs:
+  using: composite
+  steps:
+    - name: Install Python dependencies
+      shell: pwsh
+      run: |
+        $PSNativeCommandUseErrorActionPreference = $true
+        python -m pip install --disable-pip-version-check -r requirements.txt

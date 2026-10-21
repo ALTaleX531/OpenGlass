@@ -1,0 +1,148 @@
+{
+  "symbols": [
+    {
+      "name": "Symbol_CLivePreview__UpdateResources",
+      "id": "CLivePreview::_UpdateResources",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CLivePreview::_UpdateResources",
+          "ranges": [
+            {
+              "symbol_names": [
+                "private: long __cdecl CLivePreview::_UpdateResources(void) __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 22000,
+                "revision": 0
+              },
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CLivePreview__FadeOutToGlass",
+      "id": "CLivePreview::_FadeOutToGlass",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "HRESULT (*)(CLivePreview*)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "private: long __cdecl CLivePreview::_FadeOutToGlass(void) __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 22000,
+                "revision": 0
+              },
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CLivePreview__UpdateInstructions",
+      "id": "CLivePreview::_UpdateInstructions",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "HRESULT (*)(CLivePreview*)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "private: long __cdecl CLivePreview::_UpdateInstructions(void) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": {
+                "build": 22000,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CLivePreview__UpdateResourcesForMonitorHelper",
+      "id": "CLivePreview::_UpdateResourcesForMonitorHelper",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "HRESULT (*)(CLivePreview*, const CTopLevelWindow*, LivePreviewResource*)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "private: long __cdecl CLivePreview::_UpdateResourcesForMonitorHelper(class CTopLevelWindow const * __ptr64,struct LivePreviewResource * __ptr64) __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 26100,
+                "revision": 0
+              },
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CAnimatedGlassSheet_OnRectUpdated",
+      "id": "CAnimatedGlassSheet::OnRectUpdated",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "void (*)(CAnimatedGlassSheet*, LPCRECT)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "private: void __cdecl CAnimatedGlassSheet::OnRectUpdated(struct tagRECT const * __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": {
+                "build": 22000,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CAnimatedGlassSheet__CAnimatedGlassSheet",
+      "id": "CAnimatedGlassSheet::~CAnimatedGlassSheet",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "void (*)(CAnimatedGlassSheet*)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: virtual __cdecl CAnimatedGlassSheet::~CAnimatedGlassSheet(void) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": {
+                "build": 22000,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    }
+  ]
+}

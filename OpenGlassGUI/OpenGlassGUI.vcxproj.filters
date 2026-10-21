@@ -1,174 +1,164 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<ItemGroup>
-		<Filter Include="Header Files">
-			<UniqueIdentifier>{7BB529AB-6B67-4B1D-9F8E-52AC49C8B8B6}</UniqueIdentifier>
-			<Extensions>h;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
-		</Filter>
-		<Filter Include="Source Files">
-			<UniqueIdentifier>{E2D91D89-5F6B-4E1C-8E59-98F2E3A1F3B1}</UniqueIdentifier>
-			<Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-		</Filter>
-		<Filter Include="Resource Files">
-			<UniqueIdentifier>{D2FA3F4D-704B-49E2-B4B9-A060E69428A2}</UniqueIdentifier>
-			<Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
-		</Filter>
-		<Filter Include="Misc Files">
-			<UniqueIdentifier>{B8398054-B0E7-45B7-B6A1-A29A537352D0}</UniqueIdentifier>
-		</Filter>
-	</ItemGroup>
-	<ItemGroup>
-		<ClInclude Include="ColorizationPresets.hpp">
-			<Filter>Header Files</Filter>
-		</ClInclude>
-		<ClInclude Include="..\Common\Colorization.hpp">
-			<Filter>Header Files</Filter>
-		</ClInclude>
-		<ClInclude Include="EditorScope.hpp">
-			<Filter>Header Files</Filter>
-		</ClInclude>
-		<ClInclude Include="PreviewJournal.hpp">
-			<Filter>Header Files</Filter>
-		</ClInclude>
-		<ClInclude Include="SettingsCatalog.hpp">
-			<Filter>Header Files</Filter>
-		</ClInclude>
-		<ClInclude Include="Elevation.hpp">
-			<Filter>Header Files</Filter>
-		</ClInclude>
-		<ClInclude Include="ConfigurationMigration.hpp">
-			<Filter>Header Files</Filter>
-		</ClInclude>
-		<ClInclude Include="PresetPackage.hpp">
-			<Filter>Header Files</Filter>
-		</ClInclude>
-		<ClInclude Include="ColorPresetList.hpp">
-			<Filter>Header Files</Filter>
-		</ClInclude>
-		<ClInclude Include="Diagnostics.hpp">
-			<Filter>Header Files</Filter>
-		</ClInclude>
-		<ClInclude Include="OpenGlassGUI.hpp">
-			<Filter>Header Files</Filter>
-		</ClInclude>
-		<ClInclude Include="MainFrame.hpp">
-			<Filter>Header Files</Filter>
-		</ClInclude>
-		<ClInclude Include="RegistryConfig.hpp">
-			<Filter>Header Files</Filter>
-		</ClInclude>
-		<ClInclude Include="UiControls.hpp">
-			<Filter>Header Files</Filter>
-		</ClInclude>
-		<ClInclude Include="pch.h">
-			<Filter>Header Files</Filter>
-		</ClInclude>
-		<ClInclude Include="Symbols.hpp">
-			<Filter>Header Files</Filter>
-		</ClInclude>
-		<ClInclude Include="resource.h">
-			<Filter>Header Files</Filter>
-		</ClInclude>
-	</ItemGroup>
-	<ItemGroup>
-		<ClCompile Include="ColorPresetList.cpp">
-			<Filter>Source Files</Filter>
-		</ClCompile>
-		<ClCompile Include="Elevation.cpp">
-			<Filter>Source Files</Filter>
-		</ClCompile>
-		<ClCompile Include="ConfigurationMigration.cpp">
-			<Filter>Source Files</Filter>
-		</ClCompile>
-		<ClCompile Include="PresetPackage.cpp">
-			<Filter>Source Files</Filter>
-		</ClCompile>
-		<ClCompile Include="MainFrame.Presets.cpp">
-			<Filter>Source Files</Filter>
-		</ClCompile>
-		<ClCompile Include="Diagnostics.cpp">
-			<Filter>Source Files</Filter>
-		</ClCompile>
-		<ClCompile Include="OpenGlassGUI.cpp">
-			<Filter>Source Files</Filter>
-		</ClCompile>
-		<ClCompile Include="MainFrame.ColorPresets.cpp">
-			<Filter>Source Files</Filter>
-		</ClCompile>
-		<ClCompile Include="MainFrame.Core.cpp">
-			<Filter>Source Files</Filter>
-		</ClCompile>
-		<ClCompile Include="MainFrame.State.cpp">
-			<Filter>Source Files</Filter>
-		</ClCompile>
-		<ClCompile Include="MainFrame.Tabs.cpp">
-			<Filter>Source Files</Filter>
-		</ClCompile>
-		<ClCompile Include="RegistryConfig.cpp">
-			<Filter>Source Files</Filter>
-		</ClCompile>
-		<ClCompile Include="Symbols.cpp">
-			<Filter>Source Files</Filter>
-		</ClCompile>
-		<ClCompile Include="pch.cpp">
-			<Filter>Source Files</Filter>
-		</ClCompile>
-		<ClCompile Include="..\Common\PngAssetValidation.cpp">
-			<Filter>Source Files</Filter>
-		</ClCompile>
-		<ClCompile Include="..\Common\PeCodeViewIdentity.cpp">
-			<Filter>Source Files</Filter>
-		</ClCompile>
-		<ClCompile Include="..\Common\ThemeAtlasLayout.cpp">
-			<Filter>Source Files</Filter>
-		</ClCompile>
-	</ItemGroup>
-	<ItemGroup>
-		<ResourceCompile Include="OpenGlassGUI.rc">
-			<Filter>Resource Files</Filter>
-		</ResourceCompile>
-		<None Include="packages.config">
-			<Filter>Misc Files</Filter>
-		</None>
-		<None Include="Assets\OpenGlass.svg">
-			<Filter>Resource Files</Filter>
-		</None>
-		<None Include="Assets\window-apps-filled.original.svg">
-			<Filter>Resource Files</Filter>
-		</None>
-		<None Include="Assets\FluentIcons.LICENSE.txt">
-			<Filter>Resource Files</Filter>
-		</None>
-	</ItemGroup>
-	<ItemGroup>
-		<Image Include="Assets\OpenGlass.ico">
-			<Filter>Resource Files</Filter>
-		</Image>
-	</ItemGroup>
-	<ItemGroup>
-		<ClInclude Include="ColorPreference.hpp">
-			<Filter>Header Files</Filter>
-		</ClInclude>
-		<ClInclude Include="ManagedFiles.hpp">
-			<Filter>Header Files</Filter>
-		</ClInclude>
-		<ClInclude Include="ConfigurationResources.hpp">
-			<Filter>Header Files</Filter>
-		</ClInclude>
-		<ClInclude Include="EffectiveConfiguration.hpp">
-			<Filter>Header Files</Filter>
-		</ClInclude>
-		<ClInclude Include="WrappingLayout.hpp">
-			<Filter>Header Files</Filter>
-		</ClInclude>
-		<ClCompile Include="ColorPreference.cpp">
-			<Filter>Source Files</Filter>
-		</ClCompile>
-		<ClCompile Include="ConfigurationResources.cpp">
-			<Filter>Source Files</Filter>
-		</ClCompile>
-		<Manifest Include="OpenGlassGUI.manifest">
-			<Filter>Resource Files</Filter>
-		</Manifest>
-	</ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{7BB529AB-6B67-4B1D-9F8E-52AC49C8B8B6}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;ipp;xsd;hlsli</Extensions>
+    </Filter>
+    <Filter Include="Misc Files">
+      <UniqueIdentifier>{B8398054-B0E7-45B7-B6A1-A29A537352D0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D2FA3F4D-704B-49E2-B4B9-A060E69428A2}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;cso</Extensions>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{E2D91D89-5F6B-4E1C-8E59-98F2E3A1F3B1}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx;hlsl</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ColorPreference.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorPresetList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ConfigurationMigration.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ConfigurationResources.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Diagnostics.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Elevation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MainFrame.ColorPresets.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MainFrame.Core.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MainFrame.Presets.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MainFrame.State.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MainFrame.Tabs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGlassGUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PresetPackage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RegistryConfig.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Symbols.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ColorPreference.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorPresetList.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorizationPresets.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ConfigurationMigration.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ConfigurationResources.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Diagnostics.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorScope.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EffectiveConfiguration.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Elevation.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MainFrame.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ManagedFiles.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGlassGUI.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PresetPackage.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PreviewJournal.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RegistryConfig.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SettingsCatalog.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Symbols.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UiControls.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WrappingLayout.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\OpenGlass.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="OpenGlassGUI.manifest">
+      <Filter>Resource Files</Filter>
+    </Manifest>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\FluentIcons.LICENSE.txt">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Assets\OpenGlass.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Assets\window-apps-filled.original.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="packages.config">
+      <Filter>Misc Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="OpenGlassGUI.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
 </Project>

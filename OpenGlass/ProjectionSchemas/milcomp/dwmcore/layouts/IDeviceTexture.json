@@ -1,0 +1,40 @@
+{
+  "layouts": [
+    {
+      "name": "IDeviceTexture_GetShaderResourceView",
+      "id": "IDeviceTexture_GetShaderResourceView",
+      "kind": "vtable_slot",
+      "type": "IDeviceTexture_GetShaderResourceView_t",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 128,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "Confirm GetShaderResourceView from the IDeviceTexture subobject and cross-check the returned view at its binding consumer."
+    },
+    {
+      "name": "IDeviceTexture_GetTexture2D",
+      "id": "IDeviceTexture_GetTexture2D",
+      "kind": "vtable_slot",
+      "type": "IDeviceTexture_GetTexture2D_t",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 120,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CDeviceTextureTarget has complex inheritance (possible diamond):\nCD2DBitmap → CDeviceResourceT → CMILCOMBaseT → ...\n9+ vtable pointers: ID2DBitmapCacheSource, IPixelFormat, IBitmapUnlock,\nIDeviceResource (standalone + embedded in combined vtables for\nIDeviceTexture and IDeviceTarget).\nConfirm GetTexture2D from the IDeviceTexture subobject and an independent texture consumer rather than reconstructing the full inheritance graph."
+    }
+  ]
+}

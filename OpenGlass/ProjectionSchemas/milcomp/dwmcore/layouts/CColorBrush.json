@@ -1,0 +1,58 @@
+{
+  "layouts": [
+    {
+      "name": "CColorBrush_AddOcclusionInformation_VtableSlot",
+      "id": "CColorBrush.AddOcclusionInformation.vtable_slot",
+      "kind": "vtable_slot",
+      "type": "CColorBrush_AddOcclusionInformation_t",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 200,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CColorBrush private vtable slot used by GlassIntegrity to intercept occlusion information production."
+    },
+    {
+      "name": "CColorBrush_Draw_VtableSlot",
+      "id": "CColorBrush.Draw.vtable_slot",
+      "kind": "vtable_slot",
+      "type": "CColorBrush_Draw_t",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 208,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CColorBrush private vtable slot used by GlassRenderer to intercept the draw path."
+    },
+    {
+      "name": "CColorBrush_GetColor",
+      "id": "CColorBrush_GetColor",
+      "kind": "field",
+      "type": "D2D1_COLOR_F",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 104,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CColorBrush::GetColor reads the inline D2D1_COLOR_F stored by the color-brush update path."
+    }
+  ]
+}

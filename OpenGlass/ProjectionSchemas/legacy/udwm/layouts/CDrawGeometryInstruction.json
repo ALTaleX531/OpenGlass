@@ -1,0 +1,39 @@
+{
+  "layouts": [
+    {
+      "name": "CDrawGeometryInstruction_GetBrush",
+      "id": "CDrawGeometryInstruction_GetBrush",
+      "kind": "field",
+      "type": "CBaseLegacyMilBrushProxy*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 16,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CDrawGeometryInstruction::Create\nCDrawGeometryInstruction::WriteInstruction"
+    },
+    {
+      "name": "CDrawGeometryInstruction_GetGeometry",
+      "id": "CDrawGeometryInstruction_GetGeometry",
+      "kind": "field",
+      "type": "CBaseGeometryProxy*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 24,
+              "otherwise": true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

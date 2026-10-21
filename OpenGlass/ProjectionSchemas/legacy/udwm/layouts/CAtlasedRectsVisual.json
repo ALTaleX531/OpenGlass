@@ -1,0 +1,25 @@
+{
+  "layouts": [
+    {
+      "name": "CAtlasedRectsVisual_GetAtlasImageCount",
+      "id": "CAtlasedRectsVisual_GetAtlasImageCount",
+      "kind": "field",
+      "type": "DWORD",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 272,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "notes": "CAtlasedRectsVisual::InsertAtlasImageAtIndex increments the DWORD at +272 and RemoveAtlasImage decrements it; CButton::RedrawVisual also uses the same array count. Verified on uDWM 22000.194 and 22621.6630. On uDWM 26100.7705, AddAtlasImage instead reads the current count from +224 and forwards to InsertAtlasImageAtIndex. ButtonGlowHandler consumes the +272 Layout only before build 26100; build 26100+ follows the semantic AddAtlasImage path, so the old Layout correctly remains unsupported."
+    }
+  ]
+}

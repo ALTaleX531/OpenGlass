@@ -1,0 +1,22 @@
+{
+  "layouts": [
+    {
+      "name": "CSpriteVisualProxy_SpriteVisualPartner",
+      "id": "CSpriteVisualProxy.SpriteVisualPartner",
+      "kind": "field",
+      "type": "IUnknown*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 40,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CSpriteVisualProxy constructor queries the DComp visual proxy for the WinRT ISpriteVisual partner and stores it here."
+    }
+  ]
+}

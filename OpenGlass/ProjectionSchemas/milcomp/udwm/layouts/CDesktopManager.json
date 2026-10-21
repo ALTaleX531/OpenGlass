@@ -1,0 +1,130 @@
+{
+  "layouts": [
+    {
+      "name": "CDesktopManager_GetCompositor_Index",
+      "id": "CDesktopManager_GetCompositor_Index",
+      "kind": "field",
+      "type": "CCompositor*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 48,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CDesktopManager::Initialize\nCCompositor::Create(connection, &this->compositor)"
+    },
+    {
+      "name": "CDesktopManager_GetDPIValue_Index",
+      "id": "CDesktopManager_GetDPIValue_Index",
+      "kind": "field",
+      "type": "double",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 416,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CDesktopManager::SetupDPIValues\n*((double *)this + N) = GetDpiForSystem() / 96.0"
+    },
+    {
+      "name": "CDesktopManager_GetGraphicsDeviceManager_Index",
+      "id": "CDesktopManager_GetGraphicsDeviceManager_Index",
+      "kind": "field",
+      "type": "void*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 56,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CDesktopManager::Initialize\nCGraphicsDeviceManager::Create → stored at this + N"
+    },
+    {
+      "name": "CDesktopManager_GetIsHighContrastMode_BoolIndex",
+      "id": "CDesktopManager_GetIsHighContrastMode_BoolIndex",
+      "kind": "field",
+      "type": "bool",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 27,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CDesktopManager::InitializeHighContrast\nthis[26] = IsHighContrastMode"
+    },
+    {
+      "name": "CDesktopManager_GetWICFactory_Index",
+      "id": "CDesktopManager_GetWICFactory_Index",
+      "kind": "field",
+      "type": "IWICImagingFactory*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 240,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CDesktopManager::Initialize\nWICCreateImagingFactory_Proxy(567, &this->wicFactory)"
+    },
+    {
+      "name": "CDesktopManager_GetWindowList_Index",
+      "id": "CDesktopManager_GetWindowList_Index",
+      "kind": "field",
+      "type": "CWindowList*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 424,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CDesktopManager::Initialize / CLivePreview::_FadeOutToGlass\n*((QWORD *)CDesktopManager::s_pDesktopManagerInstance + N) → CWindowList*"
+    },
+    {
+      "name": "CDesktopManager_HasMaximizedWindows_BoolIndex",
+      "id": "CDesktopManager_HasMaximizedWindows_BoolIndex",
+      "kind": "field",
+      "type": "bool",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 21,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CWindowList::CheckForMaximizedChange\ns_pDesktopManagerInstance[N] = hasMaximized"
+    }
+  ]
+}
