@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <OpenGlassProductVersion>3.1.0.4043</OpenGlassProductVersion>
-    <OpenGlassProductVersionComma>3,1,0,4043</OpenGlassProductVersionComma>
+    <OpenGlassProductVersion>3.1.0.4047</OpenGlassProductVersion>
+    <OpenGlassProductVersionComma>3,1,0,4047</OpenGlassProductVersionComma>
     <OpenGlassVersionGeneratedDir>$(IntDir)Generated\Version\</OpenGlassVersionGeneratedDir>
     <OpenGlassVersionHeader>$(OpenGlassVersionGeneratedDir)OpenGlassVersion.h</OpenGlassVersionHeader>
   </PropertyGroup>
