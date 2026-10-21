@@ -2230,6 +2230,452 @@
           "rva": "0x8C7B8"
         }
       }
+    },
+    {
+      "revision": 3086,
+      "pdb": {
+        "name": "uDWM.pdb",
+        "guid": "2ed841fd-a74a-4f20-7b3c-00a10cc6c508",
+        "age": 1,
+        "sha256": "8d3b45cb631dad6a858ba2a69941d8277a625af1f6fe3f0bf9eef9c8dacbb703"
+      },
+      "symbols": {
+        "CButton::vftable": {
+          "name": "const CButton::`vftable'",
+          "rva": "0xF9078"
+        },
+        "CCompositor::ForceRender": {
+          "name": "public: long __cdecl CCompositor::ForceRender(void) __ptr64",
+          "rva": "0x5B2AC"
+        },
+        "CContainerVisual::InitializeVisualTreeClone": {
+          "name": "public: long __cdecl CContainerVisual::InitializeVisualTreeClone(class CContainerVisual * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0x1377C"
+        },
+        "CDWriteText::InitializeVisualTreeClone": {
+          "name": "protected: long __cdecl CDWriteText::InitializeVisualTreeClone(class CDWriteText * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0x38218"
+        },
+        "CDWriteText::ValidateVisual": {
+          "name": "public: virtual long __cdecl CDWriteText::ValidateVisual(void) __ptr64",
+          "rva": "0x70390"
+        },
+        "CDesktopManager::IsHighContrastMode": {
+          "name": "public: static bool __cdecl CDesktopManager::IsHighContrastMode(void)",
+          "rva": "0xA334"
+        },
+        "CDesktopManager::s_csDwmInstance": {
+          "name": "public: static class CDwmCS CDesktopManager::s_csDwmInstance",
+          "rva": "0x125C90"
+        },
+        "CDesktopManager::s_pDesktopManagerInstance": {
+          "name": "private: static class CDesktopManager * __ptr64 __ptr64 CDesktopManager::s_pDesktopManagerInstance",
+          "rva": "0x125CF8"
+        },
+        "CGlassColorizationParameters::AdjustWindowColorization": {
+          "name": "public: void __cdecl CGlassColorizationParameters::AdjustWindowColorization(union GpCC const * __ptr64,float,struct TMILFlagsEnum<enum ColorizationFlags::FlagsEnum>) __ptr64",
+          "rva": "0x1B590"
+        },
+        "CGraphicsDeviceManager::ReleaseGraphicsDevice": {
+          "name": "protected: long __cdecl CGraphicsDeviceManager::ReleaseGraphicsDevice(void) __ptr64",
+          "rva": "0x52B18"
+        },
+        "CLegacyNonClientBackground::ClearAll": {
+          "name": "public: void __cdecl CLegacyNonClientBackground::ClearAll(void) __ptr64",
+          "rva": "0x5EA3C"
+        },
+        "CLegacyNonClientBackground::HasSomethingToRender": {
+          "name": "public: bool __cdecl CLegacyNonClientBackground::HasSomethingToRender(void)const __ptr64",
+          "rva": "0x77740"
+        },
+        "CLegacyNonClientBackground::SetBorderRects": {
+          "name": "public: long __cdecl CLegacyNonClientBackground::SetBorderRects(struct tagRECT const & __ptr64,struct tagRECT const & __ptr64) __ptr64",
+          "rva": "0x825E0"
+        },
+        "CLegacyNonClientBackground::SetCaptionColor": {
+          "name": "public: long __cdecl CLegacyNonClientBackground::SetCaptionColor(struct _D3DCOLORVALUE const & __ptr64) __ptr64",
+          "rva": "0x4B470"
+        },
+        "CLegacyNonClientBackground::SetCaptionRect": {
+          "name": "public: long __cdecl CLegacyNonClientBackground::SetCaptionRect(struct tagRECT const & __ptr64) __ptr64",
+          "rva": "0xA3D8"
+        },
+        "CLegacyNonClientBackground::~CLegacyNonClientBackground": {
+          "name": "public: virtual __cdecl CLegacyNonClientBackground::~CLegacyNonClientBackground(void) __ptr64",
+          "rva": "0x8D9C4"
+        },
+        "CRectangleVisual::SetRect": {
+          "name": "public: void __cdecl CRectangleVisual::SetRect(class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const & __ptr64) __ptr64",
+          "rva": "0x9878"
+        },
+        "CRectangleVisual::UpdateClip": {
+          "name": "public: long __cdecl CRectangleVisual::UpdateClip(class CBaseGeometryProxy * __ptr64) __ptr64",
+          "rva": "0xCB0F4"
+        },
+        "CSolidRectangleVisual::Create": {
+          "name": "public: static long __cdecl CSolidRectangleVisual::Create(class CSolidRectangleVisual * __ptr64 * __ptr64)",
+          "rva": "0x3D2DC"
+        },
+        "CSolidRectangleVisual::UpdateColor": {
+          "name": "public: long __cdecl CSolidRectangleVisual::UpdateColor(struct _D3DCOLORVALUE const & __ptr64) __ptr64",
+          "rva": "0x4B83C"
+        },
+        "CSpriteVisual::CloneVisualTree": {
+          "name": "public: virtual long __cdecl CSpriteVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0xCB980"
+        },
+        "CSpriteVisual::Create": {
+          "name": "public: static long __cdecl CSpriteVisual::Create(class CSpriteVisual * __ptr64 * __ptr64)",
+          "rva": "0x7732C"
+        },
+        "CSpriteVisual::GetBrush": {
+          "name": "public: long __cdecl CSpriteVisual::GetBrush<struct Windows::UI::Composition::ICompositionBrush>(struct Windows::UI::Composition::ICompositionBrush * __ptr64 * __ptr64)const __ptr64",
+          "rva": "0x3D5BC"
+        },
+        "CSpriteVisual::SendSetSize": {
+          "name": "protected: virtual long __cdecl CSpriteVisual::SendSetSize(struct tagSIZE const & __ptr64) __ptr64",
+          "rva": "0x74700"
+        },
+        "CSpriteVisual::SetBrush": {
+          "name": "public: long __cdecl CSpriteVisual::SetBrush<struct Windows::UI::Composition::ICompositionBrush * __ptr64>(struct Windows::UI::Composition::ICompositionBrush * __ptr64) __ptr64",
+          "rva": "0xA760"
+        },
+        "CThemePartPrimitive::ShouldClone": {
+          "name": "private: bool __cdecl CThemePartPrimitive::ShouldClone(enum CloneOptions)const __ptr64",
+          "rva": "0xC9080"
+        },
+        "CTopLevelWindow::EdgeBorderMustBeOpaque": {
+          "name": "private: int __cdecl CTopLevelWindow::EdgeBorderMustBeOpaque(void) __ptr64",
+          "rva": "0x4CD40"
+        },
+        "CTopLevelWindow::GetActualWindowRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetActualWindowRect(bool,bool,bool)const __ptr64",
+          "rva": "0x9FE4"
+        },
+        "CTopLevelWindow::IsShadowNCAreaPart": {
+          "name": "private: static bool __cdecl CTopLevelWindow::IsShadowNCAreaPart(unsigned int)",
+          "rva": "0x655B8"
+        },
+        "CTopLevelWindow::OnBlurBehindUpdated": {
+          "name": "public: void __cdecl CTopLevelWindow::OnBlurBehindUpdated(void) __ptr64",
+          "rva": "0x13D30"
+        },
+        "CTopLevelWindow::OnSystemBackdropUpdated": {
+          "name": "public: void __cdecl CTopLevelWindow::OnSystemBackdropUpdated(void) __ptr64",
+          "rva": "0x4CB68"
+        },
+        "CTopLevelWindow::TreatAsActiveWindow": {
+          "name": "private: bool __cdecl CTopLevelWindow::TreatAsActiveWindow(void)const __ptr64",
+          "rva": "0x4A940"
+        },
+        "CTopLevelWindow::UpdateClientBlur": {
+          "name": "private: long __cdecl CTopLevelWindow::UpdateClientBlur(void) __ptr64",
+          "rva": "0x65910"
+        },
+        "CTopLevelWindow::UpdateNCAreaBackground": {
+          "name": "private: long __cdecl CTopLevelWindow::UpdateNCAreaBackground(void) __ptr64",
+          "rva": "0x7CB98"
+        },
+        "CTopLevelWindow::UpdateNCAreaPositionsAndSizes": {
+          "name": "private: long __cdecl CTopLevelWindow::UpdateNCAreaPositionsAndSizes(void) __ptr64",
+          "rva": "0xE1B8"
+        },
+        "CTopLevelWindow::UpdateWindowVisuals": {
+          "name": "private: long __cdecl CTopLevelWindow::UpdateWindowVisuals(void) __ptr64",
+          "rva": "0x7C124"
+        },
+        "CTopLevelWindow::ValidateVisual": {
+          "name": "public: virtual long __cdecl CTopLevelWindow::ValidateVisual(void) __ptr64",
+          "rva": "0x11D00"
+        },
+        "CTopLevelWindow::vftable": {
+          "name": "const CTopLevelWindow::`vftable'",
+          "rva": "0xF9440"
+        },
+        "CTopLevelWindow::~CTopLevelWindow": {
+          "name": "private: virtual __cdecl CTopLevelWindow::~CTopLevelWindow(void) __ptr64",
+          "rva": "0x5AA8C"
+        },
+        "CVisual::SendSetOffset": {
+          "name": "protected: virtual long __cdecl CVisual::SendSetOffset(struct tagPOINT const & __ptr64) __ptr64",
+          "rva": "0x9710"
+        },
+        "CVisual::SetDirtyFlags": {
+          "name": "protected: virtual void __cdecl CVisual::SetDirtyFlags(class DirtyFlags) __ptr64",
+          "rva": "0x12A60"
+        },
+        "CVisual::SetInsetFromParent": {
+          "name": "public: void __cdecl CVisual::SetInsetFromParent(struct _MARGINS const & __ptr64) __ptr64",
+          "rva": "0x1E8A0"
+        },
+        "CVisual::SetInsetFromParentLeft": {
+          "name": "public: void __cdecl CVisual::SetInsetFromParentLeft(int) __ptr64",
+          "rva": "0x10468"
+        },
+        "CVisual::SetSize": {
+          "name": "public: void __cdecl CVisual::SetSize(struct tagSIZE const * __ptr64) __ptr64",
+          "rva": "0x10D58"
+        },
+        "CVisual::UpdateOffset": {
+          "name": "protected: virtual long __cdecl CVisual::UpdateOffset(void) __ptr64",
+          "rva": "0x642D0"
+        },
+        "CVisualProxy::SetSize": {
+          "name": "public: long __cdecl CVisualProxy::SetSize(double,double) __ptr64",
+          "rva": "0x9600"
+        },
+        "CWindowBorder::EnableBorder": {
+          "name": "public: long __cdecl CWindowBorder::EnableBorder(bool) __ptr64",
+          "rva": "0xC384"
+        },
+        "CWindowList::GetWindowListForDesktop": {
+          "name": "public: struct _LIST_ENTRY * __ptr64 __cdecl CWindowList::GetWindowListForDesktop(unsigned __int64) __ptr64",
+          "rva": "0x295D4"
+        },
+        "ResourceHelper::CreateCombinedGeometry": {
+          "name": "public: static long __cdecl ResourceHelper::CreateCombinedGeometry(class CBaseGeometryProxy const * __ptr64,class CBaseGeometryProxy const * __ptr64,enum MilCombineMode::Enum,class CCombinedGeometryProxy * __ptr64 * __ptr64)",
+          "rva": "0x65F88"
+        },
+        "ResourceHelper::CreateGeometryFromHRGN": {
+          "name": "public: static long __cdecl ResourceHelper::CreateGeometryFromHRGN(struct HRGN__ * __ptr64,class CRgnGeometryProxy * __ptr64 * __ptr64)",
+          "rva": "0x5979C"
+        },
+        "SetMargin": {
+          "name": "bool __cdecl SetMargin(struct _MARGINS * __ptr64,int,int,int,int,struct _MARGINS const * __ptr64)",
+          "rva": "0x1ACC0"
+        },
+        "VisualCollection::InsertRelative": {
+          "name": "public: long __cdecl VisualCollection::InsertRelative(class CVisual * __ptr64,class CVisual * __ptr64,bool,bool) __ptr64",
+          "rva": "0x18B50"
+        },
+        "VisualCollection::Remove": {
+          "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
+          "rva": "0x8CE68"
+        }
+      }
+    },
+    {
+      "revision": 3231,
+      "pdb": {
+        "name": "uDWM.pdb",
+        "guid": "308df780-a0f0-90a7-2021-21ea8a7a1a6e",
+        "age": 1,
+        "sha256": "72599917552a6b9c49106662e59181f5a2a49b169a300b7242bd02bf93ee4332"
+      },
+      "symbols": {
+        "CButton::vftable": {
+          "name": "const CButton::`vftable'",
+          "rva": "0xF9078"
+        },
+        "CCompositor::ForceRender": {
+          "name": "public: long __cdecl CCompositor::ForceRender(void) __ptr64",
+          "rva": "0x5B2AC"
+        },
+        "CContainerVisual::InitializeVisualTreeClone": {
+          "name": "public: long __cdecl CContainerVisual::InitializeVisualTreeClone(class CContainerVisual * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0x1377C"
+        },
+        "CDWriteText::InitializeVisualTreeClone": {
+          "name": "protected: long __cdecl CDWriteText::InitializeVisualTreeClone(class CDWriteText * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0x38218"
+        },
+        "CDWriteText::ValidateVisual": {
+          "name": "public: virtual long __cdecl CDWriteText::ValidateVisual(void) __ptr64",
+          "rva": "0x70390"
+        },
+        "CDesktopManager::IsHighContrastMode": {
+          "name": "public: static bool __cdecl CDesktopManager::IsHighContrastMode(void)",
+          "rva": "0xA334"
+        },
+        "CDesktopManager::s_csDwmInstance": {
+          "name": "public: static class CDwmCS CDesktopManager::s_csDwmInstance",
+          "rva": "0x125C90"
+        },
+        "CDesktopManager::s_pDesktopManagerInstance": {
+          "name": "private: static class CDesktopManager * __ptr64 __ptr64 CDesktopManager::s_pDesktopManagerInstance",
+          "rva": "0x125CF8"
+        },
+        "CGlassColorizationParameters::AdjustWindowColorization": {
+          "name": "public: void __cdecl CGlassColorizationParameters::AdjustWindowColorization(union GpCC const * __ptr64,float,struct TMILFlagsEnum<enum ColorizationFlags::FlagsEnum>) __ptr64",
+          "rva": "0x1B590"
+        },
+        "CGraphicsDeviceManager::ReleaseGraphicsDevice": {
+          "name": "protected: long __cdecl CGraphicsDeviceManager::ReleaseGraphicsDevice(void) __ptr64",
+          "rva": "0x52B18"
+        },
+        "CLegacyNonClientBackground::ClearAll": {
+          "name": "public: void __cdecl CLegacyNonClientBackground::ClearAll(void) __ptr64",
+          "rva": "0x5EA3C"
+        },
+        "CLegacyNonClientBackground::HasSomethingToRender": {
+          "name": "public: bool __cdecl CLegacyNonClientBackground::HasSomethingToRender(void)const __ptr64",
+          "rva": "0x77740"
+        },
+        "CLegacyNonClientBackground::SetBorderRects": {
+          "name": "public: long __cdecl CLegacyNonClientBackground::SetBorderRects(struct tagRECT const & __ptr64,struct tagRECT const & __ptr64) __ptr64",
+          "rva": "0x825E0"
+        },
+        "CLegacyNonClientBackground::SetCaptionColor": {
+          "name": "public: long __cdecl CLegacyNonClientBackground::SetCaptionColor(struct _D3DCOLORVALUE const & __ptr64) __ptr64",
+          "rva": "0x4B470"
+        },
+        "CLegacyNonClientBackground::SetCaptionRect": {
+          "name": "public: long __cdecl CLegacyNonClientBackground::SetCaptionRect(struct tagRECT const & __ptr64) __ptr64",
+          "rva": "0xA3D8"
+        },
+        "CLegacyNonClientBackground::~CLegacyNonClientBackground": {
+          "name": "public: virtual __cdecl CLegacyNonClientBackground::~CLegacyNonClientBackground(void) __ptr64",
+          "rva": "0x8D9C4"
+        },
+        "CRectangleVisual::SetRect": {
+          "name": "public: void __cdecl CRectangleVisual::SetRect(class TMilRect_<float,struct D2D_RECT_F,struct D3D_RECT_F,struct D2D_POINTANDSIZE_F,struct RectUniqueness::NotNeeded> const & __ptr64) __ptr64",
+          "rva": "0x9878"
+        },
+        "CRectangleVisual::UpdateClip": {
+          "name": "public: long __cdecl CRectangleVisual::UpdateClip(class CBaseGeometryProxy * __ptr64) __ptr64",
+          "rva": "0xCB104"
+        },
+        "CSolidRectangleVisual::Create": {
+          "name": "public: static long __cdecl CSolidRectangleVisual::Create(class CSolidRectangleVisual * __ptr64 * __ptr64)",
+          "rva": "0x3D2DC"
+        },
+        "CSolidRectangleVisual::UpdateColor": {
+          "name": "public: long __cdecl CSolidRectangleVisual::UpdateColor(struct _D3DCOLORVALUE const & __ptr64) __ptr64",
+          "rva": "0x4B83C"
+        },
+        "CSpriteVisual::CloneVisualTree": {
+          "name": "public: virtual long __cdecl CSpriteVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0xCB990"
+        },
+        "CSpriteVisual::Create": {
+          "name": "public: static long __cdecl CSpriteVisual::Create(class CSpriteVisual * __ptr64 * __ptr64)",
+          "rva": "0x7732C"
+        },
+        "CSpriteVisual::GetBrush": {
+          "name": "public: long __cdecl CSpriteVisual::GetBrush<struct Windows::UI::Composition::ICompositionBrush>(struct Windows::UI::Composition::ICompositionBrush * __ptr64 * __ptr64)const __ptr64",
+          "rva": "0x3D5BC"
+        },
+        "CSpriteVisual::SendSetSize": {
+          "name": "protected: virtual long __cdecl CSpriteVisual::SendSetSize(struct tagSIZE const & __ptr64) __ptr64",
+          "rva": "0x74700"
+        },
+        "CSpriteVisual::SetBrush": {
+          "name": "public: long __cdecl CSpriteVisual::SetBrush<struct Windows::UI::Composition::ICompositionBrush * __ptr64>(struct Windows::UI::Composition::ICompositionBrush * __ptr64) __ptr64",
+          "rva": "0xA760"
+        },
+        "CThemePartPrimitive::ShouldClone": {
+          "name": "private: bool __cdecl CThemePartPrimitive::ShouldClone(enum CloneOptions)const __ptr64",
+          "rva": "0xC9090"
+        },
+        "CTopLevelWindow::EdgeBorderMustBeOpaque": {
+          "name": "private: int __cdecl CTopLevelWindow::EdgeBorderMustBeOpaque(void) __ptr64",
+          "rva": "0x4CD40"
+        },
+        "CTopLevelWindow::GetActualWindowRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetActualWindowRect(bool,bool,bool)const __ptr64",
+          "rva": "0x9FE4"
+        },
+        "CTopLevelWindow::IsShadowNCAreaPart": {
+          "name": "private: static bool __cdecl CTopLevelWindow::IsShadowNCAreaPart(unsigned int)",
+          "rva": "0x655B8"
+        },
+        "CTopLevelWindow::OnBlurBehindUpdated": {
+          "name": "public: void __cdecl CTopLevelWindow::OnBlurBehindUpdated(void) __ptr64",
+          "rva": "0x13D30"
+        },
+        "CTopLevelWindow::OnSystemBackdropUpdated": {
+          "name": "public: void __cdecl CTopLevelWindow::OnSystemBackdropUpdated(void) __ptr64",
+          "rva": "0x4CB68"
+        },
+        "CTopLevelWindow::TreatAsActiveWindow": {
+          "name": "private: bool __cdecl CTopLevelWindow::TreatAsActiveWindow(void)const __ptr64",
+          "rva": "0x4A940"
+        },
+        "CTopLevelWindow::UpdateClientBlur": {
+          "name": "private: long __cdecl CTopLevelWindow::UpdateClientBlur(void) __ptr64",
+          "rva": "0x65910"
+        },
+        "CTopLevelWindow::UpdateNCAreaBackground": {
+          "name": "private: long __cdecl CTopLevelWindow::UpdateNCAreaBackground(void) __ptr64",
+          "rva": "0x7CB98"
+        },
+        "CTopLevelWindow::UpdateNCAreaPositionsAndSizes": {
+          "name": "private: long __cdecl CTopLevelWindow::UpdateNCAreaPositionsAndSizes(void) __ptr64",
+          "rva": "0xE1B8"
+        },
+        "CTopLevelWindow::UpdateWindowVisuals": {
+          "name": "private: long __cdecl CTopLevelWindow::UpdateWindowVisuals(void) __ptr64",
+          "rva": "0x7C124"
+        },
+        "CTopLevelWindow::ValidateVisual": {
+          "name": "public: virtual long __cdecl CTopLevelWindow::ValidateVisual(void) __ptr64",
+          "rva": "0x11D00"
+        },
+        "CTopLevelWindow::vftable": {
+          "name": "const CTopLevelWindow::`vftable'",
+          "rva": "0xF9440"
+        },
+        "CTopLevelWindow::~CTopLevelWindow": {
+          "name": "private: virtual __cdecl CTopLevelWindow::~CTopLevelWindow(void) __ptr64",
+          "rva": "0x5AA8C"
+        },
+        "CVisual::SendSetOffset": {
+          "name": "protected: virtual long __cdecl CVisual::SendSetOffset(struct tagPOINT const & __ptr64) __ptr64",
+          "rva": "0x9710"
+        },
+        "CVisual::SetDirtyFlags": {
+          "name": "protected: virtual void __cdecl CVisual::SetDirtyFlags(class DirtyFlags) __ptr64",
+          "rva": "0x12A60"
+        },
+        "CVisual::SetInsetFromParent": {
+          "name": "public: void __cdecl CVisual::SetInsetFromParent(struct _MARGINS const & __ptr64) __ptr64",
+          "rva": "0x1E8A0"
+        },
+        "CVisual::SetInsetFromParentLeft": {
+          "name": "public: void __cdecl CVisual::SetInsetFromParentLeft(int) __ptr64",
+          "rva": "0x10468"
+        },
+        "CVisual::SetSize": {
+          "name": "public: void __cdecl CVisual::SetSize(struct tagSIZE const * __ptr64) __ptr64",
+          "rva": "0x10D58"
+        },
+        "CVisual::UpdateOffset": {
+          "name": "protected: virtual long __cdecl CVisual::UpdateOffset(void) __ptr64",
+          "rva": "0x642D0"
+        },
+        "CVisualProxy::SetSize": {
+          "name": "public: long __cdecl CVisualProxy::SetSize(double,double) __ptr64",
+          "rva": "0x9600"
+        },
+        "CWindowBorder::EnableBorder": {
+          "name": "public: long __cdecl CWindowBorder::EnableBorder(bool) __ptr64",
+          "rva": "0xC384"
+        },
+        "CWindowList::GetWindowListForDesktop": {
+          "name": "public: struct _LIST_ENTRY * __ptr64 __cdecl CWindowList::GetWindowListForDesktop(unsigned __int64) __ptr64",
+          "rva": "0x295D4"
+        },
+        "ResourceHelper::CreateCombinedGeometry": {
+          "name": "public: static long __cdecl ResourceHelper::CreateCombinedGeometry(class CBaseGeometryProxy const * __ptr64,class CBaseGeometryProxy const * __ptr64,enum MilCombineMode::Enum,class CCombinedGeometryProxy * __ptr64 * __ptr64)",
+          "rva": "0x65F88"
+        },
+        "ResourceHelper::CreateGeometryFromHRGN": {
+          "name": "public: static long __cdecl ResourceHelper::CreateGeometryFromHRGN(struct HRGN__ * __ptr64,class CRgnGeometryProxy * __ptr64 * __ptr64)",
+          "rva": "0x5979C"
+        },
+        "SetMargin": {
+          "name": "bool __cdecl SetMargin(struct _MARGINS * __ptr64,int,int,int,int,struct _MARGINS const * __ptr64)",
+          "rva": "0x1ACC0"
+        },
+        "VisualCollection::InsertRelative": {
+          "name": "public: long __cdecl VisualCollection::InsertRelative(class CVisual * __ptr64,class CVisual * __ptr64,bool,bool) __ptr64",
+          "rva": "0x18B50"
+        },
+        "VisualCollection::Remove": {
+          "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
+          "rva": "0x8CE68"
+        }
+      }
     }
   ]
 }
