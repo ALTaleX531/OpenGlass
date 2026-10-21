@@ -32,10 +32,28 @@ namespace OpenGlass::GlassService
 
 HRESULT GlassService::OpenUserRegistryForDwm(RequestBuffer& content, DWORD processId) try
 {
+	content.dwmKey = nullptr;
+	content.personalizeKey = nullptr;
 	wil::unique_handle processHandle{ OpenProcess(PROCESS_DUP_HANDLE, FALSE, processId) };
 	THROW_LAST_ERROR_IF_NULL(processHandle);
 	DWORD sessionId{ 0 };
 	THROW_IF_WIN32_BOOL_FALSE(ProcessIdToSessionId(processId, &sessionId));
+	DWORD bytesReturned{};
+	wil::unique_wtsmem_ptr<WTS_CONNECTSTATE_CLASS> state{};
+	THROW_IF_WIN32_BOOL_FALSE(
+		WTSQuerySessionInformationW(
+			WTS_CURRENT_SERVER_HANDLE,
+			sessionId,
+			WTSConnectState,
+			wil::out_param_ptr<LPWSTR*>(state),
+			&bytesReturned
+		)
+	);
+	THROW_HR_IF(HRESULT_FROM_WIN32(ERROR_INVALID_DATA), !state || bytesReturned < sizeof(WTS_CONNECTSTATE_CLASS));
+	if (*state != WTSActive)
+	{
+		return S_OK;
+	}
 	wil::unique_handle token{ nullptr };
 	THROW_IF_WIN32_BOOL_FALSE(WTSQueryUserToken(sessionId, &token));
 	wil::unique_handle duplicatedToken{ nullptr };

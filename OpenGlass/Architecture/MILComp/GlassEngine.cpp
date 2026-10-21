@@ -56,8 +56,9 @@ void GlassEngine::LoadRegistry(bool redrawNow)
 		{
 			g_personalizeKey.reset(content.personalizeKey);
 		}
-		Update(UpdateType::All, redrawNow);
 	}
+	// Apply machine settings and defaults even when the user keys are unavailable.
+	Update(UpdateType::All, redrawNow);
 }
 void GlassEngine::UnloadRegistry()
 {
