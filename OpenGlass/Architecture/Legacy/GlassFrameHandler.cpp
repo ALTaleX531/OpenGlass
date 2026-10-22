@@ -2,6 +2,7 @@
 #include "Shared.hpp"
 #include "GlassFrameHandler.hpp"
 #include "GlassKernel.hpp"
+#include "GlassInfra.hpp"
 #include "uDwmProjection.hpp"
 #include "dwmcoreProjection.hpp"
 #include "GlassEffectBrush.hpp"
@@ -162,7 +163,7 @@ void GlassFrameHandler::MyCGlassColorizationParameters_AdjustWindowColorization(
 )
 {
 	const auto active = (flag & 1) != 0;
-	const auto maximized = GlassKernel::g_window ? GlassKernel::g_window->TreatAsMaximized() : false;
+	const auto maximized = GlassInfra::g_window ? GlassInfra::g_window->TreatAsMaximized() : false;
 
 	This->color = Color::ToArgb(
 		Color::scRGBTosRGB(
@@ -230,7 +231,7 @@ HRESULT GlassFrameHandler::MyCTopLevelWindow_UpdateNCAreaBackground(uDWM::CTopLe
 			captionGeometry.copy_from(reinterpret_cast<uDWM::CRgnGeometryProxy*>(instruction->GetGeometry()));
 			RETURN_IF_FAILED(
 				uDWM::ResourceHelper::CreateGeometryFromHRGN(
-					GlassKernel::g_combinedRgn.get(),
+					GlassInfra::g_combinedRgn.get(),
 					reinterpret_cast<uDWM::CRgnGeometryProxy**>(&captionGeometry)
 				)
 			);
@@ -293,7 +294,7 @@ HRESULT GlassFrameHandler::MyCTopLevelWindow_UpdateNCAreaBackground(uDWM::CTopLe
 	if (effectBrush)
 	{
 		auto color = This->GetCaptionColorizationParameters()->getArgbcolor();
-		color.a = GlassKernel::AlphaChannelReinterpreter(active, maximized).ToFloat();
+		color.a = GlassInfra::AlphaChannelReinterpreter(active, maximized).ToFloat();
 		RETURN_IF_FAILED(effectBrush->Update(1.0, color));
 	}
 	else if (Shared::g_overrideAccent)
@@ -411,7 +412,7 @@ HRESULT GlassFrameHandler::MyCTopLevelWindow_UpdateClientBlur(uDWM::CTopLevelWin
 	if (effectBrush)
 	{
 		auto color = This->GetCaptionColorizationParameters()->getArgbcolor();
-		color.a = GlassKernel::AlphaChannelReinterpreter(active, maximized).ToFloat();
+		color.a = GlassInfra::AlphaChannelReinterpreter(active, maximized).ToFloat();
 		RETURN_IF_FAILED(effectBrush->Update(1.0, color));
 	}
 	else if (Shared::g_overrideAccent)
@@ -436,10 +437,10 @@ HRESULT GlassFrameHandler::MyCTopLevelWindow_ValidateVisual(uDWM::CTopLevelWindo
 		return g_CTopLevelWindow_ValidateVisual_Org(This);
 	}
 
-	GlassKernel::g_window = This;
+	GlassInfra::g_window = This;
 	const auto updateReflectionBeforeLeave = wil::scope_exit([This]
 	{
-		GlassKernel::g_window = nullptr;
+		GlassInfra::g_window = nullptr;
 		LOG_IF_FAILED(UpdateReflectionViewport(This));
 	});
 	

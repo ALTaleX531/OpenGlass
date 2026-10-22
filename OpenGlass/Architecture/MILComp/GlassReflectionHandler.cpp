@@ -3,7 +3,6 @@
 #include "uDwmProjection.hpp"
 #include "dwmcoreProjection.hpp"
 #include "Shared.hpp"
-#include "GlassKernel.hpp"
 
 using namespace OpenGlass;
 

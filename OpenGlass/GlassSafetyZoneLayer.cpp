@@ -1,5 +1,4 @@
 #include "pch.h"
-#include "GlassKernel.hpp"
 #include "GlassSafetyZoneLayer.hpp"
 #include "DxgiPrivates.hpp"
 

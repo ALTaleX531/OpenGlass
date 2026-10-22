@@ -837,6 +837,14 @@ namespace OpenGlass::dwmcore
 	using COcclusionContext_CollectRectangleForOcclusion_26100_Pre_7840_t = void(*)(COcclusionContext*, const D2D1_RECT_F&, D2D1_RECT_F*);
 	using COcclusionContext_CollectRectangleForOcclusion_26100_7840_t = void(*)(COcclusionContext*, const D2D1_RECT_F&, bool, D2D1_RECT_F*);
 
+	// The native owner of glass occlusion differs between compositor architectures.
+	using GlassOcclusionContext = CArrayBasedCoverageSet;
+
+	inline bool IsGlassOccluded(const GlassOcclusionContext* context, const D2D1_RECT_F& coverage, int depth)
+	{
+		return context->IsCovered(coverage, depth);
+	}
+
 } // namespace OpenGlass::dwmcore
 
 #include "dwmcore.Symbols.generated.hpp"

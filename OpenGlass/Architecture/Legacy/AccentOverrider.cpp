@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "AccentOverrider.hpp"
 #include "GlassKernel.hpp"
+#include "GlassInfra.hpp"
 #include "uDwmProjection.hpp"
 #include "dwmcoreProjection.hpp"
 #include "Shared.hpp"
@@ -158,7 +159,7 @@ HRESULT AccentOverrider::MyCAccent__UpdateSolidFill(
 				).GetEffectivescRGBBlendColor(0.f),
 				0.f
 			);
-			glassColor.a = GlassKernel::AlphaChannelReinterpreter(true, maximized).ToFloat();
+			glassColor.a = GlassInfra::AlphaChannelReinterpreter(true, maximized).ToFloat();
 			RETURN_IF_FAILED(effectBrush->Update(1.0, glassColor));
 
 			RETURN_IF_FAILED(

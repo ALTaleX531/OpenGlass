@@ -36,12 +36,6 @@
     <ClCompile Include="Architecture\MILComp\CaptionTextHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Architecture\MILComp\GlassCoverageSet.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Architecture\MILComp\GlassEngine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Architecture\MILComp\GlassFrameDemodernizer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -54,16 +48,13 @@
     <ClCompile Include="Architecture\MILComp\GlassIntegrity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Architecture\MILComp\GlassKernel.cpp">
+    <ClCompile Include="Architecture\MILComp\GlassInfra.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Architecture\MILComp\GlassReflectionHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Architecture\MILComp\GlassRenderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Architecture\MILComp\OpenGlass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Architecture\MILComp\ReflectionVisual.cpp">
@@ -80,13 +71,10 @@
     <ClInclude Include="Architecture\MILComp\Dwm.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Architecture\MILComp\GlassCoverageSet.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Architecture\MILComp\GlassIntegrity.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Architecture\MILComp\GlassKernel.hpp">
+    <ClInclude Include="Architecture\MILComp\GlassInfra.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Architecture\MILComp\ReflectionVisual.hpp">
@@ -353,6 +341,15 @@
     <ClInclude Include="GlassEngine.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CaptionMetrics.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CaptionText.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GlassKernel.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="GlassFrameDemodernizer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -473,5 +470,26 @@
     <ResourceCompile Include="OpenGlass.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+    <ClCompile Include="GlassEngine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CaptionMetrics.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CaptionText.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GlassKernel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGlass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GlassCoverageSet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClInclude Include="GlassCoverageSet.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

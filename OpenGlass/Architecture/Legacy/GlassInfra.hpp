@@ -3,8 +3,14 @@
 #include "cpprt.hpp"
 #include "GlassEngine.hpp"
 
-namespace OpenGlass::GlassKernel
+namespace OpenGlass::GlassInfra
 {
+	void RedrawTopLevelWindow(uDWM::CTopLevelWindow* window, bool deepRedraw);
+	void Update(GlassEngine::UpdateType type);
+	void Startup();
+	void Shutdown();
+	void Cleanup();
+
 	bool IsDrawGeometryCommand(UINT commandType, const DWM::span<const BYTE>* resources) noexcept;
 
 	inline const uDWM::CTopLevelWindow* g_window{ nullptr };
@@ -60,34 +66,4 @@ namespace OpenGlass::GlassKernel
 			SetIsMaximized(maximized);
 		}
 	};
-
-	void RedrawAllTopLevelWindow(bool deepRedraw);
-	float GetBlurExpansion();
-
-	struct CRealizedGlassColorizationParameters
-	{
-		D2D1_COLOR_F color;
-		D2D1_COLOR_F afterglow;
-		float colorBalance;
-		float afterglowBalance;
-		float blurBalance;
-
-		D2D1_COLOR_F GetEffectivescRGBBlendColor(float sdrBoost) const;
-	};
-	float GetColorizationOpacity(bool active, bool maximized);
-	D2D1_COLOR_F GetBaseColor(bool opaque, bool maximized);
-	D2D1_COLOR_F GetSourceColor(bool active);
-	CRealizedGlassColorizationParameters RealizeWindowColorization(
-		const D2D1_COLOR_F& baseColor,
-		const D2D1_COLOR_F& srcColor,
-		float colorizationOpacity,
-		bool opaque,
-		bool livePreview
-	);
-	float GetAdjustedReflectionIntensity(bool active, bool maximized);
-
-	void Update(GlassEngine::UpdateType type);
-	void Startup();
-	void Shutdown();
-	void Cleanup();
 }

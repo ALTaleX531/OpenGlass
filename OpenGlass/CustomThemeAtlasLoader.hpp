@@ -1,7 +1,7 @@
 #pragma once
 #include "framework.hpp"
 #include "cpprt.hpp"
-#include "GlassEngine.hpp"
+#include "DwmSettings.hpp"
 
 namespace OpenGlass::CustomThemeAtlasLoader
 {
@@ -46,7 +46,7 @@ namespace OpenGlass::CustomThemeAtlasLoader
 	);
 	HTHEME GetThemeHandle();
 
-	void Update(GlassEngine::UpdateType type);
+	void Update(DwmSettings::UpdateType type);
 	void Startup();
 	void Activate();
 	void Shutdown();

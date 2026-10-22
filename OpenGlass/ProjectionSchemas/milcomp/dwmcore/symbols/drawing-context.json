@@ -83,7 +83,7 @@
       ],
       "requirement": "required",
       "kind": "projected_function",
-      "notes": "GlassIntegrity and GlassKernel flush pending D2D work around injected state transitions; keep this distinct from EnsureBeginDraw, which refreshes the selected target afterward."
+      "notes": "GlassIntegrity flushes pending D2D work around injected state transitions; keep this distinct from EnsureBeginDraw, which refreshes the selected target afterward."
     },
     {
       "name": "Symbol_CDrawingContext_ApplyRenderStateInternal",

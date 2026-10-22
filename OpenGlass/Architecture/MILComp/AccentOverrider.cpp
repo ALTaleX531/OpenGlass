@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "AccentOverrider.hpp"
-#include "GlassKernel.hpp"
 #include "uDwmProjection.hpp"
 #include "dwmcoreProjection.hpp"
 #include "Shared.hpp"

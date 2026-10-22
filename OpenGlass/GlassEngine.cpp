@@ -5,6 +5,7 @@
 #include "CaptionMetricsTweaker.hpp"
 #include "ButtonGlowHandler.hpp"
 #include "GlassKernel.hpp"
+#include "GlassInfra.hpp"
 #include "AccentOverrider.hpp"
 #include "GlassFrameHandler.hpp"
 #include "GlassFrameDemodernizer.hpp"
@@ -81,7 +82,7 @@ void GlassEngine::Update(UpdateType type, bool redrawNow)
 {
 	{
 		const auto lock = wil::EnterCriticalSection(uDWM::CDesktopManager::s_csDwmInstance);
-		GlassKernel::Update(type);
+		GlassInfra::Update(type);
 		GlassIntegrity::Update(type);
 		GlassRenderer::Update(type);
 
@@ -97,8 +98,12 @@ void GlassEngine::Update(UpdateType type, bool redrawNow)
 		if (redrawNow)
 		{
 			GlassKernel::RedrawAllTopLevelWindow(false);
+#if defined(OPENGLASS_DWM_MILCOMP)
+			LOG_IF_FAILED(uDWM::CDesktopManager::GetInstance()->GetCompositor()->ForceRender());
+#endif
 		}
 	}
+
 	LOG_IF_FAILED(DwmFlush());
 }
 
@@ -113,7 +118,7 @@ void GlassEngine::Startup()
 	HookHelper::GetHookRundown().Open();
 	{
 		HookHelper::HookTransaction transaction{ HookHelper::HookMode::Install };
-		GlassKernel::Startup();
+		GlassInfra::Startup();
 		GlassIntegrity::Startup();
 		GlassRenderer::Startup();
 		{
@@ -131,6 +136,9 @@ void GlassEngine::Startup()
 			GlassKernel::RedrawAllTopLevelWindow(true);
 		}
 	}
+#if defined(OPENGLASS_DWM_MILCOMP)
+	LOG_IF_FAILED(uDWM::CDesktopManager::GetInstance()->GetCompositor()->ForceRender());
+#endif
 }
 void GlassEngine::Activate()
 {
@@ -154,7 +162,7 @@ void GlassEngine::Shutdown()
 		CustomThemeAtlasLoader::Shutdown();
 		GlassRenderer::Shutdown();
 		GlassIntegrity::Shutdown();
-		GlassKernel::Shutdown();
+		GlassInfra::Shutdown();
 		{
 			const auto lock = wil::EnterCriticalSection(uDWM::CDesktopManager::s_csDwmInstance);
 			transaction.Commit();
@@ -182,6 +190,10 @@ void GlassEngine::Shutdown()
 		GlassKernel::RedrawAllTopLevelWindow(true);
 		GlassRenderer::Cleanup();
 		GlassIntegrity::Cleanup();
-		GlassKernel::Cleanup();
+		GlassInfra::Cleanup();
 	}
+
+#if defined(OPENGLASS_DWM_MILCOMP)
+	LOG_IF_FAILED(uDWM::CDesktopManager::GetInstance()->GetCompositor()->ForceRender());
+#endif
 }

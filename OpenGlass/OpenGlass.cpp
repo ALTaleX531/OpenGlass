@@ -12,6 +12,10 @@
 #include "dwmcoreProjection.hpp"
 #include "GlassEngine.hpp"
 
+#if defined(OPENGLASS_DWM_LEGACY) && !defined(_DEBUG)
+#pragma optimize("s", on)
+#endif
+
 namespace OpenGlass
 {
 	void Startup();

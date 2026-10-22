@@ -4,6 +4,7 @@
 #include "HookHelper.hpp"
 #include "uDwmProjection.hpp"
 #include "CustomThemeAtlasLoader.hpp"
+#include "GlassEngine.hpp"
 #include "PngAssetValidation.hpp"
 #include "ThemeAtlasLayout.hpp"
 

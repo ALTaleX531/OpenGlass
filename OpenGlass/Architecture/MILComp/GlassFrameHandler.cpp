@@ -2,6 +2,7 @@
 #include "Shared.hpp"
 #include "GlassFrameHandler.hpp"
 #include "GlassKernel.hpp"
+#include "GlassInfra.hpp"
 #include "uDwmProjection.hpp"
 #include "dwmcoreProjection.hpp"
 #include "ReflectionVisual.hpp"
@@ -231,7 +232,7 @@ HRESULT GlassFrameHandler::UpdateReflectionViewport(uDWM::CTopLevelWindow* windo
 			reflectionVisual
 		)
 		{
-			RETURN_IF_FAILED(reflectionVisual->UpdateSurface(GlassKernel::GetOrCreateReflectionSurface()));
+			RETURN_IF_FAILED(reflectionVisual->UpdateSurface(GlassInfra::GetOrCreateReflectionSurface()));
 
 			RETURN_IF_FAILED(
 				reflectionVisual->UpdateViewport(
@@ -260,7 +261,7 @@ HRESULT GlassFrameHandler::UpdateReflectionViewport(uDWM::CTopLevelWindow* windo
 			reflectionVisual
 		)
 		{
-			RETURN_IF_FAILED(reflectionVisual->UpdateSurface(GlassKernel::GetOrCreateReflectionSurface()));
+			RETURN_IF_FAILED(reflectionVisual->UpdateSurface(GlassInfra::GetOrCreateReflectionSurface()));
 
 			RETURN_IF_FAILED(
 				reflectionVisual->UpdateViewport(
@@ -291,7 +292,7 @@ void GlassFrameHandler::MyCGlassColorizationParameters_AdjustWindowColorization(
 )
 {
 	const auto active = (flags & 1) != 0;
-	const auto maximized = GlassKernel::g_window ? GlassKernel::g_window->TreatAsMaximized() : false;
+	const auto maximized = GlassInfra::g_window ? GlassInfra::g_window->TreatAsMaximized() : false;
 
 	This->color = Color::ToAbgr(
 		Color::scRGBTosRGB(
@@ -322,11 +323,11 @@ HRESULT GlassFrameHandler::MyCChannel_CombinedGeometryUpdate(
 	UINT geometry2HandleId
 )
 {
-	if (GlassKernel::g_window)
+	if (GlassInfra::g_window)
 	{
 		std::bitset<2> windowStatus{};
-		windowStatus.set(0, GlassKernel::g_window->TreatAsActiveWindow());
-		windowStatus.set(1, GlassKernel::g_window->TreatAsMaximized());
+		windowStatus.set(0, GlassInfra::g_window->TreatAsActiveWindow());
+		windowStatus.set(1, GlassInfra::g_window->TreatAsMaximized());
 
 		mode = static_cast<D2D1_COMBINE_MODE>(windowStatus.to_ulong());
 	}
@@ -423,7 +424,7 @@ HRESULT GlassFrameHandler::MyCLegacyNonClientBackground_SetCaptionRect(uDWM::CLe
 
 		reflectionVisual->SetSize(&size);
 
-		RETURN_IF_FAILED(reflectionVisual->UpdateSurface(GlassKernel::GetOrCreateReflectionSurface()));
+		RETURN_IF_FAILED(reflectionVisual->UpdateSurface(GlassInfra::GetOrCreateReflectionSurface()));
 
 		RETURN_IF_FAILED(
 			reflectionVisual->UpdateViewport(
@@ -511,7 +512,7 @@ void GlassFrameHandler::MyCRectangleVisual_SetRect(uDWM::CRectangleVisual* This,
 	SIZE size{ static_cast<LONG>(rc.right), static_cast<LONG>(rc.bottom) };
 	reflectionVisual->SetSize(&size);
 
-	if (const auto hr = reflectionVisual->UpdateSurface(GlassKernel::GetOrCreateReflectionSurface()); FAILED(hr))
+	if (const auto hr = reflectionVisual->UpdateSurface(GlassInfra::GetOrCreateReflectionSurface()); FAILED(hr))
 	{
 		LOG_HR(hr);
 		return;
@@ -602,10 +603,10 @@ HRESULT GlassFrameHandler::MyCTopLevelWindow_ValidateVisual(uDWM::CTopLevelWindo
 		return g_CTopLevelWindow_ValidateVisual_Org(This);
 	}
 
-	GlassKernel::g_window = This;
+	GlassInfra::g_window = This;
 	const auto hr = g_CTopLevelWindow_ValidateVisual_Org(This);
 	LOG_IF_FAILED(UpdateReflectionViewport(This));
-	GlassKernel::g_window = nullptr;
+	GlassInfra::g_window = nullptr;
 	return hr;
 }
 

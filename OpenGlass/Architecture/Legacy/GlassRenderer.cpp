@@ -4,6 +4,7 @@
 #include "dwmcoreProjection.hpp"
 #include "Shared.hpp"
 #include "GlassKernel.hpp"
+#include "GlassInfra.hpp"
 #include "GlassRenderer.hpp"
 #include "GlassRealizer.hpp"
 #include "D3DGlassRealizer.hpp"
@@ -165,7 +166,7 @@ HRESULT GlassRenderer::MyCRenderData_TryDrawCommandAsDrawList(
 {
 	const auto command = reinterpret_cast<const dwmcore::CDrawGeometryCommand*>(resources->data);
 	if (
-		GlassKernel::IsDrawGeometryCommand(commandType, resources) &&
+		GlassInfra::IsDrawGeometryCommand(commandType, resources) &&
 		(
 			(
 				HookHelper::get_vftable_from(This->GetResources()->data[command->brushIndex]) == dwmcore::CSolidColorLegacyMilBrush::vftable
@@ -404,7 +405,7 @@ HRESULT GlassRenderer::MyCDrawingContext_DrawGeometry(
 		
 		const auto expansion = GlassKernel::GetBlurExpansion();
 		const auto glassCoverageSet = CArrayBasedGlassCoverageSet::GetOrCreate(occlusionContext->GetArrayBasedCoverageSet());
-		const auto reinterpreter = GlassKernel::AlphaChannelReinterpreter(color.a);
+		const auto reinterpreter = GlassInfra::AlphaChannelReinterpreter(color.a);
 
 		// try render glass
 		if (reinterpreter.GetIsValid())

@@ -95,7 +95,13 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)ButtonGlowHandler.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CaptionMetrics.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CaptionMetricsTweaker.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CaptionText.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CaptionTextHandler.hpp">
@@ -111,6 +117,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)GlassEngine.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)GlassKernel.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)GlassFrameDemodernizer.hpp">
@@ -241,5 +250,26 @@
     <ResourceCompile Include="$(MSBuildThisFileDirectory)OpenGlass.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)GlassCoverageSet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)CaptionMetrics.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)CaptionText.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)GlassEngine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)GlassKernel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)OpenGlass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClInclude Include="$(MSBuildThisFileDirectory)GlassCoverageSet.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -4,6 +4,7 @@
 #include "dwmcoreProjection.hpp"
 #include "Shared.hpp"
 #include "GlassKernel.hpp"
+#include "GlassInfra.hpp"
 #include "GlassIntegrity.hpp"
 #include "GlassSafetyZoneLayer.hpp"
 #include "GlassCoverageSet.hpp"
@@ -929,7 +930,7 @@ HRESULT GlassIntegrity::MyCOcclusionContext_DrawGeometry(
 	const auto solidColorBrush = static_cast<dwmcore::CSolidColorLegacyMilBrush*>(brush);
 	auto color = solidColorBrush->GetRealizedColor();
 	const auto expansion = GlassKernel::GetBlurExpansion();
-	const auto reinterpreter = GlassKernel::AlphaChannelReinterpreter(color.a);
+	const auto reinterpreter = GlassInfra::AlphaChannelReinterpreter(color.a);
 	const auto valid = reinterpreter.GetIsValid();
 	const auto active = reinterpreter.GetIsActive();
 	const auto maximized = reinterpreter.GetIsMaximized();

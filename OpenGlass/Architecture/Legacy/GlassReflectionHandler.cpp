@@ -4,7 +4,7 @@
 #include "dwmcoreProjection.hpp"
 #include "Shared.hpp"
 #include "GlassReflectionBrush.hpp"
-#include "GlassKernel.hpp"
+#include "GlassInfra.hpp"
 #include "DetourChains.hpp"
 
 using namespace OpenGlass;
@@ -207,7 +207,7 @@ HRESULT GlassReflectionHandler::MyCRenderData_TryDrawCommandAsDrawList(
 	T&& callback
 )
 {
-	const auto isDrawGeometryCommand = GlassKernel::IsDrawGeometryCommand(commandType, resources);
+	const auto isDrawGeometryCommand = GlassInfra::IsDrawGeometryCommand(commandType, resources);
 	const auto command = reinterpret_cast<const dwmcore::CDrawGeometryCommand*>(resources->data);
 	if (
 		isDrawGeometryCommand &&
@@ -611,14 +611,14 @@ HRESULT GlassReflectionHandler::MyCLivePreview__UpdateResourcesForMonitorHelper(
 
 	if (!build_before_w11_24h2)
 	{
-		GlassKernel::g_redirectFirstCreateRectRgnCall = true;
-		GlassKernel::g_window = window;
+		GlassInfra::g_redirectFirstCreateRectRgnCall = true;
+		GlassInfra::g_window = window;
 	}
 	const auto result = g_CLivePreview__UpdateResourcesForMonitorHelper_Org(This, window, resource);
 	if (!build_before_w11_24h2)
 	{
-		GlassKernel::g_window = nullptr;
-		GlassKernel::g_redirectFirstCreateRectRgnCall = std::nullopt;
+		GlassInfra::g_window = nullptr;
+		GlassInfra::g_redirectFirstCreateRectRgnCall = std::nullopt;
 	}
 
 	return result;

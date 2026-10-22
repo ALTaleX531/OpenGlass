@@ -1,13 +1,9 @@
 #pragma once
 #include "framework.hpp"
 #include "cpprt.hpp"
-#include "GlassEngine.hpp"
 
 namespace OpenGlass::GlassKernel
 {
-	inline uDWM::CTopLevelWindow* g_window{ nullptr };
-	abi::ICompositionSurface* GetOrCreateReflectionSurface();
-
 	void RedrawAllTopLevelWindow(bool deepRedraw);
 	float GetBlurExpansion();
 
@@ -32,9 +28,4 @@ namespace OpenGlass::GlassKernel
 		bool livePreview
 	);
 	float GetAdjustedReflectionIntensity(bool active, bool maximized);
-
-	void Update(GlassEngine::UpdateType type);
-	void Startup();
-	void Shutdown();
-	void Cleanup();
 }

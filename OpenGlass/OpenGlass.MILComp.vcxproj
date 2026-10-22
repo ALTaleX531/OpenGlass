@@ -54,9 +54,8 @@
     <ClInclude Include="Architecture\MILComp\DetourChains.hpp" />
     <ClInclude Include="Architecture\MILComp\dwmcoreProjection.hpp" />
     <ClInclude Include="Architecture\MILComp\dwmcoreProjection.Offsets.hpp" />
-    <ClInclude Include="Architecture\MILComp\GlassCoverageSet.hpp" />
     <ClInclude Include="Architecture\MILComp\GlassIntegrity.hpp" />
-    <ClInclude Include="Architecture\MILComp\GlassKernel.hpp" />
+    <ClInclude Include="Architecture\MILComp\GlassInfra.hpp" />
     <ClInclude Include="Architecture\MILComp\ReflectionVisual.hpp" />
     <ClInclude Include="Architecture\MILComp\uDwmProjection.hpp" />
     <ClInclude Include="Architecture\MILComp\uDwmProjection.Offsets.hpp" />
@@ -66,16 +65,13 @@
     <ClCompile Include="Architecture\MILComp\ButtonGlowHandler.cpp" />
     <ClCompile Include="Architecture\MILComp\CaptionMetricsTweaker.cpp" />
     <ClCompile Include="Architecture\MILComp\CaptionTextHandler.cpp" />
-    <ClCompile Include="Architecture\MILComp\GlassCoverageSet.cpp" />
-    <ClCompile Include="Architecture\MILComp\GlassEngine.cpp" />
     <ClCompile Include="Architecture\MILComp\GlassFrameDemodernizer.cpp" />
     <ClCompile Include="Architecture\MILComp\GlassFrameEnhancer.cpp" />
     <ClCompile Include="Architecture\MILComp\GlassFrameHandler.cpp" />
     <ClCompile Include="Architecture\MILComp\GlassIntegrity.cpp" />
-    <ClCompile Include="Architecture\MILComp\GlassKernel.cpp" />
+    <ClCompile Include="Architecture\MILComp\GlassInfra.cpp" />
     <ClCompile Include="Architecture\MILComp\GlassReflectionHandler.cpp" />
     <ClCompile Include="Architecture\MILComp\GlassRenderer.cpp" />
-    <ClCompile Include="Architecture\MILComp\OpenGlass.cpp" />
     <ClCompile Include="Architecture\MILComp\ReflectionVisual.cpp" />
   </ItemGroup>
   <ItemGroup>
