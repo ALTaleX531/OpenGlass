@@ -3,6 +3,9 @@
 ###############################################################################
 * text=auto eol=crlf
 
+# Keep unified diffs applicable after a fresh Windows checkout.
+ports/wxwidgets/*.patch text eol=lf
+
 ###############################################################################
 # Set default behavior for command prompt diff.
 #

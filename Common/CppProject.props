@@ -39,6 +39,27 @@
 
   <Import Project="$(MSBuildThisFileDirectory)Version.props" />
 
+  <!-- Keep the file inputs for the IDE's dependency tracking as well. -->
+  <ItemGroup>
+    <_OpenGlassVcpkgOverlayInput Include="$(CppProjectSourceRoot)\ports\**\*" />
+    <_ZVcpkgInstallManifestDependenciesInputs Include="@(_OpenGlassVcpkgOverlayInput)" />
+  </ItemGroup>
+
+  <!-- Timestamp-only inputs miss removed overlays and files with older timestamps. -->
+  <Target Name="TrackVcpkgOverlayInputs" BeforeTargets="VcpkgInstallManifestDependencies"
+          Condition="'$(VcpkgEnabled)'=='true' and '$(VcpkgEnableManifest)'=='true' and '$(VcpkgManifestInstall)'=='true'">
+    <GetFileHash Files="@(_OpenGlassVcpkgOverlayInput)">
+      <Output TaskParameter="Items" ItemName="_OpenGlassVcpkgOverlayHash" />
+    </GetFileHash>
+    <MakeDir Directories="$(IntDir)" />
+    <WriteLinesToFile File="$(IntDir)VcpkgOverlayInputs.txt"
+                      Lines="@(_OpenGlassVcpkgOverlayHash -> '%(Identity)|%(FileHash)')"
+                      Overwrite="true" WriteOnlyWhenDifferent="true" />
+    <ItemGroup>
+      <_ZVcpkgInstallManifestDependenciesInputs Include="$(IntDir)VcpkgOverlayInputs.txt" />
+    </ItemGroup>
+  </Target>
+
   <!-- Default per-config defines if the project didn't override them -->
   <PropertyGroup Condition="'$(Configuration)'=='Debug' and '$(CppProjectConfigDefines)'==''">
     <CppProjectConfigDefines>_DEBUG;</CppProjectConfigDefines>

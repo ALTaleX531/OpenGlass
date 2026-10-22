@@ -1,0 +1,13 @@
+diff --git a/src/msw/darkmode.cpp b/src/msw/darkmode.cpp
+--- a/src/msw/darkmode.cpp
++++ b/src/msw/darkmode.cpp
+@@ -844,5 +844,9 @@
+ void NotifySysColorChange()
+ {
++    // A deferred colour notification can run after the preference changes,
++    // while uxtheme still caches the policy from the earlier notification.
++    wxMSWImpl::RefreshImmersiveColorPolicyState();
++
+     if ( IsActive() != gs_wasActiveOnStartup )
+         gs_hasChanged = true;
+ }

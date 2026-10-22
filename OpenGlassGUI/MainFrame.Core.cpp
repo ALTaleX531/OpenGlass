@@ -2,6 +2,7 @@
 #include "MainFrame.hpp"
 #include "WrappingLayout.hpp"
 #include "ColorPresetList.hpp"
+#include "UiControls.hpp"
 #include "Symbols.hpp"
 #include "BlurSettings.hpp"
 #include "ConfigurationMigration.hpp"
@@ -75,7 +76,7 @@ namespace OpenGlass
 		m_systemConfig = std::make_unique<RegistryConfig>(RegistryConfig::Mode::Machine, userSid);
 		m_targetUserSid = userSid;
 
-		SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_FRAMEBK));
+		FollowSystemColours(this, wxSYS_COLOUR_FRAMEBK);
 
 		wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 		SetSizer(mainSizer);
@@ -1706,6 +1707,18 @@ namespace OpenGlass
 			}, Settings::UpdateType::Backdrop);
 			m_slColorIntensity->SetToolTip(wxString::Format(L"%d", m_slColorIntensity->GetValue()));
 		});
+
+		for (const auto& [slider, id] : {
+			std::pair{ m_slColorBalance, Settings::Id::ColorizationColorBalanceOverride },
+			std::pair{ m_slAfterglowBalance, Settings::Id::ColorizationAfterglowBalanceOverride },
+			std::pair{ m_slBlurBalance, Settings::Id::ColorizationBlurBalanceOverride } })
+		{
+			slider->Bind(wxEVT_SLIDER, [slider, id, updateDword, syncSliderTooltip](wxCommandEvent& event)
+			{
+				updateDword(id, event.GetInt());
+				syncSliderTooltip(slider);
+			});
+		}
 
 		auto bindChoiceColorEx = [&](wxChoice* ch, wxColourPickerCtrl* cp, Settings::Id id, DWORD themeSentinel, DWORD systemSentinel) {
 			auto update = [ch, cp, id, themeSentinel, systemSentinel, updateDword, deleteValue, colorToDwordBgr, updateInheritance]() {

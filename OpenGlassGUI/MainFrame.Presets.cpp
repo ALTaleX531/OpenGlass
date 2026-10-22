@@ -2,6 +2,7 @@
 #include "MainFrame.hpp"
 #include "ColorPresetList.hpp"
 #include "EffectiveConfiguration.hpp"
+#include "UiControls.hpp"
 #include <wx/imagpng.h>
 #include <wx/dcbuffer.h>
 #include <wx/scrolwin.h>
@@ -211,7 +212,7 @@ namespace OpenGlass
 			{
 				auto* description = new wxTextCtrl(general, wxID_ANY, package.metadata.description, wxDefaultPosition, wxDefaultSize,
 					wxTE_MULTILINE | wxTE_READONLY | wxBORDER_NONE);
-				description->SetBackgroundColour(general->GetBackgroundColour());
+				FollowSystemColours(description, std::nullopt);
 				description->SetMinSize(wxSize(0, description->GetCharHeight() + general->FromDIP(4)));
 				description->Bind(wxEVT_SIZE, [description, general](wxSizeEvent& event)
 				{
@@ -631,7 +632,7 @@ namespace OpenGlass
 	void MainFrame::CreatePresetsTab()
 	{
 		auto* panel = new wxPanel(m_notebook);
-		panel->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
+		FollowSystemColours(panel, wxSYS_COLOUR_WINDOW);
 		auto* root = new wxBoxSizer(wxVERTICAL);
 		m_lstPresetPackages = new wxListView(panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT | wxLC_SINGLE_SEL);
 		const wchar_t* headings[]{ L"Name", L"Accent color", L"Author", L"License", L"Status" };
@@ -667,7 +668,8 @@ namespace OpenGlass
 		});
 		DragAcceptFiles(true); EnableElevatedFileDrop(reinterpret_cast<HWND>(GetHandle()));
 		Bind(wxEVT_DROP_FILES, [this](wxDropFilesEvent& event) { ImportDroppedPresetPackages(event); });
-		auto refresh = [this]() { const auto row = m_lstPresetPackages->GetFirstSelected(); RebuildPresetPackageList(row == wxNOT_FOUND ? std::string{} : m_presetPackages[row].libraryId); };
+		// Appearance changes affect thumbnails, not rows, selection or scrolling.
+		auto refresh = [this]() { RebuildPresetPackageImages(); };
 		panel->Bind(wxEVT_DPI_CHANGED, [this, refresh](wxDPIChangedEvent& event) { event.Skip(); CallAfter(refresh); });
 		panel->Bind(wxEVT_SYS_COLOUR_CHANGED, [this, refresh](wxSysColourChangedEvent& event) { event.Skip(); CallAfter(refresh); });
 		RefreshPresetPackages();
@@ -765,12 +767,7 @@ namespace OpenGlass
 			return result == CSTR_EQUAL ? a.libraryId < b.libraryId : m_presetSortAscending ? result == CSTR_LESS_THAN : result == CSTR_GREATER_THAN;
 		});
 		m_lstPresetPackages->DeleteAllItems();
-		// A 24-DIP image slot gives report rows breathing room around 16-DIP swatches.
-		const PackagePreviewMetrics metrics{ 24, 4 };
-		const auto size = m_lstPresetPackages->FromDIP(metrics.canvasDip);
-		auto images = std::make_unique<wxImageList>(size, size, true);
-		for (const auto& package : m_presetPackages) images->Add(CreatePackagePreviewBitmap(m_lstPresetPackages, package, metrics));
-		m_lstPresetPackages->AssignImageList(images.release(), wxIMAGE_LIST_SMALL);
+		RebuildPresetPackageImages();
 		for (std::size_t index = 0; index < m_presetPackages.size(); ++index)
 		{
 			const auto& package = m_presetPackages[index];
@@ -781,6 +778,17 @@ namespace OpenGlass
 		}
 		m_lblPresetEmpty->Show(m_presetPackages.empty());
 		m_lstPresetPackages->GetParent()->Layout();
+	}
+
+	void MainFrame::RebuildPresetPackageImages()
+	{
+		// A 24-DIP image slot gives report rows breathing room around 16-DIP swatches.
+		const PackagePreviewMetrics metrics{ 24, 4 };
+		const auto size = m_lstPresetPackages->FromDIP(metrics.canvasDip);
+		auto images = std::make_unique<wxImageList>(size, size, true);
+		for (const auto& package : m_presetPackages) images->Add(CreatePackagePreviewBitmap(m_lstPresetPackages, package, metrics));
+		m_lstPresetPackages->AssignImageList(images.release(), wxIMAGE_LIST_SMALL);
+		m_lstPresetPackages->Refresh(false);
 	}
 
 	void MainFrame::SelectPresetPackageRow(std::size_t row)

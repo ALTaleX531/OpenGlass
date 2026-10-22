@@ -166,9 +166,9 @@ namespace OpenGlass
 		}
 		const bool initializeFocus = m_currentSelection < 0;
 		m_currentSelection = index;
-		// Start navigation at the applied color, but don't move the keyboard
-		// cursor during an active navigation session when settings refresh.
-		if (index >= 0 && index < GetItemCount() && (initializeFocus || !HasFocus())) Focus(index);
+		// Initialize at the applied color. Later reads must preserve navigation,
+		// including an inactive list; entering the palette handles focus separately.
+		if (index >= 0 && index < GetItemCount() && initializeFocus) Focus(index);
 		const auto previous = GetFirstSelected();
 		if (previous == index) return;
 		m_settingSelection = true;
@@ -237,7 +237,6 @@ namespace OpenGlass
 		// wxWidgets supplies the Explorer theme and dark-mode window opt-in.
 		SetBackgroundColour(GetParent()->GetBackgroundColour());
 		SetTextColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT));
-		Refresh(false);
 	}
 
 	void ColorPresetList::UpdateLayout()

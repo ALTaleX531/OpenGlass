@@ -22,6 +22,7 @@ namespace OpenGlass
 			const std::wstring name(Settings::Get(id).name);
 			THROW_IF_FAILED(m_config->SetDword(name, value));
 		}
+		LoadColorizationBalances();
 	}
 
 	void MainFrame::ApplyAccentColor(std::optional<DWORD> argb)
@@ -108,19 +109,7 @@ namespace OpenGlass
 
 	WXLRESULT MainFrame::MSWWindowProc(WXUINT message, WXWPARAM wParam, WXLPARAM lParam)
 	{
-		if (message == WM_SETTINGCHANGE && wParam == 0 && lParam
-			&& std::wstring_view(reinterpret_cast<const wchar_t*>(lParam)) == L"ImmersiveColorSet")
-		{
-			QueueColorizationRefresh();
-			if (IsBeingDeleted() || m_systemColorChangePending) return 0;
-			// wxWidgets 3.3.3 still refreshes synchronously on every accent broadcast.
-			// Merge queued notifications while retaining its normal system-colour handling.
-			m_systemColorChangePending = ::PostMessageW(GetHandle(), WM_SYSCOLORCHANGE, 0, 0) != FALSE;
-			if (m_systemColorChangePending) return 0;
-			// If posting failed, let the original notification take the normal path.
-		}
-		if (message == WM_SYSCOLORCHANGE) m_systemColorChangePending = false;
-
+		// Theme notifications can bracket a mode change: retain each deferred update.
 		const auto result = wxFrame::MSWWindowProc(message, wParam, lParam);
 		if (message == WM_DWMCOLORIZATIONCOLORCHANGED || message == WM_SETTINGCHANGE)
 		{

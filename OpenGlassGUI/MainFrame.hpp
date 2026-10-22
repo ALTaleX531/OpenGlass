@@ -33,6 +33,7 @@ namespace OpenGlass
 
 		void BindEvents();
 		void LoadSettings();
+		void LoadColorizationBalances();
 		bool CanSyncExternalChanges() const;
 		void SyncExternalChanges();
 		bool RevertSettings();
@@ -63,7 +64,6 @@ namespace OpenGlass
 		void QueueColorizationRefresh();
 		WXLRESULT MSWWindowProc(WXUINT message, WXWPARAM wParam, WXLPARAM lParam) override;
 		bool m_colorizationRefreshPending{};
-		bool m_systemColorChangePending{};
 		void NotifySettingsChange(Settings::UpdateType impact = Settings::UpdateType::Backdrop | Settings::UpdateType::Theme);
 		void UpdateUIVisibility();
 		void OnClose(wxCloseEvent& event);
@@ -89,6 +89,7 @@ namespace OpenGlass
 		PresetPackages::PreviewProvenance m_presetProvenance;
 
 		void RebuildPresetPackageList(std::string_view selectedUuid = {});
+		void RebuildPresetPackageImages();
 		void ShowPresetContextMenu(wxPoint screenPosition);
 		void SelectPresetPackageRow(std::size_t row);
 		void UpdatePresetPackageDetails();
@@ -222,6 +223,10 @@ namespace OpenGlass
 		bool m_customColorsInitialized{ false };
 		wxCheckBox* m_chkEnableTransparency{ nullptr };
 		wxSlider* m_slColorIntensity{ nullptr };
+		wxCollapsiblePane* m_compositionParametersPane{ nullptr };
+		wxSlider* m_slColorBalance{ nullptr };
+		wxSlider* m_slAfterglowBalance{ nullptr };
+		wxSlider* m_slBlurBalance{ nullptr };
 
 		wxChoice* m_chModeColorCaption{ nullptr };
 		wxColourPickerCtrl* m_cpColorCaption{ nullptr };

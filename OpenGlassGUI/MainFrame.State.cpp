@@ -210,6 +210,7 @@ namespace OpenGlass
 		const DWORD colorIntensity = std::clamp<DWORD>(m_config->GetDword(L"GlassOpacity", 63), ColorizationPresets::ClassicIntensityMinimum, ColorizationPresets::ClassicIntensityMaximum);
 		m_slColorIntensity->SetValue(colorIntensity);
 		syncSliderTooltip(m_slColorIntensity);
+		LoadColorizationBalances();
 
 		DWORD captionActive = m_config->GetDword(L"ColorizationColorCaption", 0xFFFFFFFD);
 		DWORD captionInactive = m_config->GetDword(L"ColorizationColorCaptionInactive", captionActive);
@@ -275,10 +276,24 @@ namespace OpenGlass
 		UpdatePathWarningIcons();
 	}
 
+	void MainFrame::LoadColorizationBalances()
+	{
+		auto load = [this](wxSlider* slider, Settings::Id id, DWORD defaultValue)
+		{
+			const auto value = std::min<DWORD>(m_config->GetDword(std::wstring(Settings::Get(id).name), defaultValue), 100);
+			slider->SetValue(value);
+			slider->SetToolTip(wxString::Format(L"%d", slider->GetValue()));
+		};
+		load(m_slColorBalance, Settings::Id::ColorizationColorBalanceOverride, 10);
+		load(m_slAfterglowBalance, Settings::Id::ColorizationAfterglowBalanceOverride, 10);
+		load(m_slBlurBalance, Settings::Id::ColorizationBlurBalanceOverride, 50);
+	}
+
 	void MainFrame::UpdateUIVisibility()
 	{
 		// 0 = Vista blur, 1 = Win7 blur
 		bool isVista = (m_rbGlassType->GetSelection() == 0);
+		m_compositionParametersPane->Show(!isVista);
 
 		if (m_colorPresetList)
 		{

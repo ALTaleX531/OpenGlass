@@ -56,7 +56,7 @@ namespace OpenGlass
 			}
 
 			auto* tipPanel = new wxPanel(panel);
-			tipPanel->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_INFOBK));
+			FollowSystemColours(tipPanel, wxSYS_COLOUR_INFOBK);
 
 			auto* tipSizer = new wxBoxSizer(wxHORIZONTAL);
 			auto* icon = new wxStaticBitmap(
@@ -67,7 +67,7 @@ namespace OpenGlass
 			tipSizer->Add(icon, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 8);
 
 			auto* label = CreateWrappingLabel(tipPanel, message);
-			label->SetForegroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_INFOTEXT));
+			FollowSystemColours(label, wxSYS_COLOUR_INFOBK, wxSYS_COLOUR_INFOTEXT);
 			tipSizer->Add(label, 1, wxEXPAND);
 
 			tipPanel->SetSizer(tipSizer);
@@ -135,7 +135,7 @@ namespace OpenGlass
 		}
 
 		panel->SetSizer(sizer);
-		panel->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW)); 
+		FollowSystemColours(panel, wxSYS_COLOUR_WINDOW);
 		m_notebook->AddPage(panel, L"System");
 	}
 
@@ -198,7 +198,7 @@ namespace OpenGlass
 		downloadGroup->Add(description, 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, 8);
 
 		auto* symbolNoticePanel = new wxPanel(panel);
-		symbolNoticePanel->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_INFOBK));
+		FollowSystemColours(symbolNoticePanel, wxSYS_COLOUR_INFOBK);
 		auto* symbolNoticeSizer = new wxBoxSizer(wxHORIZONTAL);
 		auto* symbolNoticeIcon = new wxStaticBitmap(
 			symbolNoticePanel,
@@ -211,7 +211,7 @@ namespace OpenGlass
 			L"If you experience a DWM crash, open a GitHub issue promptly with the exact Windows build and revision and a full dump. "
 			L"Reddit, Discord, and other third-party posts are not tracked as OpenGlass bug reports.";
 		auto* symbolNoticeLabel = CreateWrappingLabel(symbolNoticePanel, symbolNoticeText);
-		symbolNoticeLabel->SetForegroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_INFOTEXT));
+		FollowSystemColours(symbolNoticeLabel, wxSYS_COLOUR_INFOBK, wxSYS_COLOUR_INFOTEXT);
 		symbolNoticeContent->Add(symbolNoticeLabel, 0, wxEXPAND | wxBOTTOM, 4);
 		auto* symbolIssueLink = new wxHyperlinkCtrl(
 			symbolNoticePanel,
@@ -219,7 +219,7 @@ namespace OpenGlass
 			L"Open a GitHub issue",
 			L"https://github.com/ALTaleX531/OpenGlass/issues/new"
 		);
-		symbolIssueLink->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_INFOBK));
+		FollowSystemColours(symbolIssueLink, wxSYS_COLOUR_INFOBK);
 		symbolNoticeContent->Add(symbolIssueLink, 0);
 		symbolNoticeSizer->Add(symbolNoticeContent, 1, wxEXPAND);
 		symbolNoticePanel->SetSizer(symbolNoticeSizer);
@@ -396,7 +396,7 @@ namespace OpenGlass
 		});
 		RefreshTransparencyDiagnostics();
 		RefreshDwmCrashDumpConfiguration();
-		panel->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
+		FollowSystemColours(panel, wxSYS_COLOUR_WINDOW);
 		m_notebook->AddPage(panel, L"Diagnostics");
 	}
 
@@ -533,7 +533,7 @@ namespace OpenGlass
 		sizer->Add(materialGroup, 0, wxEXPAND | wxALL, 2);
 
 		panel->SetSizer(sizer);
-		panel->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW)); 
+		FollowSystemColours(panel, wxSYS_COLOUR_WINDOW);
 		m_notebook->AddPage(panel, L"Theme");
 	}
 
@@ -541,7 +541,7 @@ namespace OpenGlass
 	{
 		wxScrolledWindow* panel = new wxScrolledWindow(m_notebook);
 		panel->SetScrollRate(5, 5);
-		panel->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW)); 
+		FollowSystemColours(panel, wxSYS_COLOUR_WINDOW);
 		wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 
 		// General Group
@@ -720,7 +720,7 @@ namespace OpenGlass
 	{
 		// Use ScrolledWindow for large content
 		wxScrolledWindow* panel = new wxScrolledWindow(m_notebook);
-		panel->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
+		FollowSystemColours(panel, wxSYS_COLOUR_WINDOW);
 		panel->SetScrollRate(5, 5);
 		wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 		m_glassColorsPanel = panel;
@@ -774,6 +774,21 @@ namespace OpenGlass
 			AddOptionStatus(panel, row, Settings::Id::GlassOpacity);
 			sizer->Add(row, 0, wxEXPAND | wxALL, 8);
 		}
+
+		m_compositionParametersPane = AddCollapsibleSection(panel, sizer, L"Composition parameters");
+		auto* balancesPanel = m_compositionParametersPane->GetPane();
+		FollowSystemColours(balancesPanel, wxSYS_COLOUR_WINDOW);
+		auto* balancesSizer = new wxBoxSizer(wxVERTICAL);
+		auto addBalance = [&](wxSlider*& slider, const wxString& label, int value, Settings::Id id)
+		{
+			slider = new NativeSlider(balancesPanel, wxID_ANY, value, 0, 100,
+				wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL | wxSL_AUTOTICKS);
+			AddProperty(balancesPanel, balancesSizer, label, slider, id);
+		};
+		addBalance(m_slColorBalance, L"Color balance:", 10, Settings::Id::ColorizationColorBalanceOverride);
+		addBalance(m_slAfterglowBalance, L"Afterglow balance:", 10, Settings::Id::ColorizationAfterglowBalanceOverride);
+		addBalance(m_slBlurBalance, L"Blur balance:", 50, Settings::Id::ColorizationBlurBalanceOverride);
+		balancesPanel->SetSizer(balancesSizer);
 
 		// Advanced colorization
 		auto* advancedColorizationPane = AddCollapsibleSection(
