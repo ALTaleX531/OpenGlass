@@ -40,9 +40,6 @@
     </Link>
     <ClCompile>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
-	  <AdditionalIncludeDirectories>..\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <!-- Define WXUSINGDLL if linking against DLL version of wxWidgets, but we used VcpkgUseStatic=true -->
-      <!-- However, vcpkg might default to valid settings. -->
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>

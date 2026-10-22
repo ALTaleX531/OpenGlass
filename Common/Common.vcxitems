@@ -5,12 +5,6 @@
     <HasSharedItems>true</HasSharedItems>
     <ItemsProjectGuid>{9D3A67C5-E5CA-42AE-8B06-491C60E86EBE}</ItemsProjectGuid>
   </PropertyGroup>
-  <ItemDefinitionGroup>
-    <ClCompile>
-      <!-- Allow #include files from all importing projects. -->
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
-    </ClCompile>
-  </ItemDefinitionGroup>
   <ItemGroup>
 	<ClCompile Include="$(MSBuildThisFileDirectory)CustomBlurEffect.cpp"><Link>Source Files\CustomBlurEffect.cpp</Link></ClCompile>
 	<ClCompile Include="$(MSBuildThisFileDirectory)HookHelper.cpp"><Link>Source Files\HookHelper.cpp</Link></ClCompile>

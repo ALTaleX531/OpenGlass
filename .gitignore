@@ -430,6 +430,7 @@ FodyWeavers.xsd
 *.msp
 
 # Custom rules
+.ci-cache/
 vcpkg_installed/
 OpenGlassRenderTest/OpenGlassRenderTest.png
 *.cso
