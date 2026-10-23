@@ -172,12 +172,17 @@ void CaptionTextHandler::MyID2D1DeviceContext_DrawTextLayout(
 
 	if (LOWORD(Shared::g_textGlowMode) == 3 && g_textGlowParameters.intensity)
 	{
+		DWRITE_OVERHANG_METRICS overhangs{};
+		THROW_IF_FAILED(textLayout->GetOverhangMetrics(&overhangs));
+		const auto textBounds = CaptionText::CalculateDWriteBitmapBounds(metrics, overhangs);
+		const D2D1_POINT_2F bitmapOrigin{ origin.x + textBounds.left, origin.y + textBounds.top };
+
 		winrt::com_ptr<ID2D1BitmapRenderTarget> bitmapRT{};
 		THROW_IF_FAILED(
 			This->CreateCompatibleRenderTarget(
 				D2D1::SizeF(
-					std::ceil(metrics.left + metrics.width) + static_cast<float>(g_textGlowParameters.size * 2),
-					std::ceil(metrics.top + metrics.height) + static_cast<float>(g_textGlowParameters.size * 2)
+					textBounds.right - textBounds.left,
+					textBounds.bottom - textBounds.top
 				),
 				bitmapRT.put()
 			)
@@ -187,7 +192,7 @@ void CaptionTextHandler::MyID2D1DeviceContext_DrawTextLayout(
 		bitmapRT->BeginDraw();
 		bitmapRT->Clear();
 		bitmapRT->DrawTextLayout(
-			D2D1::Point2F(),
+			D2D1::Point2F(-textBounds.left, -textBounds.top),
 			textLayout,
 			defaultFillBrush,
 			options
@@ -211,19 +216,19 @@ void CaptionTextHandler::MyID2D1DeviceContext_DrawTextLayout(
 					D2D1_MORPHOLOGY_MODE_DILATE
 				)
 			);
-			THROW_IF_FAILED(
-				g_textMorphologyEffect->SetValue(
-					D2D1_MORPHOLOGY_PROP_WIDTH,
-					3 + g_textGlowParameters.size / 12
-				)
-			);
-			THROW_IF_FAILED(
-				g_textMorphologyEffect->SetValue(
-					D2D1_MORPHOLOGY_PROP_HEIGHT,
-					3 + g_textGlowParameters.size / 12
-				)
-			);
 		}
+		THROW_IF_FAILED(
+			g_textMorphologyEffect->SetValue(
+				D2D1_MORPHOLOGY_PROP_WIDTH,
+				3 + g_textGlowParameters.size / 12
+			)
+		);
+		THROW_IF_FAILED(
+			g_textMorphologyEffect->SetValue(
+				D2D1_MORPHOLOGY_PROP_HEIGHT,
+				3 + g_textGlowParameters.size / 12
+			)
+		);
 		if (!g_textGlowEffect)
 		{
 			THROW_IF_FAILED(
@@ -257,16 +262,17 @@ void CaptionTextHandler::MyID2D1DeviceContext_DrawTextLayout(
 		);
 		g_textMorphologyEffect->SetInput(0, bitmap.get());
 
+		// With no source rectangle, DrawImage preserves the effect's negative bounds.
 		This->DrawImage(
 			g_textGlowEffect.get(),
-			&origin,
+			&bitmapOrigin,
 			nullptr,
 			D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR,
 			D2D1_COMPOSITE_MODE_SOURCE_COPY
 		);
 		This->DrawImage(
 			bitmap.get(),
-			&origin,
+			&bitmapOrigin,
 			nullptr,
 			D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR
 		);
@@ -347,7 +353,13 @@ void CaptionTextHandler::MyID2D1DeviceContext_DrawTextLayout(
 				);
 			}
 		};
-		calcGlowClipRect(textBoundingBox, glowRect, g_dwriteTextVisual->IsRTLMirrored());
+		auto glowClipRect = glowRect;
+		calcGlowClipRect(textBoundingBox, glowClipRect, g_dwriteTextVisual->IsRTLMirrored());
+		This->PushAxisAlignedClip(glowClipRect, D2D1_ANTIALIAS_MODE_ALIASED);
+		const auto clipScope = wil::scope_exit([&]
+		{
+			This->PopAxisAlignedClip();
+		});
 
 		THROW_IF_FAILED(
 			Util::DrawNineGridBitmap(

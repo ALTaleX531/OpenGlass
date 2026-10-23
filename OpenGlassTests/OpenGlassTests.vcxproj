@@ -61,6 +61,7 @@
 	<_ExternalClCompile Include="..\Common\ThemeAtlasLayout.cpp">
 	  <PrecompiledHeader>NotUsing</PrecompiledHeader>
 	</_ExternalClCompile>
+    <ClCompile Include="CaptionTextTests.cpp" />
     <ClCompile Include="RectFTests.cpp" />
     <ClCompile Include="HookHelperTests.cpp" />
     <ClCompile Include="ProjectionHelperTests.cpp" />

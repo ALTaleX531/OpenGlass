@@ -2,6 +2,7 @@
 
 namespace OpenGlassTests
 {
+	void TestDWriteGeometry();
 	void TestEditorScope();
 	void TestPixelAlign();
 	void TestTransform2DBounds();

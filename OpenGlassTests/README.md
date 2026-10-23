@@ -24,3 +24,5 @@ Follow [the repository testing policy](../AGENTS.md#testing-policy). Put each te
 List production implementations from other project directories as `_ExternalClCompile`, retaining their per-file options. The shared build target includes them during builds and IntelliSense input computation without showing external files at the project root. Only test-project files belong in this project's filters. Common headers remain visible in the Common shared project.
 
 These tests run without injecting into DWM. Registry fixtures use unique keys under `HKCU\Software\OpenGlassTests`, and package/resource fixtures use temporary directories. GPU rendering, desktop appearance, and DWM integration require the separate real-machine verification described in the repository policy.
+
+`CaptionText.DWriteGeometry` checks that long layout boxes, alignment and reading direction do not inflate the shadow bitmap or change text/image origins. It uses DirectWrite without a GPU; glow pixels and target-DWM clipping still require rendering verification.
