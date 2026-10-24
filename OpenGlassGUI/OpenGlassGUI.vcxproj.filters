@@ -149,6 +149,12 @@
     <None Include="Assets\OpenGlass.svg">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="Assets\OpenGlass.NOTICE.txt">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Assets\AeroShotCRE.LICENSE.txt">
+      <Filter>Resource Files</Filter>
+    </None>
     <None Include="Assets\window-apps-filled.original.svg">
       <Filter>Resource Files</Filter>
     </None>

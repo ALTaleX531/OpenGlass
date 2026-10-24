@@ -1,0 +1,34 @@
+OpenGlass GUI icon
+==================
+
+Glass-window artwork
+--------------------
+Adapted from icon.ico in Cvolton/AeroShotCRE:
+https://github.com/Cvolton/AeroShotCRE/blob/master/icon.ico
+
+The upstream README credits the icon introduced in AeroShotCRE 1.9.1 to
+RUvlad1. AeroShotCRE is distributed under the GNU General Public License,
+version 3. The full upstream license is retained in AeroShotCRE.LICENSE.txt.
+
+Upstream attribution and license:
+https://github.com/Cvolton/AeroShotCRE/blob/master/README.md
+https://github.com/Cvolton/AeroShotCRE/blob/master/LICENSE
+
+Registry artwork
+----------------
+The three rectangles and sparkle are adapted from the Microsoft Windows 11
+Registry Editor icon. Source artwork: Microsoft Corporation.
+No separate redistribution license accompanied the supplied Windows icon.
+Its attribution is recorded separately from AeroShotCRE's GPLv3 license
+and the MIT license for the previous Fluent-based OpenGlass icon.
+
+OpenGlass modifications (2026-10-24)
+-----------------------------------
+Recreated the glass window as editable SVG, adjusted its colors and blur,
+squared corners, changed the close button to solid red, and moved the
+window upward. Added three outlined rectangular registry tiles in an L with
+a sparkle, horizontally center-aligned the upper-left tile with the
+caption-button divider, and produced PNG and ICO.
+
+Retain this notice and AeroShotCRE.LICENSE.txt with the current icon assets
+and their derivatives. The editable source is OpenGlass.svg.

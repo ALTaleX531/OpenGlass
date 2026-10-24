@@ -1,21 +1,134 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="6 6 40 40" fill="none">
-  <title>OpenGlass — blue gradient window</title>
-  <desc>Adapted from Microsoft Fluent UI System Icons, Window Apps 48 Filled. Original geometry with opaque Office-inspired blue and cyan gradients. MIT license; see FluentIcons.LICENSE.txt.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" fill="none" role="img" aria-labelledby="icon-title icon-description">
+  <title id="icon-title">OpenGlass configuration icon</title>
+  <desc id="icon-description">A blurred blue glass window with three cyan rectangular tiles arranged in an L at lower left and a sparkle. Adapted from the AeroShotCRE icon and the Windows 11 Registry Editor icon. See OpenGlass.NOTICE.txt for source attribution and modifications.</desc>
   <defs>
-    <linearGradient id="window" x1="10" y1="6" x2="34" y2="42" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#41A5EE"/>
-      <stop offset=".48" stop-color="#1674D5"/>
-      <stop offset="1" stop-color="#173E9D"/>
+    <!-- The checkerboard belongs to the original artwork. Its cells are 23.04 units. -->
+    <g id="checkerboard">
+      <path d="M-46.08-46.08H322.56V322.56H-46.08Z" fill="#a8a8a8"/>
+      <path d="M-46.08 -46.08h23.04v23.04h-23.04ZM0.00 -46.08h23.04v23.04h-23.04ZM46.08 -46.08h23.04v23.04h-23.04ZM92.16 -46.08h23.04v23.04h-23.04ZM138.24 -46.08h23.04v23.04h-23.04ZM184.32 -46.08h23.04v23.04h-23.04ZM230.40 -46.08h23.04v23.04h-23.04ZM276.48 -46.08h23.04v23.04h-23.04ZM-23.04 -23.04h23.04v23.04h-23.04ZM23.04 -23.04h23.04v23.04h-23.04ZM69.12 -23.04h23.04v23.04h-23.04ZM115.20 -23.04h23.04v23.04h-23.04ZM161.28 -23.04h23.04v23.04h-23.04ZM207.36 -23.04h23.04v23.04h-23.04ZM253.44 -23.04h23.04v23.04h-23.04ZM299.52 -23.04h23.04v23.04h-23.04ZM-46.08 0.00h23.04v23.04h-23.04ZM0.00 0.00h23.04v23.04h-23.04ZM46.08 0.00h23.04v23.04h-23.04ZM92.16 0.00h23.04v23.04h-23.04ZM138.24 0.00h23.04v23.04h-23.04ZM184.32 0.00h23.04v23.04h-23.04ZM230.40 0.00h23.04v23.04h-23.04ZM276.48 0.00h23.04v23.04h-23.04ZM-23.04 23.04h23.04v23.04h-23.04ZM23.04 23.04h23.04v23.04h-23.04ZM69.12 23.04h23.04v23.04h-23.04ZM115.20 23.04h23.04v23.04h-23.04ZM161.28 23.04h23.04v23.04h-23.04ZM207.36 23.04h23.04v23.04h-23.04ZM253.44 23.04h23.04v23.04h-23.04ZM299.52 23.04h23.04v23.04h-23.04ZM-46.08 46.08h23.04v23.04h-23.04ZM0.00 46.08h23.04v23.04h-23.04ZM46.08 46.08h23.04v23.04h-23.04ZM92.16 46.08h23.04v23.04h-23.04ZM138.24 46.08h23.04v23.04h-23.04ZM184.32 46.08h23.04v23.04h-23.04ZM230.40 46.08h23.04v23.04h-23.04ZM276.48 46.08h23.04v23.04h-23.04ZM-23.04 69.12h23.04v23.04h-23.04ZM23.04 69.12h23.04v23.04h-23.04ZM69.12 69.12h23.04v23.04h-23.04ZM115.20 69.12h23.04v23.04h-23.04ZM161.28 69.12h23.04v23.04h-23.04ZM207.36 69.12h23.04v23.04h-23.04ZM253.44 69.12h23.04v23.04h-23.04ZM299.52 69.12h23.04v23.04h-23.04ZM-46.08 92.16h23.04v23.04h-23.04ZM0.00 92.16h23.04v23.04h-23.04ZM46.08 92.16h23.04v23.04h-23.04ZM92.16 92.16h23.04v23.04h-23.04ZM138.24 92.16h23.04v23.04h-23.04ZM184.32 92.16h23.04v23.04h-23.04ZM230.40 92.16h23.04v23.04h-23.04ZM276.48 92.16h23.04v23.04h-23.04ZM-23.04 115.20h23.04v23.04h-23.04ZM23.04 115.20h23.04v23.04h-23.04ZM69.12 115.20h23.04v23.04h-23.04ZM115.20 115.20h23.04v23.04h-23.04ZM161.28 115.20h23.04v23.04h-23.04ZM207.36 115.20h23.04v23.04h-23.04ZM253.44 115.20h23.04v23.04h-23.04ZM299.52 115.20h23.04v23.04h-23.04ZM-46.08 138.24h23.04v23.04h-23.04ZM0.00 138.24h23.04v23.04h-23.04ZM46.08 138.24h23.04v23.04h-23.04ZM92.16 138.24h23.04v23.04h-23.04ZM138.24 138.24h23.04v23.04h-23.04ZM184.32 138.24h23.04v23.04h-23.04ZM230.40 138.24h23.04v23.04h-23.04ZM276.48 138.24h23.04v23.04h-23.04ZM-23.04 161.28h23.04v23.04h-23.04ZM23.04 161.28h23.04v23.04h-23.04ZM69.12 161.28h23.04v23.04h-23.04ZM115.20 161.28h23.04v23.04h-23.04ZM161.28 161.28h23.04v23.04h-23.04ZM207.36 161.28h23.04v23.04h-23.04ZM253.44 161.28h23.04v23.04h-23.04ZM299.52 161.28h23.04v23.04h-23.04ZM-46.08 184.32h23.04v23.04h-23.04ZM0.00 184.32h23.04v23.04h-23.04ZM46.08 184.32h23.04v23.04h-23.04ZM92.16 184.32h23.04v23.04h-23.04ZM138.24 184.32h23.04v23.04h-23.04ZM184.32 184.32h23.04v23.04h-23.04ZM230.40 184.32h23.04v23.04h-23.04ZM276.48 184.32h23.04v23.04h-23.04ZM-23.04 207.36h23.04v23.04h-23.04ZM23.04 207.36h23.04v23.04h-23.04ZM69.12 207.36h23.04v23.04h-23.04ZM115.20 207.36h23.04v23.04h-23.04ZM161.28 207.36h23.04v23.04h-23.04ZM207.36 207.36h23.04v23.04h-23.04ZM253.44 207.36h23.04v23.04h-23.04ZM299.52 207.36h23.04v23.04h-23.04ZM-46.08 230.40h23.04v23.04h-23.04ZM0.00 230.40h23.04v23.04h-23.04ZM46.08 230.40h23.04v23.04h-23.04ZM92.16 230.40h23.04v23.04h-23.04ZM138.24 230.40h23.04v23.04h-23.04ZM184.32 230.40h23.04v23.04h-23.04ZM230.40 230.40h23.04v23.04h-23.04ZM276.48 230.40h23.04v23.04h-23.04ZM-23.04 253.44h23.04v23.04h-23.04ZM23.04 253.44h23.04v23.04h-23.04ZM69.12 253.44h23.04v23.04h-23.04ZM115.20 253.44h23.04v23.04h-23.04ZM161.28 253.44h23.04v23.04h-23.04ZM207.36 253.44h23.04v23.04h-23.04ZM253.44 253.44h23.04v23.04h-23.04ZM299.52 253.44h23.04v23.04h-23.04ZM-46.08 276.48h23.04v23.04h-23.04ZM0.00 276.48h23.04v23.04h-23.04ZM46.08 276.48h23.04v23.04h-23.04ZM92.16 276.48h23.04v23.04h-23.04ZM138.24 276.48h23.04v23.04h-23.04ZM184.32 276.48h23.04v23.04h-23.04ZM230.40 276.48h23.04v23.04h-23.04ZM276.48 276.48h23.04v23.04h-23.04ZM-23.04 299.52h23.04v23.04h-23.04ZM23.04 299.52h23.04v23.04h-23.04ZM69.12 299.52h23.04v23.04h-23.04ZM115.20 299.52h23.04v23.04h-23.04ZM161.28 299.52h23.04v23.04h-23.04ZM207.36 299.52h23.04v23.04h-23.04ZM253.44 299.52h23.04v23.04h-23.04ZM299.52 299.52h23.04v23.04h-23.04Z" fill="#6e6e6e"/>
+    </g>
+    <filter id="glass-blur" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="3.4783"/>
+    </filter>
+    <filter id="window-shadow" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="6.5831"/>
+    </filter>
+    <filter id="surface" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+      <feOffset/>
+    </filter>
+    <filter id="glyph-edge" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation=".1315"/>
+    </filter>
+    <filter id="content-edge" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation=".2"/>
+    </filter>
+    <path id="window-outline" d="M-32 64H226.1333V288H-32Z"/>
+    <path id="close-outline" d="M52.2667 67.12H206.8V144.4H52.2667Z"/>
+    <clipPath id="window-clip"><use href="#window-outline"/></clipPath>
+    <clipPath id="blue-clip"><path d="M-32 67.12H56V144.4H-32Z"/></clipPath>
+    <clipPath id="outside-window">
+      <path transform="translate(0 -27)" clip-rule="evenodd" d="M-64-64H320V320H-64ZM-32 64H226.1333V288H-32Z"/>
+    </clipPath>
+    <linearGradient id="glass-alpha" x1="0" y1="64" x2="0" y2="238" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fff" stop-opacity=".997"/>
+      <stop offset="1" stop-color="#fff" stop-opacity=".991"/>
     </linearGradient>
-    <linearGradient id="apps" x1="26" y1="20" x2="42" y2="46" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#42DBE8"/>
-      <stop offset=".5" stop-color="#149ED9"/>
-      <stop offset="1" stop-color="#1763BC"/>
+    <mask id="glass-opacity"><path d="M-32 64H256V288H-32Z" fill="url(#glass-alpha)"/></mask>
+    <linearGradient id="glass-tint" x1="0" y1="64" x2="0" y2="238.007" gradientUnits="userSpaceOnUse">
+      <stop offset="0.000000" stop-color="#89aed0" stop-opacity="0.416752"/>
+      <stop offset="0.083333" stop-color="#7fa7cc" stop-opacity="0.414015"/>
+      <stop offset="0.166667" stop-color="#749fc7" stop-opacity="0.411278"/>
+      <stop offset="0.250000" stop-color="#6998c3" stop-opacity="0.408541"/>
+      <stop offset="0.333333" stop-color="#5e90be" stop-opacity="0.405804"/>
+      <stop offset="0.416667" stop-color="#5388ba" stop-opacity="0.403067"/>
+      <stop offset="0.500000" stop-color="#4780b5" stop-opacity="0.400330"/>
+      <stop offset="0.583333" stop-color="#3c79b1" stop-opacity="0.397593"/>
+      <stop offset="0.666667" stop-color="#3071ac" stop-opacity="0.394857"/>
+      <stop offset="0.750000" stop-color="#2468a7" stop-opacity="0.392120"/>
+      <stop offset="0.833333" stop-color="#1860a2" stop-opacity="0.389383"/>
+      <stop offset="0.916667" stop-color="#0c589d" stop-opacity="0.386646"/>
+      <stop offset="1.000000" stop-color="#004f98" stop-opacity="0.383909"/>
     </linearGradient>
+    <linearGradient id="blue-tint" x1="0" y1="67.12" x2="0" y2="144.4" gradientUnits="userSpaceOnUse">
+      <stop offset="0.000000" stop-color="#77a9d8" stop-opacity="0.543742"/>
+      <stop offset="0.083333" stop-color="#6ea4d6" stop-opacity="0.543344"/>
+      <stop offset="0.166667" stop-color="#659ed3" stop-opacity="0.542947"/>
+      <stop offset="0.250000" stop-color="#5d99d0" stop-opacity="0.542550"/>
+      <stop offset="0.333333" stop-color="#5493ce" stop-opacity="0.542153"/>
+      <stop offset="0.416667" stop-color="#4c8ecb" stop-opacity="0.541756"/>
+      <stop offset="0.500000" stop-color="#4388c8" stop-opacity="0.541358"/>
+      <stop offset="0.583333" stop-color="#3a83c6" stop-opacity="0.540961"/>
+      <stop offset="0.666667" stop-color="#317dc3" stop-opacity="0.540563"/>
+      <stop offset="0.750000" stop-color="#2978c0" stop-opacity="0.540166"/>
+      <stop offset="0.833333" stop-color="#2072be" stop-opacity="0.539768"/>
+      <stop offset="0.916667" stop-color="#176dbb" stop-opacity="0.539371"/>
+      <stop offset="1.000000" stop-color="#0f67b8" stop-opacity="0.538974"/>
+    </linearGradient>
+<!-- Reused blur field keeps the reflection phase continuous across all three surfaces. -->
+    <g id="blurred-checkerboard">
+      <use href="#checkerboard" filter="url(#glass-blur)"/>
+    </g>
+    <filter id="registry-outline-filter" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
+      <feMorphology in="SourceAlpha" operator="dilate" radius="2.5" result="expanded"/>
+      <feComposite in="expanded" in2="SourceAlpha" operator="out" result="outer-ring"/>
+      <feFlood flood-color="#808080" result="outline-color"/>
+      <feComposite in="outline-color" in2="outer-ring" operator="in" result="outline"/>
+      <feMerge><feMergeNode in="outline"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
   </defs>
-  <!-- Fit the canvas to the original 6..46 artwork bounds without outer padding. -->
-  <g>
-    <path d="M6 12.25C6 8.79822 8.79822 6 12.25 6H35.75C39.2018 6 42 8.79822 42 12.25V18H39.5V16.5H8.5V35.75C8.5 37.8211 10.1789 39.5 12.25 39.5H18V42H12.25C8.79822 42 6 39.2018 6 35.75V12.25Z" fill="url(#window)"/>
-    <path d="M35.5 20C33.4289 20 31.75 21.6789 31.75 23.75V31.75H23.75C21.6789 31.75 20 33.4289 20 35.5V42.25C20 44.3211 21.6789 46 23.75 46H39.75C43.2018 46 46 43.2018 46 39.75V23.75C46 21.6789 44.3211 20 42.25 20H35.5ZM34.25 23.75C34.25 23.0596 34.8096 22.5 35.5 22.5H42.25C42.9404 22.5 43.5 23.0596 43.5 23.75V31.75H34.25V23.75ZM43.5 34.25V39.75C43.5 41.8211 41.8211 43.5 39.75 43.5H34.25V34.25H43.5ZM23.75 34.25H31.75V43.5H23.75C23.0596 43.5 22.5 42.9404 22.5 42.25V35.5C22.5 34.8096 23.0596 34.25 23.75 34.25Z" fill="url(#apps)"/>
+
+  <!-- Background and soft shadow. -->
+  <g clip-path="url(#outside-window)">
+    <use href="#checkerboard"/>
+    <path transform="translate(0 -27)" d="M-50 54.3023H235.831V300H-50Z" fill="#000" opacity=".488473" filter="url(#window-shadow)"/>
+  </g>
+
+  <g id="glass-window" transform="translate(0 -27)">
+  <!-- The glass color is a blue tint over the softly blurred checkerboard. -->
+  <g clip-path="url(#window-clip)" mask="url(#glass-opacity)">
+    <g filter="url(#surface)">
+      <use href="#blurred-checkerboard" transform="translate(0 27)"/>
+      <path d="M-32 64H240V288H-32Z" fill="url(#glass-tint)"/>
+    </g>
+  </g>
+  <path d="M-32 65.6H224.5333V288" stroke="#fff" stroke-opacity=".5" stroke-width="3.2"/>
+
+  <!-- Partially cropped maximize button, including its taller top bar. -->
+  <g clip-path="url(#blue-clip)">
+    <g filter="url(#surface)">
+      <use href="#blurred-checkerboard" transform="translate(0 27)"/>
+      <path d="M-32 64H60V148H-32Z" fill="url(#blue-tint)"/>
+      <path d="M-32 67.12H56V144.4H-32V141.2H49.0667V70.32H-32Z" fill="#fff" fill-opacity=".5"/>
+    </g>
+  </g>
+  <path d="M-18 85.76H14.72V126.08H-18V119.68H8.32V103.36H-18Z" fill="#fff"/>
+
+  <!-- Close button: square corners, matching the maximize button and glass frame. -->
+  <use href="#close-outline" fill="#c75050"/>
+  <path d="M53.8667 68.72H205.2V142.8H53.8667Z" stroke="#fff" stroke-opacity=".5" stroke-width="3.2"/>
+  <path d="M114.30081 85.44787 127.91942 99.06649 141.53804 85.44787 148.29270 92.20253 134.67409 105.82115 148.29270 119.43977 141.53804 126.19443 127.91942 112.57581 114.30081 126.19443 107.54615 119.43977 121.16476 105.82115 107.54615 92.20253Z" fill="#fff" filter="url(#glyph-edge)"/>
+
+  <!-- The canvas intentionally crops the left and lower parts of the window. -->
+  <g filter="url(#content-edge)">
+    <path d="M-16 163.64H207.24V300H-16Z" fill="#000"/>
+    <path d="M-16 166.84H204.04V300H-16Z" fill="#f0f0f0"/>
+  </g>
+  </g>
+  <!-- Supplied reg.ico: restored registry L and sparkle, upper-left tile centered on the window-button divider, bottom inset 8 units. -->
+  <g id="registry-outlined" filter="url(#registry-outline-filter)">
+  <g id="registry-badge" transform="translate(17.7067 123.584) scale(13.824)" aria-label="Three registry rectangles in an L shape at the lower left">
+    <path d="M0 0H5V4H9V9H0Z" fill="#0088cc"/>
+    <path d="M1 1H4V4H1ZM1 5H4V8H1ZM5 5H8V8H5Z" fill="#52d3ff"/>
+
+    <!-- Original reg.ico upper-right 7x7 sparkle, including its source alpha values. -->
+    <g id="registry-sparkle" transform="translate(5 -.25) scale(.571428571429)" aria-label="Original registry sparkle">
+      <path d="M3 0h1v1H3ZM0 3h1v1H0ZM6 3h1v1H6ZM3 6h1v1H3Z" fill="#006699" fill-opacity="0.376470588"/>
+      <path d="M2 1h1v1H2ZM4 1h1v1H4ZM1 2h1v1H1ZM5 2h1v1H5ZM1 4h1v1H1ZM5 4h1v1H5ZM2 5h1v1H2ZM4 5h1v1H4Z" fill="#006699" fill-opacity="0.623529412"/>
+      <path d="M3 1h1v1H3ZM1 3h1v1H1ZM5 3h1v1H5ZM3 5h1v1H3Z" fill="#006699"/>
+      <path d="M2 2h1v1H2ZM4 2h1v1H4ZM2 4h1v1H2ZM4 4h1v1H4Z" fill="#0f7aac"/>
+      <path d="M3 2h1v1H3ZM2 3h1v1H2ZM4 3h1v1H4ZM3 4h1v1H3Z" fill="#48c5f2"/>
+      <path d="M3 3h1v1H3Z" fill="#52d3ff"/>
+    </g>
+  </g>
   </g>
 </svg>

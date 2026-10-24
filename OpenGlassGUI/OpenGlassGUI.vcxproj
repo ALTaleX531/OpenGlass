@@ -101,6 +101,8 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Assets\OpenGlass.svg" />
+    <None Include="Assets\OpenGlass.NOTICE.txt" />
+    <None Include="Assets\AeroShotCRE.LICENSE.txt" />
     <None Include="Assets\window-apps-filled.original.svg" />
     <None Include="Assets\FluentIcons.LICENSE.txt" />
   </ItemGroup>
