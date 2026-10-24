@@ -8,7 +8,7 @@ uDWM accessors are frequently inlined. Start with a constructor or creation path
 |---|---|---|
 | `CVisual` | Constructor/Create plus `SetScale`, `SetSize`, `SetOffset`, dirty/RTL mutators | Distinguish member byte offsets from vtable slot offsets |
 | `CContainerVisual` | Constructor/Create and visual collection initialization | Its presence does not imply `CVisual::Create` disappeared |
-| `CWindowData` | `BlurBehindChange`, LivePreview collection, backdrop/DPI setters | Verify every flag independently; adjacency is not evidence |
+| `CWindowData` | `BlurBehindChange`, LivePreview collection, backdrop/DPI setters | Verify every flag independently, as adjacency is not evidence |
 | `CTopLevelWindow` | Create, allocation, constructor, and Initialize | Track base-class and `CWindowData*` association per sample |
 | Non-client visuals | `CWindowBorder`, legacy background, caption/button/text update paths | Gate each feature and legacy variant independently |
 | LivePreview | `_CollectWindows`, resource update helper, setup/cleanup paths | Use the semantic API argument, such as a RECT passed to `IntersectRect` |
@@ -24,9 +24,9 @@ uDWM accessors are frequently inlined. Start with a constructor or creation path
 
 ## Constructor and signature routing
 
-- Use zeroed pointers, paired `1.0f`, double `1.0`, repeated `0x7FFFFFFF` insets, and `-1`/`-2` sentinels as constructor fingerprints only. Confirm the candidate with a semantic setter or consumer.
-- A `CVisual::SetScale` path taking floats usually routes to D2D `SIZE_F` storage; a double-taking path usually routes to `MilSizeD`. Both may coexist, so confirm the actual write and constructor initialization.
-- An older `CTopLevelWindow` shape may directly construct a `CVisual` base without a `CWindowData*`; a newer shape may expose a `CContainerVisual` base and a `CWindowData*` association. Use this as class-shape routing, not as a release classifier or layout proof.
+- Use zeroed pointers, paired `1.0f`, double `1.0`, repeated `0x7FFFFFFF` insets, and sentinels `-1` and `-2` as constructor fingerprints only. Confirm the candidate with a semantic setter or consumer.
+- A `CVisual::SetScale` path taking floats usually routes to D2D `SIZE_F` storage, and a double-taking path usually routes to `MilSizeD`. Both may coexist, so confirm the actual write and constructor initialization.
+- An older `CTopLevelWindow` shape may directly construct a `CVisual` base without a `CWindowData*`, whereas a newer shape may expose a `CContainerVisual` base and a `CWindowData*` association. Use this as class-shape routing, not as a release classifier or layout proof.
 
 Do not restore superseded assumptions that one codebase generation has one immutable layout, that adjusted `this` cannot occur in uDWM, or that neighboring flags and historical slots remain fixed.
 

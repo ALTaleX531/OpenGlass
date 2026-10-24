@@ -99,7 +99,7 @@
     <None Include="ProjectionSchemas\milcomp\dwmcore\layouts\IDeviceTarget.json" />
     <None Include="ProjectionSchemas\milcomp\dwmcore\layouts\IDeviceTexture.json" />
     <None Include="ProjectionSchemas\milcomp\dwmcore\layouts\RenderTargetInfo.json" />
-    <None Include="ProjectionSchemas\milcomp\README.md" />
+    <None Include="ProjectionSchemas\README.md" />
     <None Include="ProjectionSchemas\milcomp\udwm.json" />
     <None Include="ProjectionSchemas\milcomp\udwm\symbols\accent.json" />
     <None Include="ProjectionSchemas\milcomp\udwm\symbols\caption.json" />

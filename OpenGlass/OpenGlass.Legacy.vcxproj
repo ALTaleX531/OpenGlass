@@ -110,7 +110,7 @@
     <None Include="ProjectionSchemas\legacy\dwmcore\layouts\IDrawingContext.json" />
     <None Include="ProjectionSchemas\legacy\dwmcore\layouts\IRenderTarget.json" />
     <None Include="ProjectionSchemas\legacy\dwmcore\layouts\RenderTargetInfo.json" />
-    <None Include="ProjectionSchemas\legacy\README.md" />
+    <None Include="ProjectionSchemas\README.md" />
     <None Include="ProjectionSchemas\legacy\udwm.json" />
     <None Include="ProjectionSchemas\legacy\udwm\symbols\caption.json" />
     <None Include="ProjectionSchemas\legacy\udwm\symbols\colorization.json" />

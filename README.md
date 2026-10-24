@@ -17,22 +17,20 @@ OpenGlass restores the full glass effect to window frames, with control over blu
 | Windows 11 26H1 (28000) | Experimental |
 | Windows Server 2022 (20348) | Supported |
 
-Only the General Availability releases listed above are supported. Insider builds and other unlisted versions are unsupported. Windows 11 26H1 remains experimental. See [Compatibility and DWM architectures](https://github.com/ALTaleX531/OpenGlass/wiki/Compatibility-and-DWM-architectures) for details.
+OpenGlass supports only the listed x64 General Availability releases, with experimental support for Windows 11 26H1. Insider builds are not supported. See [Compatibility and DWM architectures](https://github.com/ALTaleX531/OpenGlass/wiki/Compatibility-and-DWM-architectures) for details.
 
 ## Quick start
 
-1. Download `OpenGlassSetup.exe` from [Releases](https://github.com/ALTaleX531/OpenGlass/releases).
-2. Run the installer, which selects the matching DWM implementation, then open the GUI. It requests administrator rights.
-3. Adjust the appearance. Settings are written immediately; **Save** accepts the changes, while **Revert** or closing the GUI undoes pending changes.
+1. Download `OpenGlassSetup.Signed.exe` from [Releases](https://github.com/ALTaleX531/OpenGlass/releases).
+2. Run the installer, then open the configuration window from the Start menu shortcut **Configure OpenGlass** (or check **Launch OpenGlass GUI** on the installation finish page). It requests administrator rights.
+3. Adjust the appearance. Settings are written immediately. **Save** accepts the changes, while **Revert** or closing the GUI undoes pending changes.
 
-To display changes made outside the GUI, hold <kbd>Shift</kbd> while opening **More**, then choose **Sync**. Save or Revert any pending changes first. Sync reloads settings, the preset library and diagnostics; it never saves or reverts implicitly.
-
-See the [configuration guide](https://github.com/ALTaleX531/OpenGlass/wiki/Configuration-and-registry-reference) and [preset library guide](https://github.com/ALTaleX531/OpenGlass/wiki/Preset-packages) for editing scopes, color options, presets and recovery behavior.
+Starting in v3.1.0, the configuration window opens in the shared HKLM view, which sets ordinary defaults for the computer. Personal HKCU settings override ordinary settings for that account. See the [configuration guide](https://github.com/ALTaleX531/OpenGlass/wiki/Configuration-and-registry-reference) to choose or switch views, and see the [preset library guide](https://github.com/ALTaleX531/OpenGlass/wiki/Preset-packages) for saved looks and recovery behavior.
 
 > [!TIP]
 > **Emergency Exit:** Hold <kbd>Ctrl</kbd>+<kbd>Win</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd> to terminate DWM if the system becomes unresponsive.
 
-OpenGlass is aimed at advanced users who are comfortable troubleshooting DWM. For a simpler alternative, consider [DWMBlurGlass](https://github.com/Maplespe/DWMBlurGlass).
+OpenGlass is a specialized implementation focused on Aero Glass, using aggressive optimizations for that purpose and primarily targeting advanced users. Readers who simply want a translucent desktop appearance should consider [DWMBlurGlass](https://github.com/Maplespe/DWMBlurGlass).
 
 ## Windows theme integration for developers
 
@@ -40,19 +38,22 @@ The theme extension connects Windows theme application and the classic color pan
 
 ## Reporting issues
 
-Report bugs in [GitHub Issues](https://github.com/ALTaleX531/OpenGlass/issues/new), with your exact Windows build, OpenGlass version and reproduction steps. For crashes or opaque glass, start with **Diagnostics** and the [troubleshooting guide](https://github.com/ALTaleX531/OpenGlass/wiki/Troubleshooting-and-crash-dumps).
+Report bugs in [GitHub Issues](https://github.com/ALTaleX531/OpenGlass/issues/new), with your exact Windows build, OpenGlass version and reproduction steps. For crashes or opaque glass, start with the configuration window's **Diagnostics** tab and the [troubleshooting guide](https://github.com/ALTaleX531/OpenGlass/wiki/Troubleshooting-and-crash-dumps).
 
 ## Building
 
+For build prerequisites, dependencies, and CI caching details, see [Building OpenGlass](https://github.com/ALTaleX531/OpenGlass/wiki/Building-OpenGlass), [Python setup](tools/README.md#dependencies), and [Windows dependency reuse](.github/actions/prepare-build/README.md).
+
 ```powershell
-msbuild OpenGlass.slnx /m /restore /p:Configuration=Release /p:Platform=x64
+python -m pip install -r requirements.txt
+msbuild OpenGlass.slnx /m /restore /p:RestorePackagesConfig=true /p:Configuration=Release /p:Platform=x64
 ```
 
-See [Building OpenGlass](https://github.com/ALTaleX531/OpenGlass/wiki/Building-OpenGlass) for prerequisites, tests and packaging, and the [Changelog](https://github.com/ALTaleX531/OpenGlass/wiki/Changelog) for technical version changes. CI artifacts are unsigned validation builds, not releases; the developer theme extension DLL and PDB are uploaded separately.
+See the [Changelog](https://github.com/ALTaleX531/OpenGlass/wiki/Changelog) for technical version changes. CI artifacts are unsigned validation builds, not releases, and the developer theme extension DLL and PDB are uploaded separately.
 
 ## Credits
 
-- GUI icon: adapted from Microsoft's [Fluent UI System Icons](https://github.com/microsoft/fluentui-system-icons), Copyright (c) 2020 Microsoft Corporation, under the [MIT License](OpenGlassGUI/Assets/FluentIcons.LICENSE.txt). [Sources and modifications](OpenGlassGUI/Assets/README.md).
+- GUI icon: The glass-window artwork is from [AeroShotCRE](https://github.com/Cvolton/AeroShotCRE) and is credited to RUvlad1, and the registry artwork is from Microsoft's Windows 11 Registry Editor. See the [assets guide](OpenGlassGUI/Assets/README.md) for source and license details.
 - [Banner for OpenGlass](https://github.com/ALTaleX531/OpenGlass/discussions/11) by [@aubymori](https://github.com/aubymori), using [metalheart jawn #2](https://www.deviantart.com/kfh83/art/metalheart-jawn-2-1068250045) by [@kfh83](https://github.com/kfh83)
 - [[MS-RDPCR2]: Remote Desktop Protocol: Composited Remoting V2](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-rdpcr2)
 - [KNSoft.SlimDetours](https://github.com/KNSoft/KNSoft.SlimDetours)

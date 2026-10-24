@@ -114,7 +114,7 @@
     </MASM>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ProjectionSchemas\legacy\README.md">
+    <None Include="ProjectionSchemas\README.md">
       <Filter>Projection Schemas</Filter>
     </None>
     <None Include="ProjectionSchemas\legacy\dwmcore.json">

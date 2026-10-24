@@ -111,7 +111,7 @@
     </MASM>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ProjectionSchemas\milcomp\README.md">
+    <None Include="ProjectionSchemas\README.md">
       <Filter>Projection Schemas</Filter>
     </None>
     <None Include="ProjectionSchemas\milcomp\dwmcore.json">
