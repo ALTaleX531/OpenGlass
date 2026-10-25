@@ -25,9 +25,35 @@
           DependsOnTargets="InitializeSourceControlInformation">
     <ItemGroup>
       <SourceRoot Update="@(SourceRoot)">
-        <MappedPath>$([System.String]::Copy('%(SourceRoot.Identity)').Replace('$(CppProjectSourceRoot)', ''))</MappedPath>
+        <MappedPath>$([System.String]::Copy('%(SourceRoot.Identity)').Replace('$(CppProjectSourceRoot)\', ''))</MappedPath>
+        <!-- SourceLink treats an empty MappedPath as the original absolute path. -->
+        <MappedPath Condition="'%(SourceRoot.Identity)'=='$(CppProjectSourceRoot)\'">\</MappedPath>
       </SourceRoot>
     </ItemGroup>
+  </Target>
+
+  <Target Name="TrimCppSourceLinkRoot"
+          Condition="('$(Configuration)'=='Release' or '$(Configuration)'=='ReleaseSigned') and '$(SourceLink)'!=''"
+          AfterTargets="_GenerateSourceLinkFile">
+    <ReadLinesFromFile File="$(SourceLink)">
+      <Output TaskParameter="Lines" PropertyName="_CppSourceLinkJson" />
+    </ReadLinesFromFile>
+    <PropertyGroup>
+      <_CppRelativeSourceLinkFile>$(IntDir)$(MSBuildProjectName).sourcelink.relative.json</_CppRelativeSourceLinkFile>
+    </PropertyGroup>
+    <!-- Keep the generated file separate so unchanged builds do not relink. -->
+    <WriteLinesToFile File="$(_CppRelativeSourceLinkFile)"
+                      Lines="$([System.String]::Copy('$(_CppSourceLinkJson)').Replace('&quot;\\*&quot;:', '&quot;*&quot;:'))"
+                      Overwrite="true" WriteOnlyWhenDifferent="true" />
+    <ItemGroup>
+      <Link Update="@(Link)">
+        <AdditionalOptions>$([System.String]::Copy('%(Link.AdditionalOptions)').Replace('$(SourceLink)', '$(_CppRelativeSourceLinkFile)'))</AdditionalOptions>
+      </Link>
+      <FileWrites Include="$(_CppRelativeSourceLinkFile)" />
+    </ItemGroup>
+    <PropertyGroup>
+      <SourceLink>$(_CppRelativeSourceLinkFile)</SourceLink>
+    </PropertyGroup>
   </Target>
 
   <PropertyGroup>
