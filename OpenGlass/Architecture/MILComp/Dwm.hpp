@@ -149,6 +149,12 @@ namespace OpenGlass::DWM
 		double right;
 		double bottom;
 	};
+	struct MilRect3D
+	{
+		D2D1_RECT_F rectangle;
+		float front;
+		float back;
+	};
 	struct MilSizeD
 	{
 		double width;

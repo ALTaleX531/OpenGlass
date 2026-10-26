@@ -31,6 +31,42 @@
         }
       ],
       "notes": "CAccent::UpdateAccentPolicy"
+    },
+    {
+      "name": "CAccent_ParentVisible",
+      "id": "CAccent_ParentVisible",
+      "kind": "field",
+      "type": "bool",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 397,
+              "until": {
+                "build": 22000
+              }
+            },
+            {
+              "offset": 405,
+              "until": {
+                "build": 22621
+              }
+            },
+            {
+              "offset": 381,
+              "until": {
+                "build": 26100
+              }
+            },
+            {
+              "offset": 333,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "Constructors in 17763.719, 19041.3758, 20348.2582, 22000.194, 22621.6630 and 26100.8972 initialize this flag to false; _UpdateAcrylicBlurBehind requires it before configuring and attaching the child. Named SetParentVisible mutators independently confirm the Windows 11 fields. Copy only this byte: the adjacent clone/atlas marker is initialized separately."
     }
   ]
 }

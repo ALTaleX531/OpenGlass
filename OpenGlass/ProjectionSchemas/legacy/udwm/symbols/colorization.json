@@ -107,6 +107,78 @@
       ],
       "requirement": "required",
       "kind": "raw"
+    },
+    {
+      "name": "Symbol_CAccent_CloneVisualTree_Pre19041",
+      "id": "CAccent::CloneVisualTree_Pre19041",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "HRESULT (*)(CAccent*, CVisual**, bool, bool, bool)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: virtual long __cdecl CAccent::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": {
+                "build": 19041
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw",
+      "notes": "17763.719 and 18362.267 retain the three-boolean virtual ABI. Native cloning creates the destination and initializes its policy before publication but omits ParentVisible. Preserve every option and HRESULT; only copy visibility after success. The audited entry is referenced through the vtable, without direct code callers."
+    },
+    {
+      "name": "Symbol_CAccent_CloneVisualTree",
+      "id": "CAccent::CloneVisualTree",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "HRESULT (*)(CAccent*, CVisual**, UINT)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: virtual long __cdecl CAccent::CloneVisualTree(class CVisual * __ptr64 * __ptr64,enum CloneOptions) __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 19041
+              },
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw",
+      "notes": "19041.3758, 20348.2582, 22000.194, 22621.6630 and 26100.8972: native virtual cloning publishes a newly created CAccent after policy/atlas initialization, without copying ParentVisible. Preserve CloneOptions and HRESULT, including the native state-3 policy exclusion on 19041/20348. The audited entry has vtable references and no direct code callers; indirect callers use the ordinary virtual-call ABI. On 26100.8972 InitializeVisualTreeClone always replays the source policy and ignores CloneOptions. Glass-only descendants receive bit 3 unchanged through CContainerVisual; transparent-gradient state 2 with zero gradient/animation avoids background resources while retaining the native border/shadow flags."
+    },
+    {
+      "name": "Symbol_CRenderDataVisual_CloneVisualTree_Pre19041",
+      "id": "CRenderDataVisual::CloneVisualTree_Pre19041",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CRenderDataVisual::CloneVisualTree_Pre19041",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: virtual long __cdecl CRenderDataVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": {
+                "build": 19041
+              }
+            }
+          ]
+        }
+      ],
+      "kind": "projected_function",
+      "requirement": "required",
+      "notes": "17763.719/18362.267 CAccent::CloneVisualTree rebuilds policy rather than copying render instructions. For overridden state 1 this recreates a black native fill before owner association. The CRenderDataVisual base clone creates its own destination, clones source transforms/children through CVisual, then retains each current instruction with AddInstruction. Native ClearInstructions/destruction releases those references. Use this rendered snapshot for an existing OpenGlass override in a full-window capture. Glass-only LivePreview instead uses the native state-3 background exclusion, retaining optional border/shadow atlas children; unmodified Accent keeps its native policy/visibility clone path."
     }
   ]
 }

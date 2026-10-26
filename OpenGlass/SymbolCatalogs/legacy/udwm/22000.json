@@ -10,6 +10,10 @@
         "sha256": "87218ce2324d7d22867898f7aa4565acc4266dc4d4b8209a8c1ed15483ea0629"
       },
       "symbols": {
+        "CAccent::CloneVisualTree": {
+          "name": "public: virtual long __cdecl CAccent::CloneVisualTree(class CVisual * __ptr64 * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0x4C1A0"
+        },
         "CAccent::SetClipRegion": {
           "name": "public: void __cdecl CAccent::SetClipRegion(class CBaseGeometryProxy * __ptr64) __ptr64",
           "rva": "0x4CEB8"
@@ -293,6 +297,10 @@
         "sha256": "210b2964927ac7a5db0c12f5d7dbc209f1aced4642128f501249c4a9fe43210a"
       },
       "symbols": {
+        "CAccent::CloneVisualTree": {
+          "name": "public: virtual long __cdecl CAccent::CloneVisualTree(class CVisual * __ptr64 * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0x4C300"
+        },
         "CAccent::SetClipRegion": {
           "name": "public: void __cdecl CAccent::SetClipRegion(class CBaseGeometryProxy * __ptr64) __ptr64",
           "rva": "0x4D018"
@@ -576,6 +584,10 @@
         "sha256": "44630d81a34ad74e480a1358011645fee3e56aa8362d3a49ab190cff5d63f7ac"
       },
       "symbols": {
+        "CAccent::CloneVisualTree": {
+          "name": "public: virtual long __cdecl CAccent::CloneVisualTree(class CVisual * __ptr64 * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0x4C330"
+        },
         "CAccent::SetClipRegion": {
           "name": "public: void __cdecl CAccent::SetClipRegion(class CBaseGeometryProxy * __ptr64) __ptr64",
           "rva": "0x4D048"
@@ -859,6 +871,10 @@
         "sha256": "350c718ca0bcf1cac4c1eb472687f0de2e7decafa3b83516db7483449c2e4205"
       },
       "symbols": {
+        "CAccent::CloneVisualTree": {
+          "name": "public: virtual long __cdecl CAccent::CloneVisualTree(class CVisual * __ptr64 * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0x4B590"
+        },
         "CAccent::SetClipRegion": {
           "name": "public: void __cdecl CAccent::SetClipRegion(class CBaseGeometryProxy * __ptr64) __ptr64",
           "rva": "0x4C2A8"
@@ -1142,6 +1158,10 @@
         "sha256": "dfea487a19670d36d442f5373fb15eb68e7f8e3d2a1094257c41e538a04cf38c"
       },
       "symbols": {
+        "CAccent::CloneVisualTree": {
+          "name": "public: virtual long __cdecl CAccent::CloneVisualTree(class CVisual * __ptr64 * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0x4B700"
+        },
         "CAccent::SetClipRegion": {
           "name": "public: void __cdecl CAccent::SetClipRegion(class CBaseGeometryProxy * __ptr64) __ptr64",
           "rva": "0x4C418"
@@ -1425,6 +1445,10 @@
         "sha256": "a6528cf9a4167839b90e55b05cb1422ec6593807cd58c45bb4053a628ad44743"
       },
       "symbols": {
+        "CAccent::CloneVisualTree": {
+          "name": "public: virtual long __cdecl CAccent::CloneVisualTree(class CVisual * __ptr64 * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0x4BB30"
+        },
         "CAccent::SetClipRegion": {
           "name": "public: void __cdecl CAccent::SetClipRegion(class CBaseGeometryProxy * __ptr64) __ptr64",
           "rva": "0x4C818"
@@ -1708,6 +1732,10 @@
         "sha256": "3f15ab101c9216d6820a26e7ffbb907d0ed7f98ed0588fb7fb40622462399f9d"
       },
       "symbols": {
+        "CAccent::CloneVisualTree": {
+          "name": "public: virtual long __cdecl CAccent::CloneVisualTree(class CVisual * __ptr64 * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0x4BB30"
+        },
         "CAccent::SetClipRegion": {
           "name": "public: void __cdecl CAccent::SetClipRegion(class CBaseGeometryProxy * __ptr64) __ptr64",
           "rva": "0x4C818"
@@ -1991,6 +2019,10 @@
         "sha256": "2328050722d058eb41dbbfdb6809885160decf047c90b77cff6ec05ccc11f727"
       },
       "symbols": {
+        "CAccent::CloneVisualTree": {
+          "name": "public: virtual long __cdecl CAccent::CloneVisualTree(class CVisual * __ptr64 * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0x4BDD0"
+        },
         "CAccent::SetClipRegion": {
           "name": "public: void __cdecl CAccent::SetClipRegion(class CBaseGeometryProxy * __ptr64) __ptr64",
           "rva": "0x4CAB8"
@@ -2274,6 +2306,10 @@
         "sha256": "65e107bbf3036fef222beb615aedfb09e82a060e69f9224478ca68b86e33323a"
       },
       "symbols": {
+        "CAccent::CloneVisualTree": {
+          "name": "public: virtual long __cdecl CAccent::CloneVisualTree(class CVisual * __ptr64 * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0x4BEC0"
+        },
         "CAccent::SetClipRegion": {
           "name": "public: void __cdecl CAccent::SetClipRegion(class CBaseGeometryProxy * __ptr64) __ptr64",
           "rva": "0x4CBA8"
@@ -2557,6 +2593,10 @@
         "sha256": "327292619db850ddd37cae975d15930018ab76e8650740fd4ecd744c0b3afb7f"
       },
       "symbols": {
+        "CAccent::CloneVisualTree": {
+          "name": "public: virtual long __cdecl CAccent::CloneVisualTree(class CVisual * __ptr64 * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0x4BDA0"
+        },
         "CAccent::SetClipRegion": {
           "name": "public: void __cdecl CAccent::SetClipRegion(class CBaseGeometryProxy * __ptr64) __ptr64",
           "rva": "0x4CAB8"
@@ -2840,6 +2880,10 @@
         "sha256": "0c7affd61fa15a844017712c609c40b73e2e97dc5ee19de2babd4bd6b45aee5e"
       },
       "symbols": {
+        "CAccent::CloneVisualTree": {
+          "name": "public: virtual long __cdecl CAccent::CloneVisualTree(class CVisual * __ptr64 * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0x4BDA0"
+        },
         "CAccent::SetClipRegion": {
           "name": "public: void __cdecl CAccent::SetClipRegion(class CBaseGeometryProxy * __ptr64) __ptr64",
           "rva": "0x4CAB8"
@@ -3123,6 +3167,10 @@
         "sha256": "539037efa9c024e076f7610f9f2542494df3793cdc700de66a4b2859443eb5e4"
       },
       "symbols": {
+        "CAccent::CloneVisualTree": {
+          "name": "public: virtual long __cdecl CAccent::CloneVisualTree(class CVisual * __ptr64 * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0x4BC50"
+        },
         "CAccent::SetClipRegion": {
           "name": "public: void __cdecl CAccent::SetClipRegion(class CBaseGeometryProxy * __ptr64) __ptr64",
           "rva": "0x4C968"
@@ -3406,6 +3454,10 @@
         "sha256": "b72a0a17f589e82193978cfe4e5bbcb15af285e31b9c388efef15115fac65927"
       },
       "symbols": {
+        "CAccent::CloneVisualTree": {
+          "name": "public: virtual long __cdecl CAccent::CloneVisualTree(class CVisual * __ptr64 * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0x4BC50"
+        },
         "CAccent::SetClipRegion": {
           "name": "public: void __cdecl CAccent::SetClipRegion(class CBaseGeometryProxy * __ptr64) __ptr64",
           "rva": "0x4C968"

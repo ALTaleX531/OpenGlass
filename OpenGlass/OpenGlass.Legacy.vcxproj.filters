@@ -68,6 +68,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="WindowState.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Architecture\Legacy\DetourChains.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -392,7 +395,7 @@
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClInclude Include="AccentOverrider.hpp">
+    <ClInclude Include="Architecture\Legacy\AccentOverrider.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="AeroColorizationEffect.hpp">
@@ -440,7 +443,7 @@
     <ClInclude Include="GlassFrameDemodernizer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GlassFrameEnhancer.hpp">
+    <ClInclude Include="Architecture\Legacy\GlassFrameEnhancer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GlassFrameHandler.hpp">

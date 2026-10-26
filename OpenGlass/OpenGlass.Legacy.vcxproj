@@ -50,6 +50,8 @@
   <Import Project="OpenGlass.Shared.vcxitems" Label="Shared" />
   <ItemGroup>
     <ClInclude Include="Architecture\Legacy\dcompPrivates.hpp" />
+    <ClInclude Include="Architecture\Legacy\AccentOverrider.hpp" />
+    <ClInclude Include="Architecture\Legacy\GlassFrameEnhancer.hpp" />
     <ClInclude Include="Architecture\Legacy\Dwm.hpp" />
     <ClInclude Include="Architecture\Legacy\DetourChains.hpp" />
     <ClInclude Include="Architecture\Legacy\dwmcoreProjection.hpp" />

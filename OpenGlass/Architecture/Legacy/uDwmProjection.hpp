@@ -284,6 +284,11 @@ namespace OpenGlass::uDWM
 			OPENGLASS_MUSTTAIL
 			return Projection::Invoke<&CVisual::RenderRecursive>(this);
 		}
+		inline HRESULT CloneVisualTree_Pre19041(CVisual** clonedVisual, bool option1, bool option2, bool option3)
+		{
+			OPENGLASS_MUSTTAIL
+			return Projection::Invoke<&CVisual::CloneVisualTree_Pre19041>(this, clonedVisual, option1, option2, option3);
+		}
 		inline DWORD GetDirtyFlags() const
 		{
 			return *CVisual_GetDirtyFlags.address(this);
@@ -375,6 +380,11 @@ namespace OpenGlass::uDWM
 
 	struct CRenderDataVisual : CVisual
 	{
+		inline HRESULT CloneVisualTree_Pre19041(CVisual** clone, bool option1, bool option2, bool option3)
+		{
+			OPENGLASS_MUSTTAIL
+			return Projection::Invoke<&CRenderDataVisual::CloneVisualTree_Pre19041>(this, clone, option1, option2, option3);
+		}
 		inline DynArray<CRenderDataInstruction*>& GetInstructions() const
 		{
 			return CRenderDataVisual_GetInstructions.mutable_ref(this);
@@ -490,6 +500,15 @@ namespace OpenGlass::uDWM
 		{
 			return CAtlasedRectsVisual_GetAtlasImageCount.read(this);
 		}
+		inline const MARGINS* GetClipMargins() const
+		{
+			return CAtlasedRectsVisual_ClipMargins.read(this);
+		}
+		inline HRESULT SetClipMargins(const MARGINS* margins)
+		{
+			OPENGLASS_MUSTTAIL
+			return Projection::Invoke<&CAtlasedRectsVisual::SetClipMargins>(this, margins);
+		}
 		inline HRESULT InitializeVisualTreeClone(CAtlasedRectsVisual* clonedVisual, UINT cloneOption)
 		{
 			OPENGLASS_MUSTTAIL
@@ -572,6 +591,16 @@ namespace OpenGlass::uDWM
 			OPENGLASS_MUSTTAIL
 			return Projection::Invoke<&CButton::Create>(visual);
 		}
+		inline static CButton* Construct_Pre18362(CButton* memory)
+		{
+			OPENGLASS_MUSTTAIL
+			return Projection::Invoke<&CButton::Construct_Pre18362>(memory);
+		}
+		inline HRESULT Initialize_Pre18362(IDwmChannel* channel)
+		{
+			OPENGLASS_MUSTTAIL
+			return Projection::Invoke<&CButton::Initialize_Pre18362>(this, channel);
+		}
 		inline HRESULT SetVisualStates_Win10(uDWM::CBitmapSourceArray* buttonArray,
 											 uDWM::CBitmapSourceArray* glyphArray, uDWM::CBitmapSource* glowBitmap,
 											 float opacity)
@@ -602,6 +631,10 @@ namespace OpenGlass::uDWM
 		inline float& GetGlyphOpacity()
 		{
 			return *CButton_GetGlyphOpacity.address(this);
+		}
+		inline CBitmapSource* GetGlowBitmap() const
+		{
+			return CButton_GlowBitmap.read(this);
 		}
 		inline BYTE* GetButtonState()
 		{
@@ -682,6 +715,10 @@ namespace OpenGlass::uDWM
 	};
 	struct CAccent : CRenderDataVisual
 	{
+		bool& GetParentVisible()
+		{
+			return CAccent_ParentVisible.ref(this);
+		}
 		ACCENT_POLICY& GetAccentPolicy()
 		{
 			return *CAccent_GetAccentPolicy.address(this);

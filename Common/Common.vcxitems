@@ -18,6 +18,7 @@
 	<ClInclude Include="$(MSBuildThisFileDirectory)ShellColorRefresh.hpp"><Link>Header Files\ShellColorRefresh.hpp</Link></ClInclude>
 	<ClInclude Include="$(MSBuildThisFileDirectory)DesktopWallpaper.hpp"><Link>Header Files\DesktopWallpaper.hpp</Link></ClInclude>
 	<ClInclude Include="$(MSBuildThisFileDirectory)DwmSettings.hpp"><Link>Header Files\DwmSettings.hpp</Link></ClInclude>
+	<ClInclude Include="$(MSBuildThisFileDirectory)UxMitigation.hpp"><Link>Header Files\UxMitigation.hpp</Link></ClInclude>
 	<ClInclude Include="$(MSBuildThisFileDirectory)CustomBlurEffect.hpp"><Link>Header Files\CustomBlurEffect.hpp</Link></ClInclude>
 	<ClInclude Include="$(MSBuildThisFileDirectory)RenderingEffect.hpp"><Link>Header Files\RenderingEffect.hpp</Link></ClInclude>
 	<ClInclude Include="$(MSBuildThisFileDirectory)D2DPrivates.hpp"><Link>Header Files\D2DPrivates.hpp</Link></ClInclude>

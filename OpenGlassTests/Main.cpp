@@ -39,6 +39,8 @@ namespace
 		{ "ColorizationPresets", "ColorizationPresets.ColorizationPresets", &TestColorizationPresets },
 		{ "BlurSettings", "BlurSettings.BlurSettings", &TestBlurSettings },
 		{ "SettingsCatalog", "SettingsCatalog.SettingsCatalog", &TestSettingsCatalog },
+		{ "UxMitigation", "UxMitigation.AccentWhitelist", &TestAccentWhitelist },
+		{ "WindowState", "WindowState.AppearanceOverrides", &TestWindowStateOverrides },
 		{ "RegistryConfig", "RegistryConfig.TransparencyRegistry", &TestTransparencyRegistry },
 		{ "ConfigurationMigration", "ConfigurationMigration.ConfigurationMergePolicy", &TestConfigurationMergePolicy },
 		{ "PreviewJournal", "PreviewJournal.PreviewJournal", &TestPreviewJournal },

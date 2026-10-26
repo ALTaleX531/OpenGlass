@@ -20,6 +20,26 @@
         }
       ],
       "notes": "CAtlasedRectsVisual::InsertAtlasImageAtIndex increments the DWORD at +272 and RemoveAtlasImage decrements it; CButton::RedrawVisual also uses the same array count. Verified on uDWM 22000.194 and 22621.6630. On uDWM 26100.7705, AddAtlasImage instead reads the current count from +224 and forwards to InsertAtlasImageAtIndex. ButtonGlowHandler consumes the +272 Layout only before build 26100; build 26100+ follows the semantic AddAtlasImage path, so the old Layout correctly remains unsupported."
+    },
+    {
+      "name": "CAtlasedRectsVisual_ClipMargins",
+      "id": "CAtlasedRectsVisual_ClipMargins",
+      "kind": "field",
+      "type": "MARGINS*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 272,
+              "until": {
+                "build": 19041
+              }
+            }
+          ]
+        }
+      ],
+      "notes": "17763.719/18362.267 native atlas clones read this pointer and call SetClipMargins on the destination. SetClipMargins independently owns/copies/frees the pointed-to MARGINS; the clone must not share the source allocation."
     }
   ]
 }

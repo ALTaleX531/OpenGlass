@@ -146,7 +146,8 @@
         }
       ],
       "requirement": "required",
-      "kind": "raw"
+      "kind": "raw",
+      "notes": "28000.3231: CCachedVisualImage::CCachedTarget::Update builds a 24-byte TMil3DRect before DrawVisualTree. CMILMatrix::Transform3DBoundsHelper<1> reads XY at +0..+12 and front/back at +16/+20, including its translation-only branch. The safety-zone hook must retain all six coordinates when expanding XY; a 16-byte D2D rectangle leaves the depth interval outside the object."
     }
   ]
 }

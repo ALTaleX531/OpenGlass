@@ -12,6 +12,15 @@ namespace OpenGlassTests
 	{
 		using namespace EffectiveConfiguration;
 		using enum Settings::Id;
+		{
+			Layer user, machine;
+			machine.values[EnableUxMitigation] = Encode(Value{ DWORD{0x80000001} });
+			Check(Capture(user, machine).at(EnableUxMitigation) == Value{ DWORD{0x80000001} });
+			Check(!Capture(user, machine, 2).contains(EnableUxMitigation));
+			Check(Plan(user, machine, { { EnableUxMitigation, DWORD{0} } }, Settings::Scope::User, 2).empty());
+			const auto plan = Plan(user, machine, { { EnableUxMitigation, DWORD{0} } }, Settings::Scope::User);
+			Check(plan.size() == 1 && plan.front().id == EnableUxMitigation && plan.front().after == Encode(Value{ DWORD{0} }));
+		}
 		// The catalog is the sole classification used by cleanup; unrelated values survive.
 		Layer populated;
 		unsigned colorOverrides{};

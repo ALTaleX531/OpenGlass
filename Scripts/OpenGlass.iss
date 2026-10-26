@@ -394,7 +394,7 @@ begin
     'BlurDeviation', 'BlurOptimization', 'RoundRectRadius',
     'CustomThemeMaterial', 'MaterialOpacity', 'UseDirect3DRendering',
     'CaptionButtons', 'CenterCaption', 'TextGlowMode', 'CustomThemeAtlas', 'DisableModernBorders',
-    'DisableGlassOnBattery', 'DisabledHooks', 'GlassSafetyZoneMode',
+    'DisableGlassOnBattery', 'DisabledHooks', 'EnableUxMitigation', 'GlassSafetyZoneMode',
     'MINMAXBUTTONGLOWid', 'CLOSEBUTTONGLOWid', 'TOOLCLOSEBUTTONGLOWid'
   ];
 

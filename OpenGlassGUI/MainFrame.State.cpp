@@ -96,6 +96,7 @@ namespace OpenGlass
 		m_clDisabledHooks->Check(2, (hookMask & 0x4) != 0);
 		m_clDisabledHooks->Check(3, (hookMask & 0x8) != 0);
 		m_clDisabledHooks->Check(4, (hookMask & 0x10) != 0);
+		m_clUxMitigation->Check(0, (m_config->GetDword(L"EnableUxMitigation", UxMitigation::DefaultFlags) & UxMitigation::RestrictAccentOverride) != 0);
 
 		// Theme
 		std::wstring atlas = m_config->GetString(L"CustomThemeAtlas", L"");

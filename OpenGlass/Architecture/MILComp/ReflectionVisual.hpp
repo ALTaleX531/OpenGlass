@@ -19,12 +19,27 @@ namespace OpenGlass
 		void* vector_deleting_destructor(UINT flags);
 		HRESULT CloneVisualTree(CReflectionVisual** clonedVisual, UINT cloneOption);
 	public:
+		enum class Slot
+		{
+			NonClient,
+			ClientBlur,
+			Accent
+		};
+		static HRESULT GetOrCreate(uDWM::CTopLevelWindow* window, Slot slot, uDWM::CRectangleVisual* parent, CReflectionVisual** result);
+		static HRESULT UpdateWindow(uDWM::CTopLevelWindow* window);
+		static void RemoveWindow(uDWM::CTopLevelWindow* window);
+		static void RemoveSlot(uDWM::CTopLevelWindow* window, Slot slot);
+		static void RemoveSlot(Slot slot);
+		static void RemoveChildren(uDWM::CVisual* parent);
 		static void RemoveAll();
+		static CReflectionVisual* Find(uDWM::CVisual* parent);
 		static HRESULT Create(CReflectionVisual** result);
 		static HRESULT CreateSurface(abi::ICompositionSurface** surface);
 
 		HRESULT UpdateOpacity(float opacity);
+		HRESULT UpdateForWindow(uDWM::CTopLevelWindow* window, Slot slot);
 		HRESULT UpdateSurface(abi::ICompositionSurface* surface);
+		// UpdateSurface establishes the brush before its viewport is updated.
 		HRESULT UpdateViewport(
 			const POINT& offset,
 			float parallaxIntensity = 0.f,

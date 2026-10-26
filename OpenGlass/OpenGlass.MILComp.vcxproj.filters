@@ -62,6 +62,12 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="WindowState.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Architecture\MILComp\AccentOverrider.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Architecture\MILComp\DCompProjection.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -95,6 +101,9 @@
   </ItemGroup>
   <ItemGroup>
     <MASM Include="Architecture\MILComp\GlassFrameDemodernizer.Shims.asm">
+      <Filter>Source Files</Filter>
+    </MASM>
+    <MASM Include="Architecture\MILComp\AccentOverrider.Shims.asm">
       <Filter>Source Files</Filter>
     </MASM>
     <MASM Include="Architecture\MILComp\GlassFrameHandler.Shims.asm">
@@ -159,6 +168,9 @@
     <None Include="ProjectionSchemas\milcomp\udwm.json">
       <Filter>Projection Schemas</Filter>
     </None>
+    <None Include="ProjectionSchemas\milcomp\udwm\layouts\CAccent.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
     <None Include="ProjectionSchemas\milcomp\udwm\layouts\CBaseObject.json">
       <Filter>Projection Schemas</Filter>
     </None>
@@ -181,6 +193,9 @@
       <Filter>Projection Schemas</Filter>
     </None>
     <None Include="ProjectionSchemas\milcomp\udwm\layouts\CLegacyNonClientBackground.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\milcomp\udwm\layouts\CLivePreview.json">
       <Filter>Projection Schemas</Filter>
     </None>
     <None Include="ProjectionSchemas\milcomp\udwm\layouts\CRectangleVisual.json">
@@ -213,6 +228,9 @@
     <None Include="ProjectionSchemas\milcomp\udwm\layouts\IText.json">
       <Filter>Projection Schemas</Filter>
     </None>
+    <None Include="ProjectionSchemas\milcomp\udwm\symbols\accent.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
     <None Include="ProjectionSchemas\milcomp\udwm\symbols\caption.json">
       <Filter>Projection Schemas</Filter>
     </None>
@@ -220,6 +238,9 @@
       <Filter>Projection Schemas</Filter>
     </None>
     <None Include="ProjectionSchemas\milcomp\udwm\symbols\desktop.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
+    <None Include="ProjectionSchemas\milcomp\udwm\symbols\live-preview.json">
       <Filter>Projection Schemas</Filter>
     </None>
     <None Include="ProjectionSchemas\milcomp\udwm\symbols\nonclient.json">
@@ -305,9 +326,6 @@
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClInclude Include="AccentOverrider.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="AeroColorizationEffect.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -353,7 +371,7 @@
     <ClInclude Include="GlassFrameDemodernizer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GlassFrameEnhancer.hpp">
+    <ClInclude Include="Architecture\MILComp\GlassFrameEnhancer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GlassFrameHandler.hpp">

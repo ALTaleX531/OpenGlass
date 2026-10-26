@@ -398,6 +398,69 @@
       ],
       "requirement": "required",
       "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CVisual_SetOpacity",
+      "id": "CVisual::SetOpacity",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CVisual::SetOpacity",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: void __cdecl CVisual::SetOpacity(double) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CVisualProxy_SetClip",
+      "id": "CVisualProxy::SetClip",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CVisualProxy::SetClip",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CVisualProxy::SetClip(class CBaseGeometryProxy * __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CContainerVisual_RenderRecursive",
+      "id": "CContainerVisual::RenderRecursive",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CContainerVisual::RenderRecursive",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: virtual void __cdecl CContainerVisual::RenderRecursive(void) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
     }
   ]
 }

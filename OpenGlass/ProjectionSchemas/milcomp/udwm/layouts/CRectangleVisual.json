@@ -17,6 +17,24 @@
         }
       ],
       "notes": "CRectangleVisual::SetRect"
+    },
+    {
+      "name": "CRectangleVisual_Clip",
+      "id": "CRectangleVisual_Clip",
+      "kind": "field",
+      "type": "CBaseGeometryProxy*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 184,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "UpdateClip retains the new geometry here before forwarding it to CVisualProxy::SetClip, releasing the previous value. Constructors independently initialize the field to null in 28000.1 and 28000.3231. UpdateClientBlur selects a rectangle/window geometry directly when the native blur HRGN is absent; keep that geometry when adding the glass marker."
     }
   ]
 }

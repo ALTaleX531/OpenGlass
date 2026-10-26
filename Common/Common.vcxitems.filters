@@ -46,6 +46,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)DwmSettings.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)UxMitigation.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)HookHelper.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>

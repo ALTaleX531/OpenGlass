@@ -1,11 +1,56 @@
 #include "pch.h"
 #include "GlassKernel.hpp"
+#include "WindowState.hpp"
 #include "GlassInfra.hpp"
 #include "Shared.hpp"
 #include "GlassRealizer.hpp"
 #include "D3DGlassRealizer.hpp"
 
 using namespace OpenGlass;
+
+std::bitset<2> GlassKernel::GetWindowStatus(const uDWM::CTopLevelWindow* window, bool nativeActive)
+{
+	const auto data = window->GetData();
+	const auto hwnd = data ? data->GetHwnd() : nullptr;
+	std::bitset<2> status;
+	status.set(0, WindowState::Resolve(hwnd, WindowState::ActivationOverrideProperty, nativeActive));
+	status.set(1, WindowState::Resolve(hwnd, WindowState::MaximizationOverrideProperty, window->TreatAsMaximized(data)));
+	return status;
+}
+
+std::bitset<2> GlassKernel::GetWindowStatus(uDWM::CTopLevelWindow* window)
+{
+	return GetWindowStatus(window, window->TreatAsActiveWindow());
+}
+
+D2D1_RECT_F GlassKernel::CalculateReflectionViewport(
+	const POINT& offset,
+	float parallaxIntensity,
+	bool mirrored,
+	LONG width,
+	const D2D1_SIZE_F& scale
+)
+{
+	const auto screenLeft = GetSystemMetrics(SM_XVIRTUALSCREEN);
+	const auto screenTop = GetSystemMetrics(SM_YVIRTUALSCREEN);
+	const auto screenWidth = GetSystemMetrics(SM_CXVIRTUALSCREEN);
+	const auto screenHeight = GetSystemMetrics(SM_CYVIRTUALSCREEN);
+	D2D1_RECT_F viewport{};
+	LONG left = offset.x;
+	if (mirrored)
+	{
+		left = screenLeft + (screenLeft + screenWidth) - (offset.x + width);
+	}
+	viewport.left = (screenLeft - left) + ((left + width / 2.f) - (screenLeft + screenWidth / 2.f)) * parallaxIntensity;
+	viewport.top = static_cast<float>(screenTop - offset.y);
+	viewport.right = viewport.left + static_cast<float>(screenWidth);
+	viewport.bottom = viewport.top + static_cast<float>(screenHeight);
+	viewport.left /= scale.width;
+	viewport.top /= scale.height;
+	viewport.right /= scale.width;
+	viewport.bottom /= scale.height;
+	return viewport;
+}
 
 void GlassKernel::RedrawAllTopLevelWindow(bool deepRedraw)
 {

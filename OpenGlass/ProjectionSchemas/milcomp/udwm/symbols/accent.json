@@ -1,0 +1,92 @@
+{
+  "symbols": [
+    {
+      "name": "Symbol_CAccent__IsAcrylicBlurEnabledAndAllowed",
+      "id": "CAccent::IsAcrylicBlurEnabledAndAllowed",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "CAccent__IsAcrylicBlurEnabledAndAllowed_t",
+          "ranges": [
+            {
+              "symbol_names": [
+                "protected: bool __cdecl CAccent::_IsAcrylicBlurEnabledAndAllowed(void)const __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw",
+      "notes": "28000.3231 UpdateAccentPolicy/ValidateVisual/UpdateLayout use this predicate to choose acrylic versus the existing nine-grid solid-fill path. All six direct callers were inspected. SetParentVisible keeps this in R8 and visibility in R9B across the call, then passes R8 to SetDirtyFlags through the flag-conversion helper. The physical dispatcher must preserve R8/R9 through replacement and rundown; the other callers reload arguments or use only AL."
+    },
+    {
+      "name": "Symbol_CAccent__UpdateSolidFill",
+      "id": "CAccent::UpdateSolidFill",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "CAccent__UpdateSolidFill_t",
+          "ranges": [
+            {
+              "symbol_names": [
+                "protected: long __cdecl CAccent::_UpdateSolidFill(class CNineGridVisual * __ptr64,unsigned long,struct tagRECT const & __ptr64,float) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw",
+      "notes": "28000.3231 EnsureBackgroundVisual creates primary +224 before transition +232; new pointers are assigned after this call. UpdateTransitionGradient also calls this entry for the pending policy at +200. These callers retain continuation state in nonvolatile registers/stack. Native fill sets nine-grid insets/hollow-center and CRectangleVisual rect, including virtual-screen flags, before its conditional ForceRender."
+    },
+    {
+      "name": "Symbol_CAccent__CleanupNonStaticsResources",
+      "id": "CAccent::CleanupNonStaticsResources",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "CAccent__CleanupNonStaticsResources_t",
+          "ranges": [
+            {
+              "symbol_names": [
+                "protected: void __cdecl CAccent::_CleanupNonStaticsResources(void) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw",
+      "notes": "28000.3231 destructor, ValidateVisual and UpdateResources failure paths call this cleanup. It detaches children and releases primary/transition visuals, transition, acrylic and clip resources; all direct callers reload continuation arguments or use nonvolatile state."
+    },
+    {
+      "name": "Symbol_CAccent_CloneVisualTree",
+      "id": "CAccent::CloneVisualTree",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "HRESULT (*)(CAccent*, CVisual**, UINT)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: virtual long __cdecl CAccent::CloneVisualTree(class CVisual * __ptr64 * __ptr64,enum CloneOptions) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw",
+      "notes": "28000.3231: native virtual cloning publishes a newly created CAccent after policy/atlas initialization, without copying ParentVisible. Preserve CloneOptions and HRESULT. The audited entry has vtable references and no direct code callers; indirect callers use the ordinary virtual-call ABI. InitializeVisualTreeClone replays the source policy regardless of CloneOptions. Bit 3 is propagated unchanged to glass-only descendants; native state 2 with zero gradient/animation retains border/shadow flags without creating a blur/acrylic or OpenGlass effect background."
+    }
+  ]
+}

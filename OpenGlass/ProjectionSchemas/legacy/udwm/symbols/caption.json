@@ -130,7 +130,7 @@
       "bindings": [
         {
           "platform": null,
-          "type": "BYTE*",
+          "type": "HRESULT (*)(CAtlasedRectsVisual*, CVisual**, UINT)",
           "ranges": [
             {
               "symbol_names": [
@@ -149,8 +149,7 @@
         }
       ],
       "requirement": "required",
-      "kind": "raw",
-      "usage": "code_address"
+      "kind": "raw"
     },
     {
       "name": "Symbol_CAtlasedRectsVisual_InitializeVisualTreeClone",
@@ -261,8 +260,7 @@
                 "public: static long __cdecl CButton::Create(class CButton * __ptr64 * __ptr64)"
               ],
               "min_inclusive": {
-                "build": 19041,
-                "revision": 0
+                "build": 18362
               },
               "max_exclusive": {
                 "build": 22621,
@@ -586,6 +584,125 @@
       ],
       "requirement": "required",
       "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CAtlasedRectsVisual_CloneVisualTree_Pre19041",
+      "id": "CAtlasedRectsVisual::CloneVisualTree_Pre19041",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "HRESULT (*)(CAtlasedRectsVisual*, CVisual**, bool, bool, bool)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: virtual long __cdecl CAtlasedRectsVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": {
+                "build": 19041
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw",
+      "notes": "17763.719/18362.267 CButton vtables inherit this entry. It allocates a plain CAtlasedRectsVisual and copies atlas images as CAtlasedImage, discarding the CAtlasButton glyph/glow payload. CButton clones must retain the derived visual and recreate native bitmap states; this entry identifies only that inherited vtable slot."
+    },
+    {
+      "name": "Symbol_CVisual_CloneVisualTree_Pre19041",
+      "id": "CVisual::CloneVisualTree_Pre19041",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CVisual::CloneVisualTree_Pre19041",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: virtual long __cdecl CVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": {
+                "build": 19041
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function",
+      "notes": "17763.719 and 18362.267: a non-null output supplies an already constructed destination. The atlas clone calls this base entry with false/false/true before copying clip margins and atlas images. This preserves child cloning and source offset/size/scale/opacity/RTL/transform without replacing the supplied destination."
+    },
+    {
+      "name": "Symbol_CAtlasedRectsVisual_SetClipMargins",
+      "id": "CAtlasedRectsVisual::SetClipMargins",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CAtlasedRectsVisual::SetClipMargins",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CAtlasedRectsVisual::SetClipMargins(struct _MARGINS const * __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": {
+                "build": 19041
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CButton_Construct_Pre18362",
+      "id": "CButton::Construct_Pre18362",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CButton::Construct_Pre18362",
+          "ranges": [
+            {
+              "symbol_names": [
+                "protected: __cdecl CButton::CButton(void) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": {
+                "build": 18362
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function",
+      "notes": "17763.719 EnsureNonClientAreaButton allocates 416 bytes through WPF::ProcessHeapImpl::Alloc, calls this constructor and then Initialize(IDwmChannel*). The constructor returns the constructed pointer; its last initialized member is the button glyph inset at +408. AvCreateProcessHeap caches GetProcessHeap; WPF allocation/free use HeapAlloc/HeapFree on that process heap. Preserve native deleting-destructor ownership."
+    },
+    {
+      "name": "Symbol_CButton_Initialize_Pre18362",
+      "id": "CButton::Initialize_Pre18362",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CButton::Initialize_Pre18362",
+          "ranges": [
+            {
+              "symbol_names": [
+                "protected: virtual long __cdecl CButton::Initialize(struct IDwmChannel * __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": {
+                "build": 18362
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function",
+      "notes": "17763.719 first initializes the atlas visual with the supplied channel, then creates and inserts both CAtlasButton instances. SetVisualStates owns bitmap-array references and RedrawVisual regenerates the glyphs."
     }
   ]
 }

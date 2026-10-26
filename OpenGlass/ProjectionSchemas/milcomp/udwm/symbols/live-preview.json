@@ -1,0 +1,69 @@
+{
+  "symbols": [
+    {
+      "name": "Symbol_CLivePreview__FadeOutToGlass",
+      "id": "CLivePreview::FadeOutToGlass",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "CLivePreview__FadeOutToGlass_t",
+          "ranges": [
+            {
+              "symbol_names": [
+                "private: long __cdecl CLivePreview::_FadeOutToGlass(void) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw",
+      "notes": "28000.1/1896/3231 Activate consumes only HRESULT and reloads subsequent arguments; no private volatile-register dependency at the direct call. FadeOutToGlass retains existing clones on reversal and restarts the native timeline from its current opacity."
+    },
+    {
+      "name": "Symbol_CLivePreview__UpdateResources",
+      "id": "CLivePreview::UpdateResources",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CLivePreview::UpdateResources",
+          "ranges": [
+            {
+              "symbol_names": [
+                "private: long __cdecl CLivePreview::_UpdateResources(void) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function",
+      "notes": "OnWindowShowHide keeps its continuation state in stack/nonvolatile registers on 28000.1/1896/3231. Per-monitor enumeration copies temporary resources into a vector; their destruction removes display visuals from their parents, so attach only after the complete update returns. On 28000.3231, CVisualBrush::Reset retains its visual surface, while dwmcore CVisualSurface::Freeze/GetExplicitRealizationSizeCVI skip an already frozen capture. Release old capture pairs before rebuilding resources so new bounds cannot reuse an old snapshot."
+    },
+    {
+      "name": "Symbol_CLivePreviewTimeline_GetCurrentOpacity",
+      "id": "CLivePreviewTimeline::GetCurrentOpacity",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CLivePreviewTimeline::GetCurrentOpacity",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: double __cdecl CLivePreviewTimeline::GetCurrentOpacity(void) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    }
+  ]
+}

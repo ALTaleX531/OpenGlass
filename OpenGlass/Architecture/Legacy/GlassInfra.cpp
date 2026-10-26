@@ -315,6 +315,8 @@ void GlassInfra::Update(GlassEngine::UpdateType type)
 	}
 	if (type & GlassEngine::UpdateType::Backdrop)
 	{
+		Shared::g_uxMitigationFlags = GlassEngine::GetDwordFromRegistry(L"EnableUxMitigation", UxMitigation::DefaultFlags);
+
 		Shared::g_type = static_cast<Shared::GlassType>(std::clamp(GlassEngine::GetDwordFromRegistry(L"GlassType", 0), 0ul, 1ul));
 		Shared::g_transparencyEnabled = GlassEngine::GetPersonalizeKey() ? Util::IsTransparencyEnabled(GlassEngine::GetPersonalizeKey()) : true;
 

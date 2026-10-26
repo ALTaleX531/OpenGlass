@@ -14,7 +14,6 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)AccentOverrider.hpp"><Link>Header Files\AccentOverrider.hpp</Link></ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)AeroColorizationEffect.hpp"><Link>Header Files\AeroColorizationEffect.hpp</Link></ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)AeroEffect.hpp"><Link>Header Files\AeroEffect.hpp</Link></ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)BlurEffect.hpp"><Link>Header Files\BlurEffect.hpp</Link></ClInclude>
@@ -33,7 +32,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)GlassEngine.hpp"><Link>Header Files\GlassEngine.hpp</Link></ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)GlassKernel.hpp"><Link>Header Files\GlassKernel.hpp</Link></ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)GlassFrameDemodernizer.hpp"><Link>Header Files\GlassFrameDemodernizer.hpp</Link></ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)GlassFrameEnhancer.hpp"><Link>Header Files\GlassFrameEnhancer.hpp</Link></ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)GlassFrameHandler.hpp"><Link>Header Files\GlassFrameHandler.hpp</Link></ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)GlassRealizer.hpp"><Link>Header Files\GlassRealizer.hpp</Link></ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)GlassReflectionHandler.hpp"><Link>Header Files\GlassReflectionHandler.hpp</Link></ClInclude>
@@ -54,6 +52,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)SymbolCatalog.hpp"><Link>Header Files\SymbolCatalog.hpp</Link></ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)Util.hpp"><Link>Header Files\Util.hpp</Link></ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)wil.hpp"><Link>Header Files\wil.hpp</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)WindowState.hpp"><Link>Header Files\WindowState.hpp</Link></ClInclude>
   </ItemGroup>
   <ItemGroup>
 	<_ExternalClCompile Include="$(MSBuildThisFileDirectory)..\Common\PngAssetValidation.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></_ExternalClCompile>

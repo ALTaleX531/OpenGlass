@@ -1,0 +1,76 @@
+{
+  "layouts": [
+    {
+      "name": "CAccent_AccentPolicy",
+      "id": "CAccent_AccentPolicy",
+      "kind": "field",
+      "type": "ACCENT_POLICY",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 184,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "28000.3231: UpdateAccentPolicy copies the 16-byte current policy here. ValidateVisual/IsAcrylicBlurEnabledAndAllowed/EnsureBackgroundVisual consume its state; EndTransition promotes the pending policy here."
+    },
+    {
+      "name": "CAccent_TransitionPolicy",
+      "id": "CAccent_TransitionPolicy",
+      "kind": "field",
+      "type": "ACCENT_POLICY",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 200,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "28000.3231: UpdateAccentPolicy writes the pending policy before StartTransition. UpdateResources passes it to EnsureBackgroundVisual, UpdateTransitionGradient consumes its color, and EndTransition copies all 16 bytes into the current policy."
+    },
+    {
+      "name": "CAccent_BackgroundVisual",
+      "id": "CAccent_BackgroundVisual",
+      "kind": "field",
+      "type": "CNineGridVisual*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 224,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "28000.3231: UpdateResources passes this owning pointer to EnsureBackgroundVisual before the transition layer. EndTransition removes/releases the old primary and promotes the pending visual; CleanupNonStaticsResources independently releases it."
+    },
+    {
+      "name": "CAccent_ParentVisible",
+      "id": "CAccent_ParentVisible",
+      "kind": "field",
+      "type": "bool",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 277,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "28000.1 and 28000.3231 constructors initialize this flag to false. SetParentVisible independently writes it and marks acrylic resources dirty on a visible transition. _UpdateAcrylicBlurBehind requires it before configuring and attaching the background; native clone policy initialization already schedules that update."
+    }
+  ]
+}

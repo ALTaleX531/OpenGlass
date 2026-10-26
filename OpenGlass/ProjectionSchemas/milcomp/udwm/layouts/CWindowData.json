@@ -23,7 +23,7 @@
           ]
         }
       ],
-      "notes": "Paired 28000.1, 28000.2525, and 28000.2704 uDWM show CWindowList::AlphaChange, BlurBehindChange, and ForceIconicRepresentationChange applying identical masks at +673 before the transition and +737 afterward. The +64 shift follows the bitmap-source cache inserted at +672 in the later constructors."
+      "notes": "Paired 28000.1, 28000.2525, and 28000.2704 uDWM show CWindowList::AlphaChange, BlurBehindChange, and ForceIconicRepresentationChange applying identical masks at +673 before the transition and +737 afterward. The +64 shift follows the bitmap-source cache inserted at +672 in the later constructors. On 28000.3231 CheckForMaximizedChange uses bit 0x8 at +737 to send OnColorizationUpdated and WM_DWMCOLORIZATIONCOLORCHANGED when the desktop maximized-window set changes."
     },
     {
       "name": "CWindowData_GetExtendedFrameMargins",
@@ -155,6 +155,49 @@
         }
       ],
       "notes": "CWindowList::EnsureTopLevelWindow"
+    },
+    {
+      "name": "CWindowData_LivePreviewFlags",
+      "id": "CWindowData_LivePreviewFlags",
+      "kind": "field",
+      "type": "BYTE",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 674,
+              "until": {
+                "build": 28000,
+                "revision": 1575
+              }
+            },
+            {
+              "offset": 738,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CollectWindows/OnWindowShowHide set the glass-exclusion bit 0x80; UpdateResourcesForMonitorHelper tests it before including an ordinary window in the glass bounds. The existing bitmap-source-cache transition moves this field by +64."
+    },
+    {
+      "name": "CWindowData_WindowType",
+      "id": "CWindowData_WindowType",
+      "kind": "field",
+      "type": "UINT",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 128,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "UpdateResourcesForMonitorHelper includes type 1 windows in glass bounds; FadeOutToGlass independently routes type 1 clones to the ordinary capture root."
     }
   ]
 }

@@ -94,7 +94,10 @@ HRESULT GlassFrameDemodernizer::MyCTopLevelWindow_ValidateVisual(uDWM::CTopLevel
 
 	g_systemBackdrop = old_systemBackdropType >= DWMSBT_MAINWINDOW;
 	systemBackdropType = DWMSBT_NONE;
-	if (g_systemBackdrop)
+	if (
+		g_systemBackdrop &&
+		extendedFrameMargins.cyTopHeight == 0
+	)
 	{
 		// known issue:
 		// set cyTopHeight to any non zero value will cause compatibility issue with Outlook (new)

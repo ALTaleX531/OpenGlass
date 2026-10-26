@@ -2,6 +2,7 @@
 #include "MsstyleInternals.hpp"
 #include "CaptionTextHandler.hpp"
 #include "CaptionText.hpp"
+#include "GlassKernel.hpp"
 #include "Shared.hpp"
 #include "Util.hpp"
 #include "uDwmProjection.hpp"
@@ -411,8 +412,9 @@ HRESULT CaptionTextHandler::MyCText_ValidateResources(uDWM::CText* This)
 		const auto windowState = CaptionText::GetOrCreateWindowState(g_textVisualStateMap, This);
 		if (windowState->sourceVisual == This)
 		{
-			windowState->active = g_window->TreatAsActiveWindow();
-			windowState->maximized = g_window->TreatAsMaximized();
+			const auto status = GlassKernel::GetWindowStatus(g_window);
+			windowState->active = status.test(0);
+			windowState->maximized = status.test(1);
 
 			RECT windowRect{};
 			g_window->GetActualWindowRect(&windowRect, true, false, true);
@@ -895,8 +897,9 @@ HRESULT CaptionTextHandler::MyCDWriteText_ValidateVisual(uDWM::CDWriteText* This
 		const auto windowState = CaptionText::GetOrCreateWindowState(g_textVisualStateMap, This);
 		if (windowState->sourceVisual == This)
 		{
-			windowState->active = g_window->TreatAsActiveWindow();
-			windowState->maximized = g_window->TreatAsMaximized();
+			const auto status = GlassKernel::GetWindowStatus(g_window);
+			windowState->active = status.test(0);
+			windowState->maximized = status.test(1);
 
 			RECT windowRect{};
 			g_window->GetActualWindowRect(&windowRect, true, false, true);

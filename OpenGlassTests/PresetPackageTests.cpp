@@ -537,6 +537,15 @@ namespace OpenGlassTests
 		const auto extraLoaded = PresetPackages::LoadArchive(extraPath);
 		Check(extraLoaded.digest != loaded.digest && extraLoaded.settings == loaded.settings);
 
+		auto catalogTwo = nlohmann::ordered_json::parse(loaded.manifestText);
+		catalogTwo["catalog_version"] = 2;
+		catalogTwo["settings"].erase("EnableUxMitigation");
+		const auto catalogTwoArchive = directory / L"catalog-two.zip";
+		writeRawZip(catalogTwoArchive, { { L"manifest.json", catalogTwo.dump() }, { L"LICENSE", request.licenseText } });
+		const auto catalogTwoLoaded = PresetPackages::LoadArchive(catalogTwoArchive);
+		Check(!catalogTwoLoaded.settings.contains(Settings::Id::EnableUxMitigation));
+		Check(catalogTwoLoaded.settings.size() == Settings::PresetPackSettingCount(2));
+
 		auto earlierManifest = nlohmann::ordered_json::parse(loaded.manifestText);
 		earlierManifest["catalog_version"] = Settings::CatalogVersion + 1;
 		earlierManifest["settings"]["MINMAXBUTTONGLOWid"] = 93;

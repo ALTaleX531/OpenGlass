@@ -87,7 +87,7 @@ namespace OpenGlass::GlassIntegrity
 	HRESULT MyCDrawingContext_DrawVisualTree(
 		dwmcore::CDrawingContext* This,
 		dwmcore::CVisualTree* tree,
-		const D2D1_RECT_F& rectangle,
+		const DWM::MilRect3D& bounds,
 		const dwmcore::COcclusionContext* occlusionContext,
 		int clearMode,
 		float padding,
@@ -770,7 +770,7 @@ D2D1_RECT_F* GlassIntegrity::MyCTreeDirty_GetOptimizedRect(
 HRESULT GlassIntegrity::MyCDrawingContext_DrawVisualTree(
 	dwmcore::CDrawingContext* This,
 	dwmcore::CVisualTree* tree,
-	const D2D1_RECT_F& rectangle,
+	const DWM::MilRect3D& bounds,
 	const dwmcore::COcclusionContext* occlusionContext,
 	int clearMode,
 	float padding,
@@ -778,6 +778,7 @@ HRESULT GlassIntegrity::MyCDrawingContext_DrawVisualTree(
 )
 {
 	HRESULT hr{ S_OK };
+	const auto& rectangle = bounds.rectangle;
 
 	const auto safetyZonePoolCleanup = wil::scope_exit([]
 	{
@@ -844,7 +845,9 @@ HRESULT GlassIntegrity::MyCDrawingContext_DrawVisualTree(
 			g_safetyZonePool.Release(d2dContext, std::move(safetyZoneLayer));
 		});
 
-		D2D1_RECT_F extendedRectangle{};
+		// DrawVisualTree consumes all six coordinates, including during CVI capture.
+		// Expand only XY while preserving the caller's front/back depth interval.
+		auto extendedBounds = bounds;
 		if (
 			hr = safetyZoneLayer->Push(
 				context,
@@ -852,7 +855,7 @@ HRESULT GlassIntegrity::MyCDrawingContext_DrawVisualTree(
 				false,
 				rectangle,
 				expansion,
-				extendedRectangle
+				extendedBounds.rectangle
 			);
 			FAILED(hr)
 		)
@@ -861,7 +864,7 @@ HRESULT GlassIntegrity::MyCDrawingContext_DrawVisualTree(
 			break;
 		}
 
-		hr = g_CDrawingContext_DrawVisualTree_Org(This, tree, extendedRectangle, occlusionContext, clearMode, padding, visualOverride);
+		hr = g_CDrawingContext_DrawVisualTree_Org(This, tree, extendedBounds, occlusionContext, clearMode, padding, visualOverride);
 
 		LOG_IF_FAILED(This->ApplyRenderStateInternal(false)); // apply clip and other states
 		LOG_IF_FAILED(This->FlushD2D()); // flush previous draw calls
@@ -881,7 +884,7 @@ HRESULT GlassIntegrity::MyCDrawingContext_DrawVisualTree(
 	}
 	while (false);
 
-	hr = g_CDrawingContext_DrawVisualTree_Org(This, tree, rectangle, occlusionContext, clearMode, padding, visualOverride);
+	hr = g_CDrawingContext_DrawVisualTree_Org(This, tree, bounds, occlusionContext, clearMode, padding, visualOverride);
 
 	return hr;
 }

@@ -133,8 +133,13 @@ void GlassEngine::Startup()
 			GlassFrameDemodernizer::Startup();
 			GlassReflectionHandler::Startup();
 			transaction.Commit();
-			GlassKernel::RedrawAllTopLevelWindow(true);
 		}
+	}
+	{
+		const auto lock = wil::EnterCriticalSection(uDWM::CDesktopManager::s_csDwmInstance);
+		// The first redraw can discover lazy hooks. End the installation
+		// transaction before allowing their independent transactions to run.
+		GlassKernel::RedrawAllTopLevelWindow(true);
 	}
 #if defined(OPENGLASS_DWM_MILCOMP)
 	LOG_IF_FAILED(uDWM::CDesktopManager::GetInstance()->GetCompositor()->ForceRender());

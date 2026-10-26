@@ -8,6 +8,7 @@
 #include "Symbols.hpp"
 #include "PresetPackage.hpp"
 #include "ConfigurationResources.hpp"
+#include "UxMitigation.hpp"
 
 namespace OpenGlass
 {
@@ -135,6 +136,7 @@ namespace OpenGlass
 		// System Tab
 		wxCheckBox* m_chkDisableGlassOnBattery{ nullptr };
 		wxCheckListBox* m_clDisabledHooks{ nullptr };
+		wxCheckListBox* m_clUxMitigation{ nullptr };
 
 		// Diagnostics Tab
 		wxStaticText* m_lblWindowsTransparencyStatus{ nullptr };

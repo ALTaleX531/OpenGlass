@@ -23,7 +23,7 @@ from tests import test_audit_symbol_resolution as fixtures
 class MaintenanceTests(unittest.TestCase):
 	def setUp(self) -> None:
 		self.temporary = tempfile.TemporaryDirectory()
-		self.root = Path(self.temporary.name)
+		self.root = Path(self.temporary.name).resolve()
 
 	def tearDown(self) -> None:
 		self.temporary.cleanup()

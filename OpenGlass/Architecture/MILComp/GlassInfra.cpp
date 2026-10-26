@@ -12,6 +12,14 @@
 #include "SystemSettings.hpp"
 
 using namespace OpenGlass;
+
+HRESULT GlassInfra::UpdateGlassMarker(uDWM::CSolidRectangleVisual* visual, uDWM::CBaseGeometryProxy* geometry, std::bitset<2> status)
+{
+	winrt::com_ptr<uDWM::CCombinedGeometryProxy> marker;
+	RETURN_IF_FAILED(uDWM::ResourceHelper::CreateCombinedGeometry(geometry, nullptr, static_cast<D2D1_COMBINE_MODE>(status.to_ulong()), marker.put()));
+	return visual->UpdateClip(marker.get());
+}
+
 namespace OpenGlass::GlassInfra
 {
 	HRESULT MyCD2DContext_DestroyDeviceResources(dwmcore::CD2DContext* This);
@@ -38,6 +46,8 @@ namespace OpenGlass::GlassInfra
 					legacyVisual->ClearAll();
 				}
 			}
+			// update accent
+			window->OnAccentPolicyUpdated();
 			// update nc background
 			window->SetDirtyFlags(0x20000);
 			// update window visuals
@@ -99,6 +109,8 @@ void GlassInfra::Update(GlassEngine::UpdateType type)
 	}
 	if (type & GlassEngine::UpdateType::Backdrop)
 	{
+		Shared::g_uxMitigationFlags = GlassEngine::GetDwordFromRegistry(L"EnableUxMitigation", UxMitigation::DefaultFlags);
+
 		Shared::g_type = static_cast<Shared::GlassType>(std::clamp(GlassEngine::GetDwordFromRegistry(L"GlassType", 0), 0ul, 1ul));
 		Shared::g_transparencyEnabled = GlassEngine::GetPersonalizeKey() ? Util::IsTransparencyEnabled(GlassEngine::GetPersonalizeKey()) : true;
 

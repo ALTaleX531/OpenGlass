@@ -2,6 +2,8 @@
 #include "resource.h"
 #include "Shared.hpp"
 #include "ReflectionVisual.hpp"
+#include "GlassKernel.hpp"
+#include "GlassInfra.hpp"
 #include "PngAssetValidation.hpp"
 
 using namespace OpenGlass;
@@ -13,6 +15,179 @@ LPCVOID CReflectionVisual::s_originalVtable{};
 
 std::unordered_set<CReflectionVisual*> CReflectionVisual::s_activeList{};
 
+namespace
+{
+	using ReflectionLayers = std::vector<winrt::com_ptr<CReflectionVisual>>;
+	std::unordered_map<uDWM::CTopLevelWindow*, std::array<ReflectionLayers, 3>> g_windowReflections;
+
+	HRESULT DetachReflection(CReflectionVisual* reflection)
+	{
+		if (const auto parent = reflection->GetTransformParent())
+		{
+			return parent->GetVisualCollection()->Remove(reflection);
+		}
+		return S_OK;
+	}
+
+	bool HasReflections(const std::array<ReflectionLayers, 3>& slots)
+	{
+		return std::ranges::any_of(slots, [](const auto& layers) { return !layers.empty(); });
+	}
+}
+
+HRESULT CReflectionVisual::GetOrCreate(uDWM::CTopLevelWindow* window, Slot slot, uDWM::CRectangleVisual* parent, CReflectionVisual** result)
+{
+	auto& layers = g_windowReflections[window][static_cast<size_t>(slot)];
+	const auto it = std::ranges::find_if(layers, [parent](const auto& visual) { return visual->GetTransformParent() == parent; });
+	if (it != layers.end())
+	{
+		it->copy_to(result);
+		return S_OK;
+	}
+	winrt::com_ptr<CReflectionVisual> visual;
+	// Native subtree cloning can already have copied the reflection child.
+	// Adopt it once when registering this layer instead of inserting a duplicate.
+	visual.copy_from(Find(parent));
+	if (!visual)
+	{
+		RETURN_IF_FAILED(Create(visual.put()));
+		RETURN_IF_FAILED(parent->GetVisualCollection()->InsertRelative(visual.get(), nullptr, false, true));
+	}
+	layers.push_back(visual);
+	visual.copy_to(result);
+	return S_OK;
+}
+
+void CReflectionVisual::RemoveWindow(uDWM::CTopLevelWindow* window)
+{
+	RemoveSlot(window, Slot::NonClient);
+	RemoveSlot(window, Slot::ClientBlur);
+	RemoveSlot(window, Slot::Accent);
+}
+
+void CReflectionVisual::RemoveSlot(uDWM::CTopLevelWindow* window, Slot slot)
+{
+	if (const auto it = g_windowReflections.find(window); it != g_windowReflections.end())
+	{
+		auto& layers = it->second[static_cast<size_t>(slot)];
+		for (const auto& visual : layers)
+		{
+			THROW_IF_FAILED(DetachReflection(visual.get()));
+		}
+		layers.clear();
+		if (!HasReflections(it->second))
+		{
+			g_windowReflections.erase(it);
+		}
+	}
+}
+
+void CReflectionVisual::RemoveSlot(Slot slot)
+{
+	for (auto it = g_windowReflections.begin(); it != g_windowReflections.end();)
+	{
+		auto& layers = it->second[static_cast<size_t>(slot)];
+		for (const auto& visual : layers)
+		{
+			FAIL_FAST_IF_FAILED_MSG(DetachReflection(visual.get()), "Unable to remove a reflection visual during shutdown");
+		}
+		layers.clear();
+		if (!HasReflections(it->second))
+		{
+			it = g_windowReflections.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
+}
+
+void CReflectionVisual::RemoveChildren(uDWM::CVisual* parent)
+{
+	for (auto it = g_windowReflections.begin(); it != g_windowReflections.end();)
+	{
+		for (auto& layers : it->second)
+		{
+			std::erase_if(layers, [parent](const auto& visual)
+			{
+				if (visual->GetTransformParent() != parent)
+				{
+					return false;
+				}
+				FAIL_FAST_IF_FAILED_MSG(DetachReflection(visual.get()), "Unable to remove an accent reflection visual");
+				return true;
+			});
+		}
+		if (!HasReflections(it->second))
+		{
+			it = g_windowReflections.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
+}
+
+HRESULT CReflectionVisual::UpdateWindow(uDWM::CTopLevelWindow* window)
+{
+	if (const auto it = g_windowReflections.find(window); it != g_windowReflections.end())
+	{
+		for (size_t slot = 0; slot < it->second.size(); ++slot)
+		{
+			for (const auto& visual : it->second[slot])
+			{
+				if (visual->GetTransformParent())
+				{
+					RETURN_IF_FAILED(visual->UpdateForWindow(window, static_cast<Slot>(slot)));
+				}
+			}
+		}
+	}
+	return S_OK;
+}
+
+HRESULT CReflectionVisual::UpdateForWindow(uDWM::CTopLevelWindow* window, Slot slot)
+{
+	POINT offset;
+	if (slot == Slot::Accent)
+	{
+		// Accent's primary and transition backgrounds have independent origins
+		// and opacity. Their effect parent supplies opacity; each keeps its own child.
+		const auto effect = GetTransformParent();
+		const auto background = static_cast<uDWM::CNineGridVisual*>(effect->GetTransformParent());
+		if (!background)
+		{
+			return S_OK;
+		}
+		if (const auto preview = uDWM::CDesktopManager::GetInstance()->GetLivePreview();
+			preview && window->GetTransformParent() == preview->GetGlassRoot())
+		{
+			return S_OK;
+		}
+		const auto& rect = background->GetRect();
+		const SIZE size{ static_cast<LONG>(wil::rect_width(rect)), static_cast<LONG>(wil::rect_height(rect)) };
+		SetSize(&size);
+		offset = effect->GetLocalToParentVisualOffset(window->GetTransformParent());
+		// Rectangle origins are applied outside CVisual's POINT.
+		offset.x += static_cast<LONG>(rect.left);
+		offset.y += static_cast<LONG>(rect.top);
+	}
+	else
+	{
+		offset = GetLocalToParentVisualOffset(window->GetTransformParent());
+	}
+	RETURN_IF_FAILED(UpdateSurface(GlassInfra::GetOrCreateReflectionSurface()));
+	// Client blur carries the DPI-virtualization scale; the window itself may
+	// remain at unit scale. Cancel the carrier scale when placing its reflection.
+	const auto scale = slot == Slot::ClientBlur ? GetTransformParent()->GetScale() : window->GetScale();
+	RETURN_IF_FAILED(UpdateViewport(offset, Shared::g_reflectionParallaxIntensity, window->IsRTLMirrored(), GetWidth(), scale));
+	const auto status = GlassKernel::GetWindowStatus(window);
+	return UpdateOpacity((Shared::g_reflectionPolicy & Shared::ReflectionPolicy::NonClient) ?
+		GlassKernel::GetAdjustedReflectionIntensity(status.test(0), status.test(1)) : 0.f);
+}
+
 void CReflectionVisual::Register(CReflectionVisual* visual)
 {
 	s_activeList.emplace(visual);
@@ -21,6 +196,18 @@ void CReflectionVisual::Register(CReflectionVisual* visual)
 void CReflectionVisual::Unregister(CReflectionVisual* visual)
 {
 	s_activeList.erase(visual);
+}
+
+CReflectionVisual* CReflectionVisual::Find(uDWM::CVisual* parent)
+{
+	for (const auto visual : s_activeList)
+	{
+		if (visual->GetTransformParent() == parent)
+		{
+			return visual;
+		}
+	}
+	return nullptr;
 }
 
 void CReflectionVisual::EnsureCustomVtable(PVOID const* sourceVtable)
@@ -97,6 +284,7 @@ void CReflectionVisual::RemoveAll()
 			FAIL_FAST_IF_FAILED_MSG(parent->GetVisualCollection()->Remove(visual), "Unable to remove a reflection visual during shutdown");
 		}
 	}
+	g_windowReflections.clear();
 	s_activeList.clear();
 }
 
@@ -194,6 +382,8 @@ HRESULT CReflectionVisual::CreateSurface(abi::ICompositionSurface** surface) try
 	winrt::com_ptr<ID2D1DeviceContext> deviceContext{ nullptr };
 	POINT offset{ 0, 0 };
 	THROW_IF_FAILED(drawingSurfaceInterop->BeginDraw(nullptr, IID_PPV_ARGS(deviceContext.put()), &offset));
+	deviceContext->SetDpi(96.f, 96.f);
+	deviceContext->SetTransform(D2D1::Matrix3x2F::Translation(static_cast<float>(offset.x), static_cast<float>(offset.y)));
 	deviceContext->Clear();
 	winrt::com_ptr<ID2D1Bitmap1> bitmap{ nullptr };
 	RETURN_IF_FAILED(
@@ -266,25 +456,7 @@ HRESULT CReflectionVisual::UpdateViewport(
 	winrt::com_ptr<abi::ICompositionBrush> brush{};
 	THROW_IF_FAILED(GetBrush(brush.put()));
 	winrt::com_ptr<abi::ICompositionSurfaceBrush> surfaceBrush{};
-	if (!brush)
-	{
-		winrt::com_ptr<abi::ICompositionObject> compositionObject{ nullptr };
-		THROW_IF_FAILED(GetVisualProxy()->GetDCompVisualProxy()->QueryInterface(compositionObject.put()));
-		winrt::com_ptr<abi::ICompositor> compositor{ nullptr };
-		THROW_IF_FAILED(compositionObject->get_Compositor(compositor.put()));
-		THROW_IF_FAILED(compositor->CreateSurfaceBrush(surfaceBrush.put()));
-
-		THROW_IF_FAILED(surfaceBrush->put_Stretch(abi::CompositionStretch_None));
-		THROW_IF_FAILED(surfaceBrush->put_BitmapInterpolationMode(abi::CompositionBitmapInterpolationMode_Linear));
-		THROW_IF_FAILED(surfaceBrush->put_HorizontalAlignmentRatio(0.f));
-		THROW_IF_FAILED(surfaceBrush->put_VerticalAlignmentRatio(0.f));
-
-		THROW_IF_FAILED(SetBrush(brush.get()));
-	}
-	else
-	{
-		THROW_IF_FAILED(brush->QueryInterface(surfaceBrush.put()));
-	}
+	THROW_IF_FAILED(brush->QueryInterface(surfaceBrush.put()));
 
 	winrt::com_ptr<abi::ICompositionSurface> surface{};
 	THROW_IF_FAILED(surfaceBrush->get_Surface(surface.put()));
@@ -296,25 +468,7 @@ HRESULT CReflectionVisual::UpdateViewport(
 		winrt::com_ptr<abi::ICompositionSurfaceBrush2> surfaceBrush2{};
 		THROW_IF_FAILED(surfaceBrush->QueryInterface(surfaceBrush2.put()));
 
-		D2D1_RECT_F viewport{};
-		LONG left = offset.x;
-		if (mirrored)
-		{
-			left = GetSystemMetrics(SM_XVIRTUALSCREEN) + (GetSystemMetrics(SM_XVIRTUALSCREEN) + GetSystemMetrics(SM_CXVIRTUALSCREEN)) - (offset.x + width);
-		}
-		viewport.left = (GetSystemMetrics(SM_XVIRTUALSCREEN) - left) + ((left + width / 2.f) - (GetSystemMetrics(SM_XVIRTUALSCREEN) + GetSystemMetrics(SM_CXVIRTUALSCREEN) / 2.f)) * parallaxIntensity;
-		viewport.top = static_cast<float>(
-			GetSystemMetrics(SM_YVIRTUALSCREEN) -
-			offset.y
-		);
-
-		viewport.right = viewport.left + static_cast<float>(GetSystemMetrics(SM_CXVIRTUALSCREEN));
-		viewport.bottom = viewport.top + static_cast<float>(GetSystemMetrics(SM_CYVIRTUALSCREEN));
-
-		viewport.left /= static_cast<float>(scale.width);
-		viewport.top /= static_cast<float>(scale.height);
-		viewport.right /= static_cast<float>(scale.width);
-		viewport.bottom /= static_cast<float>(scale.height);
+		const auto viewport = GlassKernel::CalculateReflectionViewport(offset, parallaxIntensity, mirrored, width, scale);
 
 		THROW_IF_FAILED(surfaceBrush2->put_CenterPoint({ 0.f, 0.f }));
 		THROW_IF_FAILED(surfaceBrush2->put_Offset({ static_cast<float>(viewport.left), static_cast<float>(viewport.top) }));

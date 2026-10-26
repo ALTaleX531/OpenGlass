@@ -10,6 +10,10 @@
         "sha256": "e357e99069b27468cb409bc877d77d8995e1b3d3968b9364cadcf0f0fa615c38"
       },
       "symbols": {
+        "CAccent::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CAccent::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x2E490"
+        },
         "CAccent::SetClipRegion": {
           "name": "public: void __cdecl CAccent::SetClipRegion(class CBaseGeometryProxy * __ptr64) __ptr64",
           "rva": "0x3A23C"
@@ -33,6 +37,18 @@
         "CAnimatedGlassSheet::~CAnimatedGlassSheet": {
           "name": "public: virtual __cdecl CAnimatedGlassSheet::~CAnimatedGlassSheet(void) __ptr64",
           "rva": "0x933CC"
+        },
+        "CAtlasedRectsVisual::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CAtlasedRectsVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x17080"
+        },
+        "CAtlasedRectsVisual::SetClipMargins": {
+          "name": "public: long __cdecl CAtlasedRectsVisual::SetClipMargins(struct _MARGINS const * __ptr64) __ptr64",
+          "rva": "0x39184"
+        },
+        "CButton::Create": {
+          "name": "public: static long __cdecl CButton::Create(class CButton * __ptr64 * __ptr64)",
+          "rva": "0xF894"
         },
         "CButton::SetVisualStates": {
           "name": "public: long __cdecl CButton::SetVisualStates(class CBitmapSourceArray const & __ptr64,class CBitmapSourceArray const & __ptr64,class CBitmapSource * __ptr64,float) __ptr64",
@@ -85,6 +101,10 @@
         "CRenderDataVisual::ClearInstructions": {
           "name": "public: long __cdecl CRenderDataVisual::ClearInstructions(void) __ptr64",
           "rva": "0x22780"
+        },
+        "CRenderDataVisual::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CRenderDataVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x240B0"
         },
         "CRenderDataVisual::Create": {
           "name": "public: static long __cdecl CRenderDataVisual::Create(class CRenderDataVisual * __ptr64 * __ptr64)",
@@ -170,6 +190,10 @@
           "name": "protected: virtual __cdecl CTopLevelWindow::~CTopLevelWindow(void) __ptr64",
           "rva": "0x214C4"
         },
+        "CVisual::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x18FC0"
+        },
         "CVisual::RenderRecursive": {
           "name": "public: virtual long __cdecl CVisual::RenderRecursive(void) __ptr64",
           "rva": "0x28DE0"
@@ -221,6 +245,10 @@
         "sha256": "82a8fdd09e5ae5b5c2739fb6bb94f7f1fbd8c421fb7f06c5e38dbe952f81bce9"
       },
       "symbols": {
+        "CAccent::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CAccent::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x2E490"
+        },
         "CAccent::SetClipRegion": {
           "name": "public: void __cdecl CAccent::SetClipRegion(class CBaseGeometryProxy * __ptr64) __ptr64",
           "rva": "0x3A23C"
@@ -244,6 +272,18 @@
         "CAnimatedGlassSheet::~CAnimatedGlassSheet": {
           "name": "public: virtual __cdecl CAnimatedGlassSheet::~CAnimatedGlassSheet(void) __ptr64",
           "rva": "0x9346C"
+        },
+        "CAtlasedRectsVisual::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CAtlasedRectsVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x17100"
+        },
+        "CAtlasedRectsVisual::SetClipMargins": {
+          "name": "public: long __cdecl CAtlasedRectsVisual::SetClipMargins(struct _MARGINS const * __ptr64) __ptr64",
+          "rva": "0x39184"
+        },
+        "CButton::Create": {
+          "name": "public: static long __cdecl CButton::Create(class CButton * __ptr64 * __ptr64)",
+          "rva": "0xF894"
         },
         "CButton::SetVisualStates": {
           "name": "public: long __cdecl CButton::SetVisualStates(class CBitmapSourceArray const & __ptr64,class CBitmapSourceArray const & __ptr64,class CBitmapSource * __ptr64,float) __ptr64",
@@ -296,6 +336,10 @@
         "CRenderDataVisual::ClearInstructions": {
           "name": "public: long __cdecl CRenderDataVisual::ClearInstructions(void) __ptr64",
           "rva": "0x22784"
+        },
+        "CRenderDataVisual::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CRenderDataVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x240B0"
         },
         "CRenderDataVisual::Create": {
           "name": "public: static long __cdecl CRenderDataVisual::Create(class CRenderDataVisual * __ptr64 * __ptr64)",
@@ -381,6 +425,10 @@
           "name": "protected: virtual __cdecl CTopLevelWindow::~CTopLevelWindow(void) __ptr64",
           "rva": "0x21534"
         },
+        "CVisual::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x19040"
+        },
         "CVisual::RenderRecursive": {
           "name": "public: virtual long __cdecl CVisual::RenderRecursive(void) __ptr64",
           "rva": "0x28DE0"
@@ -432,6 +480,10 @@
         "sha256": "4e423c26cc158b78b5799daa6edaca2011c5fc2904ad8a7b67972499b3b64949"
       },
       "symbols": {
+        "CAccent::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CAccent::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x2EA90"
+        },
         "CAccent::SetClipRegion": {
           "name": "public: void __cdecl CAccent::SetClipRegion(class CBaseGeometryProxy * __ptr64) __ptr64",
           "rva": "0x3AAA4"
@@ -455,6 +507,18 @@
         "CAnimatedGlassSheet::~CAnimatedGlassSheet": {
           "name": "public: virtual __cdecl CAnimatedGlassSheet::~CAnimatedGlassSheet(void) __ptr64",
           "rva": "0x9369C"
+        },
+        "CAtlasedRectsVisual::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CAtlasedRectsVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x19220"
+        },
+        "CAtlasedRectsVisual::SetClipMargins": {
+          "name": "public: long __cdecl CAtlasedRectsVisual::SetClipMargins(struct _MARGINS const * __ptr64) __ptr64",
+          "rva": "0x39B24"
+        },
+        "CButton::Create": {
+          "name": "public: static long __cdecl CButton::Create(class CButton * __ptr64 * __ptr64)",
+          "rva": "0x28BF8"
         },
         "CButton::SetVisualStates": {
           "name": "public: long __cdecl CButton::SetVisualStates(class CBitmapSourceArray const & __ptr64,class CBitmapSourceArray const & __ptr64,class CBitmapSource * __ptr64,float) __ptr64",
@@ -507,6 +571,10 @@
         "CRenderDataVisual::ClearInstructions": {
           "name": "public: long __cdecl CRenderDataVisual::ClearInstructions(void) __ptr64",
           "rva": "0x2419C"
+        },
+        "CRenderDataVisual::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CRenderDataVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x25540"
         },
         "CRenderDataVisual::Create": {
           "name": "public: static long __cdecl CRenderDataVisual::Create(class CRenderDataVisual * __ptr64 * __ptr64)",
@@ -592,6 +660,10 @@
           "name": "protected: virtual __cdecl CTopLevelWindow::~CTopLevelWindow(void) __ptr64",
           "rva": "0x22F84"
         },
+        "CVisual::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x1A740"
+        },
         "CVisual::RenderRecursive": {
           "name": "public: virtual long __cdecl CVisual::RenderRecursive(void) __ptr64",
           "rva": "0x294F0"
@@ -643,6 +715,10 @@
         "sha256": "a43ab5d45fd64f14fbd3284186cf6cf1dbffaa59cae944f873fd0d1c25464fe2"
       },
       "symbols": {
+        "CAccent::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CAccent::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x2EB40"
+        },
         "CAccent::SetClipRegion": {
           "name": "public: void __cdecl CAccent::SetClipRegion(class CBaseGeometryProxy * __ptr64) __ptr64",
           "rva": "0x3AB54"
@@ -666,6 +742,18 @@
         "CAnimatedGlassSheet::~CAnimatedGlassSheet": {
           "name": "public: virtual __cdecl CAnimatedGlassSheet::~CAnimatedGlassSheet(void) __ptr64",
           "rva": "0x9367C"
+        },
+        "CAtlasedRectsVisual::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CAtlasedRectsVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x192D0"
+        },
+        "CAtlasedRectsVisual::SetClipMargins": {
+          "name": "public: long __cdecl CAtlasedRectsVisual::SetClipMargins(struct _MARGINS const * __ptr64) __ptr64",
+          "rva": "0x39BD4"
+        },
+        "CButton::Create": {
+          "name": "public: static long __cdecl CButton::Create(class CButton * __ptr64 * __ptr64)",
+          "rva": "0x28CA8"
         },
         "CButton::SetVisualStates": {
           "name": "public: long __cdecl CButton::SetVisualStates(class CBitmapSourceArray const & __ptr64,class CBitmapSourceArray const & __ptr64,class CBitmapSource * __ptr64,float) __ptr64",
@@ -718,6 +806,10 @@
         "CRenderDataVisual::ClearInstructions": {
           "name": "public: long __cdecl CRenderDataVisual::ClearInstructions(void) __ptr64",
           "rva": "0x2424C"
+        },
+        "CRenderDataVisual::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CRenderDataVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x255F0"
         },
         "CRenderDataVisual::Create": {
           "name": "public: static long __cdecl CRenderDataVisual::Create(class CRenderDataVisual * __ptr64 * __ptr64)",
@@ -803,6 +895,10 @@
           "name": "protected: virtual __cdecl CTopLevelWindow::~CTopLevelWindow(void) __ptr64",
           "rva": "0x23034"
         },
+        "CVisual::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x1A7F0"
+        },
         "CVisual::RenderRecursive": {
           "name": "public: virtual long __cdecl CVisual::RenderRecursive(void) __ptr64",
           "rva": "0x295A0"
@@ -854,6 +950,10 @@
         "sha256": "4c71a2f33a484d7f152f41fe04bca23ebabdc98a4f6da8c22770d03b771c2bd2"
       },
       "symbols": {
+        "CAccent::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CAccent::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x2EB20"
+        },
         "CAccent::SetClipRegion": {
           "name": "public: void __cdecl CAccent::SetClipRegion(class CBaseGeometryProxy * __ptr64) __ptr64",
           "rva": "0x3AB34"
@@ -877,6 +977,18 @@
         "CAnimatedGlassSheet::~CAnimatedGlassSheet": {
           "name": "public: virtual __cdecl CAnimatedGlassSheet::~CAnimatedGlassSheet(void) __ptr64",
           "rva": "0x9343C"
+        },
+        "CAtlasedRectsVisual::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CAtlasedRectsVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x192D0"
+        },
+        "CAtlasedRectsVisual::SetClipMargins": {
+          "name": "public: long __cdecl CAtlasedRectsVisual::SetClipMargins(struct _MARGINS const * __ptr64) __ptr64",
+          "rva": "0x39BB4"
+        },
+        "CButton::Create": {
+          "name": "public: static long __cdecl CButton::Create(class CButton * __ptr64 * __ptr64)",
+          "rva": "0x28CB8"
         },
         "CButton::SetVisualStates": {
           "name": "public: long __cdecl CButton::SetVisualStates(class CBitmapSourceArray const & __ptr64,class CBitmapSourceArray const & __ptr64,class CBitmapSource * __ptr64,float) __ptr64",
@@ -929,6 +1041,10 @@
         "CRenderDataVisual::ClearInstructions": {
           "name": "public: long __cdecl CRenderDataVisual::ClearInstructions(void) __ptr64",
           "rva": "0x2425C"
+        },
+        "CRenderDataVisual::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CRenderDataVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x25600"
         },
         "CRenderDataVisual::Create": {
           "name": "public: static long __cdecl CRenderDataVisual::Create(class CRenderDataVisual * __ptr64 * __ptr64)",
@@ -1013,6 +1129,10 @@
         "CTopLevelWindow::~CTopLevelWindow": {
           "name": "protected: virtual __cdecl CTopLevelWindow::~CTopLevelWindow(void) __ptr64",
           "rva": "0x23044"
+        },
+        "CVisual::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x1A7F0"
         },
         "CVisual::RenderRecursive": {
           "name": "public: virtual long __cdecl CVisual::RenderRecursive(void) __ptr64",
@@ -1065,6 +1185,10 @@
         "sha256": "88de8fe98508426c1c09b8240dc042c9f4a0d2f31006553b02f5c7ce5eee0354"
       },
       "symbols": {
+        "CAccent::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CAccent::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x2EB20"
+        },
         "CAccent::SetClipRegion": {
           "name": "public: void __cdecl CAccent::SetClipRegion(class CBaseGeometryProxy * __ptr64) __ptr64",
           "rva": "0x3AB34"
@@ -1088,6 +1212,18 @@
         "CAnimatedGlassSheet::~CAnimatedGlassSheet": {
           "name": "public: virtual __cdecl CAnimatedGlassSheet::~CAnimatedGlassSheet(void) __ptr64",
           "rva": "0x9343C"
+        },
+        "CAtlasedRectsVisual::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CAtlasedRectsVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x192D0"
+        },
+        "CAtlasedRectsVisual::SetClipMargins": {
+          "name": "public: long __cdecl CAtlasedRectsVisual::SetClipMargins(struct _MARGINS const * __ptr64) __ptr64",
+          "rva": "0x39BB4"
+        },
+        "CButton::Create": {
+          "name": "public: static long __cdecl CButton::Create(class CButton * __ptr64 * __ptr64)",
+          "rva": "0x28CB8"
         },
         "CButton::SetVisualStates": {
           "name": "public: long __cdecl CButton::SetVisualStates(class CBitmapSourceArray const & __ptr64,class CBitmapSourceArray const & __ptr64,class CBitmapSource * __ptr64,float) __ptr64",
@@ -1140,6 +1276,10 @@
         "CRenderDataVisual::ClearInstructions": {
           "name": "public: long __cdecl CRenderDataVisual::ClearInstructions(void) __ptr64",
           "rva": "0x2425C"
+        },
+        "CRenderDataVisual::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CRenderDataVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x25600"
         },
         "CRenderDataVisual::Create": {
           "name": "public: static long __cdecl CRenderDataVisual::Create(class CRenderDataVisual * __ptr64 * __ptr64)",
@@ -1225,6 +1365,10 @@
           "name": "protected: virtual __cdecl CTopLevelWindow::~CTopLevelWindow(void) __ptr64",
           "rva": "0x23044"
         },
+        "CVisual::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x1A7F0"
+        },
         "CVisual::RenderRecursive": {
           "name": "public: virtual long __cdecl CVisual::RenderRecursive(void) __ptr64",
           "rva": "0x295B0"
@@ -1276,6 +1420,10 @@
         "sha256": "6b8abd6b13760730efd498ecfa71c6890a9b9808ebdc73708d92cd1d35c883b1"
       },
       "symbols": {
+        "CAccent::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CAccent::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x2EA70"
+        },
         "CAccent::SetClipRegion": {
           "name": "public: void __cdecl CAccent::SetClipRegion(class CBaseGeometryProxy * __ptr64) __ptr64",
           "rva": "0x3AA84"
@@ -1299,6 +1447,18 @@
         "CAnimatedGlassSheet::~CAnimatedGlassSheet": {
           "name": "public: virtual __cdecl CAnimatedGlassSheet::~CAnimatedGlassSheet(void) __ptr64",
           "rva": "0x9346C"
+        },
+        "CAtlasedRectsVisual::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CAtlasedRectsVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x19200"
+        },
+        "CAtlasedRectsVisual::SetClipMargins": {
+          "name": "public: long __cdecl CAtlasedRectsVisual::SetClipMargins(struct _MARGINS const * __ptr64) __ptr64",
+          "rva": "0x39B04"
+        },
+        "CButton::Create": {
+          "name": "public: static long __cdecl CButton::Create(class CButton * __ptr64 * __ptr64)",
+          "rva": "0x28C08"
         },
         "CButton::SetVisualStates": {
           "name": "public: long __cdecl CButton::SetVisualStates(class CBitmapSourceArray const & __ptr64,class CBitmapSourceArray const & __ptr64,class CBitmapSource * __ptr64,float) __ptr64",
@@ -1351,6 +1511,10 @@
         "CRenderDataVisual::ClearInstructions": {
           "name": "public: long __cdecl CRenderDataVisual::ClearInstructions(void) __ptr64",
           "rva": "0x2418C"
+        },
+        "CRenderDataVisual::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CRenderDataVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x25530"
         },
         "CRenderDataVisual::Create": {
           "name": "public: static long __cdecl CRenderDataVisual::Create(class CRenderDataVisual * __ptr64 * __ptr64)",
@@ -1436,6 +1600,10 @@
           "name": "protected: virtual __cdecl CTopLevelWindow::~CTopLevelWindow(void) __ptr64",
           "rva": "0x22F74"
         },
+        "CVisual::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x1A720"
+        },
         "CVisual::RenderRecursive": {
           "name": "public: virtual long __cdecl CVisual::RenderRecursive(void) __ptr64",
           "rva": "0x29500"
@@ -1487,6 +1655,10 @@
         "sha256": "d6f24a1592098f236c15e6de069da1bfffd2664a6b63a3de7832674ccc4defb1"
       },
       "symbols": {
+        "CAccent::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CAccent::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x2EC10"
+        },
         "CAccent::SetClipRegion": {
           "name": "public: void __cdecl CAccent::SetClipRegion(class CBaseGeometryProxy * __ptr64) __ptr64",
           "rva": "0x3AC24"
@@ -1510,6 +1682,18 @@
         "CAnimatedGlassSheet::~CAnimatedGlassSheet": {
           "name": "public: virtual __cdecl CAnimatedGlassSheet::~CAnimatedGlassSheet(void) __ptr64",
           "rva": "0x9349C"
+        },
+        "CAtlasedRectsVisual::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CAtlasedRectsVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x193A0"
+        },
+        "CAtlasedRectsVisual::SetClipMargins": {
+          "name": "public: long __cdecl CAtlasedRectsVisual::SetClipMargins(struct _MARGINS const * __ptr64) __ptr64",
+          "rva": "0x39CA4"
+        },
+        "CButton::Create": {
+          "name": "public: static long __cdecl CButton::Create(class CButton * __ptr64 * __ptr64)",
+          "rva": "0x28DA8"
         },
         "CButton::SetVisualStates": {
           "name": "public: long __cdecl CButton::SetVisualStates(class CBitmapSourceArray const & __ptr64,class CBitmapSourceArray const & __ptr64,class CBitmapSource * __ptr64,float) __ptr64",
@@ -1562,6 +1746,10 @@
         "CRenderDataVisual::ClearInstructions": {
           "name": "public: long __cdecl CRenderDataVisual::ClearInstructions(void) __ptr64",
           "rva": "0x2432C"
+        },
+        "CRenderDataVisual::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CRenderDataVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x256D0"
         },
         "CRenderDataVisual::Create": {
           "name": "public: static long __cdecl CRenderDataVisual::Create(class CRenderDataVisual * __ptr64 * __ptr64)",
@@ -1647,6 +1835,10 @@
           "name": "protected: virtual __cdecl CTopLevelWindow::~CTopLevelWindow(void) __ptr64",
           "rva": "0x23114"
         },
+        "CVisual::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x1A8C0"
+        },
         "CVisual::RenderRecursive": {
           "name": "public: virtual long __cdecl CVisual::RenderRecursive(void) __ptr64",
           "rva": "0x296A0"
@@ -1698,6 +1890,10 @@
         "sha256": "c955d84d4018f20cf0ebd55e63c3efb175a7ff4ddf98863d247c174ce0d9fc70"
       },
       "symbols": {
+        "CAccent::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CAccent::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x2B6B0"
+        },
         "CAccent::SetClipRegion": {
           "name": "public: void __cdecl CAccent::SetClipRegion(class CBaseGeometryProxy * __ptr64) __ptr64",
           "rva": "0x3B0D0"
@@ -1721,6 +1917,18 @@
         "CAnimatedGlassSheet::~CAnimatedGlassSheet": {
           "name": "public: virtual __cdecl CAnimatedGlassSheet::~CAnimatedGlassSheet(void) __ptr64",
           "rva": "0x93A4C"
+        },
+        "CAtlasedRectsVisual::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CAtlasedRectsVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x165A0"
+        },
+        "CAtlasedRectsVisual::SetClipMargins": {
+          "name": "public: long __cdecl CAtlasedRectsVisual::SetClipMargins(struct _MARGINS const * __ptr64) __ptr64",
+          "rva": "0x3A184"
+        },
+        "CButton::Create": {
+          "name": "public: static long __cdecl CButton::Create(class CButton * __ptr64 * __ptr64)",
+          "rva": "0xF0A4"
         },
         "CButton::SetVisualStates": {
           "name": "public: long __cdecl CButton::SetVisualStates(class CBitmapSourceArray const & __ptr64,class CBitmapSourceArray const & __ptr64,class CBitmapSource * __ptr64,float) __ptr64",
@@ -1773,6 +1981,10 @@
         "CRenderDataVisual::ClearInstructions": {
           "name": "public: long __cdecl CRenderDataVisual::ClearInstructions(void) __ptr64",
           "rva": "0x2204C"
+        },
+        "CRenderDataVisual::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CRenderDataVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x23500"
         },
         "CRenderDataVisual::Create": {
           "name": "public: static long __cdecl CRenderDataVisual::Create(class CRenderDataVisual * __ptr64 * __ptr64)",
@@ -1858,6 +2070,10 @@
           "name": "protected: virtual __cdecl CTopLevelWindow::~CTopLevelWindow(void) __ptr64",
           "rva": "0x20E34"
         },
+        "CVisual::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x17AC0"
+        },
         "CVisual::RenderRecursive": {
           "name": "public: virtual long __cdecl CVisual::RenderRecursive(void) __ptr64",
           "rva": "0x28F30"
@@ -1909,6 +2125,10 @@
         "sha256": "6a1438a6f9545f82d0e318e0cbe04fbc92e74c1233403b09dede65618857819c"
       },
       "symbols": {
+        "CAccent::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CAccent::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x2B6B0"
+        },
         "CAccent::SetClipRegion": {
           "name": "public: void __cdecl CAccent::SetClipRegion(class CBaseGeometryProxy * __ptr64) __ptr64",
           "rva": "0x3B100"
@@ -1932,6 +2152,18 @@
         "CAnimatedGlassSheet::~CAnimatedGlassSheet": {
           "name": "public: virtual __cdecl CAnimatedGlassSheet::~CAnimatedGlassSheet(void) __ptr64",
           "rva": "0x93A8C"
+        },
+        "CAtlasedRectsVisual::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CAtlasedRectsVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x165A0"
+        },
+        "CAtlasedRectsVisual::SetClipMargins": {
+          "name": "public: long __cdecl CAtlasedRectsVisual::SetClipMargins(struct _MARGINS const * __ptr64) __ptr64",
+          "rva": "0x3A184"
+        },
+        "CButton::Create": {
+          "name": "public: static long __cdecl CButton::Create(class CButton * __ptr64 * __ptr64)",
+          "rva": "0xF0A4"
         },
         "CButton::SetVisualStates": {
           "name": "public: long __cdecl CButton::SetVisualStates(class CBitmapSourceArray const & __ptr64,class CBitmapSourceArray const & __ptr64,class CBitmapSource * __ptr64,float) __ptr64",
@@ -1984,6 +2216,10 @@
         "CRenderDataVisual::ClearInstructions": {
           "name": "public: long __cdecl CRenderDataVisual::ClearInstructions(void) __ptr64",
           "rva": "0x2204C"
+        },
+        "CRenderDataVisual::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CRenderDataVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x23500"
         },
         "CRenderDataVisual::Create": {
           "name": "public: static long __cdecl CRenderDataVisual::Create(class CRenderDataVisual * __ptr64 * __ptr64)",
@@ -2069,6 +2305,10 @@
           "name": "protected: virtual __cdecl CTopLevelWindow::~CTopLevelWindow(void) __ptr64",
           "rva": "0x20E34"
         },
+        "CVisual::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x17AC0"
+        },
         "CVisual::RenderRecursive": {
           "name": "public: virtual long __cdecl CVisual::RenderRecursive(void) __ptr64",
           "rva": "0x28F30"
@@ -2120,6 +2360,10 @@
         "sha256": "a50268a3aff5bd3250fb97b10679768aa16de05ea8ddf3a7da669be2b43e9f1c"
       },
       "symbols": {
+        "CAccent::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CAccent::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x2D0B0"
+        },
         "CAccent::SetClipRegion": {
           "name": "public: void __cdecl CAccent::SetClipRegion(class CBaseGeometryProxy * __ptr64) __ptr64",
           "rva": "0x3A87C"
@@ -2143,6 +2387,18 @@
         "CAnimatedGlassSheet::~CAnimatedGlassSheet": {
           "name": "public: virtual __cdecl CAnimatedGlassSheet::~CAnimatedGlassSheet(void) __ptr64",
           "rva": "0x936EC"
+        },
+        "CAtlasedRectsVisual::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CAtlasedRectsVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x16C10"
+        },
+        "CAtlasedRectsVisual::SetClipMargins": {
+          "name": "public: long __cdecl CAtlasedRectsVisual::SetClipMargins(struct _MARGINS const * __ptr64) __ptr64",
+          "rva": "0x39714"
+        },
+        "CButton::Create": {
+          "name": "public: static long __cdecl CButton::Create(class CButton * __ptr64 * __ptr64)",
+          "rva": "0x2686C"
         },
         "CButton::SetVisualStates": {
           "name": "public: long __cdecl CButton::SetVisualStates(class CBitmapSourceArray const & __ptr64,class CBitmapSourceArray const & __ptr64,class CBitmapSource * __ptr64,float) __ptr64",
@@ -2195,6 +2451,10 @@
         "CRenderDataVisual::ClearInstructions": {
           "name": "public: long __cdecl CRenderDataVisual::ClearInstructions(void) __ptr64",
           "rva": "0x212F4"
+        },
+        "CRenderDataVisual::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CRenderDataVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x23350"
         },
         "CRenderDataVisual::Create": {
           "name": "public: static long __cdecl CRenderDataVisual::Create(class CRenderDataVisual * __ptr64 * __ptr64)",
@@ -2279,6 +2539,10 @@
         "CTopLevelWindow::~CTopLevelWindow": {
           "name": "protected: virtual __cdecl CTopLevelWindow::~CTopLevelWindow(void) __ptr64",
           "rva": "0x21BE8"
+        },
+        "CVisual::CloneVisualTree_Pre19041": {
+          "name": "public: virtual long __cdecl CVisual::CloneVisualTree(class CVisual * __ptr64 * __ptr64,bool,bool,bool) __ptr64",
+          "rva": "0x18130"
         },
         "CVisual::RenderRecursive": {
           "name": "public: virtual long __cdecl CVisual::RenderRecursive(void) __ptr64",

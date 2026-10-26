@@ -198,6 +198,26 @@
         }
       ],
       "notes": "CButton glow — see PR #287\nCButton::DrawStateW — visual state flags for hover/press detection"
+    },
+    {
+      "name": "CButton_GlowBitmap",
+      "id": "CButton_GlowBitmap",
+      "kind": "field",
+      "type": "CBitmapSource*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 368,
+              "until": {
+                "build": 19041
+              }
+            }
+          ]
+        }
+      ],
+      "notes": "17763.719 SetVisualStates retains its third bitmap argument here; DrawStateW consumes it for the hot/pressed native glow. The 17763.719/18362.267 constructors independently zero +368 and DrawStateW reads the same field. Cloning retains it through SetVisualStates, not a raw pointer assignment."
     }
   ]
 }

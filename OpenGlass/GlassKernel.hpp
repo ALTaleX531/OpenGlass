@@ -1,9 +1,17 @@
 #pragma once
 #include "framework.hpp"
 #include "cpprt.hpp"
+#include <bitset>
+
+namespace OpenGlass::uDWM
+{
+	struct CTopLevelWindow;
+}
 
 namespace OpenGlass::GlassKernel
 {
+	std::bitset<2> GetWindowStatus(const uDWM::CTopLevelWindow* window, bool nativeActive);
+	std::bitset<2> GetWindowStatus(uDWM::CTopLevelWindow* window);
 	void RedrawAllTopLevelWindow(bool deepRedraw);
 	float GetBlurExpansion();
 
@@ -28,4 +36,11 @@ namespace OpenGlass::GlassKernel
 		bool livePreview
 	);
 	float GetAdjustedReflectionIntensity(bool active, bool maximized);
+	D2D1_RECT_F CalculateReflectionViewport(
+		const POINT& offset,
+		float parallaxIntensity,
+		bool mirrored,
+		LONG width,
+		const D2D1_SIZE_F& scale
+	);
 }

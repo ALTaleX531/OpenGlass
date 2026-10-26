@@ -419,7 +419,7 @@ namespace OpenGlass::dwmcore
 	using CDrawingContext_DrawVisualTree_t = HRESULT(*)(
 		CDrawingContext*,
 		CVisualTree*,
-		const D2D1_RECT_F&,
+		const MilRect3D&,
 		const COcclusionContext*,
 		int,
 		float,

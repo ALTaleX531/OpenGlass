@@ -1,0 +1,93 @@
+{
+  "layouts": [
+    {
+      "name": "CLivePreview_AnimatedWindows",
+      "id": "CLivePreview_AnimatedWindows",
+      "kind": "field",
+      "type": "DynArray<LivePreviewVisual>",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 208,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "28000.1/1896 constructor initializes the array at +208; FadeOutToGlass and ClearAnimatedVisuals agree on 40-byte records, normal clone +8 and glass clone +16."
+    },
+    {
+      "name": "CLivePreview_ResourcesBegin",
+      "id": "CLivePreview_ResourcesBegin",
+      "kind": "field",
+      "type": "LivePreviewResource*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 272,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "UpdateResources/ValidateVisual walk 96-byte records between +272 and +280; constructor and resource copy/destruction independently confirm the two visual/brush pairs."
+    },
+    {
+      "name": "CLivePreview_ResourcesEnd",
+      "id": "CLivePreview_ResourcesEnd",
+      "kind": "field",
+      "type": "LivePreviewResource*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 280,
+              "otherwise": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "CLivePreview_Timeline",
+      "id": "CLivePreview_Timeline",
+      "kind": "field",
+      "type": "CLivePreviewTimeline*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 328,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "Initialize writes +328; FadeOutToGlass/ValidateVisual use the same timeline for restart and opacity."
+    },
+    {
+      "name": "CLivePreview_GlassRoot",
+      "id": "CLivePreview_GlassRoot",
+      "kind": "field",
+      "type": "CContainerVisual*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 360,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "28000.1/1896/3231 EnsureResources creates the glass canvas at +360. UpdateResourcesForMonitor captures the same field; OnWindowShowHide inserts glass-only clones there."
+    }
+  ]
+}

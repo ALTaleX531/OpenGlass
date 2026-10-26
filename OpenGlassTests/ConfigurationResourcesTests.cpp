@@ -142,6 +142,26 @@ namespace OpenGlassTests
 		Check(registryCalls == 1 && colorCalls == 1 && !recovered.HasRecovery());
 		Check(ManagedFiles::Read(reflection) == snapshot.assets.at("assets/reflection.png"));
 		resources.Accept();
+		// Published recovery IDs must still load after adding catalog settings.
+		resources.Begin();
+		const auto oldBytes = ManagedFiles::Read(recoveryPath);
+		auto oldRecord = nlohmann::json::parse(reinterpret_cast<const char*>(oldBytes.data()), reinterpret_cast<const char*>(oldBytes.data()) + oldBytes.size());
+		oldRecord["registry"] = nlohmann::json::array({
+			{ { "user", true }, { "id", 28 }, { "name", "CustomThemeReflection" }, { "present", false }, { "type", 0 }, { "bytes", nlohmann::json::array() } },
+			{ { "user", true }, { "id", 53 }, { "name", "EnableTransparency" }, { "present", true }, { "type", REG_DWORD }, { "bytes", { 0, 0, 0, 0 } } }
+		});
+		std::filesystem::remove(recoveryPath);
+		const auto oldText = oldRecord.dump();
+		ManagedFiles::Write(recoveryPath, { reinterpret_cast<const std::byte*>(oldText.data()), oldText.size() });
+		registryCalls = 0;
+		Check(recovered.Recover([&](auto scope, auto id, const auto& value)
+		{
+			++registryCalls;
+			return scope == Settings::Scope::User && ((id == Settings::Id::CustomThemeReflection && !value.present)
+				|| (id == Settings::Id::EnableTransparency && value.present && value.type == REG_DWORD && value.bytes == std::vector<BYTE>{ 0, 0, 0, 0 }));
+		}, [](const auto&) { return false; }));
+		Check(registryCalls == 2 && !recovered.HasRecovery());
+		resources.Accept();
 		// Round-trip independent Explorer/DWM Accent identities, including absence and raw types.
 		for (const bool dwm : { false, true })
 		for (const auto& accent : { RegistryConfig::RawValue{}, RegistryConfig::RawValue{ true, REG_DWORD, { 1, 2, 3, 255 } },

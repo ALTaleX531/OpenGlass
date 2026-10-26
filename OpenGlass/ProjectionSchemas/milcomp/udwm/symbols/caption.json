@@ -61,7 +61,52 @@
         }
       ],
       "requirement": "required",
-      "kind": "raw"
+      "kind": "raw",
+      "notes": "28000.1/1896/3231: CloneVisualTreeForLivePreview passes bit 2 for ordinary clones and bits 2|8 for glass-only clones. Parts 9..17 are squeegees; selection alone does not restore their drawing because ThemePart::Generate suppresses them. ClonePrimitive consumes only AL after ShouldClone; the initialization chain does not use the residual CloneOptions register."
+    },
+    {
+      "name": "Symbol_CNineGridImagePrimitive_ClonePrimitive",
+      "id": "CNineGridImagePrimitive::ClonePrimitive",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CNineGridImagePrimitive::ClonePrimitive",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: virtual long __cdecl CNineGridImagePrimitive::ClonePrimitive(class CPrimitive * __ptr64 * __ptr64,enum CloneOptions) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function",
+      "notes": "28000.3231: creates a native CNineGridImagePrimitive and copies base position/size/insets, hidden margins, opacity and CBitmapSource. The base Generate path draws the atlas pixels; CThemePartPrimitive::Generate suppresses squeegees instead. The copy does not retain a theme-part identity or module-owned vtable."
+    },
+    {
+      "name": "Symbol_CThemePartPrimitive_ClonePrimitive",
+      "id": "CThemePartPrimitive::ClonePrimitive",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "CThemePartPrimitive_ClonePrimitive_t",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: virtual long __cdecl CThemePartPrimitive::ClonePrimitive(class CPrimitive * __ptr64 * __ptr64,enum CloneOptions) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw",
+      "notes": "28000.3231: CPrimitiveGroupVisual::InitializeVisualTreeClone calls the +8 virtual slot, consumes HRESULT and the output pointer, and retains continuation state in nonvolatile registers/stack. No private volatile-register dependency at this virtual call. Squeegee copies for options 10/11 use the native nine-grid clone to bypass ThemePart::Generate suppression; other primitives retain their native class and selection."
     },
     {
       "name": "Symbol_CButton_vftable",

@@ -125,6 +125,24 @@
         }
       ],
       "notes": "CWindowList::CheckForMaximizedChange\ns_pDesktopManagerInstance[N] = hasMaximized"
+    },
+    {
+      "name": "CDesktopManager_LivePreview",
+      "id": "CDesktopManager_LivePreview",
+      "kind": "field",
+      "type": "CLivePreview*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 456,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "Initialize passes this+456 to CLivePreview::Create; CTopLevelWindow::LivePreviewAnimation_Flipped follows the same singleton to its timeline."
     }
   ]
 }

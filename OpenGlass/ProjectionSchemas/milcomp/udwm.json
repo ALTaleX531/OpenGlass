@@ -12,9 +12,11 @@
     28000
   ],
   "symbols": [
+    "udwm/symbols/accent.json",
     "udwm/symbols/caption.json",
     "udwm/symbols/colorization.json",
     "udwm/symbols/desktop.json",
+    "udwm/symbols/live-preview.json",
     "udwm/symbols/nonclient.json",
     "udwm/symbols/resources.json",
     "udwm/symbols/top-level-window.json",
@@ -22,6 +24,7 @@
     "udwm/symbols/window-frame.json"
   ],
   "layouts": [
+    "udwm/layouts/CAccent.json",
     "udwm/layouts/CBaseObject.json",
     "udwm/layouts/CButton.json",
     "udwm/layouts/CCompositor.json",
@@ -30,6 +33,7 @@
     "udwm/layouts/CGlassColorizationResources.json",
     "udwm/layouts/CGraphicsDeviceManager.json",
     "udwm/layouts/CLegacyNonClientBackground.json",
+    "udwm/layouts/CLivePreview.json",
     "udwm/layouts/CRectangleVisual.json",
     "udwm/layouts/CResource.json",
     "udwm/layouts/CResourceProxy.json",

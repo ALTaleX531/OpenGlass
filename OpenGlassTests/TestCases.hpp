@@ -21,6 +21,8 @@ namespace OpenGlassTests
 	void TestColorizationPresets();
 	void TestBlurSettings();
 	void TestSettingsCatalog();
+	void TestAccentWhitelist();
+	void TestWindowStateOverrides();
 	void TestTransparencyRegistry();
 	void TestConfigurationMergePolicy();
 	void TestPreviewJournal();

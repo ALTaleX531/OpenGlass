@@ -74,6 +74,8 @@
     <ClCompile Include="ColorizationPresetsTests.cpp" />
     <ClCompile Include="BlurSettingsTests.cpp" />
     <ClCompile Include="SettingsCatalogTests.cpp" />
+    <ClCompile Include="UxMitigationTests.cpp" />
+    <ClCompile Include="WindowStateTests.cpp" />
     <ClCompile Include="RegistryConfigTests.cpp" />
     <ClCompile Include="PreviewJournalTests.cpp" />
     <ClCompile Include="EffectiveConfigurationTests.cpp" />

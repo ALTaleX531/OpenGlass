@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Shared.hpp"
 #include "GlassFrameHandler.hpp"
+#include "AccentOverrider.hpp"
 #include "GlassKernel.hpp"
 #include "GlassInfra.hpp"
 #include "uDwmProjection.hpp"
@@ -117,171 +118,21 @@ namespace OpenGlass::GlassFrameHandler
 		g_effectVisualMap.clear();
 	}
 
-	std::unordered_map<uDWM::CTopLevelWindow*, std::array<winrt::com_ptr<CReflectionVisual>, 2>> g_reflectionVisualMap{};
-	winrt::com_ptr<CReflectionVisual> GetOrCreateReflectionVisual(uDWM::CTopLevelWindow* window, int index, uDWM::CRectangleVisual* effectVisual, bool createIfNecessary)
-	{
-		if (createIfNecessary)
-		{
-			auto& reflectionVisual = g_reflectionVisualMap[window][index];
-			if (!reflectionVisual)
-			{
-				THROW_IF_FAILED(
-					CReflectionVisual::Create(
-						reflectionVisual.put()
-					)
-				);
-				THROW_IF_FAILED(
-					effectVisual->GetVisualCollection()->InsertRelative(
-						reflectionVisual.get(),
-						nullptr,
-						false,
-						true
-					)
-				);
-			}
-
-			return reflectionVisual;
-		}
-
-		const auto it = g_reflectionVisualMap.find(window);
-		return it == g_reflectionVisualMap.end() ? nullptr : it->second[index];
-	}
-	void RemoveReflectionVisual(uDWM::CTopLevelWindow* window, int index)
-	{
-		if (const auto it = g_reflectionVisualMap.find(window); it != g_reflectionVisualMap.end())
-		{
-			if (index >= 0)
-			{
-				auto& reflectionVisual = it->second[index];
-				if (reflectionVisual)
-				{
-					const auto parent = reflectionVisual->GetTransformParent();
-					if (parent)
-					{
-						THROW_IF_FAILED(parent->GetVisualCollection()->Remove(reflectionVisual.get()));
-					}
-					reflectionVisual = nullptr;
-				}
-			}
-			else
-			{
-				for (auto& reflectionVisual : it->second)
-				{
-					if (reflectionVisual)
-					{
-						const auto parent = reflectionVisual->GetTransformParent();
-						if (parent)
-						{
-							THROW_IF_FAILED(parent->GetVisualCollection()->Remove(reflectionVisual.get()));
-						}
-						reflectionVisual = nullptr;
-					}
-				}
-				g_reflectionVisualMap.erase(it);
-			}
-		}
-	}
-	void RemoveAllReflectionVisuals()
-	{
-		for (const auto& [window, reflectionVisuals] : g_reflectionVisualMap)
-		{
-			for (const auto& reflectionVisual : reflectionVisuals)
-			{
-				if (reflectionVisual)
-				{
-					const auto parent = reflectionVisual->GetTransformParent();
-					if (parent)
-					{
-						FAIL_FAST_IF_FAILED_MSG(parent->GetVisualCollection()->Remove(reflectionVisual.get()), "Unable to remove a reflection visual during shutdown");
-					}
-				}
-			}
-		}
-		g_reflectionVisualMap.clear();
-	}
-
-	HRESULT UpdateReflectionViewport(uDWM::CTopLevelWindow* window);
+	HRESULT UpdateWindowVisuals(uDWM::CTopLevelWindow* window);
 
 	RECT g_innerBorderRect{};
 	RECT g_outerBorderRect{};
 }
 
-HRESULT GlassFrameHandler::UpdateReflectionViewport(uDWM::CTopLevelWindow* window)
+HRESULT GlassFrameHandler::UpdateWindowVisuals(uDWM::CTopLevelWindow* window)
 {
-	const auto opacity =
-		Shared::g_reflectionPolicy & Shared::ReflectionPolicy::NonClient ?
-		GlassKernel::GetAdjustedReflectionIntensity(
-			window->TreatAsActiveWindow(),
-			window->TreatAsMaximized()
-		) :
-		0.f;
-	const auto windowOffset = window->GetOffset();
-	if (windowOffset.x == -32000 && windowOffset.y == -32000)
+	const auto offset = window->GetOffset();
+	if (offset.x == -32000 && offset.y == -32000)
 	{
 		return S_OK;
 	}
-
-	if (
-		const auto legacyVisual = window->GetLegacyVisual();
-		legacyVisual
-	)
-	{
-		const auto effectVisual = GetOrCreateEffectVisual(legacyVisual, false);
-		if (
-			const auto reflectionVisual = GetOrCreateReflectionVisual(window, 0, nullptr, false);
-			reflectionVisual
-		)
-		{
-			RETURN_IF_FAILED(reflectionVisual->UpdateSurface(GlassInfra::GetOrCreateReflectionSurface()));
-
-			RETURN_IF_FAILED(
-				reflectionVisual->UpdateViewport(
-					reflectionVisual->GetLocalToParentVisualOffset(window->GetTransformParent()),
-					Shared::g_reflectionParallaxIntensity,
-					window->IsRTLMirrored(),
-					effectVisual->GetSize().cx,
-					window->GetScale()
-				)
-			);
-
-			RETURN_IF_FAILED(
-				reflectionVisual->UpdateOpacity(
-					opacity
-				)
-			);
-		}
-	}
-	if (
-		const auto clientBlurVisual = window->GetClientBlurVisual();
-		clientBlurVisual
-	)
-	{
-		if (
-			const auto reflectionVisual = GetOrCreateReflectionVisual(window, 1, nullptr, false);
-			reflectionVisual
-		)
-		{
-			RETURN_IF_FAILED(reflectionVisual->UpdateSurface(GlassInfra::GetOrCreateReflectionSurface()));
-
-			RETURN_IF_FAILED(
-				reflectionVisual->UpdateViewport(
-					reflectionVisual->GetLocalToParentVisualOffset(window->GetTransformParent()),
-					Shared::g_reflectionParallaxIntensity,
-					window->IsRTLMirrored(),
-					clientBlurVisual->GetSize().cx,
-					window->GetScale()
-				)
-			);
-
-			RETURN_IF_FAILED(
-				reflectionVisual->UpdateOpacity(
-					opacity
-				)
-			);
-		}
-	}
-
-	return S_OK;
+	RETURN_IF_FAILED(AccentOverrider::UpdateMarkers(window));
+	return CReflectionVisual::UpdateWindow(window);
 }
 
 void GlassFrameHandler::MyCGlassColorizationParameters_AdjustWindowColorization(
@@ -291,8 +142,10 @@ void GlassFrameHandler::MyCGlassColorizationParameters_AdjustWindowColorization(
 	UINT flags
 )
 {
-	const auto active = (flags & 1) != 0;
-	const auto maximized = GlassInfra::g_window ? GlassInfra::g_window->TreatAsMaximized() : false;
+	const auto status = GlassInfra::g_window ?
+		GlassKernel::GetWindowStatus(GlassInfra::g_window, (flags & 1) != 0) : std::bitset<2>{ flags & 1u };
+	const auto active = status.test(0);
+	const auto maximized = status.test(1);
 
 	This->color = Color::ToAbgr(
 		Color::scRGBTosRGB(
@@ -325,18 +178,14 @@ HRESULT GlassFrameHandler::MyCChannel_CombinedGeometryUpdate(
 {
 	if (GlassInfra::g_window)
 	{
-		std::bitset<2> windowStatus{};
-		windowStatus.set(0, GlassInfra::g_window->TreatAsActiveWindow());
-		windowStatus.set(1, GlassInfra::g_window->TreatAsMaximized());
-
-		mode = static_cast<D2D1_COMBINE_MODE>(windowStatus.to_ulong());
+		mode = static_cast<D2D1_COMBINE_MODE>(GlassKernel::GetWindowStatus(GlassInfra::g_window).to_ulong());
 	}
 
 	return g_CChannel_CombinedGeometryUpdate_Org(This, handleId, mode, geometry1HandleId, geometry2HandleId);
 }
 void GlassFrameHandler::MyCLegacyNonClientBackground_ClearAll(uDWM::CLegacyNonClientBackground* This)
 {
-	RemoveReflectionVisual(uDWM::TryGetWindowFromVisual(This), 0);
+	CReflectionVisual::RemoveSlot(uDWM::TryGetWindowFromVisual(This), CReflectionVisual::Slot::NonClient);
 	RemoveEffectVisual(This);
 	return g_CLegacyNonClientBackground_ClearAll_Org(This);
 }
@@ -356,7 +205,8 @@ HRESULT GlassFrameHandler::MyCLegacyNonClientBackground_SetCaptionRect(uDWM::CLe
 	if (!IsRectEmpty(&g_outerBorderRect))
 	{
 		const auto effectVisual = GetOrCreateEffectVisual(This, true);
-		const auto reflectionVisual = GetOrCreateReflectionVisual(window, 0, effectVisual.get(), true);
+		winrt::com_ptr<CReflectionVisual> reflectionVisual;
+		RETURN_IF_FAILED(CReflectionVisual::GetOrCreate(window, CReflectionVisual::Slot::NonClient, effectVisual.get(), reflectionVisual.put()));
 
 		wil::unique_hrgn windowRgn{ nullptr };
 		wil::unique_hrgn clientRgn{ nullptr };
@@ -418,38 +268,15 @@ HRESULT GlassFrameHandler::MyCLegacyNonClientBackground_SetCaptionRect(uDWM::CLe
 		winrt::com_ptr<uDWM::CRgnGeometryProxy> regionGeometry{};
 		RETURN_IF_FAILED(uDWM::ResourceHelper::CreateGeometryFromHRGN(windowRgn.get(), regionGeometry.put()));
 
-		winrt::com_ptr<uDWM::CCombinedGeometryProxy> combinedGeometry{};
-		RETURN_IF_FAILED(uDWM::ResourceHelper::CreateCombinedGeometry(regionGeometry.get(), nullptr, D2D1_COMBINE_MODE_INTERSECT, combinedGeometry.put()));
-		RETURN_IF_FAILED(effectVisual->UpdateClip(combinedGeometry.get()));
+		RETURN_IF_FAILED(GlassInfra::UpdateGlassMarker(effectVisual.get(), regionGeometry.get(), GlassKernel::GetWindowStatus(window)));
 
 		reflectionVisual->SetSize(&size);
 
-		RETURN_IF_FAILED(reflectionVisual->UpdateSurface(GlassInfra::GetOrCreateReflectionSurface()));
-
-		RETURN_IF_FAILED(
-			reflectionVisual->UpdateViewport(
-				reflectionVisual->GetLocalToParentVisualOffset(window->GetTransformParent()),
-				Shared::g_reflectionParallaxIntensity,
-				window->IsRTLMirrored(),
-				size.cx,
-				window->GetScale()
-			)
-		);
-
-		RETURN_IF_FAILED(
-			reflectionVisual->UpdateOpacity(
-				Shared::g_reflectionPolicy & Shared::ReflectionPolicy::NonClient ?
-				GlassKernel::GetAdjustedReflectionIntensity(
-					window->TreatAsActiveWindow(),
-					window->TreatAsMaximized()
-				) :
-				0.f
-			)
-		);
+		RETURN_IF_FAILED(reflectionVisual->UpdateForWindow(window, CReflectionVisual::Slot::NonClient));
 	}
 	else
 	{
-		RemoveReflectionVisual(window, 0);
+		CReflectionVisual::RemoveSlot(window, CReflectionVisual::Slot::NonClient);
 		RemoveEffectVisual(This);
 	}
 
@@ -491,7 +318,7 @@ HRESULT GlassFrameHandler::MyCLegacyNonClientBackground_SetCaptionColor(uDWM::CL
 void GlassFrameHandler::MyCLegacyNonClientBackground_Destructor(uDWM::CLegacyNonClientBackground* This)
 {
 	const auto window = uDWM::TryGetWindowFromVisual(This);
-	RemoveReflectionVisual(window, 0);
+	CReflectionVisual::RemoveSlot(window, CReflectionVisual::Slot::NonClient);
 	RemoveEffectVisual(This);
 	return g_CLegacyNonClientBackground_Destructor_Org(This);
 }
@@ -507,42 +334,13 @@ void GlassFrameHandler::MyCRectangleVisual_SetRect(uDWM::CRectangleVisual* This,
 		return g_CRectangleVisual_SetRect_Org(This, rc);
 	}
 
-	const auto reflectionVisual = GetOrCreateReflectionVisual(window, 1, This, true);
+	winrt::com_ptr<CReflectionVisual> reflectionVisual;
+	THROW_IF_FAILED(CReflectionVisual::GetOrCreate(window, CReflectionVisual::Slot::ClientBlur, This, reflectionVisual.put()));
 
 	SIZE size{ static_cast<LONG>(rc.right), static_cast<LONG>(rc.bottom) };
 	reflectionVisual->SetSize(&size);
 
-	if (const auto hr = reflectionVisual->UpdateSurface(GlassInfra::GetOrCreateReflectionSurface()); FAILED(hr))
-	{
-		LOG_HR(hr);
-		return;
-	}
-	if (
-		const auto hr = reflectionVisual->UpdateViewport(
-			reflectionVisual->GetLocalToParentVisualOffset(window->GetTransformParent()),
-			Shared::g_reflectionParallaxIntensity,
-			window->IsRTLMirrored(),
-			size.cx,
-			window->GetScale()
-		);
-		FAILED(hr)
-	)
-	{
-		LOG_HR(hr);
-		return;
-	}
-
-	if (
-		const auto hr = reflectionVisual->UpdateOpacity(
-			Shared::g_reflectionPolicy & Shared::ReflectionPolicy::NonClient ?
-			GlassKernel::GetAdjustedReflectionIntensity(
-				window->TreatAsActiveWindow(),
-				window->TreatAsMaximized()
-			) :
-			0.f
-		);
-		FAILED(hr)
-	)
+	if (const auto hr = reflectionVisual->UpdateForWindow(window, CReflectionVisual::Slot::ClientBlur); FAILED(hr))
 	{
 		LOG_HR(hr);
 		return;
@@ -558,10 +356,17 @@ void GlassFrameHandler::MyCRectangleVisual_SetRect(uDWM::CRectangleVisual* This,
 HRESULT GlassFrameHandler::MyCTopLevelWindow_UpdateClientBlur(uDWM::CTopLevelWindow* This)
 {
 	const auto hr = g_CTopLevelWindow_UpdateClientBlur_Org(This);
+	RETURN_IF_FAILED(hr);
 
-	if (const auto clientBlurVisual = This->GetClientBlurVisual(); !clientBlurVisual)
+	if (const auto clientBlurVisual = This->GetClientBlurVisual())
 	{
-		RemoveReflectionVisual(This, 1);
+		// Native NULL-region blur uses its rectangle/window geometry directly.
+		// Mark the selected clip after native rebuilding, retaining its exact shape.
+		RETURN_IF_FAILED(GlassInfra::UpdateGlassMarker(clientBlurVisual, clientBlurVisual->GetClip(), GlassKernel::GetWindowStatus(This)));
+	}
+	else
+	{
+		CReflectionVisual::RemoveSlot(This, CReflectionVisual::Slot::ClientBlur);
 	}
 	return hr;
 }
@@ -605,14 +410,14 @@ HRESULT GlassFrameHandler::MyCTopLevelWindow_ValidateVisual(uDWM::CTopLevelWindo
 
 	GlassInfra::g_window = This;
 	const auto hr = g_CTopLevelWindow_ValidateVisual_Org(This);
-	LOG_IF_FAILED(UpdateReflectionViewport(This));
+	LOG_IF_FAILED(UpdateWindowVisuals(This));
 	GlassInfra::g_window = nullptr;
 	return hr;
 }
 
 void GlassFrameHandler::MyCTopLevelWindow_Destructor(uDWM::CTopLevelWindow* This)
 {
-	RemoveReflectionVisual(This, -1);
+	CReflectionVisual::RemoveWindow(This);
 	return g_CTopLevelWindow_Destructor_Org(This);
 }
 
@@ -685,6 +490,7 @@ void GlassFrameHandler::Shutdown()
 
 void GlassFrameHandler::Cleanup()
 {
-	RemoveAllReflectionVisuals();
+	CReflectionVisual::RemoveSlot(CReflectionVisual::Slot::NonClient);
+	CReflectionVisual::RemoveSlot(CReflectionVisual::Slot::ClientBlur);
 	RemoveAllEffectVisuals();
 }

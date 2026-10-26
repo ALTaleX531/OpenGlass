@@ -49,7 +49,9 @@
   </ItemDefinitionGroup>
   <Import Project="OpenGlass.Shared.vcxitems" Label="Shared" />
   <ItemGroup>
+    <ClInclude Include="Architecture\MILComp\AccentOverrider.hpp" />
     <ClInclude Include="Architecture\MILComp\DCompProjection.hpp" />
+    <ClInclude Include="Architecture\MILComp\GlassFrameEnhancer.hpp" />
     <ClInclude Include="Architecture\MILComp\Dwm.hpp" />
     <ClInclude Include="Architecture\MILComp\DetourChains.hpp" />
     <ClInclude Include="Architecture\MILComp\dwmcoreProjection.hpp" />
@@ -75,6 +77,7 @@
     <ClCompile Include="Architecture\MILComp\ReflectionVisual.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <MASM Include="Architecture\MILComp\AccentOverrider.Shims.asm" />
     <MASM Include="Architecture\MILComp\GlassFrameHandler.Shims.asm" />
     <MASM Include="Architecture\MILComp\GlassFrameDemodernizer.Shims.asm" />
   </ItemGroup>
@@ -98,14 +101,17 @@
     <None Include="ProjectionSchemas\milcomp\dwmcore\layouts\RenderTargetInfo.json" />
     <None Include="ProjectionSchemas\milcomp\README.md" />
     <None Include="ProjectionSchemas\milcomp\udwm.json" />
+    <None Include="ProjectionSchemas\milcomp\udwm\symbols\accent.json" />
     <None Include="ProjectionSchemas\milcomp\udwm\symbols\caption.json" />
     <None Include="ProjectionSchemas\milcomp\udwm\symbols\colorization.json" />
     <None Include="ProjectionSchemas\milcomp\udwm\symbols\desktop.json" />
+    <None Include="ProjectionSchemas\milcomp\udwm\symbols\live-preview.json" />
     <None Include="ProjectionSchemas\milcomp\udwm\symbols\nonclient.json" />
     <None Include="ProjectionSchemas\milcomp\udwm\symbols\resources.json" />
     <None Include="ProjectionSchemas\milcomp\udwm\symbols\top-level-window.json" />
     <None Include="ProjectionSchemas\milcomp\udwm\symbols\visuals.json" />
     <None Include="ProjectionSchemas\milcomp\udwm\symbols\window-frame.json" />
+    <None Include="ProjectionSchemas\milcomp\udwm\layouts\CAccent.json" />
     <None Include="ProjectionSchemas\milcomp\udwm\layouts\CBaseObject.json" />
     <None Include="ProjectionSchemas\milcomp\udwm\layouts\CButton.json" />
     <None Include="ProjectionSchemas\milcomp\udwm\layouts\CCompositor.json" />
@@ -114,6 +120,7 @@
     <None Include="ProjectionSchemas\milcomp\udwm\layouts\CGlassColorizationResources.json" />
     <None Include="ProjectionSchemas\milcomp\udwm\layouts\CGraphicsDeviceManager.json" />
     <None Include="ProjectionSchemas\milcomp\udwm\layouts\CLegacyNonClientBackground.json" />
+    <None Include="ProjectionSchemas\milcomp\udwm\layouts\CLivePreview.json" />
     <None Include="ProjectionSchemas\milcomp\udwm\layouts\CRectangleVisual.json" />
     <None Include="ProjectionSchemas\milcomp\udwm\layouts\CResource.json" />
     <None Include="ProjectionSchemas\milcomp\udwm\layouts\CResourceProxy.json" />

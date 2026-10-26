@@ -1289,6 +1289,13 @@ namespace OpenGlass
 			}
 		});
 
+		m_clUxMitigation->Bind(wxEVT_CHECKLISTBOX, [this, updateDword](wxCommandEvent&) {
+			auto flags = m_config->GetDword(L"EnableUxMitigation", UxMitigation::DefaultFlags);
+			flags &= ~UxMitigation::RestrictAccentOverride;
+			if (m_clUxMitigation->IsChecked(0)) flags |= UxMitigation::RestrictAccentOverride;
+			updateDword(Settings::Id::EnableUxMitigation, flags);
+		});
+
 		m_fpCustomThemeAtlas->Bind(wxEVT_FILEPICKER_CHANGED, [this, updateString](wxFileDirPickerEvent& e) {
 			if (m_chkCustomThemeAtlas->IsChecked())
 			{

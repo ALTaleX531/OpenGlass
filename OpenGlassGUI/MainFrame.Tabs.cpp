@@ -125,12 +125,25 @@ namespace OpenGlass
 		globalGroup->Add(m_clDisabledHooks, 0, wxEXPAND | wxALL, 2);
 		m_clDisabledHooks->SetToolTip(L"Controls which module's hooks are disabled.\nDo not modify unless maintaining compatibility.");
 
+		{
+			wxBoxSizer* row = new wxBoxSizer(wxHORIZONTAL);
+			row->Add(new wxStaticText(panel, wxID_ANY, L"Compatibility mitigations:"), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
+			AddOptionStatus(panel, row, Settings::Id::EnableUxMitigation);
+			globalGroup->Add(row, 0, wxLEFT | wxTOP, 2);
+		}
+		wxArrayString mitigations;
+		mitigations.Add(L"Limit accent override to supported shell windows");
+		m_clUxMitigation = new wxCheckListBox(panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, mitigations);
+		m_clUxMitigation->SetToolTip(L"Allows taskbars, Start menus, supported jump lists, taskbar thumbnails and notification overflow.\nOther windows, including ordinary context menus and drop-downs, keep native accent effects.\nEnabled by default; takes effect immediately when Override accent is enabled.");
+		globalGroup->Add(m_clUxMitigation, 0, wxEXPAND | wxALL, 2);
+
 		sizer->Add(globalGroup, 0, wxEXPAND | wxALL, 2);
 		if (!m_isAdmin && m_editScope == Settings::Scope::Machine)
 		{
 			m_chkDisableGlassOnBattery->Enable(false);
 			m_chkGlassSafetyZone->Enable(false);
 			m_clDisabledHooks->Enable(false);
+			m_clUxMitigation->Enable(false);
 			AddWarningNotice(panel, sizer, L"Requires administrator privileges to edit HKLM settings.");
 		}
 

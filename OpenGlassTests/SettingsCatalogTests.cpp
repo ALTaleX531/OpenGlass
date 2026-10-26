@@ -24,7 +24,10 @@ namespace OpenGlassTests
 				Check(spec.assetRole != Settings::AssetRole::None);
 			}
 		}
-		Check(Settings::PresetPackSettingCount(1) == Settings::PresetPackSettingCount() + 5);
+		Check(Settings::PresetPackSettingCount(1) == Settings::PresetPackSettingCount(2) + 5);
+		Check(Settings::PresetPackSettingCount(2) + 1 == Settings::PresetPackSettingCount());
+		Check(!Settings::IsPresetPackSetting(Settings::Get(Settings::Id::EnableUxMitigation), 2));
+		Check(Settings::Get(Settings::Id::EnableUxMitigation).impact == Settings::UpdateType::Backdrop);
 		Check(Settings::Get(Settings::Id::GlassOverrideAccent).impact == Settings::UpdateType::Backdrop);
 		Check(Settings::Get(Settings::Id::GlassSafetyZoneMode).impact == Settings::UpdateType::Backdrop);
 		Check(Settings::Get(Settings::Id::UseDirect3DRendering).impact == Settings::UpdateType::Backdrop);

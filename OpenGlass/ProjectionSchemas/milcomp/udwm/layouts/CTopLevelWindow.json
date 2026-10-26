@@ -269,6 +269,24 @@
         }
       ],
       "notes": "CTopLevelWindow::GetButtonHeightAndOffset\nCTopLevelWindow::UpdateNCAreaButton\nxrefs to CTopLevelWindow::HasThinRenderedBorder"
+    },
+    {
+      "name": "CTopLevelWindow_AccentVisual",
+      "id": "CTopLevelWindow_AccentVisual",
+      "kind": "field",
+      "type": "CAccent*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 240,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "28000.3231 UpdateAccent creates, updates and releases CAccent through +240. CloneVisualTreeForLivePreview independently excludes/re-enables this visual at the same field while constructing snapshots."
     }
   ]
 }
