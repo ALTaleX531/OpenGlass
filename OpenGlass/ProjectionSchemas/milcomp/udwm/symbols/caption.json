@@ -109,16 +109,16 @@
       "notes": "28000.3231: CPrimitiveGroupVisual::InitializeVisualTreeClone calls the +8 virtual slot, consumes HRESULT and the output pointer, and retains continuation state in nonvolatile registers/stack. No private volatile-register dependency at this virtual call. Squeegee copies for options 10/11 use the native nine-grid clone to bypass ThemePart::Generate suppression; other primitives retain their native class and selection."
     },
     {
-      "name": "Symbol_CButton_vftable",
-      "id": "CButton::vftable",
+      "name": "Symbol_CTopLevelWindow_CreateGlyphsFromAtlas",
+      "id": "CTopLevelWindow::CreateGlyphsFromAtlas",
       "bindings": [
         {
           "platform": null,
-          "target": "&CButton::vftable",
+          "type": "HRESULT (*)(HTHEME)",
           "ranges": [
             {
               "symbol_names": [
-                "const CButton::`vftable'"
+                "private: static long __cdecl CTopLevelWindow::CreateGlyphsFromAtlas(void * __ptr64 const)"
               ],
               "min_inclusive": null,
               "max_exclusive": null
@@ -127,7 +127,202 @@
         }
       ],
       "requirement": "required",
-      "kind": "projected_variable"
+      "kind": "raw",
+      "notes": "28000.1/3231: EnsureImages consumes HRESULT and retains its theme in a nonvolatile register. Loading glow parts follows the same theme-atlas cache used by native glyph creation."
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_UpdateButtonVisuals",
+      "id": "CTopLevelWindow::UpdateButtonVisuals",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "HRESULT (*)(CTopLevelWindow*, const CTopLevelWindow::WindowFrame*)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "private: long __cdecl CTopLevelWindow::UpdateButtonVisuals(struct CTopLevelWindow::WindowFrame const * __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw",
+      "notes": "28000.1/3231: UpdateWindowVisuals retains the window/frame in nonvolatile registers and consumes HRESULT before updating caption accent color. Classify the four button slots after native visual-state assignment."
+    },
+    {
+      "name": "Symbol_CButton_DrawStateW",
+      "id": "CButton::DrawStateW",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "void (*)(CButton*, CButtonVisual*, UINT)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "private: void __cdecl CButton::DrawStateW(class CButtonVisual * __ptr64,enum CButton::ButtonStates) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw",
+      "notes": "28000.1/3231: RedrawVisual calls this once for the current state and again for the outgoing crossfade state. Both continuations reload state from the nonvolatile button pointer; no private volatile-register dependency. States 1/2 are hot/pressed. CButtonVisual retains native background/glyph rendering and its opacity supplies the glow fade."
+    },
+    {
+      "name": "Symbol_CButton_InitializeVisualTreeClone",
+      "id": "CButton::InitializeVisualTreeClone",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "HRESULT (*)(CButton*, CButton*, UINT)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CButton::InitializeVisualTreeClone(class CButton * __ptr64,enum CloneOptions) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw",
+      "notes": "28000.1/3231: the native container clone copies children before SetVisualStates copies the two bitmap arrays and base glyph opacity. CloneVisualTree retains its output and owner in nonvolatile registers and consumes HRESULT only."
+    },
+    {
+      "name": "Symbol_CImage_InitializeVisualTreeClone",
+      "id": "CImage::InitializeVisualTreeClone",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "HRESULT (*)(CImage*, CImage*, UINT)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "protected: long __cdecl CImage::InitializeVisualTreeClone(class CImage * __ptr64,enum CloneOptions) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw",
+      "notes": "28000.1/3231: copies the native rectangle/container subtree and brush, then AddRefs the source bitmap. Its CloneVisualTree caller retains the destination in a nonvolatile register and consumes HRESULT. Track copied glow images without replacing their native vtables."
+    },
+    {
+      "name": "Symbol_CContainerVisual_Destructor",
+      "id": "CContainerVisual::~CContainerVisual",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "void (*)(CContainerVisual*)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "protected: virtual __cdecl CContainerVisual::~CContainerVisual(void) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw",
+      "notes": "28000.1/3231: CButton and the CImage/CRectangleVisual destruction chain reach this base destructor. Direct callers either tail-jump here or are deleting destructors retaining the object/flags in nonvolatile registers; no private volatile-register dependency."
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_CreateBitmapFromAtlas",
+      "id": "CTopLevelWindow::CreateBitmapFromAtlas",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CTopLevelWindow::CreateBitmapFromAtlas",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: static long __cdecl CTopLevelWindow::CreateBitmapFromAtlas(void * __ptr64 const,int,struct _MARGINS * __ptr64,class CBitmapSource * __ptr64 * __ptr64)"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CImage_Create",
+      "id": "CImage::Create",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CImage::Create",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: static long __cdecl CImage::Create(class CImage * __ptr64 * __ptr64)"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CImage_SetBitmapSource",
+      "id": "CImage::SetBitmapSource",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CImage::SetBitmapSource",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: void __cdecl CImage::SetBitmapSource(class CBitmapSource * __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
+    },
+    {
+      "name": "Symbol_CVisual_MoveToFront",
+      "id": "CVisual::MoveToFront",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CVisual::MoveToFront",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CVisual::MoveToFront(bool) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function"
     }
   ]
 }

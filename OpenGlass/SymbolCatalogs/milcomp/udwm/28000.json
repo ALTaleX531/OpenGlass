@@ -26,9 +26,13 @@
           "name": "protected: long __cdecl CAccent::_UpdateSolidFill(class CNineGridVisual * __ptr64,unsigned long,struct tagRECT const & __ptr64,float) __ptr64",
           "rva": "0x952E4"
         },
-        "CButton::vftable": {
-          "name": "const CButton::`vftable'",
-          "rva": "0xEA128"
+        "CButton::DrawStateW": {
+          "name": "private: void __cdecl CButton::DrawStateW(class CButtonVisual * __ptr64,enum CButton::ButtonStates) __ptr64",
+          "rva": "0x8C74"
+        },
+        "CButton::InitializeVisualTreeClone": {
+          "name": "public: long __cdecl CButton::InitializeVisualTreeClone(class CButton * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0x5F274"
         },
         "CCompositor::ForceRender": {
           "name": "public: long __cdecl CCompositor::ForceRender(void) __ptr64",
@@ -41,6 +45,10 @@
         "CContainerVisual::RenderRecursive": {
           "name": "public: virtual void __cdecl CContainerVisual::RenderRecursive(void) __ptr64",
           "rva": "0x85690"
+        },
+        "CContainerVisual::~CContainerVisual": {
+          "name": "protected: virtual __cdecl CContainerVisual::~CContainerVisual(void) __ptr64",
+          "rva": "0x1BAC0"
         },
         "CDWriteText::InitializeVisualTreeClone": {
           "name": "protected: long __cdecl CDWriteText::InitializeVisualTreeClone(class CDWriteText * __ptr64,enum CloneOptions) __ptr64",
@@ -69,6 +77,18 @@
         "CGraphicsDeviceManager::ReleaseGraphicsDevice": {
           "name": "protected: long __cdecl CGraphicsDeviceManager::ReleaseGraphicsDevice(void) __ptr64",
           "rva": "0x559A0"
+        },
+        "CImage::Create": {
+          "name": "public: static long __cdecl CImage::Create(class CImage * __ptr64 * __ptr64)",
+          "rva": "0x2748C"
+        },
+        "CImage::InitializeVisualTreeClone": {
+          "name": "protected: long __cdecl CImage::InitializeVisualTreeClone(class CImage * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0xB41D8"
+        },
+        "CImage::SetBitmapSource": {
+          "name": "public: void __cdecl CImage::SetBitmapSource(class CBitmapSource * __ptr64) __ptr64",
+          "rva": "0x8D8C"
         },
         "CLegacyNonClientBackground::ClearAll": {
           "name": "public: void __cdecl CLegacyNonClientBackground::ClearAll(void) __ptr64",
@@ -158,6 +178,14 @@
           "name": "public: long __cdecl CTopLevelWindow::CloneVisualTreeForLivePreview(bool,class CTopLevelWindow * __ptr64 * __ptr64) __ptr64",
           "rva": "0x23D1C"
         },
+        "CTopLevelWindow::CreateBitmapFromAtlas": {
+          "name": "public: static long __cdecl CTopLevelWindow::CreateBitmapFromAtlas(void * __ptr64 const,int,struct _MARGINS * __ptr64,class CBitmapSource * __ptr64 * __ptr64)",
+          "rva": "0x504C"
+        },
+        "CTopLevelWindow::CreateGlyphsFromAtlas": {
+          "name": "private: static long __cdecl CTopLevelWindow::CreateGlyphsFromAtlas(void * __ptr64 const)",
+          "rva": "0x4980"
+        },
         "CTopLevelWindow::EdgeBorderMustBeOpaque": {
           "name": "private: int __cdecl CTopLevelWindow::EdgeBorderMustBeOpaque(void) __ptr64",
           "rva": "0x4B440"
@@ -185,6 +213,10 @@
         "CTopLevelWindow::TreatAsActiveWindow": {
           "name": "private: bool __cdecl CTopLevelWindow::TreatAsActiveWindow(void)const __ptr64",
           "rva": "0x489F0"
+        },
+        "CTopLevelWindow::UpdateButtonVisuals": {
+          "name": "private: long __cdecl CTopLevelWindow::UpdateButtonVisuals(struct CTopLevelWindow::WindowFrame const * __ptr64) __ptr64",
+          "rva": "0x208B0"
         },
         "CTopLevelWindow::UpdateClientBlur": {
           "name": "private: long __cdecl CTopLevelWindow::UpdateClientBlur(void) __ptr64",
@@ -214,9 +246,9 @@
           "name": "private: virtual __cdecl CTopLevelWindow::~CTopLevelWindow(void) __ptr64",
           "rva": "0x5C00C"
         },
-        "CVisual::SendSetOffset": {
-          "name": "protected: virtual long __cdecl CVisual::SendSetOffset(struct tagPOINT const & __ptr64) __ptr64",
-          "rva": "0xA770"
+        "CVisual::MoveToFront": {
+          "name": "public: long __cdecl CVisual::MoveToFront(bool) __ptr64",
+          "rva": "0x13F60"
         },
         "CVisual::SetDirtyFlags": {
           "name": "protected: virtual void __cdecl CVisual::SetDirtyFlags(class DirtyFlags) __ptr64",
@@ -305,9 +337,13 @@
           "name": "protected: long __cdecl CAccent::_UpdateSolidFill(class CNineGridVisual * __ptr64,unsigned long,struct tagRECT const & __ptr64,float) __ptr64",
           "rva": "0x94E94"
         },
-        "CButton::vftable": {
-          "name": "const CButton::`vftable'",
-          "rva": "0xEC128"
+        "CButton::DrawStateW": {
+          "name": "private: void __cdecl CButton::DrawStateW(class CButtonVisual * __ptr64,enum CButton::ButtonStates) __ptr64",
+          "rva": "0x8C74"
+        },
+        "CButton::InitializeVisualTreeClone": {
+          "name": "public: long __cdecl CButton::InitializeVisualTreeClone(class CButton * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0x5F0E4"
         },
         "CCompositor::ForceRender": {
           "name": "public: long __cdecl CCompositor::ForceRender(void) __ptr64",
@@ -320,6 +356,10 @@
         "CContainerVisual::RenderRecursive": {
           "name": "public: virtual void __cdecl CContainerVisual::RenderRecursive(void) __ptr64",
           "rva": "0x85490"
+        },
+        "CContainerVisual::~CContainerVisual": {
+          "name": "protected: virtual __cdecl CContainerVisual::~CContainerVisual(void) __ptr64",
+          "rva": "0x1BAC0"
         },
         "CDWriteText::InitializeVisualTreeClone": {
           "name": "protected: long __cdecl CDWriteText::InitializeVisualTreeClone(class CDWriteText * __ptr64,enum CloneOptions) __ptr64",
@@ -348,6 +388,18 @@
         "CGraphicsDeviceManager::ReleaseGraphicsDevice": {
           "name": "protected: long __cdecl CGraphicsDeviceManager::ReleaseGraphicsDevice(void) __ptr64",
           "rva": "0x55810"
+        },
+        "CImage::Create": {
+          "name": "public: static long __cdecl CImage::Create(class CImage * __ptr64 * __ptr64)",
+          "rva": "0x2748C"
+        },
+        "CImage::InitializeVisualTreeClone": {
+          "name": "protected: long __cdecl CImage::InitializeVisualTreeClone(class CImage * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0xB73C8"
+        },
+        "CImage::SetBitmapSource": {
+          "name": "public: void __cdecl CImage::SetBitmapSource(class CBitmapSource * __ptr64) __ptr64",
+          "rva": "0x8D8C"
         },
         "CLegacyNonClientBackground::ClearAll": {
           "name": "public: void __cdecl CLegacyNonClientBackground::ClearAll(void) __ptr64",
@@ -437,6 +489,14 @@
           "name": "public: long __cdecl CTopLevelWindow::CloneVisualTreeForLivePreview(bool,class CTopLevelWindow * __ptr64 * __ptr64) __ptr64",
           "rva": "0x23D1C"
         },
+        "CTopLevelWindow::CreateBitmapFromAtlas": {
+          "name": "public: static long __cdecl CTopLevelWindow::CreateBitmapFromAtlas(void * __ptr64 const,int,struct _MARGINS * __ptr64,class CBitmapSource * __ptr64 * __ptr64)",
+          "rva": "0x504C"
+        },
+        "CTopLevelWindow::CreateGlyphsFromAtlas": {
+          "name": "private: static long __cdecl CTopLevelWindow::CreateGlyphsFromAtlas(void * __ptr64 const)",
+          "rva": "0x4980"
+        },
         "CTopLevelWindow::EdgeBorderMustBeOpaque": {
           "name": "private: int __cdecl CTopLevelWindow::EdgeBorderMustBeOpaque(void) __ptr64",
           "rva": "0x4B2B0"
@@ -464,6 +524,10 @@
         "CTopLevelWindow::TreatAsActiveWindow": {
           "name": "private: bool __cdecl CTopLevelWindow::TreatAsActiveWindow(void)const __ptr64",
           "rva": "0x47A90"
+        },
+        "CTopLevelWindow::UpdateButtonVisuals": {
+          "name": "private: long __cdecl CTopLevelWindow::UpdateButtonVisuals(struct CTopLevelWindow::WindowFrame const * __ptr64) __ptr64",
+          "rva": "0x208B0"
         },
         "CTopLevelWindow::UpdateClientBlur": {
           "name": "private: long __cdecl CTopLevelWindow::UpdateClientBlur(void) __ptr64",
@@ -493,9 +557,9 @@
           "name": "private: virtual __cdecl CTopLevelWindow::~CTopLevelWindow(void) __ptr64",
           "rva": "0x5BE7C"
         },
-        "CVisual::SendSetOffset": {
-          "name": "protected: virtual long __cdecl CVisual::SendSetOffset(struct tagPOINT const & __ptr64) __ptr64",
-          "rva": "0xA770"
+        "CVisual::MoveToFront": {
+          "name": "public: long __cdecl CVisual::MoveToFront(bool) __ptr64",
+          "rva": "0x13F60"
         },
         "CVisual::SetDirtyFlags": {
           "name": "protected: virtual void __cdecl CVisual::SetDirtyFlags(class DirtyFlags) __ptr64",
@@ -584,9 +648,13 @@
           "name": "protected: long __cdecl CAccent::_UpdateSolidFill(class CNineGridVisual * __ptr64,unsigned long,struct tagRECT const & __ptr64,float) __ptr64",
           "rva": "0x94D04"
         },
-        "CButton::vftable": {
-          "name": "const CButton::`vftable'",
-          "rva": "0xEB128"
+        "CButton::DrawStateW": {
+          "name": "private: void __cdecl CButton::DrawStateW(class CButtonVisual * __ptr64,enum CButton::ButtonStates) __ptr64",
+          "rva": "0x8C74"
+        },
+        "CButton::InitializeVisualTreeClone": {
+          "name": "public: long __cdecl CButton::InitializeVisualTreeClone(class CButton * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0x5D3D4"
         },
         "CCompositor::ForceRender": {
           "name": "public: long __cdecl CCompositor::ForceRender(void) __ptr64",
@@ -599,6 +667,10 @@
         "CContainerVisual::RenderRecursive": {
           "name": "public: virtual void __cdecl CContainerVisual::RenderRecursive(void) __ptr64",
           "rva": "0x853F0"
+        },
+        "CContainerVisual::~CContainerVisual": {
+          "name": "protected: virtual __cdecl CContainerVisual::~CContainerVisual(void) __ptr64",
+          "rva": "0x1BAC0"
         },
         "CDWriteText::InitializeVisualTreeClone": {
           "name": "protected: long __cdecl CDWriteText::InitializeVisualTreeClone(class CDWriteText * __ptr64,enum CloneOptions) __ptr64",
@@ -627,6 +699,18 @@
         "CGraphicsDeviceManager::ReleaseGraphicsDevice": {
           "name": "protected: long __cdecl CGraphicsDeviceManager::ReleaseGraphicsDevice(void) __ptr64",
           "rva": "0x53870"
+        },
+        "CImage::Create": {
+          "name": "public: static long __cdecl CImage::Create(class CImage * __ptr64 * __ptr64)",
+          "rva": "0x2748C"
+        },
+        "CImage::InitializeVisualTreeClone": {
+          "name": "protected: long __cdecl CImage::InitializeVisualTreeClone(class CImage * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0xB6CD8"
+        },
+        "CImage::SetBitmapSource": {
+          "name": "public: void __cdecl CImage::SetBitmapSource(class CBitmapSource * __ptr64) __ptr64",
+          "rva": "0x8D8C"
         },
         "CLegacyNonClientBackground::ClearAll": {
           "name": "public: void __cdecl CLegacyNonClientBackground::ClearAll(void) __ptr64",
@@ -716,6 +800,14 @@
           "name": "public: long __cdecl CTopLevelWindow::CloneVisualTreeForLivePreview(bool,class CTopLevelWindow * __ptr64 * __ptr64) __ptr64",
           "rva": "0x23D1C"
         },
+        "CTopLevelWindow::CreateBitmapFromAtlas": {
+          "name": "public: static long __cdecl CTopLevelWindow::CreateBitmapFromAtlas(void * __ptr64 const,int,struct _MARGINS * __ptr64,class CBitmapSource * __ptr64 * __ptr64)",
+          "rva": "0x504C"
+        },
+        "CTopLevelWindow::CreateGlyphsFromAtlas": {
+          "name": "private: static long __cdecl CTopLevelWindow::CreateGlyphsFromAtlas(void * __ptr64 const)",
+          "rva": "0x4980"
+        },
         "CTopLevelWindow::EdgeBorderMustBeOpaque": {
           "name": "private: int __cdecl CTopLevelWindow::EdgeBorderMustBeOpaque(void) __ptr64",
           "rva": "0x4DF70"
@@ -743,6 +835,10 @@
         "CTopLevelWindow::TreatAsActiveWindow": {
           "name": "private: bool __cdecl CTopLevelWindow::TreatAsActiveWindow(void)const __ptr64",
           "rva": "0x4BE00"
+        },
+        "CTopLevelWindow::UpdateButtonVisuals": {
+          "name": "private: long __cdecl CTopLevelWindow::UpdateButtonVisuals(struct CTopLevelWindow::WindowFrame const * __ptr64) __ptr64",
+          "rva": "0x208B0"
         },
         "CTopLevelWindow::UpdateClientBlur": {
           "name": "private: long __cdecl CTopLevelWindow::UpdateClientBlur(void) __ptr64",
@@ -772,9 +868,9 @@
           "name": "private: virtual __cdecl CTopLevelWindow::~CTopLevelWindow(void) __ptr64",
           "rva": "0x5A16C"
         },
-        "CVisual::SendSetOffset": {
-          "name": "protected: virtual long __cdecl CVisual::SendSetOffset(struct tagPOINT const & __ptr64) __ptr64",
-          "rva": "0xA770"
+        "CVisual::MoveToFront": {
+          "name": "public: long __cdecl CVisual::MoveToFront(bool) __ptr64",
+          "rva": "0x13F60"
         },
         "CVisual::SetDirtyFlags": {
           "name": "protected: virtual void __cdecl CVisual::SetDirtyFlags(class DirtyFlags) __ptr64",
@@ -863,9 +959,13 @@
           "name": "protected: long __cdecl CAccent::_UpdateSolidFill(class CNineGridVisual * __ptr64,unsigned long,struct tagRECT const & __ptr64,float) __ptr64",
           "rva": "0x94D14"
         },
-        "CButton::vftable": {
-          "name": "const CButton::`vftable'",
-          "rva": "0xEC128"
+        "CButton::DrawStateW": {
+          "name": "private: void __cdecl CButton::DrawStateW(class CButtonVisual * __ptr64,enum CButton::ButtonStates) __ptr64",
+          "rva": "0x8C74"
+        },
+        "CButton::InitializeVisualTreeClone": {
+          "name": "public: long __cdecl CButton::InitializeVisualTreeClone(class CButton * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0x5D3E4"
         },
         "CCompositor::ForceRender": {
           "name": "public: long __cdecl CCompositor::ForceRender(void) __ptr64",
@@ -878,6 +978,10 @@
         "CContainerVisual::RenderRecursive": {
           "name": "public: virtual void __cdecl CContainerVisual::RenderRecursive(void) __ptr64",
           "rva": "0x85400"
+        },
+        "CContainerVisual::~CContainerVisual": {
+          "name": "protected: virtual __cdecl CContainerVisual::~CContainerVisual(void) __ptr64",
+          "rva": "0x1BAD0"
         },
         "CDWriteText::InitializeVisualTreeClone": {
           "name": "protected: long __cdecl CDWriteText::InitializeVisualTreeClone(class CDWriteText * __ptr64,enum CloneOptions) __ptr64",
@@ -906,6 +1010,18 @@
         "CGraphicsDeviceManager::ReleaseGraphicsDevice": {
           "name": "protected: long __cdecl CGraphicsDeviceManager::ReleaseGraphicsDevice(void) __ptr64",
           "rva": "0x53880"
+        },
+        "CImage::Create": {
+          "name": "public: static long __cdecl CImage::Create(class CImage * __ptr64 * __ptr64)",
+          "rva": "0x2749C"
+        },
+        "CImage::InitializeVisualTreeClone": {
+          "name": "protected: long __cdecl CImage::InitializeVisualTreeClone(class CImage * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0xB6CE8"
+        },
+        "CImage::SetBitmapSource": {
+          "name": "public: void __cdecl CImage::SetBitmapSource(class CBitmapSource * __ptr64) __ptr64",
+          "rva": "0x8D8C"
         },
         "CLegacyNonClientBackground::ClearAll": {
           "name": "public: void __cdecl CLegacyNonClientBackground::ClearAll(void) __ptr64",
@@ -995,6 +1111,14 @@
           "name": "public: long __cdecl CTopLevelWindow::CloneVisualTreeForLivePreview(bool,class CTopLevelWindow * __ptr64 * __ptr64) __ptr64",
           "rva": "0x23D2C"
         },
+        "CTopLevelWindow::CreateBitmapFromAtlas": {
+          "name": "public: static long __cdecl CTopLevelWindow::CreateBitmapFromAtlas(void * __ptr64 const,int,struct _MARGINS * __ptr64,class CBitmapSource * __ptr64 * __ptr64)",
+          "rva": "0x504C"
+        },
+        "CTopLevelWindow::CreateGlyphsFromAtlas": {
+          "name": "private: static long __cdecl CTopLevelWindow::CreateGlyphsFromAtlas(void * __ptr64 const)",
+          "rva": "0x4980"
+        },
         "CTopLevelWindow::EdgeBorderMustBeOpaque": {
           "name": "private: int __cdecl CTopLevelWindow::EdgeBorderMustBeOpaque(void) __ptr64",
           "rva": "0x4DF80"
@@ -1022,6 +1146,10 @@
         "CTopLevelWindow::TreatAsActiveWindow": {
           "name": "private: bool __cdecl CTopLevelWindow::TreatAsActiveWindow(void)const __ptr64",
           "rva": "0x4BE10"
+        },
+        "CTopLevelWindow::UpdateButtonVisuals": {
+          "name": "private: long __cdecl CTopLevelWindow::UpdateButtonVisuals(struct CTopLevelWindow::WindowFrame const * __ptr64) __ptr64",
+          "rva": "0x208C0"
         },
         "CTopLevelWindow::UpdateClientBlur": {
           "name": "private: long __cdecl CTopLevelWindow::UpdateClientBlur(void) __ptr64",
@@ -1051,9 +1179,9 @@
           "name": "private: virtual __cdecl CTopLevelWindow::~CTopLevelWindow(void) __ptr64",
           "rva": "0x5A17C"
         },
-        "CVisual::SendSetOffset": {
-          "name": "protected: virtual long __cdecl CVisual::SendSetOffset(struct tagPOINT const & __ptr64) __ptr64",
-          "rva": "0xA770"
+        "CVisual::MoveToFront": {
+          "name": "public: long __cdecl CVisual::MoveToFront(bool) __ptr64",
+          "rva": "0x13F60"
         },
         "CVisual::SetDirtyFlags": {
           "name": "protected: virtual void __cdecl CVisual::SetDirtyFlags(class DirtyFlags) __ptr64",
@@ -1142,9 +1270,13 @@
           "name": "protected: long __cdecl CAccent::_UpdateSolidFill(class CNineGridVisual * __ptr64,unsigned long,struct tagRECT const & __ptr64,float) __ptr64",
           "rva": "0x94F24"
         },
-        "CButton::vftable": {
-          "name": "const CButton::`vftable'",
-          "rva": "0xEE128"
+        "CButton::DrawStateW": {
+          "name": "private: void __cdecl CButton::DrawStateW(class CButtonVisual * __ptr64,enum CButton::ButtonStates) __ptr64",
+          "rva": "0x8C94"
+        },
+        "CButton::InitializeVisualTreeClone": {
+          "name": "public: long __cdecl CButton::InitializeVisualTreeClone(class CButton * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0x5DE14"
         },
         "CCompositor::ForceRender": {
           "name": "public: long __cdecl CCompositor::ForceRender(void) __ptr64",
@@ -1157,6 +1289,10 @@
         "CContainerVisual::RenderRecursive": {
           "name": "public: virtual void __cdecl CContainerVisual::RenderRecursive(void) __ptr64",
           "rva": "0x85560"
+        },
+        "CContainerVisual::~CContainerVisual": {
+          "name": "protected: virtual __cdecl CContainerVisual::~CContainerVisual(void) __ptr64",
+          "rva": "0x1BB00"
         },
         "CDWriteText::InitializeVisualTreeClone": {
           "name": "protected: long __cdecl CDWriteText::InitializeVisualTreeClone(class CDWriteText * __ptr64,enum CloneOptions) __ptr64",
@@ -1185,6 +1321,18 @@
         "CGraphicsDeviceManager::ReleaseGraphicsDevice": {
           "name": "protected: long __cdecl CGraphicsDeviceManager::ReleaseGraphicsDevice(void) __ptr64",
           "rva": "0x54520"
+        },
+        "CImage::Create": {
+          "name": "public: static long __cdecl CImage::Create(class CImage * __ptr64 * __ptr64)",
+          "rva": "0x2750C"
+        },
+        "CImage::InitializeVisualTreeClone": {
+          "name": "protected: long __cdecl CImage::InitializeVisualTreeClone(class CImage * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0xB82E8"
+        },
+        "CImage::SetBitmapSource": {
+          "name": "public: void __cdecl CImage::SetBitmapSource(class CBitmapSource * __ptr64) __ptr64",
+          "rva": "0x8DAC"
         },
         "CLegacyNonClientBackground::ClearAll": {
           "name": "public: void __cdecl CLegacyNonClientBackground::ClearAll(void) __ptr64",
@@ -1274,6 +1422,14 @@
           "name": "public: long __cdecl CTopLevelWindow::CloneVisualTreeForLivePreview(bool,class CTopLevelWindow * __ptr64 * __ptr64) __ptr64",
           "rva": "0x23D5C"
         },
+        "CTopLevelWindow::CreateBitmapFromAtlas": {
+          "name": "public: static long __cdecl CTopLevelWindow::CreateBitmapFromAtlas(void * __ptr64 const,int,struct _MARGINS * __ptr64,class CBitmapSource * __ptr64 * __ptr64)",
+          "rva": "0x506C"
+        },
+        "CTopLevelWindow::CreateGlyphsFromAtlas": {
+          "name": "private: static long __cdecl CTopLevelWindow::CreateGlyphsFromAtlas(void * __ptr64 const)",
+          "rva": "0x49A0"
+        },
         "CTopLevelWindow::EdgeBorderMustBeOpaque": {
           "name": "private: int __cdecl CTopLevelWindow::EdgeBorderMustBeOpaque(void) __ptr64",
           "rva": "0x4EC20"
@@ -1301,6 +1457,10 @@
         "CTopLevelWindow::TreatAsActiveWindow": {
           "name": "private: bool __cdecl CTopLevelWindow::TreatAsActiveWindow(void)const __ptr64",
           "rva": "0x4CAB0"
+        },
+        "CTopLevelWindow::UpdateButtonVisuals": {
+          "name": "private: long __cdecl CTopLevelWindow::UpdateButtonVisuals(struct CTopLevelWindow::WindowFrame const * __ptr64) __ptr64",
+          "rva": "0x208F0"
         },
         "CTopLevelWindow::UpdateClientBlur": {
           "name": "private: long __cdecl CTopLevelWindow::UpdateClientBlur(void) __ptr64",
@@ -1330,9 +1490,9 @@
           "name": "private: virtual __cdecl CTopLevelWindow::~CTopLevelWindow(void) __ptr64",
           "rva": "0x5ADFC"
         },
-        "CVisual::SendSetOffset": {
-          "name": "protected: virtual long __cdecl CVisual::SendSetOffset(struct tagPOINT const & __ptr64) __ptr64",
-          "rva": "0xA790"
+        "CVisual::MoveToFront": {
+          "name": "public: long __cdecl CVisual::MoveToFront(bool) __ptr64",
+          "rva": "0x13F90"
         },
         "CVisual::SetDirtyFlags": {
           "name": "protected: virtual void __cdecl CVisual::SetDirtyFlags(class DirtyFlags) __ptr64",
@@ -1421,9 +1581,13 @@
           "name": "protected: long __cdecl CAccent::_UpdateSolidFill(class CNineGridVisual * __ptr64,unsigned long,struct tagRECT const & __ptr64,float) __ptr64",
           "rva": "0x95024"
         },
-        "CButton::vftable": {
-          "name": "const CButton::`vftable'",
-          "rva": "0xEE078"
+        "CButton::DrawStateW": {
+          "name": "private: void __cdecl CButton::DrawStateW(class CButtonVisual * __ptr64,enum CButton::ButtonStates) __ptr64",
+          "rva": "0x7C24"
+        },
+        "CButton::InitializeVisualTreeClone": {
+          "name": "public: long __cdecl CButton::InitializeVisualTreeClone(class CButton * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0x5DEB4"
         },
         "CCompositor::ForceRender": {
           "name": "public: long __cdecl CCompositor::ForceRender(void) __ptr64",
@@ -1436,6 +1600,10 @@
         "CContainerVisual::RenderRecursive": {
           "name": "public: virtual void __cdecl CContainerVisual::RenderRecursive(void) __ptr64",
           "rva": "0x85660"
+        },
+        "CContainerVisual::~CContainerVisual": {
+          "name": "protected: virtual __cdecl CContainerVisual::~CContainerVisual(void) __ptr64",
+          "rva": "0x18DC0"
         },
         "CDWriteText::InitializeVisualTreeClone": {
           "name": "protected: long __cdecl CDWriteText::InitializeVisualTreeClone(class CDWriteText * __ptr64,enum CloneOptions) __ptr64",
@@ -1464,6 +1632,18 @@
         "CGraphicsDeviceManager::ReleaseGraphicsDevice": {
           "name": "protected: long __cdecl CGraphicsDeviceManager::ReleaseGraphicsDevice(void) __ptr64",
           "rva": "0x53C08"
+        },
+        "CImage::Create": {
+          "name": "public: static long __cdecl CImage::Create(class CImage * __ptr64 * __ptr64)",
+          "rva": "0x236FC"
+        },
+        "CImage::InitializeVisualTreeClone": {
+          "name": "protected: long __cdecl CImage::InitializeVisualTreeClone(class CImage * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0xB93C8"
+        },
+        "CImage::SetBitmapSource": {
+          "name": "public: void __cdecl CImage::SetBitmapSource(class CBitmapSource * __ptr64) __ptr64",
+          "rva": "0x7D3C"
         },
         "CLegacyNonClientBackground::ClearAll": {
           "name": "public: void __cdecl CLegacyNonClientBackground::ClearAll(void) __ptr64",
@@ -1553,6 +1733,14 @@
           "name": "public: long __cdecl CTopLevelWindow::CloneVisualTreeForLivePreview(bool,class CTopLevelWindow * __ptr64 * __ptr64) __ptr64",
           "rva": "0x1FF4C"
         },
+        "CTopLevelWindow::CreateBitmapFromAtlas": {
+          "name": "public: static long __cdecl CTopLevelWindow::CreateBitmapFromAtlas(void * __ptr64 const,int,struct _MARGINS * __ptr64,class CBitmapSource * __ptr64 * __ptr64)",
+          "rva": "0x454CC"
+        },
+        "CTopLevelWindow::CreateGlyphsFromAtlas": {
+          "name": "private: static long __cdecl CTopLevelWindow::CreateGlyphsFromAtlas(void * __ptr64 const)",
+          "rva": "0x44E00"
+        },
         "CTopLevelWindow::EdgeBorderMustBeOpaque": {
           "name": "private: int __cdecl CTopLevelWindow::EdgeBorderMustBeOpaque(void) __ptr64",
           "rva": "0x52BC0"
@@ -1580,6 +1768,10 @@
         "CTopLevelWindow::TreatAsActiveWindow": {
           "name": "private: bool __cdecl CTopLevelWindow::TreatAsActiveWindow(void)const __ptr64",
           "rva": "0x50A50"
+        },
+        "CTopLevelWindow::UpdateButtonVisuals": {
+          "name": "private: long __cdecl CTopLevelWindow::UpdateButtonVisuals(struct CTopLevelWindow::WindowFrame const * __ptr64) __ptr64",
+          "rva": "0x1CB10"
         },
         "CTopLevelWindow::UpdateClientBlur": {
           "name": "private: long __cdecl CTopLevelWindow::UpdateClientBlur(void) __ptr64",
@@ -1609,9 +1801,9 @@
           "name": "private: virtual __cdecl CTopLevelWindow::~CTopLevelWindow(void) __ptr64",
           "rva": "0x5AE6C"
         },
-        "CVisual::SendSetOffset": {
-          "name": "protected: virtual long __cdecl CVisual::SendSetOffset(struct tagPOINT const & __ptr64) __ptr64",
-          "rva": "0x9720"
+        "CVisual::MoveToFront": {
+          "name": "public: long __cdecl CVisual::MoveToFront(bool) __ptr64",
+          "rva": "0x137E0"
         },
         "CVisual::SetDirtyFlags": {
           "name": "protected: virtual void __cdecl CVisual::SetDirtyFlags(class DirtyFlags) __ptr64",
@@ -1700,9 +1892,13 @@
           "name": "protected: long __cdecl CAccent::_UpdateSolidFill(class CNineGridVisual * __ptr64,unsigned long,struct tagRECT const & __ptr64,float) __ptr64",
           "rva": "0x95024"
         },
-        "CButton::vftable": {
-          "name": "const CButton::`vftable'",
-          "rva": "0xEE078"
+        "CButton::DrawStateW": {
+          "name": "private: void __cdecl CButton::DrawStateW(class CButtonVisual * __ptr64,enum CButton::ButtonStates) __ptr64",
+          "rva": "0x7C24"
+        },
+        "CButton::InitializeVisualTreeClone": {
+          "name": "public: long __cdecl CButton::InitializeVisualTreeClone(class CButton * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0x5DEB4"
         },
         "CCompositor::ForceRender": {
           "name": "public: long __cdecl CCompositor::ForceRender(void) __ptr64",
@@ -1715,6 +1911,10 @@
         "CContainerVisual::RenderRecursive": {
           "name": "public: virtual void __cdecl CContainerVisual::RenderRecursive(void) __ptr64",
           "rva": "0x85660"
+        },
+        "CContainerVisual::~CContainerVisual": {
+          "name": "protected: virtual __cdecl CContainerVisual::~CContainerVisual(void) __ptr64",
+          "rva": "0x18DC0"
         },
         "CDWriteText::InitializeVisualTreeClone": {
           "name": "protected: long __cdecl CDWriteText::InitializeVisualTreeClone(class CDWriteText * __ptr64,enum CloneOptions) __ptr64",
@@ -1743,6 +1943,18 @@
         "CGraphicsDeviceManager::ReleaseGraphicsDevice": {
           "name": "protected: long __cdecl CGraphicsDeviceManager::ReleaseGraphicsDevice(void) __ptr64",
           "rva": "0x53C08"
+        },
+        "CImage::Create": {
+          "name": "public: static long __cdecl CImage::Create(class CImage * __ptr64 * __ptr64)",
+          "rva": "0x236FC"
+        },
+        "CImage::InitializeVisualTreeClone": {
+          "name": "protected: long __cdecl CImage::InitializeVisualTreeClone(class CImage * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0xB93C8"
+        },
+        "CImage::SetBitmapSource": {
+          "name": "public: void __cdecl CImage::SetBitmapSource(class CBitmapSource * __ptr64) __ptr64",
+          "rva": "0x7D3C"
         },
         "CLegacyNonClientBackground::ClearAll": {
           "name": "public: void __cdecl CLegacyNonClientBackground::ClearAll(void) __ptr64",
@@ -1832,6 +2044,14 @@
           "name": "public: long __cdecl CTopLevelWindow::CloneVisualTreeForLivePreview(bool,class CTopLevelWindow * __ptr64 * __ptr64) __ptr64",
           "rva": "0x1FF4C"
         },
+        "CTopLevelWindow::CreateBitmapFromAtlas": {
+          "name": "public: static long __cdecl CTopLevelWindow::CreateBitmapFromAtlas(void * __ptr64 const,int,struct _MARGINS * __ptr64,class CBitmapSource * __ptr64 * __ptr64)",
+          "rva": "0x454CC"
+        },
+        "CTopLevelWindow::CreateGlyphsFromAtlas": {
+          "name": "private: static long __cdecl CTopLevelWindow::CreateGlyphsFromAtlas(void * __ptr64 const)",
+          "rva": "0x44E00"
+        },
         "CTopLevelWindow::EdgeBorderMustBeOpaque": {
           "name": "private: int __cdecl CTopLevelWindow::EdgeBorderMustBeOpaque(void) __ptr64",
           "rva": "0x52BC0"
@@ -1859,6 +2079,10 @@
         "CTopLevelWindow::TreatAsActiveWindow": {
           "name": "private: bool __cdecl CTopLevelWindow::TreatAsActiveWindow(void)const __ptr64",
           "rva": "0x50A50"
+        },
+        "CTopLevelWindow::UpdateButtonVisuals": {
+          "name": "private: long __cdecl CTopLevelWindow::UpdateButtonVisuals(struct CTopLevelWindow::WindowFrame const * __ptr64) __ptr64",
+          "rva": "0x1CB10"
         },
         "CTopLevelWindow::UpdateClientBlur": {
           "name": "private: long __cdecl CTopLevelWindow::UpdateClientBlur(void) __ptr64",
@@ -1888,9 +2112,9 @@
           "name": "private: virtual __cdecl CTopLevelWindow::~CTopLevelWindow(void) __ptr64",
           "rva": "0x5AE6C"
         },
-        "CVisual::SendSetOffset": {
-          "name": "protected: virtual long __cdecl CVisual::SendSetOffset(struct tagPOINT const & __ptr64) __ptr64",
-          "rva": "0x9720"
+        "CVisual::MoveToFront": {
+          "name": "public: long __cdecl CVisual::MoveToFront(bool) __ptr64",
+          "rva": "0x137E0"
         },
         "CVisual::SetDirtyFlags": {
           "name": "protected: virtual void __cdecl CVisual::SetDirtyFlags(class DirtyFlags) __ptr64",
@@ -1979,9 +2203,13 @@
           "name": "protected: long __cdecl CAccent::_UpdateSolidFill(class CNineGridVisual * __ptr64,unsigned long,struct tagRECT const & __ptr64,float) __ptr64",
           "rva": "0x94E94"
         },
-        "CButton::vftable": {
-          "name": "const CButton::`vftable'",
-          "rva": "0xEF078"
+        "CButton::DrawStateW": {
+          "name": "private: void __cdecl CButton::DrawStateW(class CButtonVisual * __ptr64,enum CButton::ButtonStates) __ptr64",
+          "rva": "0x7C04"
+        },
+        "CButton::InitializeVisualTreeClone": {
+          "name": "public: long __cdecl CButton::InitializeVisualTreeClone(class CButton * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0x5E644"
         },
         "CCompositor::ForceRender": {
           "name": "public: long __cdecl CCompositor::ForceRender(void) __ptr64",
@@ -1994,6 +2222,10 @@
         "CContainerVisual::RenderRecursive": {
           "name": "public: virtual void __cdecl CContainerVisual::RenderRecursive(void) __ptr64",
           "rva": "0x854C0"
+        },
+        "CContainerVisual::~CContainerVisual": {
+          "name": "protected: virtual __cdecl CContainerVisual::~CContainerVisual(void) __ptr64",
+          "rva": "0x18CC0"
         },
         "CDWriteText::InitializeVisualTreeClone": {
           "name": "protected: long __cdecl CDWriteText::InitializeVisualTreeClone(class CDWriteText * __ptr64,enum CloneOptions) __ptr64",
@@ -2022,6 +2254,18 @@
         "CGraphicsDeviceManager::ReleaseGraphicsDevice": {
           "name": "protected: long __cdecl CGraphicsDeviceManager::ReleaseGraphicsDevice(void) __ptr64",
           "rva": "0x539A8"
+        },
+        "CImage::Create": {
+          "name": "public: static long __cdecl CImage::Create(class CImage * __ptr64 * __ptr64)",
+          "rva": "0x235FC"
+        },
+        "CImage::InitializeVisualTreeClone": {
+          "name": "protected: long __cdecl CImage::InitializeVisualTreeClone(class CImage * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0xBA3D8"
+        },
+        "CImage::SetBitmapSource": {
+          "name": "public: void __cdecl CImage::SetBitmapSource(class CBitmapSource * __ptr64) __ptr64",
+          "rva": "0x7D1C"
         },
         "CLegacyNonClientBackground::ClearAll": {
           "name": "public: void __cdecl CLegacyNonClientBackground::ClearAll(void) __ptr64",
@@ -2111,6 +2355,14 @@
           "name": "public: long __cdecl CTopLevelWindow::CloneVisualTreeForLivePreview(bool,class CTopLevelWindow * __ptr64 * __ptr64) __ptr64",
           "rva": "0x1FE4C"
         },
+        "CTopLevelWindow::CreateBitmapFromAtlas": {
+          "name": "public: static long __cdecl CTopLevelWindow::CreateBitmapFromAtlas(void * __ptr64 const,int,struct _MARGINS * __ptr64,class CBitmapSource * __ptr64 * __ptr64)",
+          "rva": "0x4526C"
+        },
+        "CTopLevelWindow::CreateGlyphsFromAtlas": {
+          "name": "private: static long __cdecl CTopLevelWindow::CreateGlyphsFromAtlas(void * __ptr64 const)",
+          "rva": "0x44BA0"
+        },
         "CTopLevelWindow::EdgeBorderMustBeOpaque": {
           "name": "private: int __cdecl CTopLevelWindow::EdgeBorderMustBeOpaque(void) __ptr64",
           "rva": "0x52960"
@@ -2138,6 +2390,10 @@
         "CTopLevelWindow::TreatAsActiveWindow": {
           "name": "private: bool __cdecl CTopLevelWindow::TreatAsActiveWindow(void)const __ptr64",
           "rva": "0x507F0"
+        },
+        "CTopLevelWindow::UpdateButtonVisuals": {
+          "name": "private: long __cdecl CTopLevelWindow::UpdateButtonVisuals(struct CTopLevelWindow::WindowFrame const * __ptr64) __ptr64",
+          "rva": "0x1CA10"
         },
         "CTopLevelWindow::UpdateClientBlur": {
           "name": "private: long __cdecl CTopLevelWindow::UpdateClientBlur(void) __ptr64",
@@ -2167,9 +2423,9 @@
           "name": "private: virtual __cdecl CTopLevelWindow::~CTopLevelWindow(void) __ptr64",
           "rva": "0x5B5FC"
         },
-        "CVisual::SendSetOffset": {
-          "name": "protected: virtual long __cdecl CVisual::SendSetOffset(struct tagPOINT const & __ptr64) __ptr64",
-          "rva": "0x9700"
+        "CVisual::MoveToFront": {
+          "name": "public: long __cdecl CVisual::MoveToFront(bool) __ptr64",
+          "rva": "0x136E0"
         },
         "CVisual::SetDirtyFlags": {
           "name": "protected: virtual void __cdecl CVisual::SetDirtyFlags(class DirtyFlags) __ptr64",
@@ -2258,9 +2514,13 @@
           "name": "protected: long __cdecl CAccent::_UpdateSolidFill(class CNineGridVisual * __ptr64,unsigned long,struct tagRECT const & __ptr64,float) __ptr64",
           "rva": "0x94EB4"
         },
-        "CButton::vftable": {
-          "name": "const CButton::`vftable'",
-          "rva": "0xF0078"
+        "CButton::DrawStateW": {
+          "name": "private: void __cdecl CButton::DrawStateW(class CButtonVisual * __ptr64,enum CButton::ButtonStates) __ptr64",
+          "rva": "0x7C04"
+        },
+        "CButton::InitializeVisualTreeClone": {
+          "name": "public: long __cdecl CButton::InitializeVisualTreeClone(class CButton * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0x5FAE4"
         },
         "CCompositor::ForceRender": {
           "name": "public: long __cdecl CCompositor::ForceRender(void) __ptr64",
@@ -2273,6 +2533,10 @@
         "CContainerVisual::RenderRecursive": {
           "name": "public: virtual void __cdecl CContainerVisual::RenderRecursive(void) __ptr64",
           "rva": "0x854E0"
+        },
+        "CContainerVisual::~CContainerVisual": {
+          "name": "protected: virtual __cdecl CContainerVisual::~CContainerVisual(void) __ptr64",
+          "rva": "0x18CC0"
         },
         "CDWriteText::InitializeVisualTreeClone": {
           "name": "protected: long __cdecl CDWriteText::InitializeVisualTreeClone(class CDWriteText * __ptr64,enum CloneOptions) __ptr64",
@@ -2301,6 +2565,18 @@
         "CGraphicsDeviceManager::ReleaseGraphicsDevice": {
           "name": "protected: long __cdecl CGraphicsDeviceManager::ReleaseGraphicsDevice(void) __ptr64",
           "rva": "0x550C8"
+        },
+        "CImage::Create": {
+          "name": "public: static long __cdecl CImage::Create(class CImage * __ptr64 * __ptr64)",
+          "rva": "0x235FC"
+        },
+        "CImage::InitializeVisualTreeClone": {
+          "name": "protected: long __cdecl CImage::InitializeVisualTreeClone(class CImage * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0xBA3F8"
+        },
+        "CImage::SetBitmapSource": {
+          "name": "public: void __cdecl CImage::SetBitmapSource(class CBitmapSource * __ptr64) __ptr64",
+          "rva": "0x7D1C"
         },
         "CLegacyNonClientBackground::ClearAll": {
           "name": "public: void __cdecl CLegacyNonClientBackground::ClearAll(void) __ptr64",
@@ -2390,6 +2666,14 @@
           "name": "public: long __cdecl CTopLevelWindow::CloneVisualTreeForLivePreview(bool,class CTopLevelWindow * __ptr64 * __ptr64) __ptr64",
           "rva": "0x1FE4C"
         },
+        "CTopLevelWindow::CreateBitmapFromAtlas": {
+          "name": "public: static long __cdecl CTopLevelWindow::CreateBitmapFromAtlas(void * __ptr64 const,int,struct _MARGINS * __ptr64,class CBitmapSource * __ptr64 * __ptr64)",
+          "rva": "0x441AC"
+        },
+        "CTopLevelWindow::CreateGlyphsFromAtlas": {
+          "name": "private: static long __cdecl CTopLevelWindow::CreateGlyphsFromAtlas(void * __ptr64 const)",
+          "rva": "0x43AE0"
+        },
         "CTopLevelWindow::EdgeBorderMustBeOpaque": {
           "name": "private: int __cdecl CTopLevelWindow::EdgeBorderMustBeOpaque(void) __ptr64",
           "rva": "0x4F400"
@@ -2417,6 +2701,10 @@
         "CTopLevelWindow::TreatAsActiveWindow": {
           "name": "private: bool __cdecl CTopLevelWindow::TreatAsActiveWindow(void)const __ptr64",
           "rva": "0x4D290"
+        },
+        "CTopLevelWindow::UpdateButtonVisuals": {
+          "name": "private: long __cdecl CTopLevelWindow::UpdateButtonVisuals(struct CTopLevelWindow::WindowFrame const * __ptr64) __ptr64",
+          "rva": "0x1CA10"
         },
         "CTopLevelWindow::UpdateClientBlur": {
           "name": "private: long __cdecl CTopLevelWindow::UpdateClientBlur(void) __ptr64",
@@ -2446,9 +2734,9 @@
           "name": "private: virtual __cdecl CTopLevelWindow::~CTopLevelWindow(void) __ptr64",
           "rva": "0x5CCFC"
         },
-        "CVisual::SendSetOffset": {
-          "name": "protected: virtual long __cdecl CVisual::SendSetOffset(struct tagPOINT const & __ptr64) __ptr64",
-          "rva": "0x9700"
+        "CVisual::MoveToFront": {
+          "name": "public: long __cdecl CVisual::MoveToFront(bool) __ptr64",
+          "rva": "0x136E0"
         },
         "CVisual::SetDirtyFlags": {
           "name": "protected: virtual void __cdecl CVisual::SetDirtyFlags(class DirtyFlags) __ptr64",
@@ -2537,9 +2825,13 @@
           "name": "protected: long __cdecl CAccent::_UpdateSolidFill(class CNineGridVisual * __ptr64,unsigned long,struct tagRECT const & __ptr64,float) __ptr64",
           "rva": "0x94F84"
         },
-        "CButton::vftable": {
-          "name": "const CButton::`vftable'",
-          "rva": "0xF0078"
+        "CButton::DrawStateW": {
+          "name": "private: void __cdecl CButton::DrawStateW(class CButtonVisual * __ptr64,enum CButton::ButtonStates) __ptr64",
+          "rva": "0x7C14"
+        },
+        "CButton::InitializeVisualTreeClone": {
+          "name": "public: long __cdecl CButton::InitializeVisualTreeClone(class CButton * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0x5DA84"
         },
         "CCompositor::ForceRender": {
           "name": "public: long __cdecl CCompositor::ForceRender(void) __ptr64",
@@ -2552,6 +2844,10 @@
         "CContainerVisual::RenderRecursive": {
           "name": "public: virtual void __cdecl CContainerVisual::RenderRecursive(void) __ptr64",
           "rva": "0x85520"
+        },
+        "CContainerVisual::~CContainerVisual": {
+          "name": "protected: virtual __cdecl CContainerVisual::~CContainerVisual(void) __ptr64",
+          "rva": "0x187F0"
         },
         "CDWriteText::InitializeVisualTreeClone": {
           "name": "protected: long __cdecl CDWriteText::InitializeVisualTreeClone(class CDWriteText * __ptr64,enum CloneOptions) __ptr64",
@@ -2580,6 +2876,18 @@
         "CGraphicsDeviceManager::ReleaseGraphicsDevice": {
           "name": "protected: long __cdecl CGraphicsDeviceManager::ReleaseGraphicsDevice(void) __ptr64",
           "rva": "0x52EA8"
+        },
+        "CImage::Create": {
+          "name": "public: static long __cdecl CImage::Create(class CImage * __ptr64 * __ptr64)",
+          "rva": "0x2351C"
+        },
+        "CImage::InitializeVisualTreeClone": {
+          "name": "protected: long __cdecl CImage::InitializeVisualTreeClone(class CImage * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0xBA188"
+        },
+        "CImage::SetBitmapSource": {
+          "name": "public: void __cdecl CImage::SetBitmapSource(class CBitmapSource * __ptr64) __ptr64",
+          "rva": "0x7D2C"
         },
         "CLegacyNonClientBackground::ClearAll": {
           "name": "public: void __cdecl CLegacyNonClientBackground::ClearAll(void) __ptr64",
@@ -2669,6 +2977,14 @@
           "name": "public: long __cdecl CTopLevelWindow::CloneVisualTreeForLivePreview(bool,class CTopLevelWindow * __ptr64 * __ptr64) __ptr64",
           "rva": "0x1FD70"
         },
+        "CTopLevelWindow::CreateBitmapFromAtlas": {
+          "name": "public: static long __cdecl CTopLevelWindow::CreateBitmapFromAtlas(void * __ptr64 const,int,struct _MARGINS * __ptr64,class CBitmapSource * __ptr64 * __ptr64)",
+          "rva": "0x3FE6C"
+        },
+        "CTopLevelWindow::CreateGlyphsFromAtlas": {
+          "name": "private: static long __cdecl CTopLevelWindow::CreateGlyphsFromAtlas(void * __ptr64 const)",
+          "rva": "0x3F7A0"
+        },
         "CTopLevelWindow::EdgeBorderMustBeOpaque": {
           "name": "private: int __cdecl CTopLevelWindow::EdgeBorderMustBeOpaque(void) __ptr64",
           "rva": "0x4D1E0"
@@ -2696,6 +3012,10 @@
         "CTopLevelWindow::TreatAsActiveWindow": {
           "name": "private: bool __cdecl CTopLevelWindow::TreatAsActiveWindow(void)const __ptr64",
           "rva": "0x4B0C0"
+        },
+        "CTopLevelWindow::UpdateButtonVisuals": {
+          "name": "private: long __cdecl CTopLevelWindow::UpdateButtonVisuals(struct CTopLevelWindow::WindowFrame const * __ptr64) __ptr64",
+          "rva": "0x1C540"
         },
         "CTopLevelWindow::UpdateClientBlur": {
           "name": "private: long __cdecl CTopLevelWindow::UpdateClientBlur(void) __ptr64",
@@ -2725,9 +3045,9 @@
           "name": "private: virtual __cdecl CTopLevelWindow::~CTopLevelWindow(void) __ptr64",
           "rva": "0x5AEDC"
         },
-        "CVisual::SendSetOffset": {
-          "name": "protected: virtual long __cdecl CVisual::SendSetOffset(struct tagPOINT const & __ptr64) __ptr64",
-          "rva": "0x9710"
+        "CVisual::MoveToFront": {
+          "name": "public: long __cdecl CVisual::MoveToFront(bool) __ptr64",
+          "rva": "0x13750"
         },
         "CVisual::SetDirtyFlags": {
           "name": "protected: virtual void __cdecl CVisual::SetDirtyFlags(class DirtyFlags) __ptr64",
@@ -2816,9 +3136,13 @@
           "name": "protected: long __cdecl CAccent::_UpdateSolidFill(class CNineGridVisual * __ptr64,unsigned long,struct tagRECT const & __ptr64,float) __ptr64",
           "rva": "0x95644"
         },
-        "CButton::vftable": {
-          "name": "const CButton::`vftable'",
-          "rva": "0xF9078"
+        "CButton::DrawStateW": {
+          "name": "private: void __cdecl CButton::DrawStateW(class CButtonVisual * __ptr64,enum CButton::ButtonStates) __ptr64",
+          "rva": "0x7C14"
+        },
+        "CButton::InitializeVisualTreeClone": {
+          "name": "public: long __cdecl CButton::InitializeVisualTreeClone(class CButton * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0x5D634"
         },
         "CCompositor::ForceRender": {
           "name": "public: long __cdecl CCompositor::ForceRender(void) __ptr64",
@@ -2831,6 +3155,10 @@
         "CContainerVisual::RenderRecursive": {
           "name": "public: virtual void __cdecl CContainerVisual::RenderRecursive(void) __ptr64",
           "rva": "0x85BD0"
+        },
+        "CContainerVisual::~CContainerVisual": {
+          "name": "protected: virtual __cdecl CContainerVisual::~CContainerVisual(void) __ptr64",
+          "rva": "0x187F0"
         },
         "CDWriteText::InitializeVisualTreeClone": {
           "name": "protected: long __cdecl CDWriteText::InitializeVisualTreeClone(class CDWriteText * __ptr64,enum CloneOptions) __ptr64",
@@ -2859,6 +3187,18 @@
         "CGraphicsDeviceManager::ReleaseGraphicsDevice": {
           "name": "protected: long __cdecl CGraphicsDeviceManager::ReleaseGraphicsDevice(void) __ptr64",
           "rva": "0x52B18"
+        },
+        "CImage::Create": {
+          "name": "public: static long __cdecl CImage::Create(class CImage * __ptr64 * __ptr64)",
+          "rva": "0x2334C"
+        },
+        "CImage::InitializeVisualTreeClone": {
+          "name": "protected: long __cdecl CImage::InitializeVisualTreeClone(class CImage * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0xC13E8"
+        },
+        "CImage::SetBitmapSource": {
+          "name": "public: void __cdecl CImage::SetBitmapSource(class CBitmapSource * __ptr64) __ptr64",
+          "rva": "0x7D2C"
         },
         "CLegacyNonClientBackground::ClearAll": {
           "name": "public: void __cdecl CLegacyNonClientBackground::ClearAll(void) __ptr64",
@@ -2948,6 +3288,14 @@
           "name": "public: long __cdecl CTopLevelWindow::CloneVisualTreeForLivePreview(bool,class CTopLevelWindow * __ptr64 * __ptr64) __ptr64",
           "rva": "0x1FBA0"
         },
+        "CTopLevelWindow::CreateBitmapFromAtlas": {
+          "name": "public: static long __cdecl CTopLevelWindow::CreateBitmapFromAtlas(void * __ptr64 const,int,struct _MARGINS * __ptr64,class CBitmapSource * __ptr64 * __ptr64)",
+          "rva": "0x3FC9C"
+        },
+        "CTopLevelWindow::CreateGlyphsFromAtlas": {
+          "name": "private: static long __cdecl CTopLevelWindow::CreateGlyphsFromAtlas(void * __ptr64 const)",
+          "rva": "0x3F5D0"
+        },
         "CTopLevelWindow::EdgeBorderMustBeOpaque": {
           "name": "private: int __cdecl CTopLevelWindow::EdgeBorderMustBeOpaque(void) __ptr64",
           "rva": "0x4CD40"
@@ -2975,6 +3323,10 @@
         "CTopLevelWindow::TreatAsActiveWindow": {
           "name": "private: bool __cdecl CTopLevelWindow::TreatAsActiveWindow(void)const __ptr64",
           "rva": "0x4A940"
+        },
+        "CTopLevelWindow::UpdateButtonVisuals": {
+          "name": "private: long __cdecl CTopLevelWindow::UpdateButtonVisuals(struct CTopLevelWindow::WindowFrame const * __ptr64) __ptr64",
+          "rva": "0x1C3C0"
         },
         "CTopLevelWindow::UpdateClientBlur": {
           "name": "private: long __cdecl CTopLevelWindow::UpdateClientBlur(void) __ptr64",
@@ -3004,9 +3356,9 @@
           "name": "private: virtual __cdecl CTopLevelWindow::~CTopLevelWindow(void) __ptr64",
           "rva": "0x5AA8C"
         },
-        "CVisual::SendSetOffset": {
-          "name": "protected: virtual long __cdecl CVisual::SendSetOffset(struct tagPOINT const & __ptr64) __ptr64",
-          "rva": "0x9710"
+        "CVisual::MoveToFront": {
+          "name": "public: long __cdecl CVisual::MoveToFront(bool) __ptr64",
+          "rva": "0x139D0"
         },
         "CVisual::SetDirtyFlags": {
           "name": "protected: virtual void __cdecl CVisual::SetDirtyFlags(class DirtyFlags) __ptr64",
@@ -3095,9 +3447,13 @@
           "name": "protected: long __cdecl CAccent::_UpdateSolidFill(class CNineGridVisual * __ptr64,unsigned long,struct tagRECT const & __ptr64,float) __ptr64",
           "rva": "0x95644"
         },
-        "CButton::vftable": {
-          "name": "const CButton::`vftable'",
-          "rva": "0xF9078"
+        "CButton::DrawStateW": {
+          "name": "private: void __cdecl CButton::DrawStateW(class CButtonVisual * __ptr64,enum CButton::ButtonStates) __ptr64",
+          "rva": "0x7C14"
+        },
+        "CButton::InitializeVisualTreeClone": {
+          "name": "public: long __cdecl CButton::InitializeVisualTreeClone(class CButton * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0x5D634"
         },
         "CCompositor::ForceRender": {
           "name": "public: long __cdecl CCompositor::ForceRender(void) __ptr64",
@@ -3110,6 +3466,10 @@
         "CContainerVisual::RenderRecursive": {
           "name": "public: virtual void __cdecl CContainerVisual::RenderRecursive(void) __ptr64",
           "rva": "0x85BD0"
+        },
+        "CContainerVisual::~CContainerVisual": {
+          "name": "protected: virtual __cdecl CContainerVisual::~CContainerVisual(void) __ptr64",
+          "rva": "0x187F0"
         },
         "CDWriteText::InitializeVisualTreeClone": {
           "name": "protected: long __cdecl CDWriteText::InitializeVisualTreeClone(class CDWriteText * __ptr64,enum CloneOptions) __ptr64",
@@ -3138,6 +3498,18 @@
         "CGraphicsDeviceManager::ReleaseGraphicsDevice": {
           "name": "protected: long __cdecl CGraphicsDeviceManager::ReleaseGraphicsDevice(void) __ptr64",
           "rva": "0x52B18"
+        },
+        "CImage::Create": {
+          "name": "public: static long __cdecl CImage::Create(class CImage * __ptr64 * __ptr64)",
+          "rva": "0x2334C"
+        },
+        "CImage::InitializeVisualTreeClone": {
+          "name": "protected: long __cdecl CImage::InitializeVisualTreeClone(class CImage * __ptr64,enum CloneOptions) __ptr64",
+          "rva": "0xC13F8"
+        },
+        "CImage::SetBitmapSource": {
+          "name": "public: void __cdecl CImage::SetBitmapSource(class CBitmapSource * __ptr64) __ptr64",
+          "rva": "0x7D2C"
         },
         "CLegacyNonClientBackground::ClearAll": {
           "name": "public: void __cdecl CLegacyNonClientBackground::ClearAll(void) __ptr64",
@@ -3227,6 +3599,14 @@
           "name": "public: long __cdecl CTopLevelWindow::CloneVisualTreeForLivePreview(bool,class CTopLevelWindow * __ptr64 * __ptr64) __ptr64",
           "rva": "0x1FBA0"
         },
+        "CTopLevelWindow::CreateBitmapFromAtlas": {
+          "name": "public: static long __cdecl CTopLevelWindow::CreateBitmapFromAtlas(void * __ptr64 const,int,struct _MARGINS * __ptr64,class CBitmapSource * __ptr64 * __ptr64)",
+          "rva": "0x3FC9C"
+        },
+        "CTopLevelWindow::CreateGlyphsFromAtlas": {
+          "name": "private: static long __cdecl CTopLevelWindow::CreateGlyphsFromAtlas(void * __ptr64 const)",
+          "rva": "0x3F5D0"
+        },
         "CTopLevelWindow::EdgeBorderMustBeOpaque": {
           "name": "private: int __cdecl CTopLevelWindow::EdgeBorderMustBeOpaque(void) __ptr64",
           "rva": "0x4CD40"
@@ -3254,6 +3634,10 @@
         "CTopLevelWindow::TreatAsActiveWindow": {
           "name": "private: bool __cdecl CTopLevelWindow::TreatAsActiveWindow(void)const __ptr64",
           "rva": "0x4A940"
+        },
+        "CTopLevelWindow::UpdateButtonVisuals": {
+          "name": "private: long __cdecl CTopLevelWindow::UpdateButtonVisuals(struct CTopLevelWindow::WindowFrame const * __ptr64) __ptr64",
+          "rva": "0x1C3C0"
         },
         "CTopLevelWindow::UpdateClientBlur": {
           "name": "private: long __cdecl CTopLevelWindow::UpdateClientBlur(void) __ptr64",
@@ -3283,9 +3667,9 @@
           "name": "private: virtual __cdecl CTopLevelWindow::~CTopLevelWindow(void) __ptr64",
           "rva": "0x5AA8C"
         },
-        "CVisual::SendSetOffset": {
-          "name": "protected: virtual long __cdecl CVisual::SendSetOffset(struct tagPOINT const & __ptr64) __ptr64",
-          "rva": "0x9710"
+        "CVisual::MoveToFront": {
+          "name": "public: long __cdecl CVisual::MoveToFront(bool) __ptr64",
+          "rva": "0x139D0"
         },
         "CVisual::SetDirtyFlags": {
           "name": "protected: virtual void __cdecl CVisual::SetDirtyFlags(class DirtyFlags) __ptr64",

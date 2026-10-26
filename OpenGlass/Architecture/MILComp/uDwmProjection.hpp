@@ -104,6 +104,10 @@ namespace OpenGlass::uDWM
 	};
 	struct CVisual : IVisual
 	{
+		inline HRESULT MoveToFront(bool treeLevel)
+		{
+			OPENGLASS_MUSTTAIL return Projection::Invoke<&CVisual::MoveToFront>(this, treeLevel);
+		}
 		inline void SetOpacity(double opacity)
 		{
 			OPENGLASS_MUSTTAIL return Projection::Invoke<&CVisual::SetOpacity>(this, opacity);
@@ -373,8 +377,26 @@ namespace OpenGlass::uDWM
 		}
 	};
 
-	struct CImage : CNineGridVisual {};
-	struct CBitmapSource : CBaseObject {};
+	struct CBitmapSource;
+	struct CImage : CNineGridVisual
+	{
+		inline static HRESULT Create(CImage** image)
+		{
+			OPENGLASS_MUSTTAIL return Projection::Invoke<&CImage::Create>(image);
+		}
+		inline void SetBitmapSource(CBitmapSource* bitmap)
+		{
+			OPENGLASS_MUSTTAIL return Projection::Invoke<&CImage::SetBitmapSource>(this, bitmap);
+		}
+	};
+	struct CButtonVisual : CImage {};
+	struct CBitmapSource : CBaseObject
+	{
+		MARGINS& GetOutsetMargins()
+		{
+			return CBitmapSource_OutsetMargins.ref(this);
+		}
+	};
 	struct CBitmapSourceArray : DynArray<CBitmapSource*> {};
 
 	struct CPrimitive : CBaseObject {};
@@ -395,8 +417,6 @@ namespace OpenGlass::uDWM
 
 	struct CButton : CCanvasVisual
 	{
-		inline static PVOID* vftable{ nullptr };
-
 		inline float& GetGlyphOpacity()
 		{
 			return *CButton_GetGlyphOpacity.address(this);
@@ -529,6 +549,11 @@ namespace OpenGlass::uDWM
 	};
 	struct CTopLevelWindow : CContainerVisual
 	{
+		struct WindowFrame;
+		inline static HRESULT CreateBitmapFromAtlas(HTHEME theme, int partId, MARGINS* margins, CBitmapSource** bitmap)
+		{
+			OPENGLASS_MUSTTAIL return Projection::Invoke<&CTopLevelWindow::CreateBitmapFromAtlas>(theme, partId, margins, bitmap);
+		}
 		inline void OnAccentPolicyUpdated()
 		{
 			OPENGLASS_MUSTTAIL return Projection::Invoke<&CTopLevelWindow::OnAccentPolicyUpdated>(this);
@@ -818,7 +843,6 @@ namespace OpenGlass::uDWM
 	);
 	struct CGraphicsDeviceManager;
 	using CVisual_UpdateOffset_t = HRESULT(*)(CVisual*);
-	using CVisual_SendSetOffset_t = HRESULT(*)(CVisual*, const POINT&);
 	using CSpriteVisual_SendSetSize_t = HRESULT(*)(CSpriteVisual*, const SIZE&);
 	using CSpriteVisual_CloneVisualTree_t = HRESULT(*)(CSpriteVisual*, CVisual**, UINT);
 	using CDWriteText_ValidateVisual_t = HRESULT(*)(CDWriteText*);

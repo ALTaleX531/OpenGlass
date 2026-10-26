@@ -8,6 +8,7 @@ namespace OpenGlass::uDWM
 	struct ACCENT_POLICY;
 	struct CAccent;
 	struct CBaseGeometryProxy;
+	struct CBitmapSource;
 	struct CCompositor;
 	struct CContainerVisual;
 	struct CGlassColorizationResources;

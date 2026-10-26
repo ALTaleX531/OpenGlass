@@ -113,6 +113,7 @@
     <None Include="ProjectionSchemas\milcomp\udwm\symbols\window-frame.json" />
     <None Include="ProjectionSchemas\milcomp\udwm\layouts\CAccent.json" />
     <None Include="ProjectionSchemas\milcomp\udwm\layouts\CBaseObject.json" />
+    <None Include="ProjectionSchemas\milcomp\udwm\layouts\CBitmapSource.json" />
     <None Include="ProjectionSchemas\milcomp\udwm\layouts\CButton.json" />
     <None Include="ProjectionSchemas\milcomp\udwm\layouts\CCompositor.json" />
     <None Include="ProjectionSchemas\milcomp\udwm\layouts\CDWriteText.json" />

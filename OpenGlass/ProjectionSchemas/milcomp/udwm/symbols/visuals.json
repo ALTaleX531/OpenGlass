@@ -22,27 +22,6 @@
       "kind": "raw"
     },
     {
-      "name": "Symbol_CVisual_SendSetOffset",
-      "id": "CVisual::SendSetOffset",
-      "bindings": [
-        {
-          "platform": null,
-          "type": "CVisual_SendSetOffset_t",
-          "ranges": [
-            {
-              "symbol_names": [
-                "protected: virtual long __cdecl CVisual::SendSetOffset(struct tagPOINT const & __ptr64) __ptr64"
-              ],
-              "min_inclusive": null,
-              "max_exclusive": null
-            }
-          ]
-        }
-      ],
-      "requirement": "required",
-      "kind": "raw"
-    },
-    {
       "name": "Symbol_CVisual_SetSize",
       "id": "CVisual::SetSize",
       "bindings": [

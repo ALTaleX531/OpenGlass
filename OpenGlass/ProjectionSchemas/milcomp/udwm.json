@@ -26,6 +26,7 @@
   "layouts": [
     "udwm/layouts/CAccent.json",
     "udwm/layouts/CBaseObject.json",
+    "udwm/layouts/CBitmapSource.json",
     "udwm/layouts/CButton.json",
     "udwm/layouts/CCompositor.json",
     "udwm/layouts/CDWriteText.json",

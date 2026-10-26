@@ -1,0 +1,22 @@
+{
+  "layouts": [
+    {
+      "name": "CBitmapSource_OutsetMargins",
+      "id": "CBitmapSource.OutsetMargins",
+      "kind": "field",
+      "type": "MARGINS",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 152,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "28000.1/3231: CImage::UpdateRectangle reads +0x98/+0xA0 as negative left/top and +0x9C/+0xA4 as added right/bottom. Independently, CBitmapSource::Create(sub-bitmap) stores the supplied source slice margins at +0x88. These destination outsets expand the image rectangle without changing the source slices; CImage::UpdateBitmap uses NineGridLayout for the native brush."
+    }
+  ]
+}
