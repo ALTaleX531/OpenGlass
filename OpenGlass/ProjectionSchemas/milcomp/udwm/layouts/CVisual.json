@@ -106,7 +106,7 @@
           ]
         }
       ],
-      "notes": "xref to VisualCollection::VisualCollection, find CContainerVisual::CContainerVisual:\nVisualCollection::VisualCollection((VisualCollection *)(this + 17));"
+      "notes": "Follow the embedded VisualCollection constructor call in CContainerVisual::CContainerVisual."
     },
     {
       "name": "CVisual_GetVisualProxy",

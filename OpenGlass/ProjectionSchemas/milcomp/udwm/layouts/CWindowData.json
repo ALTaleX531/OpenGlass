@@ -23,7 +23,7 @@
           ]
         }
       ],
-      "notes": "Paired 28000.1, 28000.2525, and 28000.2704 uDWM show CWindowList::AlphaChange, BlurBehindChange, and ForceIconicRepresentationChange applying identical masks at +673 before the transition and +737 afterward. The +64 shift follows the bitmap-source cache inserted at +672 in the later constructors. On 28000.3231 CheckForMaximizedChange uses bit 0x8 at +737 to send OnColorizationUpdated and WM_DWMCOLORIZATIONCOLORCHANGED when the desktop maximized-window set changes."
+      "notes": "Cross-check the client-blur flag read by CWindowList::ForceIconicRepresentationChange and AlphaChange."
     },
     {
       "name": "CWindowData_GetExtendedFrameMargins",
@@ -58,7 +58,7 @@
           ]
         }
       ],
-      "notes": "CTopLevelWindow::GetBorderMargins/CTopLevelWindow::_GetRightFrameThickness\nif ( y <= 0 )\ny = data[x]"
+      "notes": "CTopLevelWindow::GetBorderMargins and _GetRightFrameThickness use the stored frame thickness when the computed border thickness is nonpositive."
     },
     {
       "name": "CWindowData_GetHwnd",
@@ -101,7 +101,7 @@
           ]
         }
       ],
-      "notes": "Paired 28000.1, 28000.2525, and 28000.2704 uDWM constructors initialize the IsOpenThemeDataPresent bit 0x8 at +672 before the transition and +736 afterward. The later constructors insert a 64-byte std hash-vector bitmap-source cache rooted at +672, shifting these trailing flag bytes by +64."
+      "notes": "Follow the nonclient flag tested by CWindowList::BlurBehindChange."
     },
     {
       "name": "CWindowData_GetSystemBackdropType_Index",

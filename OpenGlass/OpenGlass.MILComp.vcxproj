@@ -122,6 +122,7 @@
     <None Include="ProjectionSchemas\milcomp\udwm\layouts\CGraphicsDeviceManager.json" />
     <None Include="ProjectionSchemas\milcomp\udwm\layouts\CLegacyNonClientBackground.json" />
     <None Include="ProjectionSchemas\milcomp\udwm\layouts\CLivePreview.json" />
+    <None Include="ProjectionSchemas\milcomp\udwm\layouts\LivePreview.json" />
     <None Include="ProjectionSchemas\milcomp\udwm\layouts\CRectangleVisual.json" />
     <None Include="ProjectionSchemas\milcomp\udwm\layouts\CResource.json" />
     <None Include="ProjectionSchemas\milcomp\udwm\layouts\CResourceProxy.json" />

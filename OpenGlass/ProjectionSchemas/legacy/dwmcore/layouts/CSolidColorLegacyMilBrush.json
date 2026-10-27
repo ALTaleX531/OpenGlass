@@ -30,7 +30,7 @@
           ]
         }
       ],
-      "notes": "CSolidColorLegacyMilBrush::GetRealizedColor (~63B)\n*(D3DCOLORVALUE *)((char *)this + N) — solid color stored inline"
+      "notes": "CSolidColorLegacyMilBrush::GetRealizedColor reads the inline D3DCOLORVALUE."
     }
   ]
 }

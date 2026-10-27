@@ -154,7 +154,7 @@
           ]
         }
       ],
-      "notes": "CLivePreview\nCLivePreview::_FadeOutToGlass\nxrefs to VisualCollection::InsertRelative\nif ( *(DWORD *)this[x] + y) )\n    goto z;"
+      "notes": "Follow the VisualCollection::InsertRelative receiver in CLivePreview::_FadeOutToGlass."
     }
   ]
 }

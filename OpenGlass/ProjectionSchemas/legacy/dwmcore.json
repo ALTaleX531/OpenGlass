@@ -39,6 +39,7 @@
     "dwmcore/layouts/COcclusionContext.json",
     "dwmcore/layouts/CRenderData.json",
     "dwmcore/layouts/CShape.json",
+    "dwmcore/layouts/CRegionShape.json",
     "dwmcore/layouts/CSolidColorLegacyMilBrush.json",
     "dwmcore/layouts/CZOrderedRectBase.json",
     "dwmcore/layouts/ID2DContextOwner.json",

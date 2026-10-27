@@ -30,7 +30,7 @@
           ]
         }
       ],
-      "notes": "CGraphicsDeviceManager::InitializeGraphicsDevice\nD2D1CreateFactory → stores D2D device at this + N"
+      "notes": "CGraphicsDeviceManager::InitializeGraphicsDevice retains the D2D device created through D2D1CreateFactory."
     }
   ]
 }

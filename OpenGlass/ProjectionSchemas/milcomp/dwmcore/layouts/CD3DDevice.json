@@ -34,7 +34,7 @@
           ]
         }
       ],
-      "notes": "CD3DDevice\nDecompile CD3DDevice::CreateTexture → trace the ID3D11Device::CreateTexture2D call,\nthe ID3D11Device* is loaded from *(QWORD *)(this + N)"
+      "notes": "Trace CD3DDevice::CreateTexture to the ID3D11Device::CreateTexture2D receiver load."
     },
     {
       "name": "CD3DDevice_GetImmediateContext",

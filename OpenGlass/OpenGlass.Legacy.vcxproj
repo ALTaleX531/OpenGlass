@@ -101,6 +101,7 @@
     <None Include="ProjectionSchemas\legacy\dwmcore\layouts\COcclusionContext.json" />
     <None Include="ProjectionSchemas\legacy\dwmcore\layouts\CRenderData.json" />
     <None Include="ProjectionSchemas\legacy\dwmcore\layouts\CShape.json" />
+    <None Include="ProjectionSchemas\legacy\dwmcore\layouts\CRegionShape.json" />
     <None Include="ProjectionSchemas\legacy\dwmcore\layouts\CSolidColorLegacyMilBrush.json" />
     <None Include="ProjectionSchemas\legacy\dwmcore\layouts\CZOrderedRectBase.json" />
     <None Include="ProjectionSchemas\legacy\dwmcore\layouts\ID2DContextOwner.json" />

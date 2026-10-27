@@ -661,16 +661,24 @@ namespace OpenGlass::uDWM
 		}
 	};
 
-	// Native per-window and per-monitor records. The two CVisualBrush members each
-	// own a composition brush and its visual surface; their lifetime stays in uDWM.
+	// Opaque native record strides are verified by the array/vector operations.
+	// Private fields use Layouts; native uDWM retains record/resource ownership.
 	struct LivePreviewVisual
 	{
-		CWindowData* data;
-		CTopLevelWindow* normalClone;
-		CTopLevelWindow* glassClone;
-		bool trulyMaximized;
-		HMONITOR monitor;
+	private:
+		alignas(void*) std::byte m_storage[40];
+
+	public:
+		inline CWindowData* GetWindowData() const
+		{
+			return LivePreviewVisual_WindowData.read(this);
+		}
+		inline CTopLevelWindow*& GetGlassClone()
+		{
+			return LivePreviewVisual_GlassClone.ref(this);
+		}
 	};
+	// Complete CVisualBrush value ABI: a composition brush and its visual surface.
 	struct LivePreviewBrush
 	{
 		winrt::com_ptr<abi::ICompositionSurfaceBrush> brush;
@@ -678,14 +686,35 @@ namespace OpenGlass::uDWM
 	};
 	struct LivePreviewResource
 	{
-		CSolidRectangleVisual* normalVisual;
-		LivePreviewBrush normalBrush;
-		RECT normalRect;
-		CSolidRectangleVisual* glassVisual;
-		LivePreviewBrush glassBrush;
-		RECT glassRect;
-		RECT monitorRect;
+	private:
+		alignas(void*) std::byte m_storage[96];
+
+	public:
+		inline CSolidRectangleVisual* GetNormalVisual() const
+		{
+			return LivePreviewResource_NormalVisual.read(this);
+		}
+		inline CSolidRectangleVisual* GetGlassVisual() const
+		{
+			return LivePreviewResource_GlassVisual.read(this);
+		}
+		inline const RECT& GetGlassRect() const
+		{
+			return *LivePreviewResource_GlassRect.address(this);
+		}
+		inline const RECT& GetMonitorRect() const
+		{
+			return *LivePreviewResource_MonitorRect.address(this);
+		}
+		inline void ResetCaptures()
+		{
+			LivePreviewResource_NormalBrush.ref(this) = {};
+			LivePreviewResource_GlassBrush.ref(this) = {};
+		}
 	};
+	static_assert(sizeof(LivePreviewVisual) == 40);
+	static_assert(sizeof(LivePreviewBrush) == 16);
+	static_assert(sizeof(LivePreviewResource) == 96);
 	struct CLivePreviewTimeline
 	{
 		inline double GetCurrentOpacity()

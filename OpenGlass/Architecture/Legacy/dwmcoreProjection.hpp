@@ -358,6 +358,12 @@ namespace OpenGlass::dwmcore
 	{
 		static inline PVOID* vftable{nullptr};
 
+		void InitializeStorage()
+		{
+			HookHelper::get_vftable_reference_from(this) = vftable;
+			CRegionShape_RegionData.ref(this) = CRegionShape_InlineRegion.address(this);
+		}
+
 		inline void dtor()
 		{
 			OPENGLASS_MUSTTAIL
@@ -370,45 +376,26 @@ namespace OpenGlass::dwmcore
 			return Projection::Invoke<&CRegionShape::BuildFromRects>(this, buffer, count);
 		}
 	};
-	// valid until (build, revision)
-	template <ULONG build = 0, ULONG revision = 0> struct CRegionShapeImpl
+	class CRegionShapeStorage
 	{
-		static_assert(false, "Not implemented.");
-	};
-	template <> struct CRegionShapeImpl<os::build_w10_2004, 0>
-	{
-		struct FastRegionStorage
-		{
-			ULONG_PTR data;
-			DWORD count;
-			std::byte payload[60];
-		};
+		// Native CopyShape allocates 96 bytes; GetWindowClipShape uses the same
+		// stack capacity. Private member locations belong to the typed Layouts.
+		alignas(void*) std::byte m_storage[96]{};
 
-		void* vftable;
-		void* unknown;
-		FastRegionStorage regionData;
-		ID2D1Geometry* geometry;
-		static_assert(sizeof(FastRegionStorage) == 72);
-
-		CRegionShapeImpl()
+	public:
+		CRegionShapeStorage()
 		{
-			memset(this, 0, sizeof(*this));
-			vftable = CRegionShape::vftable;
-			regionData.data = reinterpret_cast<ULONG_PTR>(&regionData.count);
+			As()->InitializeStorage();
 		}
-		~CRegionShapeImpl()
+		~CRegionShapeStorage()
 		{
-			reinterpret_cast<CRegionShape*>(this)->dtor();
+			As()->dtor();
 		}
 		CRegionShape* As()
 		{
-			return reinterpret_cast<CRegionShape*>(this);
+			return reinterpret_cast<CRegionShape*>(m_storage);
 		}
 	};
-	static_assert(offsetof(CRegionShapeImpl<os::build_w10_2004>, regionData) +
-				  offsetof(CRegionShapeImpl<os::build_w10_2004>::FastRegionStorage, data) == 16);
-	static_assert(offsetof(CRegionShapeImpl<os::build_w10_2004>, regionData) +
-				  offsetof(CRegionShapeImpl<os::build_w10_2004>::FastRegionStorage, count) == 24);
 
 	class CShapePtr
 	{
@@ -723,7 +710,7 @@ namespace OpenGlass::dwmcore
 			return MILERR_GENERIC_IGNORE;
 		}
 
-		CRegionShapeImpl<os::build_w10_2004> regionShape{};
+		CRegionShapeStorage regionShape{};
 		D2D1_RECT_L rectanglesL[4]{};
 		for (uint32_t i = 0; i < count; i++)
 		{

@@ -62,7 +62,7 @@
           ]
         }
       ],
-      "notes": "CD3DDevice — historically frozen across all Win11 builds\nDecompile CD3DDevice::CreateTexture → trace the ID3D11Device::CreateTexture2D\ncall, the ID3D11Device* is loaded from *(QWORD *)(this + N)"
+      "notes": "Trace CD3DDevice::CreateTexture to the ID3D11Device::CreateTexture2D receiver load."
     },
     {
       "name": "CD3DDevice_GetImmediateContext",

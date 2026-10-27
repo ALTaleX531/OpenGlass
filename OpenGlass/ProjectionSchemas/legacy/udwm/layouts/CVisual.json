@@ -197,7 +197,7 @@
           ]
         }
       ],
-      "notes": "CVisual_GetVisualCollection\nPre-24H2: constructor assigns &VisualCollection::vftable → xrefs to find\noffset 24H2+: xref to VisualCollection::VisualCollection, find\nCContainerVisual::CContainerVisual:\n  VisualCollection::VisualCollection((VisualCollection *)(this + 18));"
+      "notes": "Follow the embedded VisualCollection constructor call in CContainerVisual::CContainerVisual. Before 26100, follow the VisualCollection vtable assignment in CVisual construction instead."
     },
     {
       "name": "CVisual_GetVisualProxy",
@@ -272,7 +272,7 @@
           ]
         }
       ],
-      "notes": "CVisual::InitializeVisualTreeClone\nif ( (this[x] & 8) == 0 )"
+      "notes": "CVisual::InitializeVisualTreeClone skips the child subtree when the exclusion flag 0x8 is set."
     },
     {
       "name": "CVisual__ValidateVisual",

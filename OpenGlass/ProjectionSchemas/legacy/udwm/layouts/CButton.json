@@ -51,7 +51,7 @@
           ]
         }
       ],
-      "notes": "CButton::RedrawVisual\nCButton::DrawStateW\nthis[x] & y"
+      "notes": "Cross-check the button-state mask read by CButton::RedrawVisual with CButton::DrawStateW."
     },
     {
       "name": "CButton_GetFirstAtlasImage",

@@ -16,7 +16,7 @@
           ]
         }
       ],
-      "notes": "CTopLevelWindow::GetBorderMargins\nmargins = (MARGINS)this[x]"
+      "notes": "CTopLevelWindow::GetBorderMargins returns the address of the MARGINS subobject."
     },
     {
       "name": "CTopLevelWindow_GetButton_BasePointerIndex",
@@ -52,7 +52,7 @@
           ]
         }
       ],
-      "notes": "CTopLevelWindow::UpdateColorizationColor\nCTopLevelWindow::UpdateNCAreaBackground\nif ( y1 == 0x7FFFFFFF && y2 == 0x7FFFFFFF && y3 == 0x7FFFFFFF && y4 == 0x7FFFFFFF )\nz = this[x]\nelse\nz = this[w]"
+      "notes": "CTopLevelWindow::UpdateColorizationColor and UpdateNCAreaBackground select colorization parameters using four 0x7FFFFFFF margin sentinels. Follow both pointer loads and distinguish their branches."
     },
     {
       "name": "CTopLevelWindow_GetClientBlurVisual_Index",
@@ -124,7 +124,7 @@
           ]
         }
       ],
-      "notes": "CTopLevelWindow::UpdateNCAreaBackground\nif ( this[x1] == 0x7FFFFFFF && this[x2] == 0x7FFFFFFF && this[x3] == 0x7FFFFFFF && this[x4] == 0x7FFFFFFF )\nz = this[y]\nelse\nz = this[w]\n\n(x = min(x1, x2, x3, x4))"
+      "notes": "In CTopLevelWindow::UpdateNCAreaBackground, trace the four margin comparisons against 0x7FFFFFFF and the resulting colorization-parameter branch."
     },
     {
       "name": "CTopLevelWindow_GetFrameOutsideMargins_Normal",
@@ -142,7 +142,7 @@
           ]
         }
       ],
-      "notes": "CTopLevelWindow::UpdateNCAreaPositionsAndSizes\nx = x1;\nif ( !zoomed )\nx = x2;\ny = this[x]  (Normal path, same function as Zoomed)"
+      "notes": "CTopLevelWindow::UpdateNCAreaPositionsAndSizes selects the normal margin block when the native zoomed test is false. Cross-check it separately from the zoomed block."
     },
     {
       "name": "CTopLevelWindow_GetFrameOutsideMargins_Zoomed",
@@ -160,7 +160,7 @@
           ]
         }
       ],
-      "notes": "CTopLevelWindow::UpdateNCAreaPositionsAndSizes\nx = x1;\nif ( !zoomed )\nx = x2;\ny = this[x]"
+      "notes": "CTopLevelWindow::UpdateNCAreaPositionsAndSizes selects the maximized margin block when the native zoomed test is true. Cross-check it separately from the normal block."
     },
     {
       "name": "CTopLevelWindow_GetIconVisual_Index",
@@ -178,7 +178,7 @@
           ]
         }
       ],
-      "notes": "CTopLevelWindow::UpdateIcon\n(CImage *)this[x];"
+      "notes": "Follow the CImage receiver in CTopLevelWindow::UpdateIcon."
     },
     {
       "name": "CTopLevelWindow_GetIsBorderUpdatesSuppressed_ByteIndex",
@@ -196,7 +196,7 @@
           ]
         }
       ],
-      "notes": "CTopLevelWindow::SetSuppressBorderUpdates (could be inlined)\nCTopLevelWindow::UpdateWindowVisuals\nif ( this[x] )\ngoto y;"
+      "notes": "Cross-check CTopLevelWindow::SetSuppressBorderUpdates (possibly inlined) with the UpdateWindowVisuals branch that skips border updates."
     },
     {
       "name": "CTopLevelWindow_GetLegacyVisual_Index",

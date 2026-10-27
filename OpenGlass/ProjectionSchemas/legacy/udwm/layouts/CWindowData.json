@@ -76,7 +76,7 @@
           ]
         }
       ],
-      "notes": "CWindowList::ForceIconicRepresentationChange\nCWindowList::AlphaChange\ndata[x] & y"
+      "notes": "Cross-check the client-blur flag read by CWindowList::ForceIconicRepresentationChange and AlphaChange."
     },
     {
       "name": "CWindowData_GetClientMargins",
@@ -94,7 +94,7 @@
           ]
         }
       ],
-      "notes": "CTopLevelWindow::CalculateOutsideMargins\nif (data[x1] >= y1 && datap[x2] >= y2 && data[x3] >= y3 && data[x4] >= y4)"
+      "notes": "CTopLevelWindow::CalculateOutsideMargins compares all four client margins with the corresponding frame thicknesses."
     },
     {
       "name": "CWindowData_GetExtendedFrameMargins",
@@ -144,7 +144,7 @@
           ]
         }
       ],
-      "notes": "CTopLevelWindow::GetBorderMargins/CTopLevelWindow::_GetRightFrameThickness\nif ( y <= 0 )\n    y = data[x]"
+      "notes": "CTopLevelWindow::GetBorderMargins and _GetRightFrameThickness use the stored frame thickness when the computed border thickness is nonpositive."
     },
     {
       "name": "CWindowData_GetHwnd",
@@ -215,7 +215,7 @@
           ]
         }
       ],
-      "notes": "CWindowList::BlurBehindChange\ndata[x] & y"
+      "notes": "Follow the nonclient flag tested by CWindowList::BlurBehindChange."
     },
     {
       "name": "CWindowData_GetSystemBackdropType_Index",

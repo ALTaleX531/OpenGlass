@@ -23,7 +23,7 @@
           ]
         }
       ],
-      "notes": "CCompositor::Initialize\n*((QWORD *)this + N) = MilConnection_CreateChannel(connection, &channel)\n>= 24H2 uses index 3; earlier uses index 2"
+      "notes": "CCompositor::Initialize retains the channel returned by MilConnection_CreateChannel."
     },
     {
       "name": "CCompositor_GetInteropCompositorDCompDevicePartner",

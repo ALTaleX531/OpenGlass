@@ -72,7 +72,7 @@
           ]
         }
       ],
-      "notes": "COcclusionContext::FlushOcclusionRects\nCArrayBasedCoverageSet::Add((char *)this + N, ...) — DynArray at byte offset\nN Constructor initializes inline buffer at this + N + 16"
+      "notes": "Follow the CArrayBasedCoverageSet::Add receiver in COcclusionContext::FlushOcclusionRects and the constructor's inline buffer initialization."
     },
     {
       "name": "COcclusionContext_GetCurrentZ",
@@ -146,7 +146,7 @@
           ]
         }
       ],
-      "notes": "COcclusionContext::FlushOcclusionRects\n*(DWORD *)(this + N) read, then value += 2 written back — unique \"+2\" pattern\nAdjacent DWORD (+4) is the push-skip counter — do NOT confuse\nNOTE: GetCurrentZ, GetDeviceTransform, GetDeviceTransformFlag, and\nGetArrayBasedCoverageSet tend to shift by the SAME byte delta across CUs.\nIf all four differ by the same amount, trust the data."
+      "notes": "COcclusionContext::FlushOcclusionRects increments the depth by two. Distinguish this from the adjacent push-skip counter."
     },
     {
       "name": "COcclusionContext_GetDeviceTransform",
@@ -220,7 +220,7 @@
           ]
         }
       ],
-      "notes": "COcclusionContext::UpdateDeviceTransform\nCMILMatrix::Multiply((char *)this + N, a2, result) — device-space matrix\nembedded inline"
+      "notes": "COcclusionContext::UpdateDeviceTransform passes the embedded device-space matrix to CMILMatrix::Multiply."
     },
     {
       "name": "COcclusionContext_GetDeviceTransformFlag",
@@ -294,7 +294,7 @@
           ]
         }
       ],
-      "notes": "COcclusionContext::FlushOcclusionRects / UpdateDeviceTransform\nif (*((BYTE *)this + N)) → use device transform, else use nullptr\nInvariant: DeviceTransformFlag = DeviceTransform_Offset - 4 or -8"
+      "notes": "COcclusionContext::FlushOcclusionRects and UpdateDeviceTransform select the device transform or nullptr using this flag. Verify the flag independently from the matrix offset."
     },
     {
       "name": "COcclusionContext_GetFrameId",
@@ -365,7 +365,7 @@
           ]
         }
       ],
-      "notes": "COcclusionContext constructor / GetWorldTransform\n*(QWORD *)(this + N) → matrix stack data; *(DWORD *)(this + N + 8) → count"
+      "notes": "Cross-check the matrix-stack data pointer and count initialized by the COcclusionContext constructor with GetWorldTransform."
     }
   ]
 }

@@ -41,7 +41,7 @@
           ]
         }
       ],
-      "notes": "Pre-21H2: D2D device stored directly on CDesktopManager\nCDesktopManager::EnsureDCompositionInteropDevice → D2D1CreateFactory → stores\nat this + N"
+      "notes": "CDesktopManager::EnsureDCompositionInteropDevice retains the D2D device created through D2D1CreateFactory."
     },
     {
       "name": "CDesktopManager_GetDCompDevice_OnThis_Index",
@@ -59,7 +59,7 @@
           ]
         }
       ],
-      "notes": "Pre-21H2: DComp device stored directly on CDesktopManager\nxrefs to RoGetActivationFactory(\"Windows.UI.Composition.Compositor\")\nQueryInterface GUID_d14b6158_c3fa_4bce_9c1f_b61d8665eab0\nCDesktopManager::EnsureDCompositionInteropDevice → DCompositionCreateDevice3\n→ stores at this + N"
+      "notes": "Follow RoGetActivationFactory(\"Windows.UI.Composition.Compositor\") and QueryInterface GUID_d14b6158_c3fa_4bce_9c1f_b61d8665eab0. Cross-check the device retained by CDesktopManager::EnsureDCompositionInteropDevice after DCompositionCreateDevice3."
     },
     {
       "name": "CDesktopManager_GetDPIValue_Index",
@@ -105,7 +105,7 @@
           ]
         }
       ],
-      "notes": "CDesktopManager::SetupDPIValues\n*((double *)this + N) = GetDpiForSystem() / 96.0"
+      "notes": "CDesktopManager::SetupDPIValues stores GetDpiForSystem() / 96.0 as a double."
     },
     {
       "name": "CDesktopManager_GetGraphicsManager_Index",
@@ -130,7 +130,7 @@
           ]
         }
       ],
-      "notes": "CDesktopManager::Initialize\nCGraphicsDeviceManager::Create → stored at this + N\nFor builds < 22H2, index = 6; for 22H2 and later, index = 7"
+      "notes": "CDesktopManager::Initialize retains the result of CGraphicsDeviceManager::Create."
     },
     {
       "name": "CDesktopManager_GetIsHighContrastMode_BoolIndex",
@@ -155,7 +155,7 @@
           ]
         }
       ],
-      "notes": "CDesktopManager::InitializeHighContrast\nthis[26] = IsHighContrastMode"
+      "notes": "CDesktopManager::InitializeHighContrast stores the queried high-contrast state."
     },
     {
       "name": "CDesktopManager_GetLivePreview_Index",

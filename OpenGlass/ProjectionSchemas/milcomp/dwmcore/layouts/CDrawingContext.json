@@ -34,7 +34,7 @@
           ]
         }
       ],
-      "notes": "CDrawingContext::Create / CDrawingContext::FlushD2D\nID2DContextOwner vtable at this + 16; this + N cast to ID2DContextOwner*"
+      "notes": "CDrawingContext::Create assigns the ID2DContextOwner vtable at this + 16; cross-check the subobject receiver passed by FlushD2D."
     },
     {
       "name": "CDrawingContext_GetD3DDevice",
@@ -70,7 +70,7 @@
           ]
         }
       ],
-      "notes": "CDrawingContext::UpdateDeviceTransform\nCMILMatrix::Multiply((char *)this + N, ...) — device transform matrix embedded inline"
+      "notes": "CDrawingContext::UpdateDeviceTransform passes the embedded device transform matrix to CMILMatrix::Multiply."
     },
     {
       "name": "CDrawingContext_GetWorldTransform",
@@ -88,7 +88,7 @@
           ]
         }
       ],
-      "notes": "CDrawingContext::GetWorldTransform3x2 (virtual, slot 0 of ID2DContextOwner vtable)\nthis adjusted to CDrawingContext + 16 (ID2DContextOwner subobject)\n*(QWORD *)(this + N/8) → matrix stack data pointer; *(DWORD *)(this + N/4) → count\nActual base offset = subobject_offset(16) + adjusted_offset"
+      "notes": "CDrawingContext::GetWorldTransform3x2 is slot 0 of ID2DContextOwner. Its this pointer is adjusted by 16 bytes; recover the complete-object offset from that subobject displacement and the matrix-stack data/count loads."
     }
   ]
 }

@@ -16,6 +16,7 @@ namespace OpenGlass::uDWM
 	struct CLegacyNonClientBackground;
 	struct CLivePreview;
 	struct CLivePreviewTimeline;
+	struct LivePreviewBrush;
 	struct LivePreviewVisual;
 	struct LivePreviewResource;
 	struct CNineGridVisual;

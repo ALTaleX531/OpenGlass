@@ -201,6 +201,9 @@
     <None Include="ProjectionSchemas\milcomp\udwm\layouts\CLivePreview.json">
       <Filter>Projection Schemas</Filter>
     </None>
+    <None Include="ProjectionSchemas\milcomp\udwm\layouts\LivePreview.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
     <None Include="ProjectionSchemas\milcomp\udwm\layouts\CRectangleVisual.json">
       <Filter>Projection Schemas</Filter>
     </None>

@@ -16,7 +16,7 @@
           ]
         }
       ],
-      "notes": "28000.1/1896 constructor initializes the array at +208; FadeOutToGlass and ClearAnimatedVisuals agree on 40-byte records, normal clone +8 and glass clone +16."
+      "notes": "28000.1/1896 constructor initializes the array at +208; FadeOutToGlass walks 40-byte records and populates the normal clone at +8. ClearAnimatedVisuals independently releases and zeros the clone pointers at +8 and +16."
     },
     {
       "name": "CLivePreview_ResourcesBegin",

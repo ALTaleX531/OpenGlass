@@ -1,0 +1,148 @@
+{
+  "layouts": [
+    {
+      "name": "LivePreviewVisual_WindowData",
+      "id": "LivePreviewVisual.WindowData",
+      "kind": "field",
+      "type": "CWindowData*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 0,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "28000.1/3231: CollectWindows stores CWindowData in each 40-byte record; ClearAnimatedVisuals independently follows that pointer to stop the window animation."
+    },
+    {
+      "name": "LivePreviewVisual_GlassClone",
+      "id": "LivePreviewVisual.GlassClone",
+      "kind": "field",
+      "type": "CTopLevelWindow*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 16,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "28000.1/3231: ClearAnimatedVisuals releases and zeros the clone at +16 independently of the normal clone at +8. Cross-check the 40-byte records initialized by CollectWindows and walked by FadeOutToGlass."
+    },
+    {
+      "name": "LivePreviewResource_NormalVisual",
+      "id": "LivePreviewResource.NormalVisual",
+      "kind": "field",
+      "type": "CSolidRectangleVisual*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 0,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "28000.1/3231: UpdateResourcesForMonitor updates the normal rectangle visual; resource copy/destruction retain/release and detach the same pointer."
+    },
+    {
+      "name": "LivePreviewResource_NormalBrush",
+      "id": "LivePreviewResource.NormalBrush",
+      "kind": "field",
+      "type": "LivePreviewBrush",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 8,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "28000.1/3231: UpdateResourcesForMonitor uses this CVisualBrush for the normal capture; the resource copy constructor and destructor call the matching brush routines on the same subobject."
+    },
+    {
+      "name": "LivePreviewResource_GlassVisual",
+      "id": "LivePreviewResource.GlassVisual",
+      "kind": "field",
+      "type": "CSolidRectangleVisual*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 40,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "28000.1/3231: UpdateResourcesForMonitor updates the glass rectangle visual; resource copy/destruction retain/release and detach the same pointer."
+    },
+    {
+      "name": "LivePreviewResource_GlassBrush",
+      "id": "LivePreviewResource.GlassBrush",
+      "kind": "field",
+      "type": "LivePreviewBrush",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 48,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "28000.1/3231: UpdateResourcesForMonitor uses this CVisualBrush for the glass capture; the resource copy constructor and destructor call the matching brush routines on the same subobject."
+    },
+    {
+      "name": "LivePreviewResource_GlassRect",
+      "id": "LivePreviewResource.GlassRect",
+      "kind": "field",
+      "type": "RECT",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 64,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "28000.1/3231: UpdateResourcesForMonitorHelper unions eligible glass window rectangles into this RECT. UpdateResourcesForMonitor consumes it for the glass visual and capture; the copy constructor copies it independently from the normal rectangle."
+    },
+    {
+      "name": "LivePreviewResource_MonitorRect",
+      "id": "LivePreviewResource.MonitorRect",
+      "kind": "field",
+      "type": "RECT",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 80,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "28000.1/3231: s_UpdateResourcesForMonitor copies the monitor rectangle into this RECT before updating resources. UpdateResourcesForMonitorHelper independently intersects each window rectangle with it."
+    }
+  ]
+}

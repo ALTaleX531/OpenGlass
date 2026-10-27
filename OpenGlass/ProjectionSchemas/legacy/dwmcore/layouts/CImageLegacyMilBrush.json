@@ -44,7 +44,7 @@
           ]
         }
       ],
-      "notes": "CImageLegacyMilBrush::ProcessUpdate (pre-22H2) / TryDrawCommandAsDrawList\n*((QWORD *)this + N) null-checked → CFloatResource* for opacity animation\nCross-check: CChannel::ImageLegacyMilBrushUpdate (sends float resource handle\nvia MIL cmd 552)"
+      "notes": "CImageLegacyMilBrush::ProcessUpdate (pre-22H2) / TryDrawCommandAsDrawList null-check the CFloatResource used for opacity animation. Cross-check CChannel::ImageLegacyMilBrushUpdate, which sends its handle via MIL cmd 552."
     },
     {
       "name": "CImageLegacyMilBrush_GetImageSource",
@@ -150,7 +150,7 @@
           ]
         }
       ],
-      "notes": "CSolidColorLegacyMilBrush::GetRealizedColor /\nCImageLegacyMilBrush::ProcessUpdate (pre-22H2)\n*(float *)(this + N) — inline opacity (else-branch when float resource is\nnull) Cross-check: CChannel::ImageLegacyMilBrushUpdate (sends opacity via MIL\ncmd 551)\n  and uDWM: CImageLegacyMilBrushProxy::Update (24H2+, opacity param)"
+      "notes": "CSolidColorLegacyMilBrush::GetRealizedColor and CImageLegacyMilBrush::ProcessUpdate (pre-22H2) use inline opacity when the float resource is null. Cross-check CChannel::ImageLegacyMilBrushUpdate (MIL cmd 551) and uDWM CImageLegacyMilBrushProxy::Update (24H2+, opacity parameter)."
     },
     {
       "name": "CImageLegacyMilBrush_GetOpacityValue_Double",
@@ -171,7 +171,7 @@
           ]
         }
       ],
-      "notes": "Pre-1903 only: 1809 stores opacity as double at *(double *)(this + N/8).\nRemoved in 1903 (switched to float). Caller gates: if (build <\nbuild_w10_1903)."
+      "notes": "Pre-1903 CImageLegacyMilBrush::ProcessUpdate reads double opacity; later versions read float opacity."
     },
     {
       "name": "CImageLegacyMilBrush_GetViewbox",
@@ -217,7 +217,7 @@
           ]
         }
       ],
-      "notes": "CImageLegacyMilBrush::ProcessUpdate (pre-22H2): *(_OWORD *)((char *)this + N)\n= cmd->viewbox CImageLegacyMilBrushGeneratedT::SetViewbox (22H2+):\n_mm_loadu_si128(this + N/16) Cross-check: CChannel::ImageLegacyMilBrushUpdate\n(sends viewbox via MIL cmd 541)\n  and uDWM: CImageLegacyMilBrushProxy::Update (24H2+, passes viewbox as\n  MilRectF)"
+      "notes": "CImageLegacyMilBrush::ProcessUpdate (pre-22H2) copies the command viewbox; CImageLegacyMilBrushGeneratedT::SetViewbox (22H2+) stores it. Cross-check CChannel::ImageLegacyMilBrushUpdate (MIL cmd 541) and uDWM CImageLegacyMilBrushProxy::Update (24H2+, MilRectF viewbox)."
     },
     {
       "name": "CImageLegacyMilBrush_GetViewport",
@@ -263,7 +263,7 @@
           ]
         }
       ],
-      "notes": "CImageLegacyMilBrush::ProcessUpdate (pre-22H2): *(_OWORD *)(this + N) =\ncmd->viewport CImageLegacyMilBrushGeneratedT::SetViewport (22H2+):\n_mm_loadu_si128(this + N/16) Cross-check: CChannel::ImageLegacyMilBrushUpdate\n(sends viewport via MIL cmd 539)\n  and uDWM: CImageLegacyMilBrushProxy::Update (24H2+, passes viewport as\n  MilRectF)"
+      "notes": "CImageLegacyMilBrush::ProcessUpdate (pre-22H2) copies the command viewport; CImageLegacyMilBrushGeneratedT::SetViewport (22H2+) stores it. Cross-check CChannel::ImageLegacyMilBrushUpdate (MIL cmd 539) and uDWM CImageLegacyMilBrushProxy::Update (24H2+, MilRectF viewport)."
     }
   ]
 }

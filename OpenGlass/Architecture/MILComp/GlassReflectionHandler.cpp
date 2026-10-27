@@ -17,7 +17,8 @@ namespace OpenGlass::GlassReflectionHandler
 
 	HRESULT UpdateReflection(uDWM::CLivePreview* preview, const uDWM::LivePreviewResource& resource)
 	{
-		const auto parent = resource.glassVisual;
+		const auto parent = resource.GetGlassVisual();
+		const auto& glassRect = resource.GetGlassRect();
 		auto reflection = CReflectionVisual::Find(parent);
 		if (!(Shared::g_reflectionPolicy & Shared::ReflectionPolicy::LivePreview))
 		{
@@ -34,8 +35,8 @@ namespace OpenGlass::GlassReflectionHandler
 		RETURN_LAST_ERROR_IF_NULL(region);
 		for (const auto& visual : preview->GetWindows())
 		{
-			const auto window = visual.data->GetWindow();
-			if (!window || !visual.data->HasLivePreviewGlass())
+			const auto window = visual.GetWindowData()->GetWindow();
+			if (!window || !visual.GetWindowData()->HasLivePreviewGlass())
 			{
 				continue;
 			}
@@ -50,20 +51,20 @@ namespace OpenGlass::GlassReflectionHandler
 			RETURN_LAST_ERROR_IF_NULL(windowRegion);
 			RETURN_LAST_ERROR_IF(CombineRgn(region.get(), region.get(), windowRegion.get(), RGN_OR) == ERROR);
 		}
-		wil::unique_hrgn monitorRegion{ CreateRectRgnIndirect(&resource.monitorRect) };
+		wil::unique_hrgn monitorRegion{ CreateRectRgnIndirect(&resource.GetMonitorRect()) };
 		RETURN_LAST_ERROR_IF_NULL(monitorRegion);
 		RETURN_LAST_ERROR_IF(CombineRgn(region.get(), region.get(), monitorRegion.get(), RGN_AND) == ERROR);
 		// CRectangleVisual's composition offset includes its rectangle origin.
-		RETURN_LAST_ERROR_IF(OffsetRgn(region.get(), -resource.glassRect.left, -resource.glassRect.top) == ERROR);
+		RETURN_LAST_ERROR_IF(OffsetRgn(region.get(), -glassRect.left, -glassRect.top) == ERROR);
 		winrt::com_ptr<uDWM::CRgnGeometryProxy> geometry;
 		RETURN_IF_FAILED(uDWM::ResourceHelper::CreateGeometryFromHRGN(region.get(), geometry.put()));
 		RETURN_IF_FAILED(reflection->GetVisualProxy()->SetClip(geometry.get()));
-		const SIZE size{ wil::rect_width(resource.glassRect), wil::rect_height(resource.glassRect) };
+		const SIZE size{ wil::rect_width(glassRect), wil::rect_height(glassRect) };
 		reflection->SetSize(&size);
 		RETURN_IF_FAILED(reflection->UpdateSurface(GlassInfra::GetOrCreateReflectionSurface()));
 		auto offset = preview->GetLocalToParentVisualOffset();
-		offset.x += resource.glassRect.left;
-		offset.y += resource.glassRect.top;
+		offset.x += glassRect.left;
+		offset.y += glassRect.top;
 		RETURN_IF_FAILED(reflection->UpdateViewport(offset));
 		return reflection->UpdateOpacity(1.f);
 	}
@@ -83,13 +84,13 @@ HRESULT GlassReflectionHandler::MyCLivePreview__UpdateResources(uDWM::CLivePrevi
 	// Match the native ordinary-clone traversal and retain native record ownership.
 	for (auto& visual : This->GetWindows() | std::views::reverse)
 	{
-		const auto window = visual.data->GetWindow();
-		if (!visual.glassClone && window && visual.data->HasLivePreviewGlass())
+		const auto window = visual.GetWindowData()->GetWindow();
+		if (!visual.GetGlassClone() && window && visual.GetWindowData()->HasLivePreviewGlass())
 		{
 			winrt::com_ptr<uDWM::CTopLevelWindow> clone;
 			RETURN_IF_FAILED(window->CloneVisualTreeForLivePreview(true, clone.put()));
 			RETURN_IF_FAILED(glassRoot->GetVisualCollection()->InsertRelative(clone.get(), nullptr, false, true));
-			visual.glassClone = clone.detach();
+			visual.GetGlassClone() = clone.detach();
 		}
 	}
 	glassRoot->RenderRecursive();
@@ -97,17 +98,16 @@ HRESULT GlassReflectionHandler::MyCLivePreview__UpdateResources(uDWM::CLivePrevi
 	// when the source visual is unchanged, so each resource update needs fresh captures.
 	for (auto& resource : This->GetResources())
 	{
-		resource.normalBrush = {};
-		resource.glassBrush = {};
+		resource.ResetCaptures();
 	}
 	RETURN_IF_FAILED(g_CLivePreview__UpdateResources_Org(This));
 
 	const auto opacity = This->GetTimeline()->GetCurrentOpacity();
 	for (const auto& resource : This->GetResources())
 	{
-		// Enumeration copies a temporary LivePreviewResource into the native vector;
-		// its destructor removes both visuals. Attach only after enumeration finishes.
-		if (const auto normal = resource.normalVisual)
+		// Native monitor enumeration copies a temporary into its resource vector;
+		// the temporary's destructor detaches both visuals. Attach after the native update.
+		if (const auto normal = resource.GetNormalVisual())
 		{
 			normal->SetOpacity(opacity);
 			if (!normal->GetTransformParent())
@@ -115,7 +115,7 @@ HRESULT GlassReflectionHandler::MyCLivePreview__UpdateResources(uDWM::CLivePrevi
 				RETURN_IF_FAILED(This->GetVisualCollection()->InsertRelative(normal, nullptr, false, true));
 			}
 		}
-		if (const auto glass = resource.glassVisual)
+		if (const auto glass = resource.GetGlassVisual())
 		{
 			glass->SetOpacity(1.0 - opacity);
 			if (!glass->GetTransformParent())
@@ -139,7 +139,7 @@ void GlassReflectionHandler::Update(GlassEngine::UpdateType type)
 	{
 		for (const auto& resource : preview->GetResources())
 		{
-			if (resource.glassVisual)
+			if (resource.GetGlassVisual())
 			{
 				LOG_IF_FAILED(UpdateReflection(preview, resource));
 			}

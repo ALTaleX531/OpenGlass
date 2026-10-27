@@ -150,6 +150,9 @@
     <None Include="ProjectionSchemas\legacy\dwmcore\layouts\CShape.json">
       <Filter>Projection Schemas</Filter>
     </None>
+    <None Include="ProjectionSchemas\legacy\dwmcore\layouts\CRegionShape.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
     <None Include="ProjectionSchemas\legacy\dwmcore\layouts\CSolidColorLegacyMilBrush.json">
       <Filter>Projection Schemas</Filter>
     </None>
