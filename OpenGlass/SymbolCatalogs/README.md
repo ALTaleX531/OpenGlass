@@ -21,6 +21,11 @@ Every active Required Symbol must resolve uniquely. Missing Optional Symbols rem
 
 Runtime matches the loaded module's CodeView identity and stages base-plus-RVA addresses. An identity miss uses ordinary PDB resolution. Runtime does not repeat generated-table integrity checks or binary-audit checks. The common two-module Validate/Commit gate still owns Required validation and publication, including version activation and fallbacks.
 
+## Known availability limits
+
+- Windows Server 2022 build 20348 is not indexed by Winbindex, so audits use explicitly supplied PE/PDB pairs.
+- As of 2026-10-28, Microsoft Symbol Server returns HTTP 404 for the PDB matching uDWM.dll 10.0.28000.1896. The catalog has no record for that module revision.
+
 ## Collection and replay
 
 Run from the repository root (replace placeholder paths such as `CACHE` and `PATH_TO_DBGHELP` with actual local paths):
