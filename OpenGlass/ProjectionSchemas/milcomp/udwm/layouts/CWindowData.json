@@ -13,7 +13,7 @@
               "offset": 673,
               "until": {
                 "build": 28000,
-                "revision": 1575
+                "revision": 1516
               }
             },
             {
@@ -23,7 +23,7 @@
           ]
         }
       ],
-      "notes": "Cross-check the client-blur flag read by CWindowList::ForceIconicRepresentationChange and AlphaChange."
+      "notes": "ForceIconicRepresentationChange and AlphaChange independently update the client-blur byte. Both use +737 in 28000.1516, corroborated by the constructor's default 0x40 bit; 28000.1 uses +673."
     },
     {
       "name": "CWindowData_GetExtendedFrameMargins",
@@ -91,7 +91,7 @@
               "offset": 672,
               "until": {
                 "build": 28000,
-                "revision": 1575
+                "revision": 1516
               }
             },
             {
@@ -101,7 +101,7 @@
           ]
         }
       ],
-      "notes": "Follow the nonclient flag tested by CWindowList::BlurBehindChange."
+      "notes": "GetCurrentStyle reads the active bit 0x02 and nonclient-rendering bit 0x08. ActivationChange independently updates bit 0x02, and the constructor initializes bit 0x08 from theme availability. These paths use +736 in 28000.1516; 28000.1 uses +672."
     },
     {
       "name": "CWindowData_GetSystemBackdropType_Index",
@@ -169,7 +169,7 @@
               "offset": 674,
               "until": {
                 "build": 28000,
-                "revision": 1575
+                "revision": 1516
               }
             },
             {
@@ -179,7 +179,7 @@
           ]
         }
       ],
-      "notes": "CollectWindows/OnWindowShowHide set the glass-exclusion bit 0x80; UpdateResourcesForMonitorHelper tests it before including an ordinary window in the glass bounds. The existing bitmap-source-cache transition moves this field by +64."
+      "notes": "CollectWindows/OnWindowShowHide set the glass-exclusion bit 0x80; UpdateResourcesForMonitorHelper tests it before including an ordinary window in the glass bounds. The producer and consumer use +674 in 28000.1 and +738 in 28000.1516, after insertion of the bitmap-source cache."
     },
     {
       "name": "CWindowData_WindowType",
