@@ -39,6 +39,9 @@
     <ClCompile Include="Architecture\MILComp\GlassFrameDemodernizer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Architecture\MILComp\GlassFrameIntegrity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Architecture\MILComp\GlassFrameEnhancer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -216,6 +219,9 @@
     <None Include="ProjectionSchemas\milcomp\udwm\layouts\CSpriteVisualProxy.json">
       <Filter>Projection Schemas</Filter>
     </None>
+    <None Include="ProjectionSchemas\milcomp\udwm\layouts\CPrimitive.json">
+      <Filter>Projection Schemas</Filter>
+    </None>
     <None Include="ProjectionSchemas\milcomp\udwm\layouts\CThemePartPrimitive.json">
       <Filter>Projection Schemas</Filter>
     </None>
@@ -375,6 +381,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GlassFrameDemodernizer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Architecture\MILComp\GlassFrameIntegrity.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Architecture\MILComp\GlassFrameEnhancer.hpp">

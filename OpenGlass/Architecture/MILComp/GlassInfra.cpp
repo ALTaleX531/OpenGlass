@@ -30,33 +30,30 @@ namespace OpenGlass::GlassInfra
 
 	void RedrawTopLevelWindow(uDWM::CTopLevelWindow* window, bool deepRedraw)
 	{
-		if (window)
+		if (const auto dwriteTextVisual = window->GetDWriteTextVisual(); dwriteTextVisual)
 		{
-			if (const auto dwriteTextVisual = window->GetDWriteTextVisual(); dwriteTextVisual)
-			{
-				dwriteTextVisual->SetDirtyFlags(0x2); // device lost/update layout
-				dwriteTextVisual->SetDirtyFlags(0x4); // update offset
-				dwriteTextVisual->SetDirtyFlags(0x200); // update dwrite objects
-			}
-			if (deepRedraw)
-			{
-				// clear extra reflection draw geometry command
-				if (const auto legacyVisual = window->GetLegacyVisual(); legacyVisual)
-				{
-					legacyVisual->ClearAll();
-				}
-			}
-			// update accent
-			window->OnAccentPolicyUpdated();
-			// update nc background
-			window->SetDirtyFlags(0x20000);
-			// update window visuals
-			window->SetDirtyFlags(0x40000);
-			// update blur behind
-			window->OnBlurBehindUpdated();
-			// update system backdrop
-			window->OnSystemBackdropUpdated();
+			dwriteTextVisual->SetDirtyFlags(0x2); // device lost/update layout
+			dwriteTextVisual->SetDirtyFlags(0x4); // update offset
+			dwriteTextVisual->SetDirtyFlags(0x200); // update dwrite objects
 		}
+		if (deepRedraw)
+		{
+			// clear extra reflection draw geometry command
+			if (const auto legacyVisual = window->GetLegacyVisual(); legacyVisual)
+			{
+				legacyVisual->ClearAll();
+			}
+		}
+		// update accent
+		window->OnAccentPolicyUpdated();
+		// update nc background
+		window->SetDirtyFlags(0x20000);
+		// update window visuals
+		window->SetDirtyFlags(0x40000);
+		// update blur behind
+		window->OnBlurBehindUpdated();
+		// update system backdrop
+		window->OnSystemBackdropUpdated();
 	}
 
 	winrt::com_ptr<abi::ICompositionSurface> g_reflectionSurface{ nullptr };

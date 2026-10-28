@@ -42,6 +42,9 @@
     <ClCompile Include="Architecture\Legacy\GlassFrameDemodernizer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Architecture\Legacy\GlassFrameIntegrity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Architecture\Legacy\GlassFrameEnhancer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -444,6 +447,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GlassFrameDemodernizer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Architecture\Legacy\GlassFrameIntegrity.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Architecture\Legacy\GlassFrameEnhancer.hpp">

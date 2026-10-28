@@ -1,6 +1,78 @@
 {
   "symbols": [
     {
+      "name": "Symbol_CTopLevelWindow_GetBorderRect",
+      "id": "CTopLevelWindow::GetBorderRect",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "RECT* (*)(const CTopLevelWindow*, RECT*, bool)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 22000,
+                "revision": 0
+              },
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_GetFrameMargins",
+      "id": "CTopLevelWindow::GetFrameMargins",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "void (*)(const CTopLevelWindow*, MARGINS*)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64"
+              ],
+              "min_inclusive": {
+                "build": 22000,
+                "revision": 0
+              },
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_GetBorderMargins",
+      "id": "CTopLevelWindow::GetBorderMargins",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "void (*)(CTopLevelWindow*, MARGINS*)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: void __cdecl CTopLevelWindow::GetBorderMargins(struct _MARGINS * __ptr64) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": {
+                "build": 26100,
+                "revision": 0
+              }
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
       "name": "Symbol_CTopLevelWindow_vftable",
       "id": "CTopLevelWindow::`vftable'",
       "bindings": [
@@ -335,6 +407,28 @@
       ],
       "requirement": "required",
       "kind": "raw"
+    },
+    {
+      "name": "Symbol_CWindowData_OnWindowSizeUpdated",
+      "id": "CWindowData::OnWindowSizeUpdated",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CWindowData::OnWindowSizeUpdated",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function",
+      "notes": "On 20348.2582 the border and SWR updates are inline; 26100.7705 dispatches through the active native capture manager before notifying SWRs. This is a size/margin notification, not a layout-validation entry point."
     }
   ]
 }

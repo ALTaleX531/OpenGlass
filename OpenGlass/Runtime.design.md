@@ -16,6 +16,16 @@ Hook publication, the first redraw and rundown follow the [DWM safety contract](
 
 Custom-theme shutdown preserves the lock-free synchronous `SendMessageW(WM_THEMECHANGED)` before `UnloadTheme`, after removing its delay-IAT hooks and the OpenGlass window procedure. Preserve the remaining component cleanup/redraw order in `GlassEngine::Shutdown`.
 
+## Window frame bounds
+
+Each architecture has its own `GlassFrameIntegrity` to align capture borders, thumbnails, and transitions with the themed frame, independently of the selected glass effect. Margin calculations use `GetActualWindowRect` with `excludeShadowMargins=true` without hooking that function or altering arguments for other callers. The modern `GetBorderRect` hook computes atlas-aware shadow-free bounds directly to avoid recursion through `GetActualWindowRect`, matching the native legacy calculation. Relative coordinates, screen coordinates, and native maximized frame margins remain independent of appearance overrides.
+
+Capture borders on Legacy builds below 26100, including Server 2022, use `GetBorderMargins`. Later capture borders use `GetBorderRect`. Windows 11 uses `GetFrameMargins` for thumbnail and animation margins. They use one consistent frame rectangle for sizes and offsets. Native clone margin snapshots remain frozen and retain native ownership. Shared engine hook transactions and rundown still apply.
+
+Integrity is the outermost node in the existing `ValidateVisual` chain. It records the live owner's frame before calling the rest of the chain, compares the frame only after successful validation, and calls `CWindowData::OnWindowSizeUpdated` to update capture borders and secondary representations only if the bounds changed. Clone trees borrowing the owner's data do not notify that owner. The projection border is a sibling and reverse traversal may already have visited it, so it is validated immediately after the notification. MILComp validates the native border container, including its feature-selected child.
+
+Loading OpenGlass or changing the theme or atlas uses normal native layout validation. On unload the comparison hook is gone, so the shared window traversal explicitly sends `OnWindowSizeUpdated` in the final redraw, under the existing DWM lock after hook removal and rundown. It does not replay settings notifications or recursively rebuild source windows. There is no per-window map, deferred queue, extra frame request, or new resource ownership or cleanup. `deepRedraw` has the separate purpose of clearing extra reflection instructions on startup and shutdown.
+
 ## Window appearance state
 
 Appearance consumers use shared `GlassKernel::GetWindowStatus`. `WindowState.hpp` reads `OpenGlass.ActivationOverride` and `OpenGlass.MaximizationOverride` directly with `GetPropW`. A value of 1 forces false and 2 forces true. Zero, absence, and other values retain the native state and the transition-on-maximized rule, though explicit false overrides that transition rule.

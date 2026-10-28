@@ -229,6 +229,14 @@
         "VisualCollection::Remove": {
           "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
           "rva": "0x396F0"
+        },
+        "CTopLevelWindow::GetBorderMargins": {
+          "name": "public: void __cdecl CTopLevelWindow::GetBorderMargins(struct _MARGINS * __ptr64) __ptr64",
+          "rva": "0x9D9E4"
+        },
+        "CWindowData::OnWindowSizeUpdated": {
+          "name": "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64",
+          "rva": "0x1F910"
         }
       }
     }

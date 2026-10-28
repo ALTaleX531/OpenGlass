@@ -1,6 +1,48 @@
 {
   "symbols": [
     {
+      "name": "Symbol_CTopLevelWindow_GetBorderRect",
+      "id": "CTopLevelWindow::GetBorderRect",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "RECT* (*)(const CTopLevelWindow*, RECT*, bool)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
+      "name": "Symbol_CTopLevelWindow_GetFrameMargins",
+      "id": "CTopLevelWindow::GetFrameMargins",
+      "bindings": [
+        {
+          "platform": null,
+          "type": "void (*)(const CTopLevelWindow*, MARGINS*)",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "raw"
+    },
+    {
       "name": "Symbol_CTopLevelWindow_vftable",
       "id": "CTopLevelWindow::vftable",
       "bindings": [
@@ -132,7 +174,7 @@
       "bindings": [
         {
           "platform": null,
-          "type": "CTopLevelWindow_ValidateVisual_t",
+          "type": "HRESULT (*)(CTopLevelWindow*)",
           "ranges": [
             {
               "symbol_names": [
@@ -231,6 +273,28 @@
       "requirement": "required",
       "kind": "projected_function",
       "notes": "28000.3231 derives parent visibility from CWindowData and calls UpdateAccent, which refreshes the existing CAccent from the unchanged window policy. Use the native update during redraw so setting changes and shutdown restore the correct acrylic/solid path."
+    },
+    {
+      "name": "Symbol_CWindowData_OnWindowSizeUpdated",
+      "id": "CWindowData::OnWindowSizeUpdated",
+      "bindings": [
+        {
+          "platform": null,
+          "target": "&CWindowData::OnWindowSizeUpdated",
+          "ranges": [
+            {
+              "symbol_names": [
+                "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64"
+              ],
+              "min_inclusive": null,
+              "max_exclusive": null
+            }
+          ]
+        }
+      ],
+      "requirement": "required",
+      "kind": "projected_function",
+      "notes": "28000.1/3231 update top-level border placement, dispatch to the native capture manager, then notify secondary representations and destination thumbnails. Native code retains capture-manager selection and resource ownership."
     }
   ]
 }

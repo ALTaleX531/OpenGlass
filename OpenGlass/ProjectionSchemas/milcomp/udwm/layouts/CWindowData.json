@@ -76,7 +76,7 @@
           ]
         }
       ],
-      "notes": "CWindowData::IsGhostWindow\nxrefs to GetPropW — first parameter is the HWND, trace back to the CWindowData offset"
+      "notes": "CWindowData::IsGhostWindow\nxrefs to GetPropW \u2014 first parameter is the HWND, trace back to the CWindowData offset"
     },
     {
       "name": "CWindowData_GetNonClientAttribute",
@@ -198,6 +198,42 @@
         }
       ],
       "notes": "UpdateResourcesForMonitorHelper includes type 1 windows in glass bounds; FadeOutToGlass independently routes type 1 clones to the ordinary capture root."
+    },
+    {
+      "name": "CWindowData_GetWindowRect",
+      "id": "CWindowData_GetWindowRect",
+      "kind": "field",
+      "type": "RECT",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 48,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "28000.3231 GetActualWindowRect reads the physical window rectangle at CWindowData +48. CalculateWindowMetrics independently computes the source width and height from the same four coordinates."
+    },
+    {
+      "name": "CWindowData_GetProjectionBorder",
+      "id": "CWindowData_GetProjectionBorder",
+      "kind": "field",
+      "type": "CContainerVisual*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 464,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "28000.1 CWindowList::ShowProjectionBorder stores the CProjectionBorderVisual at +464; 28000.3231 uses the same field for CProjectionBorderVisualShim. The shim initializes its CContainerVisual base and owns either the projection-border or capture-border child according to the native feature switch. RenderRecursive on that container validates the selected child without duplicating native feature selection or ownership."
     }
   ]
 }

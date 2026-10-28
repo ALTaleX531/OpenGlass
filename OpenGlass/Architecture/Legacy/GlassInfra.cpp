@@ -50,44 +50,41 @@ namespace OpenGlass::GlassInfra
 
 	void RedrawTopLevelWindow(uDWM::CTopLevelWindow* window, bool deepRedraw)
 	{
-		if (window)
+		if (uDWM::g_versionInfo.build >= os::build_w11_22h2)
 		{
-			if (uDWM::g_versionInfo.build >= os::build_w11_22h2)
+			if (const auto dwriteTextVisual = window->GetDWriteTextVisual(); dwriteTextVisual)
 			{
-				if (const auto dwriteTextVisual = window->GetDWriteTextVisual(); dwriteTextVisual)
-				{
-					// update text offset
-					dwriteTextVisual->SetDirtyFlags(8);
-					// update text color
-					dwriteTextVisual->SetDirtyFlags(0x1000);
-				}
+				// update text offset
+				dwriteTextVisual->SetDirtyFlags(8);
+				// update text color
+				dwriteTextVisual->SetDirtyFlags(0x1000);
 			}
-			else
+		}
+		else
+		{
+			// update text
+			window->SetDirtyFlags(0x10000u);
+		}
+		if (deepRedraw)
+		{
+			// clear extra reflection draw geometry command
+			if (const auto legacyVisual = window->GetLegacyVisual(); legacyVisual)
 			{
-				// update text
-				window->SetDirtyFlags(0x10000u);
+				legacyVisual->ClearInstructions();
 			}
-			if (deepRedraw)
-			{
-				// clear extra reflection draw geometry command
-				if (const auto legacyVisual = window->GetLegacyVisual(); legacyVisual)
-				{
-					legacyVisual->ClearInstructions();
-				}
-			}
-			// update accent
-			window->OnAccentPolicyUpdated();
-			// update nc background
-			window->SetDirtyFlags(0x100000u);
-			// update window visuals
-			window->SetDirtyFlags(0x1000000u);
-			// update blur behind
-			window->OnBlurBehindUpdated();
-			// update system backdrop
-			if (uDWM::g_versionInfo.build >= os::build_w11_21h2)
-			{
-				window->SetDirtyFlags(0x4000u);
-			}
+		}
+		// update accent
+		window->OnAccentPolicyUpdated();
+		// update nc background
+		window->SetDirtyFlags(0x100000u);
+		// update window visuals
+		window->SetDirtyFlags(0x1000000u);
+		// update blur behind
+		window->OnBlurBehindUpdated();
+		// update system backdrop
+		if (uDWM::g_versionInfo.build >= os::build_w11_21h2)
+		{
+			window->SetDirtyFlags(0x4000u);
 		}
 	}
 

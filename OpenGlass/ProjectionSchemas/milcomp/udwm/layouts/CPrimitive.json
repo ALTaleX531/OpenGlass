@@ -1,0 +1,22 @@
+{
+  "layouts": [
+    {
+      "name": "CPrimitive_GetSize",
+      "id": "CPrimitive_GetSize",
+      "kind": "field",
+      "type": "SIZE",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 32,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "28000.3231 CPrimitive::SetSize compares +32/+36 and writes the full SIZE at +32 before marking its group for rebuilding. GetActualWindowRect independently consumes the side widths and bottom height to exclude shadow margins."
+    }
+  ]
+}

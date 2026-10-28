@@ -876,14 +876,25 @@
             {
               "offset": 344,
               "until": {
-                "build": 22000,
-                "revision": 195
+                "build": 22621,
+                "revision": 0
               }
+            },
+            {
+              "offset": 368,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 328,
+              "otherwise": true
             }
           ]
         }
       ],
-      "notes": "First CAtlasedImage pointer read by CTopLevelWindow::UpdateNCAreaBackground on build 22000.194. GlassFrameDemodernizer temporarily supplies a zero-size sentinel when the pointer is null. The descriptor exists only for the exact workaround range."
+      "notes": "Left/right/bottom frame image pointers consumed together by GetActualWindowRect when excluding shadow margins. Read on 22000+ only. Cross-check their dimensions with CAtlasedImage::SetSize; the 22000.194 non-client background workaround also uses the same three pointers."
     },
     {
       "name": "CTopLevelWindow_GetNCAreaAtlasImage2",
@@ -897,14 +908,25 @@
             {
               "offset": 352,
               "until": {
-                "build": 22000,
-                "revision": 195
+                "build": 22621,
+                "revision": 0
               }
+            },
+            {
+              "offset": 376,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 336,
+              "otherwise": true
             }
           ]
         }
       ],
-      "notes": "Second CAtlasedImage pointer read by CTopLevelWindow::UpdateNCAreaBackground on build 22000.194. GlassFrameDemodernizer temporarily supplies a zero-size sentinel when the pointer is null. The descriptor exists only for the exact workaround range."
+      "notes": "Left/right/bottom frame image pointers consumed together by GetActualWindowRect when excluding shadow margins. Read on 22000+ only. Cross-check their dimensions with CAtlasedImage::SetSize; the 22000.194 non-client background workaround also uses the same three pointers."
     },
     {
       "name": "CTopLevelWindow_GetNCAreaAtlasImage3",
@@ -918,14 +940,25 @@
             {
               "offset": 368,
               "until": {
-                "build": 22000,
-                "revision": 195
+                "build": 22621,
+                "revision": 0
               }
+            },
+            {
+              "offset": 392,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 352,
+              "otherwise": true
             }
           ]
         }
       ],
-      "notes": "Third CAtlasedImage pointer read by CTopLevelWindow::UpdateNCAreaBackground on build 22000.194. GlassFrameDemodernizer temporarily supplies a zero-size sentinel when the pointer is null. The descriptor exists only for the exact workaround range."
+      "notes": "Left/right/bottom frame image pointers consumed together by GetActualWindowRect when excluding shadow margins. Read on 22000+ only. Cross-check their dimensions with CAtlasedImage::SetSize; the 22000.194 non-client background workaround also uses the same three pointers."
     },
     {
       "name": "CTopLevelWindow_GetTextVisual_Index",
@@ -1117,6 +1150,38 @@
         }
       ],
       "notes": "uDWM 19041.6456 CTopLevelWindow::UpdateButtonVisuals passes WindowFrame+0xD0 to CButton::SetVisualStates for minimize/maximize buttons. Win7 full symbols independently name the field pbsButtonNormalGlow; WindowFrame::~WindowFrame releases it, and native CreateButtonGlowsFromAtlas AddRefs every frame slot before releasing its local reference."
+    },
+    {
+      "name": "CTopLevelWindow_GetCloneFrameMargins",
+      "id": "CTopLevelWindow_GetCloneFrameMargins",
+      "kind": "field",
+      "type": "const MARGINS*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 696,
+              "until": {
+                "build": 22621,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 712,
+              "until": {
+                "build": 26100,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 672,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "GlassFrameIntegrity reads this field only on builds 22000+. InitializeVisualTreeClone allocates a MARGINS snapshot in the destination and fills it through the source GetFrameMargins. GetFrameMargins reads this pointer before consulting live CWindowData. Verified on 22000.194 (+696), 22621.6630 (+712), 26100.7705 (+672)."
     }
   ]
 }

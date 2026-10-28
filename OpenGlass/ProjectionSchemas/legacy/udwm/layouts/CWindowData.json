@@ -162,7 +162,7 @@
           ]
         }
       ],
-      "notes": "CWindowData::IsGhostWindow\nxrefs to GetPropW — first parameter is the HWND, trace back to the\nCWindowData offset"
+      "notes": "CWindowData::IsGhostWindow\nxrefs to GetPropW \u2014 first parameter is the HWND, trace back to the\nCWindowData offset"
     },
     {
       "name": "CWindowData_GetNonClientAttribute",
@@ -323,6 +323,45 @@
         }
       ],
       "notes": "CWindowList::EnsureTopLevelWindow"
+    },
+    {
+      "name": "CWindowData_GetProjectionBorder",
+      "id": "CWindowData_GetProjectionBorder",
+      "kind": "field",
+      "type": "CVisual*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 408,
+              "until": {
+                "build": 18362,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 416,
+              "until": {
+                "build": 19041,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 400,
+              "until": {
+                "build": 22000,
+                "revision": 0
+              }
+            },
+            {
+              "offset": 464,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "CWindowList::ShowProjectionBorder creates, inserts and releases the CProjectionBorderVisual through this field; CWindowData::OnWindowSizeUpdated or the native capture manager reads it when updating the border rectangle. Verified at +408 on 17763.719, +416 on 18362.267, +400 on 19041.3758/20348.2582 and +464 on 22000.194/22621.6630/26100.7705. Expose its CVisual base for validating this sibling after the source frame changes; native window data retains ownership."
     }
   ]
 }

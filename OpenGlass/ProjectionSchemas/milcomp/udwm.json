@@ -45,7 +45,8 @@
     "udwm/layouts/CVisualProxy.json",
     "udwm/layouts/CWindowData.json",
     "udwm/layouts/IText.json",
-    "udwm/layouts/LivePreview.json"
+    "udwm/layouts/LivePreview.json",
+    "udwm/layouts/CPrimitive.json"
   ],
   "notes": [
     "MILComp compositor projection inventory; ABI evidence remains independent from Legacy.",

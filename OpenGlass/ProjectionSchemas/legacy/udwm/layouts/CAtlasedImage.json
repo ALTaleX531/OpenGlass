@@ -47,22 +47,19 @@
       "name": "CAtlasedImage_GetSize",
       "id": "CAtlasedImage_GetSize",
       "kind": "field",
-      "type": "DWORD",
+      "type": "SIZE",
       "cases": [
         {
           "platform": null,
           "ranges": [
             {
               "offset": 24,
-              "until": {
-                "build": 22000,
-                "revision": 195
-              }
+              "otherwise": true
             }
           ]
         }
       ],
-      "notes": "CTopLevelWindow::UpdateNCAreaBackground on build 22000.194 dereferences this size while processing the three NCArea atlas-image pointers. The descriptor exists only for the exact workaround range; later builds are unsupported. Audit status: inherited from the existing workaround; independent semantic confirmation remains required."
+      "notes": "Verified on x64 uDWM 17763.719, 18362.267, 19041.3758, 20348.2582, 22000.194, 22621.6630, 26100.7705 and 26100.8972: CTopLevelWindow::GetActualWindowRect uses +24 as cx for the side atlas images and +28 as cy for the bottom image; CAtlasedImage::SetSize independently compares both 32-bit dimensions and writes the full 8-byte SIZE at +24. The 22000.194 background workaround uses an all-zero SIZE sentinel. The open range is runtime behavior, not evidence for unanalyzed builds."
     }
   ]
 }

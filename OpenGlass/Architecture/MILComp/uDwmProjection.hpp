@@ -399,7 +399,13 @@ namespace OpenGlass::uDWM
 	};
 	struct CBitmapSourceArray : DynArray<CBitmapSource*> {};
 
-	struct CPrimitive : CBaseObject {};
+	struct CPrimitive : CBaseObject
+	{
+		inline const SIZE& GetSize() const
+		{
+			return CPrimitive_GetSize.ref(this);
+		}
+	};
 	struct CNineGridImagePrimitive : CPrimitive
 	{
 		inline HRESULT ClonePrimitive(CPrimitive** primitive, UINT cloneOptions)
@@ -438,6 +444,14 @@ namespace OpenGlass::uDWM
 		{
 			return !(CWindowData_LivePreviewFlags.read(this) & 0x80) && CWindowData_WindowType.read(this) == 1;
 		}
+		inline HRESULT OnWindowSizeUpdated()
+		{
+			OPENGLASS_MUSTTAIL return Projection::Invoke<&CWindowData::OnWindowSizeUpdated>(this);
+		}
+		inline CContainerVisual* GetProjectionBorder() const
+		{
+			return CWindowData_GetProjectionBorder.read(this);
+		}
 		inline HWND GetHwnd() const
 		{
 			return *CWindowData_GetHwnd.address(this);
@@ -450,6 +464,11 @@ namespace OpenGlass::uDWM
 		inline DWM_SYSTEMBACKDROP_TYPE& GetSystemBackdropType()
 		{
 			return *CWindowData_GetSystemBackdropType_Index.address(this);
+		}
+
+		inline const RECT& GetWindowRect() const
+		{
+			return CWindowData_GetWindowRect.ref(this);
 		}
 
 		inline UINT GetWindowDPI() const
@@ -622,6 +641,10 @@ namespace OpenGlass::uDWM
 			return (button && *button) ? *button : nullptr;
 		}
 
+		inline const MARGINS& GetFrameOutsideMargins(bool zoomed) const
+		{
+			return zoomed ? CTopLevelWindow_GetFrameOutsideMargins_Zoomed.ref(this) : CTopLevelWindow_GetFrameOutsideMargins_Normal.ref(this);
+		}
 		inline MARGINS& GetFrameOutsideMargins(bool zoomed)
 		{
 			if (zoomed)
@@ -649,6 +672,22 @@ namespace OpenGlass::uDWM
 		inline void OnSystemBackdropUpdated()
 		{
 			OPENGLASS_MUSTTAIL return Projection::Invoke<&CTopLevelWindow::OnSystemBackdropUpdated>(this);
+		}
+		inline const CPrimitive* GetNCAreaAtlasImage1() const
+		{
+			return CTopLevelWindow_GetNCAreaAtlasImage1.read(this);
+		}
+		inline const CPrimitive* GetNCAreaAtlasImage2() const
+		{
+			return CTopLevelWindow_GetNCAreaAtlasImage2.read(this);
+		}
+		inline const CPrimitive* GetNCAreaAtlasImage3() const
+		{
+			return CTopLevelWindow_GetNCAreaAtlasImage3.read(this);
+		}
+		inline const MARGINS* GetCloneFrameMargins() const
+		{
+			return CTopLevelWindow_GetCloneFrameMargins.read(this);
 		}
 		inline RECT* GetActualWindowRect(
 			RECT* rect,
@@ -886,7 +925,6 @@ namespace OpenGlass::uDWM
 	using CTopLevelWindow_UpdateNCAreaBackground_t = HRESULT(*)(CTopLevelWindow*);
 	using CTopLevelWindow_UpdateNCAreaPositionsAndSizes_t = HRESULT(*)(CTopLevelWindow*);
 	using CTopLevelWindow_UpdateClientBlur_t = HRESULT(*)(CTopLevelWindow*);
-	using CTopLevelWindow_ValidateVisual_t = HRESULT(*)(CTopLevelWindow*);
 	using CTopLevelWindow_UpdateWindowVisuals_t = HRESULT(*)(CTopLevelWindow*);
 	using CTopLevelWindow_Destructor_t = void(*)(CTopLevelWindow*);
 	using CTopLevelWindow_IsShadowNCAreaPart_t = bool(*)(UINT);

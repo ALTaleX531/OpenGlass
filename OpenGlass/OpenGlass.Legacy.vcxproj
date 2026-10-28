@@ -51,6 +51,7 @@
   <ItemGroup>
     <ClInclude Include="Architecture\Legacy\dcompPrivates.hpp" />
     <ClInclude Include="Architecture\Legacy\AccentOverrider.hpp" />
+    <ClInclude Include="Architecture\Legacy\GlassFrameIntegrity.hpp" />
     <ClInclude Include="Architecture\Legacy\GlassFrameEnhancer.hpp" />
     <ClInclude Include="Architecture\Legacy\Dwm.hpp" />
     <ClInclude Include="Architecture\Legacy\DetourChains.hpp" />
@@ -71,6 +72,7 @@
     <ClCompile Include="Architecture\Legacy\CaptionTextHandler.cpp" />
     <ClCompile Include="Architecture\Legacy\GlassEffectBrush.cpp" />
     <ClCompile Include="Architecture\Legacy\GlassFrameDemodernizer.cpp" />
+    <ClCompile Include="Architecture\Legacy\GlassFrameIntegrity.cpp" />
     <ClCompile Include="Architecture\Legacy\GlassFrameEnhancer.cpp" />
     <ClCompile Include="Architecture\Legacy\GlassFrameHandler.cpp" />
     <ClCompile Include="Architecture\Legacy\GlassIntegrity.cpp" />

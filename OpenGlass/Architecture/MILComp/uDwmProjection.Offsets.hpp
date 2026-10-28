@@ -13,6 +13,7 @@ namespace OpenGlass::uDWM
 	struct CContainerVisual;
 	struct CGlassColorizationResources;
 	struct CImage;
+	struct CPrimitive;
 	struct CLegacyNonClientBackground;
 	struct CLivePreview;
 	struct CLivePreviewTimeline;

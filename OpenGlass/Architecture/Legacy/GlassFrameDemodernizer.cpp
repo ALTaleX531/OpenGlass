@@ -272,13 +272,8 @@ void GlassFrameDemodernizer::Startup()
 	)
 	{
 		const auto sizeOffset = uDWM::CAtlasedImage_GetSize.offset();
-		FAIL_FAST_HR_IF_MSG(E_UNEXPECTED, sizeOffset < 0, "CAtlasedImage size offset is negative");
-		FAIL_FAST_HR_IF_MSG(E_UNEXPECTED, static_cast<ULONGLONG>(sizeOffset) > SIZE_MAX - sizeof(DWORD), "CAtlasedImage size offset overflows");
 
-		g_atlasedImageNullSentinel.assign(static_cast<size_t>(sizeOffset) + sizeof(DWORD), std::byte{});
-		auto atlasedImageNullSentinel =
-			reinterpret_cast<uDWM::CAtlasedImage*>(g_atlasedImageNullSentinel.data());
-		atlasedImageNullSentinel->GetSize() = 0;
+		g_atlasedImageNullSentinel.assign(static_cast<size_t>(sizeOffset) + sizeof(SIZE), std::byte{});
 	}
 
 	auto CTopLevelWindow_UpdateWindowVisuals_Instructions =

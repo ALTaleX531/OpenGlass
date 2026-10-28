@@ -52,17 +52,21 @@ D2D1_RECT_F GlassKernel::CalculateReflectionViewport(
 	return viewport;
 }
 
-void GlassKernel::RedrawAllTopLevelWindow(bool deepRedraw)
+void GlassKernel::RedrawAllTopLevelWindow(bool deepRedraw, bool notifyFrameBounds)
 {
 	ULONG_PTR desktopID{ 0 };
 	Util::GetDesktopID(1, &desktopID);
 	const auto windowList = uDWM::CDesktopManager::GetInstance()->GetWindowList()->GetWindowListForDesktop(desktopID);
 	for (auto i = windowList->Blink; i != windowList; i = i->Blink)
 	{
-		GlassInfra::RedrawTopLevelWindow(
-			reinterpret_cast<uDWM::CWindowData*>(i)->GetWindow(),
-			deepRedraw
-		);
+		if (const auto window = reinterpret_cast<uDWM::CWindowData*>(i)->GetWindow(); window)
+		{
+			GlassInfra::RedrawTopLevelWindow(window, deepRedraw);
+			if (notifyFrameBounds)
+			{
+				LOG_IF_FAILED(window->GetData()->OnWindowSizeUpdated());
+			}
+		}
 	}
 }
 

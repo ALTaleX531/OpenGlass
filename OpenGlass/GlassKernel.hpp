@@ -12,7 +12,7 @@ namespace OpenGlass::GlassKernel
 {
 	std::bitset<2> GetWindowStatus(const uDWM::CTopLevelWindow* window, bool nativeActive);
 	std::bitset<2> GetWindowStatus(uDWM::CTopLevelWindow* window);
-	void RedrawAllTopLevelWindow(bool deepRedraw);
+	void RedrawAllTopLevelWindow(bool deepRedraw, bool notifyFrameBounds = false);
 	float GetBlurExpansion();
 
 	struct CRealizedGlassColorizationParameters

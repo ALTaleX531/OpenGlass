@@ -66,16 +66,23 @@ namespace OpenGlass::GlassRenderer
 	);
 }
 
+namespace OpenGlass::GlassFrameIntegrity
+{
+	HRESULT MyCTopLevelWindow_ValidateVisual(uDWM::CTopLevelWindow* This);
+}
+
 namespace OpenGlass::DetourChains
 {
 	// Replacements are listed in invocation order, not component startup order.
 	using TopLevelWindowValidateVisual = Projection::ChainDetour<
 		uDWM::Symbol_CTopLevelWindow_ValidateVisual,
+		&GlassFrameIntegrity::MyCTopLevelWindow_ValidateVisual,
 		&GlassFrameDemodernizer::MyCTopLevelWindow_ValidateVisual,
 		&GlassFrameHandler::MyCTopLevelWindow_ValidateVisual
 	>;
-	using TopLevelWindowValidateVisualDemodernizerNode = TopLevelWindowValidateVisual::Node<0>;
-	using TopLevelWindowValidateVisualFrameHandlerNode = TopLevelWindowValidateVisual::Node<1>;
+	using TopLevelWindowValidateVisualIntegrityNode = TopLevelWindowValidateVisual::Node<0>;
+	using TopLevelWindowValidateVisualDemodernizerNode = TopLevelWindowValidateVisual::Node<1>;
+	using TopLevelWindowValidateVisualFrameHandlerNode = TopLevelWindowValidateVisual::Node<2>;
 
 	// GlassInfra must remain first so its rounded-region scope encloses every
 	// downstream replacement and the original background update.

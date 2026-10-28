@@ -289,6 +289,18 @@
         "VisualCollection::Remove": {
           "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
           "rva": "0x635A8"
+        },
+        "CTopLevelWindow::GetBorderRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64",
+          "rva": "0x21900"
+        },
+        "CTopLevelWindow::GetFrameMargins": {
+          "name": "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64",
+          "rva": "0x4FBB4"
+        },
+        "CWindowData::OnWindowSizeUpdated": {
+          "name": "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64",
+          "rva": "0x371E0"
         }
       }
     },
@@ -580,6 +592,18 @@
         "VisualCollection::Remove": {
           "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
           "rva": "0x635A8"
+        },
+        "CTopLevelWindow::GetBorderRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64",
+          "rva": "0x21900"
+        },
+        "CTopLevelWindow::GetFrameMargins": {
+          "name": "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64",
+          "rva": "0x4CDE4"
+        },
+        "CWindowData::OnWindowSizeUpdated": {
+          "name": "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64",
+          "rva": "0x35EC0"
         }
       }
     },
@@ -871,6 +895,18 @@
         "VisualCollection::Remove": {
           "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
           "rva": "0x2591C"
+        },
+        "CTopLevelWindow::GetBorderRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64",
+          "rva": "0x3BFDC"
+        },
+        "CTopLevelWindow::GetFrameMargins": {
+          "name": "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64",
+          "rva": "0x16B40"
+        },
+        "CWindowData::OnWindowSizeUpdated": {
+          "name": "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64",
+          "rva": "0x9FA0"
         }
       }
     },
@@ -1162,6 +1198,18 @@
         "VisualCollection::Remove": {
           "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
           "rva": "0x2591C"
+        },
+        "CTopLevelWindow::GetBorderRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64",
+          "rva": "0x3BFDC"
+        },
+        "CTopLevelWindow::GetFrameMargins": {
+          "name": "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64",
+          "rva": "0x16B40"
+        },
+        "CWindowData::OnWindowSizeUpdated": {
+          "name": "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64",
+          "rva": "0x9FA0"
         }
       }
     },
@@ -1453,6 +1501,18 @@
         "VisualCollection::Remove": {
           "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
           "rva": "0x256FC"
+        },
+        "CTopLevelWindow::GetBorderRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64",
+          "rva": "0x3BDBC"
+        },
+        "CTopLevelWindow::GetFrameMargins": {
+          "name": "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64",
+          "rva": "0x16B70"
+        },
+        "CWindowData::OnWindowSizeUpdated": {
+          "name": "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64",
+          "rva": "0x9FC8"
         }
       }
     },
@@ -1744,6 +1804,18 @@
         "VisualCollection::Remove": {
           "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
           "rva": "0x129FC"
+        },
+        "CTopLevelWindow::GetBorderRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64",
+          "rva": "0x8F4C"
+        },
+        "CTopLevelWindow::GetFrameMargins": {
+          "name": "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64",
+          "rva": "0x2D660"
+        },
+        "CWindowData::OnWindowSizeUpdated": {
+          "name": "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64",
+          "rva": "0x32C60"
         }
       }
     },
@@ -2035,6 +2107,18 @@
         "VisualCollection::Remove": {
           "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
           "rva": "0x129FC"
+        },
+        "CTopLevelWindow::GetBorderRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64",
+          "rva": "0x8F4C"
+        },
+        "CTopLevelWindow::GetFrameMargins": {
+          "name": "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64",
+          "rva": "0x2D660"
+        },
+        "CWindowData::OnWindowSizeUpdated": {
+          "name": "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64",
+          "rva": "0x32C60"
         }
       }
     },
@@ -2326,6 +2410,18 @@
         "VisualCollection::Remove": {
           "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
           "rva": "0x129FC"
+        },
+        "CTopLevelWindow::GetBorderRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64",
+          "rva": "0x8F4C"
+        },
+        "CTopLevelWindow::GetFrameMargins": {
+          "name": "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64",
+          "rva": "0x2D660"
+        },
+        "CWindowData::OnWindowSizeUpdated": {
+          "name": "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64",
+          "rva": "0x32C60"
         }
       }
     },
@@ -2617,6 +2713,18 @@
         "VisualCollection::Remove": {
           "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
           "rva": "0x12A2C"
+        },
+        "CTopLevelWindow::GetBorderRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64",
+          "rva": "0x8F7C"
+        },
+        "CTopLevelWindow::GetFrameMargins": {
+          "name": "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64",
+          "rva": "0x2D690"
+        },
+        "CWindowData::OnWindowSizeUpdated": {
+          "name": "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64",
+          "rva": "0x32C90"
         }
       }
     },
@@ -2908,6 +3016,18 @@
         "VisualCollection::Remove": {
           "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
           "rva": "0x12A2C"
+        },
+        "CTopLevelWindow::GetBorderRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64",
+          "rva": "0x8F7C"
+        },
+        "CTopLevelWindow::GetFrameMargins": {
+          "name": "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64",
+          "rva": "0x2D690"
+        },
+        "CWindowData::OnWindowSizeUpdated": {
+          "name": "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64",
+          "rva": "0x32C90"
         }
       }
     },
@@ -3199,6 +3319,18 @@
         "VisualCollection::Remove": {
           "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
           "rva": "0x12A2C"
+        },
+        "CTopLevelWindow::GetBorderRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64",
+          "rva": "0x8F7C"
+        },
+        "CTopLevelWindow::GetFrameMargins": {
+          "name": "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64",
+          "rva": "0x2D690"
+        },
+        "CWindowData::OnWindowSizeUpdated": {
+          "name": "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64",
+          "rva": "0x32C90"
         }
       }
     },
@@ -3490,6 +3622,18 @@
         "VisualCollection::Remove": {
           "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
           "rva": "0x12A1C"
+        },
+        "CTopLevelWindow::GetBorderRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64",
+          "rva": "0x8F7C"
+        },
+        "CTopLevelWindow::GetFrameMargins": {
+          "name": "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64",
+          "rva": "0x2D5C0"
+        },
+        "CWindowData::OnWindowSizeUpdated": {
+          "name": "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64",
+          "rva": "0x32BC0"
         }
       }
     },
@@ -3781,6 +3925,18 @@
         "VisualCollection::Remove": {
           "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
           "rva": "0x65C4"
+        },
+        "CTopLevelWindow::GetBorderRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64",
+          "rva": "0x24B0C"
+        },
+        "CTopLevelWindow::GetFrameMargins": {
+          "name": "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64",
+          "rva": "0x210E0"
+        },
+        "CWindowData::OnWindowSizeUpdated": {
+          "name": "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64",
+          "rva": "0x476D0"
         }
       }
     },
@@ -4072,6 +4228,18 @@
         "VisualCollection::Remove": {
           "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
           "rva": "0x65C4"
+        },
+        "CTopLevelWindow::GetBorderRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64",
+          "rva": "0x24B0C"
+        },
+        "CTopLevelWindow::GetFrameMargins": {
+          "name": "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64",
+          "rva": "0x210E0"
+        },
+        "CWindowData::OnWindowSizeUpdated": {
+          "name": "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64",
+          "rva": "0x476D0"
         }
       }
     },
@@ -4363,6 +4531,18 @@
         "VisualCollection::Remove": {
           "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
           "rva": "0x65C4"
+        },
+        "CTopLevelWindow::GetBorderRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64",
+          "rva": "0x24B0C"
+        },
+        "CTopLevelWindow::GetFrameMargins": {
+          "name": "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64",
+          "rva": "0x210E0"
+        },
+        "CWindowData::OnWindowSizeUpdated": {
+          "name": "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64",
+          "rva": "0x472D8"
         }
       }
     },
@@ -4654,6 +4834,18 @@
         "VisualCollection::Remove": {
           "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
           "rva": "0x65C4"
+        },
+        "CTopLevelWindow::GetBorderRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64",
+          "rva": "0x24B0C"
+        },
+        "CTopLevelWindow::GetFrameMargins": {
+          "name": "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64",
+          "rva": "0x210E0"
+        },
+        "CWindowData::OnWindowSizeUpdated": {
+          "name": "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64",
+          "rva": "0x472D8"
         }
       }
     },
@@ -4945,6 +5137,18 @@
         "VisualCollection::Remove": {
           "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
           "rva": "0x65C4"
+        },
+        "CTopLevelWindow::GetBorderRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64",
+          "rva": "0x24A7C"
+        },
+        "CTopLevelWindow::GetFrameMargins": {
+          "name": "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64",
+          "rva": "0x21050"
+        },
+        "CWindowData::OnWindowSizeUpdated": {
+          "name": "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64",
+          "rva": "0x44288"
         }
       }
     },
@@ -5236,6 +5440,18 @@
         "VisualCollection::Remove": {
           "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
           "rva": "0x65C4"
+        },
+        "CTopLevelWindow::GetBorderRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64",
+          "rva": "0x24A7C"
+        },
+        "CTopLevelWindow::GetFrameMargins": {
+          "name": "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64",
+          "rva": "0x21050"
+        },
+        "CWindowData::OnWindowSizeUpdated": {
+          "name": "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64",
+          "rva": "0x44288"
         }
       }
     },
@@ -5527,6 +5743,18 @@
         "VisualCollection::Remove": {
           "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
           "rva": "0x65C4"
+        },
+        "CTopLevelWindow::GetBorderRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64",
+          "rva": "0x24A7C"
+        },
+        "CTopLevelWindow::GetFrameMargins": {
+          "name": "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64",
+          "rva": "0x21050"
+        },
+        "CWindowData::OnWindowSizeUpdated": {
+          "name": "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64",
+          "rva": "0x44288"
         }
       }
     },
@@ -5818,6 +6046,18 @@
         "VisualCollection::Remove": {
           "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
           "rva": "0x65C4"
+        },
+        "CTopLevelWindow::GetBorderRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64",
+          "rva": "0x24A7C"
+        },
+        "CTopLevelWindow::GetFrameMargins": {
+          "name": "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64",
+          "rva": "0x21050"
+        },
+        "CWindowData::OnWindowSizeUpdated": {
+          "name": "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64",
+          "rva": "0x44288"
         }
       }
     },
@@ -6109,6 +6349,18 @@
         "VisualCollection::Remove": {
           "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
           "rva": "0x65C4"
+        },
+        "CTopLevelWindow::GetBorderRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64",
+          "rva": "0x24A4C"
+        },
+        "CTopLevelWindow::GetFrameMargins": {
+          "name": "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64",
+          "rva": "0x21020"
+        },
+        "CWindowData::OnWindowSizeUpdated": {
+          "name": "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64",
+          "rva": "0x44248"
         }
       }
     },
@@ -6400,6 +6652,18 @@
         "VisualCollection::Remove": {
           "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
           "rva": "0x65C4"
+        },
+        "CTopLevelWindow::GetBorderRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64",
+          "rva": "0x24A4C"
+        },
+        "CTopLevelWindow::GetFrameMargins": {
+          "name": "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64",
+          "rva": "0x21020"
+        },
+        "CWindowData::OnWindowSizeUpdated": {
+          "name": "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64",
+          "rva": "0x44248"
         }
       }
     },
@@ -6691,6 +6955,18 @@
         "VisualCollection::Remove": {
           "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
           "rva": "0x10E3C"
+        },
+        "CTopLevelWindow::GetBorderRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64",
+          "rva": "0x2F2BC"
+        },
+        "CTopLevelWindow::GetFrameMargins": {
+          "name": "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64",
+          "rva": "0x2B890"
+        },
+        "CWindowData::OnWindowSizeUpdated": {
+          "name": "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64",
+          "rva": "0x46998"
         }
       }
     },
@@ -6982,6 +7258,18 @@
         "VisualCollection::Remove": {
           "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
           "rva": "0x10E3C"
+        },
+        "CTopLevelWindow::GetBorderRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64",
+          "rva": "0x2F25C"
+        },
+        "CTopLevelWindow::GetFrameMargins": {
+          "name": "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64",
+          "rva": "0x2B830"
+        },
+        "CWindowData::OnWindowSizeUpdated": {
+          "name": "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64",
+          "rva": "0x46978"
         }
       }
     },
@@ -7273,6 +7561,18 @@
         "VisualCollection::Remove": {
           "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
           "rva": "0x10E3C"
+        },
+        "CTopLevelWindow::GetBorderRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64",
+          "rva": "0x2F25C"
+        },
+        "CTopLevelWindow::GetFrameMargins": {
+          "name": "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64",
+          "rva": "0x2B830"
+        },
+        "CWindowData::OnWindowSizeUpdated": {
+          "name": "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64",
+          "rva": "0x46978"
         }
       }
     },
@@ -7564,6 +7864,18 @@
         "VisualCollection::Remove": {
           "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
           "rva": "0x10E3C"
+        },
+        "CTopLevelWindow::GetBorderRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64",
+          "rva": "0x2F25C"
+        },
+        "CTopLevelWindow::GetFrameMargins": {
+          "name": "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64",
+          "rva": "0x2B830"
+        },
+        "CWindowData::OnWindowSizeUpdated": {
+          "name": "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64",
+          "rva": "0x46978"
         }
       }
     },
@@ -7855,6 +8167,18 @@
         "VisualCollection::Remove": {
           "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
           "rva": "0x1DB9C"
+        },
+        "CTopLevelWindow::GetBorderRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64",
+          "rva": "0x39E4C"
+        },
+        "CTopLevelWindow::GetFrameMargins": {
+          "name": "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64",
+          "rva": "0x2ADF8"
+        },
+        "CWindowData::OnWindowSizeUpdated": {
+          "name": "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64",
+          "rva": "0x53E28"
         }
       }
     },
@@ -8146,6 +8470,18 @@
         "VisualCollection::Remove": {
           "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
           "rva": "0x1DB9C"
+        },
+        "CTopLevelWindow::GetBorderRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64",
+          "rva": "0x39E4C"
+        },
+        "CTopLevelWindow::GetFrameMargins": {
+          "name": "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64",
+          "rva": "0x2ADF8"
+        },
+        "CWindowData::OnWindowSizeUpdated": {
+          "name": "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64",
+          "rva": "0x53E28"
         }
       }
     },
@@ -8437,6 +8773,18 @@
         "VisualCollection::Remove": {
           "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
           "rva": "0x2447C"
+        },
+        "CTopLevelWindow::GetBorderRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64",
+          "rva": "0x4073C"
+        },
+        "CTopLevelWindow::GetFrameMargins": {
+          "name": "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64",
+          "rva": "0x316D8"
+        },
+        "CWindowData::OnWindowSizeUpdated": {
+          "name": "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64",
+          "rva": "0x52B98"
         }
       }
     },
@@ -8728,6 +9076,18 @@
         "VisualCollection::Remove": {
           "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
           "rva": "0x2448C"
+        },
+        "CTopLevelWindow::GetBorderRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64",
+          "rva": "0x4074C"
+        },
+        "CTopLevelWindow::GetFrameMargins": {
+          "name": "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64",
+          "rva": "0x316E8"
+        },
+        "CWindowData::OnWindowSizeUpdated": {
+          "name": "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64",
+          "rva": "0x52BA8"
         }
       }
     },
@@ -9019,6 +9379,18 @@
         "VisualCollection::Remove": {
           "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
           "rva": "0x244AC"
+        },
+        "CTopLevelWindow::GetBorderRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64",
+          "rva": "0x4076C"
+        },
+        "CTopLevelWindow::GetFrameMargins": {
+          "name": "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64",
+          "rva": "0x31708"
+        },
+        "CWindowData::OnWindowSizeUpdated": {
+          "name": "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64",
+          "rva": "0x52BC8"
         }
       }
     },
@@ -9310,6 +9682,18 @@
         "VisualCollection::Remove": {
           "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
           "rva": "0x244AC"
+        },
+        "CTopLevelWindow::GetBorderRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64",
+          "rva": "0x4076C"
+        },
+        "CTopLevelWindow::GetFrameMargins": {
+          "name": "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64",
+          "rva": "0x31708"
+        },
+        "CWindowData::OnWindowSizeUpdated": {
+          "name": "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64",
+          "rva": "0x52BC8"
         }
       }
     },
@@ -9601,6 +9985,18 @@
         "VisualCollection::Remove": {
           "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
           "rva": "0x1D63C"
+        },
+        "CTopLevelWindow::GetBorderRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64",
+          "rva": "0x4265C"
+        },
+        "CTopLevelWindow::GetFrameMargins": {
+          "name": "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64",
+          "rva": "0x2A868"
+        },
+        "CWindowData::OnWindowSizeUpdated": {
+          "name": "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64",
+          "rva": "0x497E8"
         }
       }
     },
@@ -9892,6 +10288,18 @@
         "VisualCollection::Remove": {
           "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
           "rva": "0xFC0C"
+        },
+        "CTopLevelWindow::GetBorderRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64",
+          "rva": "0x2D53C"
+        },
+        "CTopLevelWindow::GetFrameMargins": {
+          "name": "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64",
+          "rva": "0x1D674"
+        },
+        "CWindowData::OnWindowSizeUpdated": {
+          "name": "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64",
+          "rva": "0x460E8"
         }
       }
     },
@@ -10183,6 +10591,18 @@
         "VisualCollection::Remove": {
           "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
           "rva": "0xFC0C"
+        },
+        "CTopLevelWindow::GetBorderRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64",
+          "rva": "0x2D53C"
+        },
+        "CTopLevelWindow::GetFrameMargins": {
+          "name": "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64",
+          "rva": "0x1D674"
+        },
+        "CWindowData::OnWindowSizeUpdated": {
+          "name": "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64",
+          "rva": "0x460E8"
         }
       }
     },
@@ -10474,6 +10894,18 @@
         "VisualCollection::Remove": {
           "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
           "rva": "0xFC0C"
+        },
+        "CTopLevelWindow::GetBorderRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64",
+          "rva": "0x2D4DC"
+        },
+        "CTopLevelWindow::GetFrameMargins": {
+          "name": "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64",
+          "rva": "0x1DF24"
+        },
+        "CWindowData::OnWindowSizeUpdated": {
+          "name": "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64",
+          "rva": "0x46088"
         }
       }
     },
@@ -10765,6 +11197,18 @@
         "VisualCollection::Remove": {
           "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
           "rva": "0x10C0C"
+        },
+        "CTopLevelWindow::GetBorderRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64",
+          "rva": "0x2E4DC"
+        },
+        "CTopLevelWindow::GetFrameMargins": {
+          "name": "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64",
+          "rva": "0x1EF24"
+        },
+        "CWindowData::OnWindowSizeUpdated": {
+          "name": "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64",
+          "rva": "0x46038"
         }
       }
     },
@@ -11056,6 +11500,18 @@
         "VisualCollection::Remove": {
           "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
           "rva": "0x252AC"
+        },
+        "CTopLevelWindow::GetBorderRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64",
+          "rva": "0x41B1C"
+        },
+        "CTopLevelWindow::GetFrameMargins": {
+          "name": "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64",
+          "rva": "0x32CC8"
+        },
+        "CWindowData::OnWindowSizeUpdated": {
+          "name": "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64",
+          "rva": "0x18B30"
         }
       }
     },
@@ -11347,6 +11803,18 @@
         "VisualCollection::Remove": {
           "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
           "rva": "0x149E4"
+        },
+        "CTopLevelWindow::GetBorderRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64",
+          "rva": "0x4425C"
+        },
+        "CTopLevelWindow::GetFrameMargins": {
+          "name": "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64",
+          "rva": "0x1E20C"
+        },
+        "CWindowData::OnWindowSizeUpdated": {
+          "name": "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64",
+          "rva": "0x53DC8"
         }
       }
     },
@@ -11638,6 +12106,18 @@
         "VisualCollection::Remove": {
           "name": "public: long __cdecl VisualCollection::Remove(class CVisual * __ptr64) __ptr64",
           "rva": "0x149E4"
+        },
+        "CTopLevelWindow::GetBorderRect": {
+          "name": "public: struct tagRECT __cdecl CTopLevelWindow::GetBorderRect(bool)const __ptr64",
+          "rva": "0x4425C"
+        },
+        "CTopLevelWindow::GetFrameMargins": {
+          "name": "public: void __cdecl CTopLevelWindow::GetFrameMargins(struct _MARGINS * __ptr64)const __ptr64",
+          "rva": "0x1E20C"
+        },
+        "CWindowData::OnWindowSizeUpdated": {
+          "name": "public: long __cdecl CWindowData::OnWindowSizeUpdated(void) __ptr64",
+          "rva": "0x53DC8"
         }
       }
     }

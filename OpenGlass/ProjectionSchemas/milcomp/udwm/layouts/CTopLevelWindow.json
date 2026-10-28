@@ -287,6 +287,78 @@
         }
       ],
       "notes": "28000.3231 UpdateAccent creates, updates and releases CAccent through +240. CloneVisualTreeForLivePreview independently excludes/re-enables this visual at the same field while constructing snapshots."
+    },
+    {
+      "name": "CTopLevelWindow_GetCloneFrameMargins",
+      "id": "CTopLevelWindow_GetCloneFrameMargins",
+      "kind": "field",
+      "type": "const MARGINS*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 656,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "28000.1 and 28000.3231 InitializeVisualTreeClone allocate the MARGINS snapshot at +656 and fill it through source GetFrameMargins; GetFrameMargins independently reads it before live CWindowData. Native clone destruction owns the snapshot."
+    },
+    {
+      "name": "CTopLevelWindow_GetNCAreaAtlasImage1",
+      "id": "CTopLevelWindow_GetNCAreaAtlasImage1",
+      "kind": "field",
+      "type": "const CPrimitive*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 312,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "28000.1 and 28000.3231 GetActualWindowRect read the left/right/bottom non-client primitives together when excluding shadows. CPrimitive::SetSize independently writes their SIZE at +32; native non-client primitives retain ownership."
+    },
+    {
+      "name": "CTopLevelWindow_GetNCAreaAtlasImage2",
+      "id": "CTopLevelWindow_GetNCAreaAtlasImage2",
+      "kind": "field",
+      "type": "const CPrimitive*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 320,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "28000.1 and 28000.3231 GetActualWindowRect read the left/right/bottom non-client primitives together when excluding shadows. CPrimitive::SetSize independently writes their SIZE at +32; native non-client primitives retain ownership."
+    },
+    {
+      "name": "CTopLevelWindow_GetNCAreaAtlasImage3",
+      "id": "CTopLevelWindow_GetNCAreaAtlasImage3",
+      "kind": "field",
+      "type": "const CPrimitive*",
+      "cases": [
+        {
+          "platform": null,
+          "ranges": [
+            {
+              "offset": 336,
+              "otherwise": true
+            }
+          ]
+        }
+      ],
+      "notes": "28000.1 and 28000.3231 GetActualWindowRect read the left/right/bottom non-client primitives together when excluding shadows. CPrimitive::SetSize independently writes their SIZE at +32; native non-client primitives retain ownership."
     }
   ]
 }

@@ -554,7 +554,7 @@ namespace OpenGlass::uDWM
 		{
 			return CAtlasedImage_GetParent.read(this);
 		}
-		inline DWORD& GetSize()
+		inline const SIZE& GetSize() const
 		{
 			return CAtlasedImage_GetSize.ref(this);
 		}
@@ -743,6 +743,14 @@ namespace OpenGlass::uDWM
 	struct CTopLevelWindow;
 	struct CWindowData : CBaseObject
 	{
+		inline HRESULT OnWindowSizeUpdated()
+		{
+			OPENGLASS_MUSTTAIL return Projection::Invoke<&CWindowData::OnWindowSizeUpdated>(this);
+		}
+		inline CVisual* GetProjectionBorder() const
+		{
+			return CWindowData_GetProjectionBorder.read(this);
+		}
 		inline HWND GetHwnd() const
 		{
 			return *CWindowData_GetHwnd.address(this);
@@ -905,13 +913,25 @@ namespace OpenGlass::uDWM
 			OPENGLASS_MUSTTAIL
 			return Projection::Invoke<&CTopLevelWindow::UpdateButtonVisuals>(this, windowFrame);
 		}
+		inline const CAtlasedImage* GetNCAreaAtlasImage1() const
+		{
+			return CTopLevelWindow_GetNCAreaAtlasImage1.read(this);
+		}
 		inline CAtlasedImage const*& GetNCAreaAtlasImage1()
 		{
 			return CTopLevelWindow_GetNCAreaAtlasImage1.ref(this);
 		}
+		inline const CAtlasedImage* GetNCAreaAtlasImage2() const
+		{
+			return CTopLevelWindow_GetNCAreaAtlasImage2.read(this);
+		}
 		inline CAtlasedImage const*& GetNCAreaAtlasImage2()
 		{
 			return CTopLevelWindow_GetNCAreaAtlasImage2.ref(this);
+		}
+		inline const CAtlasedImage* GetNCAreaAtlasImage3() const
+		{
+			return CTopLevelWindow_GetNCAreaAtlasImage3.read(this);
 		}
 		inline CAtlasedImage const*& GetNCAreaAtlasImage3()
 		{
@@ -1073,6 +1093,10 @@ namespace OpenGlass::uDWM
 			return (button && *button) ? *button : nullptr;
 		}
 
+		inline const MARGINS& GetFrameOutsideMargins(bool zoomed) const
+		{
+			return zoomed ? CTopLevelWindow_GetFrameOutsideMargins_Zoomed.ref(this) : CTopLevelWindow_GetFrameOutsideMargins_Normal.ref(this);
+		}
 		inline MARGINS& GetFrameOutsideMargins(bool zoomed)
 		{
 			if (zoomed)
@@ -1128,6 +1152,10 @@ namespace OpenGlass::uDWM
 		{
 			OPENGLASS_MUSTTAIL
 			return Projection::Invoke<&CTopLevelWindow::OnAccentPolicyUpdated>(this);
+		}
+		inline const MARGINS* GetCloneFrameMargins() const
+		{
+			return CTopLevelWindow_GetCloneFrameMargins.read(this);
 		}
 		inline RECT* GetActualWindowRect(RECT* rect, char relative, char respectMaximizedClip,
 										 bool excludeShadowMargins) const

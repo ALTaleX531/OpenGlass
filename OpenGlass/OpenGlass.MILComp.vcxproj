@@ -51,6 +51,7 @@
   <ItemGroup>
     <ClInclude Include="Architecture\MILComp\AccentOverrider.hpp" />
     <ClInclude Include="Architecture\MILComp\DCompProjection.hpp" />
+    <ClInclude Include="Architecture\MILComp\GlassFrameIntegrity.hpp" />
     <ClInclude Include="Architecture\MILComp\GlassFrameEnhancer.hpp" />
     <ClInclude Include="Architecture\MILComp\Dwm.hpp" />
     <ClInclude Include="Architecture\MILComp\DetourChains.hpp" />
@@ -68,6 +69,7 @@
     <ClCompile Include="Architecture\MILComp\CaptionMetricsTweaker.cpp" />
     <ClCompile Include="Architecture\MILComp\CaptionTextHandler.cpp" />
     <ClCompile Include="Architecture\MILComp\GlassFrameDemodernizer.cpp" />
+    <ClCompile Include="Architecture\MILComp\GlassFrameIntegrity.cpp" />
     <ClCompile Include="Architecture\MILComp\GlassFrameEnhancer.cpp" />
     <ClCompile Include="Architecture\MILComp\GlassFrameHandler.cpp" />
     <ClCompile Include="Architecture\MILComp\GlassIntegrity.cpp" />
@@ -127,6 +129,7 @@
     <None Include="ProjectionSchemas\milcomp\udwm\layouts\CResource.json" />
     <None Include="ProjectionSchemas\milcomp\udwm\layouts\CResourceProxy.json" />
     <None Include="ProjectionSchemas\milcomp\udwm\layouts\CSpriteVisualProxy.json" />
+    <None Include="ProjectionSchemas\milcomp\udwm\layouts\CPrimitive.json" />
     <None Include="ProjectionSchemas\milcomp\udwm\layouts\CThemePartPrimitive.json" />
     <None Include="ProjectionSchemas\milcomp\udwm\layouts\CTopLevelWindow.json" />
     <None Include="ProjectionSchemas\milcomp\udwm\layouts\CVisual.json" />
