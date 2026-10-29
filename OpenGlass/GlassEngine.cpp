@@ -10,7 +10,6 @@
 #include "GlassFrameHandler.hpp"
 #include "GlassFrameDemodernizer.hpp"
 #include "GlassFrameEnhancer.hpp"
-#include "GlassFrameIntegrity.hpp"
 #include "GlassReflectionHandler.hpp"
 #include "GlassRenderer.hpp"
 #include "GlassIntegrity.hpp"
@@ -95,7 +94,6 @@ void GlassEngine::Update(UpdateType type, bool redrawNow)
 		GlassFrameHandler::Update(type);
 		GlassFrameDemodernizer::Update(type);
 		GlassFrameEnhancer::Update(type);
-		GlassFrameIntegrity::Update(type);
 		GlassReflectionHandler::Update(type);
 		if (redrawNow)
 		{
@@ -132,7 +130,7 @@ void GlassEngine::Startup()
 			AccentOverrider::Startup();
 			GlassFrameHandler::Startup();
 			GlassFrameEnhancer::Startup();
-			GlassFrameIntegrity::Startup();
+			// GlassFrameIntegrity is suspended pending a redesign.
 			GlassFrameDemodernizer::Startup();
 			GlassReflectionHandler::Startup();
 			transaction.Commit();
@@ -161,7 +159,6 @@ void GlassEngine::Shutdown()
 		HookHelper::HookTransaction transaction{ HookHelper::HookMode::Remove };
 		GlassReflectionHandler::Shutdown();
 		GlassFrameDemodernizer::Shutdown();
-		GlassFrameIntegrity::Shutdown();
 		GlassFrameEnhancer::Shutdown();
 		GlassFrameHandler::Shutdown();
 		AccentOverrider::Shutdown();
@@ -184,7 +181,6 @@ void GlassEngine::Shutdown()
 		const auto lock = wil::EnterCriticalSection(uDWM::CDesktopManager::s_csDwmInstance);
 		GlassReflectionHandler::Cleanup();
 		GlassFrameDemodernizer::Cleanup();
-		GlassFrameIntegrity::Cleanup();
 		GlassFrameEnhancer::Cleanup();
 		GlassFrameHandler::Cleanup();
 		AccentOverrider::Cleanup();
@@ -197,7 +193,7 @@ void GlassEngine::Shutdown()
 
 	{
 		const auto lock = wil::EnterCriticalSection(uDWM::CDesktopManager::s_csDwmInstance);
-		GlassKernel::RedrawAllTopLevelWindow(true, true);
+		GlassKernel::RedrawAllTopLevelWindow(true);
 		GlassRenderer::Cleanup();
 		GlassIntegrity::Cleanup();
 		GlassInfra::Cleanup();

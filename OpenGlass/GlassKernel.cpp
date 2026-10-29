@@ -52,7 +52,7 @@ D2D1_RECT_F GlassKernel::CalculateReflectionViewport(
 	return viewport;
 }
 
-void GlassKernel::RedrawAllTopLevelWindow(bool deepRedraw, bool notifyFrameBounds)
+void GlassKernel::RedrawAllTopLevelWindow(bool deepRedraw)
 {
 	ULONG_PTR desktopID{ 0 };
 	Util::GetDesktopID(1, &desktopID);
@@ -62,10 +62,6 @@ void GlassKernel::RedrawAllTopLevelWindow(bool deepRedraw, bool notifyFrameBound
 		if (const auto window = reinterpret_cast<uDWM::CWindowData*>(i)->GetWindow(); window)
 		{
 			GlassInfra::RedrawTopLevelWindow(window, deepRedraw);
-			if (notifyFrameBounds)
-			{
-				LOG_IF_FAILED(window->GetData()->OnWindowSizeUpdated());
-			}
 		}
 	}
 }
