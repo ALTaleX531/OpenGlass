@@ -16,6 +16,14 @@ Hook publication, the first redraw and rundown follow the [DWM safety contract](
 
 Custom-theme shutdown preserves the lock-free synchronous `SendMessageW(WM_THEMECHANGED)` before `UnloadTheme`, after removing its delay-IAT hooks and the OpenGlass window procedure. Preserve the remaining component cleanup/redraw order in `GlassEngine::Shutdown`.
 
+## Injection crash protection
+
+The service validates the DWM process and saves its verified handle and injection time in the per-session map before injection and initialization. Injection waits for initialization to finish. Recording the process only after successful initialization misses startup FailFast exits and can keep injecting replacement DWM processes. The crash guard requires the tracked process to exit, excluding a failed load while that process is still running. Preserve per-session timing rules, the session-manager shutdown exception, and Abort, Retry, and Ignore behavior.
+
+## Frame demodernizer patches
+
+Each architecture-private frame demodernizer has a distinct shadow patch and a high-contrast patch. The high-contrast patch replaces only the five-byte call, leaving later caller instructions and the AL test intact. Both expected patches must be located and their original bytes validated before applying them through the engine-owned `HookTransaction`.
+
 ## Window frame bounds
 
 Each architecture has its own `GlassFrameIntegrity` to align capture borders, thumbnails, and transitions with the themed frame, independently of the selected glass effect. Margin calculations use `GetActualWindowRect` with `excludeShadowMargins=true` without hooking that function or altering arguments for other callers. The modern `GetBorderRect` hook computes atlas-aware shadow-free bounds directly to avoid recursion through `GetActualWindowRect`, matching the native legacy calculation. Relative coordinates, screen coordinates, and native maximized frame margins remain independent of appearance overrides.

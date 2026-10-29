@@ -470,16 +470,14 @@ HRESULT GlassService::RunInjectionThread(const ThreadControl& control)
 				return true;
 			}
 
+			wil::unique_handle processHandle{ OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, processId) };
+			if (!processHandle)
 			{
-				wil::unique_handle processHandle{ OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, processId) };
-				if (!processHandle)
-				{
-					return true;
-				}
-				if (!IsDwmProcess(processHandle.get()) || g_dwmInjectionBlackList.find(processId) != g_dwmInjectionBlackList.end())
-				{
-					return true;
-				}
+				return true;
+			}
+			if (!IsDwmProcess(processHandle.get()) || g_dwmInjectionBlackList.find(processId) != g_dwmInjectionBlackList.end())
+			{
+				return true;
 			}
 
 			if (!IsOpenGlassAlreadyLoaded(processId))
@@ -488,18 +486,21 @@ HRESULT GlassService::RunInjectionThread(const ThreadControl& control)
 				const auto it = g_dwmInjectionMap.find(sessionId);
 				if (it != g_dwmInjectionMap.end())
 				{
-					const auto& [injectionTimeStamp, processHandle] = it->second;
+					const auto& [injectionTimeStamp, previousProcessHandle] = it->second;
 
 					DWORD exitCode{ 0 };
-					LOG_IF_WIN32_BOOL_FALSE(GetExitCodeProcess(processHandle.get(), &exitCode));
+					LOG_IF_WIN32_BOOL_FALSE(GetExitCodeProcess(previousProcessHandle.get(), &exitCode));
 					// DWM constantly crashes or manual fast fail triggered by user
 					if (
+						exitCode != STILL_ACTIVE &&
 						(
-							currentTimeStamp - injectionTimeStamp <= std::chrono::seconds{ 15 } &&
-							// DWM shutdown by session manager
-							exitCode != 0xD00002FE
-						) ||
-						exitCode == 0xC0000409
+							(
+								currentTimeStamp - injectionTimeStamp <= std::chrono::seconds{ 15 } &&
+								// DWM shutdown by session manager
+								exitCode != 0xD00002FE
+							) ||
+							exitCode == 0xC0000409
+						)
 					)
 					{
 						auto title = Util::GetResourceStringView<IDS_STRING101>();
@@ -532,10 +533,10 @@ HRESULT GlassService::RunInjectionThread(const ThreadControl& control)
 					}
 				}
 
-				if (const auto hresult = InjectOpenGlassDLL(processId, true); SUCCEEDED(hresult))
-				{
-					g_dwmInjectionMap.insert_or_assign(sessionId, CDwmProcessInfo{ currentTimeStamp, OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, processId) });
-				}
+				// Retain the verified process before Startup can fail. Injection waits
+				// for initialization, so a startup crash must also reach the guard.
+				g_dwmInjectionMap.insert_or_assign(sessionId, CDwmProcessInfo{ currentTimeStamp, processHandle.release() });
+				LOG_IF_FAILED(InjectOpenGlassDLL(processId, true));
 			}
 
 			return true;
