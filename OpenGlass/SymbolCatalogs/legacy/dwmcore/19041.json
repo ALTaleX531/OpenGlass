@@ -7881,7 +7881,7 @@
         "name": "dwmcore.pdb",
         "guid": "03663aee-8908-66dd-aca8-50992b829951",
         "age": 1,
-        "sha256": "1c26f32becef75ce839a722ea639ba7ddb584df3a14b416231df3c010904c5ef"
+        "sha256": "6a531f60df759893db3c87eb1f03f8d1fb3723391782932a007279240d20663c"
       },
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {
@@ -8008,7 +8008,7 @@
         "name": "dwmcore.pdb",
         "guid": "72052572-e107-ec32-b9a5-29b7b7487e09",
         "age": 1,
-        "sha256": "311e741b1450c9ae3341cea6ad28366407faf5949c9e7f555137d626b77e0940"
+        "sha256": "7d3316997e52f5cfd3ae2f90e4480f0c99c56714738028ae77bfd5168f4caa7a"
       },
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {

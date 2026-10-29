@@ -6517,7 +6517,7 @@
         "name": "dwmcore.pdb",
         "guid": "5e96cc46-fad9-845a-227b-742c5d71800d",
         "age": 1,
-        "sha256": "20162264c523b6925969f8d9a3e6b6872930658d774f206a80e1e2f3b2debf23"
+        "sha256": "0657a68d2e9e9d7ad38753021efb66d2bd6480290fb88f9527175d44d21daaa3"
       },
       "symbols": {
         "CArrayBasedCoverageSet::IsCovered.pre26100": {

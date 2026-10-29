@@ -1580,7 +1580,7 @@
         "name": "dwmcore.pdb",
         "guid": "e1aa62ca-1e13-a5e6-69f6-888a3aac0b1d",
         "age": 1,
-        "sha256": "8f73983a9b6efdfd7a6dc93f256b779de83fda63e24b6fdcd8fa01d7b187f8f0"
+        "sha256": "2be1e4a984819135cf50c01e2154790ec794f5c6738b1ae822834ed10075c257"
       },
       "symbols": {
         "CChannel::CombinedGeometryUpdate": {

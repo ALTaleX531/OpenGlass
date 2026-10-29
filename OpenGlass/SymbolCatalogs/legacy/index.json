@@ -3,8 +3,8 @@
   "architecture": "legacy",
   "resolver": {
     "dbghelp": {
-      "version": "26100.8249",
-      "sha256": "140adb286a11fbdfb63b6d8dff30039c50ff9c88b6909be9ce8292680d5be2af"
+      "version": "26100.9457",
+      "sha256": "3ce12537291b46af6914ea6865f176d9528cd7707c752fca8be96ad2a7562220"
     }
   },
   "sources": [
