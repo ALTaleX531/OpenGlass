@@ -36,15 +36,25 @@ HRESULT GlassFrameIntegrity::MyCTopLevelWindow_ValidateVisual(uDWM::CTopLevelWin
 		return g_CTopLevelWindow_ValidateVisual_Org(This);
 	}
 
+	const auto beforeInsideMargins = This->GetFrameInsideMargins();
 	RECT before, after;
 	This->GetActualWindowRect(&before, false, true, true);
 	const auto hr = g_CTopLevelWindow_ValidateVisual_Org(This);
 	if (SUCCEEDED(hr))
 	{
 		This->GetActualWindowRect(&after, false, true, true);
-		// Native theme notifications can precede atlas sizing. Notify only after
-		// validation has changed the actual frame, so consumers cannot keep the old bounds.
-		if (!EqualRect(&before, &after))
+		const auto& insideMargins = This->GetFrameInsideMargins();
+		const auto insideMarginsChanged =
+			beforeInsideMargins.cxLeftWidth != insideMargins.cxLeftWidth ||
+			beforeInsideMargins.cxRightWidth != insideMargins.cxRightWidth ||
+			beforeInsideMargins.cyBottomHeight != insideMargins.cyBottomHeight;
+		// WindowBorder caches its content clip before atlas sizing. Inside margins
+		// can change even when the final rectangle stays the same. Only the side
+		// and bottom margins participate in GetBorderRect's atlas exclusion.
+		if (
+			!EqualRect(&before, &after) ||
+			(uDWM::g_versionInfo.build >= os::build_w11_21h2 && insideMarginsChanged)
+		)
 		{
 			LOG_IF_FAILED(data->OnWindowSizeUpdated());
 			// The sibling border may already have been visited in this frame.
