@@ -30,21 +30,94 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <Import Project="..\Common\CppProject.props" />
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(MSBuildThisFileDirectory)..\OpenGlass;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <_ExternalClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </_ExternalClCompile>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>$(IntDir)Shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
   <ImportGroup Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ItemGroup>
+    <ClInclude Include="Benchmark.hpp" />
+    <ClInclude Include="Renderer.hpp" />
     <ClInclude Include="pch.h" />
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Benchmark.cpp" />
+    <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="OpenGlassRenderTest.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
-    <_ExternalClCompile Include="..\Common\CustomBlurEffect.cpp">
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-    </_ExternalClCompile>
+    <_ExternalClCompile Include="..\Common\CustomBlurEffect.cpp" />
+    <_ExternalClCompile Include="..\OpenGlass\AeroColorizationEffect.cpp" />
+    <_ExternalClCompile Include="..\OpenGlass\AeroEffect.cpp" />
+    <_ExternalClCompile Include="..\OpenGlass\BlurEffect.cpp" />
+    <_ExternalClCompile Include="..\OpenGlass\BackdropCopy.cpp" />
+    <_ExternalClCompile Include="..\OpenGlass\GlassEffectBatch.cpp" />
+    <_ExternalClCompile Include="..\OpenGlass\GlassRealizer.cpp" />
+    <_ExternalClCompile Include="..\OpenGlass\D3DGlassRealizer.cpp" />
+    <ResourceCompile Include="Shaders.rc" />
   </ItemGroup>
+  <ItemGroup>
+    <_RendererShader Include="$(MSBuildThisFileDirectory)..\OpenGlass\AeroColorizationEffect.hlsl">
+      <Stage>Pixel</Stage><Entry>AeroColorizationEffect</Entry>
+      <Defines>D2D_FULL_SHADER;D2D_ENTRY=AeroColorizationEffect;MINP_PREFIX=min16</Defines>
+    </_RendererShader>
+    <_RendererShader Include="$(MSBuildThisFileDirectory)..\OpenGlass\Blur.PS_BlurH.hlsl"><Stage>Pixel</Stage><Entry>main</Entry><Defines>MINP_PREFIX=min16</Defines></_RendererShader>
+    <_RendererShader Include="$(MSBuildThisFileDirectory)..\OpenGlass\Blur.PS_BlurV.hlsl"><Stage>Pixel</Stage><Entry>main</Entry><Defines>MINP_PREFIX=min16</Defines></_RendererShader>
+    <_RendererShader Include="$(MSBuildThisFileDirectory)..\OpenGlass\Blur.PS_BlurV_Vista.hlsl"><Stage>Pixel</Stage><Entry>main</Entry><Defines>MINP_PREFIX=min16</Defines></_RendererShader>
+    <_RendererShader Include="$(MSBuildThisFileDirectory)..\OpenGlass\Blur.VS.hlsl"><Stage>Vertex</Stage><Entry>main</Entry><Defines>MINP_PREFIX=min16</Defines></_RendererShader>
+  </ItemGroup>
+  <!-- FXC's custom-effect export shares tracking keys with shader compilation.
+       Use MSBuild input/output tracking to retain unchanged shader resources. -->
+  <Target Name="PrepareRendererShaders">
+    <MakeDir Directories="$(IntDir)Shaders" />
+    <ItemGroup>
+      <_RendererSdkDirectory Include="$(WindowsSDK_IncludePath)" />
+      <_RendererSdkHeader Include="%(_RendererSdkDirectory.Identity)\d2d1effecthelpers.hlsli"
+                          Condition="Exists('%(_RendererSdkDirectory.Identity)\d2d1effecthelpers.hlsli')" />
+      <_RendererCompilerDirectory Include="$(FXCToolPath);$(WindowsSDK_ExecutablePath);$(WindowsSDK_ExecutablePath_x64)" />
+      <_RendererCompiler Include="%(_RendererCompilerDirectory.Identity)\fxc.exe"
+                         Condition="Exists('%(_RendererCompilerDirectory.Identity)\fxc.exe')" />
+    </ItemGroup>
+    <WriteLinesToFile File="$(IntDir)Shaders\Settings.txt"
+                      Lines="$(Configuration)|$(WindowsSDK_IncludePath)|$(PlatformToolset)|$(WindowsSDKToolArchitecture)|$(FXCToolPath)|$(UseDebugLibraries)"
+                      Overwrite="true" WriteOnlyWhenDifferent="true" />
+    <ItemGroup>
+      <FileWrites Include="@(_RendererShader -> '$(IntDir)Shaders\%(Filename).cso');$(IntDir)Shaders\AeroColorizationEffect.fxlib;$(IntDir)Shaders\Settings.txt" />
+    </ItemGroup>
+  </Target>
+  <Target Name="CompileRendererShaders" BeforeTargets="ResourceCompile"
+          DependsOnTargets="PrepareForBuild;PrepareRendererShaders"
+          Inputs="@(_RendererShader);$(MSBuildProjectFullPath);$(MSBuildThisFileDirectory)..\OpenGlass\Common.hlsli;$(MSBuildThisFileDirectory)..\OpenGlass\Blur.Common.hlsli;$(MSBuildThisFileDirectory)..\Common\CppProject.props;@(_RendererSdkHeader);@(_RendererCompiler);$(IntDir)Shaders\Settings.txt"
+          Outputs="@(_RendererShader -> '$(IntDir)Shaders\%(Filename).cso');$(IntDir)Shaders\AeroColorizationEffect.fxlib">
+    <FXC Source="$(MSBuildThisFileDirectory)..\OpenGlass\AeroColorizationEffect.hlsl"
+         GenerateExportFile="$(IntDir)Shaders\AeroColorizationEffect.fxlib"
+         GenerateExportShaderProfile="Pixel;4.0_level_9_3"
+         PreprocessorDefinitions="D2D_FUNCTION;D2D_ENTRY=AeroColorizationEffect"
+         AdditionalIncludeDirectories="$(WindowsSDK_IncludePath)"
+         DisableOptimizations="$(UseDebugLibraries)" EnableDebuggingInformation="$(UseDebugLibraries)"
+         ToolPath="$(FXCToolPath)" ToolArchitecture="$(WindowsSDKToolArchitecture)"
+         SuppressStartupBanner="true" TrackFileAccess="false" />
+    <FXC Source="%(_RendererShader.Identity)"
+         ShaderType="%(_RendererShader.Stage)" ShaderModel="4.0_level_9_3"
+         EntryPointName="%(_RendererShader.Entry)" PreprocessorDefinitions="%(_RendererShader.Defines)"
+         ObjectFileOutput="$(IntDir)Shaders\%(_RendererShader.Filename).cso"
+         ConsumeExportFile="$(IntDir)Shaders\AeroColorizationEffect.fxlib"
+         AdditionalIncludeDirectories="$(WindowsSDK_IncludePath)"
+         DisableOptimizations="$(UseDebugLibraries)" EnableDebuggingInformation="$(UseDebugLibraries)"
+         ToolPath="$(FXCToolPath)" ToolArchitecture="$(WindowsSDKToolArchitecture)"
+         SuppressStartupBanner="true" TrackFileAccess="false" />
+  </Target>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\Common\NuGet.targets" Condition="Exists('..\Common\NuGet.targets')" />

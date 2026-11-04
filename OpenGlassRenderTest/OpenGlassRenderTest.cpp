@@ -1,860 +1,311 @@
 #include "pch.h"
-#include "CustomBlurEffect.hpp"
-#include "D2DPrivates.hpp"
-#include "RectF.hpp"
+#include "Benchmark.hpp"
+#include <shellapi.h>
+#include <cstdio>
 
-using namespace OpenGlass;
+using namespace OpenGlass::RenderTest;
 
 namespace
 {
-	constexpr UINT kDefaultWidth = 1600;
-	constexpr UINT kDefaultHeight = 1200;
-	constexpr float kInsetLeft = 22.f * 8.f;
-	constexpr float kInsetTop = 50.f * 8.f;
-	constexpr float kInsetRight = 22.f * 8.f;
-	constexpr float kInsetBottom = 22.f * 8.f;
-	constexpr float kBlurAmount = 9.f;
-	constexpr wchar_t kImageFileName[] = L"OpenGlassRenderTest.png";
+	constexpr wchar_t Help[] =
+		L"OpenGlassRenderTest: D2D / D2D rects / D3D / Gaussian (Aero)\n\n"
+		L"1/2/3/4 select; Space cycle; A auto; R radius 0/6/30; O occlusion;\n"
+		L"F BGRA8/FP16; C force background copy;\n"
+		L"Q Speed/Balanced/Quality; +/- D2D blur; P fractional phase; S reset stats.\n\n"
+		L"--benchmark PATH.json [--frames 120] [--warmup 12] [--validate]\n"
+		L"--adapter INDEX --width 1600 --height 1000 --radius 6 --occlusion 0\n"
+		L"--blur 3 --optimization speed|balanced|quality --format bgra8|fp16\n"
+		L"--mode d2d|rects|d3d|gaussian (initial interactive mode); --phase 0.5\n"
+		L"--copy --cpu-only --debug --capture FRAMES_PER_MODE\n\n"
+		L"Benchmark is offscreen; capture opens a finite annotated comparison. Both run all four modes.\n"
+		L"Background: OpenGlassRenderTest.png in the working directory.\n"
+		L"CPU = Flush + Render + EndDraw. GPU = timestamp span. D3D sigma is fixed at 3.\n"
+		L"Gaussian uses Scale 0.5, configured sigma at half size, and 2x output.\n";
 
-	float GetBlurExpansion(float blurAmount)
+	class Application
 	{
-		return blurAmount * 3.f + 0.5f;
-	}
+		HWND m_window{};
+		Benchmark m_benchmark;
+		Method m_method;
+		bool m_auto{};
+		UINT m_captureFrame{};
+		std::chrono::steady_clock::time_point m_switch{}, m_refresh{};
+		winrt::com_ptr<IDXGISwapChain1> m_swapChain;
+		winrt::com_ptr<ID2D1Bitmap1> m_display;
+		winrt::com_ptr<ID2D1SolidColorBrush> m_brush;
+		winrt::com_ptr<IDWriteTextFormat> m_textFormat;
+		std::wstring m_overlay;
 
-	std::wstring BuildImagePath()
-	{
-		const auto length = GetCurrentDirectoryW(0, nullptr);
-		std::wstring workingDir(length + 1 + wcslen(kImageFileName) + 1, L'\0');
-		GetCurrentDirectoryW(length + 1, workingDir.data());
-		PathCchAppend(workingDir.data(), workingDir.size(), kImageFileName);
-		return workingDir;
-	}
-}
-
-enum class ClipMode
-{
-	PushLayer,
-	DrawRects
-};
-
-class COpenGlassRenderTestApp
-{
-public:
-	explicit COpenGlassRenderTestApp(HWND hwnd)
-		: m_hwnd(hwnd)
-	{
-	}
-
-	void SetHwnd(HWND hwnd)
-	{
-		m_hwnd = hwnd;
-	}
-
-	HRESULT Initialize()
-	{
-		RETURN_IF_FAILED(CreateDeviceResources());
-		RETURN_IF_FAILED(LoadBackgroundBitmap());
-
-		RECT rc{};
-		GetClientRect(m_hwnd, &rc);
-		RETURN_IF_FAILED(CreateWindowSizeDependentResources(rc.right - rc.left, rc.bottom - rc.top));
-
-		return S_OK;
-	}
-
-	void OnResize(UINT width, UINT height)
-	{
-		if (!m_d2dContext || width == 0 || height == 0)
+		void CreateDisplay(UINT width, UINT height)
 		{
-			return;
+			auto* context = m_benchmark.Context();
+			if (!m_swapChain)
+			{
+				winrt::com_ptr<IDXGIDevice> device;
+				THROW_IF_FAILED(m_benchmark.Device()->QueryInterface(device.put()));
+				winrt::com_ptr<IDXGIAdapter> adapter;
+				THROW_IF_FAILED(device->GetAdapter(adapter.put()));
+				winrt::com_ptr<IDXGIFactory2> factory;
+				THROW_IF_FAILED(adapter->GetParent(IID_PPV_ARGS(factory.put())));
+				DXGI_SWAP_CHAIN_DESC1 desc{};
+				desc.Width = width; desc.Height = height;
+				desc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+				desc.SampleDesc.Count = 1;
+				desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+				desc.BufferCount = 2;
+				desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+				desc.AlphaMode = DXGI_ALPHA_MODE_IGNORE;
+				THROW_IF_FAILED(factory->CreateSwapChainForHwnd(m_benchmark.Device(), m_window, &desc, nullptr, nullptr, m_swapChain.put()));
+			}
+			else
+			{
+				context->SetTarget(nullptr);
+				m_display = nullptr;
+				THROW_IF_FAILED(m_swapChain->ResizeBuffers(0, width, height, DXGI_FORMAT_UNKNOWN, 0));
+			}
+			winrt::com_ptr<IDXGISurface> surface;
+			THROW_IF_FAILED(m_swapChain->GetBuffer(0, IID_PPV_ARGS(surface.put())));
+			const auto props = D2D1::BitmapProperties1(D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
+				D2D1::PixelFormat(DXGI_FORMAT_B8G8R8A8_UNORM, D2D1_ALPHA_MODE_IGNORE), 96.f, 96.f);
+			THROW_IF_FAILED(context->CreateBitmapFromDxgiSurface(surface.get(), &props, m_display.put()));
 		}
 
-		CreateWindowSizeDependentResources(width, height);
-		InvalidateRect(m_hwnd, nullptr, FALSE);
-	}
-
-	void ToggleClipMode()
-	{
-		m_clipMode = (m_clipMode == ClipMode::PushLayer) ? ClipMode::DrawRects : ClipMode::PushLayer;
-		UpdateWindowTitle();
-		InvalidateRect(m_hwnd, nullptr, FALSE);
-	}
-
-	void ToggleAutoCompare()
-	{
-		m_autoCompare = !m_autoCompare;
-		m_lastAutoSwitch = std::chrono::steady_clock::now();
-		UpdateWindowTitle();
-	}
-
-	void AdjustWorkload(int delta)
-	{
-		m_workloadIterations = static_cast<UINT>(std::clamp<int>(static_cast<int>(m_workloadIterations) + delta, 1, 256));
-		UpdateWindowTitle();
-	}
-
-	HRESULT Render()
-	{
-		if (!m_d2dContext || !m_targetBitmap)
+		void UpdateOverlay()
 		{
-			return S_OK;
+			const auto& options = m_benchmark.Configuration();
+			constexpr const wchar_t* optimizations[]{ L"Speed", L"Balanced", L"Quality" };
+			wchar_t header[640];
+			swprintf_s(header, L"%s  %ux%u %s  Aero\nMode: %s  Auto:%s  D2D blur:%.2f  Radius:%u  Occlusion:%u  Phase:%.2f\nInput: %s  D2D optimization:%s\n\nMethod      CPU median/p95 (us)  GPU span (us)    CPU/GPU samples\n",
+				m_benchmark.AdapterName().c_str(), options.width, options.height, options.fp16 ? L"FP16" : L"BGRA8",
+				MethodLabels[size_t(m_method)], m_auto ? L"on" : L"off", options.settings.blurAmount, options.radius,
+				options.occlusion, options.phase, options.settings.forceCapture ? L"copy for all" : L"production policy",
+				optimizations[options.settings.optimization]);
+			m_overlay = header;
+			const auto formatTime = [](const std::vector<double>& samples, double percentile)
+			{
+				return samples.empty() ? std::wstring{ L"--" } : std::format(L"{:.1f}", Percentile(samples, percentile));
+			};
+			for (size_t i = 0; i < MethodCount; ++i)
+			{
+				const auto& stats = m_benchmark.Stats(Method(i));
+				m_overlay += std::format(L"{:<10} {:>8} / {:<8} {:>10}    {}/{}\n", MethodLabels[i],
+					formatTime(stats.cpu, .5), formatTime(stats.cpu, .95), formatTime(stats.gpu, .5), stats.cpu.size(), stats.gpu.size());
+			}
+			wchar_t footer[512];
+			swprintf_s(footer, L"\nRectangles:%u  D3D sigma:3 (fixed)\nD2D: production four-stage / native selection\nD2D rects: pre-batching copy and draw policy\nGaussian sigma: %.2f half-size / %.2f full-size (nominal)\n\n1/2/3/4 select  Space cycle  A auto  R radius  O occlusion\nF format  C copy  Q quality  +/- D2D blur  P phase  S reset\nGPU span includes CPU-feed idle. --validate exports pixel differences.",
+				m_benchmark.RectangleCount(), options.settings.blurAmount, options.settings.blurAmount * 2.f);
+			m_overlay += footer;
+			std::wstring title = L"OpenGlassRenderTest - ";
+			title += MethodLabels[size_t(m_method)];
+			SetWindowTextW(m_window, title.c_str());
 		}
-
-		const auto frameStart = std::chrono::steady_clock::now();
-		MaybeAutoSwitchClipMode(frameStart);
-
-		m_d2dContext->BeginDraw();
-		m_d2dContext->SetTransform(D2D1::IdentityMatrix());
-		m_d2dContext->Clear(D2D1::ColorF(0.f, 0.f, 0.f, 1.f));
-
-		if (m_backgroundBitmap)
+	public:
+		explicit Application(const Options& options) : m_benchmark(options), m_method(options.method) {}
+		void Initialize(HWND window)
 		{
-			const auto imageSize = m_backgroundBitmap->GetSize();
-			const D2D1_RECT_F dst = D2D1::RectF(0.f, 0.f, imageSize.width, imageSize.height);
-			m_d2dContext->DrawBitmap(m_backgroundBitmap.get(), dst, 1.f, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR);
+			m_window = window;
+			m_benchmark.Initialize();
+			const auto& options = m_benchmark.Configuration();
+			CreateDisplay(options.width, options.height);
+			THROW_IF_FAILED(m_benchmark.Context()->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White), m_brush.put()));
+			winrt::com_ptr<IDWriteFactory> writeFactory;
+			THROW_IF_FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), reinterpret_cast<IUnknown**>(writeFactory.put())));
+			THROW_IF_FAILED(writeFactory->CreateTextFormat(L"Consolas", nullptr, DWRITE_FONT_WEIGHT_REGULAR,
+				DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, 15.f, L"", m_textFormat.put()));
+			m_switch = std::chrono::steady_clock::now();
+			UpdateOverlay();
 		}
-
-
-		double blurMs = 0.0;
-		for (UINT i = 0; i < m_workloadIterations; ++i)
+		void Resize(UINT width, UINT height)
 		{
-			const auto blurStart = std::chrono::steady_clock::now();
-			RETURN_IF_FAILED(RenderBlur());
-			const auto blurEnd = std::chrono::steady_clock::now();
-			blurMs += std::chrono::duration<double, std::milli>(blurEnd - blurStart).count();
+			if (!m_swapChain || !width || !height) return;
+			auto options = m_benchmark.Configuration();
+			options.width = width;
+			options.height = height;
+			m_benchmark.Reconfigure(options);
+			CreateDisplay(width, height);
+			UpdateOverlay();
 		}
-
-		m_lastBlurMs = blurMs;
-		AccumulateModeStats(blurMs);
-		DrawPerfOverlay();
-
-		const auto hr = m_d2dContext->EndDraw();
-		if (hr == D2DERR_RECREATE_TARGET)
+		void Key(WPARAM key)
 		{
-			DiscardDeviceResources();
-			RETURN_IF_FAILED(CreateDeviceResources());
-			RECT rc{};
-			GetClientRect(m_hwnd, &rc);
-			RETURN_IF_FAILED(CreateWindowSizeDependentResources(rc.right - rc.left, rc.bottom - rc.top));
-			return S_OK;
+			auto options = m_benchmark.Configuration();
+			if (key >= '1' && key < '1' + MethodCount)
+			{
+				m_method = Method(key - '1');
+				m_auto = false;
+			}
+			else if (key == VK_SPACE)
+			{
+				m_method = Method((size_t(m_method) + 1) % MethodCount);
+				m_auto = false;
+			}
+			else if (key == 'A')
+			{
+				m_auto = !m_auto;
+				m_switch = std::chrono::steady_clock::now();
+			}
+			else if (key == 'S') m_benchmark.ResetMeasurements();
+			else
+			{
+				if (key == 'R') options.radius = options.radius == 0 ? 6 : options.radius == 6 ? 30 : 0;
+				else if (key == 'O') options.occlusion = (options.occlusion + 1) % 3;
+				else if (key == 'F') options.fp16 = !options.fp16;
+				else if (key == 'C') options.settings.forceCapture = !options.settings.forceCapture;
+				else if (key == 'P') options.phase = options.phase == 0.f ? .5f : 0.f;
+				else if (key == 'Q') options.settings.optimization = D2D1_GAUSSIANBLUR_OPTIMIZATION((int(options.settings.optimization) + 1) % 3);
+				else if (key == VK_ADD || key == VK_OEM_PLUS) options.settings.blurAmount = std::min(100.f, options.settings.blurAmount + 1.f);
+				else if (key == VK_SUBTRACT || key == VK_OEM_MINUS) options.settings.blurAmount = std::max(1.f, options.settings.blurAmount - 1.f);
+				else return;
+				m_benchmark.Reconfigure(options);
+			}
+			UpdateOverlay();
 		}
-		RETURN_IF_FAILED(hr);
-
-		m_swapChain->Present(0, 0);
-
-		const auto frameEnd = std::chrono::steady_clock::now();
-		m_lastFrameMs = std::chrono::duration<double, std::milli>(frameEnd - frameStart).count();
-		TickFrameStats(frameEnd);
-
-		return S_OK;
-	}
-
-private:
-	HWND m_hwnd{};
-	ClipMode m_clipMode{ ClipMode::PushLayer };
-
-	winrt::com_ptr<ID3D11Device> m_d3dDevice{};
-	winrt::com_ptr<ID3D11DeviceContext> m_d3dContext{};
-	winrt::com_ptr<IDXGISwapChain1> m_swapChain{};
-
-	winrt::com_ptr<ID2D1Factory1> m_d2dFactory{};
-	winrt::com_ptr<ID2D1Device> m_d2dDevice{};
-	winrt::com_ptr<ID2D1DeviceContext> m_d2dContext{};
-	winrt::com_ptr<ID2D1Bitmap1> m_targetBitmap{};
-	winrt::com_ptr<ID2D1Layer> m_clipLayer{};
-	winrt::com_ptr<ID2D1PathGeometry> m_ringGeometry{};
-	winrt::com_ptr<ID2D1SolidColorBrush> m_overlayBrush{};
-
-	winrt::com_ptr<IWICImagingFactory> m_wicFactory{};
-	winrt::com_ptr<ID2D1Bitmap1> m_backgroundBitmap{};
-	winrt::com_ptr<IDWriteFactory> m_dwriteFactory{};
-	winrt::com_ptr<IDWriteTextFormat> m_overlayTextFormat{};
-
-	winrt::com_ptr<CCustomBlurEffect> m_blurEffect{};
-
-	D2D1_RECT_F m_outerRect{};
-	D2D1_RECT_F m_innerRect{};
-	std::array<D2D1_RECT_F, 4> m_ringRects{};
-
-	struct ModePerfStats
-	{
-		double lastMs{ 0.0 };
-		double avgMs{ 0.0 };
-		double accMs{ 0.0 };
-		UINT samples{ 0 };
+		void Render()
+		{
+			const auto now = std::chrono::steady_clock::now();
+			const auto& options = m_benchmark.Configuration();
+			if (options.captureFrames)
+			{
+				const auto count = options.warmup + options.captureFrames;
+				if (m_captureFrame >= count * MethodCount)
+				{
+					PostMessageW(m_window, WM_CLOSE, 0, 0);
+					return;
+				}
+				m_method = Method(m_captureFrame++ / count);
+			}
+			else if (m_auto && now - m_switch >= std::chrono::seconds(3))
+			{
+				m_method = Method((size_t(m_method) + 1) % MethodCount);
+				m_switch = now;
+			}
+			m_benchmark.Frame(m_method);
+			if (now - m_refresh >= std::chrono::milliseconds(500))
+			{
+				UpdateOverlay();
+				m_refresh = now;
+			}
+			auto* context = m_benchmark.Context();
+			context->SetTarget(m_display.get());
+			context->SetTransform(D2D1::IdentityMatrix());
+			context->BeginDraw();
+			context->DrawBitmap(m_benchmark.PreviewBitmap());
+			const float dpiScale = GetDpiForWindow(m_window) / 96.f;
+			context->SetTransform(D2D1::Matrix3x2F::Scale(dpiScale, dpiScale));
+			m_brush->SetColor(D2D1::ColorF(0.f, 0.f, 0.f, .82f));
+			context->FillRectangle(D2D1::RectF(12.f, 12.f, 700.f, 390.f), m_brush.get());
+			m_brush->SetColor(D2D1::ColorF(D2D1::ColorF::White));
+			context->DrawTextW(m_overlay.c_str(), UINT(m_overlay.size()), m_textFormat.get(),
+				D2D1::RectF(22.f, 20.f, 690.f, 385.f), m_brush.get(), D2D1_DRAW_TEXT_OPTIONS_NO_SNAP);
+			THROW_IF_FAILED(context->EndDraw());
+			THROW_IF_FAILED(m_swapChain->Present(0, 0));
+		}
 	};
 
-	std::chrono::steady_clock::time_point m_lastSummaryStamp{};
-	std::chrono::steady_clock::time_point m_lastAutoSwitch{};
-	double m_lastFrameMs{ 0.0 };
-	double m_lastBlurMs{ 0.0 };
-	double m_avgFrameMs{ 0.0 };
-	double m_fps{ 0.0 };
-	double m_accumulatedFrameMs{ 0.0 };
-	UINT m_accumulatedFrames{ 0 };
-	UINT m_workloadIterations{ 1 };
-	bool m_autoCompare{ true };
-	ModePerfStats m_pushLayerStats{};
-	ModePerfStats m_drawRectsStats{};
-
-	HRESULT CreateDeviceResources()
+	LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wparam, LPARAM lparam)
 	{
-		UINT flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
-		#ifdef _DEBUG
-		flags |= D3D11_CREATE_DEVICE_DEBUG;
-		#endif
-
-		static const D3D_FEATURE_LEVEL kLevels[] =
+		auto* app = reinterpret_cast<Application*>(GetWindowLongPtrW(window, GWLP_USERDATA));
+		try
 		{
-			D3D_FEATURE_LEVEL_11_1,
-			D3D_FEATURE_LEVEL_11_0
-		};
-
-		RETURN_IF_FAILED(
-			D3D11CreateDevice(
-				nullptr,
-				D3D_DRIVER_TYPE_HARDWARE,
-				nullptr,
-				flags,
-				kLevels,
-				static_cast<UINT>(std::size(kLevels)),
-				D3D11_SDK_VERSION,
-				m_d3dDevice.put(),
-				nullptr,
-				m_d3dContext.put()
-			)
-		);
-
-		winrt::com_ptr<IDXGIDevice> dxgiDevice{};
-		RETURN_IF_FAILED(m_d3dDevice->QueryInterface(dxgiDevice.put()));
-
-		D2D1_FACTORY_OPTIONS options{};
-		#ifdef _DEBUG
-		options.debugLevel = D2D1_DEBUG_LEVEL_INFORMATION;
-		#endif
-
-		RETURN_IF_FAILED(
-			D2D1CreateFactory(
-				D2D1_FACTORY_TYPE_SINGLE_THREADED,
-				__uuidof(ID2D1Factory1),
-				&options,
-				reinterpret_cast<void**>(m_d2dFactory.put())
-			)
-		);
-
-		RETURN_IF_FAILED(m_d2dFactory->CreateDevice(dxgiDevice.get(), m_d2dDevice.put()));
-		RETURN_IF_FAILED(m_d2dDevice->CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS_NONE, m_d2dContext.put()));
-		RETURN_IF_FAILED(m_d2dContext->CreateLayer(m_clipLayer.put()));
-		RETURN_IF_FAILED(m_d2dContext->CreateSolidColorBrush(D2D1::ColorF(1.f, 1.f, 1.f, 1.f), m_overlayBrush.put()));
-		m_d2dContext->SetUnitMode(D2D1_UNIT_MODE_PIXELS);
-
-		RETURN_IF_FAILED(
-			DWriteCreateFactory(
-				DWRITE_FACTORY_TYPE_SHARED,
-				__uuidof(IDWriteFactory),
-				reinterpret_cast<IUnknown**>(m_dwriteFactory.put())
-			)
-		);
-		RETURN_IF_FAILED(
-			m_dwriteFactory->CreateTextFormat(
-				L"Consolas",
-				nullptr,
-				DWRITE_FONT_WEIGHT_REGULAR,
-				DWRITE_FONT_STYLE_NORMAL,
-				DWRITE_FONT_STRETCH_NORMAL,
-				18.f,
-				L"",
-				m_overlayTextFormat.put()
-			)
-		);
-		RETURN_IF_FAILED(m_overlayTextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING));
-		RETURN_IF_FAILED(m_overlayTextFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_NEAR));
-
-		RETURN_IF_FAILED(CoCreateInstance(
-			CLSID_WICImagingFactory2,
-			nullptr,
-			CLSCTX_INPROC_SERVER,
-			IID_PPV_ARGS(m_wicFactory.put())
-		));
-
-		m_blurEffect = winrt::make_self<CCustomBlurEffect>();
-
-		return S_OK;
-	}
-
-	void DiscardDeviceResources()
-	{
-		m_targetBitmap = nullptr;
-		m_swapChain = nullptr;
-	}
-
-	HRESULT CreateWindowSizeDependentResources(UINT width, UINT height)
-	{
-		if (!m_swapChain)
-		{
-			winrt::com_ptr<IDXGIDevice> dxgiDevice{};
-			RETURN_IF_FAILED(m_d3dDevice->QueryInterface(dxgiDevice.put()));
-			winrt::com_ptr<IDXGIAdapter> adapter{};
-			RETURN_IF_FAILED(dxgiDevice->GetAdapter(adapter.put()));
-			winrt::com_ptr<IDXGIFactory2> factory{};
-			RETURN_IF_FAILED(adapter->GetParent(IID_PPV_ARGS(factory.put())));
-
-			DXGI_SWAP_CHAIN_DESC1 desc{};
-			desc.Width = width;
-			desc.Height = height;
-			desc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
-			desc.SampleDesc.Count = 1;
-			desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT | DXGI_USAGE_SHADER_INPUT;
-			desc.BufferCount = 2;
-			desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
-			desc.AlphaMode = DXGI_ALPHA_MODE_IGNORE;
-
-			RETURN_IF_FAILED(factory->CreateSwapChainForHwnd(
-				m_d3dDevice.get(),
-				m_hwnd,
-				&desc,
-				nullptr,
-				nullptr,
-				m_swapChain.put()
-			));
-		}
-		else
-		{
-			m_d2dContext->SetTarget(nullptr);
-			m_targetBitmap = nullptr;
-			RETURN_IF_FAILED(m_swapChain->ResizeBuffers(0, width, height, DXGI_FORMAT_UNKNOWN, 0));
-		}
-
-		winrt::com_ptr<IDXGISurface> surface{};
-		RETURN_IF_FAILED(m_swapChain->GetBuffer(0, IID_PPV_ARGS(surface.put())));
-
-		const auto props = D2D1::BitmapProperties1(
-			D2D1_BITMAP_OPTIONS_TARGET,
-			D2D1::PixelFormat(DXGI_FORMAT_B8G8R8A8_UNORM, D2D1_ALPHA_MODE_IGNORE)
-		);
-
-		RETURN_IF_FAILED(m_d2dContext->CreateBitmapFromDxgiSurface(surface.get(), &props, m_targetBitmap.put()));
-		m_d2dContext->SetTarget(m_targetBitmap.get());
-
-		RETURN_IF_FAILED(UpdateRingGeometry(width, height));
-		UpdateWindowTitle();
-
-		return S_OK;
-	}
-
-	HRESULT LoadBackgroundBitmap()
-	{
-		if (!m_wicFactory)
-		{
-			return E_FAIL;
-		}
-
-		auto filePath = BuildImagePath();
-
-		winrt::com_ptr<IWICBitmapDecoder> decoder{};
-		const auto hr = m_wicFactory->CreateDecoderFromFilename(
-			filePath.c_str(),
-			nullptr,
-			GENERIC_READ,
-			WICDecodeMetadataCacheOnLoad,
-			decoder.put()
-		);
-		if (FAILED(hr))
-		{
-			OutputDebugStringW(L"[OpenGlassRenderTest] Image not found, drawing background only.\n");
-			return S_OK;
-		}
-
-		winrt::com_ptr<IWICBitmapFrameDecode> frame{};
-		RETURN_IF_FAILED(decoder->GetFrame(0, frame.put()));
-
-		winrt::com_ptr<IWICFormatConverter> converter{};
-		RETURN_IF_FAILED(m_wicFactory->CreateFormatConverter(converter.put()));
-		RETURN_IF_FAILED(converter->Initialize(
-			frame.get(),
-			GUID_WICPixelFormat32bppPBGRA,
-			WICBitmapDitherTypeNone,
-			nullptr,
-			0.f,
-			WICBitmapPaletteTypeCustom
-		));
-
-		RETURN_IF_FAILED(m_d2dContext->CreateBitmapFromWicBitmap(converter.get(), nullptr, m_backgroundBitmap.put()));
-
-		return S_OK;
-	}
-
-	HRESULT UpdateRingGeometry(UINT width, UINT height)
-	{
-		m_outerRect = D2D1::RectF(30.f, 30.f, static_cast<float>(width - 30.f), static_cast<float>(height - 30.f));
-
-		m_innerRect = D2D1::RectF(
-			std::min(m_outerRect.right, m_outerRect.left + kInsetLeft),
-			std::min(m_outerRect.bottom, m_outerRect.top + kInsetTop),
-			std::max(m_outerRect.left, m_outerRect.right - kInsetRight),
-			std::max(m_outerRect.top, m_outerRect.bottom - kInsetBottom)
-		);
-
-		m_ringRects =
-		{
-			D2D1::RectF(m_outerRect.left, m_outerRect.top, m_outerRect.right, m_innerRect.top),
-			D2D1::RectF(m_outerRect.left, m_innerRect.top, m_innerRect.left, m_innerRect.bottom),
-			D2D1::RectF(m_innerRect.right, m_innerRect.top, m_outerRect.right, m_innerRect.bottom),
-			D2D1::RectF(m_outerRect.left, m_innerRect.bottom, m_outerRect.right, m_outerRect.bottom)
-		};
-
-		m_ringGeometry = nullptr;
-
-		if (!m_d2dFactory)
-		{
-			return S_OK;
-		}
-
-		RETURN_IF_FAILED(m_d2dFactory->CreatePathGeometry(m_ringGeometry.put()));
-		winrt::com_ptr<ID2D1GeometrySink> sink{};
-		RETURN_IF_FAILED(m_ringGeometry->Open(sink.put()));
-
-		sink->SetFillMode(D2D1_FILL_MODE_ALTERNATE);
-
-		const D2D1_POINT_2F outerPoints[] =
-		{
-			{ m_outerRect.left, m_outerRect.top },
-			{ m_outerRect.right, m_outerRect.top },
-			{ m_outerRect.right, m_outerRect.bottom },
-			{ m_outerRect.left, m_outerRect.bottom }
-		};
-		const D2D1_POINT_2F innerPoints[] =
-		{
-			{ m_innerRect.left, m_innerRect.top },
-			{ m_innerRect.right, m_innerRect.top },
-			{ m_innerRect.right, m_innerRect.bottom },
-			{ m_innerRect.left, m_innerRect.bottom }
-		};
-
-		sink->BeginFigure(outerPoints[0], D2D1_FIGURE_BEGIN_FILLED);
-		sink->AddLines(outerPoints + 1, static_cast<UINT>(std::size(outerPoints) - 1));
-		sink->EndFigure(D2D1_FIGURE_END_CLOSED);
-
-		sink->BeginFigure(innerPoints[0], D2D1_FIGURE_BEGIN_FILLED);
-		sink->AddLines(innerPoints + 1, static_cast<UINT>(std::size(innerPoints) - 1));
-		sink->EndFigure(D2D1_FIGURE_END_CLOSED);
-
-		RETURN_IF_FAILED(sink->Close());
-
-		return S_OK;
-	}
-
-	HRESULT RenderBlur()
-	{
-		if (!m_blurEffect || !m_targetBitmap)
-		{
-			return S_OK;
-		}
-
-		winrt::com_ptr<ID2D1Image> targetImage{};
-		m_d2dContext->GetTarget(targetImage.put());
-		if (!targetImage)
-		{
-			return S_OK;
-		}
-
-		RETURN_IF_FAILED(m_d2dContext->Flush());
-		m_d2dContext->SetPrimitiveBlend(D2D1_PRIMITIVE_BLEND_COPY);
-
-		winrt::com_ptr<ID2D1Bitmap1> renderTargetBitmap{};
-		RETURN_IF_FAILED(targetImage->QueryInterface(renderTargetBitmap.put()));
-
-		winrt::com_ptr<ID2D1PrivateCompositorDeviceContext> compositorDeviceContext{};
-		RETURN_IF_FAILED(m_d2dContext->QueryInterface(compositorDeviceContext.put()));
-
-		winrt::com_ptr<ID2D1Bitmap1> sharedAtlasBitmap{};
-		const auto bitmapProperties = D2D1::BitmapProperties1(
-			renderTargetBitmap->GetOptions(),
-			renderTargetBitmap->GetPixelFormat()
-		);
-		RETURN_IF_FAILED(
-			compositorDeviceContext->CreateSharedAtlasBitmap(
-				renderTargetBitmap.get(),
-				&bitmapProperties,
-				sharedAtlasBitmap.put()
-			)
-		);
-
-		const auto targetSize = renderTargetBitmap->GetSize();
-		const auto expansion = GetBlurExpansion(kBlurAmount);
-
-		D2D1_RECT_F alignedSamplingWorldBounds
-		{
-			std::max(std::floor(m_outerRect.left - expansion), 0.f),
-			std::max(std::floor(m_outerRect.top - expansion), 0.f),
-			std::min(std::ceil(m_outerRect.right + expansion), targetSize.width),
-			std::min(std::ceil(m_outerRect.bottom + expansion), targetSize.height)
-		};
-
-		const D2D1_RECT_F alignedDrawingWorldBounds
-		{
-			std::floor(m_outerRect.left),
-			std::floor(m_outerRect.top),
-			std::ceil(m_outerRect.right),
-			std::ceil(m_outerRect.bottom)
-		};
-
-		if (m_clipMode == ClipMode::PushLayer && m_ringGeometry)
-		{
-			const auto layerParams = D2D1::LayerParameters1(
-				alignedDrawingWorldBounds,
-				m_ringGeometry.get(),
-				D2D1_ANTIALIAS_MODE_ALIASED,
-				D2D1::IdentityMatrix(),
-				1.0f,
-				nullptr,
-				D2D1_LAYER_OPTIONS1_INITIALIZE_FROM_BACKGROUND | D2D1_LAYER_OPTIONS1_IGNORE_ALPHA
-			);
-			m_d2dContext->PushLayer(layerParams, nullptr);
-		}
-
-		CCustomBlurParams params{};
-		params.blurAmount = kBlurAmount;
-		params.optimization = D2D1_GAUSSIANBLUR_OPTIMIZATION_BALANCED;
-
-		RETURN_IF_FAILED(
-			m_blurEffect->Build(
-				m_d2dContext.get(),
-				sharedAtlasBitmap.get(),
-				alignedSamplingWorldBounds,
-				&params
-			)
-		);
-
-		winrt::com_ptr<ID2D1Image> outputImage{};
-		m_blurEffect->GetOutput(outputImage.put());
-		RETURN_HR_IF_NULL(D2DERR_UNSUPPORTED_PIXEL_FORMAT, outputImage);
-
-		D2D1_MATRIX_3X2_F originalMatrix{};
-		m_d2dContext->GetTransform(&originalMatrix);
-
-		D2D1_MATRIX_3X2_F outputMatrix = m_blurEffect->GetOutputMatrix();
-		m_d2dContext->SetTransform(outputMatrix);
-
-		D2D1_RENDERING_CONTROLS renderingControls{}, originalControls{};
-		m_d2dContext->GetRenderingControls(&renderingControls);
-		originalControls = renderingControls;
-		const auto targetPixelSize = renderTargetBitmap->GetPixelSize();
-		if (renderingControls.tileSize.width < targetPixelSize.width || renderingControls.tileSize.height < targetPixelSize.height)
-		{
-			renderingControls.tileSize = D2D1::SizeU(4096, 4096);
-			m_d2dContext->SetRenderingControls(renderingControls);
-		}
-
-		const auto restoreState = wil::scope_exit([&]
-		{
-			m_d2dContext->SetTransform(originalMatrix);
-			m_d2dContext->SetRenderingControls(originalControls);
-			if (m_clipMode == ClipMode::PushLayer && m_ringGeometry)
+			switch (message)
 			{
-				m_d2dContext->PopLayer();
+			case WM_SIZE:
+				if (app) app->Resize(LOWORD(lparam), HIWORD(lparam));
+				return 0;
+			case WM_KEYDOWN:
+				if (app) app->Key(wparam);
+				return 0;
+			case WM_GETMINMAXINFO:
+				reinterpret_cast<MINMAXINFO*>(lparam)->ptMinTrackSize = { 560, 400 };
+				return 0;
+			case WM_PAINT:
+			{
+				PAINTSTRUCT paint;
+				BeginPaint(window, &paint);
+				EndPaint(window, &paint);
+				return 0;
 			}
-		});
-
-		D2D1_MATRIX_3X2_F inverseOutputMatrix = outputMatrix;
-		D2D1InvertMatrix(&inverseOutputMatrix);
-
-		const auto offset = m_blurEffect->GetOutputOffset();
-
-		auto drawBlurRect = [&](const D2D1_RECT_F& rect)
-		{
-			auto transformedRect = RectF::TransformRect(rect, inverseOutputMatrix);
-			m_d2dContext->PushAxisAlignedClip(transformedRect, D2D1_ANTIALIAS_MODE_ALIASED);
-			m_d2dContext->DrawImage(
-				outputImage.get(),
-				D2D1::Point2F(transformedRect.left, transformedRect.top),
-				D2D1::RectF(
-					transformedRect.left + offset.x,
-					transformedRect.top + offset.y,
-					transformedRect.right + offset.x,
-					transformedRect.bottom + offset.y
-				),
-				D2D1_INTERPOLATION_MODE_LINEAR,
-				D2D1_COMPOSITE_MODE_SOURCE_OVER
-			);
-			m_d2dContext->PopAxisAlignedClip();
-		};
-
-		if (m_clipMode == ClipMode::PushLayer && m_ringGeometry)
-		{
-			drawBlurRect(alignedDrawingWorldBounds);
-		}
-		else
-		{
-			for (const auto& rect : m_ringRects)
-			{
-				auto clipped = rect;
-				if (RectF::IntersectUnsafe(clipped, alignedDrawingWorldBounds))
-				{
-					drawBlurRect(clipped);
-				}
+			case WM_DESTROY:
+				PostQuitMessage(0);
+				return 0;
 			}
 		}
-
-		m_blurEffect->Reset();
-
-		return S_OK;
-	}
-
-	void UpdateWindowTitle()
-	{
-		const wchar_t* modeText = (m_clipMode == ClipMode::PushLayer) ? L"PushLayer" : L"DrawImage";
-		const wchar_t* autoText = m_autoCompare ? L"Auto" : L"Manual";
-		wchar_t title[256]{};
-		swprintf_s(
-			title,
-			L"OpenGlassRenderTest - %s | Frame %.2f ms | FPS %.1f | WL x%u | %s",
-			modeText,
-			m_avgFrameMs,
-			m_fps,
-			m_workloadIterations,
-			autoText
-		);
-		SetWindowTextW(m_hwnd, title);
-	}
-
-	void AccumulateModeStats(double blurMs)
-	{
-		auto& stats = (m_clipMode == ClipMode::PushLayer) ? m_pushLayerStats : m_drawRectsStats;
-		stats.lastMs = blurMs;
-		stats.accMs += blurMs;
-		++stats.samples;
-	}
-
-	void MaybeAutoSwitchClipMode(const std::chrono::steady_clock::time_point& now)
-	{
-		if (!m_autoCompare)
+		catch (...)
 		{
-			return;
-		}
-
-		if (!m_lastAutoSwitch.time_since_epoch().count())
-		{
-			m_lastAutoSwitch = now;
-			return;
-		}
-
-		if (now - m_lastAutoSwitch >= std::chrono::seconds(2))
-		{
-			m_clipMode = (m_clipMode == ClipMode::PushLayer) ? ClipMode::DrawRects : ClipMode::PushLayer;
-			m_lastAutoSwitch = now;
-		}
-	}
-
-	void TickFrameStats(const std::chrono::steady_clock::time_point& now)
-	{
-		m_accumulatedFrameMs += m_lastFrameMs;
-		++m_accumulatedFrames;
-
-		if (!m_lastSummaryStamp.time_since_epoch().count())
-		{
-			m_lastSummaryStamp = now;
-			return;
-		}
-
-		if (now - m_lastSummaryStamp >= std::chrono::seconds(1) && m_accumulatedFrames > 0)
-		{
-			m_avgFrameMs = m_accumulatedFrameMs / static_cast<double>(m_accumulatedFrames);
-			m_fps = (m_accumulatedFrameMs > 0.0) ? (1000.0 * static_cast<double>(m_accumulatedFrames) / m_accumulatedFrameMs) : 0.0;
-
-			if (m_pushLayerStats.samples > 0)
-			{
-				m_pushLayerStats.avgMs = m_pushLayerStats.accMs / static_cast<double>(m_pushLayerStats.samples);
-				m_pushLayerStats.accMs = 0.0;
-				m_pushLayerStats.samples = 0;
-			}
-			if (m_drawRectsStats.samples > 0)
-			{
-				m_drawRectsStats.avgMs = m_drawRectsStats.accMs / static_cast<double>(m_drawRectsStats.samples);
-				m_drawRectsStats.accMs = 0.0;
-				m_drawRectsStats.samples = 0;
-			}
-
-			m_accumulatedFrameMs = 0.0;
-			m_accumulatedFrames = 0;
-			m_lastSummaryStamp = now;
-			UpdateWindowTitle();
-		}
-	}
-
-	void DrawPerfOverlay()
-	{
-		if (!m_overlayTextFormat || !m_overlayBrush)
-		{
-			return;
-		}
-
-		const wchar_t* modeText = (m_clipMode == ClipMode::PushLayer) ? L"PushLayer" : L"DrawImage";
-		const wchar_t* autoText = m_autoCompare ? L"On" : L"Off";
-		const auto deltaMs = m_drawRectsStats.avgMs - m_pushLayerStats.avgMs;
-		wchar_t text[256]{};
-		swprintf_s(
-			text,
-			L"Mode: %s  Auto:%s\nFrame: %.3f ms  FPS: %.1f\nBlur(last): %.3f ms  WL:x%u\nPushLayer(avg): %.3f ms\nDrawImage(avg): %.3f ms\nDelta(Draw-Push): %.3f ms",
-			modeText,
-			autoText,
-			m_lastFrameMs,
-			m_fps,
-			m_lastBlurMs,
-			m_workloadIterations,
-			m_pushLayerStats.avgMs,
-			m_drawRectsStats.avgMs,
-			deltaMs
-		);
-
-		const D2D1_RECT_F panelRect = D2D1::RectF(12.f, 12.f, 460.f, 210.f);
-		m_overlayBrush->SetColor(D2D1::ColorF(0.f, 0.f, 0.f, 0.55f));
-		m_d2dContext->FillRectangle(panelRect, m_overlayBrush.get());
-
-		m_overlayBrush->SetColor(D2D1::ColorF(1.f, 1.f, 1.f, 1.f));
-		m_d2dContext->DrawTextW(
-			text,
-			static_cast<UINT32>(wcslen(text)),
-			m_overlayTextFormat.get(),
-			D2D1::RectF(panelRect.left + 8.f, panelRect.top + 8.f, panelRect.right - 8.f, panelRect.bottom - 8.f),
-			m_overlayBrush.get(),
-			D2D1_DRAW_TEXT_OPTIONS_NO_SNAP,
-			DWRITE_MEASURING_MODE_NATURAL
-		);
-	}
-};
-
-LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-	if (message == WM_NCCREATE)
-	{
-		auto createStruct = reinterpret_cast<CREATESTRUCTW*>(lParam);
-		auto app = reinterpret_cast<COpenGlassRenderTestApp*>(createStruct->lpCreateParams);
-		if (app)
-		{
-			app->SetHwnd(hwnd);
-			SetWindowLongPtrW(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(app));
-		}
-		return TRUE;
-	}
-
-	auto app = reinterpret_cast<COpenGlassRenderTestApp*>(GetWindowLongPtrW(hwnd, GWLP_USERDATA));
-
-	switch (message)
-	{
-	case WM_SIZE:
-		if (app)
-		{
-			app->OnResize(LOWORD(lParam), HIWORD(lParam));
-		}
-		return 0;
-	case WM_KEYDOWN:
-		if (app && (wParam == VK_SPACE || wParam == 'C'))
-		{
-			app->ToggleClipMode();
+			LOG_CAUGHT_EXCEPTION();
+			PostQuitMessage(1);
 			return 0;
 		}
-		if (app && wParam == 'A')
-		{
-			app->ToggleAutoCompare();
-			return 0;
-		}
-		if (app && (wParam == VK_OEM_PLUS || wParam == VK_ADD))
-		{
-			app->AdjustWorkload(4);
-			return 0;
-		}
-		if (app && (wParam == VK_OEM_MINUS || wParam == VK_SUBTRACT))
-		{
-			app->AdjustWorkload(-4);
-			return 0;
-		}
-		break;
-	case WM_PAINT:
-		{
-			PAINTSTRUCT ps{};
-			BeginPaint(hwnd, &ps);
-			EndPaint(hwnd, &ps);
-			return 0;
-		}
-		break;
-	case WM_DESTROY:
-		PostQuitMessage(0);
-		return 0;
+		return DefWindowProcW(window, message, wparam, lparam);
 	}
-
-	return DefWindowProcW(hwnd, message, wParam, lParam);
 }
 
-int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPWSTR, _In_ int nCmdShow)
+int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, LPWSTR, int show)
+try
 {
-	SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
-	CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
-	const auto coUninit = wil::scope_exit([] { CoUninitialize(); });
-
-	const wchar_t kClassName[] = L"OpenGlassRenderTestWindow";
-
-	WNDCLASSEXW wc{};
-	wc.cbSize = sizeof(wc);
-	wc.lpfnWndProc = WndProc;
-	wc.hInstance = hInstance;
-	wc.hCursor = LoadCursorW(nullptr, IDC_ARROW);
-	wc.lpszClassName = kClassName;
-	wc.hbrBackground = reinterpret_cast<HBRUSH>(GetStockObject(BLACK_BRUSH));
-	RegisterClassExW(&wc);
-
-	RECT rc{ 0, 0, static_cast<LONG>(kDefaultWidth), static_cast<LONG>(kDefaultHeight) };
-	AdjustWindowRectEx(&rc, WS_OVERLAPPEDWINDOW, FALSE, 0);
-
-	COpenGlassRenderTestApp app(nullptr);
-
-	HWND hwnd = CreateWindowExW(
-		0,
-		kClassName,
-		L"OpenGlassRenderTest",
-		WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT,
-		CW_USEDEFAULT,
-		rc.right - rc.left,
-		rc.bottom - rc.top,
-		nullptr,
-		nullptr,
-		hInstance,
-		&app
-	);
-
-	if (!hwnd)
+	int argc{};
+	auto** argv = CommandLineToArgvW(GetCommandLineW(), &argc);
+	THROW_LAST_ERROR_IF_NULL(argv);
+	const auto freeArgs = wil::scope_exit([&] { LocalFree(argv); });
+	if (argc == 2 && std::wstring_view(argv[1]) == L"--help")
 	{
+		const auto text = winrt::to_string(Help);
+		DWORD written{};
+		if (!WriteFile(GetStdHandle(STD_OUTPUT_HANDLE), text.data(), DWORD(text.size()), &written, nullptr))
+			MessageBoxW(nullptr, Help, L"OpenGlassRenderTest", MB_OK);
 		return 0;
 	}
-
-	app.Initialize();
-
-	ShowWindow(hwnd, nCmdShow);
-	UpdateWindow(hwnd);
-
-	MSG msg{};
-	bool running = true;
-	while (running)
+	const auto options = ParseOptions(argc, argv);
+	SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
+	winrt::init_apartment(winrt::apartment_type::single_threaded);
+	const auto uninitialize = wil::scope_exit([] { winrt::uninit_apartment(); });
+	if (!options.output.empty())
 	{
-		while (PeekMessageW(&msg, nullptr, 0, 0, PM_REMOVE))
-		{
-			if (msg.message == WM_QUIT)
-			{
-				running = false;
-				break;
-			}
-			TranslateMessage(&msg);
-			DispatchMessageW(&msg);
-		}
-
-		if (!running)
-		{
-			break;
-		}
-
-		app.Render();
+		Benchmark benchmark(options);
+		benchmark.Initialize();
+		benchmark.Run();
+		return 0;
 	}
-
-	return static_cast<int>(msg.wParam);
+	const wchar_t* className = L"OpenGlassRenderTestWindow";
+	WNDCLASSEXW wc{ sizeof(wc) };
+	wc.lpfnWndProc = WindowProc;
+	wc.hInstance = instance;
+	wc.hCursor = LoadCursorW(nullptr, IDC_ARROW);
+	wc.lpszClassName = className;
+	THROW_LAST_ERROR_IF(!RegisterClassExW(&wc));
+	RECT rect{ 0, 0, LONG(options.width), LONG(options.height) };
+	THROW_IF_WIN32_BOOL_FALSE(AdjustWindowRectEx(&rect, WS_OVERLAPPEDWINDOW, FALSE, 0));
+	const auto window = CreateWindowExW(0, className, L"OpenGlassRenderTest", WS_OVERLAPPEDWINDOW,
+		CW_USEDEFAULT, CW_USEDEFAULT, rect.right - rect.left, rect.bottom - rect.top, nullptr, nullptr, instance, nullptr);
+	THROW_LAST_ERROR_IF_NULL(window);
+	Application app(options);
+	app.Initialize(window);
+	SetWindowLongPtrW(window, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(&app));
+	ShowWindow(window, show);
+	MSG message{};
+	for (;;)
+	{
+		while (PeekMessageW(&message, nullptr, 0, 0, PM_REMOVE))
+		{
+			if (message.message == WM_QUIT) return int(message.wParam);
+			TranslateMessage(&message);
+			DispatchMessageW(&message);
+		}
+		if (IsIconic(window)) WaitMessage();
+		else app.Render();
+	}
+}
+catch (const wil::ResultException& error)
+{
+	OutputDebugStringA(error.what());
+	fprintf(stderr, "%s\n", error.what());
+	return 1;
+}
+catch (...)
+{
+	const auto hr = wil::ResultFromCaughtException();
+	wchar_t text[100];
+	swprintf_s(text, L"OpenGlassRenderTest failed: 0x%08X\n", unsigned(hr));
+	OutputDebugStringW(text);
+	fwprintf(stderr, L"%s", text);
+	return 1;
 }

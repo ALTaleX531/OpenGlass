@@ -1,0 +1,7 @@
+#include "../OpenGlass/resource.h"
+
+IDR_RCDATA_AEROCOLORIZATION_PS RCDATA "AeroColorizationEffect.cso"
+IDR_RCDATA_BLUR_VS RCDATA "Blur.VS.cso"
+IDR_RCDATA_BLUR_PS_BLURH RCDATA "Blur.PS_BlurH.cso"
+IDR_RCDATA_BLUR_PS_BLURV RCDATA "Blur.PS_BlurV.cso"
+IDR_RCDATA_BLUR_PS_BLURV_VISTA RCDATA "Blur.PS_BlurV_Vista.cso"

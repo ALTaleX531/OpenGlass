@@ -9,8 +9,17 @@
       <UniqueIdentifier>{5F20E7B2-9BDA-4EA4-A4B1-9ECA49AD7B4A}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx;hlsl</Extensions>
     </Filter>
+    <Filter Include="Documentation">
+      <UniqueIdentifier>{DC770D93-044F-452A-AB26-706A21976240}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Benchmark.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="OpenGlassRenderTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -19,8 +28,22 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Benchmark.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Shaders.rc">
+      <Filter>Source Files</Filter>
+    </ResourceCompile>
+    <None Include="README.md">
+      <Filter>Documentation</Filter>
+    </None>
   </ItemGroup>
 </Project>
