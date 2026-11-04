@@ -8,6 +8,10 @@
 
 namespace OpenGlass::RectF
 {
+	[[nodiscard]] inline constexpr double Area(const D2D1_RECT_F& rectangle)
+	{
+		return static_cast<double>(rectangle.right - rectangle.left) * static_cast<double>(rectangle.bottom - rectangle.top);
+	}
 	[[nodiscard]] inline D2D1_RECT_F Align(const D2D1_RECT_F& rectangle)
 	{
 		return

@@ -25,7 +25,6 @@ namespace OpenGlass::dwmcore
 	using ID2DContextOwner_GetCurrentZ_t = UINT (*)(const ID2DContextOwner*);
 	using ID2DContextOwner_GetCurrentRenderTargetInfo_t = const RenderTargetInfo& (*)(const ID2DContextOwner*);
 	using IDeviceTarget_GetRenderTargetView_t = ID3D11RenderTargetView* (*)(const IDeviceTarget*);
-	using IDeviceTexture_GetTexture2D_t = ID3D11Texture2D* (*)(const IDeviceTexture*, UINT*);
 	using IDeviceTexture_GetShaderResourceView_t = ID3D11ShaderResourceView* (*)(const IDeviceTexture*);
 
 } // namespace OpenGlass::dwmcore

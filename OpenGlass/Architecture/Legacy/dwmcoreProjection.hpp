@@ -542,10 +542,6 @@ namespace OpenGlass::dwmcore
 	struct IBitmapResource;
 	struct IDeviceTexture
 	{
-		inline ID3D11Texture2D* GetTexture2D() const
-		{
-			return std::invoke(IDeviceTexture_GetTexture2D.read(HookHelper::get_vftable_from(this)), this);
-		}
 		inline ID3D11ShaderResourceView* GetShaderResourceView() const
 		{
 			return std::invoke(
@@ -554,10 +550,6 @@ namespace OpenGlass::dwmcore
 	};
 	struct CD3DSurface
 	{
-		inline ID3D11Texture2D* GetTexture2D() const
-		{
-			return CD3DSurface_GetTexture2D.read(this);
-		}
 		inline ID3D11ShaderResourceView* GetShaderResourceView() const
 		{
 			return CD3DSurface_GetShaderResourceView.read(this);

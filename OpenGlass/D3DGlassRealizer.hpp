@@ -1,7 +1,6 @@
 #pragma once
 #include "framework.hpp"
 #include "cpprt.hpp"
-#include "dwmcoreProjection.hpp"
 #include "AeroEffect.hpp"
 #include "Shared.hpp"
 #include "Buffer2D.hpp"
@@ -46,6 +45,7 @@ namespace OpenGlass
 	class CD3DGlassRealizer
 	{
 		bool m_initialized{ false };
+		winrt::com_ptr<ID3DDeviceContextState> m_contextState;
 
 		float										m_sigma{ 0.f };
 		DwmHwSamples								m_dwmHwSamples{};

@@ -39,27 +39,6 @@
           ]
         }
       ]
-    },
-    {
-      "name": "CD3DSurface_GetTexture2D",
-      "id": "CD3DSurface_GetTexture2D",
-      "kind": "field",
-      "type": "ID3D11Texture2D*",
-      "cases": [
-        {
-          "platform": null,
-          "ranges": [
-            {
-              "offset": 128,
-              "until": {
-                "build": 19041,
-                "revision": 0
-              }
-            }
-          ]
-        }
-      ],
-      "notes": "CD3DSurface only used before Windows 10 2004\nSequential pointer members: Texture2D, RTV, SRV"
     }
   ]
 }

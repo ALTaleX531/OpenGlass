@@ -16,6 +16,34 @@ Hook publication, the first redraw and rundown follow the [DWM safety contract](
 
 Custom-theme shutdown preserves the lock-free synchronous `SendMessageW(WM_THEMECHANGED)` before `UnloadTheme`, after removing its delay-IAT hooks and the OpenGlass window procedure. Preserve the remaining component cleanup/redraw order in `GlassEngine::Shutdown`.
 
+## Background copies
+
+Both renderers resolve the current target bitmap through `Util::GetTargetBitmapFromD2DContext` and its underlying texture through `Util::GetTextureFromD2DBitmap`. The Direct3D path selects DWM's render-target and shader-resource views. Bitmap and texture COM references remain scoped to the draw call.
+
+`BackdropCopy.hpp` declares `CoalesceCopyRectangles`, implemented in `BackdropCopy.cpp` and shared across both realizers. Callers expand, clip, and round source boxes outward to integer texels using the actual occlusion and clipping boundaries. The helper merges touching or overlapping boxes when combined transfer-area and command cost decreases, then selects a single bounding copy when cheaper.
+
+For Direct2D captures, `CGlassRealizer` uses `GetBlurExpansion()` for sampling bounds and background copies to match dirty-region tracking. It intersects drawing rectangles with drawing bounds, expands them, clips them to the effect sampling bounds, and rounds outward to source texels before coalescing. Sampling bounds are clamped to the geometry bounding box and source bitmap. Crop defines the content region, and Border mirrors that content at its edges. The effect input rectangle and final drawing geometry remain unchanged.
+
+Copies execute on the immediate context ahead of dependent effects. The Direct2D path uses the caller's pre-copy `ID2D1DeviceContext::Flush` to materialize the background before capture. Direct3D command submission follows standard caller and runtime scheduling.
+
+Each Direct3D realizer owns a device-context state object using DWM's single-threaded device contract. After the caller flushes Direct2D, glass drawing switches into that state and restores the previous state on return, including failure returns. Native switching preserves pipeline bindings, constant-buffer ranges and hardware protection. Before switching back, unbind the borrowed output target and input view so the cached state retains only realizer-owned resources. Renderer replacement and device cleanup release the state with the realizer.
+
+## Direct2D effect batching
+
+`CGlassEffectBatch` (`GlassEffectBatch.cpp`) manages scheduling resources for banded blur across four stages using two scratch buffers, while `CustomBlurEffect` computes blur mathematics and shaders. The composition buffer receives Scale/Crop/Border output. Horizontal blur consumes that input and writes to the second buffer. Vertical blur and colorization then reuse the composition buffer, and the result is composed into the original rectangles. The batch holds COM references to graph nodes owned by `CAeroEffect`/`CBlurEffect` and restores connections before subsequent builds or native draws.
+
+The final effect build determines whether to use native drawing or banded batching. Background copies precede drawing, while banded rendering plans stages and manages resources using a snapshot of the effect output, transform, and offset.
+
+- Callers route zero-blur operations to solid-color rendering. The realizer processes nonzero blur and plans bands for multi-rectangle effects with non-unit output scale. Unit-scale output, single rectangles, full-coverage tiles, and plans that retain the original band count use the native path.
+- Scratch-stage footprints derive from native kernel required-input queries, cached while blur amount, optimization, and output scale remain unchanged. Banded draws prepare these footprints; background copies and native draws bypass them. The effect's input rectangle and output offset remain authoritative.
+- Non-negative scratch ranges retain absolute coordinates. Integer-translated bitmap views handle negative sample reach and preserve the sampling grid, keeping positive ranges free of additional translation effects.
+- Scratch rendering uses a separate pixel-unit context. Composition retains the caller's target, depth and clip, and restores its transform, blend mode and antialiasing state. Scratch targets are detached before parent composition samples them, including on `EndDraw` failure.
+- Composition uses the original rectangles under the caller's clip; geometry and curve masks belong to that final composition.
+- Scratch textures allocate on demand to match source format, sample description, miscellaneous flags, and hardware protection settings. Effect changes release graph references while preserving reusable scheduling resources. Context destruction, renderer replacement, and rundown cleanup free these resources.
+- Keep copies, passes and composition asynchronous, with command submission owned by the caller/runtime.
+- Texture and bitmap metadata are queried directly from owned resources. Planner extents, origins, and kernel-cache keys are stored in scheduling state.
+- `CustomBlurEffect::Reset` disconnects inputs while retaining the cached image pointer. Input callers recreate bitmap wrappers to trigger graph reconnection on unchanged frames; scratch callers reuse compatible wrappers.
+
 ## Legacy overlay candidates
 
 Keep swap-chain content that contributes to visible blur in the composed desktop. `GlassIntegrity` selects overlay hooks for the module's verified ABIs; that selection must cover the relevant native candidate paths. Compare clipped candidate bounds with glass coverage in the same device space and at the current depth. Reject only overlapping candidates while blur is enabled; preserve native overlay eligibility elsewhere.

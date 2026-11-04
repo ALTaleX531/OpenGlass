@@ -368,6 +368,12 @@
     <ClCompile Include="D3DGlassRealizer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BackdropCopy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GlassEffectBatch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="GlassRealizer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -419,6 +425,9 @@
     <ClInclude Include="BlurEffect.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BackdropCopy.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Buffer2D.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -462,6 +471,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GlassFrameHandler.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GlassEffectBatch.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GlassRealizer.hpp">

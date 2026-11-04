@@ -264,10 +264,6 @@ namespace OpenGlass::dwmcore
 	struct IBitmapResource;
 	struct IDeviceTexture
 	{
-		inline ID3D11Texture2D* GetTexture2D(UINT* unknown = nullptr) const
-		{
-			return IDeviceTexture_GetTexture2D.read(HookHelper::get_vftable_from(this))(this, unknown);
-		}
 		inline ID3D11ShaderResourceView* GetShaderResourceView() const
 		{
 			return IDeviceTexture_GetShaderResourceView.read(HookHelper::get_vftable_from(this))(this);

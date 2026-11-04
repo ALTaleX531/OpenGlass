@@ -2,6 +2,7 @@
 #include "resource.h"
 #include "Util.hpp"
 #include "D3DGlassRealizer.hpp"
+#include "BackdropCopy.hpp"
 #include "Shared.hpp"
 #include "DxgiPrivates.hpp"
 #include "BlurSettings.hpp"
@@ -386,6 +387,15 @@ HRESULT CD3DGlassRealizer::Initialize(ID3D11Device* device)
 {
 	RETURN_IF_FAILED(CreateDeviceResources(device));
 
+	winrt::com_ptr<ID3D11Device1> device1;
+	RETURN_IF_FAILED(device->QueryInterface(device1.put()));
+	const auto featureLevel = device->GetFeatureLevel();
+	// DWM creates its D3D11 device with SINGLETHREADED.
+	RETURN_IF_FAILED(device1->CreateDeviceContextState(
+		D3D11_1_CREATE_DEVICE_CONTEXT_STATE_SINGLETHREADED,
+		&featureLevel, 1, D3D11_SDK_VERSION, __uuidof(ID3D11Device), nullptr, m_contextState.put()
+	));
+
 	m_initialized = true;
 	return S_OK;
 }
@@ -593,13 +603,19 @@ HRESULT CD3DGlassRealizer::Render(
 	RETURN_IF_FAILED(EnsureVertexBufferCapacity(device, verticesBlur.size(), m_vertexBuffer, m_vertexCapacityBlur));
 	RETURN_IF_FAILED(EnsureMeshBuffersCapacity(device, verticesCompose.size(), indicesCompose.size(), m_vertexBufferCompose, m_indexBufferCompose, m_vertexCapacityCompose, m_indexCapacityCompose));
 
-	Util::D3D11ContextStateGuard contextStateGuard(context);
-
+	winrt::com_ptr<ID3D11DeviceContext3> context3;
+	RETURN_IF_FAILED(context->QueryInterface(context3.put()));
+	winrt::com_ptr<ID3DDeviceContextState> previousState;
+	context3->SwapDeviceContextState(m_contextState.get(), previousState.put());
+	const auto restoreContext = wil::scope_exit([&]
 	{
-		winrt::com_ptr<ID3D11DeviceContext3> context3{};
-		RETURN_IF_FAILED(context->QueryInterface(context3.put()));
-		context3->SetHardwareProtectionState(static_cast<BOOL>(hwProtectionEnabled));
-	}
+		// The cached state must not retain borrowed targets or source views between draws.
+		ID3D11ShaderResourceView* nullSRV = nullptr;
+		context3->PSSetShaderResources(0, 1, &nullSRV);
+		context3->OMSetRenderTargets(0, nullptr, nullptr);
+		context3->SwapDeviceContextState(previousState.get(), nullptr);
+	});
+	context3->SetHardwareProtectionState(hwProtectionEnabled);
 
 	UINT stride{ sizeof(BlurVertex) };
 	UINT offset{ 0 };
@@ -717,44 +733,25 @@ HRESULT CD3DGlassRealizer::Render(
 		const float copyLeftMargin = expansion + static_cast<float>(m_dwmHwSamples.radius + 1);
 		const float copyRightMargin = expansion + static_cast<float>(m_dwmHwSamples.radius);
 
-		if (rectangles.size() <= 12)
+		std::vector<D2D1_RECT_U> copyRectangles;
+		copyRectangles.reserve(rectangles.size());
+		for (auto subRectangle : rectangles)
 		{
-			for (auto subRectangle : rectangles)
+			if (RectF::IntersectUnsafe(subRectangle, drawingWorldBounds))
 			{
-				if (RectF::IntersectUnsafe(subRectangle, drawingWorldBounds))
+				subRectangle =
 				{
-					subRectangle =
-					{
-						std::max(subRectangle.left - copyLeftMargin, 0.f),
-						std::max(subRectangle.top - expansion, 0.f),
-						std::min(subRectangle.right + copyRightMargin, static_cast<float>(backBufferDesc.Width)),
-						std::min(subRectangle.bottom + expansion, static_cast<float>(backBufferDesc.Height))
-					};
-
-					const auto copyRegionRect = RectF::ToRectU(subRectangle);
-					Util::CopyTextureRegion(
-						context,
-						backBuffer,
-						m_intermediateBuffer.m_texture.get(),
-						copyRegionRect,
-						copyRegionRect.left,
-						copyRegionRect.top
-					);
-				}
+					std::max(subRectangle.left - copyLeftMargin, 0.f),
+					std::max(subRectangle.top - expansion, 0.f),
+					std::min(subRectangle.right + copyRightMargin, static_cast<float>(backBufferDesc.Width)),
+					std::min(subRectangle.bottom + expansion, static_cast<float>(backBufferDesc.Height))
+				};
+				copyRectangles.push_back(RectF::ToRectU(subRectangle));
 			}
 		}
-		else
+		CoalesceCopyRectangles(copyRectangles);
+		for (const auto& copyRegionRect : copyRectangles)
 		{
-			// The single bounding region needs the same extra horizontal reach. samplingWorldBounds is
-			// not clamped here (the scissor clamps it later), so clamp it before copying.
-			const auto copyRegionRect = RectF::ToRectU(
-				D2D1::RectF(
-					std::max(samplingWorldBounds.left - static_cast<float>(m_dwmHwSamples.radius + 1), 0.f),
-					std::max(samplingWorldBounds.top, 0.f),
-					std::min(samplingWorldBounds.right + static_cast<float>(m_dwmHwSamples.radius), static_cast<float>(backBufferDesc.Width)),
-					std::min(samplingWorldBounds.bottom, static_cast<float>(backBufferDesc.Height))
-				)
-			);
 			Util::CopyTextureRegion(
 				context,
 				backBuffer,
@@ -859,8 +856,6 @@ HRESULT CD3DGlassRealizer::Render(
 	);
 	context->RSSetScissorRects(1, &clipRect);
 	context->DrawIndexed(static_cast<UINT>(indicesCompose.size()), 0, 0);
-	{ ID3D11ShaderResourceView* nullSRV[1] = { nullptr }; context->PSSetShaderResources(0, 1, nullSRV); }
-	context->Flush();
 
 	return S_OK;
 }

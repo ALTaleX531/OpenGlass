@@ -6,46 +6,18 @@ namespace OpenGlass
 {
 	struct CBuffer2D
 	{
-		UINT m_width{};
-		UINT m_height{};
-		DXGI_FORMAT m_format{ DXGI_FORMAT_UNKNOWN };
-		DXGI_SAMPLE_DESC m_sampleDesc{ 1, 0 };
-		UINT m_bindFlags{};
-		UINT m_miscFlags{};
 		winrt::com_ptr<ID3D11Texture2D> m_texture{};
 		winrt::com_ptr<ID3D11RenderTargetView> m_rtv{ nullptr };
 		winrt::com_ptr<ID3D11ShaderResourceView> m_srv{ nullptr };
 
-		D2D1_BITMAP_PROPERTIES1 m_properties
-		{
-			.pixelFormat = D2D1::PixelFormat(),
-			.dpiX = 96.f,
-			.dpiY = 96.f,
-			.bitmapOptions = D2D1_BITMAP_OPTIONS_NONE,
-			.colorContext = nullptr
-		};
 		winrt::com_ptr<ID2D1Bitmap1> m_bitmap{};
 
 		void Reset()
 		{
-			m_width = 0;
-			m_height = 0;
-			m_format = DXGI_FORMAT_UNKNOWN;
-			m_sampleDesc = { 1, 0 };
-			m_bindFlags = 0;
-			m_miscFlags = 0;
 			m_texture = nullptr;
 			m_rtv = nullptr;
 			m_srv = nullptr;
 
-			m_properties =
-			{
-				.pixelFormat = D2D1::PixelFormat(),
-				.dpiX = 96.f,
-				.dpiY = 96.f,
-				.bitmapOptions = D2D1_BITMAP_OPTIONS_NONE,
-				.colorContext = nullptr
-			};
 			m_bitmap = nullptr;
 		}
 		HRESULT Ensure(
@@ -63,18 +35,22 @@ namespace OpenGlass
 				(baseDesc.MiscFlags & ~D3D11_RESOURCE_MISC_HW_PROTECTED) |
 				(hwProtectionEnabled ? D3D11_RESOURCE_MISC_HW_PROTECTED : 0u);
 
-			if (
-				m_texture &&
-				m_width == safeWidth &&
-				m_height == safeHeight &&
-				m_format == baseDesc.Format &&
-				m_sampleDesc.Count == baseDesc.SampleDesc.Count &&
-				m_sampleDesc.Quality == baseDesc.SampleDesc.Quality &&
-				m_bindFlags == bindFlags &&
-				m_miscFlags == desiredMiscFlags
-			)
+			if (m_texture)
 			{
-				return S_OK;
+				D3D11_TEXTURE2D_DESC current;
+				m_texture->GetDesc(&current);
+				if (
+					current.Width == safeWidth &&
+					current.Height == safeHeight &&
+					current.Format == baseDesc.Format &&
+					current.SampleDesc.Count == baseDesc.SampleDesc.Count &&
+					current.SampleDesc.Quality == baseDesc.SampleDesc.Quality &&
+					current.BindFlags == bindFlags &&
+					current.MiscFlags == desiredMiscFlags
+				)
+				{
+					return S_OK;
+				}
 			}
 
 			D3D11_TEXTURE2D_DESC desc{};
@@ -92,12 +68,6 @@ namespace OpenGlass
 			winrt::com_ptr<ID3D11Texture2D> texture{};
 			RETURN_IF_FAILED(device->CreateTexture2D(&desc, nullptr, texture.put()));
 
-			m_width = safeWidth;
-			m_height = safeHeight;
-			m_format = baseDesc.Format;
-			m_sampleDesc = baseDesc.SampleDesc;
-			m_bindFlags = bindFlags;
-			m_miscFlags = desiredMiscFlags;
 			m_texture = std::move(texture);
 			m_rtv = nullptr;
 			m_srv = nullptr;
@@ -140,19 +110,9 @@ namespace OpenGlass
 				return D2DERR_UNSUPPORTED_OPERATION;
 			}
 
-			if (
-				m_bitmap &&
-				m_properties.pixelFormat.format == properties.pixelFormat.format &&
-				m_properties.pixelFormat.alphaMode == properties.pixelFormat.alphaMode &&
-				m_properties.dpiX == properties.dpiX &&
-				m_properties.dpiY == properties.dpiY &&
-				m_properties.bitmapOptions == properties.bitmapOptions &&
-				m_properties.colorContext == properties.colorContext
-			)
-			{
-				return S_OK;
-			}
-
+			// CustomBlurEffect::Reset disconnects inputs but retains Build's image-pointer cache.
+			// A new wrapper triggers reconnection even when parameters are unchanged.
+			// Scratch callers reuse a compatible wrapper before reaching this method.
 			winrt::com_ptr<IDXGISurface> dxgiSurface{};
 			RETURN_IF_FAILED(m_texture->QueryInterface(dxgiSurface.put()));
 			RETURN_IF_FAILED(

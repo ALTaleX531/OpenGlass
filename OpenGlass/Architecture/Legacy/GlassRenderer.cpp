@@ -626,63 +626,44 @@ void GlassRenderer::MyID2D1DeviceContext_FillGeometry(
 		else
 		{
 			auto& d3dGlassRealizer = std::get<CD3DGlassRealizer>(g_currentDeviceResources->m_glassRealizer);
+			winrt::com_ptr<ID2D1Bitmap1> renderTargetBitmap{};
+			THROW_IF_FAILED(Util::GetTargetBitmapFromD2DContext(This, renderTargetBitmap));
+			winrt::com_ptr<ID3D11Texture2D> backBufferTexture{};
+			THROW_IF_FAILED(Util::GetTextureFromD2DBitmap(renderTargetBitmap.get(), backBufferTexture));
+
+			ID3D11RenderTargetView* renderTargetView{};
+			ID3D11ShaderResourceView* shaderResourceView{};
 			if (uDWM::g_versionInfo.build < os::build_w10_2004)
 			{
 				const auto renderTarget = g_drawingContextNoRef->GetRenderTarget();
 				const auto d3dSurface = renderTarget->GetTargetSurfaceNoRef();
 
-				const auto texture2D = d3dSurface->GetTexture2D();
-				const auto renderTargetView = d3dSurface->GetRenderTargetView();
-				const auto shaderResourceView = d3dSurface->GetShaderResourceView();
-
-				LOG_IF_FAILED(
-					d3dGlassRealizer.Render(
-						g_drawingContextNoRef->GetD3DDevice()->GetDevice(),
-						g_drawingContextNoRef->GetD3DDevice()->GetImmediateContext(),
-						texture2D,
-						renderTargetView,
-						shaderResourceView,
-						geometry,
-						g_drawingWorldBounds,
-						g_rectangleSpan,
-						g_params,
-						g_type
-					)
-				);
+				renderTargetView = d3dSurface->GetRenderTargetView();
+				shaderResourceView = d3dSurface->GetShaderResourceView();
 			}
 			else
 			{
 				const auto deviceTarget = g_drawingContextNoRef->GetDeviceTarget();
 				const auto deviceTexture = deviceTarget->GetDeviceTexture();
 
-				auto texture2D = deviceTexture->GetTexture2D();
-				const auto renderTargetView = deviceTarget->GetRenderTargetView();
-				const auto shaderResourceView = deviceTexture->GetShaderResourceView();
-
-				winrt::com_ptr<ID3D11Texture2D> backBufferTexture{};
-				if (!texture2D)
-				{
-					winrt::com_ptr<ID2D1Bitmap1> renderTargetBitmap{};
-					THROW_IF_FAILED(Util::GetTargetBitmapFromD2DContext(This, renderTargetBitmap));
-					THROW_IF_FAILED(Util::GetTextureFromD2DBitmap(renderTargetBitmap.get(), backBufferTexture));
-					texture2D = backBufferTexture.get();
-				}
-
-				LOG_IF_FAILED(
-					d3dGlassRealizer.Render(
-						g_drawingContextNoRef->GetD3DDevice()->GetDevice(),
-						g_drawingContextNoRef->GetD3DDevice()->GetImmediateContext(),
-						texture2D,
-						renderTargetView,
-						shaderResourceView,
-						geometry,
-						g_drawingWorldBounds,
-						g_rectangleSpan,
-						g_params,
-						g_type
-					)
-				);
+				renderTargetView = deviceTarget->GetRenderTargetView();
+				shaderResourceView = deviceTexture->GetShaderResourceView();
 			}
+
+			LOG_IF_FAILED(
+				d3dGlassRealizer.Render(
+					g_drawingContextNoRef->GetD3DDevice()->GetDevice(),
+					g_drawingContextNoRef->GetD3DDevice()->GetImmediateContext(),
+					backBufferTexture.get(),
+					renderTargetView,
+					shaderResourceView,
+					geometry,
+					g_drawingWorldBounds,
+					g_rectangleSpan,
+					g_params,
+					g_type
+				)
+			);
 		}
 
 	}
