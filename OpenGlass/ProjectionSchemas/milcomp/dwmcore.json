@@ -27,8 +27,6 @@
     "dwmcore/layouts/CDrawingContext.json",
     "dwmcore/layouts/COcclusionContext.json",
     "dwmcore/layouts/ID2DContextOwner.json",
-    "dwmcore/layouts/IDeviceTarget.json",
-    "dwmcore/layouts/IDeviceTexture.json",
     "dwmcore/layouts/RenderTargetInfo.json"
   ],
   "notes": [

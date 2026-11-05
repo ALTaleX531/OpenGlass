@@ -6,6 +6,7 @@
 #include "GlassKernel.hpp"
 #include "GlassIntegrity.hpp"
 #include "GlassSafetyZoneLayer.hpp"
+#include "GlassRenderTarget.hpp"
 #include "GlassCoverageSet.hpp"
 #include "GlassRenderer.hpp"
 
@@ -13,6 +14,13 @@ using namespace OpenGlass;
 
 namespace OpenGlass::GlassIntegrity
 {
+	CGlassRenderTarget* g_renderTarget{};
+
+	CGlassRenderTarget& GetRenderTarget()
+	{
+		return *g_renderTarget;
+	}
+
 	HRESULT MyCOcclusionContext_CheckAndRecordOverlayCandidate(
 		dwmcore::COcclusionContext* This,
 		dwmcore::CVisual* visual,
@@ -777,6 +785,14 @@ HRESULT GlassIntegrity::MyCDrawingContext_DrawVisualTree(
 	dwmcore::CVisual* visualOverride
 )
 {
+	// Keep each nested tree's target views alive only until that draw returns.
+	CGlassRenderTarget target;
+	const auto previousTarget = std::exchange(g_renderTarget, &target);
+	const auto restoreTarget = wil::scope_exit([previousTarget]
+	{
+		g_renderTarget = previousTarget;
+	});
+
 	HRESULT hr{ S_OK };
 	const auto& rectangle = bounds.rectangle;
 

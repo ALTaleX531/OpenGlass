@@ -98,8 +98,6 @@
     <None Include="ProjectionSchemas\milcomp\dwmcore\layouts\CDrawingContext.json" />
     <None Include="ProjectionSchemas\milcomp\dwmcore\layouts\COcclusionContext.json" />
     <None Include="ProjectionSchemas\milcomp\dwmcore\layouts\ID2DContextOwner.json" />
-    <None Include="ProjectionSchemas\milcomp\dwmcore\layouts\IDeviceTarget.json" />
-    <None Include="ProjectionSchemas\milcomp\dwmcore\layouts\IDeviceTexture.json" />
     <None Include="ProjectionSchemas\milcomp\dwmcore\layouts\RenderTargetInfo.json" />
     <None Include="ProjectionSchemas\README.md" />
     <None Include="ProjectionSchemas\milcomp\udwm.json" />

@@ -5,7 +5,6 @@
 #include "BackdropCopy.hpp"
 #include "AeroEffect.hpp"
 #include "BlurEffect.hpp"
-#include "DxgiPrivates.hpp"
 
 using namespace OpenGlass;
 
@@ -15,6 +14,7 @@ struct CGlassRealizer::RenderTargetInfo
 	winrt::com_ptr<ID3D11Texture2D> m_texture{};
 	winrt::com_ptr<ID3D11Device> m_device{};
 	D3D11_TEXTURE2D_DESC m_desc{};
+	UINT m_subresource{};
 	BOOL m_hwProtectionEnabled{ FALSE };
 };
 
@@ -104,7 +104,8 @@ HRESULT CGlassRealizer::Render(
 		RETURN_IF_FAILED(
 			Util::GetTextureFromD2DBitmap(
 				targetInfo.m_bitmap.get(),
-				targetInfo.m_texture
+				targetInfo.m_texture,
+				&targetInfo.m_subresource
 			)
 		);
 		RETURN_IF_FAILED(
@@ -115,6 +116,9 @@ HRESULT CGlassRealizer::Render(
 			)
 		);
 
+		const auto pixelSize = targetInfo.m_bitmap->GetPixelSize();
+		targetInfo.m_desc.Width = pixelSize.width;
+		targetInfo.m_desc.Height = pixelSize.height;
 		targetInfo.m_texture->GetDevice(targetInfo.m_device.put());
 	}
 	if (!sharedAtlasBitmap)
@@ -239,7 +243,8 @@ void CGlassRealizer::CopyBackdropForEffect(
 			m_buffer.m_texture.get(),
 			copyRegionRect,
 			copyRegionRect.left,
-			copyRegionRect.top
+			copyRegionRect.top,
+			targetInfo.m_subresource
 		);
 	}
 }

@@ -96,7 +96,6 @@
     <None Include="ProjectionSchemas\legacy\dwmcore\layouts\CArrayBasedCoverageSet.json" />
     <None Include="ProjectionSchemas\legacy\dwmcore\layouts\CD2DContext.json" />
     <None Include="ProjectionSchemas\legacy\dwmcore\layouts\CD3DDevice.json" />
-    <None Include="ProjectionSchemas\legacy\dwmcore\layouts\CD3DSurface.json" />
     <None Include="ProjectionSchemas\legacy\dwmcore\layouts\CDirtyRegion.json" />
     <None Include="ProjectionSchemas\legacy\dwmcore\layouts\CDrawingContext.json" />
     <None Include="ProjectionSchemas\legacy\dwmcore\layouts\CImageLegacyMilBrush.json" />
@@ -107,8 +106,6 @@
     <None Include="ProjectionSchemas\legacy\dwmcore\layouts\CSolidColorLegacyMilBrush.json" />
     <None Include="ProjectionSchemas\legacy\dwmcore\layouts\CZOrderedRectBase.json" />
     <None Include="ProjectionSchemas\legacy\dwmcore\layouts\ID2DContextOwner.json" />
-    <None Include="ProjectionSchemas\legacy\dwmcore\layouts\IDeviceTarget.json" />
-    <None Include="ProjectionSchemas\legacy\dwmcore\layouts\IDeviceTexture.json" />
     <None Include="ProjectionSchemas\legacy\dwmcore\layouts\IDrawingContext.json" />
     <None Include="ProjectionSchemas\legacy\dwmcore\layouts\IRenderTarget.json" />
     <None Include="ProjectionSchemas\legacy\dwmcore\layouts\RenderTargetInfo.json" />

@@ -4,7 +4,6 @@
 #include "D3DGlassRealizer.hpp"
 #include "BackdropCopy.hpp"
 #include "Shared.hpp"
-#include "DxgiPrivates.hpp"
 #include "BlurSettings.hpp"
 
 using namespace OpenGlass;
@@ -521,6 +520,7 @@ HRESULT CD3DGlassRealizer::Render(
 	ID3D11Device* device,
 	ID3D11DeviceContext* context,
 	ID3D11Texture2D* backBuffer,
+	UINT sourceSubresource,
 	ID3D11RenderTargetView* backBufferRTV,
 	ID3D11ShaderResourceView* backBufferSRV,
 	ID2D1Geometry* geometry,
@@ -532,13 +532,11 @@ HRESULT CD3DGlassRealizer::Render(
 {
 	BOOL hwProtectionEnabled = FALSE;
 	D3D11_TEXTURE2D_DESC backBufferDesc{};
-	RETURN_IF_FAILED(
-		Util::GetDescAndHwProtectionStateFromTexture(
-			backBuffer,
-			backBufferDesc,
-			hwProtectionEnabled
-		)
-	);
+	RETURN_IF_FAILED(Util::GetDescAndHwProtectionStateFromTexture(backBuffer, backBufferDesc, hwProtectionEnabled));
+	// View coordinates use the selected mip's extent, not the parent texture's.
+	const auto mip = sourceSubresource % backBufferDesc.MipLevels;
+	backBufferDesc.Width = std::max(1u, backBufferDesc.Width >> mip);
+	backBufferDesc.Height = std::max(1u, backBufferDesc.Height >> mip);
 
 	if (!m_initialized)
 	{
@@ -697,15 +695,8 @@ HRESULT CD3DGlassRealizer::Render(
 	context->PSSetSamplers(0, 1, samplers);
 	context->RSSetState(m_rasterizerStateScissor.get());
 
-	// If the caller can't provide an SRV for the back buffer, create an intermediate SRV-capable texture
-	// and copy only the needed blur region into it. We keep coordinates identical (copy into same offset)
-	// so UVs remain unchanged.
-	//
-	// Required on Windows 11 24H2 and later: Windows.Graphics.Capture targets expose no shader resource
-	// view (dwmcore!CDeviceTextureTarget::GetShaderResourceView returns null unless the target is a
-	// display target or an intermediate target), so this is the only usable path there.
-	//
-	// https://github.com/ALTaleX531/OpenGlass/issues/257#issuecomment-3856945555
+	// A null source view selects a sampleable backdrop copy.
+	// Copy into the same coordinates so the blur UVs remain unchanged.
 	ID3D11ShaderResourceView* pass1InputSRV = backBufferSRV;
 	if (!pass1InputSRV)
 	{
@@ -758,7 +749,8 @@ HRESULT CD3DGlassRealizer::Render(
 				m_intermediateBuffer.m_texture.get(),
 				copyRegionRect,
 				copyRegionRect.left,
-				copyRegionRect.top
+				copyRegionRect.top,
+				sourceSubresource
 			);
 		}
 

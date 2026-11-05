@@ -185,10 +185,11 @@ namespace
 				m_refresh = now;
 			}
 			auto* context = m_benchmark.Context();
+			const auto preview = m_benchmark.PreparePreview();
 			context->SetTarget(m_display.get());
 			context->SetTransform(D2D1::IdentityMatrix());
 			context->BeginDraw();
-			context->DrawBitmap(m_benchmark.PreviewBitmap());
+			context->DrawBitmap(preview);
 			const float dpiScale = GetDpiForWindow(m_window) / 96.f;
 			context->SetTransform(D2D1::Matrix3x2F::Scale(dpiScale, dpiScale));
 			m_brush->SetColor(D2D1::ColorF(0.f, 0.f, 0.f, .82f));

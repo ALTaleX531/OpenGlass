@@ -540,45 +540,11 @@ namespace OpenGlass::dwmcore
 		}
 	};
 	struct IBitmapResource;
-	struct IDeviceTexture
-	{
-		inline ID3D11ShaderResourceView* GetShaderResourceView() const
-		{
-			return std::invoke(
-				IDeviceTexture_GetShaderResourceView.read(HookHelper::get_vftable_from(this)), this);
-		}
-	};
-	struct CD3DSurface
-	{
-		inline ID3D11ShaderResourceView* GetShaderResourceView() const
-		{
-			return CD3DSurface_GetShaderResourceView.read(this);
-		}
-		inline ID3D11RenderTargetView* GetRenderTargetView() const
-		{
-			return CD3DSurface_GetRenderTargetView.read(this);
-		}
-	};
 	struct IRenderTarget
 	{
-		inline CD3DSurface* GetTargetSurfaceNoRef() const
-		{
-			return std::invoke(IRenderTarget_GetTargetSurfaceNoRef.read(HookHelper::get_vftable_from(this)), this);
-		}
 		inline float GetSDRBoost() const
 		{
 			return std::invoke(IRenderTarget_GetSDRBoost.read(HookHelper::get_vftable_from(this)), this);
-		}
-	};
-	struct IDeviceTarget
-	{
-		inline ID3D11RenderTargetView* GetRenderTargetView() const
-		{
-			return std::invoke(IDeviceTarget_GetRenderTargetView.read(HookHelper::get_vftable_from(this)), this);
-		}
-		inline IDeviceTexture* GetDeviceTexture() const
-		{
-			return IDeviceTarget_GetDeviceTexture.mutable_address(this);
 		}
 	};
 	struct CComposeTop;

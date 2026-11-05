@@ -135,9 +135,6 @@
     <None Include="ProjectionSchemas\legacy\dwmcore\layouts\CD3DDevice.json">
       <Filter>Projection Schemas</Filter>
     </None>
-    <None Include="ProjectionSchemas\legacy\dwmcore\layouts\CD3DSurface.json">
-      <Filter>Projection Schemas</Filter>
-    </None>
     <None Include="ProjectionSchemas\legacy\dwmcore\layouts\CDirtyRegion.json">
       <Filter>Projection Schemas</Filter>
     </None>
@@ -166,12 +163,6 @@
       <Filter>Projection Schemas</Filter>
     </None>
     <None Include="ProjectionSchemas\legacy\dwmcore\layouts\ID2DContextOwner.json">
-      <Filter>Projection Schemas</Filter>
-    </None>
-    <None Include="ProjectionSchemas\legacy\dwmcore\layouts\IDeviceTarget.json">
-      <Filter>Projection Schemas</Filter>
-    </None>
-    <None Include="ProjectionSchemas\legacy\dwmcore\layouts\IDeviceTexture.json">
       <Filter>Projection Schemas</Filter>
     </None>
     <None Include="ProjectionSchemas\legacy\dwmcore\layouts\IDrawingContext.json">
@@ -374,6 +365,9 @@
     <ClCompile Include="GlassEffectBatch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GlassRenderTarget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="GlassRealizer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -474,6 +468,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GlassEffectBatch.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GlassRenderTarget.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GlassRealizer.hpp">

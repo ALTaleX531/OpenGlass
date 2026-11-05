@@ -2,6 +2,7 @@
 #include "Renderer.hpp"
 #include "GlassRealizer.hpp"
 #include "D3DGlassRealizer.hpp"
+#include "GlassRenderTarget.hpp"
 #include <nlohmann/json.hpp>
 #include <array>
 #include <filesystem>
@@ -43,8 +44,7 @@ namespace OpenGlass::RenderTest
 		winrt::com_ptr<ID2D1Factory1> m_factory;
 		winrt::com_ptr<ID2D1DeviceContext> m_context;
 		winrt::com_ptr<ID3D11Texture2D> m_target, m_background;
-		winrt::com_ptr<ID3D11RenderTargetView> m_targetView;
-		winrt::com_ptr<ID3D11ShaderResourceView> m_sourceView;
+		CGlassRenderTarget m_renderTarget;
 		winrt::com_ptr<ID2D1Bitmap1> m_bitmap;
 		winrt::com_ptr<ID2D1Bitmap1> m_previewBitmap;
 		winrt::com_ptr<ID2D1Bitmap1> m_backgroundBitmap;
@@ -78,7 +78,7 @@ namespace OpenGlass::RenderTest
 		const Statistics& Stats(Method method) const { return m_stats[static_cast<size_t>(method)]; }
 		ID3D11Device* Device() const { return m_device.get(); }
 		ID2D1DeviceContext* Context() const { return m_context.get(); }
-		ID2D1Bitmap1* PreviewBitmap() const { return m_previewBitmap.get(); }
+		ID2D1Bitmap1* PreparePreview();
 		UINT RectangleCount() const { return static_cast<UINT>(m_rectangles.size()); }
 	};
 }

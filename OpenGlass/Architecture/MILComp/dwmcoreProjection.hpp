@@ -262,24 +262,6 @@ namespace OpenGlass::dwmcore
 		}
 	};
 	struct IBitmapResource;
-	struct IDeviceTexture
-	{
-		inline ID3D11ShaderResourceView* GetShaderResourceView() const
-		{
-			return IDeviceTexture_GetShaderResourceView.read(HookHelper::get_vftable_from(this))(this);
-		}
-	};
-	struct IDeviceTarget
-	{
-		inline ID3D11RenderTargetView* GetRenderTargetView() const
-		{
-			return IDeviceTarget_GetRenderTargetView.read(HookHelper::get_vftable_from(this))(this);
-		}
-		inline IDeviceTexture* GetDeviceTexture() const
-		{
-			return IDeviceTarget_GetDeviceTexture.mutable_address(this);
-		}
-	};
 	struct COverlayContext : CResource
 	{
 		struct OverlayPlaneInfo;

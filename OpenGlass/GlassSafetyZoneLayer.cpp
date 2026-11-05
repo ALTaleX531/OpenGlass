@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "GlassSafetyZoneLayer.hpp"
-#include "DxgiPrivates.hpp"
+#include "Util.hpp"
 
 using namespace OpenGlass;
 
@@ -76,7 +76,8 @@ HRESULT CGlassSafetyZoneLayer::Push(
 	RETURN_IF_FAILED(
 		Util::GetTextureFromD2DBitmap(
 			renderTargetBitmap.get(),
-			m_renderTargetTexture
+			m_renderTargetTexture,
+			&m_renderTargetSubresource
 		)
 	);
 	RETURN_IF_FAILED(
@@ -139,48 +140,27 @@ HRESULT CGlassSafetyZoneLayer::Push(
 	RETURN_IF_FAILED(m_safetyZoneBufferVertical.Ensure(d3dDevice.get(), verticalWidth, verticalHeight, renderTargetDesc, 0, hwProtectionEnabled));
 	RETURN_IF_FAILED(m_safetyZoneBufferHorizontal.Ensure(d3dDevice.get(), horizontalWidth, horizontalHeight, renderTargetDesc, 0, hwProtectionEnabled));
 
-	if (!wil::rect_is_empty(m_safetyZoneBounds[0]))
+	for (UINT i = 0; i < ARRAYSIZE(m_safetyZoneBounds); ++i)
 	{
+		const auto& bounds = m_safetyZoneBounds[i];
+		if (wil::rect_is_empty(bounds))
+		{
+			continue;
+		}
+		auto& buffer = i % 2 ? m_safetyZoneBufferHorizontal : m_safetyZoneBufferVertical;
+		const D2D1_POINT_2U destination
+		{
+			i == 2 ? wil::rect_width(m_safetyZoneBounds[0]) : 0,
+			i == 3 ? wil::rect_height(m_safetyZoneBounds[1]) : 0
+		};
 		Util::CopyTextureRegion(
 			d3dContext.get(),
 			m_renderTargetTexture.get(),
-			m_safetyZoneBufferVertical.m_texture.get(),
-			m_safetyZoneBounds[0],
-			0,
-			0
-		);
-	}
-	if (!wil::rect_is_empty(m_safetyZoneBounds[2]))
-	{
-		Util::CopyTextureRegion(
-			d3dContext.get(),
-			m_renderTargetTexture.get(),
-			m_safetyZoneBufferVertical.m_texture.get(),
-			m_safetyZoneBounds[2],
-			wil::rect_width(m_safetyZoneBounds[0]),
-			0
-		);
-	}
-	if (!wil::rect_is_empty(m_safetyZoneBounds[1]))
-	{
-		Util::CopyTextureRegion(
-			d3dContext.get(),
-			m_renderTargetTexture.get(),
-			m_safetyZoneBufferHorizontal.m_texture.get(),
-			m_safetyZoneBounds[1],
-			0,
-			0
-		);
-	}
-	if (!wil::rect_is_empty(m_safetyZoneBounds[3]))
-	{
-		Util::CopyTextureRegion(
-			d3dContext.get(),
-			m_renderTargetTexture.get(),
-			m_safetyZoneBufferHorizontal.m_texture.get(),
-			m_safetyZoneBounds[3],
-			0,
-			wil::rect_height(m_safetyZoneBounds[1])
+			buffer.m_texture.get(),
+			bounds,
+			destination.x,
+			destination.y,
+			m_renderTargetSubresource
 		);
 	}
 
@@ -202,81 +182,30 @@ void CGlassSafetyZoneLayer::Pop()
 	winrt::com_ptr<ID3D11DeviceContext> d3dContext{};
 	d3dDevice->GetImmediateContext(d3dContext.put());
 
-	if (!wil::rect_is_empty(m_safetyZoneBounds[0]))
+	for (UINT i = 0; i < ARRAYSIZE(m_safetyZoneBounds); ++i)
 	{
-		const D2D1_RECT_U srcRect
+		const auto& bounds = m_safetyZoneBounds[i];
+		if (wil::rect_is_empty(bounds))
 		{
-			0u,
-			0u,
-			wil::rect_width(m_safetyZoneBounds[0]),
-			wil::rect_height(m_safetyZoneBounds[0])
-		};
+			continue;
+		}
+		auto& buffer = i % 2 ? m_safetyZoneBufferHorizontal : m_safetyZoneBufferVertical;
+		const UINT x = i == 2 ? wil::rect_width(m_safetyZoneBounds[0]) : 0;
+		const UINT y = i == 3 ? wil::rect_height(m_safetyZoneBounds[1]) : 0;
+		const D2D1_RECT_U source{ x, y, x + wil::rect_width(bounds), y + wil::rect_height(bounds) };
 		Util::CopyTextureRegion(
 			d3dContext.get(),
-			m_safetyZoneBufferVertical.m_texture.get(),
+			buffer.m_texture.get(),
 			m_renderTargetTexture.get(),
-			srcRect,
-			m_safetyZoneBounds[0].left,
-			m_safetyZoneBounds[0].top
-		);
-	}
-	if (!wil::rect_is_empty(m_safetyZoneBounds[2]))
-	{
-		const D2D1_RECT_U srcRect
-		{
-			wil::rect_width(m_safetyZoneBounds[0]),
-			0u,
-			wil::rect_width(m_safetyZoneBounds[0]) + wil::rect_width(m_safetyZoneBounds[2]),
-			wil::rect_height(m_safetyZoneBounds[2])
-		};
-		Util::CopyTextureRegion(
-			d3dContext.get(),
-			m_safetyZoneBufferVertical.m_texture.get(),
-			m_renderTargetTexture.get(),
-			srcRect,
-			m_safetyZoneBounds[2].left,
-			m_safetyZoneBounds[2].top
-		);
-	}
-	if (!wil::rect_is_empty(m_safetyZoneBounds[1]))
-	{
-		const D2D1_RECT_U srcRect
-		{
-			0u,
-			0u,
-			wil::rect_width(m_safetyZoneBounds[1]),
-			wil::rect_height(m_safetyZoneBounds[1])
-		};
-		Util::CopyTextureRegion(
-			d3dContext.get(),
-			m_safetyZoneBufferHorizontal.m_texture.get(),
-			m_renderTargetTexture.get(),
-			srcRect,
-			m_safetyZoneBounds[1].left,
-			m_safetyZoneBounds[1].top
-		);
-	}
-	if (!wil::rect_is_empty(m_safetyZoneBounds[3]))
-	{
-		const D2D1_RECT_U srcRect
-		{
-			0u,
-			wil::rect_height(m_safetyZoneBounds[1]),
-			wil::rect_width(m_safetyZoneBounds[3]),
-			wil::rect_height(m_safetyZoneBounds[1]) + wil::rect_height(m_safetyZoneBounds[3])
-		};
-		Util::CopyTextureRegion(
-			d3dContext.get(),
-			m_safetyZoneBufferHorizontal.m_texture.get(),
-			m_renderTargetTexture.get(),
-			srcRect,
-			m_safetyZoneBounds[3].left,
-			m_safetyZoneBounds[3].top
+			source,
+			bounds.left,
+			bounds.top,
+			0,
+			m_renderTargetSubresource
 		);
 	}
 
 	d3dContext->Flush();
 	m_renderTargetTexture = nullptr;
-	d3dContext = nullptr;
 	ZeroMemory(m_safetyZoneBounds, sizeof(m_safetyZoneBounds));
 }

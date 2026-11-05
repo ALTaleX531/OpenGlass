@@ -242,9 +242,9 @@ namespace OpenGlass::Util
 		winrt::com_ptr<IDXGISwapChain1>& dxgiSwapChain
 	)
 	{
-		winrt::com_ptr<IDXGISurface> dxgiSurface{};
-		RETURN_IF_FAILED(texture->QueryInterface(dxgiSurface.put()));
-		return dxgiSurface->GetParent(IID_PPV_ARGS(dxgiSwapChain.put()));
+		winrt::com_ptr<IDXGIResource> dxgiResource;
+		RETURN_IF_FAILED(texture->QueryInterface(dxgiResource.put()));
+		return dxgiResource->GetParent(IID_PPV_ARGS(dxgiSwapChain.put()));
 	}
 
 	inline HRESULT GetDescAndHwProtectionStateFromTexture(
@@ -275,12 +275,21 @@ namespace OpenGlass::Util
 
 	inline HRESULT GetTextureFromD2DBitmap(
 		ID2D1Bitmap1* bitmap,
-		winrt::com_ptr<ID3D11Texture2D>& texture
+		winrt::com_ptr<ID3D11Texture2D>& texture,
+		UINT* subresource = nullptr
 	)
 	{
 		winrt::com_ptr<IDXGISurface> dxgiSurface{};
 		RETURN_IF_FAILED(bitmap->GetSurface(dxgiSurface.put()));
-		RETURN_IF_FAILED(dxgiSurface->QueryInterface(texture.put()));
+		winrt::com_ptr<IDXGISurface2> subresourceSurface;
+		RETURN_IF_FAILED(dxgiSurface->QueryInterface(subresourceSurface.put()));
+		// A subresource surface is a separate object. GetResource returns its parent texture.
+		UINT index;
+		RETURN_IF_FAILED(subresourceSurface->GetResource(IID_PPV_ARGS(texture.put()), &index));
+		if (subresource)
+		{
+			*subresource = index;
+		}
 		return S_OK;
 	}
 
@@ -290,7 +299,9 @@ namespace OpenGlass::Util
 		ID3D11Texture2D* dst,
 		const D2D1_RECT_U& srcRect,
 		UINT dstX,
-		UINT dstY
+		UINT dstY,
+		UINT srcSubresource = 0,
+		UINT dstSubresource = 0
 	)
 	{
 		D3D11_BOX box{};
@@ -300,7 +311,7 @@ namespace OpenGlass::Util
 		box.bottom = srcRect.bottom;
 		box.front = 0;
 		box.back = 1;
-		context->CopySubresourceRegion(dst, 0, dstX, dstY, 0, src, 0, &box);
+		context->CopySubresourceRegion(dst, dstSubresource, dstX, dstY, 0, src, srcSubresource, &box);
 	}
 
 	inline HRESULT GetTargetBitmapFromD2DContext(

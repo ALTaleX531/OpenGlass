@@ -65,6 +65,7 @@
     <_ExternalClCompile Include="..\OpenGlass\GlassEffectBatch.cpp" />
     <_ExternalClCompile Include="..\OpenGlass\GlassRealizer.cpp" />
     <_ExternalClCompile Include="..\OpenGlass\D3DGlassRealizer.cpp" />
+    <_ExternalClCompile Include="..\OpenGlass\GlassRenderTarget.cpp" />
     <ResourceCompile Include="Shaders.rc" />
   </ItemGroup>
   <ItemGroup>

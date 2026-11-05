@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Benchmark.hpp"
 #include "BlurSettings.hpp"
+#include "Util.hpp"
 #include <DirectXPackedVector.h>
 #include <d3d11sdklayers.h>
 #include <fstream>
@@ -139,14 +140,9 @@ void Benchmark::CreateTarget()
 	desc.Height = m_options.height;
 	desc.MipLevels = desc.ArraySize = desc.SampleDesc.Count = 1;
 	desc.Format = m_options.fp16 ? DXGI_FORMAT_R16G16B16A16_FLOAT : DXGI_FORMAT_B8G8R8A8_UNORM;
-	desc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+	desc.BindFlags = D3D11_BIND_RENDER_TARGET |
+		(m_options.settings.forceCapture ? 0 : D3D11_BIND_SHADER_RESOURCE);
 	THROW_IF_FAILED(m_device->CreateTexture2D(&desc, nullptr, m_target.put()));
-	THROW_IF_FAILED(m_device->CreateRenderTargetView(m_target.get(), nullptr, m_targetView.put()));
-	m_sourceView = nullptr;
-	if (!m_options.settings.forceCapture)
-	{
-		THROW_IF_FAILED(m_device->CreateShaderResourceView(m_target.get(), nullptr, m_sourceView.put()));
-	}
 	const auto bitmapOptions = m_options.settings.forceCapture ?
 		D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW : D2D1_BITMAP_OPTIONS_TARGET;
 	const auto properties = D2D1::BitmapProperties1(bitmapOptions,
@@ -154,10 +150,15 @@ void Benchmark::CreateTarget()
 	THROW_IF_FAILED(m_context->CreateBitmapFromDxgiSurface(m_target.as<IDXGISurface>().get(), &properties, m_bitmap.put()));
 	if (m_options.settings.forceCapture)
 	{
-		// The realizer sees a non-sampleable target; the preview still needs an input bitmap.
+		// Preview the RT-only target through a separate sampleable bitmap.
 		auto previewProperties = properties;
 		previewProperties.bitmapOptions = D2D1_BITMAP_OPTIONS_NONE;
-		THROW_IF_FAILED(m_context->CreateBitmapFromDxgiSurface(m_target.as<IDXGISurface>().get(), &previewProperties, m_previewBitmap.put()));
+		auto previewDesc = desc;
+		previewDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+		winrt::com_ptr<ID3D11Texture2D> previewTexture;
+		THROW_IF_FAILED(m_device->CreateTexture2D(&previewDesc, nullptr, previewTexture.put()));
+		THROW_IF_FAILED(m_context->CreateBitmapFromDxgiSurface(previewTexture.as<IDXGISurface>().get(),
+			&previewProperties, m_previewBitmap.put()));
 	}
 	else
 	{
@@ -180,6 +181,7 @@ void Benchmark::CreateTarget()
 	THROW_IF_FAILED(m_context->EndDraw());
 	m_context->SetPrimitiveBlend(D2D1_PRIMITIVE_BLEND_COPY);
 	m_context->SetTarget(m_bitmap.get());
+	THROW_IF_FAILED(m_renderTarget.Ensure(m_context.get()));
 }
 
 void Benchmark::CreateGeometry()
@@ -244,6 +246,17 @@ void Benchmark::Reconfigure(const Options& options)
 	if (formatChanged || sizeChanged || inputChanged) CreateTarget();
 	if (geometryChanged) CreateGeometry();
 	ResetMeasurements();
+}
+
+ID2D1Bitmap1* Benchmark::PreparePreview()
+{
+	if (m_options.settings.forceCapture)
+	{
+		winrt::com_ptr<ID3D11Texture2D> texture;
+		THROW_IF_FAILED(OpenGlass::Util::GetTextureFromD2DBitmap(m_previewBitmap.get(), texture));
+		m_immediate->CopyResource(texture.get(), m_target.get());
+	}
+	return m_previewBitmap.get();
 }
 
 void Benchmark::ResetMeasurements()
@@ -354,7 +367,8 @@ void Benchmark::Frame(Method method, bool measured)
 		hr = m_gaussian.Render(m_context.get(), m_geometry.get(), m_bounds, m_rectangles, params, 2.f);
 		break;
 	case Method::D3D:
-		hr = m_d3d.Render(m_device.get(), m_immediate.get(), m_target.get(), m_targetView.get(), m_sourceView.get(),
+		hr = m_d3d.Render(m_device.get(), m_immediate.get(), m_renderTarget.GetTexture(), m_renderTarget.GetSubresource(),
+			m_renderTarget.GetRenderTargetView(), m_renderTarget.GetShaderResourceView(),
 			m_geometry.get(), m_bounds, m_rectangles, params, OpenGlass::Shared::GlassType::Aero);
 		break;
 	}

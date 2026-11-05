@@ -326,6 +326,7 @@ bool CGlassEffectBatch::PlanBands(const D2D1_RECT_F& drawingWorldBounds, std::sp
 	m_worldBands.clear();
 	m_worldBands.reserve(drawingRectangles.size());
 	double originalArea{};
+	// Clipping preserves the disjoint input, so summing gives its covered area.
 	for (auto band : drawingRectangles)
 	{
 		if (RectF::IntersectUnsafe(band, drawingWorldBounds))
@@ -351,6 +352,7 @@ bool CGlassEffectBatch::PlanBands(const D2D1_RECT_F& drawingWorldBounds, std::sp
 		for (size_t bandIndex = 0; bandIndex < retainedBandCount; ++bandIndex)
 		{
 			const auto existingBand = m_worldBands[bandIndex];
+			// A merged bounding box can overlap later inputs even when the originals do not.
 			if (
 				existingBand.left > band.right || existingBand.top > band.bottom ||
 				existingBand.right < band.left || existingBand.bottom < band.top

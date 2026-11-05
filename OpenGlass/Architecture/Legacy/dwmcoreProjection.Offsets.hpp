@@ -8,7 +8,6 @@ namespace OpenGlass::dwmcore
 	struct CArrayBasedCoverageSet;
 	struct CComposeTop;
 	struct CD2DContext;
-	struct CD3DSurface;
 	struct CD3DDevice;
 	struct CDrawingContext;
 	struct CFloatResource;
@@ -30,7 +29,6 @@ namespace OpenGlass::dwmcore
 	struct CZOrderedRect2;
 	struct ID2DContextOwner;
 	struct IDeviceTarget;
-	struct IDeviceTexture;
 	struct IDrawingContext;
 	struct IRenderTarget;
 	struct RenderTargetInfo;

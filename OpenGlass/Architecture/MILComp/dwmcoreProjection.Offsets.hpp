@@ -17,15 +17,12 @@ namespace OpenGlass::dwmcore
 	struct CZOrderedRect;
 	struct ID2DContextOwner;
 	struct IDeviceTarget;
-	struct IDeviceTexture;
 	struct RenderTargetInfo;
 
 	using CColorBrush_AddOcclusionInformation_t = HRESULT (*)(CColorBrush*, COcclusionContext*, const D2D1_SIZE_F&);
 	using CColorBrush_Draw_t = HRESULT (*)(CColorBrush*, CDrawingContext*, const D2D1_SIZE_F&, CDrawListCache*);
 	using ID2DContextOwner_GetCurrentZ_t = UINT (*)(const ID2DContextOwner*);
 	using ID2DContextOwner_GetCurrentRenderTargetInfo_t = const RenderTargetInfo& (*)(const ID2DContextOwner*);
-	using IDeviceTarget_GetRenderTargetView_t = ID3D11RenderTargetView* (*)(const IDeviceTarget*);
-	using IDeviceTexture_GetShaderResourceView_t = ID3D11ShaderResourceView* (*)(const IDeviceTexture*);
 
 } // namespace OpenGlass::dwmcore
 

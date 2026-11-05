@@ -32,7 +32,6 @@
     "dwmcore/layouts/CArrayBasedCoverageSet.json",
     "dwmcore/layouts/CD2DContext.json",
     "dwmcore/layouts/CD3DDevice.json",
-    "dwmcore/layouts/CD3DSurface.json",
     "dwmcore/layouts/CDirtyRegion.json",
     "dwmcore/layouts/CDrawingContext.json",
     "dwmcore/layouts/CImageLegacyMilBrush.json",
@@ -43,8 +42,6 @@
     "dwmcore/layouts/CSolidColorLegacyMilBrush.json",
     "dwmcore/layouts/CZOrderedRectBase.json",
     "dwmcore/layouts/ID2DContextOwner.json",
-    "dwmcore/layouts/IDeviceTarget.json",
-    "dwmcore/layouts/IDeviceTexture.json",
     "dwmcore/layouts/IDrawingContext.json",
     "dwmcore/layouts/IRenderTarget.json",
     "dwmcore/layouts/RenderTargetInfo.json"

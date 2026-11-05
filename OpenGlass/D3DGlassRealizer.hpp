@@ -74,7 +74,7 @@ namespace OpenGlass
 		// first stage buffer is quarter width, full height
 		CBuffer2D									m_quarterResBuffer{};
 
-		// Fallback when the caller can't provide an SRV for the back buffer:
+		// A null source view selects a backdrop copy:
 		// copy the needed region from backBuffer into this texture and sample it in pass 1.
 		CBuffer2D							m_intermediateBuffer{};
 
@@ -147,6 +147,7 @@ namespace OpenGlass
 			ID3D11Device* device,
 			ID3D11DeviceContext* context,
 			ID3D11Texture2D* backBuffer,
+			UINT sourceSubresource,
 			ID3D11RenderTargetView* backBufferRTV,
 			ID3D11ShaderResourceView* backBufferSRV,
 			ID2D1Geometry* geometry,

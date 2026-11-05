@@ -35,6 +35,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)GlassFrameDemodernizer.hpp"><Link>Header Files\GlassFrameDemodernizer.hpp</Link></ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)GlassFrameHandler.hpp"><Link>Header Files\GlassFrameHandler.hpp</Link></ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)GlassEffectBatch.hpp"><Link>Header Files\GlassEffectBatch.hpp</Link></ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)GlassRenderTarget.hpp"><Link>Header Files\GlassRenderTarget.hpp</Link></ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)GlassRealizer.hpp"><Link>Header Files\GlassRealizer.hpp</Link></ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)GlassReflectionHandler.hpp"><Link>Header Files\GlassReflectionHandler.hpp</Link></ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)GlassRenderer.hpp"><Link>Header Files\GlassRenderer.hpp</Link></ClInclude>
@@ -77,6 +78,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)OpenGlass.cpp"><Link>Source Files\OpenGlass.cpp</Link></ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)BackdropCopy.cpp"><Link>Source Files\BackdropCopy.cpp</Link></ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)GlassEffectBatch.cpp"><Link>Source Files\GlassEffectBatch.cpp</Link></ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)GlassRenderTarget.cpp"><Link>Source Files\GlassRenderTarget.cpp</Link></ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)GlassRealizer.cpp"><Link>Source Files\GlassRealizer.cpp</Link></ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)GlassSafetyZoneLayer.cpp"><Link>Source Files\GlassSafetyZoneLayer.cpp</Link></ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)GlassService.cpp"><Link>Source Files\GlassService.cpp</Link></ClCompile>
