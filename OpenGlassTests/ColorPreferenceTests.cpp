@@ -16,12 +16,13 @@ namespace OpenGlassTests
 			Snapshot live;
 			DWORD wallpaper{ 0x123456 }, derived{};
 			bool reject{}, fail{}, failAfterAccent{}, failAfterDwmAccent{}, shellWritesAccent{ true };
-			unsigned writes{}, refreshes{};
+			unsigned writes{}, refreshes{}, manualPreviews{};
 			HRESULT Capture(const std::wstring&, Snapshot& value) noexcept override { value = live; return S_OK; }
-			HRESULT Prepare(const Snapshot&) noexcept override { return reject ? E_NOINTERFACE : S_OK; }
-			HRESULT Apply(const Snapshot& value, Snapshot* applied) noexcept override
+			HRESULT Prepare(const Snapshot&, bool) noexcept override { return reject ? E_NOINTERFACE : S_OK; }
+			HRESULT Apply(const Snapshot& value, Snapshot* applied, bool writeManualRgb) noexcept override
 			{
 				++writes;
+				if (writeManualRgb) ++manualPreviews;
 				if (value.applyChoice) live.automatic = value.automatic; // Failure may follow a partial mutation.
 				if (fail) return E_FAIL;
 				if (value.accent && !value.RestoresAutomatic()) live.accent = value.accent;
@@ -29,7 +30,7 @@ namespace OpenGlassTests
 				{
 					live.rgb = value.rgb;
 					if (value.IsAutomatic()) { ++refreshes; derived = wallpaper; }
-					else derived = *value.rgb;
+					else if (value.rgb) derived = *value.rgb;
 				}
 				if (value.RestoresAutomatic() && live.accent && shellWritesAccent)
 					live.accent = RegistryConfig::RawValue{ true, REG_DWORD,
@@ -52,6 +53,23 @@ namespace OpenGlassTests
 				return S_OK;
 			}
 		};
+		{
+			auto backend = std::make_unique<Backend>(); auto* live = backend.get();
+			Snapshot original;
+			original.accent = RegistryConfig::RawValue{ true, REG_DWORD, { 0x11, 0x22, 0x33, 0xFF } };
+			live->live = original;
+			ColorPreference preview(std::move(backend));
+			Check(SUCCEEDED(preview.SaveAccent(L"user", std::nullopt, [](const Snapshot&) { Check(false); })));
+			Check(live->writes == 0 && live->live == original && !preview.IsAttemptActive());
+			Check(SUCCEEDED(preview.Apply(L"user", 0x445566)));
+			Check(SUCCEEDED(preview.RollbackAttempt()) && live->live == original && live->manualPreviews == 1);
+			Check(SUCCEEDED(preview.Apply(L"user", 0)));
+			Check(preview.Baseline() == Snapshot{} && live->live.rgb == DWORD{0});
+			preview.CommitAttempt();
+			Check(SUCCEEDED(preview.SaveAccent(L"user", 0)) && live->live.accent == RegistryConfig::RawValue{ true, REG_DWORD, { 0, 0, 0, 0xFF } });
+			preview.CommitAttempt();
+			Check(SUCCEEDED(preview.Revert()) && live->live == original && live->manualPreviews == 2);
+		}
 		{
 			auto backend = std::make_unique<Backend>(); auto* live = backend.get();
 			ColorPreference fresh(std::move(backend));

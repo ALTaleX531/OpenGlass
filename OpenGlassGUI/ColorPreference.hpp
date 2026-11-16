@@ -18,7 +18,7 @@ namespace OpenGlass
 		struct Snapshot
 		{
 			DWORD automatic{};
-			std::optional<DWORD> rgb; // Manual RGB only; Automatic never captures derived RGB.
+			std::optional<DWORD> rgb; // Present only when the Manual base color exists.
 			bool applyChoice{ true }; // Raw-value recovery must not change the coloring mode.
 			std::optional<RegistryConfig::RawValue> accent; // Save writes and Automatic Shell side effects.
 			std::optional<RegistryConfig::RawValue> dwmAccent; // Independent DWM AccentColor, not an editor setting.
@@ -31,9 +31,10 @@ namespace OpenGlass
 		{
 			virtual ~Backend() = default;
 			virtual HRESULT Capture(const std::wstring& userSid, Snapshot& snapshot) noexcept = 0;
-			virtual HRESULT Prepare(const Snapshot& choice) noexcept = 0;
+			virtual HRESULT Prepare(const Snapshot& choice, bool writeManualRgb = false) noexcept = 0;
 			// Automatic resolves its Accent targets only after the synchronous shell request.
-			virtual HRESULT Apply(const Snapshot& choice, Snapshot* applied = nullptr) noexcept = 0;
+			// Only an explicit Manual preview writes RGB. Raw journal entries own its recovery.
+			virtual HRESULT Apply(const Snapshot& choice, Snapshot* applied = nullptr, bool writeManualRgb = false) noexcept = 0;
 		};
 		ColorPreference();
 		explicit ColorPreference(std::unique_ptr<Backend> backend);
@@ -43,12 +44,12 @@ namespace OpenGlass
 		HRESULT RecoverSnapshot(const Snapshot& snapshot) noexcept;
 		std::optional<Snapshot> Baseline(bool attempt = false) const;
 		void CommitAttempt() noexcept;
-		HRESULT ReadRgb(const std::wstring& userSid, DWORD& rgb) noexcept;
+		HRESULT ReadRgb(const std::wstring& userSid, std::optional<DWORD>& rgb) noexcept;
 		HRESULT ComputeWallpaperColor(const std::wstring& userSid, DWORD& argb) noexcept;
 		HRESULT ReadAutoColorization(const std::wstring& userSid, bool& enabled) noexcept;
 		HRESULT Apply(const std::wstring& userSid, std::optional<DWORD> argb,
 			const std::function<void(const Snapshot&)>& beforeWrite = {}) noexcept;
-		HRESULT SaveAccent(const std::wstring& userSid, DWORD rgb,
+		HRESULT SaveAccent(const std::wstring& userSid, std::optional<DWORD> rgb,
 			const std::function<void(const Snapshot&)>& beforeWrite = {}) noexcept;
 		HRESULT Revert() noexcept;
 		void Accept() noexcept;

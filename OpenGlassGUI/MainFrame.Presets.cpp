@@ -1119,9 +1119,8 @@ namespace OpenGlass
 		}
 		if (accentColor)
 		{
-			DWORD rgb{};
-			THROW_IF_FAILED(m_colorPreference.ReadRgb(m_targetUserSid.ToStdWstring(), rgb));
-			request.accentColor = rgb;
+			THROW_IF_FAILED(m_colorPreference.ReadRgb(m_targetUserSid.ToStdWstring(), request.accentColor));
+			THROW_HR_IF(HRESULT_FROM_WIN32(ERROR_INVALID_DATA), !request.accentColor);
 		}
 	}
 

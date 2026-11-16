@@ -266,7 +266,7 @@ namespace OpenGlass
 		if (!RunPreview([&]
 		{
 			const auto sid = m_targetUserSid.ToStdWstring();
-			DWORD rgb{};
+			std::optional<DWORD> rgb;
 			THROW_IF_FAILED(m_colorPreference.ReadRgb(sid, rgb));
 			THROW_IF_FAILED(m_colorPreference.SaveAccent(sid, rgb, [this](const auto& before)
 			{

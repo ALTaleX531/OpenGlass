@@ -159,7 +159,9 @@ namespace OpenGlass
 		if (SUCCEEDED(modeResult) && automatic)
 		{
 			// Read the original user's current accent, never the elevated account or message payload.
-			colorAvailable = SUCCEEDED(m_colorPreference.ReadRgb(m_targetUserSid.ToStdWstring(), color));
+			std::optional<DWORD> rgb;
+			colorAvailable = SUCCEEDED(m_colorPreference.ReadRgb(m_targetUserSid.ToStdWstring(), rgb)) && rgb.has_value();
+			if (colorAvailable) color = *rgb;
 		}
 		if (colorAvailable && (!m_customColorsInitialized || automatic || selectedPreset == nullptr))
 		{

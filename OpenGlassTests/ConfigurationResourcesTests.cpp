@@ -183,19 +183,26 @@ namespace OpenGlassTests
 			Check(registryCalls == 0 && colorCalls == 1 && !recovered.HasRecovery());
 			resources.Accept();
 		}
-		// A failed raw DWM restore retains the record for retry.
-		resources.Begin(ColorPreference::Snapshot{ 0u, 0x112233u });
+		// A failed raw DWM restore retains both the missing color and present afterglow for retry.
+		const ColorPreference::Snapshot missingColor;
+		resources.Begin(missingColor);
+		resources.TrackRegistry(Settings::Scope::User, Settings::Id::ColorizationColor, {});
 		resources.TrackRegistry(Settings::Scope::User, Settings::Id::ColorizationAfterglow, { true, REG_DWORD, { 0x66, 0x55, 0x44, 0xAA } });
 		std::vector<int> recoveryOrder;
-		auto restoreColor = [&](const auto&) { recoveryOrder.push_back(1); return true; };
+		auto restoreColor = [&](const auto& choice) { recoveryOrder.push_back(1); return choice == missingColor; };
 		bool allowRegistryRestore{};
-		auto restoreRegistry = [&](auto, auto, const auto& value) { recoveryOrder.push_back(2); return allowRegistryRestore && value.bytes[0] == 0x66; };
+		auto restoreRegistry = [&](auto scope, auto id, const auto& value)
+		{
+			recoveryOrder.push_back(2);
+			return scope == Settings::Scope::User && (id == Settings::Id::ColorizationColor ? !value.present
+				: allowRegistryRestore && id == Settings::Id::ColorizationAfterglow && value == RegistryConfig::RawValue{ true, REG_DWORD, { 0x66, 0x55, 0x44, 0xAA } });
+		};
 		Check(!recovered.Recover(restoreRegistry, restoreColor));
-		Check(recoveryOrder == std::vector<int>{ 1, 2 } && recovered.HasRecovery());
+		Check(recoveryOrder == std::vector<int>{ 1, 2, 2 } && recovered.HasRecovery());
 		recoveryOrder.clear();
 		allowRegistryRestore = true;
 		Check(recovered.Recover(restoreRegistry, restoreColor));
-		Check(recoveryOrder == std::vector<int>{ 1, 2 } && !recovered.HasRecovery());
+		Check(recoveryOrder == std::vector<int>{ 1, 2, 2 } && !recovered.HasRecovery());
 		resources.Accept();
 		// Automatic recovery must not overwrite freshly recomputed RGB with its old derived values.
 		resources.Begin();
