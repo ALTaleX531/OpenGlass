@@ -137,12 +137,8 @@ namespace OpenGlass::GlassIntegrity
 		0xF3, 0x0F, 0x10, HookHelper::c_patwc, HookHelper::c_patwc, HookHelper::c_patwc, HookHelper::c_patwc, HookHelper::c_patwc,
 		// comiss xmmM, xmmN
 		0x0F, 0x2F, HookHelper::c_patwc,
-		// jb short below_minimum_occlusion_area
-		0x72, 0x07,
-		// mov byte ptr [r13 + 1Ch], 1
-		0x41, 0xC6, 0x45, 0x1C, 0x01,
-		// jmp short minimum_occlusion_area_checked
-		0xEB, HookHelper::c_patwc
+		// jb short below_minimum_occlusion_area. The following flag store varies by build.
+		0x72, HookHelper::c_patwc
 	};
 	uint16_t g_COcclusionContext_MinimumOcclusionAreaCutoffLoad_Instructions[] =
 	{
@@ -1045,20 +1041,16 @@ void GlassIntegrity::Startup()
 			"The minimum occlusion-area cutoff loads were not found"
 		);
 
-		const auto cutoffRegister = static_cast<uint8_t>((loadedCutoffMatch[3] >> 3) & 7);
-		std::array<uint8_t, 8> zeroCutoffInstructions
-		{
-			// xorps xmmN, xmmN
-			0x0F, 0x57, static_cast<uint8_t>(0xC0 | (cutoffRegister << 3) | cutoffRegister),
-			// nop
-			0x90, 0x90, 0x90, 0x90, 0x90
-		};
 		for (const auto cutoffLoad : cutoffLoads)
 		{
-			FAIL_FAST_IF_FAILED_MSG(
-				((cutoffLoad[3] >> 3) & 7) == cutoffRegister ? S_OK : E_UNEXPECTED,
-				"The minimum occlusion-area cutoff loads use different registers"
-			);
+			const auto cutoffRegister = (cutoffLoad[3] >> 3) & 7;
+			const std::array<uint8_t, 8> zeroCutoffInstructions
+			{
+				// xorps xmmN, xmmN using this load's destination register
+				0x0F, 0x57, static_cast<uint8_t>(0xC0 | (cutoffRegister << 3) | cutoffRegister),
+				// nop
+				0x90, 0x90, 0x90, 0x90, 0x90
+			};
 			preparePatch(const_cast<uint8_t*>(cutoffLoad), zeroCutoffInstructions);
 		}
 	}

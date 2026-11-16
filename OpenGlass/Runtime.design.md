@@ -110,6 +110,8 @@ Release both capture brushes and surfaces before resource updates. Native brush 
 
 MILComp `CDrawingContext::DrawVisualTree` consumes a 24-byte `TMil3DRect`, including front and back depth. The safety-zone hook expands only its XY rectangle and preserves both depth coordinates, including offscreen visual-surface captures. Never forward a 16-byte `D2D1_RECT_F` in its place.
 
+`GlassIntegrity` identifies the minimum-area comparison in `COcclusionContext::PreSubgraph` from its threshold operand and conditional branch. For the form that loads the cutoff into an XMM register, verify both loads of the same constant and zero each destination register. The native branch and flag store consume these results. Apply and restore the original instruction ranges through the engine's hook transaction.
+
 ## MILComp Accent and client blur
 
 MILComp `AccentOverrider` keeps native accent policies and selects the native solid-fill path when overriding blur or acrylic. Keep primary and transition policy and opacity independent across layers. The glass child reproduces the nine-grid hollow center and inherits the native clip. Never replace the native nine-grid brush graph. Native cleanup owns background layers, so detach tracked effects on cleanup, disable, and unload. Redraw must call `OnAccentPolicyUpdated` to switch between native acrylic and the replacement.

@@ -191,12 +191,16 @@
           "ranges": [
             {
               "offset": 792,
+              "until": { "build": 28000, "revision": 3365 }
+            },
+            {
+              "offset": 812,
               "otherwise": true
             }
           ]
         }
       ],
-      "notes": "Cross-check CTopLevelWindow::SetSuppressBorderUpdates (possibly inlined) with the UpdateWindowVisuals branch that skips border updates."
+      "notes": "CTopLevelWindow::SetSuppressBorderUpdates writes the byte that UpdateWindowVisuals tests before updating the border. Both use +792 in 28000.3231 and +812 in 28000.3365 and 28000.3501. In the new layout the constructor initializes the DWORD at +792 for UpdateRemoteAppRenderTargetOpacity."
     },
     {
       "name": "CTopLevelWindow_GetLegacyVisual_Index",
