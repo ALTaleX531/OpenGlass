@@ -1,0 +1,11 @@
+name: Feature request
+description: Suggest an improvement to OpenGlass.
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: request
+    attributes:
+      label: Requested improvement
+      description: Describe what you want OpenGlass to do and when you would use it.
+    validations:
+      required: true

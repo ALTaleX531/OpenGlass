@@ -38,7 +38,11 @@ The theme extension connects Windows theme application and the classic color pan
 
 ## Reporting issues
 
-Report bugs in [GitHub Issues](https://github.com/ALTaleX531/OpenGlass/issues/new), with your exact Windows build, OpenGlass version and reproduction steps. For crashes or opaque glass, start with the configuration window's **Diagnostics** tab and the [troubleshooting guide](https://github.com/ALTaleX531/OpenGlass/wiki/Troubleshooting-and-crash-dumps).
+Include your full four-part OpenGlass version, exact Windows build, and reproduction steps when filing a [bug report](https://github.com/ALTaleX531/OpenGlass/issues/new?template=bug-report.yml). Reports for versions older than the current CI build are closed with a request to retest using the [current CI installer](https://github.com/ALTaleX531/OpenGlass/actions/workflows/build.yml?query=branch%3Amain). If the version is missing or malformed, the workflow asks for the full version. If the reported version is higher than CI, the workflow asks you to verify the installed version and say whether you used a modified build or changed the version number.
+
+For a DWM crash, choose **DWM crash** in the report form and describe how to reproduce it or when it occurs. List the other Windows customization tools, custom themes, and enabled mods you use. If you can share a dump, compress it, upload it to Google Drive or a similar service, and paste a share link. Current-version reports get the `needs info` label if reproduction details or the dump link are missing. See the [dump collection guide](https://github.com/ALTaleX531/OpenGlass/wiki/Troubleshooting-and-crash-dumps#collecting-a-crash-dump).
+
+For opaque glass, start with the configuration window's **Diagnostics** tab and the [troubleshooting guide](https://github.com/ALTaleX531/OpenGlass/wiki/Troubleshooting-and-crash-dumps).
 
 ## Building
 

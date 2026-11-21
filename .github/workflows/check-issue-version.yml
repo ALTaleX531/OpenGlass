@@ -1,0 +1,95 @@
+name: Triage bug reports
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    if: contains(github.event.issue.labels.*.name, 'bug')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check version and crash details
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          $PSNativeCommandUseErrorActionPreference = $true
+
+          $issuePath = "repos/$env:GITHUB_REPOSITORY/issues/$env:ISSUE_NUMBER"
+          $issue = gh api $issuePath | ConvertFrom-Json
+          if ($issue.state -ne 'open' -or $issue.labels.name -notcontains 'bug') {
+              return
+          }
+
+          $versionFile = "repos/$env:GITHUB_REPOSITORY/contents/Common/Version.props"
+          [xml]$props = (gh api $versionFile --method GET --raw-field "ref=$env:GITHUB_SHA" --header 'Accept: application/vnd.github.raw+json') -join "`n"
+          $version = ([string]$props.Project.PropertyGroup.OpenGlassProductVersion).Trim()
+          $versionPattern = '[0-9]+(?:\.[0-9]+){3}'
+          $ciVersion = $null
+          if ($version -notmatch "^$versionPattern$" -or ![version]::TryParse($version, [ref]$ciVersion)) {
+              throw 'Common/Version.props must contain one four-part OpenGlassProductVersion.'
+          }
+
+          # GitHub renders the form label as a Markdown heading followed by the field value.
+          $reportedVersion = $null
+          if ($issue.body -match "(?m)\A[ \t\r\n]*### OpenGlass version\r?\n\r?\n[ \t]*v?(?<version>$versionPattern)[ \t]*\r?$") {
+              [void][version]::TryParse($Matches.version, [ref]$reportedVersion)
+          }
+          if ($null -eq $reportedVersion -or $reportedVersion -gt $ciVersion) {
+              $comment = if ($null -eq $reportedVersion) {
+                  'Please add the full four-part Product version from the Details tab of the installed OpenGlass.dll file properties to the OpenGlass version field.'
+              } else {
+                  "The reported OpenGlass version ($reportedVersion) is higher than this repository's current CI version ($version). Please verify the four-part Product version in the installed OpenGlass.dll file properties and update this report. Say whether you used a modified build or changed the version number."
+              }
+              gh api "$issuePath/comments" --method POST --raw-field "body=$comment" --silent
+              return
+          }
+
+          $repoUrl = "$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY"
+          if ($reportedVersion -lt $ciVersion) {
+              $ciUrl = "$repoUrl/actions/workflows/build.yml?query=branch%3Amain"
+              $sourceUrl = "$repoUrl/tree/$env:GITHUB_SHA#building"
+              $comment = @"
+          This report was filed for OpenGlass $reportedVersion. Please retest with OpenGlass $version.
+
+          Sign in to GitHub and download **v$version-unsigned** from the Artifacts section of the matching [OpenGlass CI run]($ciUrl). Extract the archive and run **OpenGlassSetup.exe**. If the artifact has expired, you can [build that revision from source]($sourceUrl).
+
+          If the problem still occurs, update this issue with the exact OpenGlass version, Windows build, and reproduction steps, then ask for it to be reopened.
+          "@
+              gh issue close $env:ISSUE_NUMBER --repo $env:GITHUB_REPOSITORY --reason 'not planned' --comment $comment
+              return
+          }
+
+          if ($issue.body -notmatch '(?m)^### Problem type\r?\n\r?\nDWM crash\r?$' -or
+              $issue.labels.name -contains 'needs info') {
+              return
+          }
+
+          $steps = [regex]::Match($issue.body, '(?ms)^### Steps to reproduce\r?\n(.*?)(?=^### DWM crash dump\r?$|\z)').Groups[1].Value.Trim()
+          $dump = [regex]::Match($issue.body, '(?ms)^### DWM crash dump\r?\n(.*)\z').Groups[1].Value
+          $missing = @()
+          if (!$steps -or $steps -match '^(?:_No response_|n/?a|none|unknown|random|no steps|cannot reproduce)[.!]?$') {
+              $missing += '- Add the steps leading to the crash. If it happens intermittently, describe what you were doing just before it happened and how often it occurs.'
+          }
+          if ($dump -notmatch 'https://[^\s<>()]+') {
+              $dumpGuide = "$repoUrl/wiki/Troubleshooting-and-crash-dumps#collecting-a-crash-dump"
+              $missing += "- Follow the [dump collection guide]($dumpGuide) to capture a dwm.exe crash dump. Compress it, upload the archive to Google Drive or a similar file-sharing service, and paste a share link that maintainers can access. Full dumps can contain private data. If you cannot capture or share a dump, explain why."
+          }
+          if ($missing.Count -eq 0) {
+              return
+          }
+
+          $comment = @"
+          Please update this report with the following crash details.
+
+          $($missing -join "`n")
+          - List the other Windows customization tools, custom themes, and enabled mods you were using when DWM crashed, or say if you were using none.
+          "@
+          gh api "$issuePath/comments" --method POST --raw-field "body=$comment" --silent
+          gh api "$issuePath/labels" --method POST --raw-field 'labels[]=needs info' --silent

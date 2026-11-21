@@ -1,0 +1,64 @@
+name: Bug report
+description: Report a problem with OpenGlass.
+labels: ["bug"]
+body:
+  - type: input
+    id: openglass-version
+    attributes:
+      label: OpenGlass version
+      description: >-
+        Enter the four-part Product version from the Details tab of the installed
+        OpenGlass.dll's file properties. If your version is older than the current CI build,
+        the report will be closed with a request to retest using the
+        [current CI installer](https://github.com/ALTaleX531/OpenGlass/actions/workflows/build.yml?query=branch%3Amain).
+        If your version is higher, verify the installed version and say whether you used a modified build or changed the version number.
+      placeholder: Major.Minor.Patch.Build
+    validations:
+      required: true
+  - type: input
+    id: windows-build
+    attributes:
+      label: Windows version and OS build
+      description: Run `winver` and enter the Windows version and full OS build.
+      placeholder: Windows 11 25H2 (26200.9974)
+    validations:
+      required: true
+  - type: dropdown
+    id: problem-type
+    attributes:
+      label: Problem type
+      description: Select DWM crash if the Desktop Window Manager process crashed.
+      options:
+        - Other bug
+        - DWM crash
+      default: 0
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happened
+      description: >-
+        Include what you expected, what happened, and any OpenGlass Diagnostics error messages.
+        For a DWM crash, list the other Windows customization tools, custom themes, and enabled mods
+        you were using when it crashed, or say if you were using none.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: >-
+        List the steps leading to the problem. If it happens intermittently, describe what you were doing just
+        before it happened and how often it occurs.
+    validations:
+      required: true
+  - type: textarea
+    id: dwm-crash-dump
+    attributes:
+      label: DWM crash dump
+      description: >-
+        For a DWM crash, follow the [dump collection guide](https://github.com/ALTaleX531/OpenGlass/wiki/Troubleshooting-and-crash-dumps#collecting-a-crash-dump).
+        Compress the dwm.exe dump, upload the archive to Google Drive or a similar file-sharing service,
+        and paste a share link that maintainers can access. Full dumps can contain private data.
+        If you cannot capture or share a dump, explain why.
