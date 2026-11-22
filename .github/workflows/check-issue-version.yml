@@ -2,7 +2,7 @@ name: Triage bug reports
 
 on:
   issues:
-    types: [opened]
+    types: [opened, edited]
 
 permissions:
   contents: read
